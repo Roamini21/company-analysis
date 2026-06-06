@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IES Holdings (IESC) — CAP 프레임워크 기반 분석</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e17;
+  --bg2: #111827;
+  --bg3: #1a2236;
+  --surface: #1e293b;
+  --border: #2d3a4f;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #f59e0b;
+  --accent2: #fbbf24;
+  --green: #22c55e;
+  --green-dim: #166534;
+  --red: #ef4444;
+  --red-dim: #991b1b;
+  --blue: #3b82f6;
+  --blue-dim: #1e3a5f;
+  --purple: #a78bfa;
+  --cyan: #06b6d4;
+  --orange: #fb923c;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  font-weight: 300;
+}
+
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 60px 0 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-ticker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+.hero-subtitle {
+  font-size: 18px;
+  color: var(--text-dim);
+  max-width: 700px;
+  margin-bottom: 32px;
+}
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  max-width: 800px;
+}
+.hero-metric {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.hero-metric-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.hero-metric-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+}
+.hero-metric-sub {
+  font-size: 12px;
+  color: var(--green);
+}
+
+/* NAV */
+.toc {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.toc-inner {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.toc-inner::-webkit-scrollbar { display: none; }
+.toc-link {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.toc-link:hover { color: var(--accent); }
+
+/* SECTIONS */
+section {
+  padding: 60px 0;
+  border-bottom: 1px solid var(--border);
+}
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.section-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 24px;
+}
+.section-desc {
+  font-size: 16px;
+  color: var(--text-dim);
+  max-width: 800px;
+  margin-bottom: 32px;
+}
+
+/* CARDS */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.card p {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* TABLES */
+.table-wrap {
+  overflow-x: auto;
+  margin: 24px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  background: var(--bg3);
+  color: var(--accent);
+  font-weight: 500;
+  text-align: right;
+  padding: 10px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  border-bottom: 2px solid var(--border);
+}
+th:first-child { text-align: left; }
+td {
+  padding: 10px 14px;
+  text-align: right;
+  color: var(--text-dim);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  white-space: nowrap;
+}
+td:first-child {
+  text-align: left;
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+}
+tr:hover td { background: rgba(255,255,255,0.02); }
+.highlight-row td { background: rgba(245,158,11,0.08); color: var(--accent2); font-weight: 700; }
+
+/* BARS */
+.bar-chart { margin: 20px 0; }
+.bar-item { margin-bottom: 14px; }
+.bar-label {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+.bar-track {
+  height: 24px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  transition: width 0.8s ease;
+}
+
+/* SWOT */
+.swot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.swot-card {
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid;
+}
+.swot-card.strength { background: rgba(34,197,94,0.06); border-color: rgba(34,197,94,0.2); }
+.swot-card.weakness { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.2); }
+.swot-card.opportunity { background: rgba(59,130,246,0.06); border-color: rgba(59,130,246,0.2); }
+.swot-card.threat { background: rgba(251,146,60,0.06); border-color: rgba(251,146,60,0.2); }
+.swot-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.swot-card.strength .swot-title { color: var(--green); }
+.swot-card.weakness .swot-title { color: var(--red); }
+.swot-card.opportunity .swot-title { color: var(--blue); }
+.swot-card.threat .swot-title { color: var(--orange); }
+.swot-card li {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  list-style: none;
+  padding-left: 16px;
+  position: relative;
+}
+.swot-card li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+}
+
+/* LIFECYCLE */
+.lifecycle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 24px 0;
+}
+.lifecycle-stage {
+  flex: 1;
+  padding: 14px 12px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  position: relative;
+}
+.lifecycle-stage.active {
+  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05));
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 20px rgba(245,158,11,0.1);
+}
+.lifecycle-stage .cf-pattern {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  display: block;
+  margin-top: 4px;
+  color: var(--text-muted);
+}
+.lifecycle-stage.active .cf-pattern { color: var(--accent2); }
+
+/* FLOW */
+.flow-diagram {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0;
+}
+.flow-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--text);
+}
+.flow-arrow {
+  font-size: 18px;
+  color: var(--accent);
+}
+
+/* CALLOUT */
+.callout {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02));
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 20px 24px;
+  margin: 24px 0;
+}
+.callout-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.callout p {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+.callout.blue {
+  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(59,130,246,0.02));
+  border-left-color: var(--blue);
+}
+.callout.blue .callout-title { color: var(--blue); }
+.callout.red {
+  background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.02));
+  border-left-color: var(--red);
+}
+.callout.red .callout-title { color: var(--red); }
+
+/* SCENARIO */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.scenario-card {
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+.scenario-card.bear { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
+.scenario-card.base { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); }
+.scenario-card.bull { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
+.scenario-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.scenario-card.bear .scenario-label { color: var(--red); }
+.scenario-card.base .scenario-label { color: var(--accent); }
+.scenario-card.bull .scenario-label { color: var(--green); }
+.scenario-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+}
+.scenario-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* PIE CHART CSS */
+.pie-container { display: flex; align-items: center; gap: 32px; margin: 24px 0; flex-wrap: wrap; }
+.pie-chart {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+}
+.pie-legend { display: flex; flex-direction: column; gap: 10px; }
+.pie-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+.pie-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* FOOTER */
+.footer {
+  padding: 40px 0;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-right: 6px;
+}
+.tag-green { background: rgba(34,197,94,0.15); color: var(--green); }
+.tag-red { background: rgba(239,68,68,0.15); color: var(--red); }
+.tag-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
+.tag-amber { background: rgba(245,158,11,0.15); color: var(--accent); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 768px) {
+  .two-col, .swot-grid, .scenario-grid { grid-template-columns: 1fr; }
+  .hero-title { font-size: 32px; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+.prose { max-width: 800px; }
+.prose p { margin-bottom: 16px; font-size: 15px; color: var(--text-dim); }
+.prose strong { color: var(--text); font-weight: 500; }
+
+.inline-metric {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent);
+  font-weight: 500;
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+<div class="container">
+  <div class="hero-ticker">NASDAQ: IESC</div>
+  <h1 class="hero-title">IES Holdings, Inc.</h1>
+  <p class="hero-subtitle">미국 데이터센터 인프라 건설 붐의 핵심 수혜주 — 전기·통신 시스템 통합 설계·시공 전문기업</p>
+  <div class="hero-metrics">
+    <div class="hero-metric">
+      <div class="hero-metric-label">주가 (5/15)</div>
+      <div class="hero-metric-value">$682</div>
+      <div class="hero-metric-sub">52주 $236–$700</div>
+    </div>
+    <div class="hero-metric">
+      <div class="hero-metric-label">시가총액</div>
+      <div class="hero-metric-value">$13.6B</div>
+      <div class="hero-metric-sub">발행주식 19.9M</div>
+    </div>
+    <div class="hero-metric">
+      <div class="hero-metric-label">TTM 매출</div>
+      <div class="hero-metric-value">$3.63B</div>
+      <div class="hero-metric-sub">YoY +16.2%</div>
+    </div>
+    <div class="hero-metric">
+      <div class="hero-metric-label">TTM 순이익</div>
+      <div class="hero-metric-value">$380M</div>
+      <div class="hero-metric-sub">마진 10.5%</div>
+    </div>
+  </div>
+</div>
+</header>
+
+<!-- TOC -->
+<nav class="toc">
+<div class="container">
+  <div class="toc-inner">
+    <a href="#overview" class="toc-link">기업 개요</a>
+    <a href="#revenue" class="toc-link">수익 구조</a>
+    <a href="#product" class="toc-link">핵심 사업</a>
+    <a href="#industry" class="toc-link">산업 분석</a>
+    <a href="#swot" class="toc-link">SWOT</a>
+    <a href="#moat" class="toc-link">경제적 해자</a>
+    <a href="#lifecycle" class="toc-link">생애주기</a>
+    <a href="#dcf" class="toc-link">DCF 모델</a>
+    <a href="#cap" class="toc-link">내재 CAP</a>
+    <a href="#sensitivity" class="toc-link">민감도 분석</a>
+    <a href="#peers" class="toc-link">피어그룹</a>
+    <a href="#risk" class="toc-link">리스크</a>
+  </div>
+</div>
+</nav>
+
+<!-- 1. 기업 개요 -->
+<section id="overview">
+<div class="container">
+  <div class="section-label">01 — Company Overview</div>
+  <div class="section-title">기업 개요</div>
+  
+  <div class="callout">
+    <div class="callout-title">한 문장 요약</div>
+    <p>IES Holdings는 <strong>데이터센터, 주택, 상업시설에 전기·통신·기계 시스템을 설계·시공하는 미국의 인프라 서비스 기업</strong>으로, AI/클라우드 확산에 따른 데이터센터 건설 슈퍼사이클의 직접 수혜를 받고 있습니다.</p>
+  </div>
+
+  <div class="prose">
+    <p><strong>설립 배경과 역사:</strong> IES Holdings는 1997년 "Integrated Electrical Services"라는 이름으로 텍사스주 휴스턴에서 설립되었습니다. 당시 미국 전역에 흩어져 있던 소규모 전기 시공업체들을 하나의 지주회사 아래로 통합하는 "롤업(roll-up)" 전략으로 시작했습니다. 이 전략은 파편화된(=수많은 소규모 업체가 난립하는) 전기 시공업 시장에서 규모의 경제를 확보하려는 것이었습니다.</p>
+    
+    <p>초기에는 과도한 인수와 경기 침체로 어려움을 겪었지만, 2010년대 들어 투자자 <strong>Jeffrey Gendell</strong>이 경영에 참여하면서 회사는 극적으로 변모합니다. 그는 무분별한 확장 대신 수익성 높은 핵심 사업에 집중하고, 선별적 인수를 통해 회사를 재건했습니다. 2016년 사명을 "IES Holdings"로 변경하고 나스닥에 상장을 유지하며 성장 궤도에 올랐습니다.</p>
+
+    <p><strong>현재의 IES:</strong> 오늘날 IES는 10,000명 이상의 직원을 보유한 기업으로, <strong>4개 사업 부문</strong>을 통해 데이터센터, 주택, 상업빌딩, 산업시설에 전기·통신·기계 시스템을 제공합니다. 특히 2023년 이후 AI 인프라 투자 붐과 함께 데이터센터 관련 사업이 폭발적으로 성장하면서, 매출은 3년 만에 2배 이상 증가했습니다. 2025년 5월, Jeff Gendell 회장이 CEO 직을 <strong>Matt Simmes</strong>에게 넘기며 세대교체를 단행했습니다.</p>
+  </div>
+
+  <div class="card-grid" style="margin-top:24px;">
+    <div class="card">
+      <div class="card-title"><div class="card-icon" style="background:rgba(245,158,11,0.15);">📍</div> 기본 정보</div>
+      <p><strong>본사:</strong> 텍사스주 슈가랜드 (휴스턴 인근)<br>
+      <strong>설립:</strong> 1997년<br>
+      <strong>상장:</strong> NASDAQ: IESC<br>
+      <strong>직원:</strong> 10,000명 이상<br>
+      <strong>CEO:</strong> Matt Simmes (2025년 취임)<br>
+      <strong>회장:</strong> Jeffrey Gendell (Executive Chairman)<br>
+      <strong>CFO:</strong> Tracy McLauchlin<br>
+      <strong>회계연도:</strong> 10월~9월 (FY2025 = 2024.10~2025.9)</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="card-icon" style="background:rgba(59,130,246,0.15);">🏗️</div> 4대 사업 부문</div>
+      <p><strong>① Communications (통신):</strong> 데이터센터 내부 통신 인프라 설계·시공<br>
+      <strong>② Residential (주거):</strong> 단독주택·아파트 전기·HVAC·배관<br>
+      <strong>③ Infrastructure Solutions (인프라):</strong> 맞춤형 전력 장비 제조·산업 서비스<br>
+      <strong>④ Commercial & Industrial (상업·산업):</strong> 빌딩·공장·데이터센터 전기·기계 시공</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 2. 수익 구조 -->
+<section id="revenue">
+<div class="container">
+  <div class="section-label">02 — Revenue Structure</div>
+  <div class="section-title">수익 구조 — 이 회사는 어떻게 돈을 버는가</div>
+
+  <div class="prose">
+    <p>IES의 수익은 크게 <strong>"프로젝트 기반 건설·시공 매출"</strong>과 <strong>"제품 제조·서비스 매출"</strong>로 나뉩니다. 고객이 건물이나 데이터센터를 지을 때, IES가 전기·통신 시스템을 설계하고 설치해주는 대가로 돈을 받는 구조입니다. 프로젝트별로 입찰·계약하며, 진행률에 따라 매출을 인식합니다.</p>
+  </div>
+
+  <div class="pie-container">
+    <div class="pie-chart" style="background: conic-gradient(
+      #3b82f6 0% 34%,
+      #22c55e 34% 73%,
+      #f59e0b 73% 88%,
+      #a78bfa 88% 100%
+    );"></div>
+    <div class="pie-legend">
+      <div class="pie-legend-item"><div class="pie-dot" style="background:#3b82f6;"></div> <span>Communications (통신) — 34% / $1,141M</span></div>
+      <div class="pie-legend-item"><div class="pie-dot" style="background:#22c55e;"></div> <span>Residential (주거) — 39% / $1,305M</span></div>
+      <div class="pie-legend-item"><div class="pie-dot" style="background:#f59e0b;"></div> <span>Infrastructure Solutions (인프라) — 15% / $499M</span></div>
+      <div class="pie-legend-item"><div class="pie-dot" style="background:#a78bfa;"></div> <span>Commercial & Industrial (상업) — 13% / $428M</span></div>
+    </div>
+  </div>
+  <p style="font-size:12px; color:var(--text-muted); margin-top:-12px;">FY2025 (2024.10~2025.9) 기준 연간 매출 비중</p>
+
+  <div style="margin-top:32px;">
+    <h3 style="color:#fff; font-size:18px; margin-bottom:16px;">부문별 성장률 (FY2025 vs FY2024)</h3>
+    <div class="bar-chart">
+      <div class="bar-item">
+        <div class="bar-label"><span>Communications (통신)</span><span class="mono" style="color:var(--green);">+47%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:94%; background:linear-gradient(90deg,#3b82f6,#60a5fa);">$1,141M</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label"><span>Infrastructure Solutions (인프라)</span><span class="mono" style="color:var(--green);">+42%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:55%; background:linear-gradient(90deg,#f59e0b,#fbbf24);">$499M</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label"><span>Commercial & Industrial (상업)</span><span class="mono" style="color:var(--green);">+16%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:47%; background:linear-gradient(90deg,#a78bfa,#c4b5fd);">$428M</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label"><span>Residential (주거)</span><span class="mono" style="color:var(--red);">-6%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#22c55e,#4ade80);">$1,305M</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout blue" style="margin-top:24px;">
+    <div class="callout-title">핵심 포인트: 데이터센터가 성장 엔진</div>
+    <p>Communications와 Infrastructure Solutions 두 부문이 각각 +47%, +42% 성장했는데, 이 성장의 주요 동력은 <strong>데이터센터 건설 수요</strong>입니다. FY2025 전체 매출 성장의 대부분은 데이터센터 관련 프로젝트에서 발생했습니다. 반면, 주거 부문은 미국 주택 시장 침체(높은 금리, 주택 구매 부담)로 매출이 감소했습니다.</p>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:32px 0 16px;">연도별 매출 추이</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>항목</th><th>FY2021</th><th>FY2022</th><th>FY2023</th><th>FY2024</th><th>FY2025</th><th>TTM</th></tr>
+      <tr><td>매출 ($M)</td><td>1,537</td><td>2,167</td><td>2,377</td><td>2,884</td><td>3,371</td><td>3,633</td></tr>
+      <tr><td>성장률 (%)</td><td>+29.0</td><td>+41.0</td><td>+9.7</td><td>+21.3</td><td>+16.9</td><td>+16.2</td></tr>
+      <tr><td>매출총이익 ($M)</td><td>—</td><td>319</td><td>445</td><td>697</td><td>860</td><td>947</td></tr>
+      <tr><td>매출총이익률 (%)</td><td>—</td><td>14.7</td><td>18.7</td><td>24.2</td><td>25.5</td><td>26.1</td></tr>
+      <tr><td>영업이익 ($M)</td><td>—</td><td>56</td><td>146</td><td>301</td><td>384</td><td>427</td></tr>
+      <tr><td>영업이익률 (%)</td><td>—</td><td>2.6</td><td>6.1</td><td>10.4</td><td>11.4</td><td>11.8</td></tr>
+      <tr><td>순이익 ($M)</td><td>—</td><td>51</td><td>118</td><td>219</td><td>306</td><td>380</td></tr>
+      <tr><td>희석EPS ($)</td><td>—</td><td>2.31</td><td>5.69</td><td>9.89</td><td>15.02</td><td>~18.8</td></tr>
+    </table>
+  </div>
+  <p style="font-size:12px; color:var(--text-muted);">출처: IES Holdings IR, Yahoo Finance, SEC Filings. FY = 10월~9월. TTM = 2025.4~2026.3.</p>
+</div>
+</section>
+
+<!-- 3. 핵심 사업 -->
+<section id="product">
+<div class="container">
+  <div class="section-label">03 — Products & Services</div>
+  <div class="section-title">제품·서비스 및 기술력</div>
+
+  <div class="card-grid">
+    <div class="card" style="border-top: 3px solid #3b82f6;">
+      <div class="card-title">📡 Communications (통신 인프라)</div>
+      <p><strong>하는 일:</strong> 데이터센터 내부의 통신 배선과 인프라를 처음부터 끝까지 책임집니다. 서버랙 사이를 연결하는 광케이블 설치, 화재 감지·소화 시스템, 보안 시스템, 무선 네트워크까지 포함됩니다.</p>
+      <p style="margin-top:8px;"><strong>쉬운 비유:</strong> 데이터센터가 뇌라면, 이 부문은 뇌 안의 신경망을 만드는 것입니다. 수천 대의 서버가 서로 대화할 수 있도록 연결하는 일입니다.</p>
+      <p style="margin-top:8px;"><strong>주요 고객:</strong> 대형 클라우드 업체(하이퍼스케일러), 코로케이션 업체, 이커머스 물류센터, 첨단 제조시설</p>
+      <p style="margin-top:8px;"><strong>FY2025 실적:</strong> 매출 $1,141M (+47%), 영업이익 $166.5M (마진 14.6%)</p>
+    </div>
+    <div class="card" style="border-top: 3px solid #22c55e;">
+      <div class="card-title">🏠 Residential (주거)</div>
+      <p><strong>하는 일:</strong> 신축 주택(단독·아파트)에 전기 배선, 에어컨(HVAC), 배관 시스템을 설치합니다. 주택이 지어질 때 벽 안에 들어가는 전선, 에어컨 덕트, 수도관 등을 시공합니다.</p>
+      <p style="margin-top:8px;"><strong>쉬운 비유:</strong> 새 집을 짓는 건설사가 뼈대를 세우면, IES는 그 집에 혈관(배관)과 신경(전기)을 넣어주는 것입니다.</p>
+      <p style="margin-top:8px;"><strong>주요 고객:</strong> 대형 주택건설사 (플로리다, 텍사스 중심)</p>
+      <p style="margin-top:8px;"><strong>FY2025 실적:</strong> 매출 $1,305M (-6%), 영업이익 $103.8M (마진 8.0%)</p>
+    </div>
+    <div class="card" style="border-top: 3px solid #f59e0b;">
+      <div class="card-title">⚙️ Infrastructure Solutions (인프라 솔루션)</div>
+      <p><strong>하는 일:</strong> 산업용 전기 장비를 직접 <strong>제조</strong>합니다. 데이터센터용 맞춤형 발전기 인클로저(보호 케이스), 전력 분배 장치(버스덕트), 산업용 전동기 수리, 철도 발전기 정비 등을 수행합니다.</p>
+      <p style="margin-top:8px;"><strong>쉬운 비유:</strong> 데이터센터에는 거대한 비상 발전기가 필요한데, 이 발전기를 보호하는 맞춤형 철제 케이스를 설계·제작하는 것입니다. 주문 제작 방식이라 고객 요구에 맞춰 특수하게 만듭니다.</p>
+      <p style="margin-top:8px;"><strong>FY2025 실적:</strong> 매출 $499M (+42%), 영업이익 $118.5M (마진 23.7%)</p>
+    </div>
+    <div class="card" style="border-top: 3px solid #a78bfa;">
+      <div class="card-title">🏢 Commercial & Industrial (상업·산업)</div>
+      <p><strong>하는 일:</strong> 사무실 빌딩, 병원, 학교, 공장, 데이터센터 등 대형 상업·산업 시설의 전기·기계 시스템을 설계·시공합니다. 건물의 전력 배분, 조명, 공조 시스템 등 전반적인 MEP(기계·전기·배관) 작업입니다.</p>
+      <p style="margin-top:8px;"><strong>쉬운 비유:</strong> 큰 빌딩이나 공장을 새로 지을 때, 건물 전체에 전기가 돌아가도록 하는 모든 작업입니다.</p>
+      <p style="margin-top:8px;"><strong>FY2025 실적:</strong> 매출 $428M (+16%), 영업이익 $47.3M (마진 11.1%)</p>
+    </div>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:32px 0 16px;">서비스 제공 과정 흐름도</h3>
+  <div class="flow-diagram">
+    <div class="flow-box">🔍 고객 요구 파악<br><span style="font-size:11px;color:var(--text-muted);">데이터센터/주택/빌딩</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">📐 설계·엔지니어링<br><span style="font-size:11px;color:var(--text-muted);">전기/통신/기계 도면</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">🏭 장비 제조·조달<br><span style="font-size:11px;color:var(--text-muted);">맞춤형 인클로저/버스덕트</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">⚡ 현장 시공·설치<br><span style="font-size:11px;color:var(--text-muted);">배선/배관/테스트</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box">🔧 유지보수·서비스<br><span style="font-size:11px;color:var(--text-muted);">장기 계약 기반</span></div>
+  </div>
+</div>
+</section>
+
+<!-- 4. 산업 분석 -->
+<section id="industry">
+<div class="container">
+  <div class="section-label">04 — Industry Analysis</div>
+  <div class="section-title">산업 분석 — 전기·통신 인프라 건설업</div>
+
+  <div class="prose">
+    <p>IES가 속한 산업은 <strong>"전기 및 건설 서비스업(Electrical & Construction Services)"</strong>으로 분류됩니다. 이 산업은 건물, 데이터센터, 공장 등에 전기·기계·통신 시스템을 설계하고 설치하는 모든 기업을 포괄합니다.</p>
+    
+    <p><strong>산업의 핵심 특징:</strong> 이 산업은 전통적으로 <strong>극도로 파편화</strong>되어 있습니다. 미국 전체에 수만 개의 전기 시공업체가 있지만, 대부분은 지역 기반의 소규모 업체입니다. 상위 10개 기업의 시장점유율을 합쳐도 전체의 20% 미만입니다. 이런 파편화된 구조 덕분에 IES 같은 기업은 소규모 업체를 인수하며 성장할 수 있는 "롤업" 기회가 풍부합니다.</p>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">산업을 움직이는 메가트렌드: AI 데이터센터 슈퍼사이클</div>
+    <p>글로벌 데이터센터 건설 시장은 2025년 약 $2,760억 규모에서 2030년 $3,830억~$4,570억으로 성장할 전망입니다 (연평균 7~12% 성장). 특히 AI 워크로드가 폭발적으로 증가하면서, 고밀도·고전력 데이터센터에 대한 수요가 전례 없이 높아지고 있습니다. 2026~2030년에 약 100GW의 신규 데이터센터 용량이 추가될 것으로 예상되며, 이는 현재 전 세계 용량의 2배에 해당합니다. 미국이 이 시장의 약 40%를 차지하며, 북버지니아, 텍사스, 오하이오 등이 주요 건설 허브입니다.</p>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:24px 0 16px;">가치사슬(Value Chain) 내 IES의 위치</h3>
+  <div class="flow-diagram">
+    <div class="flow-box" style="background:rgba(255,255,255,0.02);">🌐 빅테크/클라우드<br><span style="font-size:11px;color:var(--text-muted);">AWS, Google, Meta 등</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="background:rgba(255,255,255,0.02);">🏗️ 건설총괄(GC)<br><span style="font-size:11px;color:var(--text-muted);">Turner, DPR 등</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="background:rgba(245,158,11,0.1); border-color:var(--accent);">⚡ <strong>IES Holdings</strong><br><span style="font-size:11px;color:var(--accent);">전기/통신/기계 시공</span></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="background:rgba(255,255,255,0.02);">🔌 장비/부품 공급<br><span style="font-size:11px;color:var(--text-muted);">Eaton, Vertiv 등</span></div>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:32px 0 16px;">포터의 5 Forces 요약</h3>
+  <div class="bar-chart">
+    <div class="bar-item">
+      <div class="bar-label"><span>신규 진입 위협</span><span class="tag tag-green">낮음~중간</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:35%; background:var(--green);">숙련 인력 확보가 진입장벽</div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label"><span>기존 경쟁 강도</span><span class="tag tag-amber">중간~높음</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:65%; background:var(--accent);">파편화된 시장, 가격 경쟁 존재</div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label"><span>공급자 교섭력</span><span class="tag tag-amber">중간</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:50%; background:var(--accent);">전선·변압기 등 자재 가격 변동성</div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label"><span>구매자 교섭력</span><span class="tag tag-amber">중간~높음</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:60%; background:var(--orange);">대형 고객(빅테크, 건설사)의 협상력</div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label"><span>대체재 위협</span><span class="tag tag-green">낮음</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:20%; background:var(--green);">전기 시공은 대체 불가능한 물리적 작업</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 5. SWOT -->
+<section id="swot">
+<div class="container">
+  <div class="section-label">05 — SWOT Analysis</div>
+  <div class="section-title">SWOT 분석</div>
+  
+  <div class="swot-grid">
+    <div class="swot-card strength">
+      <div class="swot-title">💪 강점 (Strengths)</div>
+      <ul>
+        <li>데이터센터 전기·통신 시공에서 검증된 실행력과 트랙레코드</li>
+        <li>4개 사업부문의 다각화된 포트폴리오 (경기 사이클 완충)</li>
+        <li>ROIC 28%로 자본비용 대비 압도적 초과 수익 창출</li>
+        <li>사실상 무차입 재무구조 (부채비율 0.09)</li>
+        <li>$3.9B의 강력한 수주잔고 (연 매출의 1.1배)</li>
+        <li>수직 통합: 설계·제조·시공을 동시에 수행</li>
+      </ul>
+    </div>
+    <div class="swot-card weakness">
+      <div class="swot-title">⚠️ 약점 (Weaknesses)</div>
+      <ul>
+        <li>주거 부문이 전체 매출의 39%로 주택 경기에 노출</li>
+        <li>미국 시장에만 100% 의존 (지리적 집중 리스크)</li>
+        <li>숙련 기술자 확보·유지 어려움 (인건비 상승 압력)</li>
+        <li>대형 프로젝트 비중 증가에 따른 실행 리스크</li>
+        <li>내부자(Gendell) 지속적 매도로 시장 불안 유발</li>
+      </ul>
+    </div>
+    <div class="swot-card opportunity">
+      <div class="swot-title">🌟 기회 (Opportunities)</div>
+      <ul>
+        <li>AI/클라우드 인프라 투자 슈퍼사이클 (2030년까지 $3조)</li>
+        <li>파편화된 시장에서 지속적 M&A 기회 (Gulf Island 인수 등)</li>
+        <li>제조 역량 확대로 고마진 인프라 솔루션 비중 확대 가능</li>
+        <li>에너지 전환(태양광, 풍력) 관련 전기 시공 수요 증가</li>
+        <li>주택 시장 회복 시 주거 부문 실적 반등 잠재력</li>
+      </ul>
+    </div>
+    <div class="swot-card threat">
+      <div class="swot-title">🔥 위협 (Threats)</div>
+      <ul>
+        <li>데이터센터 투자 사이클 둔화 또는 조정 가능성</li>
+        <li>고금리 장기화로 인한 건설 투자 위축</li>
+        <li>대형 경쟁사(EMCOR, Quanta)의 시장 확대</li>
+        <li>자재 비용(구리, 변압기) 인플레이션 압력</li>
+        <li>숙련 인력 부족 심화로 프로젝트 지연 리스크</li>
+        <li>지정학적 리스크로 인한 경기 침체 가능성</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 6. 경제적 해자 -->
+<section id="moat">
+<div class="container">
+  <div class="section-label">06 — Economic Moat</div>
+  <div class="section-title">경제적 해자 분석</div>
+
+  <div class="prose">
+    <p><strong>"경제적 해자(moat)"란</strong> 중세 성 주위의 물길처럼, 경쟁자가 쉽게 넘어올 수 없는 경쟁 우위 요소를 말합니다. IES Holdings의 해자를 분석합니다.</p>
+  </div>
+
+  <div class="two-col" style="margin-top:24px;">
+    <div>
+      <h3 style="color:#fff; font-size:16px; margin-bottom:12px;">차별화 vs 원가 우위 판별</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>지표</th><th>IESC</th><th>산업 평균</th><th>판정</th></tr>
+          <tr><td>NOPAT 마진</td><td>8.6%</td><td>~5%</td><td><span class="tag tag-green">1.7배</span></td></tr>
+          <tr><td>투자자본 회전율</td><td>~3.3x</td><td>~2.0x</td><td><span class="tag tag-green">1.7배</span></td></tr>
+          <tr><td>ROIC</td><td>28.3%</td><td>~10%</td><td><span class="tag tag-green">2.8배</span></td></tr>
+        </table>
+      </div>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:12px;">NOPAT 마진과 투자자본 회전율 모두 산업 평균보다 높습니다. CAP 프레임워크 기준, 두 지표 모두 우수한 경우는 드물며, IES는 <strong>차별화와 운영 효율성을 모두 갖춘</strong> 유형에 해당합니다.</p>
+    </div>
+    <div>
+      <h3 style="color:#fff; font-size:16px; margin-bottom:12px;">해자의 원천</h3>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-title">🔧 숙련 인력 + 실행력</div>
+        <p>데이터센터 전기·통신 시공은 높은 수준의 기술력과 경험이 필요합니다. IES는 10,000명 이상의 숙련 기술자를 보유하고 있으며, 대형 프로젝트에서의 실행 트랙레코드가 고객 재계약의 핵심 동력입니다.</p>
+      </div>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-title">🏭 수직 통합 제조 역량</div>
+        <p>IES는 맞춤형 발전기 인클로저, 버스덕트 등을 직접 제조합니다. 3년간 100만 sq.ft 이상의 제조 시설을 추가했으며, 이 역량은 시공만 하는 경쟁사 대비 차별점입니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">🤝 고객 관계 & 전환 비용</div>
+        <p>대형 데이터센터 프로젝트는 시공사를 중간에 바꾸기 어렵습니다. IES가 설계·제조·시공을 통합 제공하므로, 고객 입장에서 전환 비용이 상당합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <div class="callout-title">해자 지속 가능성 평가: 중간~높음</div>
+    <p>IES의 해자는 "좁은 해자(narrow moat)" 수준으로 판단됩니다. 데이터센터 수요가 지속되는 한 강력하지만, 건설·시공업의 구조적 특성상 브랜드 파워나 네트워크 효과 같은 "넓은 해자" 요소는 부족합니다. 다만, 숙련 인력 확보 어려움과 수직 통합 제조 역량은 경쟁자가 단기간에 복제하기 어려운 요소입니다. CAP 프레임워크 기준, 산업 부문(Industrial) 페이드 비율 0.21을 적용하되, IES의 제조 역량을 감안해 약간 낮은 0.19를 기본값으로 사용합니다.</p>
+  </div>
+</div>
+</section>
+
+<!-- 7. 생애주기 -->
+<section id="lifecycle">
+<div class="container">
+  <div class="section-label">07 — Lifecycle Stage</div>
+  <div class="section-title">기업 생애주기 판별</div>
+  
+  <div class="prose">
+    <p><strong>"기업 생애주기"란</strong> 기업이 태어나서(도입) → 빠르게 커가고(성장) → 안정기에 접어들며(성숙) → 쇠퇴하는 과정을 말합니다. 현금흐름표의 패턴으로 현재 단계를 판별합니다.</p>
+  </div>
+
+  <div class="table-wrap" style="margin-top:16px;">
+    <table>
+      <tr><th>현금흐름 항목</th><th>FY2025</th><th>부호</th><th>H1 FY2026</th><th>부호</th></tr>
+      <tr><td>영업활동 현금흐름</td><td>~$321M</td><td style="color:var(--green);">유입 (+)</td><td>$131M</td><td style="color:var(--green);">유입 (+)</td></tr>
+      <tr><td>투자활동 현금흐름</td><td>~-$187M</td><td style="color:var(--red);">유출 (-)</td><td>-$221M</td><td style="color:var(--red);">유출 (-)</td></tr>
+      <tr><td>재무활동 현금흐름</td><td>~-$30M</td><td style="color:var(--red);">유출 (-)</td><td>+$12.5M</td><td style="color:var(--green);">유입 (+)</td></tr>
+    </table>
+  </div>
+
+  <div class="lifecycle">
+    <div class="lifecycle-stage">
+      도입기
+      <span class="cf-pattern">- / - / +</span>
+    </div>
+    <div class="lifecycle-stage active" style="flex:1.3;">
+      <strong>성장기 ↔ 성숙기</strong>
+      <span class="cf-pattern">+ / - / ± 전환 중</span>
+    </div>
+    <div class="lifecycle-stage">
+      성숙기
+      <span class="cf-pattern">+ / - / -</span>
+    </div>
+    <div class="lifecycle-stage">
+      정리기
+      <span class="cf-pattern">혼합</span>
+    </div>
+    <div class="lifecycle-stage">
+      감소기
+      <span class="cf-pattern">- / + / ±</span>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">판정: 성장~성숙기 전환 구간</div>
+    <p>FY2025 기준으로는 <strong>성숙기</strong>(+/-/-)에 해당하나, H1 FY2026에서는 Gulf Island 인수를 위한 차입이 발생하면서 재무활동이 유입으로 전환되어 <strong>성장기</strong>(+/-/+) 패턴을 보입니다. 이는 IES가 데이터센터 수요에 대응해 적극적으로 투자·인수를 진행하면서 다시 성장 모드에 진입했음을 시사합니다. CAP 분석이 적합한 단계입니다.</p>
+  </div>
+</div>
+</section>
+
+<!-- 8. DCF 모델 -->
+<section id="dcf">
+<div class="container">
+  <div class="section-label">08 — DCF Model</div>
+  <div class="section-title">DCF 모델 구축 (전시 23 형식)</div>
+
+  <div class="prose">
+    <p><strong>"DCF 모델"이란</strong> "미래에 벌어들일 현금을 오늘 가치로 환산하면 이 기업이 얼마의 가치가 있는가?"를 계산하는 방법입니다. 미래 현금흐름을 예측하고, 이를 적절한 할인율로 "깎아서" 현재 가치로 만듭니다.</p>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:24px 0 16px;">주요 가정값</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>가정 항목</th><th>값</th><th>출처/근거</th></tr>
+      <tr><td>기준 연도</td><td>FY2025 (Sep 2025)</td><td>최근 완전 회계연도</td></tr>
+      <tr><td>기준 매출</td><td>$3,371M</td><td>IES FY2025 실적</td></tr>
+      <tr><td>EBITA 마진</td><td>11.4% → 유지</td><td>FY2025 영업이익률</td></tr>
+      <tr><td>유효 세율</td><td>25.0%</td><td>FY2025: 24.6% 반올림</td></tr>
+      <tr><td>매출 성장률 (1~3년)</td><td>15%</td><td>컨센서스 ~19%, 보수적 조정</td></tr>
+      <tr><td>매출 성장률 (4~5년)</td><td>10%</td><td>데이터센터 성장 지속 반영</td></tr>
+      <tr><td>장기 성장률 (g)</td><td>2.5%</td><td>FRED 10년 기대인플레이션 2.45%</td></tr>
+      <tr><td>무위험 이자율</td><td>4.6%</td><td>미국 10년 국채 수익률 (5/15/2026)</td></tr>
+      <tr><td>ERP</td><td>4.23%</td><td>다모다란 2026년 1월</td></tr>
+      <tr><td>베타 (원시 → 조정)</td><td>1.71 → 1.47</td><td>StockAnalysis / 블룸 조정</td></tr>
+      <tr><td>자기자본비용</td><td>10.8%</td><td>4.6% + 1.47 × 4.23%</td></tr>
+      <tr><td>WACC</td><td>10.8%</td><td>부채 비중 ~1%, 거의 전액 자기자본</td></tr>
+      <tr><td>페이드 비율</td><td>0.19</td><td>산업(0.21) 기반, 제조역량 감안 하향</td></tr>
+      <tr><td>미래 투자율</td><td>NOPAT의 ~55%</td><td>FY2025 capex+WC 변동 기반 추정</td></tr>
+    </table>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:32px 0 16px;">DCF 테이블 (10년 명시적 예측)</h3>
+  <div class="table-wrap">
+    <table>
+      <tr>
+        <th>항목</th><th>Base<br>FY25</th><th>Y1<br>FY26</th><th>Y2<br>FY27</th><th>Y3<br>FY28</th><th>Y4<br>FY29</th><th>Y5<br>FY30</th><th>Y6<br>FY31</th><th>Y7<br>FY32</th><th>Y8<br>FY33</th><th>Y9<br>FY34</th><th>Y10<br>FY35</th>
+      </tr>
+      <tr><td>매출 ($M)</td><td>3,371</td><td>3,877</td><td>4,459</td><td>5,128</td><td>5,641</td><td>6,205</td><td>6,639</td><td>6,972</td><td>7,181</td><td>7,290</td><td>7,363</td></tr>
+      <tr><td>성장률 (%)</td><td>—</td><td>15.0</td><td>15.0</td><td>15.0</td><td>10.0</td><td>10.0</td><td>7.0</td><td>5.0</td><td>3.0</td><td>1.5</td><td>1.0</td></tr>
+      <tr><td>EBITA ($M)</td><td>384</td><td>442</td><td>508</td><td>585</td><td>643</td><td>707</td><td>757</td><td>795</td><td>819</td><td>831</td><td>839</td></tr>
+      <tr><td>EBITA 마진 (%)</td><td>11.4</td><td>11.4</td><td>11.4</td><td>11.4</td><td>11.4</td><td>11.4</td><td>11.4</td><td>11.4</td><td>11.4</td><td>11.4</td><td>11.4</td></tr>
+      <tr><td>세율 (%)</td><td>25</td><td>25</td><td>25</td><td>25</td><td>25</td><td>25</td><td>25</td><td>25</td><td>25</td><td>25</td><td>25</td></tr>
+      <tr><td>NOPAT ($M)</td><td>288</td><td>331</td><td>381</td><td>439</td><td>482</td><td>531</td><td>568</td><td>596</td><td>614</td><td>623</td><td>630</td></tr>
+      <tr><td>미래투자 ($M)</td><td>—</td><td>182</td><td>210</td><td>241</td><td>265</td><td>292</td><td>312</td><td>328</td><td>338</td><td>343</td><td>346</td></tr>
+      <tr><td>FCF ($M)</td><td>—</td><td>149</td><td>172</td><td>197</td><td>217</td><td>239</td><td>255</td><td>268</td><td>276</td><td>280</td><td>283</td></tr>
+      <tr><td>할인계수 (mid-yr)</td><td>—</td><td>0.951</td><td>0.858</td><td>0.774</td><td>0.699</td><td>0.630</td><td>0.569</td><td>0.513</td><td>0.463</td><td>0.418</td><td>0.377</td></tr>
+      <tr class="highlight-row"><td>FCF 현재가치 ($M)</td><td>—</td><td>142</td><td>147</td><td>153</td><td>152</td><td>150</td><td>145</td><td>138</td><td>128</td><td>117</td><td>107</td></tr>
+    </table>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:32px 0 16px;">가치 산출 요약</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>항목</th><th>값</th><th>설명</th></tr>
+      <tr><td>명시적 예측기간 FCF PV 합계</td><td>$1,379M</td><td>10년간 할인된 잉여현금흐름 합</td></tr>
+      <tr><td>최종 가치 (페이드 모델)</td><td>$5,430M</td><td>10년 이후 영구 가치 (할인 전)</td></tr>
+      <tr><td>최종 가치 현재가치</td><td>$2,047M</td><td>최종 가치를 현재로 할인</td></tr>
+      <tr class="highlight-row"><td>기업 가치 (Enterprise Value)</td><td>$3,426M</td><td>예측기간 PV + 최종가치 PV</td></tr>
+      <tr><td>(-) 순부채</td><td>~$0M</td><td>사실상 무차입 (현금 > 부채)</td></tr>
+      <tr><td>(+) 비영업 자산</td><td>~$105M</td><td>유가증권 투자 등</td></tr>
+      <tr class="highlight-row"><td>자기자본 가치</td><td>$3,531M</td><td></td></tr>
+      <tr><td>발행주식 (백만)</td><td>20.15</td><td>희석 기준</td></tr>
+      <tr class="highlight-row"><td>주당 가치 (10년 CAP)</td><td>~$175</td><td>10년 명시적 예측 기간 기준</td></tr>
+      <tr><td>현재 주가</td><td>$682</td><td>2026.5.15 종가</td></tr>
+    </table>
+  </div>
+
+  <div class="callout red" style="margin-top:24px;">
+    <div class="callout-title">주요 발견: 10년 예측으로는 현재 주가를 설명할 수 없음</div>
+    <p>10년간의 보수적 DCF 모델 결과, 주당 가치는 약 $175로 현재 주가 $682의 약 26% 수준입니다. 이는 시장이 IES에 대해 <strong>매우 긴 경쟁 우위 기간(CAP)</strong>을 반영하고 있음을 의미합니다. 다음 섹션에서 시장 내재 CAP를 역산합니다.</p>
+  </div>
+</div>
+</section>
+
+<!-- 9. 내재 CAP -->
+<section id="cap">
+<div class="container">
+  <div class="section-label">09 — Implied CAP</div>
+  <div class="section-title">시장 내재 경쟁 우위 기간(CAP) 역산</div>
+
+  <div class="prose">
+    <p><strong>"시장 내재 CAP"란</strong> "현재 주가가 정당화되려면, 이 기업이 자본비용을 초과하는 수익을 몇 년간 유지해야 하는가?"를 역으로 계산한 것입니다. 주가에 숨겨진 시장의 기대치를 읽는 방법입니다.</p>
+  </div>
+
+  <div class="table-wrap" style="margin-top:24px;">
+    <table>
+      <tr><th>예측 기간</th><th>주당 가치</th><th>현재 주가 대비</th><th>판정</th></tr>
+      <tr><td>5년</td><td>~$118</td><td>17%</td><td>불일치</td></tr>
+      <tr><td>10년</td><td>~$175</td><td>26%</td><td>불일치</td></tr>
+      <tr><td>15년</td><td>~$300</td><td>44%</td><td>불일치</td></tr>
+      <tr><td>20년</td><td>~$460</td><td>67%</td><td>불일치</td></tr>
+      <tr><td>25년</td><td>~$610</td><td>89%</td><td>근접</td></tr>
+      <tr class="highlight-row"><td>~27년</td><td>~$682</td><td>100%</td><td>일치</td></tr>
+      <tr><td>30년</td><td>~$750</td><td>110%</td><td>초과</td></tr>
+    </table>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <div class="callout-title">시장 내재 CAP: 약 25~27년</div>
+    <p>현재 주가 $682를 정당화하려면, 시장은 IES가 <strong>약 25~27년간 자본비용(10.8%)을 초과하는 수익을 계속 낼 것</strong>이라고 기대하고 있습니다.</p>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:32px 0 16px;">CAP 합리성 평가</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>내재 CAP</th><th>해석</th><th>방향성</th></tr>
+      <tr><td>5년 미만</td><td>시장이 매우 비관적</td><td style="color:var(--green);">매수 후보</td></tr>
+      <tr><td>5~10년</td><td>약간 비관적</td><td style="color:var(--green);">해자 확실하면 매수</td></tr>
+      <tr><td>10~15년</td><td>합리적 범위</td><td>중립</td></tr>
+      <tr><td>15~20년</td><td>약간 낙관적</td><td style="color:var(--orange);">강력한 해자 근거 필요</td></tr>
+      <tr class="highlight-row"><td>20년 초과</td><td>과도한 낙관</td><td style="color:var(--red);">회피 고려</td></tr>
+    </table>
+  </div>
+
+  <div class="callout red" style="margin-top:24px;">
+    <div class="callout-title">판정: 시장 기대가 과도하게 낙관적인 영역</div>
+    <p><strong>25~27년의 내재 CAP는 역사적 기준으로 매우 높은 수준입니다.</strong> 미국 상장 기업의 평균 상장 기간이 11.7년(중앙값 6.8년)이며, 100개 기업 중 18개만 생존한다는 경험적 데이터를 고려하면, 시장은 IES가 극소수의 "슈퍼스타 기업"에 해당한다고 가격을 매기고 있습니다.</p>
+    <p style="margin-top:8px;">IES의 산업(Industrial) 섹터 집계 ROIC는 8.4%이고, 동 섹터의 대부분 기업들은 10~15년 이내에 초과 수익이 평균 회귀합니다. IES가 데이터센터 붐의 직접 수혜주이긴 하나, <strong>건설·시공업이 25년 이상 초과 수익을 유지한 사례는 극히 드뭅니다.</strong> 이 밸류에이션은 데이터센터 투자 슈퍼사이클이 장기간 지속된다는 전제에 크게 의존합니다.</p>
+  </div>
+</div>
+</section>
+
+<!-- 10. 민감도 분석 -->
+<section id="sensitivity">
+<div class="container">
+  <div class="section-label">10 — Sensitivity & Scenarios</div>
+  <div class="section-title">민감도 및 시나리오 분석</div>
+
+  <h3 style="color:#fff; font-size:18px; margin-bottom:16px;">자본비용(WACC) 변동 시 내재 CAP</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>WACC</th><th>9.8% (-1%p)</th><th>10.8% (기본)</th><th>11.8% (+1%p)</th></tr>
+      <tr><td>주당 가치 (15년)</td><td>$370</td><td>$300</td><td>$248</td></tr>
+      <tr><td>내재 CAP (년)</td><td>~22년</td><td>~27년</td><td>~32년+</td></tr>
+    </table>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:32px 0 16px;">성장률 변동 시 내재 CAP</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>초기 성장률</th><th>13% (-2%p)</th><th>15% (기본)</th><th>17% (+2%p)</th></tr>
+      <tr><td>주당 가치 (15년)</td><td>$265</td><td>$300</td><td>$340</td></tr>
+      <tr><td>내재 CAP (년)</td><td>~30년+</td><td>~27년</td><td>~23년</td></tr>
+    </table>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:32px 0 16px;">페이드 비율 변동</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>페이드 비율</th><th>0.15 (낙관)</th><th>0.19 (기본)</th><th>0.25 (비관)</th></tr>
+      <tr><td>최종 가치 ($M)</td><td>$6,800</td><td>$5,430</td><td>$4,100</td></tr>
+      <tr><td>주당 가치 (15년)</td><td>$350</td><td>$300</td><td>$240</td></tr>
+    </table>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:32px 0 16px;">시나리오 분석</h3>
+  <div class="scenario-grid">
+    <div class="scenario-card bear">
+      <div class="scenario-label">약세 (Bear)</div>
+      <div class="scenario-value">~$180</div>
+      <div class="scenario-sub">데이터센터 투자 둔화,<br>주거 부문 지속 부진,<br>성장률 10%, 마진 축소</div>
+    </div>
+    <div class="scenario-card base">
+      <div class="scenario-label">기본 (Base)</div>
+      <div class="scenario-value">~$300</div>
+      <div class="scenario-sub">데이터센터 성장 지속,<br>주거 부문 점진적 회복,<br>성장률 15%, 마진 유지</div>
+    </div>
+    <div class="scenario-card bull">
+      <div class="scenario-label">강세 (Bull)</div>
+      <div class="scenario-value">~$500</div>
+      <div class="scenario-sub">AI 슈퍼사이클 20년+,<br>M&A로 시장점유율 확대,<br>성장률 18%, 마진 개선</div>
+    </div>
+  </div>
+  <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">15년 명시적 예측 기간 기준 주당 가치. 강세 시나리오에서도 현재 주가 $682에는 미달합니다.</p>
+</div>
+</section>
+
+<!-- 11. 피어그룹 -->
+<section id="peers">
+<div class="container">
+  <div class="section-label">11 — Peer Comparison</div>
+  <div class="section-title">피어그룹 비교</div>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>기업</th><th>티커</th><th>시총 ($B)</th><th>매출 ($B)</th><th>P/E</th><th>P/S</th><th>ROE (%)</th><th>순이익률 (%)</th><th>D/E</th></tr>
+      <tr class="highlight-row"><td>IES Holdings</td><td>IESC</td><td>13.6</td><td>3.6</td><td>~38</td><td>3.8</td><td>38.5</td><td>10.5</td><td>0.09</td></tr>
+      <tr><td>EMCOR Group</td><td>EME</td><td>~27</td><td>14.6</td><td>~30</td><td>1.9</td><td>~40</td><td>~6.5</td><td>~0.1</td></tr>
+      <tr><td>Comfort Systems</td><td>FIX</td><td>~20</td><td>7.0</td><td>~47</td><td>2.8</td><td>~45</td><td>11.4</td><td>~0.2</td></tr>
+      <tr><td>Quanta Services</td><td>PWR</td><td>~50</td><td>23.7</td><td>~45</td><td>2.1</td><td>~20</td><td>~4.5</td><td>~0.5</td></tr>
+      <tr><td>Dycom Industries</td><td>DY</td><td>~8</td><td>4.7</td><td>~28</td><td>1.7</td><td>~25</td><td>~6</td><td>~0.6</td></tr>
+      <tr><td>MYR Group</td><td>MYRG</td><td>~3</td><td>3.3</td><td>~22</td><td>0.9</td><td>~15</td><td>~3.5</td><td>~0.3</td></tr>
+    </table>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <div class="callout-title">피어그룹 대비 특징</div>
+    <p>IES의 <strong>P/E 38배, P/S 3.8배</strong>는 피어그룹 내에서 높은 편입니다. Comfort Systems(FIX)와 Quanta(PWR)도 높은 밸류에이션을 받고 있지만, 이들은 각각 매출 규모에서 IES의 2배, 7배입니다. IES는 순이익률(10.5%)과 ROE(38.5%)에서 상위권이며, 부채가 거의 없는 것이 큰 장점입니다. 그러나 규모 대비 프리미엄이 가장 높아, <strong>밸류에이션 정당화의 부담도 가장 큽니다.</strong></p>
+  </div>
+</div>
+</section>
+
+<!-- 12. 리스크 -->
+<section id="risk">
+<div class="container">
+  <div class="section-label">12 — Risks & Checkpoints</div>
+  <div class="section-title">주요 리스크 및 체크포인트</div>
+
+  <div class="card-grid">
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <div class="card-title">🔴 밸류에이션 리스크 (높음)</div>
+      <p>내재 CAP 25~27년은 역사적으로 극소수 기업만 달성한 수준입니다. 데이터센터 투자 사이클이 예상보다 빨리 둔화되거나, 경쟁 심화로 마진이 압축되면 주가 하방 압력이 큽니다.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--red);">
+      <div class="card-title">🔴 데이터센터 집중 리스크 (높음)</div>
+      <p>Communications와 Infrastructure Solutions 부문의 성장이 데이터센터 한 가지 엔드마켓에 크게 의존합니다. AI 투자 과열 조정, 빅테크 capex 삭감 시 매출 성장이 급격히 둔화될 수 있습니다.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--orange);">
+      <div class="card-title">🟠 인력 리스크 (중간)</div>
+      <p>숙련 전기 기술자 부족은 산업 전반의 구조적 문제입니다. IES는 10,000명 이상의 인력을 유지해야 하며, 인건비 상승은 마진 압축으로 이어질 수 있습니다.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--orange);">
+      <div class="card-title">🟠 내부자 매도 (중간)</div>
+      <p>최근 6개월간 내부자 거래 78건이 모두 매도입니다. 특히 경영진의 대규모 주식 매각은 시장 신뢰에 영향을 줄 수 있습니다. 다만, 세금 목적이나 분산 투자 목적일 수도 있어 해석에 주의가 필요합니다.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--blue);">
+      <div class="card-title">🔵 주거 부문 회복 (모니터링)</div>
+      <p>주거 부문은 미국 금리 인하 시 회복 가능성이 있습니다. 그러나 현재 높은 인플레이션과 중동 긴장으로 금리 인하가 지연되고 있어, 단기 회복은 불확실합니다.</p>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--blue);">
+      <div class="card-title">🔵 M&A 통합 리스크 (모니터링)</div>
+      <p>Gulf Island Fabrication, Arrow Engine 등 최근 인수를 진행 중이며, 이러한 인수가 기대한 시너지를 내는지 지켜봐야 합니다.</p>
+    </div>
+  </div>
+
+  <h3 style="color:#fff; font-size:18px; margin:32px 0 16px;">분기별 체크포인트</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>확인 항목</th><th>경계 수준</th><th>의미</th></tr>
+      <tr><td>Communications 성장률</td><td>+20% 미만 지속</td><td>데이터센터 수요 둔화 신호</td></tr>
+      <tr><td>수주잔고(Backlog)</td><td>$3B 미만 하락</td><td>미래 매출 가시성 악화</td></tr>
+      <tr><td>영업이익률</td><td>10% 미만 하락</td><td>마진 압축, 경쟁 심화</td></tr>
+      <tr><td>Residential 매출</td><td>-15% 이상 감소</td><td>주택 경기 심각한 침체</td></tr>
+      <tr><td>내부자 매도 규모</td><td>분기 $50M+ 매도</td><td>경영진 신뢰 문제</td></tr>
+      <tr><td>부채비율</td><td>D/E 0.3 초과</td><td>재무 건전성 악화</td></tr>
+    </table>
+  </div>
+
+  <div style="margin-top:40px; padding: 24px; background: var(--surface); border-radius: 12px; border: 1px solid var(--border);">
+    <h3 style="color:#fff; font-size:18px; margin-bottom:16px;">한계와 가정 (Limitations & Assumptions)</h3>
+    <div class="prose">
+      <p><strong>이 결론이 의존하는 가정:</strong> (1) 데이터센터 건설 슈퍼사이클이 최소 5~10년 지속 (2) IES의 EBITA 마진이 현재 수준(11.4%)을 유지 (3) 숙련 인력 확보가 성장의 제약 요인이 되지 않음</p>
+      <p><strong>확신도 낮은 지점:</strong> (1) 25~27년 내재 CAP의 합리성 — 건설·시공업에서 이 정도 CAP를 가진 선례가 거의 없음 (2) 데이터센터 투자의 주기적 조정 규모와 시기 (3) 베타 1.71의 적정성 — 최근 급등에 따른 과대 추정 가능성</p>
+      <p><strong>이 결론이 틀릴 수 있는 조건:</strong> (1) AI 투자가 기대를 초과하여 데이터센터 수요가 20년+ 지속 시 → 현재 밸류에이션이 정당화될 수 있음 (2) IES가 M&A를 통해 매출 $10B+ 기업으로 성장하며 시장 지위가 근본적으로 변화할 경우</p>
+      <p><strong>다음 검증 단계:</strong> FY2026 Q3 실적 (2026년 8월 예상)에서 Communications 성장 지속 여부, 수주잔고 추이, Gulf Island 통합 진행 상황 확인</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <p style="margin-bottom:8px;">분석 기준일: 2026년 5월 18일 | 데이터 출처: SEC Filings, Yahoo Finance, Morningstar, FRED, Damodaran Online</p>
+    <p>이 보고서는 투자 권유가 아닌 정보 제공 목적으로 작성되었습니다. 투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.</p>
+  </div>
+</footer>
+
+</body>
+</html>

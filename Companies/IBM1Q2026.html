@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBM 종합 분석 · 경쟁우위기간(CAP) 프레임워크</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,500&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --paper:#F4F0E8; --paper2:#EDE7DA; --card:#FBF9F4; --ink:#1B232E; --ink2:#3C4654;
+  --muted:#6B7280; --line:#D9D2C4; --line2:#C8BFAD;
+  --blue:#1F4E79; --blue2:#2E6DA4; --steel:#4A6A8A;
+  --amber:#C2691C; --amber2:#E08A2B; --gold:#B8860B;
+  --green:#2F7D5B; --red:#B2402F; --redL:#D9694F;
+  --serif:'Fraunces',Georgia,serif; --sans:'Archivo',system-ui,sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--sans);
+  font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 12% 8%, rgba(46,109,164,.05), transparent 38%),
+                   radial-gradient(circle at 88% 92%, rgba(194,105,28,.05), transparent 42%);
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.18;letter-spacing:-.01em}
+.mono{font-family:var(--mono)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(244,240,232,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);}
+.topbar .row{display:flex;align-items:center;justify-content:space-between;padding:11px 22px;max-width:1080px;margin:0 auto}
+.brand{font-family:var(--serif);font-weight:800;font-size:18px;letter-spacing:-.02em}
+.brand b{color:var(--amber)}
+.tnav{display:flex;gap:3px;flex-wrap:wrap}
+.tnav a{font-size:12.5px;color:var(--ink2);text-decoration:none;padding:5px 9px;border-radius:6px;font-weight:500}
+.tnav a:hover{background:var(--paper2);color:var(--blue)}
+@media(max-width:820px){.tnav{display:none}}
+
+/* ---------- hero ---------- */
+.hero{padding:64px 0 40px;border-bottom:2px solid var(--ink);position:relative}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);font-weight:600}
+.hero h1{font-size:clamp(38px,6vw,68px);margin:14px 0 6px;font-weight:800}
+.hero .sub{font-family:var(--serif);font-style:italic;font-size:clamp(18px,2.4vw,24px);color:var(--ink2);font-weight:500}
+.tickerline{display:flex;gap:22px;flex-wrap:wrap;align-items:baseline;margin-top:22px;font-family:var(--mono);font-size:14px}
+.tickerline .px{font-size:30px;font-weight:600;color:var(--ink)}
+.tickerline .chg.dn{color:var(--red)} .tickerline .chg.up{color:var(--green)}
+.tickerline span small{color:var(--muted);font-size:11px;display:block;letter-spacing:.04em}
+
+.verdict{margin:30px 0 8px;background:linear-gradient(135deg,#1B232E,#26303f);color:#F4F0E8;border-radius:16px;padding:28px 30px;
+  box-shadow:0 18px 40px -20px rgba(27,35,46,.55);position:relative;overflow:hidden}
+.verdict::before{content:"";position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(224,138,43,.22),transparent 70%)}
+.verdict .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber2)}
+.verdict p{font-family:var(--serif);font-size:clamp(18px,2.5vw,23px);line-height:1.5;margin-top:10px;font-weight:500}
+.verdict p b{color:var(--amber2);font-weight:600}
+.verdict .conf{margin-top:14px;font-family:var(--mono);font-size:12.5px;color:#C9CDD4}
+.verdict .conf b{color:#F4F0E8}
+
+/* ---------- metric strip ---------- */
+.mstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:26px 0 6px}
+@media(max-width:720px){.mstrip{grid-template-columns:repeat(2,1fr)}}
+.mcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 16px}
+.mcard .k{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.mcard .v{font-family:var(--serif);font-size:25px;font-weight:600;margin-top:4px;color:var(--ink)}
+.mcard .v small{font-size:13px;font-family:var(--sans);color:var(--ink2);font-weight:500}
+.mcard .d{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* ---------- sections ---------- */
+section{padding:46px 0;border-bottom:1px solid var(--line)}
+.sec-no{font-family:var(--mono);font-size:12px;color:var(--amber);letter-spacing:.18em;font-weight:600}
+section h2{font-size:clamp(26px,3.6vw,38px);margin:6px 0 4px;font-weight:700}
+.lead{font-size:17px;color:var(--ink2);max-width:760px;margin-bottom:8px}
+p{margin:12px 0}
+.tldr{background:var(--paper2);border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0;font-size:15.5px}
+.tldr b{color:var(--blue)}
+.note{background:#FBF4E9;border:1px solid #E8D6B6;border-radius:10px;padding:14px 18px;margin:16px 0;font-size:14.5px;color:#5A4422}
+.note b{color:var(--amber)}
+.warn{background:#FBEDE9;border:1px solid #ECCcc3;border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0;font-size:14.5px;color:#5e2a20}
+.glossary{font-size:13.5px;color:var(--ink2);background:var(--card);border:1px dashed var(--line2);border-radius:10px;padding:12px 16px;margin:14px 0}
+.glossary b{color:var(--blue);font-family:var(--mono);font-size:12.5px}
+
+/* generic cards/grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.card h3{font-size:19px;margin-bottom:6px}
+.card h4{font-size:15px;font-family:var(--sans);font-weight:700;color:var(--blue);margin-bottom:4px}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:14px 0}
+th,td{padding:8px 9px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+thead th{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+  border-bottom:1.5px solid var(--line2);background:var(--paper2)}
+tbody tr:hover{background:rgba(46,109,164,.04)}
+td.num,th.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.pos{color:var(--green);font-weight:600}.neg{color:var(--red);font-weight:600}
+
+.chartbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px 8px;margin:16px 0}
+.chartbox .ct{font-family:var(--serif);font-size:17px;font-weight:600;margin-bottom:2px}
+.chartbox .cs{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.canvas-h{position:relative;height:300px}
+
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;letter-spacing:.03em}
+.pill.b{background:#E3EBF3;color:var(--blue)} .pill.a{background:#F6E7D2;color:var(--amber)}
+.pill.g{background:#DDEEE5;color:var(--green)} .pill.r{background:#F4DDD7;color:var(--red)}
+.src{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+.footnote{font-size:12.5px;color:var(--muted)}
+ul.clean{list-style:none;margin:10px 0}
+ul.clean li{position:relative;padding-left:20px;margin:7px 0;font-size:14.5px}
+ul.clean li::before{content:"▸";position:absolute;left:0;color:var(--amber);font-size:13px;top:1px}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="row">
+  <div class="brand">IBM <b>·</b> CAP 분석</div>
+  <nav class="tnav">
+    <a href="#overview">개요</a><a href="#revenue">수익구조</a><a href="#tech">기술</a>
+    <a href="#industry">산업</a><a href="#swot">SWOT</a><a href="#moat">해자</a><a href="#peers">피어</a>
+    <a href="#lifecycle">생애주기</a><a href="#dcf">DCF</a><a href="#cap">내재 CAP</a>
+    <a href="#sens">민감도</a><a href="#scenario">시나리오</a><a href="#verdict2">종합</a><a href="#risk">리스크</a>
+  </nav>
+</div></div>
+
+<!-- ============ HERO ============ -->
+<header class="hero"><div class="wrap">
+  <div class="kicker">장기투자 분석 · 경쟁우위기간(CAP) 프레임워크</div>
+  <h1>IBM</h1>
+  <div class="sub">International Business Machines — 메인프레임의 제국, AI 시대의 재평가</div>
+
+  <div class="tickerline">
+    <span><span class="px num">$255</span><small>2026-05-27 종가 (NYSE)</small></span>
+    <span><span class="chg dn num">52주 −16.8%</span><small>고점 $324.90 / 저점 $212.34</small></span>
+    <span><span class="num">시총 ≈ $238B</span><small>발행주식 9.40억 주</small></span>
+    <span><span class="num">P/E ≈ 22.6 · 배당 2.6%</span><small>29년 연속 배당 증액</small></span>
+  </div>
+
+  <div class="verdict">
+    <div class="lbl">핵심 결론</div>
+    <p>현재가 $255는 IBM을 <b>저위험·채권형 복리기업</b>으로 보고 ~6.4%의 낮은 할인율을 적용할 때 약 <b>15년의 경쟁우위기간(CAP)</b>을 내재합니다(합리적~약간 낙관적 경계). 그러나 통상적 ~7.4% 할인율을 쓰면 20년을 초과하는 비현실적 CAP가 필요해, 시장은 IBM을 <b>가능 범위의 낙관적 끝단</b>에서 가격 매기고 있습니다.</p>
+    <p style="font-size:16px;margin-top:8px;color:#C9CDD4">밸류에이션의 운명을 가르는 변수는 화제의 'COBOL 해자 위협'(영향 미미)이 아니라 <b style="color:#E08A2B">할인율, 즉 베타</b>(영향 압도적)였습니다.</p>
+    <div class="conf">베이지안 신뢰도 — 낙관적 끝단 평가: <b>높음(~70%)</b> · 할인율이 최대 스윙변수: <b>높음(~85%)</b> · COBOL 위협은 성장·마진 경로로 작용(터미널 영향 작음): <b>중간(~60%)</b></div>
+  </div>
+
+  <div class="mstrip">
+    <div class="mcard"><div class="k">2025 매출</div><div class="v num">$67.5<small>B</small></div><div class="d">+8% (cc +6%)</div></div>
+    <div class="mcard"><div class="k">잉여현금흐름</div><div class="v num">$14.7<small>B</small></div><div class="d">10년 내 최고</div></div>
+    <div class="mcard"><div class="k">생애주기 단계</div><div class="v" style="font-size:21px">성숙기</div><div class="d">Mature · ROIC&gt;WACC</div></div>
+    <div class="mcard"><div class="k">시장 내재 CAP</div><div class="v num">≈15<small>년+</small></div><div class="d">낙관적 끝단</div></div>
+  </div>
+  <p class="src">기준 시점: 2026-05-27~28 · 출처: SEC 8-K/10-K·10-Q(IBM FY2025/1Q26), Google/CNBC/Morningstar/WSZ, FRED, Damodaran 2026 · 모든 수치는 방향성 위주(정밀도 아님)</p>
+</div></header>
+
+<main class="wrap">
+
+<!-- ============ 1. 기업 개요 ============ -->
+<section id="overview">
+  <div class="sec-no">01 — COMPANY OVERVIEW</div>
+  <h2>IBM은 어떤 회사인가</h2>
+  <p class="lead">한 문장 요약: <b>IBM은 은행·항공·정부 같은 거대 조직의 '심장부 전산 시스템'을 만들고(메인프레임), 그 위에서 돌아갈 소프트웨어를 팔고(레드햇·AI), 그것을 깔아주고 운영해주는(컨설팅) — 기업 IT의 종합 솔루션 회사</b>입니다.</p>
+
+  <div class="tldr">114년 역사의 IBM은 PC·하드디스크·ATM·바코드를 발명한 회사지만, 지금의 IBM은 그 시절과 전혀 다릅니다. 2018년 매출의 25%였던 <b>소프트웨어가 2025년 45%</b>로 커졌고, 회사는 스스로를 “하이브리드 클라우드 + AI 플랫폼 기업”이라 부릅니다.</div>
+
+  <div class="grid3" style="margin-top:18px">
+    <div class="card"><h4>설립 & 규모</h4>
+      <p style="font-size:14px">1911년 설립, 본사 미국 뉴욕주 아몽크. 175개국 사업, 임직원 <b>약 26.4만 명</b>. 다우존스 30종목 중 하나. 1993~2021년 29년 연속 미국 기업 특허 1위.</p></div>
+    <div class="card"><h4>핵심 사업 (3대 + 1)</h4>
+      <p style="font-size:14px"><b>소프트웨어</b>(레드햇·자동화·데이터·거래처리)<br><b>컨설팅</b>(전략·기술 도입·운영)<br><b>인프라</b>(메인프레임 IBM Z·스토리지)<br>+ 금융(고객 할부·리스)</p></div>
+    <div class="card"><h4>경영진 & 전략</h4>
+      <p style="font-size:14px">CEO 아빈드 크리슈나(Arvind Krishna). 2019년 <b>레드햇 $340억 인수</b>로 클라우드 전략을 '하이브리드'(자사 데이터센터 + 여러 클라우드 혼합)로 전환. 생성형 AI 누적 수주 <b>$125억+</b>.</p></div>
+  </div>
+
+  <div class="note"><b>비전공자를 위한 비유</b> — IBM을 '건물'로 비유하면: ① <b>메인프레임</b>은 건물의 철골·기초(절대 무너지면 안 되는 핵심 골조), ② <b>레드햇/소프트웨어</b>는 그 위의 전기·배관·엘리베이터(모든 층을 연결하는 시스템), ③ <b>컨설팅</b>은 이 건물을 설계·시공·관리해주는 건설사. 세 가지를 같이 쓰는 고객이 매출의 <b>80% 이상</b>이라, 한 곳에서 번 매출이 다른 곳 매출을 끌어옵니다(이것이 IBM이 강조하는 '플라이휠').</p>
+  </div>
+</section>
+
+<!-- ============ 2. 수익 구조 ============ -->
+<section id="revenue">
+  <div class="sec-no">02 — HOW IBM MAKES MONEY</div>
+  <h2>이 회사는 어떻게 돈을 버는가</h2>
+  <p class="lead">매출 $67.5B의 절반 가까이가 <b>소프트웨어</b>에서 나오고, 이익률도 소프트웨어가 압도적입니다. 즉 IBM의 '돈 버는 엔진'은 점점 더 소프트웨어 쪽으로 이동 중입니다.</p>
+
+  <div class="grid2">
+    <div class="chartbox">
+      <div class="ct">2025 사업부문별 매출 비중</div>
+      <div class="cs">단위: $B · 소프트웨어 45% / 컨설팅 31% / 인프라 23%</div>
+      <div class="canvas-h"><canvas id="revPie"></canvas></div>
+    </div>
+    <div class="chartbox">
+      <div class="ct">부문별 이익률 — '엔진'은 소프트웨어</div>
+      <div class="cs">세그먼트 이익률(%) · 소프트웨어가 가장 고마진</div>
+      <div class="canvas-h"><canvas id="marginBar"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 플라이휠 다이어그램 -->
+  <div class="card" style="margin-top:18px">
+    <h3>수익 플라이휠 — 세 사업이 서로를 끌어올린다</h3>
+    <p style="font-size:14px;color:var(--ink2)">고객이 한 부문을 도입하면 자연스럽게 다른 부문 수요가 발생하는 구조. 매출의 80%+가 3개 부문을 함께 거래하는 고객에서 발생.</p>
+    <svg viewBox="0 0 760 280" style="width:100%;height:auto;margin-top:8px" font-family="Archivo">
+      <defs>
+        <marker id="ar" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#C2691C"/></marker>
+        <linearGradient id="gc1" x1="0" x2="1"><stop offset="0" stop-color="#1F4E79"/><stop offset="1" stop-color="#2E6DA4"/></linearGradient>
+      </defs>
+      <!-- center -->
+      <circle cx="380" cy="140" r="58" fill="#1B232E"/>
+      <text x="380" y="132" text-anchor="middle" fill="#E08A2B" font-size="13" font-weight="700">플라이휠</text>
+      <text x="380" y="152" text-anchor="middle" fill="#F4F0E8" font-size="12">고객 80%+</text>
+      <text x="380" y="168" text-anchor="middle" fill="#C9CDD4" font-size="10">3개 부문 동시 거래</text>
+      <!-- nodes -->
+      <g>
+        <rect x="120" y="40" width="200" height="64" rx="12" fill="url(#gc1)"/>
+        <text x="220" y="66" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">소프트웨어 $30B</text>
+        <text x="220" y="86" text-anchor="middle" fill="#cfe0f0" font-size="11">레드햇·자동화·AI·거래처리 (45%)</text>
+      </g>
+      <g>
+        <rect x="440" y="40" width="200" height="64" rx="12" fill="#4A6A8A"/>
+        <text x="540" y="66" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">컨설팅 $21B</text>
+        <text x="540" y="86" text-anchor="middle" fill="#dde6ef" font-size="11">전략·도입·운영 (31%)</text>
+      </g>
+      <g>
+        <rect x="280" y="200" width="200" height="64" rx="12" fill="#C2691C"/>
+        <text x="380" y="226" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">인프라 $15.6B</text>
+        <text x="380" y="246" text-anchor="middle" fill="#fce6d0" font-size="11">메인프레임 IBM Z·스토리지 (23%)</text>
+      </g>
+      <!-- arrows around -->
+      <path d="M325,82 Q380,70 435,82" fill="none" stroke="#C2691C" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M540,108 Q470,170 482,205" fill="none" stroke="#C2691C" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M278,205 Q300,150 240,108" fill="none" stroke="#C2691C" stroke-width="2" marker-end="url(#ar)"/>
+      <text x="380" y="60" text-anchor="middle" fill="#6B7280" font-size="10.5">소프트웨어가 컨설팅 수요 창출</text>
+      <text x="556" y="165" text-anchor="end" fill="#6B7280" font-size="10.5">컨설팅이 인프라 도입 견인</text>
+      <text x="206" y="165" text-anchor="start" fill="#6B7280" font-size="10.5">인프라가 SW 라이선스 견인</text>
+    </svg>
+  </div>
+
+  <div class="grid3" style="margin-top:16px">
+    <div class="card"><h4>① 소프트웨어 (45%)</h4><p style="font-size:13.5px">연간반복매출(ARR) <b>$23.6B</b>. 한 번 깔면 매년 구독료가 들어오는 '구독형'이 핵심. 레드햇 +10%, 자동화 +14~18%, 데이터 +19%. 세그먼트 이익률 <b>~32%</b>로 가장 높음.</p></div>
+    <div class="card"><h4>② 컨설팅 (31%)</h4><p style="font-size:13.5px">사람이 일하는 노동집약 사업이라 이익률 <b>~10%</b>로 낮음. 수주잔고 <b>$32B</b>. AI 도입 자문 수요로 하반기 회복. 단, 2025 신규 수주는 −13%로 약점.</p></div>
+    <div class="card"><h4>③ 인프라 (23%)</h4><p style="font-size:13.5px">신형 메인프레임 <b>z17</b> 사이클로 IBM Z가 2025년 +48%(4분기 +67%) 급증. 이익률 ~18%. 하드웨어지만 SW·서비스 매출을 끌어오는 '미끼' 역할.</p></div>
+  </div>
+  <p class="src">출처: IBM 4Q25 8-K(2026-01-28), 2025 연차보고서, Futurum/Investing.com 부문 데이터</p>
+</section>
+<!-- CONTINUE -->
+
+<!-- ============ 3. 제품 / 기술력 ============ -->
+<section id="tech">
+  <div class="sec-no">03 — PRODUCTS & TECHNOLOGY</div>
+  <h2>핵심 제품과 기술 — 쉽게 풀어보기</h2>
+  <p class="lead">IBM의 기술은 어렵게 들리지만, 본질은 “세상에서 가장 안 멈추고 안 틀리는 컴퓨터 시스템”을 만드는 것입니다. 아래 4가지만 이해하면 IBM이 보입니다.</p>
+
+  <div class="grid2">
+    <div class="card"><span class="pill a">① 메인프레임 (IBM Z)</span>
+      <h3 style="margin-top:8px">절대 멈추면 안 되는 '슈퍼 금고 컴퓨터'</h3>
+      <p style="font-size:14px">은행 송금, 신용카드 승인, 항공권 예약처럼 1초도 멈추거나 틀리면 안 되는 거래를 처리하는 초고신뢰 컴퓨터. 일반 서버 수백 대 몫을 한 대가 처리. 신형 <b>z17</b>은 하루 <b>4,500억 건의 AI 추론</b>이 가능한 'AI 내장형'으로 진화 — 그래서 "AI가 메인프레임을 죽인다"가 아니라 "메인프레임이 AI 작업장이 된다"는 반론도 나옵니다.</p>
+    </div>
+    <div class="card"><span class="pill b">② 레드햇 / 하이브리드 클라우드</span>
+      <h3 style="margin-top:8px">여러 클라우드를 잇는 '만능 어댑터'</h3>
+      <p style="font-size:14px">기업들은 자사 데이터센터 + AWS + Azure + 구글을 섞어 씁니다(하이브리드). 레드햇의 <b>OpenShift</b>는 이 서로 다른 환경 위에서 소프트웨어가 똑같이 돌아가게 해주는 '표준 콘센트'. 민감한 데이터를 외부 클라우드에 못 올리는 규제 산업(금융·정부·의료)에서 특히 강함.</p>
+    </div>
+    <div class="card"><span class="pill g">③ watsonx (AI 플랫폼)</span>
+      <h3 style="margin-top:8px">기업 전용 '안전한 AI 작업대'</h3>
+      <p style="font-size:14px">ChatGPT 같은 소비자 AI와 달리, 기업이 자사 데이터로 <b>규제·보안·감사(governance)</b>를 지키며 AI를 쓰도록 돕는 도구. 생성형 AI 누적 수주 <b>$125억+</b>(소프트웨어 + SaaS + 컨설팅). 단, 과거 'Watson Health' 실패로 AI 신뢰엔 물음표도.</p>
+    </div>
+    <div class="card"><span class="pill r">④ 거래처리 & 양자(Quantum)</span>
+      <h3 style="margin-top:8px">'현금흐름 캐시카우' + '복권'</h3>
+      <p style="font-size:14px">거래처리 SW는 메인프레임 위 핵심 업무 SW로 <b>초고마진·초끈끈함</b>(여기가 COBOL 논쟁의 핵심). 양자컴퓨팅은 <b>2026년 5월 미 상무부와 $20억 'Anderon' 파운드리</b> 합작 발표로 주가 급등 — 성과는 미정인 '장기 옵션(복권)'.</p>
+    </div>
+  </div>
+
+  <!-- 생산/제공 흐름도 -->
+  <div class="card" style="margin-top:18px">
+    <h3>IBM의 가치 제공 흐름 (서비스가 만들어지는 과정)</h3>
+    <svg viewBox="0 0 820 130" style="width:100%;height:auto;margin-top:10px" font-family="Archivo" font-size="12">
+      <defs><marker id="ar2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#4A6A8A"/></marker></defs>
+      <g text-anchor="middle">
+        <rect x="10"  y="40" width="135" height="50" rx="10" fill="#FBF9F4" stroke="#1F4E79" stroke-width="1.5"/><text x="77" y="60" font-weight="700" fill="#1F4E79">19개 연구소</text><text x="77" y="77" fill="#6B7280" font-size="10.5">R&D·특허·반도체</text>
+        <rect x="180" y="40" width="135" height="50" rx="10" fill="#FBF9F4" stroke="#1F4E79" stroke-width="1.5"/><text x="247" y="60" font-weight="700" fill="#1F4E79">제품화</text><text x="247" y="77" fill="#6B7280" font-size="10.5">메인프레임·SW·AI</text>
+        <rect x="350" y="40" width="135" height="50" rx="10" fill="#FBF9F4" stroke="#C2691C" stroke-width="1.5"/><text x="417" y="60" font-weight="700" fill="#C2691C">M&amp;A 보강</text><text x="417" y="77" fill="#6B7280" font-size="10.5">레드햇·HashiCorp</text>
+        <rect x="520" y="40" width="135" height="50" rx="10" fill="#FBF9F4" stroke="#4A6A8A" stroke-width="1.5"/><text x="587" y="60" font-weight="700" fill="#4A6A8A">컨설팅 전달</text><text x="587" y="77" fill="#6B7280" font-size="10.5">설계·구축·운영</text>
+        <rect x="690" y="40" width="120" height="50" rx="10" fill="#1B232E"/><text x="750" y="60" font-weight="700" fill="#E08A2B">반복 매출</text><text x="750" y="77" fill="#C9CDD4" font-size="10.5">구독·라이선스</text>
+        <path d="M145,65 L178,65" stroke="#4A6A8A" stroke-width="2" marker-end="url(#ar2)"/>
+        <path d="M315,65 L348,65" stroke="#4A6A8A" stroke-width="2" marker-end="url(#ar2)"/>
+        <path d="M485,65 L518,65" stroke="#4A6A8A" stroke-width="2" marker-end="url(#ar2)"/>
+        <path d="M655,65 L688,65" stroke="#4A6A8A" stroke-width="2" marker-end="url(#ar2)"/>
+      </g>
+    </svg>
+    <p style="font-size:13px;color:var(--muted);margin-top:4px">핵심: IBM은 부족한 성장을 <b>대규모 인수(M&A)</b>로 메우는 경향이 큽니다(레드햇 $340억, HashiCorp $64억). 이는 매출을 늘리지만 영업권(goodwill)을 키워 자본효율(ROIC)을 떨어뜨리는 양날의 검 — 뒤의 DCF에서 핵심 변수가 됩니다.</p>
+  </div>
+</section>
+
+<!-- ============ 4. 산업 분석 ============ -->
+<section id="industry">
+  <div class="sec-no">04 — INDUSTRY ANALYSIS</div>
+  <h2>IBM이 속한 산업: 기업 IT · 하이브리드 클라우드 · AI</h2>
+  <p class="lead">IBM은 '엔터프라이즈 IT'(대기업·정부의 전산 인프라) 산업에 속합니다. 이 산업은 지금 <b>AI와 클라우드</b>라는 두 거대한 파도가 동시에 치는 격변기입니다.</p>
+
+  <div class="tldr">산업 구조 한눈에: 위로는 <b>하이퍼스케일러</b>(AWS·MS·구글)가 클라우드 인프라를 장악(2025 4분기 클라우드 지출 <b>$1,191억, +30%</b>), 아래로는 <b>SI·컨설팅</b>(액센추어 등)이 경쟁. IBM은 이 사이에서 '규제 산업의 신뢰할 수 있는 하이브리드 통제 계층'이라는 틈새를 지키는 포지션입니다.</div>
+
+  <!-- 가치사슬 -->
+  <div class="card" style="margin-top:6px">
+    <h3>엔터프라이즈 IT 가치사슬 — IBM은 어디에 있나</h3>
+    <svg viewBox="0 0 820 210" style="width:100%;height:auto;margin-top:8px" font-family="Archivo" font-size="11.5">
+      <g text-anchor="middle">
+        <!-- layers -->
+        <rect x="10" y="10" width="800" height="34" rx="8" fill="#E3EBF3"/><text x="410" y="32" font-weight="700" fill="#1F4E79">① 반도체·하드웨어 — NVIDIA, 인텔, 삼성 / IBM(메인프레임칩·양자)</text>
+        <rect x="10" y="52" width="800" height="34" rx="8" fill="#F6E7D2"/><text x="410" y="74" font-weight="700" fill="#C2691C">② 클라우드 인프라(IaaS) — AWS·Azure·Google ★지배 / IBM Cloud(소수)</text>
+        <rect x="10" y="94" width="800" height="34" rx="8" fill="#DDEEE5"/><text x="410" y="116" font-weight="700" fill="#2F7D5B">③ 플랫폼·SW(PaaS/SaaS) — 레드햇·watsonx ★IBM 강점 / 오라클·SAP·MS</text>
+        <rect x="10" y="136" width="800" height="34" rx="8" fill="#EDE7DA"/><text x="410" y="158" font-weight="700" fill="#4A6A8A">④ 통합·구축·운영(SI/컨설팅) — IBM 컨설팅 ★ / 액센추어·인도 IT</text>
+        <rect x="10" y="178" width="800" height="26" rx="8" fill="#1B232E"/><text x="410" y="196" font-weight="700" fill="#E08A2B">최종 고객 — 은행·항공·정부·통신·제조 (규제·미션크리티컬 영역에서 IBM 신뢰도 높음)</text>
+      </g>
+    </svg>
+    <p style="font-size:13px;color:var(--muted);margin-top:6px">IBM은 <b>③ 플랫폼·SW</b>와 <b>④ 통합·운영</b>에 가장 강하고, <b>② 클라우드 인프라</b>에서는 하이퍼스케일러에 밀립니다. 그래서 "우리 클라우드를 쓰라"가 아니라 "어느 클라우드를 쓰든 우리가 연결·관리해준다"는 전략을 택했습니다.</p>
+  </div>
+
+  <div class="grid3" style="margin-top:16px">
+    <div class="card"><h4>트렌드 ① AI 전환</h4><p style="font-size:13.5px">기업들이 생성형 AI를 도입하며 <b>자문·통합 수요 증가</b>(IBM에 +). 동시에 AI가 단순 코딩·운영을 자동화해 <b>프로젝트당 단가 하락 압력</b>(IBM에 −). 양면성.</p></div>
+    <div class="card"><h4>트렌드 ② 하이퍼스케일러 지배</h4><p style="font-size:13.5px">AWS·Azure·Google이 쿠버네티스·데이터·AI를 자사 서비스에 묶어 제공하며 IBM 같은 <b>제3자 계층의 필요성을 잠식</b>. 가격 경쟁 심화.</p></div>
+    <div class="card"><h4>트렌드 ③ 미션크리티컬 잔존</h4><p style="font-size:13.5px">규제·보안 때문에 핵심 업무는 여전히 <b>온프레미스/메인프레임</b>에 남음. 이 '못 옮기는 영역'이 IBM의 방어선이자 성장의 한계.</p></div>
+  </div>
+  <p class="src">출처: EBC/재경일보(국문), CNBC 클라우드 지출, IBM 연차보고서 · 본 산업 해석의 신뢰도: 중간~높음(~70%)</p>
+</section>
+
+</main>
+<!-- CONTINUE2 -->
+
+<main class="wrap">
+
+<!-- ============ 5. SWOT ============ -->
+<section id="swot">
+  <div class="sec-no">05 — SWOT</div>
+  <h2>SWOT 분석</h2>
+  <p class="lead">강점·약점·기회·위협을 한눈에. IBM의 본질은 “튼튼한 현금흐름과 끈끈한 고객을 가진 성숙기업이, 성장과 해자 모두에서 새 도전을 받는 상황”입니다.</p>
+  <div class="grid2" style="margin-top:6px">
+    <div class="card" style="border-top:4px solid var(--green)"><h3 style="color:var(--green)">S · 강점 (Strengths)</h3>
+      <ul class="clean">
+        <li>거래처리·메인프레임의 <b>극강 전환비용</b> — 한 번 깔면 수십 년 사용</li>
+        <li><b>$14.7B 잉여현금흐름</b> + 29년 연속 배당 증액 (재무 안정)</li>
+        <li>규제 산업(금융·정부) 신뢰 + 175개국 영업망</li>
+        <li>소프트웨어 ARR $23.6B의 <b>반복매출 기반</b></li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--red)"><h3 style="color:var(--red)">W · 약점 (Weaknesses)</h3>
+      <ul class="clean">
+        <li>저성장(~5~6%) — 하이퍼스케일러 대비 둔함</li>
+        <li>클라우드 인프라(IaaS)에서 <b>AWS·Azure에 열세</b></li>
+        <li>성장의 상당 부분을 <b>고가 M&A</b>에 의존 → 영업권 누적, 자본효율 저하</li>
+        <li>컨설팅 신규 수주 −13%, AI가 자동화하는 영역</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--blue)"><h3 style="color:var(--blue)">O · 기회 (Opportunities)</h3>
+      <ul class="clean">
+        <li>생성형 AI 도입 자문 — 누적 수주 $125억+ 가속</li>
+        <li>z17 메인프레임 사이클 + <b>'AI 작업장'으로의 재정의</b></li>
+        <li>양자컴퓨팅 — 미 정부 $20억 합작(장기 옵션)</li>
+        <li>규제 강화로 하이브리드/온프레미스 수요 잔존</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amber)"><h3 style="color:var(--amber)">T · 위협 (Threats)</h3>
+      <ul class="clean">
+        <li><b>AI 기반 COBOL 현대화</b>가 메인프레임 락인을 약화시킬 가능성</li>
+        <li>하이퍼스케일러의 번들링·가격 압박</li>
+        <li>AI 자동화로 컨설팅 단가 하락</li>
+        <li>거시: 고금리·인플레 재발 시 IT 투자 위축</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. 경제적 해자 ============ -->
+<section id="moat">
+  <div class="sec-no">06 — ECONOMIC MOAT</div>
+  <h2>경제적 해자 — 그리고 2026년의 균열</h2>
+  <p class="lead">'해자(moat)'란 경쟁자가 쉽게 못 넘어오게 막는 성벽입니다. IBM의 해자는 강력하지만, 2026년 2월 <b>AI가 그 성벽에 사다리를 걸 수 있다</b>는 공포가 주가를 25년 만에 최대폭으로 무너뜨렸습니다.</p>
+
+  <!-- moat diagram -->
+  <div class="card">
+    <h3>IBM의 4중 해자 — 그리고 위협 수준</h3>
+    <svg viewBox="0 0 800 250" style="width:100%;height:auto;margin-top:8px" font-family="Archivo" font-size="12">
+      <g>
+        <!-- castle center -->
+        <rect x="330" y="95" width="140" height="60" rx="8" fill="#1B232E"/>
+        <text x="400" y="122" text-anchor="middle" fill="#E08A2B" font-weight="700" font-size="14">IBM 코어</text>
+        <text x="400" y="140" text-anchor="middle" fill="#C9CDD4" font-size="10.5">거래처리·메인프레임</text>
+        <!-- 4 moats -->
+        <g text-anchor="middle">
+          <rect x="40" y="20" width="200" height="56" rx="10" fill="#DDEEE5" stroke="#2F7D5B"/><text x="140" y="42" font-weight="700" fill="#2F7D5B">전환비용 (강)</text><text x="140" y="60" fill="#3C4654" font-size="10.5">수십 년 누적 COBOL 코드</text>
+          <rect x="560" y="20" width="200" height="56" rx="10" fill="#DDEEE5" stroke="#2F7D5B"/><text x="660" y="42" font-weight="700" fill="#2F7D5B">규모·신뢰 (강)</text><text x="660" y="60" fill="#3C4654" font-size="10.5">금융·정부 미션크리티컬</text>
+          <rect x="40" y="174" width="200" height="56" rx="10" fill="#F6E7D2" stroke="#C2691C"/><text x="140" y="196" font-weight="700" fill="#C2691C">생태계·브랜드 (중)</text><text x="140" y="214" fill="#3C4654" font-size="10.5">레드햇 오픈소스 표준</text>
+          <rect x="560" y="174" width="200" height="56" rx="10" fill="#F4DDD7" stroke="#B2402F"/><text x="660" y="196" font-weight="700" fill="#B2402F">기술 우위 (위협)</text><text x="660" y="214" fill="#3C4654" font-size="10.5">AI가 COBOL 장벽 잠식?</text>
+        </g>
+        <!-- lines -->
+        <path d="M240,48 L330,110" stroke="#A9BBA9" stroke-width="1.5"/>
+        <path d="M560,48 L470,110" stroke="#A9BBA9" stroke-width="1.5"/>
+        <path d="M240,202 L330,140" stroke="#D8B48A" stroke-width="1.5"/>
+        <path d="M560,202 L470,140" stroke="#D89A8A" stroke-width="1.5" stroke-dasharray="4 3"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="warn" style="margin-top:18px">
+    <b>2026년 2월 23일의 사건 — IBM 25년 만의 최악의 하루(−13%)</b><br>
+    한 AI 기업이 자사 코딩 도구로 <b>COBOL(1959년산 금융 전산 언어) 현대화를 자동화</b>하는 시연을 공개했습니다. COBOL은 미국 ATM 거래의 95%를 떠받치는, IBM 메인프레임 락인의 뿌리입니다. "AI가 수십 년 묵은 'spaghetti code'를 해독·이전할 수 있다면, IBM의 가장 끈끈하고 고마진인 거래처리·컨설팅 해자가 무너질 수 있다"는 공포에 주가는 $223까지 급락(3개월 −20.6%)했습니다.
+  </div>
+
+  <div class="grid2">
+    <div class="card" style="border-left:4px solid var(--red)">
+      <h4 style="color:var(--red)">약세 논거 (해자 침식) — Steel-man</h4>
+      <ul class="clean">
+        <li>COBOL 이전의 핵심 난관은 '복잡성'이었는데, AI가 그 비용·리스크를 급감시키면 <b>고객이 메인프레임을 떠날 유인</b>이 생김</li>
+        <li>거래처리 SW·컨설팅은 IBM 이익의 <b>가장 고마진·끈끈한 원천</b> — 여기가 흔들리면 타격이 큼</li>
+        <li>AI 자동화는 컨설팅 <b>단가·인력 수요</b>를 직접 압박</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left:4px solid var(--green)">
+      <h4 style="color:var(--green)">반박 논거 (해자 유지) — Steel-man</h4>
+      <ul class="clean">
+        <li>해당 AI 도구는 메인프레임 문제의 <b>일부만</b> 해결 — 마이그레이션 ≠ 코드 변환</li>
+        <li>IBM도 <b>스스로 현대화 도구를 판매</b>(watsonx Code Assistant for Z) — 현대화는 IBM의 사업이기도 함</li>
+        <li>신형 z17은 <b>AI 내장 풀스택</b>(하루 4,500억 추론) — AI가 오히려 메인프레임 수요를 키울 수 있음</li>
+        <li>대기업 전환은 <b>느리고 위험회피적</b>(Y2K처럼 점진적)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note"><b>모델이 말하는 의외의 사실</b> — 본 분석의 민감도 검증 결과, 이 'COBOL 해자 논쟁'(=페이드 비율 0.10↔0.30)을 극단으로 바꿔도 주당가치는 <b>±1~3%</b>밖에 안 움직입니다. 즉 해자 침식은 <b>'먼 미래의 영구가치'보다 '향후 5~10년의 성장률·마진'을 통해</b> 더 크게 작용합니다. 시장이 2월에 −13%를 매긴 것은 터미널 해자가 아니라 <b>'성장·마진 경로가 꺾인다'</b>는 베팅이었던 셈입니다. (신뢰도 중간~60%)</div>
+</section>
+
+<!-- ============ 7. 피어그룹 비교 ============ -->
+<section id="peers">
+  <div class="sec-no">07 — PEER COMPARISON</div>
+  <h2>경쟁사 비교 — IBM의 위치</h2>
+  <p class="lead">IBM은 단일 경쟁자가 없는 '복합 기업'입니다. 소프트웨어로는 MS·오라클·SAP과, 컨설팅으로는 액센추어와, 인프라로는 자신이 분사시킨 Kyndryl·하이퍼스케일러와 겹칩니다.</p>
+
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th>기업</th><th class="num">2025 매출</th><th class="num">매출성장</th><th class="num">영업이익률(대략)</th><th class="num">시가총액(대략)</th><th>겹치는 영역</th></tr></thead>
+      <tbody>
+        <tr><td><b>IBM</b></td><td class="num">$67.5B</td><td class="num">+8%</td><td class="num">~18%(operating)</td><td class="num">~$238B</td><td>전 영역(복합)</td></tr>
+        <tr><td>Accenture</td><td class="num">~$70B</td><td class="num">+6~7%</td><td class="num">~15.6%</td><td class="num">~$190B</td><td>컨설팅·AI 도입</td></tr>
+        <tr><td>Microsoft</td><td class="num">초대형</td><td class="num">두 자릿수</td><td class="num">~45%+</td><td class="num">초대형</td><td>클라우드·SW·AI</td></tr>
+        <tr><td>Oracle</td><td class="num">대형</td><td class="num">두 자릿수</td><td class="num">~30%+</td><td class="num">대형</td><td>DB·엔터프라이즈 SW</td></tr>
+        <tr><td>SAP</td><td class="num">대형</td><td class="num">두 자릿수</td><td class="num">~25%+</td><td class="num">대형</td><td>ERP·기업 SW</td></tr>
+        <tr><td>Kyndryl (KD)</td><td class="num">$15.1B</td><td class="num">낮음</td><td class="num">매우 낮음</td><td class="num">소형</td><td>인프라 운영(IBM 분사)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="footnote">※ MS·오라클·SAP의 매출/시총은 IBM과 사업구성이 크게 달라 정밀 비교보다 '맥락'으로만 제시(검색 기반 근사). 이익률은 보고 기준 차이로 대략값. 신뢰도: 중간(~60%).</p>
+
+  <div class="chartbox" style="margin-top:8px">
+    <div class="ct">성장 vs 마진 — IBM의 포지셔닝</div>
+    <div class="cs">가로축 매출성장(%), 세로축 영업이익률(%). IBM은 '저성장·중마진' 영역에 위치 — 소프트웨어 순수기업(MS·오라클)보다 마진이 낮고 성장도 느림</div>
+    <div class="canvas-h"><canvas id="peerScatter"></canvas></div>
+  </div>
+
+  <div class="tldr"><b>피어 비교의 시사점</b>: IBM은 순수 소프트웨어 기업(MS·오라클·SAP)만큼의 고마진·고성장이 아니고, 순수 컨설팅(액센추어)보다 마진은 높지만 성장은 비슷한 수준입니다. 즉 <b>'소프트웨어로 재평가받을지(상승), 컨설팅·하드웨어로 묶일지(정체)'의 경계</b>에 서 있으며, 현재 $255 주가는 전자(소프트웨어 재평가)에 가까운 배수를 부여하고 있습니다.</div>
+</section>
+
+</main>
+<!-- CAPSECTION -->
+
+<div style="background:linear-gradient(180deg,#1B232E,#222c39);padding:30px 0;margin:0;border-top:3px solid #C2691C;border-bottom:3px solid #C2691C">
+  <div class="wrap" style="text-align:center;color:#F4F0E8">
+    <div style="font-family:var(--mono);font-size:12px;letter-spacing:.25em;color:#E08A2B">PART II</div>
+    <h2 style="color:#F4F0E8;font-size:34px;margin:6px 0">경쟁우위기간(CAP) 프레임워크 분석</h2>
+    <p style="max-width:720px;margin:6px auto;color:#C9CDD4;font-size:15px">"적정 가치"를 계산하는 대신, <b style="color:#E08A2B">현재 주가 $255에 시장이 암묵적으로 심어둔 가정</b>을 거꾸로 읽어냅니다. 핵심 질문: <i>"시장은 IBM이 자본비용을 초과하는 수익을 몇 년이나 낼 것이라 가격 매기고 있는가?"</i></p>
+  </div>
+</div>
+
+<main class="wrap">
+
+<!-- ============ 8. 생애주기 ============ -->
+<section id="lifecycle">
+  <div class="sec-no">08 — LIFECYCLE STAGE</div>
+  <h2>생애주기 단계 판별 → 성숙기(Mature)</h2>
+  <p class="lead">현금흐름표의 '부호 패턴'으로 기업의 생애주기를 판별합니다. IBM은 <b>영업현금 유입(+) · 투자현금 유출(−) · 재무현금 유출(−)</b>의 전형적 <b>성숙기</b> 패턴입니다. → CAP/DCF 분석에 가장 적합한 단계.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>현금흐름 부호 패턴</h3>
+      <table style="font-size:13px">
+        <thead><tr><th>현금흐름</th><th>IBM 2025</th><th>의미</th></tr></thead>
+        <tbody>
+          <tr><td>영업활동(O)</td><td class="num pos">+$13.2B</td><td>본업에서 현금 창출</td></tr>
+          <tr><td>투자활동(I)</td><td class="num neg">−(M&A·설비)</td><td>HashiCorp 등 투자</td></tr>
+          <tr><td>재무활동(F)</td><td class="num neg">−(배당·자사주)</td><td>주주환원 $6.3B 배당</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:13.5px;margin-top:6px">→ <span class="pill g">성숙기 (Mature)</span> 확정. 단, 소프트웨어/AI 전환으로 <b>'성숙기 내 재가속'</b> 시도 중(애플의 2001년 이후와 유사한 변신 가능성).</p>
+    </div>
+    <div class="card">
+      <h3>5단계 중 위치</h3>
+      <svg viewBox="0 0 360 170" style="width:100%;height:auto" font-family="Archivo" font-size="11">
+        <line x1="20" y1="120" x2="340" y2="120" stroke="#C8BFAD" stroke-width="2"/>
+        <path d="M20,120 Q90,40 180,55 Q270,68 340,110" fill="none" stroke="#1F4E79" stroke-width="2.5"/>
+        <g text-anchor="middle" fill="#6B7280">
+          <circle cx="40" cy="118" r="4" fill="#C8BFAD"/><text x="40" y="138">도입</text>
+          <circle cx="110" cy="78" r="4" fill="#C8BFAD"/><text x="110" y="138">성장</text>
+          <circle cx="200" cy="58" r="7" fill="#C2691C"/><text x="200" y="44" fill="#C2691C" font-weight="700">성숙 ★IBM</text>
+          <circle cx="280" cy="80" r="4" fill="#C8BFAD"/><text x="280" y="138">정리</text>
+          <circle cx="330" cy="108" r="4" fill="#C8BFAD"/><text x="325" y="138">감소</text>
+        </g>
+        <text x="180" y="160" text-anchor="middle" fill="#3C4654" font-size="10.5">성숙기 기업은 전체 상장사의 ~32%, 평균 ROIC ~11%</text>
+      </svg>
+      <p style="font-size:13px;color:var(--muted)">신뢰도: <b>높음(~90%)</b> — 현금흐름 패턴이 명확.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. 경쟁우위 정성분석 ============ -->
+<section id="qual">
+  <div class="sec-no">09 — QUALITATIVE COMPETITIVE ANALYSIS</div>
+  <h2>경쟁우위 정성분석</h2>
+  <p class="lead">DCF에 숫자를 넣기 전에, "IBM의 우위가 진짜인가, 차별화인가 원가우위인가"를 먼저 판단합니다.</p>
+
+  <h3 style="margin-top:14px;font-size:21px">포터의 5 Forces (경쟁 압력 5요인)</h3>
+  <div class="grid3" style="margin-top:10px">
+    <div class="card"><h4>신규 진입 위협 <span class="pill g">낮음</span></h4><p style="font-size:13px">메인프레임·규제 산업 진입장벽 극히 높음. 단 AI 스타트업이 '우회로'를 열 수 있음.</p></div>
+    <div class="card"><h4>기존 경쟁 강도 <span class="pill a">높음</span></h4><p style="font-size:13px">클라우드는 하이퍼스케일러, 컨설팅은 액센추어·인도 IT와 치열.</p></div>
+    <div class="card"><h4>공급자 교섭력 <span class="pill g">낮음</span></h4><p style="font-size:13px">자체 R&D·칩 설계 보유. 인재·반도체 위탁 일부 의존.</p></div>
+    <div class="card"><h4>구매자 교섭력 <span class="pill b">중간</span></h4><p style="font-size:13px">대형 고객 집중도 있으나, 전환비용이 높아 이탈은 어려움.</p></div>
+    <div class="card"><h4>대체재 위협 <span class="pill a">상승 중</span></h4><p style="font-size:13px">클라우드 네이티브·오픈소스·<b>AI 자동화</b>가 메인프레임/컨설팅 대체 압박.</p></div>
+    <div class="card" style="background:#1B232E;color:#F4F0E8"><h4 style="color:#E08A2B">종합</h4><p style="font-size:13px;color:#C9CDD4">코어(거래처리)는 <b style="color:#fff">견고</b>, 주변부(클라우드·컨설팅)는 <b style="color:#E08A2B">압박 상승</b>. 해자는 '있으나 가장자리가 침식되는 중'.</p></div>
+  </div>
+
+  <h3 style="margin-top:22px;font-size:21px">차별화 vs 원가우위 — IBM은 '차별화' 유형</h3>
+  <div class="grid2" style="margin-top:8px">
+    <div class="card">
+      <p style="font-size:14px">프레임워크 판별법: <b>NOPAT 마진이 산업 평균의 2배+면 차별화</b>, <b>투자자본 회전율이 1.5배+면 원가우위</b>입니다. IBM은 소프트웨어 기반의 높은 마진(거래처리·SW 30%+ 세그먼트 마진)을 가진 <b>차별화 유형</b>에 가깝습니다. 다만 영업권이 큰 탓에 <b>자본 회전율은 낮아</b> 원가우위는 아닙니다.</p>
+      <p style="font-size:14px">실증 연구상 <b>차별화가 원가우위보다 더 지속 가능한 우위의 원천</b>인데, 이는 IBM에 유리한 점입니다. 단, IBM의 차별화는 '레거시 락인'에 상당 부분 기대고 있어, AI가 그 락인을 풀면 차별화의 질이 떨어질 위험이 있습니다.</p>
+    </div>
+    <div class="card">
+      <h4>핵심 자본효율 지표 (추정)</h4>
+      <table style="font-size:13px">
+        <tbody>
+          <tr><td>NOPAT 마진</td><td class="num">~16% (SW 부문 30%+)</td></tr>
+          <tr><td>블렌디드 ROIC</td><td class="num">~13~14%</td></tr>
+          <tr><td>WACC (본 분석)</td><td class="num">~7.4%</td></tr>
+          <tr><td>ROIC − WACC 스프레드</td><td class="num pos">+5~6%p (가치창출 中)</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12.5px;color:var(--muted);margin-top:6px">→ IBM은 자본비용을 초과해 가치를 창출하는 기업. 단 스프레드가 슈퍼스타급(15%p+)은 아님. 신뢰도: 중간(~65%).</p>
+    </div>
+  </div>
+</section>
+
+</main>
+<!-- DCFSECTION -->
+
+<main class="wrap">
+
+<!-- ============ 10. DCF 모델 ============ -->
+<section id="dcf">
+  <div class="sec-no">10 — DCF MODEL</div>
+  <h2>DCF 모델 — 현금흐름 할인 (전시 23 형식)</h2>
+  <p class="lead">아래 표는 <b>현재 주가 $255를 정확히 재현하는</b> '시장암시 케이스'입니다(WACC 6.4%·증분ROIC 18%·페이드 0.20, 명시적 15년). 즉 시장이 IBM에 기대하는 현금흐름의 모습입니다.</p>
+
+  <div class="glossary"><b>용어 풀이</b> · <b>NOPAT</b>=세후영업이익(부채 영향 제거한 순수 영업 벌이) · <b>FCF</b>=잉여현금흐름(NOPAT−성장투자) · <b>PV</b>=현재가치(미래 돈을 오늘 가치로 할인) · <b>WACC</b>=가중평균자본비용(회사가 돈을 굴리는 데 드는 '기대수익률'=할인율) · <b>터미널가치</b>=명시적 예측기간 이후 전체의 가치 · <b>페이드</b>=초과수익이 평균으로 회귀하는 속도(해자 지속성)</div>
+
+  <div class="tbl-scroll" style="margin-top:8px">
+    <table style="font-size:12.5px">
+      <thead><tr>
+        <th>연도</th><th class="num">매출($B)</th><th class="num">성장%</th><th class="num">EBITA%</th>
+        <th class="num">NOPAT</th><th class="num">성장투자</th><th class="num">FCF</th><th class="num">PV(FCF)</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>2025(기준)</td><td class="num">67.5</td><td class="num">—</td><td class="num">20.0</td><td class="num">11.34</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr><td>2026</td><td class="num">71.2</td><td class="num">5.5</td><td class="num">20.4</td><td class="num">12.20</td><td class="num">4.94</td><td class="num">7.26</td><td class="num">7.04</td></tr>
+        <tr><td>2027</td><td class="num">74.9</td><td class="num">5.2</td><td class="num">20.8</td><td class="num">13.09</td><td class="num">5.06</td><td class="num">8.03</td><td class="num">7.31</td></tr>
+        <tr><td>2028</td><td class="num">78.6</td><td class="num">4.9</td><td class="num">21.2</td><td class="num">14.00</td><td class="num">5.17</td><td class="num">8.84</td><td class="num">7.57</td></tr>
+        <tr><td>2029</td><td class="num">82.3</td><td class="num">4.7</td><td class="num">21.6</td><td class="num">14.93</td><td class="num">5.25</td><td class="num">9.69</td><td class="num">7.80</td></tr>
+        <tr><td>2030</td><td class="num">85.9</td><td class="num">4.4</td><td class="num">22.0</td><td class="num">15.88</td><td class="num">3.63</td><td class="num">12.25</td><td class="num">9.27</td></tr>
+        <tr><td>2031</td><td class="num">89.5</td><td class="num">4.1</td><td class="num">22.0</td><td class="num">16.53</td><td class="num">3.52</td><td class="num">13.01</td><td class="num">9.25</td></tr>
+        <tr><td>2032</td><td class="num">92.9</td><td class="num">3.8</td><td class="num">22.0</td><td class="num">17.16</td><td class="num">3.39</td><td class="num">13.77</td><td class="num">9.20</td></tr>
+        <tr><td>2033</td><td class="num">96.2</td><td class="num">3.6</td><td class="num">22.0</td><td class="num">17.77</td><td class="num">3.24</td><td class="num">14.54</td><td class="num">9.13</td></tr>
+        <tr><td>2034</td><td class="num">99.3</td><td class="num">3.3</td><td class="num">22.0</td><td class="num">18.36</td><td class="num">3.06</td><td class="num">15.30</td><td class="num">9.03</td></tr>
+        <tr><td>2035</td><td class="num">102.3</td><td class="num">3.0</td><td class="num">22.0</td><td class="num">18.91</td><td class="num">3.15</td><td class="num">15.76</td><td class="num">8.74</td></tr>
+        <tr><td>2036</td><td class="num">105.4</td><td class="num">3.0</td><td class="num">22.0</td><td class="num">19.47</td><td class="num">3.25</td><td class="num">16.23</td><td class="num">8.46</td></tr>
+        <tr><td>2037</td><td class="num">108.5</td><td class="num">3.0</td><td class="num">22.0</td><td class="num">20.06</td><td class="num">3.34</td><td class="num">16.72</td><td class="num">8.19</td></tr>
+        <tr><td>2038</td><td class="num">111.8</td><td class="num">3.0</td><td class="num">22.0</td><td class="num">20.66</td><td class="num">3.44</td><td class="num">17.22</td><td class="num">7.93</td></tr>
+        <tr><td>2039</td><td class="num">115.2</td><td class="num">3.0</td><td class="num">22.0</td><td class="num">21.28</td><td class="num">3.55</td><td class="num">17.73</td><td class="num">7.68</td></tr>
+        <tr><td>2040</td><td class="num">118.6</td><td class="num">3.0</td><td class="num">22.0</td><td class="num">21.92</td><td class="num">3.65</td><td class="num">18.27</td><td class="num">7.43</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid3" style="margin-top:14px">
+    <div class="mcard"><div class="k">Σ PV(명시적 FCF)</div><div class="v num">$124<small>B</small></div><div class="d">15년 잉여현금 현가</div></div>
+    <div class="mcard"><div class="k">터미널가치(PV)</div><div class="v num">$150<small>B</small></div><div class="d">전체 EV의 55%</div></div>
+    <div class="mcard"><div class="k">기업가치(EV)</div><div class="v num">$274<small>B</small></div><div class="d">→ 자본가치 $239B</div></div>
+  </div>
+  <div class="card" style="margin-top:8px;background:#1B232E;color:#F4F0E8;text-align:center">
+    <span style="font-family:var(--mono);font-size:13px;color:#C9CDD4">자본가치 $239.4B ÷ 9.40억 주 = </span>
+    <span style="font-family:var(--serif);font-size:32px;color:#E08A2B;font-weight:700">$254.64 / 주</span>
+    <span style="font-family:var(--mono);font-size:13px;color:#C9CDD4"> ≈ 현재가 $255 ✓ (연중할인 적용)</span>
+  </div>
+
+  <!-- WACC build -->
+  <h3 style="margin-top:28px;font-size:21px">WACC(할인율) 산출 — 이 분석의 운명을 가르는 숫자</h3>
+  <p style="font-size:14px;color:var(--ink2)">위 표는 WACC <b>6.4%</b>를 썼지만, 프레임워크 표준(베타를 1로 회귀조정)으로는 <b>7.4%</b>가 나옵니다. 이 1%p 차이가 결론을 바꿉니다.</p>
+  <div class="grid2" style="margin-top:8px">
+    <div class="card">
+      <h4>CAPM 자본비용 구성</h4>
+      <table style="font-size:13px">
+        <tbody>
+          <tr><td>무위험이자율 (10년 국채)</td><td class="num">4.50%</td></tr>
+          <tr><td>주식위험프리미엄(ERP)</td><td class="num">4.50%</td></tr>
+          <tr><td>베타 (원시 0.58~1.0, 출처 상충)</td><td class="num">0.85(조정)</td></tr>
+          <tr style="border-top:1.5px solid var(--line2)"><td><b>자기자본비용</b></td><td class="num"><b>8.33%</b></td></tr>
+          <tr><td>세후 부채비용 (CoD 4.7%×0.84)</td><td class="num">3.95%</td></tr>
+          <tr><td>자본구조 (E 80% / D 20%)</td><td class="num">—</td></tr>
+          <tr style="border-top:1.5px solid var(--line2)"><td><b>WACC (표준)</b></td><td class="num"><b>~7.4%</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h4>최종가치(터미널) 가정</h4>
+      <table style="font-size:13px">
+        <tbody>
+          <tr><td>장기성장률 g</td><td class="num">2.5%</td></tr>
+          <tr><td> (10년 기대인플레 BEI)</td><td class="num">2.4%로 검증</td></tr>
+          <tr><td>페이드 비율 f (IT 섹터)</td><td class="num">0.20</td></tr>
+          <tr><td>증분ROIC r (블렌디드)</td><td class="num">15~18%</td></tr>
+          <tr><td>순부채 (총부채−현금−금융채권)</td><td class="num">$35B</td></tr>
+          <tr><td>발행주식수</td><td class="num">9.40억</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12px;color:var(--muted);margin-top:4px">※ 베타 출처가 0.58(Google)~1.00(TradingView)으로 갈려, 베타가 본 분석 최대 불확실성. 신뢰도(WACC): 중간(~55%).</p>
+    </div>
+  </div>
+
+  <div class="warn"><b>왜 이게 결정적인가</b> — IBM은 배당 2.6%·저변동성의 '방어주'라 시장이 <b>채권처럼 낮은 할인율(~6.4%)</b>로 평가하면 주가가 정당화됩니다. 그러나 프레임워크가 권하는 '베타를 시장(1.0) 쪽으로 보정'한 <b>7.4%</b>를 쓰면, 아래에서 보듯 <b>아무리 CAP를 늘려도 $255에 못 미칩니다</b>. 즉 IBM 밸류에이션은 'IBM을 얼마나 안전한 채권형 기업으로 보느냐'에 달려 있습니다.</div>
+</section>
+
+</main>
+<!-- CAPCALC -->
+
+<main class="wrap">
+
+<!-- ============ 11. 시장 내재 CAP 역산 ============ -->
+<section id="cap">
+  <div class="sec-no">11 — MARKET-IMPLIED CAP</div>
+  <h2>시장 내재 CAP 역산 — 핵심 발견</h2>
+  <p class="lead">이 프레임워크의 결정적 단계입니다. "주가 $255를 정당화하려면 시장은 IBM이 자본비용 초과수익을 <b>몇 년이나</b> 낼 것이라 가정해야 하는가?"를 거꾸로 풉니다. 답은 <b>전적으로 할인율에 달려 있었습니다.</b></p>
+
+  <div class="grid2" style="margin-top:6px">
+    <div class="card" style="border-left:4px solid var(--red)">
+      <h4 style="color:var(--red)">발견 ① — 표준 할인율(7.4%)에선 '도달 불가'</h4>
+      <p style="font-size:14px">프레임워크 표준 WACC(7.4%)와 보통의 증분ROIC(15~18%)로는, 명시적 예측기간을 <b>60년까지 늘려도 주당 $228~241</b>에 그쳐 <b>$255에 닿지 못합니다.</b> 즉 시장은 '듀레이션(기간)만으로' 설명되지 않는, 추가적 낙관을 반영하고 있습니다.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--green)">
+      <h4 style="color:var(--green)">발견 ② — 채권형 할인율(6.4%)에선 'CAP ≈ 15년'</h4>
+      <p style="font-size:14px">반대로 IBM을 방어주로 보고 <b>WACC 6.4%</b>(원시 저베타 ~0.55 직접 사용)를 적용하면, 주가 $255는 <b>약 15년의 경쟁우위기간</b>에 깔끔히 대응합니다 — 해석표상 <b>'합리적~약간 낙관적' 경계</b>.</p>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:14px"><b>역산된 시장의 암묵 가정</b> (참조 CAP 15년 기준, 다른 변수 고정 시) — 주가 $255는 다음 중 하나를 함의: ① <b>내재 할인율 ≈ 6.2%</b> (= 베타 약 0.5, '채권형'으로 본다는 뜻), 또는 ② <b>터미널 EBITA 마진 ≈ 30%</b> (순수 소프트웨어 수준까지 마진 확장), 또는 ③ 둘의 조합. 셋 다 '낙관적이지만 불가능하진 않은' 가정입니다.</div>
+
+  <!-- WACC x ROIIC heatmap -->
+  <h3 style="margin-top:26px;font-size:21px">WACC × 증분ROIC → 내재 CAP(년) 그리드</h3>
+  <p style="font-size:14px;color:var(--ink2)">각 칸은 그 조합에서 주가 $255를 정당화하는 데 필요한 경쟁우위기간(년)입니다. <b>초록=짧음(보수적, 주가가 싸 보임)</b>, <b>빨강/60+=비현실적으로 길다(시장이 과도하게 낙관적)</b>. IBM이 '합리적'(10~15년) 칸에 들어오려면 WACC가 6.4% 근처여야 합니다.</p>
+  <div class="tbl-scroll" style="margin-top:10px">
+    <table style="font-size:13px;text-align:center">
+      <thead><tr><th style="text-align:left">WACC ＼ 증분ROIC</th><th class="num">12%</th><th class="num">15%</th><th class="num">18%</th><th class="num">22%</th><th class="num">30%</th></tr></thead>
+      <tbody>
+        <tr><td style="text-align:left"><b>6.4%</b> <span style="font-size:10px;color:#888">채권형</span></td>
+          <td class="num" style="background:#E9B84C;color:#5a4422;font-weight:600">31</td>
+          <td class="num" style="background:#F2D08A;color:#5a4422;font-weight:600">19</td>
+          <td class="num" style="background:#CDE4D2;color:#1e5e3e;font-weight:700">15</td>
+          <td class="num" style="background:#AED9BC;color:#1e5e3e;font-weight:700">12</td>
+          <td class="num" style="background:#8FCBA6;color:#15502f;font-weight:700">10</td></tr>
+        <tr><td style="text-align:left"><b>7.0%</b></td>
+          <td class="num" style="background:#D98E5A;color:#fff;font-weight:600">60+</td>
+          <td class="num" style="background:#D98E5A;color:#fff;font-weight:600">60+</td>
+          <td class="num" style="background:#E9B84C;color:#5a4422;font-weight:600">38</td>
+          <td class="num" style="background:#E9B84C;color:#5a4422;font-weight:600">28</td>
+          <td class="num" style="background:#F2D08A;color:#5a4422;font-weight:600">21</td></tr>
+        <tr><td style="text-align:left"><b>7.4%</b> <span style="font-size:10px;color:#888">표준</span></td>
+          <td class="num" style="background:#C0563C;color:#fff;font-weight:600">60+</td>
+          <td class="num" style="background:#C0563C;color:#fff;font-weight:600">60+</td>
+          <td class="num" style="background:#C0563C;color:#fff;font-weight:600">60+</td>
+          <td class="num" style="background:#C0563C;color:#fff;font-weight:600">60+</td>
+          <td class="num" style="background:#E9B84C;color:#5a4422;font-weight:600">37</td></tr>
+        <tr><td style="text-align:left"><b>8.0%</b></td>
+          <td class="num" style="background:#A8402F;color:#fff">60+</td><td class="num" style="background:#A8402F;color:#fff">60+</td>
+          <td class="num" style="background:#A8402F;color:#fff">60+</td><td class="num" style="background:#A8402F;color:#fff">60+</td>
+          <td class="num" style="background:#A8402F;color:#fff">60+</td></tr>
+        <tr><td style="text-align:left"><b>8.5%</b></td>
+          <td class="num" style="background:#A8402F;color:#fff">60+</td><td class="num" style="background:#A8402F;color:#fff">60+</td>
+          <td class="num" style="background:#A8402F;color:#fff">60+</td><td class="num" style="background:#A8402F;color:#fff">60+</td>
+          <td class="num" style="background:#A8402F;color:#fff">60+</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:12px;font-family:var(--mono);color:var(--ink2)">
+    <span><span style="display:inline-block;width:12px;height:12px;background:#8FCBA6;border-radius:2px;vertical-align:middle"></span> ~10년 합리적</span>
+    <span><span style="display:inline-block;width:12px;height:12px;background:#F2D08A;border-radius:2px;vertical-align:middle"></span> 15~20년 약간 낙관</span>
+    <span><span style="display:inline-block;width:12px;height:12px;background:#E9B84C;border-radius:2px;vertical-align:middle"></span> 20~40년 낙관</span>
+    <span><span style="display:inline-block;width:12px;height:12px;background:#C0563C;border-radius:2px;vertical-align:middle"></span> 60+ 비현실적</span>
+  </div>
+
+  <!-- 해석표 -->
+  <h3 style="margin-top:24px;font-size:19px">내재 CAP 해석표 — IBM은 어디에?</h3>
+  <div class="tbl-scroll">
+    <table style="font-size:13px">
+      <thead><tr><th>내재 CAP</th><th>시장 심리</th><th>해석</th><th>IBM</th></tr></thead>
+      <tbody>
+        <tr><td class="num">&lt; 5년</td><td>매우 비관적</td><td>저평가 후보</td><td></td></tr>
+        <tr><td class="num">5–10년</td><td>약간 비관적</td><td>다소 저평가</td><td></td></tr>
+        <tr><td class="num">10–15년</td><td>중립/합리적</td><td>적정</td><td><span class="pill g">6.4% WACC 시 여기 (~15년)</span></td></tr>
+        <tr><td class="num">15–20년</td><td>약간 낙관적</td><td>다소 고평가</td><td><span class="pill a">경계선</span></td></tr>
+        <tr style="background:#FBEDE9"><td class="num">&gt; 20년</td><td>과도한 낙관</td><td>고평가 경계</td><td><span class="pill r">7.0%+ WACC 시 여기</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:14px;margin-top:10px">→ <b>종합 판독</b>: IBM의 시장 내재 CAP은 할인율 가정에 따라 <b>'15년(합리적 끝단)'에서 '20년 초과(과도한 낙관)' 사이</b>에 위치합니다. 어떤 합리적 가정으로도 '저평가' 구간엔 들어오지 않습니다. 신뢰도: <b>높음(~70%)</b>.</p>
+</section>
+
+</main>
+<!-- SENSSECTION -->
+
+<main class="wrap">
+
+<!-- ============ 12. 민감도 분석 ============ -->
+<section id="sens">
+  <div class="sec-no">12 — SENSITIVITY</div>
+  <h2>민감도 분석 — 무엇이 주가를 흔드는가</h2>
+  <p class="lead">주당가치를 가장 크게 흔드는 변수 순서: <b>① 할인율(WACC) ≫ ② 성장률 &gt; ③ 증분ROIC ≫ ④ 순부채 &gt; ⑤ 페이드(해자)</b>. 화제의 'COBOL 해자'(=페이드)는 영향이 가장 작았습니다.</p>
+
+  <div class="chartbox">
+    <div class="ct">토네이도 차트 — 각 변수 단독 변동 시 주당가치 ($)</div>
+    <div class="cs">기준값 $223.5 (15년 CAP · WACC 7.0% · 증분ROIC 18% · 페이드 0.20). 막대가 길수록 영향 큼</div>
+    <svg viewBox="0 0 800 250" style="width:100%;height:auto" font-family="Archivo" font-size="12">
+      <!-- axis -->
+      <line x1="435.6" y1="22" x2="435.6" y2="214" stroke="#1B232E" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="435.6" y="14" text-anchor="middle" fill="#1B232E" font-weight="700" font-size="11">기준 $223.5</text>
+      <g stroke="#E2DBCD" stroke-width="1">
+        <line x1="206" y1="22" x2="206" y2="214"/><line x1="528" y1="22" x2="528" y2="214"/><line x1="686" y1="22" x2="686" y2="214"/>
+      </g>
+      <g fill="#9aa0a8" font-size="10" text-anchor="middle">
+        <text x="206" y="230">$180</text><text x="435.6" y="230">$224</text><text x="528" y="230">$258</text><text x="686" y="230">$288</text>
+      </g>
+      <!-- rows: red=downside, blue=upside -->
+      <!-- WACC -->
+      <g>
+        <text x="150" y="44" text-anchor="end" font-weight="700" fill="#1B232E">WACC ±1%p</text>
+        <rect x="222.2" y="32" width="213.4" height="22" rx="3" fill="#C0563C"/>
+        <rect x="435.6" y="32" width="292.5" height="22" rx="3" fill="#2E6DA4"/>
+        <text x="216" y="47" text-anchor="end" fill="#C0563C" font-size="11" font-weight="600">$183</text>
+        <text x="734" y="47" fill="#2E6DA4" font-size="11" font-weight="600">$279</text>
+      </g>
+      <!-- 성장 -->
+      <g>
+        <text x="150" y="82" text-anchor="end" font-weight="700" fill="#1B232E">성장률 ±2%p</text>
+        <rect x="248.5" y="70" width="187.1" height="22" rx="3" fill="#D07A52"/>
+        <rect x="435.6" y="70" width="229.2" height="22" rx="3" fill="#4A82B0"/>
+        <text x="242" y="85" text-anchor="end" fill="#C0563C" font-size="11" font-weight="600">$188</text>
+        <text x="671" y="85" fill="#2E6DA4" font-size="11" font-weight="600">$267</text>
+      </g>
+      <!-- ROIIC -->
+      <g>
+        <text x="150" y="120" text-anchor="end" font-weight="700" fill="#1B232E">증분ROIC 12~25%</text>
+        <rect x="317" y="108" width="118.6" height="22" rx="3" fill="#DD9670"/>
+        <rect x="435.6" y="108" width="65.9" height="22" rx="3" fill="#6B9AC0"/>
+        <text x="311" y="123" text-anchor="end" fill="#C0563C" font-size="11" font-weight="600">$201</text>
+        <text x="508" y="123" fill="#2E6DA4" font-size="11" font-weight="600">$236</text>
+      </g>
+      <!-- 순부채 -->
+      <g>
+        <text x="150" y="158" text-anchor="end" font-weight="700" fill="#1B232E">순부채 +$12B</text>
+        <rect x="369.7" y="146" width="65.9" height="22" rx="3" fill="#DD9670"/>
+        <text x="363" y="161" text-anchor="end" fill="#C0563C" font-size="11" font-weight="600">$211</text>
+      </g>
+      <!-- 페이드 -->
+      <g>
+        <text x="150" y="196" text-anchor="end" font-weight="700" fill="#1B232E">페이드(해자) 0.10~0.30</text>
+        <rect x="422.4" y="184" width="13.2" height="22" rx="3" fill="#E5C2A0"/>
+        <rect x="435.6" y="184" width="29" height="22" rx="3" fill="#9CBBD6"/>
+        <text x="416" y="199" text-anchor="end" fill="#B2402F" font-size="11">$221</text>
+        <text x="470" y="199" fill="#2E6DA4" font-size="11">$229</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="grid2">
+    <div class="card" style="border-left:4px solid var(--blue)">
+      <h4 style="color:var(--blue)">핵심 시사점 ①: WACC가 전부다</h4>
+      <p style="font-size:14px">WACC를 ±1%p만 움직여도 주당가치가 <b>$183 ↔ $279(±20% 이상)</b> 출렁입니다. IBM처럼 현금흐름이 길고 안정적인 '듀레이션이 긴' 자산은 할인율에 극도로 민감합니다. <b>금리 환경과 시장의 IBM 리스크 인식(베타)이 주가의 최대 동인</b>입니다.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--amber)">
+      <h4 style="color:var(--amber)">핵심 시사점 ②: COBOL 논쟁은 과대평가</h4>
+      <p style="font-size:14px">해자 지속성(페이드)을 극단으로 바꿔도 주가는 <b>$221 ↔ $229(±2%)</b>뿐. 2월의 −13% 폭락은 '터미널 해자 붕괴'가 아니라 <b>'성장·마진 경로 훼손'</b>에 대한 베팅이었습니다. 투자 판단 시 COBOL 헤드라인보다 <b>분기 성장률·마진 추세</b>를 봐야 합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13. 시나리오 분석 ============ -->
+<section id="scenario">
+  <div class="sec-no">13 — SCENARIOS</div>
+  <h2>시나리오 분석 — 강세 / 기본 / 약세</h2>
+  <p class="lead">15년 CAP를 고정하고, 변수 묶음을 일관되게 바꾼 3가지 시나리오. 현재가 $255는 <b>'기본'($224)보다 위, '강세'($289) 아래</b> — 즉 시장은 IBM을 강세 쪽에 가깝게 가격 매기고 있습니다.</p>
+
+  <div class="grid3" style="margin-top:8px">
+    <div class="card" style="border-top:5px solid var(--green)">
+      <div style="font-family:var(--mono);font-size:12px;color:var(--green);letter-spacing:.1em">BULL · 강세</div>
+      <div style="font-family:var(--serif);font-size:40px;font-weight:700;color:var(--green);margin:4px 0">$289</div>
+      <div style="font-size:13px;color:var(--green);font-weight:600">vs 현재가 +13%</div>
+      <ul class="clean" style="margin-top:8px">
+        <li>WACC 6.4% (채권형 재평가)</li>
+        <li>증분ROIC 22% · 마진 23.5%</li>
+        <li>페이드 0.12 (해자 견고)</li>
+        <li>메인프레임=AI 작업장 + SW 마진 확장</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:5px solid var(--blue);transform:scale(1.02);box-shadow:0 14px 36px -22px rgba(31,78,121,.5)">
+      <div style="font-family:var(--mono);font-size:12px;color:var(--blue);letter-spacing:.1em">BASE · 기본</div>
+      <div style="font-family:var(--serif);font-size:40px;font-weight:700;color:var(--blue);margin:4px 0">$224</div>
+      <div style="font-size:13px;color:var(--red);font-weight:600">vs 현재가 −12%</div>
+      <ul class="clean" style="margin-top:8px">
+        <li>WACC 7.0% · 증분ROIC 18%</li>
+        <li>마진 22% · 세율 16%</li>
+        <li>페이드 0.20 (IT 평균)</li>
+        <li>성장 5.5%→3%로 완만한 둔화</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:5px solid var(--red)">
+      <div style="font-family:var(--mono);font-size:12px;color:var(--red);letter-spacing:.1em">BEAR · 약세</div>
+      <div style="font-family:var(--serif);font-size:40px;font-weight:700;color:var(--red);margin:4px 0">$157</div>
+      <div style="font-size:13px;color:var(--red);font-weight:600">vs 현재가 −38%</div>
+      <ul class="clean" style="margin-top:8px">
+        <li>WACC 7.8% (베타 시장수렴)</li>
+        <li>증분ROIC 13% · 마진 정체 20%</li>
+        <li>페이드 0.28 (COBOL·하이퍼스케일러 침식)</li>
+        <li>컨설팅 단가 하락 + 성장 빠른 둔화</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- scenario bar vs price -->
+  <div class="chartbox" style="margin-top:16px">
+    <div class="ct">시나리오별 주당가치 vs 현재가 $255</div>
+    <svg viewBox="0 0 800 150" style="width:100%;height:auto" font-family="Archivo" font-size="12">
+      <!-- scale: $0-$320 → x 120-760 -->
+      <line x1="120" y1="120" x2="760" y2="120" stroke="#C8BFAD"/>
+      <!-- current price line -->
+      <line x1="630" y1="20" x2="630" y2="128" stroke="#1B232E" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <text x="630" y="14" text-anchor="middle" fill="#1B232E" font-weight="700" font-size="11">현재가 $255</text>
+      <!-- bars: x width = value/320*640 -->
+      <g>
+        <rect x="120" y="34" width="314" height="22" rx="4" fill="#B2402F"/><text x="120" y="29" fill="#B2402F" font-size="11" font-weight="700">약세 $157</text>
+        <rect x="120" y="68" width="448" height="22" rx="4" fill="#2E6DA4"/><text x="120" y="63" fill="#2E6DA4" font-size="11" font-weight="700">기본 $224</text>
+        <rect x="120" y="102" width="578" height="22" rx="4" fill="#2F7D5B" transform="translate(0,-2)"/><text x="120" y="97" fill="#2F7D5B" font-size="11" font-weight="700">강세 $289</text>
+      </g>
+      <g fill="#9aa0a8" font-size="10" text-anchor="middle">
+        <text x="120" y="140">$0</text><text x="320" y="140">$100</text><text x="520" y="140">$200</text><text x="720" y="140">$300</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="tldr"><b>시나리오의 메시지</b>: 현재 주가에 투자한다는 것은 사실상 <b>'강세 시나리오의 상당 부분이 실현된다'</b>는 데 베팅하는 것입니다. 하방(약세 −38%)이 상방(강세 +13%)보다 크다는 점 — 즉 <b>비대칭적 위험구조</b>가 현재 가격의 특징입니다. 신뢰도: 중간~높음(~70%).</div>
+</section>
+
+</main>
+<!-- VERDICTSECTION -->
+
+<main class="wrap">
+
+<!-- ============ 14. 종합 판단 ============ -->
+<section id="verdict2">
+  <div class="sec-no">14 — SYNTHESIS</div>
+  <h2>종합 판단</h2>
+  <p class="lead">CAP 프레임워크로 읽은 IBM의 결론을 베이지안 방식으로 정리합니다 — 단정하지 않고, 경쟁하는 가설과 그것을 뒤집을 증거를 함께 제시합니다.</p>
+
+  <div class="card" style="background:#1B232E;color:#F4F0E8;margin-top:6px">
+    <h3 style="color:#E08A2B">한 문단 요약</h3>
+    <p style="font-size:15.5px;color:#E8E4DA;line-height:1.6">IBM은 <b style="color:#fff">자본비용을 초과해 가치를 창출하는 견고한 성숙기 기업</b>입니다(ROIC−WACC 스프레드 +5~6%p). 그러나 현재가 $255는 시장 내재 CAP 기준 <b style="color:#E08A2B">'합리적의 끝단(15년)~과도한 낙관(20년+)'</b>에 위치하며, 어떤 합리적 가정으로도 '저평가' 구간엔 없습니다. 이 평가의 운명은 <b style="color:#fff">할인율/베타</b>가 쥐고 있으며, 화제의 COBOL 해자 논쟁은 의외로 영향이 작았습니다.</p>
+  </div>
+
+  <h3 style="margin-top:22px;font-size:20px">경쟁하는 두 가설 (증거 불충분 시 병존)</h3>
+  <div class="grid2" style="margin-top:8px">
+    <div class="card" style="border-top:4px solid var(--green)">
+      <h4 style="color:var(--green)">가설 A — "정당한 채권형 복리기업" (확률 ~45%)</h4>
+      <p style="font-size:14px">IBM의 저변동성·고배당·미션크리티컬 현금흐름은 ~6.4% 할인율을 정당화하며, 15년 CAP는 entrenched 엔터프라이즈 프랜차이즈에 합리적이다. AI·양자·z17이 성장을 재가속하면 강세 시나리오로 이동.</p>
+      <p style="font-size:12.5px;color:var(--muted)"><b>뒤집을 증거</b>: 베타가 구조적으로 상승(주가 변동성 확대), 또는 소프트웨어 성장률이 한 자릿수 초반으로 둔화.</p>
+    </div>
+    <div class="card" style="border-top:4px solid var(--red)">
+      <h4 style="color:var(--red)">가설 B — "과도하게 낙관적인 가격" (확률 ~55%)</h4>
+      <p style="font-size:14px">표준 할인율(7.4%)로는 듀레이션을 무한히 늘려도 $255에 못 미친다. 시장은 IBM을 사실상 순수 소프트웨어 기업(30% 마진)처럼 가격 매기는데, 컨설팅·하드웨어 비중이 큰 복합기업엔 과하다. 하방(−38%)이 상방(+13%)보다 큼.</p>
+      <p style="font-size:12.5px;color:var(--muted)"><b>뒤집을 증거</b>: 소프트웨어 비중이 55%+로 빠르게 상승하며 전사 마진이 25%+로 확장, 또는 금리 급락으로 할인율이 영구히 낮아짐.</p>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:14px"><b>왜 B가 약간 더 높은가</b> — 프레임워크의 표준 방법론(베타를 시장 쪽으로 보정)을 일관되게 적용하면 현재가는 설명되지 않으며, 컨센서스 목표가($277~287)조차 '소프트웨어 재평가'를 전제로 합니다. 다만 시장이 IBM을 채권 대체재로 보는 행태가 지속될 수 있어 A도 무시할 수 없습니다. <b>이것은 베이지안 사전확률이며, 향후 분기 데이터로 갱신되어야 합니다.</b></div>
+
+  <h3 style="margin-top:22px;font-size:20px">신뢰도 종합 (Bayesian)</h3>
+  <div class="tbl-scroll">
+    <table style="font-size:13.5px">
+      <thead><tr><th>판단</th><th>신뢰도</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>성숙기 단계 판별</td><td><span class="pill g">높음 ~90%</span></td><td>현금흐름 부호 패턴 명확</td></tr>
+        <tr><td>할인율이 최대 스윙 변수</td><td><span class="pill g">높음 ~85%</span></td><td>민감도에서 압도적 1위(±20%+)</td></tr>
+        <tr><td>현재가 = 낙관적 끝단</td><td><span class="pill b">높음 ~70%</span></td><td>모든 합리적 가정에서 저평가 아님</td></tr>
+        <tr><td>차별화 유형(원가우위 아님)</td><td><span class="pill b">중간 ~65%</span></td><td>고마진·저회전, 단 영업권 큼</td></tr>
+        <tr><td>COBOL 위협=성장·마진 경로로 작용</td><td><span class="pill a">중간 ~60%</span></td><td>페이드 민감도 ±2%에 불과</td></tr>
+        <tr><td>WACC 절대수준(7.4%)</td><td><span class="pill a">중간 ~55%</span></td><td>베타 출처 0.58~1.0로 상충</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 15. 리스크 & 체크포인트 ============ -->
+<section id="risk">
+  <div class="sec-no">15 — RISKS & CHECKPOINTS</div>
+  <h2>주요 리스크 & 분기별 체크포인트</h2>
+  <p class="lead">가설 A·B 중 어느 쪽이 맞는지는 데이터가 말해줍니다. 매 분기 아래 지표를 추적하면 베이지안 갱신이 가능합니다.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>핵심 리스크 (영향도 순)</h4>
+      <ul class="clean">
+        <li><b>금리·베타 상승</b> — 할인율 1%p↑ = 가치 ~18%↓ (최대 위험)</li>
+        <li><b>소프트웨어 성장 둔화</b> — 재평가 논리의 근간 훼손</li>
+        <li><b>컨설팅 약세 지속</b> — 신규 수주 −13%, AI 자동화 압박</li>
+        <li><b>고가 M&A 반복</b> — 영업권 누적·ROIC 희석</li>
+        <li><b>메인프레임 사이클 둔화</b> — z17 효과 소멸 후 역기저</li>
+        <li><b>AI 해자 침식</b> — 점진적이나 장기 누적 위험</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>분기별 추적 지표 (Watch List)</h4>
+      <ul class="clean">
+        <li><b>소프트웨어 ARR & 성장률</b> — 두 자릿수 유지 여부 (가장 중요)</li>
+        <li><b>전사 영업이익률 추세</b> — 22%→25% 확장 시 가설 A 강화</li>
+        <li><b>컨설팅 신규 수주(book-to-bill)</b> — 플러스 전환 여부</li>
+        <li><b>생성형 AI 수주 잔고</b> — $125억에서 가속 여부</li>
+        <li><b>IBM Z 매출 증감률</b> — 사이클 위치 확인</li>
+        <li><b>주식 베타·변동성</b> — 방어주 지위 유지 여부</li>
+        <li><b>FCF & 배당성향</b> — 29년 증액 기록 지속성</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="warn"><b>가장 중요한 단일 신호</b> — '소프트웨어 비중과 전사 마진'입니다. 소프트웨어가 매출의 50%+로 커지고 전사 영업마진이 25%+로 확장되면 시장의 '소프트웨어 프리미엄'이 정당화(가설 A)됩니다. 반대로 소프트웨어 성장이 한 자릿수로 둔화되고 컨설팅이 계속 부진하면 현재가는 과도(가설 B)했던 것으로 판명될 가능성이 높습니다.</div>
+</section>
+
+<!-- ============ 16. 한계와 가정 ============ -->
+<section id="limits" style="border-bottom:none">
+  <div class="sec-no">16 — ASSUMPTIONS & LIMITATIONS</div>
+  <h2>한계와 가정</h2>
+  <p class="lead">엄정한 분석은 자신의 한계를 드러냅니다. 위 결론을 읽을 때 반드시 함께 고려해야 할 가정과 약점입니다.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>모델이 의존하는 핵심 가정</h4>
+      <ul class="clean">
+        <li>기준 NOPAT $11.34B는 <b>EBITA 마진 20%·세율 16%</b> 가정에서 도출 (IBM 영업세율 12.7~17% 변동)</li>
+        <li>WACC는 <b>베타 0.85(조정)</b> 전제 — 출처가 0.58~1.0로 갈려 ±1%p 오차 가능</li>
+        <li>증분ROIC 15~18%는 <b>'자본경량 소프트웨어 성장 + M&A 프리미엄'의 블렌드</b> 추정</li>
+        <li>장기성장 2.5%, 페이드 0.20은 IT 섹터 평균값 적용</li>
+        <li>순부채 $35B는 <b>금융 채권을 부채에서 차감</b>한 코어 기준 (총부채 기준 시 $47B → 가치 ~$13/주↓)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>분석의 약점·불확실성</h4>
+      <ul class="clean">
+        <li>IBM은 '복합기업'이라 단일 페이드·ROIC로 묶는 것 자체가 단순화 — 부문별 모델이 더 정확</li>
+        <li>피어(MS·오라클·SAP) 비교는 사업구성 차이로 <b>맥락용 근사</b>일 뿐</li>
+        <li>AI의 해자 침식은 <b>전례 없는 변수</b>라 과거 데이터 기반 추정의 신뢰도가 본질적으로 낮음</li>
+        <li>거시(금리·인플레)는 2026년 5월 시점 스냅샷 — 변동 시 결론 재계산 필요</li>
+        <li>회계상 영업이익·세율·FCF 정의가 GAAP/non-GAAP에 따라 달라 수치는 <b>방향성 위주</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note"><b>무엇이 결론을 바꾸는가 (베이지안 트리거)</b> — ① 신뢰할 만한 60개월 베타가 0.6 이하로 확인되면 → 가설 A(정당) 쪽으로 이동. ② 소프트웨어 성장률이 한 자릿수로 둔화되면 → 가설 B(과대) 강화. ③ 금리(10년 국채)가 3.5% 이하로 영구 하락하면 → 현재가 정당화. ④ AI COBOL 마이그레이션의 <b>실제 대규모 레퍼런스 사례</b>가 등장하면 → 성장·마진 경로 하향. 이 중 어느 하나라도 관측되면 위 확률(A 45% / B 55%)을 갱신해야 합니다.</div>
+
+  <div class="card" style="margin-top:16px;background:var(--paper2)">
+    <h4>데이터 출처 & 기준 시점</h4>
+    <p style="font-size:13px;color:var(--ink2)"><b>기준 시점</b>: 2026년 5월 27~28일 (주가·거시), 2026년 1~4월 (재무).<br>
+    <b>재무</b>: IBM 4Q25 8-K(2026-01-28), 2025 Annual Report/10-K, 1Q26 실적(2026-04). <b>시장</b>: Google Finance, CNBC, StockAnalysis, Morningstar, WSZ, TradingView. <b>거시</b>: FRED(10년 국채·BEI), 미 BEA(PCE), Damodaran(ERP, 2026-01). <b>섹션</b>: EBC/재경일보(국문), Reuters/Bloomberg(COBOL 사건), IBM 뉴스룸(z17·양자). <br>
+    <b>방법</b>: 경쟁우위기간(CAP) 역-DCF 프레임워크(페이드 모델). 한·영 교차 검색 기반. 모든 수치는 <b>의사결정 보조용 방향성 추정</b>이며 정밀 회계치가 아닙니다.</p>
+    <p style="font-size:12px;color:var(--muted);margin-top:6px">본 분석은 정보 제공 목적의 독립적 가치평가 연구이며, 특정 매매를 권유하지 않습니다. 모든 투자 판단과 책임은 투자자 본인에게 있습니다.</p>
+  </div>
+</section>
+
+<footer style="padding:34px 0 60px;text-align:center">
+  <div style="font-family:var(--serif);font-weight:800;font-size:22px">IBM <span style="color:var(--amber)">·</span> 경쟁우위기간(CAP) 분석</div>
+  <p style="font-size:13px;color:var(--muted);margin-top:6px;font-family:var(--mono)">현재가 $255 ≈ 시장 내재 CAP 15년+ (낙관적 끝단) · 운명의 변수는 할인율 · 2026-05 기준</p>
+</footer>
+
+</main>
+
+<script>
+const ink='#1B232E', muted='#6B7280', line='#D9D2C4', blue='#1F4E79', blue2='#2E6DA4', steel='#4A6A8A', amber='#C2691C', amber2='#E08A2B', green='#2F7D5B', red='#B2402F';
+Chart.defaults.font.family="'Archivo', sans-serif";
+Chart.defaults.color=muted;
+Chart.defaults.font.size=12;
+
+// 1) 매출 비중 도넛
+new Chart(document.getElementById('revPie'),{
+  type:'doughnut',
+  data:{labels:['소프트웨어 $30.0B (45%)','컨설팅 $21.1B (31%)','인프라 $15.6B (23%)','금융 $0.7B (1%)'],
+    datasets:[{data:[30.0,21.1,15.6,0.7],backgroundColor:[blue,steel,amber,'#C8BFAD'],borderColor:'#FBF9F4',borderWidth:3}]},
+  options:{cutout:'58%',plugins:{legend:{position:'bottom',labels:{padding:12,font:{size:11.5}}},
+    tooltip:{callbacks:{label:c=>' '+c.label}}}}
+});
+
+// 2) 부문 이익률 막대
+new Chart(document.getElementById('marginBar'),{
+  type:'bar',
+  data:{labels:['소프트웨어','인프라','컨설팅','전사 영업'],
+    datasets:[{label:'세그먼트/영업 이익률 %',data:[32,18,10,18],
+      backgroundColor:[blue,amber,steel,blue2],borderRadius:6,maxBarThickness:62}]},
+  options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+'%'}}},
+    scales:{y:{beginAtZero:true,max:40,grid:{color:line},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
+});
+
+// 3) 피어 성장 vs 마진 산점도
+new Chart(document.getElementById('peerScatter'),{
+  type:'scatter',
+  data:{datasets:[
+    {label:'IBM',data:[{x:8,y:18}],backgroundColor:amber2,pointRadius:11,pointHoverRadius:13,borderColor:'#fff',borderWidth:2},
+    {label:'Accenture',data:[{x:6.5,y:15.6}],backgroundColor:steel,pointRadius:9},
+    {label:'Microsoft',data:[{x:13,y:45}],backgroundColor:blue,pointRadius:9},
+    {label:'Oracle',data:[{x:11,y:31}],backgroundColor:green,pointRadius:9},
+    {label:'SAP',data:[{x:11,y:26}],backgroundColor:'#9C7BB8',pointRadius:9},
+    {label:'Kyndryl',data:[{x:1,y:3}],backgroundColor:red,pointRadius:9}
+  ]},
+  options:{plugins:{legend:{position:'bottom',labels:{padding:10,font:{size:11},usePointStyle:true}},
+    tooltip:{callbacks:{label:c=>c.dataset.label+': 성장 '+c.parsed.x+'%, 마진 '+c.parsed.y+'%'}}},
+    scales:{
+      x:{title:{display:true,text:'매출 성장률 (%) →',color:ink,font:{size:11.5}},min:0,max:16,grid:{color:line}},
+      y:{title:{display:true,text:'영업이익률 (%) →',color:ink,font:{size:11.5}},min:0,max:50,grid:{color:line},ticks:{callback:v=>v+'%'}}
+    }}
+});
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+

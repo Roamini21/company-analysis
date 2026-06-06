@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMETEK (AME) — 경쟁우위기간(CAP) 기반 장기 투자 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Spline+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f2ea; --bg2:#efe8db; --paper:#fffdf8; --ink:#17140f; --ink2:#3d362c;
+    --muted:#6b6253; --line:#ddd2bf; --line2:#cbbfa8;
+    --bronze:#a8682a; --bronze2:#c4853c; --gold:#caa04a;
+    --navy:#1d3140; --teal:#2c6c5d; --teal2:#3f8a78;
+    --red:#b23a2e; --redsoft:#c95a4c; --amber:#cf8a2e;
+    --shadow:0 1px 2px rgba(30,20,5,.06),0 8px 30px rgba(30,20,5,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Spline Sans',-apple-system,sans-serif;font-size:16.5px;line-height:1.72;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 12% 8%,rgba(202,160,74,.07),transparent 40%),radial-gradient(circle at 88% 92%,rgba(44,108,93,.06),transparent 45%);background-attachment:fixed}
+  .mono{font-family:'IBM Plex Mono',monospace;font-feature-settings:"tnum";letter-spacing:-.02em}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 26px}
+  h1,h2,h3,h4{font-family:'Fraunces',serif;font-weight:600;line-height:1.12;letter-spacing:-.02em;color:var(--ink)}
+  .pos{color:var(--teal)} .neg{color:var(--red)} .acc{color:var(--bronze)}
+  a{color:var(--bronze);text-decoration:none}
+  .hero{background:linear-gradient(160deg,#1a2c3a 0%,#21384a 48%,#2a4257 100%);color:#f4ede0;position:relative;overflow:hidden;border-bottom:3px solid var(--bronze)}
+  .hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:34px 34px;opacity:.5}
+  .hero:after{content:"";position:absolute;top:-30%;right:-12%;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(202,160,74,.22),transparent 65%)}
+  .hero .wrap{position:relative;padding:62px 26px 54px}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .hero h1{font-size:clamp(40px,7vw,76px);font-weight:700;color:#fff;margin:14px 0 6px;line-height:1}
+  .hero h1 .tk{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:.42em;color:var(--gold);vertical-align:middle;letter-spacing:0;margin-left:4px}
+  .hero .sub{font-family:'Fraunces',serif;font-style:italic;font-weight:300;font-size:clamp(18px,2.4vw,24px);color:#d8e3e0;max-width:680px;margin-top:6px}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:24px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#aebfc0}
+  .hero .meta b{color:#e9dfce;font-weight:600}
+  .statband{display:grid;grid-template-columns:repeat(4,1fr);margin-top:34px;border:1px solid rgba(255,255,255,.16);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.04)}
+  .statband>div{padding:16px 18px;border-right:1px solid rgba(255,255,255,.12)}
+  .statband>div:last-child{border-right:none}
+  .statband .k{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#9fb2b3}
+  .statband .v{font-family:'Fraunces',serif;font-size:30px;font-weight:600;color:#fff;margin-top:3px;line-height:1}
+  .statband .vsm{font-size:13px;color:#bccccc;font-family:'IBM Plex Mono',monospace;margin-top:5px}
+  section{padding:54px 0 8px}
+  .secnum{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.28em;color:var(--bronze);font-weight:600;text-transform:uppercase}
+  .sectitle{font-size:clamp(28px,4vw,40px);font-weight:600;margin:8px 0 6px}
+  .seclede{font-family:'Fraunces',serif;font-style:italic;font-weight:300;font-size:19px;color:var(--ink2);max-width:760px;margin-bottom:26px}
+  p{margin:0 0 15px;color:var(--ink2)} p strong,li strong{color:var(--ink);font-weight:600} .lead-p{font-size:17.5px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:26px 28px;box-shadow:var(--shadow)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .eli{background:linear-gradient(180deg,#fbf6ea,#f7efdd);border:1px solid var(--line2);border-left:4px solid var(--gold);border-radius:0 12px 12px 0;padding:16px 20px;margin:18px 0}
+  .eli .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.1em;color:var(--bronze);text-transform:uppercase;display:flex;align-items:center;gap:7px;margin-bottom:5px}
+  .eli .tag:before{content:"";width:16px;height:16px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(202,160,74,.18);flex:none}
+  .eli p{margin:0;font-size:15px;color:var(--ink2)}
+  .callout{border-radius:14px;padding:20px 24px;margin:20px 0}
+  .callout.warn{background:#fbeee9;border:1px solid #e8c4b8}
+  .callout.note{background:#eaf1ef;border:1px solid #bcd4cc}
+  .callout.key{background:#1d3140;color:#eee4d2;border:1px solid #2a4257}
+  .callout .ct{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin-bottom:6px;display:flex;align-items:center;gap:9px}
+  .callout.key .ct{color:#fff} .callout.warn .ct{color:var(--red)} .callout.note .ct{color:var(--teal)}
+  .callout p{margin:0}.callout.key p{color:#d6c9b4}
+  .conf{display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px;vertical-align:middle}
+  .conf.hi{background:#e3efe9;color:#235e4f;border:1px solid #b6d6c9}
+  .conf.mid{background:#fbf0dd;color:#9b6a1e;border:1px solid #e6cf9f}
+  .conf.lo{background:#f4e7e3;color:#a23f30;border:1px solid #e1bcb1}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  .tbl{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+  .tbl thead th{background:#21384a;color:#ece2d0;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;padding:11px 12px;text-align:right}
+  .tbl thead th:first-child{text-align:left}
+  .tbl td{padding:9px 12px;text-align:right;border-top:1px solid var(--line);font-family:'IBM Plex Mono',monospace;color:var(--ink2)}
+  .tbl td:first-child{text-align:left;font-family:'Spline Sans',sans-serif;color:var(--ink);font-weight:500}
+  .tbl tbody tr:nth-child(even){background:#faf6ee}
+  .tbl tr.hl td{background:#fbf2df!important;font-weight:600;color:var(--ink)}
+  .tbl tr.tot td{background:#21384a;color:#f1e7d5;font-weight:600;border-top:2px solid var(--bronze)}
+  .tbl tr.tot td:first-child{color:#fff}
+  .pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;padding:2px 9px;border-radius:6px}
+  .pill.g{background:#e2efe9;color:#2c6c5d}.pill.r{background:#f6e4df;color:#b23a2e}.pill.y{background:#faeed7;color:#a8682a}.pill.b{background:#e5edf2;color:#1d3140}
+  .chip{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 11px;border:1px solid var(--line2);border-radius:20px;color:var(--ink2);background:var(--paper);margin:3px 4px 3px 0}
+  figure{margin:24px 0} figcaption{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);text-align:center;margin-top:10px}
+  .chartbox{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+  svg{display:block;width:100%;height:auto;overflow:visible}
+  ul.clean{list-style:none;margin:6px 0 16px}
+  ul.clean li{position:relative;padding-left:24px;margin-bottom:9px;color:var(--ink2)}
+  ul.clean li:before{content:"";position:absolute;left:4px;top:11px;width:7px;height:7px;border-radius:2px;background:var(--bronze);transform:rotate(45deg)}
+  .anchor{scroll-margin-top:20px}
+  .toc{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 28px;box-shadow:var(--shadow);margin-top:30px}
+  .toc h4{font-size:14px;font-family:'IBM Plex Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--bronze);margin-bottom:14px}
+  .toc ol{list-style:none;columns:2;column-gap:34px}
+  .toc li{padding:5px 0;border-bottom:1px dotted var(--line);font-size:14px;break-inside:avoid}
+  .toc li a{color:var(--ink2);display:flex;justify-content:space-between;gap:10px}
+  .toc li a:hover{color:var(--bronze)}
+  .toc .n{font-family:'IBM Plex Mono',monospace;color:var(--line2);font-size:12px}
+  @media(max-width:760px){body{font-size:15.5px}.statband{grid-template-columns:1fr 1fr}.statband>div:nth-child(2){border-right:none}.statband>div:nth-child(1),.statband>div:nth-child(2){border-bottom:1px solid rgba(255,255,255,.12)}.grid2,.grid3,.grid4{grid-template-columns:1fr}.toc ol{columns:1}}
+  .foot{background:#1a2c3a;color:#b9c8c9;padding:34px 0 40px;margin-top:50px;border-top:3px solid var(--bronze)}
+  .foot .wrap{font-size:12.5px}
+  .foot .src{font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.9;color:#9fb2b3}
+  .foot b{color:#e3d6bf}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">경쟁우위기간 · CAP 프레임워크 분석 — 장기 투자 관점</div>
+    <h1>AMETEK<span class="tk">NYSE : AME</span></h1>
+    <div class="sub">"눈에 잘 띄지 않는 곳에서 세상을 측정·제어하는 정밀 계측·전자기계 기업이, 인수합병을 엔진 삼아 수십 년간 복리로 성장해 온 우량 산업기술 컴파운더"</div>
+    <div class="meta">
+      <span>기준일 <b>2026-06-05</b></span><span>기준 주가 <b>$229</b></span><span>시가총액 <b>약 $52.5B</b></span><span>섹터 <b>산업재 / 전자계측</b></span><span>생애주기 <b>성숙기(컴파운더)</b></span>
+    </div>
+    <div class="statband">
+      <div><div class="k">2025 매출</div><div class="v">$7.40B</div><div class="vsm">+7% YoY</div></div>
+      <div><div class="k">영업마진</div><div class="v">26.2%</div><div class="vsm">EBITDA 31.5%</div></div>
+      <div><div class="k">보고 ROIC</div><div class="v">12.5%</div><div class="vsm">WACC 약 8.5%</div></div>
+      <div><div class="k">시장 내재 CAP</div><div class="v">20년+</div><div class="vsm">"낙관" 구간</div></div>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+  <section id="verdict" class="anchor" style="padding-top:40px">
+    <div class="secnum">01 · 핵심 결론</div>
+    <h2 class="sectitle">한 문장 결론</h2>
+    <div class="callout key">
+      <div class="ct">&#9678; 결론</div>
+      <p style="font-size:17px;line-height:1.7"><b style="color:#fff">AMETEK은 수십 년간 자본비용을 크게 웃도는 수익률로 복리 성장해 온 최우량 산업기술 기업이지만, 현재 주가($229)는 역(逆)DCF 관점에서 섹터 평균 가정으로는 정당화되기 어려운 프리미엄을 반영</b>하고 있습니다. 즉 시장은 AME가 앞으로 <b style="color:#fff">20~35년 이상</b> 지금의 높은 수익성과 인수 성공을 흔들림 없이 이어간다는 매우 긍정적인 전제를 가격에 담고 있어, <b style="color:#fff">안전마진(margin of safety)은 얇은</b> 상태입니다.</p>
+    </div>
+    <div class="grid3" style="margin-top:8px">
+      <div class="card" style="padding:22px 24px"><div class="secnum" style="color:var(--teal)">기업 품질</div><div style="font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin:6px 0 4px">탁월함 <span class="conf hi">높음 ≈85%</span></div><p style="font-size:14px;margin:0">니치 시장 지배력, 30%대 EBITDA 마진, 수십 년 ROIC&gt;WACC. 보고 ROIC(12.5%)는 동종 컴파운더의 약 2배.</p></div>
+      <div class="card" style="padding:22px 24px"><div class="secnum" style="color:var(--red)">밸류에이션</div><div style="font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin:6px 0 4px">부담스러움 <span class="conf mid">중간 ≈70%</span></div><p style="font-size:14px;margin:0">기본 내재가치 약 $124, 강세 $160 — 모두 주가 $229 미만. EV/EBITDA 22.5배는 동종 최상단.</p></div>
+      <div class="card" style="padding:22px 24px"><div class="secnum" style="color:var(--bronze)">방향성</div><div style="font-family:'Fraunces',serif;font-size:21px;font-weight:600;margin:6px 0 4px">신중 / 관망</div><p style="font-size:14px;margin:0">"좋은 기업, 비싼 가격". 조정 시 우량주 편입 후보지만, 현재가에는 완벽한 실행이 선반영.</p></div>
+    </div>
+    <div class="callout note" style="margin-top:18px">
+      <div class="ct">&#9878; 경쟁 가설 (Bayesian)</div>
+      <p style="margin:0 0 8px"><b>주 가설 (≈70%):</b> 역DCF상 주가는 20~35년 이상의 내재 CAP를 요구 &rarr; 프레임워크 해석상 "과도한 낙관" 구간. 멀티플 디레이팅 리스크 존재(동종 Roper −42%, Fortive −26% 사례).</p>
+      <p style="margin:0"><b>대안 가설 (≈30%):</b> AME의 예외적 자본배분 규율(피어 2배 ROIC)과 수십 년 트랙레코드가 다수 컴파운더보다 긴 CAP를 정당화 &rarr; 시장이 "수십 년 복리"를 올바르게 가격. <b>판단을 바꿀 신호:</b> 유기적 성장 가속(고한자릿수+), 인수 ROIIC 구조적 상승(&gt;16%), 금리 하락(WACC&rarr;7.5%), 30% 초과 마진 경로.</p>
+    </div>
+  </section>
+  <div class="toc"><h4>목차</h4><ol>
+    <li><a href="#verdict"><span>핵심 결론</span><span class="n">01</span></a></li>
+    <li><a href="#overview"><span>기업 개요</span><span class="n">02</span></a></li>
+    <li><a href="#revenue"><span>수익 구조</span><span class="n">03</span></a></li>
+    <li><a href="#products"><span>제품·기술력</span><span class="n">04</span></a></li>
+    <li><a href="#industry"><span>산업 분석</span><span class="n">05</span></a></li>
+    <li><a href="#moat"><span>경제적 해자</span><span class="n">06</span></a></li>
+    <li><a href="#swot"><span>SWOT</span><span class="n">07</span></a></li>
+    <li><a href="#peers"><span>피어그룹 비교</span><span class="n">08</span></a></li>
+    <li><a href="#lifecycle"><span>생애주기 판별</span><span class="n">09</span></a></li>
+    <li><a href="#porter"><span>경쟁우위 정성분석</span><span class="n">10</span></a></li>
+    <li><a href="#dcf"><span>DCF 모델(전시 23)</span><span class="n">11</span></a></li>
+    <li><a href="#wacc"><span>WACC·최종가치 가정</span><span class="n">12</span></a></li>
+    <li><a href="#cap"><span>시장 내재 CAP</span><span class="n">13</span></a></li>
+    <li><a href="#sens"><span>민감도 분석</span><span class="n">14</span></a></li>
+    <li><a href="#scenario"><span>시나리오 분석</span><span class="n">15</span></a></li>
+    <li><a href="#risk"><span>리스크·체크포인트</span><span class="n">16</span></a></li>
+    <li><a href="#final"><span>종합 판단·한계</span><span class="n">17</span></a></li>
+  </ol></div>
+</div>
+<div class="wrap">
+  <!-- 02 개요 -->
+  <section id="overview" class="anchor">
+    <div class="secnum">02 · 기업 개요</div>
+    <h2 class="sectitle">AMETEK은 무엇을 하는 회사인가</h2>
+    <div class="seclede">비행기 엔진의 온도, 발전소의 압력, 반도체 공장의 미세 입자, 수술 도구의 정밀 부품 — 우리가 직접 보지 못하는 곳에서 무언가를 "측정하고 움직이는" 장치를 만드는 회사입니다.</div>
+    <p class="lead-p">AMETEK(아메텍)은 <strong>1930년 미국에서 'American Machine and Metals'라는 이름으로 설립</strong>된, 약 100년 역사의 산업 기술 기업입니다. 본사는 미국 펜실베이니아주 버윈(Berwyn), 직원 약 2.2만 명, 회장 겸 CEO는 2016년부터 회사를 이끄는 데이비드 자피코(David Zapico)입니다. 일반 소비자가 매장에서 마주치는 브랜드는 아니지만, <strong>항공·우주, 발전, 의료, 반도체, 공정산업 등 'B2B(기업 간 거래)' 영역에서 핵심 계측·제어 장비를 공급</strong>합니다.</p>
+    <div class="eli"><div class="tag">쉽게 말하면</div><p>AMETEK은 "정밀하게 재고(계측), 정밀하게 움직이는(전자기계) 부품·장비"를 만드는 회사입니다. 제품 하나는 비싸지 않더라도 그 장비가 멈추면 비행기·발전소·공장 전체가 멈추기 때문에 고객이 쉽게 바꾸지 못합니다. 이것이 높은 이익률의 비결입니다.</p></div>
+    <div class="grid2" style="margin-top:8px">
+      <div class="card">
+        <h3 style="font-size:20px;margin-bottom:4px">두 개의 사업부</h3>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:14px">AMETEK은 매출을 두 그룹으로 나눠 보고합니다.</p>
+        <div style="border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:#faf6ee"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-family:Fraunces,serif;font-size:17px">EIG · 전자계측 그룹</b><span class="pill b mono">매출 ~68%</span></div><p style="font-size:13.5px;margin:6px 0 0">분석·모니터링·시험·교정·디스플레이 장비. 항공·발전·공정·산업용. <b>영업마진 ~31%</b>로 더 높음.</p></div>
+        <div style="border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:#faf6ee"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-family:Fraunces,serif;font-size:17px">EMG · 전자기계 그룹</b><span class="pill b mono">매출 ~32%</span></div><p style="font-size:13.5px;margin:6px 0 0">전기 커넥터·정밀 모션제어·특수금속·열관리. 항공·방산·의료·산업용. <b>영업마진 ~23–26%</b>.</p></div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:20px;margin-bottom:14px">설립부터 오늘까지</h3>
+        <div style="position:relative;padding-left:22px">
+          <div style="position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line2)"></div>
+          <div style="position:relative;margin-bottom:13px"><span style="position:absolute;left:-22px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--bronze)"></span><b class="mono" style="color:var(--bronze)">1930</b><div style="font-size:13.5px">American Machine and Metals로 설립</div></div>
+          <div style="position:relative;margin-bottom:13px"><span style="position:absolute;left:-22px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--bronze)"></span><b class="mono" style="color:var(--bronze)">1990s~</b><div style="font-size:13.5px">'AMETEK 성장모델' 확립 — 인수+운영개선 반복</div></div>
+          <div style="position:relative;margin-bottom:13px"><span style="position:absolute;left:-22px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--bronze)"></span><b class="mono" style="color:var(--bronze)">2023</b><div style="font-size:13.5px">Paragon Medical 등 5개사 인수(당시 최대)</div></div>
+          <div style="position:relative;margin-bottom:13px"><span style="position:absolute;left:-22px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--bronze)"></span><b class="mono" style="color:var(--bronze)">2025</b><div style="font-size:13.5px">Faro Technologies 인수, 매출 $7.4B 돌파</div></div>
+          <div style="position:relative"><span style="position:absolute;left:-22px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(44,108,93,.18)"></span><b class="mono" style="color:var(--teal)">2026</b><div style="font-size:13.5px">Indicor 계측사업 <b>$5.0B</b> 인수 합의(역대 최대), First Aviation·LKC 인수</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="callout note" style="margin-top:18px"><div class="ct">&#9654; 회사를 한 문장으로</div><p style="margin:0">"AMETEK은 <b>고객이 쉽게 바꿀 수 없는 미션 크리티컬(필수) 계측·전자기계 장비를 만드는 니치 시장의 강자로, 강한 현금흐름을 다시 인수에 투입하는 '복리 성장 기계(compounder)'</b>다."</p></div>
+  </section>
+
+  <!-- 03 수익구조 -->
+  <section id="revenue" class="anchor">
+    <div class="secnum">03 · 수익 구조</div>
+    <h2 class="sectitle">AMETEK은 어떻게 돈을 버는가</h2>
+    <div class="seclede">"장비 한 번 팔고 끝"이 아니라, 장비 판매 + 소모품·서비스·애프터마켓의 반복 매출이 결합된 구조입니다.</div>
+    <div class="grid2">
+      <figure class="chartbox" style="margin-top:0">
+        <h4 style="font-size:15px;margin-bottom:6px;text-align:center">사업부별 매출 비중 (2025)</h4>
+        <svg viewBox="0 0 300 230" role="img" aria-label="사업부 도넛">
+          <circle cx="150" cy="105" r="74" fill="none" stroke="#e7dcc7" stroke-width="34"/>
+          <circle cx="150" cy="105" r="74" fill="none" stroke="#21384a" stroke-width="34" stroke-dasharray="316.4 465.4" transform="rotate(-90 150 105)"/>
+          <circle cx="150" cy="105" r="74" fill="none" stroke="#c4853c" stroke-width="34" stroke-dasharray="148.9 465.4" stroke-dashoffset="-316.4" transform="rotate(-90 150 105)"/>
+          <text x="150" y="98" text-anchor="middle" font-family="Fraunces" font-size="30" font-weight="700" fill="#17140f">$7.4B</text>
+          <text x="150" y="119" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#6b6253">2025 매출</text>
+          <g font-family="IBM Plex Mono" font-size="11.5"><rect x="34" y="206" width="11" height="11" fill="#21384a"/><text x="50" y="216" fill="#3d362c">EIG 전자계측 68%</text><rect x="184" y="206" width="11" height="11" fill="#c4853c"/><text x="200" y="216" fill="#3d362c">EMG 전자기계 32%</text></g>
+        </svg>
+      </figure>
+      <figure class="chartbox" style="margin-top:0">
+        <h4 style="font-size:15px;margin-bottom:14px;text-align:center">주요 전방시장 (개략)</h4>
+        <svg viewBox="0 0 340 205" role="img" aria-label="전방시장 막대">
+          <g font-family="IBM Plex Mono" font-size="11.5" fill="#3d362c">
+            <text x="0" y="22">항공·방산</text><rect x="92" y="11" width="238" height="15" rx="3" fill="#21384a"/><text x="320" y="22" fill="#fff" text-anchor="end">~30%</text>
+            <text x="0" y="52">공정·산업</text><rect x="92" y="41" width="174" height="15" rx="3" fill="#2c6c5d"/><text x="258" y="52" text-anchor="end" fill="#fff">~22%</text>
+            <text x="0" y="82">발전·전력</text><rect x="92" y="71" width="119" height="15" rx="3" fill="#3f8a78"/><text x="203" y="82" text-anchor="end" fill="#fff">~15%</text>
+            <text x="0" y="112">의료·헬스</text><rect x="92" y="101" width="103" height="15" rx="3" fill="#a8682a"/><text x="187" y="112" text-anchor="end" fill="#fff">~13%</text>
+            <text x="0" y="142">반도체·연구</text><rect x="92" y="131" width="80" height="15" rx="3" fill="#c4853c"/><text x="164" y="142" text-anchor="end" fill="#fff">~10%</text>
+            <text x="0" y="172">자동화·기타</text><rect x="92" y="161" width="78" height="15" rx="3" fill="#caa04a"/><text x="162" y="172" text-anchor="end" fill="#fff">~10%</text>
+          </g>
+        </svg>
+        <figcaption>비중은 회사 공시·세그먼트 설명 기반 개략 추정</figcaption>
+      </figure>
+    </div>
+    <h3 style="font-size:21px;margin:26px 0 10px">매출이 흘러가는 길 — 'AMETEK 성장모델' 플라이휠</h3>
+    <p>AMETEK의 수익 구조에서 가장 중요한 것은 <strong>'돈이 돌고 도는 구조(플라이휠)'</strong>입니다. ① 니치 장비를 팔아 ② 높은 마진의 현금을 만들고 ③ 그 현금으로 또 다른 우량 기업을 인수해 ④ AMETEK의 운영 노하우로 마진을 끌어올린 뒤 ⑤ 다시 더 큰 현금을 만드는 식입니다.</p>
+    <figure class="chartbox">
+      <svg viewBox="0 0 760 250" role="img" aria-label="성장모델 플라이휠">
+        <defs><marker id="arr" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#a8682a"/></marker></defs>
+        <g font-family="Spline Sans" font-size="12.5" text-anchor="middle">
+          <g><rect x="20" y="95" width="120" height="60" rx="12" fill="#21384a"/><text x="80" y="120" fill="#fff" font-weight="600">① 니치 장비</text><text x="80" y="138" fill="#bccccc" font-size="11">판매·반복매출</text></g>
+          <g><rect x="180" y="30" width="120" height="60" rx="12" fill="#2c6c5d"/><text x="240" y="55" fill="#fff" font-weight="600">② 높은 마진</text><text x="240" y="73" fill="#cfe3dd" font-size="11">강한 현금흐름</text></g>
+          <g><rect x="180" y="160" width="120" height="60" rx="12" fill="#2c6c5d"/><text x="240" y="185" fill="#fff" font-weight="600">⑤ 더 큰 현금</text><text x="240" y="203" fill="#cfe3dd" font-size="11">FCF $1.7B</text></g>
+          <g><rect x="340" y="95" width="130" height="60" rx="12" fill="#a8682a"/><text x="405" y="120" fill="#fff" font-weight="600">③ 전략적 인수</text><text x="405" y="138" fill="#f3e2cb" font-size="11">자본 재배치</text></g>
+          <g><rect x="510" y="95" width="130" height="60" rx="12" fill="#c4853c"/><text x="575" y="118" fill="#fff" font-weight="600">④ 운영 개선</text><text x="575" y="136" fill="#f6ead4" font-size="11">마진·시너지 ↑</text></g>
+          <g><rect x="660" y="95" width="80" height="60" rx="12" fill="#caa04a"/><text x="700" y="120" fill="#fff" font-weight="600">복리</text><text x="700" y="138" fill="#fff" font-size="11">성장</text></g>
+          <path d="M140,118 H176" stroke="#a8682a" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+          <path d="M300,60 C330,70 330,95 338,112" stroke="#a8682a" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+          <path d="M470,125 H506" stroke="#a8682a" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+          <path d="M640,125 H656" stroke="#a8682a" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+          <path d="M575,158 C575,200 320,205 302,192" stroke="#caa04a" stroke-width="2" stroke-dasharray="5 4" fill="none" marker-end="url(#arr)"/>
+          <path d="M180,190 C150,180 150,160 140,148" stroke="#2c6c5d" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+        </g>
+      </svg>
+      <figcaption>AMETEK 성장모델 = 운영 우수성 · 기술 혁신 · 글로벌/시장 확장 · 전략적 인수 + 규율 있는 현금 배치</figcaption>
+    </figure>
+    <div class="eli"><div class="tag">쉽게 말하면</div><p>AMETEK은 "버는 돈으로 회사를 계속 사 모아 덩치를 키우는" 모델입니다. 인수한 회사에 자기 경영방식을 이식해 마진을 높이고, 거기서 나온 더 큰 현금으로 또 인수합니다. 이 '눈덩이(snowball)' 구조가 잘 굴러가면 주당이익이 매년 두 자릿수로 늘어납니다. 다만 <b>인수를 비싸게 하거나 통합에 실패하면</b> 눈덩이가 멈출 수 있다는 점이 핵심 리스크입니다.</p></div>
+    <div class="grid4" style="margin-top:6px">
+      <div class="card" style="padding:18px 18px;text-align:center"><div class="mono" style="font-size:26px;font-weight:700;color:var(--bronze)">~50%</div><div style="font-size:13px;color:var(--ink2)">애프터마켓·소모품<br>비중(인수자산 일부)</div></div>
+      <div class="card" style="padding:18px 18px;text-align:center"><div class="mono" style="font-size:26px;font-weight:700;color:var(--bronze)">25%</div><div style="font-size:13px;color:var(--ink2)">바이탈리티 지수<br>(3년내 신제품 매출)</div></div>
+      <div class="card" style="padding:18px 18px;text-align:center"><div class="mono" style="font-size:26px;font-weight:700;color:var(--bronze)">$3.87B</div><div style="font-size:13px;color:var(--ink2)">수주잔고(백로그)<br>2026 1분기 사상최대</div></div>
+      <div class="card" style="padding:18px 18px;text-align:center"><div class="mono" style="font-size:26px;font-weight:700;color:var(--bronze)">~94%</div><div style="font-size:13px;color:var(--ink2)">FCF/순이익 전환율<br>(자본효율 높음)</div></div>
+    </div>
+  </section>
+</div>
+<div class="wrap">
+  <!-- 04 제품·기술 -->
+  <section id="products" class="anchor">
+    <div class="secnum">04 · 제품·서비스 및 기술력</div>
+    <h2 class="sectitle">무엇을 만들고, 왜 대체하기 어려운가</h2>
+    <div class="seclede">AMETEK 제품의 공통점은 "작지만 없으면 안 되는, 고객 시스템에 깊이 박힌 부품"이라는 점입니다.</div>
+    <div class="grid2">
+      <div class="card">
+        <div class="pill b mono" style="margin-bottom:8px">EIG · 전자계측</div>
+        <h3 style="font-size:19px;margin-bottom:6px">"재는 장비" — 측정·분석·모니터링</h3>
+        <ul class="clean" style="font-size:14.5px">
+          <li><b>항공·엔진 센서</b>: 비행기 엔진·기체의 온도·압력·위치를 실시간 측정</li>
+          <li><b>공정·분석 계측</b>: 화학·제약 공장에서 물질 성분을 분석</li>
+          <li><b>전력 계측</b>: 발전·송배전 설비의 상태 감시·진단</li>
+          <li><b>중장비 계기판</b>: 트럭·건설장비의 디스플레이</li>
+          <li><b>3D 측정·메트롤로지</b>: Faro 등 정밀 3차원 측정 솔루션</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="pill y mono" style="margin-bottom:8px">EMG · 전자기계</div>
+        <h3 style="font-size:19px;margin-bottom:6px">"움직이는·잇는 부품" — 모션·연결·소재</h3>
+        <ul class="clean" style="font-size:14.5px">
+          <li><b>정밀 모션 제어</b>: 자동화·로봇용 초정밀 모터·구동장치</li>
+          <li><b>엔지니어링 커넥터</b>: 항공·방산용 고신뢰성 전기 접속</li>
+          <li><b>전자 패키징</b>: 가혹한 환경에서 전자부품 보호</li>
+          <li><b>특수 금속·소재</b>: 항공·의료용 특수 합금·분말</li>
+          <li><b>열 관리</b>: 고출력 전자장비의 냉각·방열</li>
+        </ul>
+      </div>
+    </div>
+    <h3 style="font-size:21px;margin:26px 0 10px">기술력의 본질 — "성능 차별화 + 깊은 고정(lock-in)"</h3>
+    <p>AMETEK의 기술은 단일 혁신 제품이 아니라, <strong>수백 개의 작은 니치에서 1~2위를 차지하는 '차별화된 정밀 기술의 묶음'</strong>입니다. 고객의 비행기·발전소·공장 설계 단계에서 '설계에 들어가면(designed-in)' 제품 수명 내내 교체가 어렵고, 인증·규제(항공·의료)가 높은 진입장벽으로 작동합니다. 신제품 비중(바이탈리티 지수) 25%는 지속적인 R&amp;D 갱신을 보여줍니다.</p>
+    <figure class="chartbox">
+      <h4 style="font-size:15px;margin-bottom:14px;text-align:center">제품이 고객에게 전달·고정되는 과정</h4>
+      <svg viewBox="0 0 820 130" role="img" aria-label="가치 전달 흐름도">
+        <defs><marker id="arr2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#6b6253"/></marker></defs>
+        <g font-family="Spline Sans" font-size="12" text-anchor="middle">
+          <g><rect x="10" y="40" width="130" height="52" rx="10" fill="#fff" stroke="#cbbfa8"/><text x="75" y="62" font-weight="600" fill="#17140f">R&amp;D·설계</text><text x="75" y="80" font-size="10.5" fill="#6b6253">고객 요구 맞춤</text></g>
+          <g><rect x="175" y="40" width="130" height="52" rx="10" fill="#fff" stroke="#cbbfa8"/><text x="240" y="62" font-weight="600" fill="#17140f">정밀 제조</text><text x="240" y="80" font-size="10.5" fill="#6b6253">소량·고부가</text></g>
+          <g><rect x="340" y="40" width="140" height="52" rx="10" fill="#21384a"/><text x="410" y="62" font-weight="600" fill="#fff">고객 설계 내장</text><text x="410" y="80" font-size="10.5" fill="#bccccc">designed-in</text></g>
+          <g><rect x="515" y="40" width="140" height="52" rx="10" fill="#2c6c5d"/><text x="585" y="62" font-weight="600" fill="#fff">장기 운영·인증</text><text x="585" y="80" font-size="10.5" fill="#cfe3dd">교체 어려움</text></g>
+          <g><rect x="690" y="40" width="120" height="52" rx="10" fill="#a8682a"/><text x="750" y="62" font-weight="600" fill="#fff">애프터마켓</text><text x="750" y="80" font-size="10.5" fill="#f3e2cb">소모품·서비스</text></g>
+          <path d="M140,66 H173" stroke="#6b6253" stroke-width="1.6" marker-end="url(#arr2)"/>
+          <path d="M305,66 H338" stroke="#6b6253" stroke-width="1.6" marker-end="url(#arr2)"/>
+          <path d="M480,66 H513" stroke="#6b6253" stroke-width="1.6" marker-end="url(#arr2)"/>
+          <path d="M655,66 H688" stroke="#6b6253" stroke-width="1.6" marker-end="url(#arr2)"/>
+        </g>
+      </svg>
+      <figcaption>한 번 '설계에 내장'되면 제품 수명 내내 반복 매출(애프터마켓)이 발생 — 높은 전환비용</figcaption>
+    </figure>
+    <div class="eli"><div class="tag">쉽게 말하면</div><p>AMETEK 제품은 "고객의 기계 속에 한 번 박히면 빼기 힘든 부품"입니다. 비행기에 들어간 센서를 다른 회사 제품으로 바꾸려면 재인증·재설계 비용이 막대해서, 고객은 웬만하면 그냥 씁니다. 그래서 가격을 어느 정도 올려도 고객이 떠나지 않습니다(가격결정력).</p></div>
+  </section>
+
+  <!-- 05 산업 분석 -->
+  <section id="industry" class="anchor">
+    <div class="secnum">05 · 산업 분석</div>
+    <h2 class="sectitle">어떤 산업에, 어떤 위치로 있는가</h2>
+    <div class="seclede">AMETEK이 속한 곳은 '산업용 계측·시험·전자기계' 산업 — GDP보다 약간 빠르게 성장하고, 자동화·전동화·항공방산·의료 같은 구조적 수요가 떠받칩니다.</div>
+    <p class="lead-p"><strong>산업 구조:</strong> 이 산업은 거대 종합 산업기업(Danaher, Roper, Fortive, Emerson 등)과 수많은 전문 중소기업이 공존하는 <strong>'파편화된(fragmented)' 시장</strong>입니다. 바로 이 파편화가 AMETEK 같은 '인수형 컴파운더'에게는 기회입니다 — 작고 우량한 니치 기업을 계속 사 모을 수 있기 때문입니다.</p>
+    <figure class="chartbox">
+      <h4 style="font-size:15px;margin-bottom:14px;text-align:center">산업 가치사슬(Value Chain) 속 AMETEK의 위치</h4>
+      <svg viewBox="0 0 820 150" role="img" aria-label="가치사슬">
+        <defs><marker id="arr3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#a8682a"/></marker></defs>
+        <g font-family="Spline Sans" font-size="12" text-anchor="middle">
+          <g><rect x="10" y="50" width="130" height="56" rx="10" fill="#fff" stroke="#cbbfa8"/><text x="75" y="73" font-weight="600" fill="#17140f">소재·부품</text><text x="75" y="91" font-size="10.5" fill="#6b6253">금속·전자소자</text></g>
+          <g><rect x="178" y="38" width="150" height="80" rx="12" fill="#21384a" stroke="#a8682a" stroke-width="2"/><text x="253" y="64" font-weight="700" fill="#fff" font-size="13">AMETEK</text><text x="253" y="82" font-size="10.5" fill="#bccccc">계측·전자기계</text><text x="253" y="98" font-size="10.5" fill="#caa04a">차별화·설계내장</text></g>
+          <g><rect x="366" y="50" width="140" height="56" rx="10" fill="#fff" stroke="#cbbfa8"/><text x="436" y="73" font-weight="600" fill="#17140f">OEM·시스템</text><text x="436" y="91" font-size="10.5" fill="#6b6253">항공기·장비 제조</text></g>
+          <g><rect x="544" y="50" width="140" height="56" rx="10" fill="#fff" stroke="#cbbfa8"/><text x="614" y="73" font-weight="600" fill="#17140f">운영자·기업</text><text x="614" y="91" font-size="10.5" fill="#6b6253">항공사·공장·병원</text></g>
+          <g><rect x="700" y="50" width="110" height="56" rx="10" fill="#2c6c5d"/><text x="755" y="73" font-weight="600" fill="#fff">최종 수요</text><text x="755" y="91" font-size="10.5" fill="#cfe3dd">생산·안전</text></g>
+          <path d="M140,78 H176" stroke="#a8682a" stroke-width="1.8" marker-end="url(#arr3)"/>
+          <path d="M328,78 H364" stroke="#a8682a" stroke-width="1.8" marker-end="url(#arr3)"/>
+          <path d="M506,78 H542" stroke="#a8682a" stroke-width="1.8" marker-end="url(#arr3)"/>
+          <path d="M684,78 H698" stroke="#a8682a" stroke-width="1.8" marker-end="url(#arr3)"/>
+        </g>
+      </svg>
+      <figcaption>AMETEK은 소재를 받아 '차별화된 계측·정밀부품'으로 가공해 OEM·운영자에게 공급 — 가치사슬 중상류의 고부가 위치</figcaption>
+    </figure>
+    <div class="grid3" style="margin-top:8px">
+      <div class="card" style="padding:20px 22px"><h4 style="font-size:16px;color:var(--teal)">구조적 성장 동력 (+)</h4><ul class="clean" style="font-size:13.5px;margin-bottom:0"><li>공장 자동화·로봇 확대</li><li>전동화·전력 인프라 투자</li><li>항공·방산 사이클 회복</li><li>반도체·연구 장비 수요</li><li>의료기기 정밀화</li></ul></div>
+      <div class="card" style="padding:20px 22px"><h4 style="font-size:16px;color:var(--bronze)">최근 트렌드</h4><ul class="clean" style="font-size:13.5px;margin-bottom:0"><li>AI·소프트웨어 결합 계측</li><li>애프터마켓·구독화</li><li>리쇼어링·공급망 재편</li><li>주문 회복(AME 주문 +23%)</li><li>M&amp;A 경쟁 심화</li></ul></div>
+      <div class="card" style="padding:20px 22px"><h4 style="font-size:16px;color:var(--red)">역풍 요인 (−)</h4><ul class="clean" style="font-size:13.5px;margin-bottom:0"><li>경기 민감(산업 자본지출)</li><li>관세·무역 불확실성</li><li>인수 자산 가격 상승</li><li>금리·환율 변동</li><li>중국 경기 둔화</li></ul></div>
+    </div>
+    <div class="callout note" style="margin-top:18px"><div class="ct">&#9654; 산업의 미래 방향성</div><p style="margin:0">계측·산업기술 산업은 <b>'하드웨어 + 소프트웨어/데이터'로 진화</b>하고 있습니다. 측정 장비가 데이터를 수집해 예측정비·AI 분석으로 이어지면 반복 매출과 마진이 더 높아집니다. AMETEK은 이 흐름에서 소프트웨어·메트롤로지(Faro 등) 역량을 인수로 보강 중이나, 순수 소프트웨어 컴파운더(Roper)만큼 전환이 빠르진 않습니다. <span class="conf mid">확신도 중간 ≈65%</span></p></div>
+  </section>
+</div>
+<div class="wrap">
+  <!-- 06 해자 -->
+  <section id="moat" class="anchor">
+    <div class="secnum">06 · 경제적 해자 (Moat)</div>
+    <h2 class="sectitle">경쟁자가 넘기 어려운 '성벽'은 무엇인가</h2>
+    <div class="seclede">'해자(moat)'란 경쟁사가 쉽게 따라올 수 없는 구조적 우위입니다. AMETEK의 해자는 한 가지가 아니라 여러 겹입니다.</div>
+    <div class="eli"><div class="tag">쉽게 말하면</div><p>'해자'는 중세 성 둘레의 물길처럼 "적(경쟁자)이 쉽게 침입하지 못하게 막는 방어선"입니다. 해자가 깊고 넓을수록 회사는 오래 높은 이익을 지킬 수 있습니다 — 이것이 곧 CAP(경쟁우위기간)의 길이를 결정합니다.</p></div>
+    <div class="grid2">
+      <div class="card"><div style="display:flex;justify-content:space-between"><h4 style="font-size:16px">① 높은 전환비용 (Switching Cost)</h4><span class="pill g">강함</span></div><p style="font-size:14px;margin:8px 0 0">제품이 고객 시스템에 '설계 내장'되고 항공·의료 인증을 거치면, 교체에 막대한 재인증·재설계 비용 발생.</p></div>
+      <div class="card"><div style="display:flex;justify-content:space-between"><h4 style="font-size:16px">② 니치 시장 지배력</h4><span class="pill g">강함</span></div><p style="font-size:14px;margin:8px 0 0">수백 개 작은 시장에서 1~2위. 시장이 작아 대기업이 진입할 유인이 적어 경쟁 무풍지대.</p></div>
+      <div class="card"><div style="display:flex;justify-content:space-between"><h4 style="font-size:16px">③ 무형자산·기술/인증</h4><span class="pill g">강함</span></div><p style="font-size:14px;margin:8px 0 0">수십 년 축적된 정밀 노하우, 특허, 항공·의료 규제 인증이 진입장벽으로 작동.</p></div>
+      <div class="card"><div style="display:flex;justify-content:space-between"><h4 style="font-size:16px">④ 인수·통합 역량 (규모/프로세스)</h4><span class="pill y">중간~강함</span></div><p style="font-size:14px;margin:8px 0 0">'AMETEK 성장모델'로 인수기업 마진을 끌어올리는 반복가능한 프로세스. 다만 경쟁 격화로 인수가 상승.</p></div>
+      <div class="card"><div style="display:flex;justify-content:space-between"><h4 style="font-size:16px">⑤ 원가 우위 (규모의 경제)</h4><span class="pill y">중간</span></div><p style="font-size:14px;margin:8px 0 0">글로벌 조달·생산 규모. 단, 핵심은 원가보다 '차별화'에 있음.</p></div>
+      <div class="card"><div style="display:flex;justify-content:space-between"><h4 style="font-size:16px">⑥ 브랜드·네트워크 효과</h4><span class="pill r">약함</span></div><p style="font-size:14px;margin:8px 0 0">B2B 니치 특성상 소비자 브랜드·네트워크 효과는 제한적. 해자의 핵심 원천은 아님.</p></div>
+    </div>
+    <div class="callout note" style="margin-top:18px"><div class="ct">&#9654; 해자 종합 판정</div><p style="margin:0"><b>차별화 기반의 넓은 해자(wide moat)</b>로 판단합니다 <span class="conf hi">확신도 높음 ≈80%</span>. 실증적으로 NOPAT 마진(~24%)이 산업 평균을 크게 웃돌아 '원가 우위'가 아닌 <b>'차별화 전략'</b>이 해자의 본질임을 시사합니다(CAP 방법론: NOPAT 마진이 산업 평균의 배수면 차별화). 해자의 <b>지속성</b>은 인수 가격 규율에 좌우됩니다.</p></div>
+  </section>
+
+  <!-- 07 SWOT -->
+  <section id="swot" class="anchor">
+    <div class="secnum">07 · SWOT 분석</div>
+    <h2 class="sectitle">강점·약점·기회·위협</h2>
+    <div class="grid2" style="margin-top:6px">
+      <div class="card" style="border-top:4px solid var(--teal)"><h3 style="font-size:18px;color:var(--teal)">S · 강점 (Strengths)</h3><ul class="clean" style="font-size:14px;margin-bottom:0"><li>30%대 EBITDA 마진, 높은 현금전환(~94%)</li><li>다각화된 전방시장(항공·의료·전력·반도체)</li><li>피어 2배 수준의 보고 ROIC(12.5%)</li><li>입증된 인수·통합 프로세스, 사상 최대 백로그</li></ul></div>
+      <div class="card" style="border-top:4px solid var(--red)"><h3 style="font-size:18px;color:var(--red)">W · 약점 (Weaknesses)</h3><ul class="clean" style="font-size:14px;margin-bottom:0"><li>성장의 상당 부분이 인수에 의존(유기적 ~4–5%)</li><li>경기 민감한 산업 자본지출 노출</li><li>대형 인수 시 레버리지·통합 리스크 상승</li><li>순수 소프트웨어 대비 반복매출 비중 낮음</li></ul></div>
+      <div class="card" style="border-top:4px solid var(--bronze)"><h3 style="font-size:18px;color:var(--bronze)">O · 기회 (Opportunities)</h3><ul class="clean" style="font-size:14px;margin-bottom:0"><li>파편화된 시장의 풍부한 인수 파이프라인</li><li>Indicor($5B)·First Aviation·LKC로 외형 확대</li><li>자동화·전동화·방산·반도체 구조적 수요</li><li>계측+AI/소프트웨어 결합으로 마진 상승 여지</li></ul></div>
+      <div class="card" style="border-top:4px solid var(--navy)"><h3 style="font-size:18px;color:var(--navy)">T · 위협 (Threats)</h3><ul class="clean" style="font-size:14px;margin-bottom:0"><li>높은 밸류에이션의 멀티플 디레이팅(동종 사례)</li><li>인수 경쟁 심화로 가격 상승·수익률 희석</li><li>관세·무역·중국 경기 등 거시 역풍</li><li>금리 상승 시 자본비용↑·인수자금 부담↑</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 08 피어 비교 -->
+  <section id="peers" class="anchor">
+    <div class="secnum">08 · 피어그룹 비교</div>
+    <h2 class="sectitle">동종 '인수형 컴파운더'와의 비교</h2>
+    <div class="seclede">AMETEK은 Roper·Fortive·Danaher·IDEX 등과 같은 '니치 인수형 컴파운더' 그룹에 속합니다. 결론부터: AME는 이 그룹에서 가장 비싼 편이되, 자본효율(ROIC)은 가장 높습니다.</div>
+    <div class="tbl" style="overflow-x:auto"><table>
+      <thead><tr><th>회사</th><th>매출(TTM)</th><th>시총</th><th>P/E</th><th>EV/EBITDA</th><th>영업마진</th><th>보고 ROIC</th><th>1년 주가</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td>AMETEK (AME)</td><td>$7.4B</td><td>$52B</td><td>~34x</td><td>22.5x</td><td>26.2%</td><td>12.5%</td><td class="pos">+20%</td></tr>
+        <tr><td>Roper (ROP)</td><td>$7.1B</td><td>~$36B</td><td>23.5x</td><td>14.3x</td><td>31.6%</td><td>6.1%</td><td class="neg">−42%</td></tr>
+        <tr><td>Fortive (FTV)*</td><td>$4.2B</td><td>$19B</td><td>~37x</td><td>17.0x</td><td>~25%</td><td>6.8%</td><td class="neg">−26%</td></tr>
+        <tr><td>Danaher (DHR)</td><td>~$24B</td><td>~$142B</td><td>40.5x</td><td>20.4x</td><td>~25%</td><td>6.8%</td><td class="neg">−0.5%</td></tr>
+        <tr><td>Amphenol (APH)†</td><td>~$28B</td><td>~$183B</td><td>~35x</td><td>~25x</td><td>25.8%</td><td>~10%</td><td class="pos">+112%</td></tr>
+        <tr><td>Mettler-Toledo (MTD)</td><td>~$4.0B</td><td>$27B</td><td>~30x</td><td>~20x</td><td>~31%</td><td>높음</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px">* Fortive는 2025년 Ralliant 분사 후 수치. † Amphenol은 AI 데이터센터 수요로 매출 급증(분기 +58%)한 특수 상황으로 직접 비교에 주의. 보고 ROIC는 인수 영업권(goodwill) 영향으로 컴파운더 전반이 낮게 표시됨(방법론 한계).</p>
+    <div class="grid2" style="margin-top:18px">
+      <figure class="chartbox" style="margin-top:0">
+        <h4 style="font-size:15px;margin-bottom:12px;text-align:center">EV/EBITDA — AME가 가장 비싼 편</h4>
+        <svg viewBox="0 0 340 200" role="img" aria-label="EV/EBITDA 비교">
+          <g font-family="IBM Plex Mono" font-size="11.5" fill="#3d362c">
+            <text x="0" y="26">AME</text><rect x="58" y="15" width="225" height="16" rx="3" fill="#a8682a"/><text x="289" y="27" fill="#fff" text-anchor="end">22.5x</text>
+            <text x="0" y="56">DHR</text><rect x="58" y="45" width="204" height="16" rx="3" fill="#21384a"/><text x="268" y="57" fill="#fff" text-anchor="end">20.4x</text>
+            <text x="0" y="86">APH</text><rect x="58" y="75" width="250" height="16" rx="3" fill="#3f8a78"/><text x="314" y="87" fill="#fff" text-anchor="end">~25x</text>
+            <text x="0" y="116">FTV</text><rect x="58" y="105" width="170" height="16" rx="3" fill="#21384a"/><text x="234" y="117" fill="#fff" text-anchor="end">17.0x</text>
+            <text x="0" y="146">MTD</text><rect x="58" y="135" width="200" height="16" rx="3" fill="#21384a"/><text x="264" y="147" fill="#fff" text-anchor="end">~20x</text>
+            <text x="0" y="176">ROP</text><rect x="58" y="165" width="143" height="16" rx="3" fill="#2c6c5d"/><text x="207" y="177" fill="#fff" text-anchor="end">14.3x</text>
+          </g>
+        </svg>
+      </figure>
+      <figure class="chartbox" style="margin-top:0">
+        <h4 style="font-size:15px;margin-bottom:12px;text-align:center">보고 ROIC — AME가 가장 높음 (품질)</h4>
+        <svg viewBox="0 0 340 200" role="img" aria-label="ROIC 비교">
+          <g font-family="IBM Plex Mono" font-size="11.5" fill="#3d362c">
+            <text x="0" y="26">AME</text><rect x="58" y="15" width="250" height="16" rx="3" fill="#a8682a"/><text x="314" y="27" fill="#fff" text-anchor="end">12.5%</text>
+            <text x="0" y="56">APH</text><rect x="58" y="45" width="200" height="16" rx="3" fill="#3f8a78"/><text x="264" y="57" fill="#fff" text-anchor="end">~10%</text>
+            <text x="0" y="86">DHR</text><rect x="58" y="75" width="136" height="16" rx="3" fill="#21384a"/><text x="200" y="87" fill="#fff" text-anchor="end">6.8%</text>
+            <text x="0" y="116">FTV</text><rect x="58" y="105" width="136" height="16" rx="3" fill="#21384a"/><text x="200" y="117" fill="#fff" text-anchor="end">6.8%</text>
+            <text x="0" y="146">ROP</text><rect x="58" y="135" width="122" height="16" rx="3" fill="#2c6c5d"/><text x="186" y="147" fill="#fff" text-anchor="end">6.1%</text>
+            <line x1="58" y1="8" x2="58" y2="158" stroke="#cbbfa8" stroke-width="1"/>
+          </g>
+        </svg>
+      </figure>
+    </div>
+    <div class="callout note" style="margin-top:8px"><div class="ct">&#9654; 피어 비교의 핵심 시사점</div>
+      <p style="margin:0 0 8px"><b>① 품질은 최고 수준:</b> AME의 보고 ROIC(12.5%)는 Roper·Danaher·Fortive(~6%)의 약 2배. 인수 시 영업권을 덜 쌓거나(가격 규율) 유기적 자본효율이 높다는 의미로, <b>프리미엄을 부분적으로 정당화</b>합니다.</p>
+      <p style="margin:0"><b>② 그러나 가격은 최상단:</b> EV/EBITDA 22.5배는 그룹 최고 수준. 그리고 <b>Roper(−42%)·Fortive(−26%)의 급락은 '프리미엄 컴파운더도 멀티플이 무너질 수 있다'</b>는 경고입니다 <span class="conf mid">확신도 중간 ≈70%</span>.</p>
+    </div>
+  </section>
+</div>
+<div class="wrap">
+  <!-- 09 생애주기 -->
+  <section id="lifecycle" class="anchor">
+    <div class="secnum">09 · 생애주기 판별</div>
+    <h2 class="sectitle">AMETEK은 지금 어느 단계인가</h2>
+    <div class="seclede">기업은 도입 → 성장 → 성숙 → 정리 → 감소의 5단계를 거칩니다. 현금흐름표의 '부호(+/−)' 패턴으로 단계를 판별합니다.</div>
+    <div class="eli"><div class="tag">쉽게 말하면</div><p>회사가 "벌어들이는지(영업), 투자에 쓰는지(투자), 빌리거나 갚는지(재무)"의 부호 조합으로 인생 단계를 읽습니다. 성숙기 우량 기업은 보통 <b>영업(+) · 투자(−) · 재무(−)</b> 패턴입니다.</p></div>
+    <div class="grid2">
+      <div class="tbl"><table>
+        <thead><tr><th>현금흐름</th><th>AMETEK 패턴</th><th>의미</th></tr></thead>
+        <tbody>
+          <tr><td>영업활동 CF</td><td class="pos">유입 (+)</td><td style="font-family:Spline Sans">강한 본업 현금창출</td></tr>
+          <tr><td>투자활동 CF</td><td class="neg">유출 (−)</td><td style="font-family:Spline Sans">인수·설비에 집중 투자</td></tr>
+          <tr><td>재무활동 CF</td><td style="color:var(--bronze)">혼합 (±)</td><td style="font-family:Spline Sans">평시 환원(−), 대형인수 시 차입(+)</td></tr>
+        </tbody>
+      </table></div>
+      <div class="card" style="display:flex;flex-direction:column;justify-content:center">
+        <h4 style="font-size:17px;margin-bottom:8px">판정: <span class="acc">성숙기 (컴파운더)</span> <span class="conf hi">확신도 높음 ≈85%</span></h4>
+        <p style="font-size:14px;margin:0">영업(+)/투자(−)에 평시 재무(−)는 전형적 <b>성숙기</b>입니다. 다만 AMETEK은 대형 인수 때 차입(재무 +)을 일으켜 <b>'성장기 성격을 겸한 성숙기'</b>로, 단순 정체 성숙기와 다릅니다. 이 단계는 <b>DCF + CAP 분석에 가장 적합</b>합니다.</p>
+      </div>
+    </div>
+    <figure class="chartbox" style="margin-top:18px">
+      <h4 style="font-size:15px;margin-bottom:6px;text-align:center">생애주기 위치</h4>
+      <svg viewBox="0 0 760 96" role="img" aria-label="생애주기 단계">
+        <g font-family="Spline Sans" font-size="12" text-anchor="middle">
+          <line x1="40" y1="60" x2="720" y2="60" stroke="#cbbfa8" stroke-width="2"/>
+          <g fill="#6b6253"><text x="100" y="84">도입</text><text x="250" y="84">성장</text><text x="400" y="84">성숙</text><text x="540" y="84">정리</text><text x="660" y="84">감소</text></g>
+          <circle cx="100" cy="60" r="7" fill="#e7dcc7"/><circle cx="250" cy="60" r="7" fill="#e7dcc7"/>
+          <circle cx="400" cy="60" r="13" fill="#a8682a" stroke="#fff" stroke-width="3"/>
+          <circle cx="540" cy="60" r="7" fill="#e7dcc7"/><circle cx="660" cy="60" r="7" fill="#e7dcc7"/>
+          <text x="400" y="34" font-weight="600" fill="#a8682a" font-family="Fraunces">AMETEK</text>
+          <path d="M400,40 L400,50" stroke="#a8682a" stroke-width="2"/>
+        </g>
+      </svg>
+    </figure>
+  </section>
+
+  <!-- 10 포터 5 Forces -->
+  <section id="porter" class="anchor">
+    <div class="secnum">10 · 경쟁우위 정성 분석</div>
+    <h2 class="sectitle">포터의 5가지 경쟁요인 & 전략 유형</h2>
+    <div class="seclede">'5 Forces'는 산업의 매력도를 다섯 압력(신규진입·경쟁·공급자·구매자·대체재)으로 평가하는 틀입니다. 압력이 약할수록 그 산업/기업의 수익성이 높게 유지됩니다.</div>
+    <figure class="chartbox">
+      <h4 style="font-size:15px;margin-bottom:14px;text-align:center">5 Forces 위협 강도 (낮음 = AMETEK에 유리)</h4>
+      <svg viewBox="0 0 700 230" role="img" aria-label="포터 5 forces">
+        <g font-family="Spline Sans" font-size="12.5" fill="#3d362c">
+          <!-- scale: 0..100 mapped to 230..680 ; low=green,high=red -->
+          <text x="0" y="28">신규 진입 위협</text><rect x="200" y="16" width="480" height="16" rx="8" fill="#eee3cf"/><rect x="200" y="16" width="115" height="16" rx="8" fill="#2c6c5d"/><text x="690" y="28" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="#2c6c5d">낮음</text>
+          <text x="0" y="62">기존 경쟁 강도</text><rect x="200" y="50" width="480" height="16" rx="8" fill="#eee3cf"/><rect x="200" y="50" width="230" height="16" rx="8" fill="#caa04a"/><text x="690" y="62" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="#a8682a">중간</text>
+          <text x="0" y="96">공급자 교섭력</text><rect x="200" y="84" width="480" height="16" rx="8" fill="#eee3cf"/><rect x="200" y="84" width="140" height="16" rx="8" fill="#2c6c5d"/><text x="690" y="96" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="#2c6c5d">낮음~중</text>
+          <text x="0" y="130">구매자 교섭력</text><rect x="200" y="118" width="480" height="16" rx="8" fill="#eee3cf"/><rect x="200" y="118" width="150" height="16" rx="8" fill="#2c6c5d"/><text x="690" y="130" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="#2c6c5d">낮음</text>
+          <text x="0" y="164">대체재 위협</text><rect x="200" y="152" width="480" height="16" rx="8" fill="#eee3cf"/><rect x="200" y="152" width="120" height="16" rx="8" fill="#2c6c5d"/><text x="690" y="164" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="#2c6c5d">낮음</text>
+          <text x="200" y="200" font-family="IBM Plex Mono" font-size="11" fill="#6b6253">종합: 산업 매력도 높음 — 5개 압력 중 4개가 '낮음'</text>
+        </g>
+      </svg>
+    </figure>
+    <div class="grid2" style="margin-top:6px">
+      <div class="card" style="padding:20px 22px">
+        <h4 style="font-size:16px">5 Forces 해설</h4>
+        <ul class="clean" style="font-size:13.5px;margin-bottom:0">
+          <li><b>신규 진입(낮음):</b> 작은 니치 + 인증 장벽으로 신규 진입 유인 적음</li>
+          <li><b>기존 경쟁(중간):</b> 인수 시장에서 Roper·Danaher 등과 경쟁(가격 상승 압력)</li>
+          <li><b>공급자(낮음~중):</b> 다변화된 부품 조달, 규모로 협상력 보유</li>
+          <li><b>구매자(낮음):</b> 설계 내장·전환비용으로 고객 협상력 제한</li>
+          <li><b>대체재(낮음):</b> 미션 크리티컬 정밀 계측은 대체가 어려움</li>
+        </ul>
+      </div>
+      <div class="card" style="padding:20px 22px">
+        <h4 style="font-size:16px">전략 유형: <span class="acc">차별화</span></h4>
+        <p style="font-size:14px;margin:8px 0 10px">CAP 방법론은 <b>NOPAT 마진</b>과 <b>투자자본 회전율</b>로 전략 유형을 판별합니다.</p>
+        <div class="tbl"><table style="font-size:12.5px"><tbody>
+          <tr><td>NOPAT 마진</td><td>~24% (산업 평균 큰 폭 상회)</td><td><span class="pill g">차별화 ↑</span></td></tr>
+          <tr><td>투자자본 회전율</td><td>평균 수준(영업권 영향)</td><td><span class="pill y">원가우위 약</span></td></tr>
+        </tbody></table></div>
+        <p style="font-size:13.5px;margin:10px 0 0"><b>결론:</b> 원가가 아닌 <b>'차별화'가 초과수익의 원천</b> — 실증연구상 차별화가 지속우위로 더 흔함.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 DCF Exhibit 23 -->
+  <section id="dcf" class="anchor">
+    <div class="secnum">11 · DCF 모델 — 전시 23 형식</div>
+    <h2 class="sectitle">기본 시나리오 현금흐름 할인 모델</h2>
+    <div class="seclede">미래 잉여현금흐름(FCF)을 현재가치로 할인해 기업가치를 구합니다. 아래는 15년 명시적 예측 + 페이드 최종가치로 구성한 기본 시나리오입니다.</div>
+    <div class="eli"><div class="tag">쉽게 말하면 — 핵심 용어</div><p><b>EBITA</b>: 이자·세금·인수무형상각 전 이익(영업 본연의 이익). <b>NOPAT</b>: EBITA에서 세금만 뺀 '세후 영업이익'. <b>투자</b>: 성장하려고 새로 투입하는 돈(설비+운전자본+인수). <b>FCF</b>: NOPAT − 투자 = 주주에게 돌아갈 수 있는 잉여현금. <b>현재가치</b>: 미래의 돈을 자본비용(WACC)으로 할인해 '오늘의 가치'로 환산한 값.</p></div>
+    <div style="background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink2)">
+      가정: 매출성장 점진 둔화(2027 Indicor 반영 +13%) · EBITA마진 29.6%→30.0% · 세율 19% · ROIIC 15% · WACC 8.5% · 장기성장 2.5% · 페이드 0.18 · 연중(mid-year) 할인
+    </div>
+    <div class="tbl" style="overflow-x:auto"><table style="font-size:12.5px">
+      <thead><tr><th>연도</th><th>매출</th><th>성장%</th><th>EBITA</th><th>마진%</th><th>NOPAT</th><th>투자</th><th>FCF</th><th>FCF 현가</th></tr></thead>
+      <tbody>
+        <tr><td>2025(기준)</td><td>7,401</td><td>—</td><td>2,190</td><td>29.6</td><td>1,774</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td>2026E</td><td>7,993</td><td>8.0</td><td>2,366</td><td>29.6</td><td>1,916</td><td>950</td><td>966</td><td>928</td></tr>
+        <tr><td>2027E</td><td>9,032</td><td>13.0</td><td>2,683</td><td>29.7</td><td>2,173</td><td>1,710</td><td>463</td><td>410</td></tr>
+        <tr><td>2028E</td><td>9,664</td><td>7.0</td><td>2,880</td><td>29.8</td><td>2,333</td><td>1,066</td><td>1,267</td><td>1,032</td></tr>
+        <tr><td>2029E</td><td>10,293</td><td>6.5</td><td>3,067</td><td>29.8</td><td>2,484</td><td>1,011</td><td>1,474</td><td>1,107</td></tr>
+        <tr><td>2030E</td><td>10,910</td><td>6.0</td><td>3,262</td><td>29.9</td><td>2,642</td><td>1,053</td><td>1,590</td><td>1,100</td></tr>
+        <tr><td>2031E</td><td>11,510</td><td>5.5</td><td>3,442</td><td>29.9</td><td>2,788</td><td>969</td><td>1,819</td><td>1,160</td></tr>
+        <tr><td>2032E</td><td>12,086</td><td>5.0</td><td>3,626</td><td>30.0</td><td>2,937</td><td>994</td><td>1,942</td><td>1,141</td></tr>
+        <tr><td>2033E</td><td>12,690</td><td>5.0</td><td>3,807</td><td>30.0</td><td>3,084</td><td>979</td><td>2,105</td><td>1,140</td></tr>
+        <tr><td>2034E</td><td>13,261</td><td>4.5</td><td>3,978</td><td>30.0</td><td>3,222</td><td>925</td><td>2,297</td><td>1,146</td></tr>
+        <tr><td>2035E</td><td>13,858</td><td>4.5</td><td>4,157</td><td>30.0</td><td>3,367</td><td>967</td><td>2,401</td><td>1,104</td></tr>
+        <tr><td>2036E</td><td>14,412</td><td>4.0</td><td>4,324</td><td>30.0</td><td>3,502</td><td>898</td><td>2,604</td><td>1,103</td></tr>
+        <tr><td>2037E</td><td>14,989</td><td>4.0</td><td>4,497</td><td>30.0</td><td>3,642</td><td>934</td><td>2,708</td><td>1,057</td></tr>
+        <tr><td>2038E</td><td>15,588</td><td>4.0</td><td>4,676</td><td>30.0</td><td>3,788</td><td>971</td><td>2,817</td><td>1,013</td></tr>
+        <tr><td>2039E</td><td>16,134</td><td>3.5</td><td>4,840</td><td>30.0</td><td>3,921</td><td>884</td><td>3,037</td><td>1,007</td></tr>
+        <tr><td>2040E</td><td>16,698</td><td>3.5</td><td>5,010</td><td>30.0</td><td>4,058</td><td>915</td><td>3,143</td><td>960</td></tr>
+      </tbody>
+    </table></div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="tbl"><table style="font-size:13px"><tbody>
+        <tr><td>명시적 FCF 현재가치 합계</td><td>$15,409M</td></tr>
+        <tr><td>최종가치(2040, 페이드 모델)</td><td>$49,338M</td></tr>
+        <tr><td>최종가치의 현재가치</td><td>$15,072M</td></tr>
+        <tr><td>기업가치 (EV)</td><td>$30,482M</td></tr>
+        <tr><td>(−) 순부채</td><td>$2,112M</td></tr>
+        <tr class="tot"><td>자기자본가치</td><td>$28,370M</td></tr>
+      </tbody></table></div>
+      <div class="card" style="display:flex;flex-direction:column;justify-content:center;text-align:center;background:linear-gradient(160deg,#21384a,#2a4257);color:#fff">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;color:#bccccc">기본 시나리오 주당 내재가치</div>
+        <div style="font-family:'Fraunces',serif;font-size:54px;font-weight:700;line-height:1.1;margin:6px 0">$124</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#caa04a">vs 주가 $229 &nbsp;·&nbsp; 갭 −46%</div>
+        <div style="font-size:13px;color:#d6c9b4;margin-top:10px">15년의 가치창출 + 섹터형 페이드 가정 시</div>
+      </div>
+    </div>
+    <div class="callout warn" style="margin-top:16px"><div class="ct">&#9888; 해석</div><p style="margin:0">이 기본 DCF는 <b>주당 약 $124</b>를 제시합니다. 즉 "<b>15년간 견실히 가치를 창출한 뒤 섹터 평균 속도로 초과수익이 소멸</b>"한다는, 충분히 우호적인 가정으로도 현재가($229)를 정당화하지 못합니다. 이 갭이 바로 다음 장(시장 내재 CAP)의 출발점입니다.</p></div>
+  </section>
+</div>
+<div class="wrap">
+  <!-- 12 WACC -->
+  <section id="wacc" class="anchor">
+    <div class="secnum">12 · WACC 및 최종가치 가정</div>
+    <h2 class="sectitle">할인율(자본비용)은 어떻게 구했나</h2>
+    <div class="seclede">WACC(가중평균자본비용)는 "이 회사에 투자할 때 요구되는 최소 수익률"입니다. 미래 현금흐름을 오늘 가치로 깎는 '할인율'로 쓰입니다.</div>
+    <div class="grid2">
+      <div class="card">
+        <h4 style="font-size:17px;margin-bottom:12px">CAPM 기반 자본비용 분해</h4>
+        <div class="tbl"><table style="font-size:13px"><tbody>
+          <tr><td>무위험이자율 (10년 국채)</td><td>4.47%</td></tr>
+          <tr><td>베타 (β)</td><td>1.00</td></tr>
+          <tr><td>주식위험프리미엄 ERP*</td><td>4.23%</td></tr>
+          <tr class="hl"><td>자기자본비용 (Ke)</td><td>8.70%</td></tr>
+          <tr><td>세후 부채비용 (Kd)</td><td>4.10%</td></tr>
+          <tr><td>자기자본 / 부채 비중</td><td>95.3% / 4.7%</td></tr>
+          <tr class="tot"><td>WACC (기본)</td><td>8.5%</td></tr>
+        </tbody></table></div>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px">* ERP는 다모다란 2026년 내재 ERP <b>4.23%</b> 적용. 프로젝트 표준값 4.75% 적용 시 <b>WACC ≈ 9.0%</b>. 두 값 모두 민감도·시나리오에 반영.</p>
+      </div>
+      <div class="card">
+        <h4 style="font-size:17px;margin-bottom:12px">최종가치 — 페이드 모델</h4>
+        <div class="eli" style="margin:0 0 12px"><div class="tag">쉽게 말하면 — 페이드(fade)</div><p style="font-size:13.5px">'페이드'는 초과수익이 시간이 지나며 <b>평균으로 사라지는 속도</b>입니다. 0이면 영원히 우위 유지(매우 낙관), 1이면 즉시 소멸(해자 없음). 산업 섹터 평균은 0.21.</p></div>
+        <ul class="clean" style="font-size:13.5px;margin-bottom:0">
+          <li>장기 성장률 <b>2.5%</b> (FRED 10년 기대 인플레 ~2.33% 참조)</li>
+          <li>페이드 비율 <b>0.18</b> (산업 0.21과 기술하드웨어 0.17 사이 — AME의 우수한 지속성 반영)</li>
+          <li>고든 영구성장이 아닌 <b>페이드 모델</b>로 점진적 평균회귀 반영</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout warn" style="margin-top:16px"><div class="ct">&#9888; 데이터 출처 상충 알림</div><p style="margin:0">프로젝트 표준 ERP(4.75%)와 다모다란 최신 실측값(4.23%)이 다릅니다. 데이터 수집 원칙(다모다란 최신값 우선)에 따라 <b>기본은 4.23%(WACC 8.5%)</b>를 채택하되, 표준값 4.75%(WACC 9.0%)도 병기합니다. 이 차이는 결론(고평가 방향)을 강화하는 쪽으로 작동합니다(WACC↑ → 내재가치↓).</p></div>
+  </section>
+
+  <!-- 13 시장 내재 CAP -->
+  <section id="cap" class="anchor">
+    <div class="secnum">13 · 시장 내재 CAP — 본 분석의 핵심</div>
+    <h2 class="sectitle">주가는 '몇 년의 초과수익'을 가격에 담고 있나</h2>
+    <div class="seclede">'적정가치'를 정하는 대신, 거꾸로 묻습니다 — "현재 주가 $229가 맞으려면, 시장은 AMETEK이 자본비용을 넘는 수익을 몇 년이나 낼 거라 믿어야 하는가?" 이것이 '시장 내재 CAP'입니다.</div>
+    <div class="eli"><div class="tag">쉽게 말하면 — 역(逆)DCF</div><p>보통은 "이 회사는 얼마짜리"를 계산하지만, 여기서는 반대로 합니다. <b>주가를 정답으로 놓고, 그 가격을 만들려면 회사가 얼마나 오래 잘해야 하는지</b>를 역산합니다. 그 '기간(CAP)'이 너무 길면 시장이 과하게 낙관적이라는 신호입니다.</p></div>
+
+    <figure class="chartbox">
+      <h4 style="font-size:15px;margin-bottom:4px;text-align:center">내재가치 vs 명시적 가치창출 기간(CAP) — 기본 가정</h4>
+      <svg viewBox="0 0 640 340" role="img" aria-label="내재 CAP 곡선">
+        <!-- zone bands -->
+        <rect x="70" y="30" width="58.9" height="240" fill="#e3efe9" opacity="0.5"/>
+        <rect x="128.9" y="30" width="58.9" height="240" fill="#eaf1ef" opacity="0.5"/>
+        <rect x="187.8" y="30" width="58.9" height="240" fill="#f2efe6" opacity="0.6"/>
+        <rect x="246.7" y="30" width="58.9" height="240" fill="#faeed7" opacity="0.5"/>
+        <rect x="305.6" y="30" width="294.4" height="240" fill="#f6e4df" opacity="0.45"/>
+        <!-- zone labels -->
+        <g font-family="IBM Plex Mono" font-size="9.5" text-anchor="middle" fill="#6b6253">
+          <text x="99" y="46">매수후보</text>
+          <text x="158" y="46">약간비관</text>
+          <text x="217" y="46">중립</text>
+          <text x="276" y="46">약간낙관</text>
+          <text x="450" y="46">과도한 낙관</text>
+        </g>
+        <!-- axes -->
+        <line x1="70" y1="270" x2="600" y2="270" stroke="#cbbfa8" stroke-width="1.5"/>
+        <line x1="70" y1="30" x2="70" y2="270" stroke="#cbbfa8" stroke-width="1.5"/>
+        <!-- y ticks -->
+        <g font-family="IBM Plex Mono" font-size="10" fill="#6b6253" text-anchor="end">
+          <text x="64" y="274">$0</text>
+          <line x1="67" y1="227.1" x2="600" y2="227.1" stroke="#eee3cf" stroke-width="1"/><text x="64" y="231">$50</text>
+          <line x1="67" y1="184.3" x2="600" y2="184.3" stroke="#eee3cf" stroke-width="1"/><text x="64" y="188">$100</text>
+          <line x1="67" y1="141.4" x2="600" y2="141.4" stroke="#eee3cf" stroke-width="1"/><text x="64" y="145">$150</text>
+          <line x1="67" y1="98.6" x2="600" y2="98.6" stroke="#eee3cf" stroke-width="1"/><text x="64" y="102">$200</text>
+          <line x1="67" y1="55.7" x2="600" y2="55.7" stroke="#eee3cf" stroke-width="1"/><text x="64" y="59">$250</text>
+        </g>
+        <!-- x ticks -->
+        <g font-family="IBM Plex Mono" font-size="10" fill="#6b6253" text-anchor="middle">
+          <text x="70" y="286">0</text><text x="187.8" y="286">10</text><text x="305.6" y="286">20</text><text x="423.3" y="286">30</text><text x="541.1" y="286">40</text>
+          <text x="335" y="306" fill="#3d362c" font-size="11">명시적 가치창출 기간 = 내재 CAP (년)</text>
+        </g>
+        <!-- price line $229 at y=73.7 -->
+        <line x1="70" y1="73.7" x2="600" y2="73.7" stroke="#b23a2e" stroke-width="2" stroke-dasharray="7 4"/>
+        <text x="78" y="69" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="#b23a2e">현재 주가 $229</text>
+        <!-- value curve -->
+        <polyline points="70,193.7 128.9,178.3 187.8,162 246.7,144.9 305.6,127.7 364.4,110.6 423.3,93.4 482.2,74.6 541.1,56.6 600,37.7"
+          fill="none" stroke="#21384a" stroke-width="3"/>
+        <!-- crossing marker ~yr35 x=482 y=74.6 -->
+        <circle cx="482.2" cy="74.2" r="7" fill="#a8682a" stroke="#fff" stroke-width="2.5"/>
+        <line x1="482.2" y1="74.2" x2="482.2" y2="270" stroke="#a8682a" stroke-width="1.3" stroke-dasharray="3 3"/>
+        <text x="482.2" y="262" font-family="IBM Plex Mono" font-size="11" font-weight="700" fill="#a8682a" text-anchor="middle">≈35년</text>
+        <!-- curve dots -->
+        <g fill="#21384a">
+          <circle cx="187.8" cy="162" r="3"/><circle cx="305.6" cy="127.7" r="3"/><circle cx="423.3" cy="93.4" r="3"/>
+        </g>
+        <text x="150" y="158" font-family="IBM Plex Mono" font-size="10" fill="#21384a">기본 내재가치 곡선</text>
+      </svg>
+      <figcaption>곡선이 주가($229)와 만나는 지점 = 시장 내재 CAP ≈ 35년 (기본 가정: 성장 9%, ROIIC 15%, 페이드 0.18, WACC 8.5%)</figcaption>
+    </figure>
+
+    <h3 style="font-size:21px;margin:24px 0 10px">가정별 내재 CAP — 어떤 전제든 '낙관' 구간</h3>
+    <div class="grid3">
+      <div class="card" style="text-align:center;padding:22px"><div class="secnum" style="color:var(--teal)">강세 가정</div><div class="mono" style="font-size:40px;font-weight:700;color:var(--teal);line-height:1.1;margin:4px 0">~17.5년</div><p style="font-size:12.5px;margin:0">성장 11%·ROIIC 17%·페이드 0.12·WACC 8.0%. "약간 낙관" 상단 — 해자 근거 강력해야 정당화.</p></div>
+      <div class="card" style="text-align:center;padding:22px;border:2px solid var(--bronze)"><div class="secnum">기본 가정</div><div class="mono" style="font-size:40px;font-weight:700;color:var(--bronze);line-height:1.1;margin:4px 0">~35년</div><p style="font-size:12.5px;margin:0">성장 9%·ROIIC 15%·페이드 0.18·WACC 8.5%. "과도한 낙관" 구간(20년+).</p></div>
+      <div class="card" style="text-align:center;padding:22px"><div class="secnum" style="color:var(--red)">섹터 평균 가정</div><div class="mono" style="font-size:40px;font-weight:700;color:var(--red);line-height:1.1;margin:4px 0">~54년</div><p style="font-size:12.5px;margin:0">성장 8%·ROIIC 14%·페이드 0.21·WACC 8.5%. 비현실적으로 길어 고평가를 강하게 시사.</p></div>
+    </div>
+
+    <div class="tbl" style="margin-top:18px"><table style="font-size:13px">
+      <thead><tr><th>내재 CAP</th><th>해석 (CAP 방법론)</th><th>AMETEK 위치</th></tr></thead>
+      <tbody>
+        <tr><td>5년 미만</td><td>시장이 매우 비관적 → 매수 후보</td><td></td></tr>
+        <tr><td>5~10년</td><td>약간 비관 → 해자 확실하면 매수</td><td></td></tr>
+        <tr><td>10~15년</td><td>합리적 범위 → 중립</td><td></td></tr>
+        <tr><td>15~20년</td><td>약간 낙관 → 해자 근거 강력해야</td><td><span class="pill y">강세 가정</span></td></tr>
+        <tr class="hl"><td>20년 초과</td><td>과도한 낙관 → 회피 고려</td><td><span class="pill r">기본·섹터 가정</span></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout note" style="margin-top:16px"><div class="ct">&#9654; 보완 렌즈 — '보고 FCF'로 보면?</div><p style="margin:0 0 8px">위 모델은 인수(M&amp;A)를 '투자'로 차감하는 <b>경제적 관점</b>입니다. 만약 시장이 AMETEK의 <b>높은 보고 FCF($1.67B, 인수는 차입으로 조달)</b>를 기준으로 본다면, 현재가($229)는 <b>"FCF가 매년 약 8~10%씩 10~15년간 성장"</b>해야 정당화됩니다.</p><p style="margin:0">두 렌즈 모두 결론은 같습니다 — <b>주가는 '고한자릿수~저두자릿수 복리가 10~15년 이상 지속'</b>이라는 요구 수준 높은 기대를 담고 있습니다. AMETEK의 트랙레코드상 불가능하진 않으나, <b>실수의 여지(margin of safety)가 거의 없습니다</b> <span class="conf mid">확신도 중간 ≈70%</span>.</p></div>
+
+    <div class="callout note" style="margin-top:12px;background:#f2efe6;border-color:#d8cdb6"><div class="ct" style="color:var(--bronze)">&#9432; 방법론 주의</div><p style="margin:0">WACC(8.5%)가 성장률(8~9%)에 근접할 때, 내재 CAP는 가정에 매우 민감하고 길게 나오며 <b>페이드 비율의 영향은 작아집니다</b>(할인율 효과가 지배). 따라서 "35년"이라는 숫자 자체보다 <b>"주가가 수십 년의 지속 우위를 요구한다"는 방향성</b>에 무게를 둬야 합니다.</p></div>
+  </section>
+</div>
+<div class="wrap">
+  <!-- 14 민감도 -->
+  <section id="sens" class="anchor">
+    <div class="secnum">14 · 민감도 분석</div>
+    <h2 class="sectitle">어떤 가정이 가치를 크게 흔드나</h2>
+    <div class="seclede">기본 내재가치 $124를 기준으로, 각 변수를 흔들었을 때의 변동폭입니다. 막대가 길수록 그 변수의 영향이 큽니다.</div>
+    <figure class="chartbox">
+      <h4 style="font-size:15px;margin-bottom:12px;text-align:center">토네이도 차트 — 변수별 주당 내재가치 범위</h4>
+      <svg viewBox="0 0 640 220" role="img" aria-label="민감도 토네이도">
+        <!-- baseline at $124 x=363.1 -->
+        <line x1="363.1" y1="20" x2="363.1" y2="180" stroke="#a8682a" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="363.1" y="200" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" font-weight="700" fill="#a8682a">기준 $124</text>
+        <g font-family="IBM Plex Mono" font-size="11.5" fill="#3d362c">
+          <!-- WACC 7.5%~9.5% : x 232.9 to 534.6 -->
+          <text x="0" y="38">WACC ±1%p</text><rect x="232.9" y="27" width="301.7" height="18" rx="4" fill="#21384a"/>
+          <text x="228" y="39" text-anchor="end" fill="#2c6c5d" font-size="10">$149</text><text x="540" y="39" fill="#b23a2e" font-size="10">$105</text>
+          <!-- 성장 ±25% : x 280.9 to 452.3 -->
+          <text x="0" y="72">성장 ±25%</text><rect x="280.9" y="61" width="171.4" height="18" rx="4" fill="#2c6c5d"/>
+          <text x="276" y="73" text-anchor="end" fill="#b23a2e" font-size="10">$112</text><text x="458" y="73" fill="#2c6c5d" font-size="10">$137</text>
+          <!-- ROIIC 12~18% : x 287.7 to 411.1 -->
+          <text x="0" y="106">ROIIC 12–18%</text><rect x="287.7" y="95" width="123.4" height="18" rx="4" fill="#3f8a78"/>
+          <text x="283" y="107" text-anchor="end" fill="#b23a2e" font-size="10">$113</text><text x="416" y="107" fill="#2c6c5d" font-size="10">$131</text>
+          <!-- 페이드 0.10~0.30 : x 356.3 to 370 -->
+          <text x="0" y="140">페이드 0.10–0.30</text><rect x="356.3" y="129" width="13.7" height="18" rx="4" fill="#caa04a"/>
+          <text x="378" y="140" fill="#6b6253" font-size="10">$123–125 (영향 미미)</text>
+        </g>
+        <line x1="130" y1="18" x2="130" y2="180" stroke="#eee3cf"/><line x1="610" y1="18" x2="610" y2="180" stroke="#eee3cf"/>
+      </svg>
+      <figcaption>가치를 가장 크게 흔드는 변수는 <b>WACC(할인율)</b> · 그 다음 <b>성장률</b>. 페이드(해자 지속성)는 WACC≈성장 구간에서 영향이 작음.</figcaption>
+    </figure>
+    <div class="callout note"><div class="ct">&#9654; 시사점</div><p style="margin:0">밸류에이션은 <b>금리(WACC)에 가장 민감</b>합니다. 현재 거시 환경은 유가 상승·지정학 리스크로 <b>연내 금리 인상 가능성까지 거론</b>되는 상황이라, 할인율 상방 리스크가 밸류에이션에 부담입니다. 반대로 금리가 하락(WACC→7.5%)하면 내재가치는 $149까지 상승해 갭이 줄어듭니다.</p></div>
+  </section>
+
+  <!-- 15 시나리오 -->
+  <section id="scenario" class="anchor">
+    <div class="secnum">15 · 시나리오 분석</div>
+    <h2 class="sectitle">강세 · 기본 · 약세</h2>
+    <div class="seclede">세 가지 미래를 가정해 주당 내재가치를 비교합니다. 주목할 점 — 강세 시나리오에서조차 현재가($229)에 미치지 못합니다.</div>
+    <figure class="chartbox">
+      <svg viewBox="0 0 640 250" role="img" aria-label="시나리오 막대">
+        <!-- scale $0-260 -> x 130-600 (470/260=1.808px/$); bars vertical -->
+        <line x1="130" y1="200" x2="600" y2="200" stroke="#cbbfa8" stroke-width="1.5"/>
+        <!-- price reference line $229 -> using horizontal? bars are vertical; use y for value -->
+        <!-- redo: vertical bars, y from 200(0) up; scale 260$ -> 170px -> 0.6538px/$ -->
+        <g font-family="IBM Plex Mono" font-size="12">
+          <!-- bear $88 -->
+          <rect x="165" y="142.5" width="90" height="57.5" rx="5" fill="#b23a2e"/><text x="210" y="134" text-anchor="middle" font-weight="700" fill="#b23a2e">$88</text><text x="210" y="220" text-anchor="middle" fill="#3d362c">약세</text>
+          <!-- base $124 -->
+          <rect x="295" y="118.9" width="90" height="81.1" rx="5" fill="#a8682a"/><text x="340" y="110" text-anchor="middle" font-weight="700" fill="#a8682a">$124</text><text x="340" y="220" text-anchor="middle" fill="#3d362c">기본</text>
+          <!-- bull $160 -->
+          <rect x="425" y="95.4" width="90" height="104.6" rx="5" fill="#2c6c5d"/><text x="470" y="87" text-anchor="middle" font-weight="700" fill="#2c6c5d">$160</text><text x="470" y="220" text-anchor="middle" fill="#3d362c">강세</text>
+        </g>
+        <!-- price line $229 -> y=200-229*0.6538=200-149.7=50.3 -->
+        <line x1="140" y1="50.3" x2="595" y2="50.3" stroke="#1d3140" stroke-width="2" stroke-dasharray="7 4"/>
+        <text x="595" y="46" text-anchor="end" font-family="IBM Plex Mono" font-size="11.5" font-weight="700" fill="#1d3140">현재 주가 $229</text>
+        <text x="135" y="240" font-family="IBM Plex Mono" font-size="10.5" fill="#6b6253">15년 명시적 가치창출 + 페이드 최종가치 기준 / 점선 = 현재가</text>
+      </svg>
+    </figure>
+    <div class="tbl" style="overflow-x:auto"><table style="font-size:13px">
+      <thead><tr><th>시나리오</th><th>성장 가정</th><th>ROIIC</th><th>페이드</th><th>WACC</th><th>주당가치</th><th>주가 대비</th></tr></thead>
+      <tbody>
+        <tr><td>강세 (낙관)</td><td>경로 ×1.25</td><td>17%</td><td>0.12</td><td>8.0%</td><td>$160</td><td class="neg">−30%</td></tr>
+        <tr class="hl"><td>기본 (중립)</td><td>경로 기준</td><td>15%</td><td>0.18</td><td>8.5%</td><td>$124</td><td class="neg">−46%</td></tr>
+        <tr><td>약세 (비관)</td><td>경로 ×0.70</td><td>12%</td><td>0.27</td><td>9.5%</td><td>$88</td><td class="neg">−62%</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout warn" style="margin-top:14px"><div class="ct">&#9888; 핵심 관찰</div><p style="margin:0"><b>강세 시나리오($160)조차 현재가($229)를 30% 밑돕니다.</b> 즉 경제적 관점(인수=투자)에서는 상당히 낙관적인 가정으로도 현재 밸류에이션을 정당화하기 어렵습니다. 현재가가 정당화되려면 <b>강세 가정 + '보고 FCF 렌즈'(인수 자본비용 무시)</b>를 동시에 적용해야 하며, 이는 시장이 AMETEK에 매우 후한 전제를 부여하고 있음을 의미합니다.</p></div>
+  </section>
+
+  <!-- 16 리스크 -->
+  <section id="risk" class="anchor">
+    <div class="secnum">16 · 주요 리스크 및 체크포인트</div>
+    <h2 class="sectitle">무엇을 지켜봐야 하는가</h2>
+    <div class="grid2">
+      <div class="card">
+        <h4 style="font-size:17px;color:var(--red);margin-bottom:10px">핵심 리스크</h4>
+        <ul class="clean" style="font-size:14px;margin-bottom:0">
+          <li><b>밸류에이션·멀티플 압축:</b> EV/EBITDA 22.5배. 동종 Roper·Fortive처럼 디레이팅 시 큰 하락</li>
+          <li><b>인수 의존·통합 리스크:</b> $5B Indicor 통합 실패·시너지 미달 시 ROIC 희석, 레버리지 2.3배 상승</li>
+          <li><b>인수 가격 인플레이션:</b> 경쟁 심화로 인수 멀티플 상승 → 증분수익률(ROIIC) 하락</li>
+          <li><b>경기 민감도:</b> 산업 자본지출·항공·중국 수요 둔화 시 유기적 성장 약화</li>
+          <li><b>금리·환율:</b> 금리 상승 시 WACC↑ + 인수자금 부담↑ (현재 인상 가능성 거론)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="font-size:17px;color:var(--teal);margin-bottom:10px">상방 촉매</h4>
+        <ul class="clean" style="font-size:14px;margin-bottom:0">
+          <li><b>유기적 성장 가속:</b> 주문 +23%·백로그 사상최대 → 유기 성장 고한자릿수 전환 시</li>
+          <li><b>Indicor 시너지 조기 실현:</b> 매출의 10–12% 시너지·연1차 현금 증익</li>
+          <li><b>금리 하락:</b> WACC 7.5%로 하락 시 내재가치 $149+</li>
+          <li><b>마진 확장:</b> 영업마진 30% 초과 안착</li>
+          <li><b>소프트웨어·AI 결합:</b> 반복매출 비중 상승</li>
+        </ul>
+      </div>
+    </div>
+    <h3 style="font-size:20px;margin:22px 0 10px">재검토 체크포인트</h3>
+    <div class="grid3">
+      <div class="card" style="padding:20px"><div class="secnum">분기마다</div><ul class="clean" style="font-size:13px;margin:8px 0 0"><li>유기적 매출 성장률 (가정 ~5%)</li><li>EBITA·핵심 마진 추세</li><li>주문·백로그 (수요 선행지표)</li><li>인수 진행·통합 상황</li></ul></div>
+      <div class="card" style="padding:20px"><div class="secnum">연간</div><ul class="clean" style="font-size:13px;margin:8px 0 0"><li>내재 CAP 재계산</li><li>WACC 재산정 (금리 환경)</li><li>ROIIC 추정·검증</li><li>섹터 페이드 비율 갱신</li></ul></div>
+      <div class="card" style="padding:20px"><div class="secnum">경계 신호</div><ul class="clean" style="font-size:13px;margin:8px 0 0"><li>ROIC 2년 연속 하락</li><li>인수 ROIIC가 WACC 하회 지속</li><li>레버리지 과다 누적</li><li>성숙→정리 단계 전환</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 17 종합 판단 -->
+  <section id="final" class="anchor">
+    <div class="secnum">17 · 종합 판단</div>
+    <h2 class="sectitle">종합 결론 및 한계</h2>
+    <div class="callout key">
+      <div class="ct">&#9678; 종합</div>
+      <p style="margin:0 0 10px">AMETEK은 <b style="color:#fff">"의심의 여지 없이 훌륭한 기업"</b>입니다 — 넓은 차별화 해자, 30%대 EBITDA 마진, 동종 2배의 자본효율, 수십 년의 복리 트랙레코드. 그러나 <b style="color:#fff">현재 주가($229)는 이 훌륭함이 앞으로 20~35년 이상 흔들림 없이 지속된다는 매우 높은 기대</b>를 담고 있습니다.</p>
+      <p style="margin:0">역DCF의 모든 합리적 가정(강세 포함)에서 내재가치는 현재가를 밑돌며, 내재 CAP는 프레임워크상 "낙관" 구간에 위치합니다. 이는 <b style="color:#fff">'좋은 기업이지만 비싼 가격'</b>의 전형으로, 매수 시 안전마진이 얇고 멀티플 디레이팅 리스크(동종 Roper −42% 사례)에 노출됩니다. 방향성은 <b style="color:#fff">'관망/조정 대기'</b>이며, 의미 있는 가격 조정 또는 펀더멘털(유기 성장·인수 수익률) 가속 확인 시 우량주 편입 매력이 커집니다.</p>
+    </div>
+
+    <div class="card" style="margin-top:18px;border-left:4px solid var(--bronze)">
+      <h3 style="font-size:19px;margin-bottom:10px">한계와 가정 (Limitations &amp; Assumptions)</h3>
+      <ul class="clean" style="font-size:14px;margin-bottom:0">
+        <li><b>의존하는 핵심 가정:</b> ① 인수(M&amp;A)를 '투자'로 차감하는 경제적 관점 ② 증분수익률(ROIIC) ~15% ③ WACC 8.5%(다모다란 ERP 4.23%) ④ 페이드 0.18. 이들이 결론을 좌우합니다.</li>
+        <li><b>확신도 낮은 지점:</b> ROIIC는 향후 인수 멀티플에 따라 변동(관측 불가에 가까움). EBITA·인수무형상각 추정은 공시 기반 근사치. 전방시장 비중은 개략 추정.</li>
+        <li><b>결론이 틀릴 수 있는 조건:</b> (a) 유기적 성장이 구조적으로 고한자릿수로 가속, (b) 인수 ROIIC가 16%+로 입증, (c) 금리 하락으로 WACC가 7.5% 이하, (d) 시장이 '보고 FCF'(인수=차입) 기준으로 평가하는 것이 타당 — 이 경우 현재가가 정당화될 수 있습니다.</li>
+        <li><b>다음 검증 단계:</b> 분기 유기성장·마진 추적, Indicor 통합 성과(시너지·ROIC) 모니터링, 금리·ERP 갱신에 따른 WACC·내재 CAP 재계산.</li>
+      </ul>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="card" style="padding:20px"><h4 style="font-size:15px;margin-bottom:8px">확신도 요약 (Bayesian)</h4>
+        <table style="font-size:13px"><tbody>
+          <tr><td style="padding:5px 0">기업 품질 = 탁월</td><td style="text-align:right"><span class="conf hi">높음 85%</span></td></tr>
+          <tr><td style="padding:5px 0">차별화 기반 넓은 해자</td><td style="text-align:right"><span class="conf hi">높음 80%</span></td></tr>
+          <tr><td style="padding:5px 0">성숙기(컴파운더) 판정</td><td style="text-align:right"><span class="conf hi">높음 85%</span></td></tr>
+          <tr><td style="padding:5px 0">현재가 = 요구수준 높음</td><td style="text-align:right"><span class="conf mid">중간 70%</span></td></tr>
+          <tr><td style="padding:5px 0">멀티플 디레이팅 리스크</td><td style="text-align:right"><span class="conf mid">중간 65%</span></td></tr>
+        </tbody></table>
+      </div>
+      <div class="card" style="padding:20px"><h4 style="font-size:15px;margin-bottom:8px">한눈에 — 가치 vs 가격</h4>
+        <table style="font-size:13px"><tbody>
+          <tr><td style="padding:5px 0">현재 주가</td><td style="text-align:right" class="mono">$229</td></tr>
+          <tr><td style="padding:5px 0">강세 내재가치</td><td style="text-align:right" class="mono pos">$160</td></tr>
+          <tr><td style="padding:5px 0">기본 내재가치</td><td style="text-align:right" class="mono acc">$124</td></tr>
+          <tr><td style="padding:5px 0">약세 내재가치</td><td style="text-align:right" class="mono neg">$88</td></tr>
+          <tr><td style="padding:5px 0">FCF렌즈 정당화 조건</td><td style="text-align:right" class="mono" style="font-size:11px">FCF +8~10%, 10–15년</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <div style="font-family:'Fraunces',serif;font-size:20px;color:#fff;margin-bottom:6px">AMETEK (NYSE: AME) — CAP 프레임워크 분석</div>
+    <p style="color:#9fb2b3;margin-bottom:16px">본 자료는 정보 제공 목적의 분석이며, 특정 매매 행위를 권유하지 않습니다. 모든 수치는 기준 시점의 추정·가정에 기반하며 실제와 다를 수 있습니다.</p>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#caa04a;margin-bottom:8px">데이터 출처 및 기준 시점</div>
+    <div class="src">
+      <b>주가·밸류에이션</b> (2026-06-04~05): Google Finance, stockanalysis.com, Investing.com — 주가 $229, 시총 ~$52.5B, 베타 1.00<br>
+      <b>재무</b> (FY2025, 2026 1분기): AMETEK IR / SEC 8-K·10-Q, prnewswire, Motley Fool/Insider Monkey 어닝콜 — 매출 $7.40B, 영업이익 $1.94B, EBITDA $2.33B, 조정 EPS $7.43, FCF ~$1.67B, 부채 $2.57B, 현금 $458M, 주식수 229M<br>
+      <b>인수</b>: AMETEK 보도자료 (2026-05-06) — Indicor $5.0B / 매출 ~$1.1B / 시너지 10–12% / H2 2026 마감 예정<br>
+      <b>거시</b>: FRED (10년 국채 DGS10 4.47% @06-04; 10년 BEI ~2.33%), Damodaran 2026 ERP 4.23% (musings on markets / SSRN)<br>
+      <b>피어</b> (2026): stockanalysis.com·GuruFocus·companiesmarketcap·Wikipedia — Roper·Fortive·Danaher·Amphenol·Mettler-Toledo<br>
+      <b>방법론</b>: 경쟁우위기간(CAP) 프레임워크 — 가치동인(ROIC−WACC 스프레드·재투자·CAP), 페이드 모델, 생애주기 5단계, 섹터 페이드 비율
+    </div>
+    <p style="margin-top:16px;color:#7d9091;font-size:11px;font-family:'IBM Plex Mono',monospace">기준일 2026-06-05 · 분석 통화 USD · 단위 백만달러(별도 표기 외) · 다음 정기 재검토 권장: 2026 2분기 실적 발표 후</p>
+  </div>
+</footer>
+</body>
+</html>

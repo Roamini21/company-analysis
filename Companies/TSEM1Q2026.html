@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tower Semiconductor (TSEM) — CAP 기반 투자 분석</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0f14;
+  --card: #151922;
+  --card-alt: #1a1f2b;
+  --accent: #00d4aa;
+  --accent2: #6c5ce7;
+  --accent3: #fd79a8;
+  --warn: #fdcb6e;
+  --danger: #e17055;
+  --text: #e0e6ed;
+  --text-dim: #8892a4;
+  --border: #2d3448;
+  --gradient1: linear-gradient(135deg, #00d4aa 0%, #6c5ce7 100%);
+  --gradient2: linear-gradient(135deg, #6c5ce7 0%, #fd79a8 100%);
+  --gradient3: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  font-size: 15px;
+  font-weight: 300;
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* HERO */
+.hero {
+  position: relative;
+  padding: 80px 0 60px;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -150px; left: -150px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(108,92,231,0.06) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 12px;
+  background: var(--gradient1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 18px;
+  color: var(--text-dim);
+  max-width: 700px;
+  margin-bottom: 32px;
+}
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.hero-stat {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 24px;
+  min-width: 140px;
+}
+.hero-stat .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+.hero-stat .value { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 600; color: var(--accent); margin-top: 4px; }
+.hero-stat .sub { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+/* SECTIONS */
+.section {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+}
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.section h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #fff;
+}
+.section h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 32px 0 16px;
+  color: #fff;
+}
+p { margin-bottom: 16px; }
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+/* TABLES */
+.table-wrap {
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+}
+thead { background: var(--card-alt); }
+th {
+  padding: 12px 10px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--border);
+}
+th:first-child { text-align: left; }
+td {
+  padding: 10px 10px;
+  text-align: right;
+  border-bottom: 1px solid rgba(45,52,72,0.5);
+  white-space: nowrap;
+}
+td:first-child { text-align: left; color: var(--text-dim); font-weight: 400; }
+tr:hover { background: rgba(0,212,170,0.03); }
+.highlight-row { background: rgba(0,212,170,0.06) !important; }
+.highlight-row td { color: var(--accent); font-weight: 600; }
+
+/* TAGS */
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.tag-green { background: rgba(0,212,170,0.15); color: var(--accent); }
+.tag-purple { background: rgba(108,92,231,0.15); color: var(--accent2); }
+.tag-yellow { background: rgba(253,203,110,0.15); color: var(--warn); }
+.tag-red { background: rgba(225,112,85,0.15); color: var(--danger); }
+.tag-pink { background: rgba(253,121,168,0.15); color: var(--accent3); }
+
+/* CHARTS (CSS-only bar charts) */
+.bar-chart { margin: 20px 0; }
+.bar-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.bar-label {
+  width: 140px;
+  font-size: 13px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--card-alt);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  color: #fff;
+  transition: width 1s ease;
+}
+.bar-fill.g1 { background: var(--gradient1); }
+.bar-fill.g2 { background: var(--gradient2); }
+.bar-fill.g3 { background: var(--gradient3); }
+
+/* SWOT */
+.swot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+.swot-card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px;
+  border-left: 4px solid;
+}
+.swot-card.s { border-color: var(--accent); }
+.swot-card.w { border-color: var(--danger); }
+.swot-card.o { border-color: var(--accent2); }
+.swot-card.t { border-color: var(--warn); }
+.swot-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.swot-card.s h4 { color: var(--accent); }
+.swot-card.w h4 { color: var(--danger); }
+.swot-card.o h4 { color: var(--accent2); }
+.swot-card.t h4 { color: var(--warn); }
+.swot-card ul { padding-left: 16px; }
+.swot-card li { margin-bottom: 6px; font-size: 13px; }
+
+/* FLOW */
+.flow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.flow-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 100px;
+}
+.flow-arrow { color: var(--accent); font-size: 20px; }
+
+/* CONCLUSION BOX */
+.conclusion-box {
+  background: linear-gradient(135deg, rgba(0,212,170,0.08), rgba(108,92,231,0.08));
+  border: 1px solid rgba(0,212,170,0.3);
+  border-radius: 16px;
+  padding: 32px;
+  margin: 24px 0;
+}
+.conclusion-box h3 { margin-top: 0; color: var(--accent); }
+
+/* SENSITIVITY TABLE */
+.sens-table td.positive { color: var(--accent); }
+.sens-table td.negative { color: var(--danger); }
+.sens-table td.neutral { color: var(--warn); }
+
+/* ASSUMPTIONS BOX */
+.assumptions {
+  background: var(--card-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  font-size: 13px;
+}
+.assumptions h4 {
+  font-size: 14px;
+  color: var(--warn);
+  margin-bottom: 10px;
+}
+
+/* DATA SOURCE */
+.data-source {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* RISK METER */
+.risk-meter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 12px 0;
+}
+.risk-block {
+  width: 32px;
+  height: 16px;
+  border-radius: 3px;
+  opacity: 0.3;
+}
+.risk-block.active { opacity: 1; }
+.risk-low { background: var(--accent); }
+.risk-med { background: var(--warn); }
+.risk-high { background: var(--danger); }
+
+/* TIMELINE */
+.timeline { margin: 24px 0; }
+.timeline-item {
+  display: flex;
+  gap: 20px;
+  padding: 16px 0;
+  border-left: 2px solid var(--border);
+  padding-left: 24px;
+  position: relative;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 20px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.timeline-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 600;
+  min-width: 50px;
+}
+
+/* PEER TABLE */
+.peer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.peer-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+.peer-card .name { font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+.peer-card .metric { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); margin: 4px 0; }
+.peer-card .val { color: var(--accent); font-weight: 600; }
+
+/* FOOTER */
+.footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .hero-stats { flex-direction: column; gap: 12px; }
+  .swot-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 28px; }
+  .flow { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+/* INFOGRAPHIC BOX */
+.info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+}
+.info-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.moat-bar {
+  height: 8px;
+  background: var(--card-alt);
+  border-radius: 4px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+.moat-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+
+<!-- ======= HERO ======= -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-label">CAP 기반 투자 분석 보고서</div>
+    <h1>Tower Semiconductor</h1>
+    <p class="hero-sub">
+      빛으로 데이터를 전송하는 반도체를 만드는 이스라엘의 특수 파운드리 기업. AI 데이터센터의 광연결 수요 폭증이라는 거대한 파도 위에 올라탄 '실리콘 포토닉스' 분야의 선두주자.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="label">티커</div>
+        <div class="value">TSEM</div>
+        <div class="sub">NASDAQ / TASE</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">현재 주가</div>
+        <div class="value">~$280</div>
+        <div class="sub">2026.05.22 기준</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">시가총액</div>
+        <div class="value">$31.6B</div>
+        <div class="sub">약 44조원</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">주당순이익(TTM)</div>
+        <div class="value">$1.94</div>
+        <div class="sub">P/E 144x</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">52주 범위</div>
+        <div class="value">$37~$303</div>
+        <div class="sub">1년간 +580%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= 1. 기업 개요 ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">01</div>
+    <h2>기업 개요 — "빛으로 데이터를 옮기는 반도체 공장"</h2>
+
+    <p><strong>한 문장 요약:</strong> Tower Semiconductor는 다른 회사가 설계한 '아날로그 반도체 칩'을 대신 제조해주는 <span class="tag tag-green">전문 파운드리(위탁생산) 기업</span>으로, 특히 빛을 이용해 데이터를 초고속 전송하는 '실리콘 포토닉스(SiPho)' 칩 생산에서 세계 1위 입지를 차지하고 있습니다.</p>
+
+    <h3>설립 배경과 역사</h3>
+    <p>1993년 이스라엘 미그달 하에멕(Migdal HaEmek)에서 설립되었습니다. '파운드리'란 반도체를 직접 설계하지 않고, 고객사가 설계한 칩을 대신 만들어주는 '반도체 위탁 생산 공장'입니다. 삼성전자나 TSMC가 대표적인 파운드리인데, 이들이 스마트폰 AP나 PC 프로세서 같은 '디지털 칩'을 주로 만든다면, Tower는 '아날로그/특수 칩'에 집중합니다.</p>
+    <p>'아날로그 칩'이란 현실 세계의 신호(빛, 소리, 온도, 전류, 전파 등)를 디지털 데이터로 바꾸거나, 반대로 디지털 데이터를 현실 세계로 내보내는 역할을 하는 반도체입니다. 예를 들어, 카메라의 이미지 센서, 5G 안테나의 RF(무선주파수) 칩, 전원관리IC, 그리고 광통신 칩이 모두 아날로그 칩입니다.</p>
+    <p>Tower는 2008년 Jazz Semiconductor를 인수하며 'TowerJazz'로 불리기도 했고, 일본에는 Panasonic(현 Nuvoton)과 합작한 TPSCo를 통해 대형 팹(공장)을 운영합니다. 2022년 Intel이 $54억에 인수를 시도했으나 중국 규제 당국의 승인 실패로 무산되었고, Intel은 계약 해지 위약금으로 약 $3.5억을 지불했습니다.</p>
+
+    <h3>제조 시설(팹) 현황</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div style="font-weight:700; color:#fff; margin-bottom:8px;">🇮🇱 Fab 2 — 이스라엘</div>
+        <p style="font-size:13px; margin:0;">200mm 웨이퍼 / 가동률 60%<br>파워반도체, CMOS 이미지센서</p>
+      </div>
+      <div class="card">
+        <div style="font-weight:700; color:#fff; margin-bottom:8px;">🇺🇸 Fab 3 — 캘리포니아 뉴포트비치</div>
+        <p style="font-size:13px; margin:0;">200mm 웨이퍼 / 가동률 80%<br><strong style="color:var(--accent);">SiPho(실리콘 포토닉스) 핵심 팹</strong></p>
+      </div>
+      <div class="card">
+        <div style="font-weight:700; color:#fff; margin-bottom:8px;">🇮🇱 Fab 5 — 이스라엘</div>
+        <p style="font-size:13px; margin:0;">200mm 웨이퍼 / 가동률 75%<br>SiGe, RF CMOS</p>
+      </div>
+      <div class="card">
+        <div style="font-weight:700; color:#fff; margin-bottom:8px;">🇯🇵 Fab 7 — 일본 우오즈</div>
+        <p style="font-size:13px; margin:0;">300mm 웨이퍼 / 가동률 85%+<br>SiPho/SiGe 확장 중, 2026년 완전 소유 전환</p>
+      </div>
+      <div class="card">
+        <div style="font-weight:700; color:#fff; margin-bottom:8px;">🇺🇸 Fab 9 — 텍사스 샌안토니오</div>
+        <p style="font-size:13px; margin:0;">200mm 웨이퍼 / 가동률 80%<br>파워반도체(BCD)</p>
+      </div>
+      <div class="card">
+        <div style="font-weight:700; color:#fff; margin-bottom:8px;">🇮🇹 ST 공유팹 — 이탈리아 아그라테</div>
+        <p style="font-size:13px; margin:0;">300mm 웨이퍼 / 램프업 중<br>STMicro와 클린룸 공유</p>
+      </div>
+    </div>
+    <p class="data-source">출처: Tower Semiconductor Q1 2026 실적 발표, SEC Form 6-K (2026.05.13)</p>
+  </div>
+</div>
+
+<!-- ======= 2. 수익 구조 ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">02</div>
+    <h2>수익 구조 — "이 기업은 어떻게 돈을 버는가"</h2>
+
+    <p>Tower는 <strong>팹리스(Fabless) 반도체 회사나 IDM(종합반도체기업)으로부터 칩 제조 주문을 받아</strong> 웨이퍼(실리콘 원판) 위에 회로를 새기는 서비스를 제공하고, 생산된 웨이퍼 수량에 따라 매출을 인식합니다. 즉, '기술 라이선스'가 아닌 '물리적 제조'로 돈을 벌며, 가동률이 높을수록 수익성이 좋아지는 구조입니다.</p>
+
+    <h3>기술 플랫폼별 매출 구성 (2025년 기준)</h3>
+    <div class="bar-chart">
+      <div class="bar-item">
+        <div class="bar-label">SiPho + SiGe (광/RF)</div>
+        <div class="bar-track"><div class="bar-fill g1" style="width:27%;">$421M (27%)</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">RF 인프라</div>
+        <div class="bar-track"><div class="bar-fill g1" style="width:22%;">~$345M (22%)</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">파워반도체 (BCD)</div>
+        <div class="bar-track"><div class="bar-fill g2" style="width:20%;">~$314M (20%)</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">이미지센서 (CIS)</div>
+        <div class="bar-track"><div class="bar-fill g2" style="width:16%;">~$251M (16%)</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">RF 모바일 (SOI)</div>
+        <div class="bar-track"><div class="bar-fill g3" style="width:10%;">~$157M (10%)</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">기타 (MEMS 등)</div>
+        <div class="bar-track"><div class="bar-fill g3" style="width:5%;">~$78M (5%)</div></div>
+      </div>
+    </div>
+    <p class="data-source">출처: Tower Semiconductor Q4 2025 실적 발표 슬라이드, 경영진 코멘터리 기반 추정. SiPho $228M, SiGe+SiPho 합계 $421M은 공식 수치.</p>
+
+    <h3>최종 고객 시장별 분류</h3>
+    <div class="bar-chart">
+      <div class="bar-item">
+        <div class="bar-label">데이터센터/AI 인프라</div>
+        <div class="bar-track"><div class="bar-fill g1" style="width:35%;">~35% (급성장 중)</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">통신 인프라 (5G/6G)</div>
+        <div class="bar-track"><div class="bar-fill g1" style="width:20%;">~20%</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">산업/자동차</div>
+        <div class="bar-track"><div class="bar-fill g2" style="width:20%;">~20%</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">모바일/소비자가전</div>
+        <div class="bar-track"><div class="bar-fill g3" style="width:15%;">~15%</div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-label">의료/항공우주/국방</div>
+        <div class="bar-track"><div class="bar-fill g3" style="width:10%;">~10%</div></div>
+      </div>
+    </div>
+
+    <h3>돈 버는 과정: 파운드리 비즈니스 모델 흐름</h3>
+    <div class="flow">
+      <div class="flow-box">고객이 칩<br>설계 완료</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">Tower에<br>제조 의뢰</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">공정 개발<br>& 마스크 제작</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">웨이퍼<br>대량 생산</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">테스트 &<br>출하</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border:1px solid var(--accent);">웨이퍼 단가<br>× 수량 = <strong>매출</strong></div>
+    </div>
+    <p>핵심 포인트: 한번 고객이 Tower의 공정에 맞춰 칩을 설계하면('디자인 윈'), 다른 파운드리로 옮기는 데 수년과 수백만 달러가 소요되므로 <strong>높은 전환비용</strong>이 발생합니다. 이것이 파운드리 비즈니스의 핵심 해자입니다.</p>
+  </div>
+</div>
+
+<!-- ======= 3. 기술력 설명 ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">03</div>
+    <h2>핵심 기술 — "비전공자를 위한 실리콘 포토닉스 해설"</h2>
+
+    <div class="card" style="border-left: 4px solid var(--accent);">
+      <h3 style="margin-top:0; color:var(--accent);">🔬 실리콘 포토닉스(SiPho)가 뭔가요?</h3>
+      <p>데이터센터에서 서버 간 데이터를 주고받을 때, 지금까지는 주로 <strong>구리선(전기 신호)</strong>을 사용했습니다. 그런데 AI 워크로드가 폭발하면서 GPU 수만 대가 동시에 통신해야 하는 상황이 되었고, 구리선으로는 속도와 에너지 효율 한계에 부딪혔습니다.</p>
+      <p><strong>실리콘 포토닉스</strong>는 실리콘 칩 위에 아주 작은 '광도파로(빛이 지나가는 통로)'를 만들어, <strong>전기 신호 대신 빛(레이저)으로 데이터를 전송</strong>하는 기술입니다. 구리 대비 수십 배 빠르고, 에너지 소비는 훨씬 적습니다.</p>
+      <p>Tower는 이 SiPho 칩을 대량 생산하는 세계 최대 파운드리입니다. NVIDIA, Coherent, OpenLight 등 주요 고객이 설계한 광트랜시버 칩을 Tower가 제조합니다.</p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--accent2);">
+      <h3 style="margin-top:0; color:var(--accent2);">🔬 SiGe(실리콘 저마늄)는 뭔가요?</h3>
+      <p>실리콘(Si)에 저마늄(Ge)이라는 원소를 섞어 만든 반도체 소재입니다. 순수 실리콘보다 전자가 훨씬 빠르게 이동하므로, <strong>초고주파 무선통신(5G/6G)과 광통신 회로</strong>에 적합합니다. Tower의 SiGe 칩은 광트랜시버의 '구동 회로'(데이터를 빛으로 변환하는 전자 회로)와 5G 기지국 내 핵심 부품에 사용됩니다.</p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--accent3);">
+      <h3 style="margin-top:0; color:var(--accent3);">🔬 기타 핵심 기술</h3>
+      <p><strong>BCD (파워반도체):</strong> 전기를 효율적으로 변환/관리하는 칩. 전기차, 산업용 장비, 스마트폰 충전IC 등에 사용. Tower는 최대 700V까지 지원하는 고전압 파워IC를 생산합니다.</p>
+      <p><strong>CMOS 이미지센서:</strong> 카메라가 빛을 디지털 이미지로 변환하는 센서. 자동차 ADAS(첨단운전보조시스템), 산업용 비전, 의료 영상 장비에 탑재됩니다.</p>
+      <p><strong>RF CMOS/SOI:</strong> 스마트폰의 무선 안테나 스위치 칩. 65nm 공정 기반으로 5G 모바일 시장에 공급합니다.</p>
+    </div>
+
+    <h3>기술 플랫폼과 응용 분야 흐름</h3>
+    <div class="flow">
+      <div class="flow-box" style="background:rgba(0,212,170,0.1);">SiPho<br><small>광도파로/변조기</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">광트랜시버<br>모듈</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="background:rgba(108,92,231,0.1);">AI 데이터센터<br>GPU↔GPU 연결</div>
+    </div>
+    <div class="flow">
+      <div class="flow-box" style="background:rgba(0,212,170,0.1);">SiGe<br><small>초고속 TIA/드라이버</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">5G 기지국<br>파워앰프</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="background:rgba(108,92,231,0.1);">통신 인프라<br>고속 백홀</div>
+    </div>
+    <div class="flow">
+      <div class="flow-box" style="background:rgba(253,121,168,0.1);">BCD<br><small>고전압 파워IC</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">전원관리<br>모듈</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="background:rgba(108,92,231,0.1);">자동차/산업<br>전력 변환</div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= 4. 산업 분석 ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">04</div>
+    <h2>산업 분석 — 반도체 파운드리 & 실리콘 포토닉스</h2>
+
+    <h3>반도체 파운드리 산업 구조</h3>
+    <p>전 세계 반도체 파운드리 시장은 TSMC가 67.6%의 점유율로 압도적 1위이고, 삼성(7.7%), SMIC(6%), UMC(4.7%), GlobalFoundries(4.2%) 순입니다. Tower는 약 0.9%의 점유율로 8위권이지만, '특수 공정(아날로그/혼합신호)' 분야에서는 GlobalFoundries와 함께 상위 플레이어입니다.</p>
+
+    <p>이 산업의 핵심 트렌드:</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">1. "More-than-Moore" 시대</div>
+        <p style="font-size:13px; margin:0;">첨단 미세공정(3nm, 2nm)만이 중요한 게 아닙니다. 센서, 파워칩, RF, 광칩 등 '기능 다양화'가 동시에 중요해지고 있습니다. Tower가 바로 이 영역의 전문가입니다.</p>
+      </div>
+      <div class="card">
+        <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">2. AI 인프라 투자 폭발</div>
+        <p style="font-size:13px; margin:0;">글로벌 빅테크의 AI 데이터센터 CapEx가 2025년 $2,500억 이상으로, GPU 간 초고속 광연결 수요가 폭발하며 SiPho 시장이 급성장하고 있습니다.</p>
+      </div>
+      <div class="card">
+        <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">3. 공급망 재편 (리쇼어링)</div>
+        <p style="font-size:13px; margin:0;">미국 CHIPS법, 유럽 반도체법 등 자국 내 반도체 생산 역량 확보 움직임. Tower의 미국(캘리포니아, 텍사스) 팹은 전략적 가치가 있습니다.</p>
+      </div>
+      <div class="card">
+        <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">4. 광통신: 구리→빛 전환</div>
+        <p style="font-size:13px; margin:0;">데이터 전송 속도가 800G→1.6T→3.2T로 올라가면서, 구리선의 물리적 한계로 SiPho 채택이 가속화됩니다. 2028년까지 SiPho 시장은 연평균 30%+ 성장 전망.</p>
+      </div>
+    </div>
+
+    <h3>가치사슬 내 Tower의 위치</h3>
+    <div class="flow">
+      <div class="flow-box">칩 설계사<br><small>(Coherent, OpenLight,<br>Marvell 등)</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border:2px solid var(--accent); background:rgba(0,212,170,0.05);">
+        <strong>Tower Semiconductor</strong><br><small>웨이퍼 제조 (파운드리)</small>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">패키징/모듈업체<br><small>(광모듈 조립)</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box">최종 고객<br><small>(NVIDIA, Google,<br>Meta, AWS 등)</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= 5. SWOT ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">05</div>
+    <h2>SWOT 분석</h2>
+
+    <div class="swot-grid">
+      <div class="swot-card s">
+        <h4>💪 강점 (Strengths)</h4>
+        <ul>
+          <li>SiPho 파운드리 세계 1위 — 고객 50사 이상</li>
+          <li>SiGe 공정 기술 업계 최고 수준</li>
+          <li>다양한 특수 공정 포트폴리오 (12개 이상 플랫폼)</li>
+          <li>글로벌 팹 6곳 — 지정학적 리스크 분산</li>
+          <li>$1.3B 확정 계약 (2027 SiPho) — 매출 가시성</li>
+          <li>낮은 부채 ($164M), 높은 순현금 ($990M+)</li>
+          <li>NVIDIA, Coherent 등 핵심 고객과 장기 파트너십</li>
+        </ul>
+      </div>
+      <div class="swot-card w">
+        <h4>⚠️ 약점 (Weaknesses)</h4>
+        <ul>
+          <li>현재 영업이익률 12.4%로 업계 평균 대비 낮음</li>
+          <li>대규모 CapEx ($920M) 투입 중 — 실행 리스크</li>
+          <li>전체 파운드리 시장 점유율 1% 미만</li>
+          <li>200mm 위주 레거시 팹 — 300mm 전환 과도기</li>
+          <li>고객 집중도: 상위 고객사 매출 비중 높음</li>
+          <li>이스라엘 본사 — 지정학적 불확실성</li>
+        </ul>
+      </div>
+      <div class="swot-card o">
+        <h4>🚀 기회 (Opportunities)</h4>
+        <ul>
+          <li>AI 데이터센터 광연결 시장 연 30%+ 성장</li>
+          <li>1.6T→3.2T 광모듈 세대 교체 사이클</li>
+          <li>Co-Packaged Optics(CPO) 차세대 기술 선점</li>
+          <li>자동차 LiDAR에 SiPho 적용 확대</li>
+          <li>양자컴퓨팅 광인터커넥트 (Xanadu 협력)</li>
+          <li>일본 Fab 7 완전 소유 → 300mm 확장</li>
+          <li>2028 모델: 매출 $2.8B, 순이익 $750M</li>
+        </ul>
+      </div>
+      <div class="swot-card t">
+        <h4>🔥 위협 (Threats)</h4>
+        <ul>
+          <li>GlobalFoundries 특허 침해 소송 (11건)</li>
+          <li>TSMC, 삼성의 SiPho 시장 진입 가능성</li>
+          <li>AI CapEx 사이클 둔화 시 수요 급감 위험</li>
+          <li>인듐인(InP) 소재 공급 제약</li>
+          <li>환율 리스크 (NIS/JPY/EUR vs USD)</li>
+          <li>글로벌 반도체 사이클 하강 가능성</li>
+          <li>이스라엘 지정학적 긴장 (중동 분쟁)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= 6. 경제적 해자 ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">06</div>
+    <h2>경제적 해자 (Moat) 분석</h2>
+
+    <p>포터의 5 Forces 관점에서 Tower의 경쟁 우위를 평가합니다.</p>
+
+    <div class="card" style="margin-bottom:20px;">
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+        <div>
+          <div style="font-weight:700; margin-bottom:4px;">신규 진입 위협</div>
+          <div class="risk-meter">
+            <div class="risk-block risk-low active"></div>
+            <div class="risk-block risk-low active"></div>
+            <div class="risk-block risk-low"></div>
+            <div class="risk-block risk-med"></div>
+            <div class="risk-block risk-high"></div>
+          </div>
+          <div style="font-size:12px; color:var(--accent);">낮음</div>
+        </div>
+        <div>
+          <div style="font-weight:700; margin-bottom:4px;">기존 경쟁 강도</div>
+          <div class="risk-meter">
+            <div class="risk-block risk-low active"></div>
+            <div class="risk-block risk-low active"></div>
+            <div class="risk-block risk-med active"></div>
+            <div class="risk-block risk-med"></div>
+            <div class="risk-block risk-high"></div>
+          </div>
+          <div style="font-size:12px; color:var(--warn);">중간</div>
+        </div>
+        <div>
+          <div style="font-weight:700; margin-bottom:4px;">공급자 교섭력</div>
+          <div class="risk-meter">
+            <div class="risk-block risk-low active"></div>
+            <div class="risk-block risk-low active"></div>
+            <div class="risk-block risk-med active"></div>
+            <div class="risk-block risk-med"></div>
+            <div class="risk-block risk-high"></div>
+          </div>
+          <div style="font-size:12px; color:var(--warn);">중간</div>
+        </div>
+        <div>
+          <div style="font-weight:700; margin-bottom:4px;">구매자 교섭력</div>
+          <div class="risk-meter">
+            <div class="risk-block risk-low active"></div>
+            <div class="risk-block risk-low active"></div>
+            <div class="risk-block risk-med active"></div>
+            <div class="risk-block risk-med active"></div>
+            <div class="risk-block risk-high"></div>
+          </div>
+          <div style="font-size:12px; color:var(--warn);">중상</div>
+        </div>
+        <div>
+          <div style="font-weight:700; margin-bottom:4px;">대체재 위협</div>
+          <div class="risk-meter">
+            <div class="risk-block risk-low active"></div>
+            <div class="risk-block risk-low"></div>
+            <div class="risk-block risk-med"></div>
+            <div class="risk-block risk-med"></div>
+            <div class="risk-block risk-high"></div>
+          </div>
+          <div style="font-size:12px; color:var(--accent);">낮음</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>해자의 원천</h3>
+
+    <div class="info-box">
+      <div class="info-icon" style="background:rgba(0,212,170,0.15);">🔒</div>
+      <div style="flex:1;">
+        <div style="font-weight:700; margin-bottom:4px;">높은 전환비용 (Switching Cost)</div>
+        <p style="font-size:13px; margin:0;">고객이 Tower 공정에 맞춰 칩을 설계하면, 다른 파운드리로 이전하려면 2~3년의 재설계와 수백만 달러가 필요합니다. SiPho 공정은 특히 전문화되어 있어 전환이 더 어렵습니다.</p>
+        <div class="moat-bar"><div class="moat-fill" style="width:90%; background:var(--gradient1);"></div></div>
+        <div style="font-size:11px; color:var(--text-dim);">강도: 매우 높음</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-icon" style="background:rgba(108,92,231,0.15);">🧪</div>
+      <div style="flex:1;">
+        <div style="font-weight:700; margin-bottom:4px;">희소한 기술 전문성 (Know-How)</div>
+        <p style="font-size:13px; margin:0;">실리콘 포토닉스를 대량 생산할 수 있는 파운드리는 전 세계적으로 극소수입니다. Tower는 수십 년간 축적한 특수 공정 노하우(SiGe, BiCMOS, SiPho)를 보유하고 있으며, 400G/lane 변조기를 시연한 유일한 파운드리입니다.</p>
+        <div class="moat-bar"><div class="moat-fill" style="width:85%; background:var(--gradient2);"></div></div>
+        <div style="font-size:11px; color:var(--text-dim);">강도: 높음</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-icon" style="background:rgba(253,203,110,0.15);">📋</div>
+      <div style="flex:1;">
+        <div style="font-weight:700; margin-bottom:4px;">장기 계약 & 선수금 (Contract Lock-in)</div>
+        <p style="font-size:13px; margin:0;">$1.3B의 2027년 SiPho 확정 계약, $290M의 선수금, 2028년까지 70%+ 용량 예약. 이는 단순한 '전망'이 아닌 법적 구속력 있는 약정입니다.</p>
+        <div class="moat-bar"><div class="moat-fill" style="width:80%; background:var(--gradient1);"></div></div>
+        <div style="font-size:11px; color:var(--text-dim);">강도: 높음 (단, 2~3년 한정 가시성)</div>
+      </div>
+    </div>
+
+    <h3>차별화 vs 원가 우위 판별</h3>
+    <div class="card">
+      <p style="margin-bottom:8px;"><strong>NOPAT 마진 (2025):</strong> ~10.6% — 반도체 장비/반도체 섹터 중앙값(10.8%) 대비 유사 수준</p>
+      <p style="margin-bottom:8px;"><strong>투자자본 회전율:</strong> ~0.78x — 업종 평균 대비 낮은 편 (자본집약적 파운드리 특성)</p>
+      <p style="margin:0;">→ 현재는 뚜렷한 <strong>차별화 전략도 원가 우위도 명확하지 않은 과도기</strong>입니다. 그러나 SiPho 램프가 완료되는 2027~2028년에는 NOPAT 마진이 급격히 개선될 것으로 경영진은 예상하고 있으며(2028 목표: 순이익률 26.8%), 이 경우 <strong>'기술 차별화'에 의한 해자</strong>가 명확해질 수 있습니다.</p>
+    </div>
+    <p class="data-source">NOPAT 마진 = Operating Profit × (1-Tax Rate) / Revenue. 섹터 중앙값은 CAP 프레임워크 요약본 기준.</p>
+  </div>
+</div>
+
+<!-- ======= 7. 피어그룹 비교 ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">07</div>
+    <h2>피어그룹 비교</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>기업</th>
+            <th>시가총액</th>
+            <th>매출(TTM)</th>
+            <th>영업이익률</th>
+            <th>P/E(TTM)</th>
+            <th>파운드리 점유율</th>
+            <th>핵심 차별점</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td><strong>Tower (TSEM)</strong></td>
+            <td>$31.6B</td>
+            <td>$1.6B</td>
+            <td>12.4%</td>
+            <td>~144x</td>
+            <td>~0.9%</td>
+            <td>SiPho 1위, 아날로그 특화</td>
+          </tr>
+          <tr>
+            <td>GlobalFoundries (GFS)</td>
+            <td>$23B</td>
+            <td>$6.6B</td>
+            <td>~10%</td>
+            <td>~25x</td>
+            <td>~4.2%</td>
+            <td>규모, FD-SOI, 자동차</td>
+          </tr>
+          <tr>
+            <td>UMC (UMC)</td>
+            <td>$18B</td>
+            <td>$7.5B</td>
+            <td>~28%</td>
+            <td>~11x</td>
+            <td>~4.7%</td>
+            <td>저원가 성숙공정</td>
+          </tr>
+          <tr>
+            <td>X-FAB (XFAB)</td>
+            <td>$2.8B</td>
+            <td>$0.9B</td>
+            <td>~14%</td>
+            <td>~15x</td>
+            <td>&lt;0.5%</td>
+            <td>자동차/산업 아날로그</td>
+          </tr>
+          <tr>
+            <td>SkyWater (SKYT)</td>
+            <td>$2.0B</td>
+            <td>$0.3B</td>
+            <td>적자</td>
+            <td>적자</td>
+            <td>&lt;0.1%</td>
+            <td>미국 국방/정부, ASIC</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="data-source">출처: 각사 최신 실적 발표, TrendForce Q1 2025 파운드리 순위, 웹 검색 기준. Tower의 P/E가 매우 높은 것은 SiPho 성장 기대를 반영한 것입니다.</p>
+
+    <div class="card" style="border-left:4px solid var(--warn);">
+      <h4 style="color:var(--warn); margin-bottom:8px;">⚡ 핵심 관전 포인트</h4>
+      <p style="font-size:13px; margin:0;">Tower의 시가총액($31.6B)은 매출이 4배 이상 큰 GlobalFoundries($23B)나 UMC($18B)보다 높습니다. 이는 시장이 Tower의 SiPho 성장 스토리에 매우 높은 프리미엄을 부여하고 있다는 의미입니다. 2028년 목표($2.8B 매출, $750M 순이익)가 실현된다면 현재 밸류에이션은 정당화될 수 있지만, 실행 실패 시 큰 하방 리스크가 존재합니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ======= 8. 생애주기 & 재무 분석 ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">08</div>
+    <h2>생애주기 판별 & 재무 실적</h2>
+
+    <h3>현금흐름표 패턴 분석 (2025년)</h3>
+    <div class="card-grid">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:12px; color:var(--text-dim);">영업활동 CF</div>
+        <div style="font-size:32px; font-weight:700; color:var(--accent);">+$395M</div>
+        <div class="tag tag-green">유입 (+)</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:12px; color:var(--text-dim);">투자활동 CF</div>
+        <div style="font-size:32px; font-weight:700; color:var(--danger);">−$437M</div>
+        <div class="tag tag-red">유출 (−)</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:12px; color:var(--text-dim);">재무활동 CF</div>
+        <div style="font-size:32px; font-weight:700; color:var(--danger);">−$33M</div>
+        <div class="tag tag-red">유출 (−)</div>
+      </div>
+    </div>
+
+    <div class="conclusion-box">
+      <h3 style="font-size:18px;">📊 생애주기 판정: <span class="tag tag-purple">성숙 단계 (Mature)</span></h3>
+      <p style="margin:0; font-size:14px;">현금흐름 패턴 (+, −, −)은 성숙 단계에 해당합니다. 영업이익으로 번 돈으로 투자도 하고 부채도 갚는 자기완결형 구조입니다. 다만, Tower는 SiPho 대규모 투자라는 '성장 이니셔티브'를 동시에 추진 중이므로, 실질적으로는 <strong>'성숙-성장 전환기'</strong>라고 보는 것이 적절합니다. CAP 분석을 적용하기에 적합한 단계입니다.</p>
+    </div>
+
+    <h3>연도별 핵심 재무 실적</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>항목</th><th>2021</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>Q1 2026</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>매출 ($M)</td><td>1,510</td><td>1,678</td><td>1,423</td><td>1,436</td><td>1,566</td><td>414</td></tr>
+          <tr><td>매출 성장률</td><td>19.2%</td><td>11.1%</td><td>-15.2%</td><td>0.9%</td><td>9.1%</td><td>15.6%</td></tr>
+          <tr><td>매출총이익 ($M)</td><td>—</td><td>466</td><td>354</td><td>339</td><td>364</td><td>111</td></tr>
+          <tr><td>매출총이익률</td><td>—</td><td>27.8%</td><td>24.9%</td><td>23.6%</td><td>23.2%</td><td>26.8%</td></tr>
+          <tr><td>영업이익 ($M)</td><td>—</td><td>302</td><td>201</td><td>191</td><td>194</td><td>65</td></tr>
+          <tr><td>영업이익률</td><td>—</td><td>18.0%</td><td>14.1%</td><td>13.3%</td><td>12.4%</td><td>15.7%</td></tr>
+          <tr><td>순이익 ($M)</td><td>—</td><td>265</td><td>—*</td><td>208</td><td>220</td><td>65</td></tr>
+          <tr><td>EPS (희석)</td><td>—</td><td>$2.39</td><td>—*</td><td>$1.85</td><td>$1.94</td><td>$0.57</td></tr>
+          <tr><td>영업CF ($M)</td><td>—</td><td>—</td><td>—</td><td>449</td><td>395**</td><td>510***</td></tr>
+          <tr><td>CapEx ($M)</td><td>—</td><td>—</td><td>—</td><td>432</td><td>437</td><td>156</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="data-source">* 2023년 순이익은 Intel 합병 계약 해지 위약금($314M 등 비경상 항목) 포함으로 비교 어려움. ** 2025 영업CF는 $105M Fab3 임대 연장 선급금 포함. *** Q1 2026 영업CF는 $290M 고객 선수금 포함.<br>출처: SEC Form 6-K, Tower Semiconductor 실적 발표 자료.</p>
+  </div>
+</div>
+
+<!-- ======= 9. DCF 모델 ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">09</div>
+    <h2>DCF 모델 — 시장 내재 CAP 역산</h2>
+
+    <div class="assumptions">
+      <h4>📐 핵심 가정값</h4>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+        <div>무위험이자율: <strong>4.50%</strong> (10Y Treasury, 2026.05)</div>
+        <div>ERP: <strong>4.75%</strong> (프로젝트 표준)</div>
+        <div>조정 베타: <strong>0.90</strong> (raw 0.85 → 1로 회귀)</div>
+        <div>자기자본비용: <strong>8.78%</strong></div>
+        <div>부채비율 (D/V): <strong>0.5%</strong> (거의 무차입)</div>
+        <div>WACC: <strong>8.7%</strong></div>
+        <div>세율: <strong>15%</strong> (이스라엘 우대세율)</div>
+        <div>장기성장률(g): <strong>2.45%</strong> (10Y BEI)</div>
+        <div>페이드 비율: <strong>0.25</strong> (반도체 및 반도체 장비)</div>
+        <div>발행주식수: <strong>112M</strong></div>
+        <div>현금: <strong>$1,150M</strong></div>
+        <div>부채: <strong>$162M</strong></div>
+      </div>
+      <p style="font-size:11px; color:var(--text-dim); margin:8px 0 0;">WACC = (E/V)×Ke + (D/V)×Kd×(1-t) = 0.995×8.78% + 0.005×4%×0.85 ≈ 8.7%<br>
+      매출 성장 가정: 2026E +19%, 2027E +32%, 2028E +17%, 이후 점진 하락. 경영진 2028 목표($2.8B) 기반.<br>
+      EBITA 마진: 2025 실적(12.4%)에서 2028 목표(32%)로 점진 개선. SiPho 고마진 믹스 변화 반영.</p>
+    </div>
+
+    <h3>DCF 테이블 (전시 23 형식)</h3>
+    <div class="table-wrap">
+      <table style="font-size:11px;">
+        <thead>
+          <tr>
+            <th>항목</th><th>2025</th><th>2026E</th><th>2027E</th><th>2028E</th><th>2029E</th><th>2030E</th><th>2031E</th><th>2032E</th><th>2033E</th><th>2034E</th><th>2035E</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>매출 ($M)</td><td>1,566</td><td>1,864</td><td>2,462</td><td>2,800</td><td>3,080</td><td>3,326</td><td>3,526</td><td>3,685</td><td>3,813</td><td>3,909</td><td>3,979</td></tr>
+          <tr><td>매출 성장률</td><td>9.1%</td><td>19.0%</td><td>32.1%</td><td>13.7%</td><td>10.0%</td><td>8.0%</td><td>6.0%</td><td>4.5%</td><td>3.5%</td><td>2.5%</td><td>1.8%</td></tr>
+          <tr><td>EBITA ($M)</td><td>194</td><td>335</td><td>690</td><td>900</td><td>985</td><td>1,063</td><td>1,127</td><td>1,178</td><td>1,219</td><td>1,250</td><td>1,272</td></tr>
+          <tr><td>EBITA 마진</td><td>12.4%</td><td>18.0%</td><td>28.0%</td><td>32.1%</td><td>32.0%</td><td>32.0%</td><td>32.0%</td><td>32.0%</td><td>32.0%</td><td>32.0%</td><td>32.0%</td></tr>
+          <tr><td>세율</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td></tr>
+          <tr><td>NOPAT ($M)</td><td>165</td><td>285</td><td>587</td><td>765</td><td>837</td><td>904</td><td>958</td><td>1,001</td><td>1,036</td><td>1,063</td><td>1,081</td></tr>
+          <tr><td>미래투자 ($M)</td><td>437</td><td>500</td><td>550</td><td>400</td><td>370</td><td>350</td><td>330</td><td>310</td><td>290</td><td>275</td><td>265</td></tr>
+          <tr class="highlight-row"><td>잉여현금흐름 ($M)</td><td>-272</td><td>-215</td><td>37</td><td>365</td><td>467</td><td>554</td><td>628</td><td>691</td><td>746</td><td>788</td><td>816</td></tr>
+          <tr><td>FCF의 현재가치 ($M)</td><td>—</td><td>-202</td><td>32</td><td>289</td><td>340</td><td>371</td><td>387</td><td>391</td><td>389</td><td>377</td><td>360</td></tr>
+          <tr><td>FCF 누적 PV ($M)</td><td>—</td><td>-202</td><td>-170</td><td>119</td><td>459</td><td>830</td><td>1,217</td><td>1,608</td><td>1,997</td><td>2,374</td><td>2,734</td></tr>
+          <tr><td>연도</td><td>—</td><td>0.5</td><td>1.5</td><td>2.5</td><td>3.5</td><td>4.5</td><td>5.5</td><td>6.5</td><td>7.5</td><td>8.5</td><td>9.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>시장 내재 CAP 역산</h3>
+    <div class="card">
+      <p>현재 주가 <strong>$280</strong> × 발행주식 <strong>112M주</strong> = 시장이 매긴 <strong>주주가치 $31,360M</strong></p>
+      <p>기업가치 = 주주가치 + 부채 − 현금 = $31,360 + $162 − $1,150 = <strong>$30,372M</strong></p>
+      <p>DCF 모델에서 예측 기간을 조정하여 이 기업가치와 일치하는 점을 찾으면:</p>
+    </div>
+
+    <div class="table-wrap">
+      <table class="sens-table">
+        <thead>
+          <tr><th>명시적 예측기간</th><th>FCF 누적 PV</th><th>최종가치 PV</th><th>기업가치</th><th>주당가치</th><th>현재주가 대비</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>5년 (2030)</td><td>$830M</td><td>$12,614M</td><td>$13,444M</td><td>$120</td><td class="negative">-57%</td></tr>
+          <tr><td>7년 (2032)</td><td>$1,608M</td><td>$15,897M</td><td>$17,505M</td><td>$157</td><td class="negative">-44%</td></tr>
+          <tr><td>10년 (2035)</td><td>$2,734M</td><td>$19,811M</td><td>$22,545M</td><td>$200</td><td class="negative">-29%</td></tr>
+          <tr><td>13년 (2038)</td><td>$4,286M</td><td>$22,340M</td><td>$26,626M</td><td>$237</td><td class="negative">-15%</td></tr>
+          <tr class="highlight-row"><td><strong>17년 (2042)</strong></td><td><strong>$6,100M</strong></td><td><strong>$24,270M</strong></td><td><strong>$30,370M</strong></td><td><strong>$271</strong></td><td class="neutral"><strong>≈ 현재주가</strong></td></tr>
+          <tr><td>20년 (2045)</td><td>$7,412M</td><td>$25,100M</td><td>$32,512M</td><td>$290</td><td class="positive">+4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="conclusion-box">
+      <h3 style="font-size:20px;">🎯 시장 내재 CAP: 약 <span style="font-size:28px;">17년</span></h3>
+      <p style="font-size:14px;">현재 주가 ~$280에는 Tower가 <strong>향후 약 17년간 자본비용을 초과하는 수익을 창출할 것</strong>이라는 시장의 기대가 반영되어 있습니다.</p>
+      <p style="font-size:14px; margin:0;">CAP 프레임워크 해석표 기준으로 17년은 <strong>"약간 낙관적"</strong> 영역입니다(15~20년). 이 수준의 CAP가 정당화되려면 SiPho 시장에서의 경쟁 우위가 장기간 지속된다는 <strong>강력한 해자 근거</strong>가 필요합니다.</p>
+    </div>
+    <p class="data-source">주: 이 DCF 모델은 경영진의 2028 재무 목표를 기본 가정으로 사용하며, 이후 페이드 모델을 적용합니다. 실제 결과는 가정과 크게 다를 수 있습니다. 연중할인(mid-year convention) 적용.</p>
+  </div>
+</div>
+
+<!-- ======= 10. 민감도 분석 ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">10</div>
+    <h2>민감도 & 시나리오 분석</h2>
+
+    <h3>자본비용 변동 시 내재 CAP</h3>
+    <div class="table-wrap">
+      <table class="sens-table">
+        <thead><tr><th>WACC</th><th>내재 CAP</th><th>해석</th></tr></thead>
+        <tbody>
+          <tr><td>7.7% (−1%p)</td><td>14년</td><td class="neutral">합리적 범위 상단</td></tr>
+          <tr class="highlight-row"><td>8.7% (기본)</td><td>17년</td><td class="neutral">약간 낙관적</td></tr>
+          <tr><td>9.7% (+1%p)</td><td>21년+</td><td class="negative">과도한 낙관</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>매출성장률 변동 시 영향</h3>
+    <div class="table-wrap">
+      <table class="sens-table">
+        <thead><tr><th>시나리오</th><th>2028 매출</th><th>내재 CAP</th><th>해석</th></tr></thead>
+        <tbody>
+          <tr><td>낙관 (+2%p)</td><td>$3.1B</td><td>14년</td><td class="positive">합리적 범위</td></tr>
+          <tr class="highlight-row"><td>기본</td><td>$2.8B</td><td>17년</td><td class="neutral">약간 낙관적</td></tr>
+          <tr><td>비관 (−2%p)</td><td>$2.5B</td><td>22년+</td><td class="negative">과도한 낙관</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>3가지 시나리오</h3>
+    <div class="card-grid">
+      <div class="card" style="border-top: 3px solid var(--accent);">
+        <div style="font-weight:700; color:var(--accent); margin-bottom:8px;">🐂 강세 시나리오</div>
+        <p style="font-size:13px;">SiPho 시장이 예상 이상 성장, Tower가 CPO/NPO 시장까지 장악. 2028 매출 $3.2B 달성. EBITA 마진 35%.</p>
+        <p style="font-size:13px; margin:0;"><strong>내재 CAP: ~12년</strong> — 해자 확인 시 매수 가능 영역</p>
+      </div>
+      <div class="card" style="border-top: 3px solid var(--warn);">
+        <div style="font-weight:700; color:var(--warn); margin-bottom:8px;">📊 기본 시나리오</div>
+        <p style="font-size:13px;">경영진 2028 목표 달성. 매출 $2.8B, 순이익 $750M. 이후 점진적 성장 둔화.</p>
+        <p style="font-size:13px; margin:0;"><strong>내재 CAP: ~17년</strong> — 약간 낙관적, 해자 강도에 의존</p>
+      </div>
+      <div class="card" style="border-top: 3px solid var(--danger);">
+        <div style="font-weight:700; color:var(--danger); margin-bottom:8px;">🐻 약세 시나리오</div>
+        <p style="font-size:13px;">AI CapEx 사이클 둔화, TSMC의 SiPho 진입으로 가격 경쟁 심화. 2028 매출 $2.2B, 마진 압축.</p>
+        <p style="font-size:13px; margin:0;"><strong>내재 CAP: 25년+</strong> — 현재 주가 정당화 불가, 하방 리스크 큼</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= 11. 종합 판단 ======= -->
+<div class="section">
+  <div class="container">
+    <div class="section-num">11</div>
+    <h2>종합 판단 자료</h2>
+
+    <div class="conclusion-box" style="background: linear-gradient(135deg, rgba(253,203,110,0.08), rgba(225,112,85,0.08)); border-color: rgba(253,203,110,0.3);">
+      <h3 style="color:var(--warn); font-size:20px;">📋 핵심 결론</h3>
+      <p style="font-size:15px;">Tower Semiconductor의 현재 주가($280)에는 약 <strong>17년간의 경쟁 우위 기간(CAP)</strong>이 내재되어 있습니다. 이는 CAP 프레임워크 기준 <strong>"약간 낙관적"</strong> 영역으로, SiPho 시장에서의 선두 지위가 장기간 유지된다는 전제가 필수입니다.</p>
+      <p style="font-size:15px;">반도체 및 반도체 장비 섹터의 평균 페이드 비율(0.25)은 경쟁 우위의 지속성이 상대적으로 낮은 산업임을 시사합니다. 기업 생존율 데이터에 따르면 평균 상장 기간이 11.7년(중앙값 6.8년)인데, 17년의 CAP는 이를 크게 상회합니다.</p>
+      <p style="font-size:15px; margin:0;"><strong>신뢰도: 중간(~60%)</strong>. 성장 스토리는 $1.3B 확정 계약과 NVIDIA 파트너십 등 구체적 근거가 있지만, 17년은 매우 긴 시간이고, 기술 산업에서 이 정도의 해자 지속은 역사적으로 드뭅니다. 실행 리스크(대규모 CapEx, 글로벌 팹 운영)와 경쟁 리스크(TSMC 진입)를 고려하면 현재 밸류에이션에는 의미 있는 프리미엄이 포함되어 있습니다.</p>
+    </div>
+
+    <h3>섹터 평균 대비 합리성</h3>
+    <div class="card">
+      <p>반도체 장비/반도체 섹터의 집계 ROIC: 19.0% (프레임워크 데이터)</p>
+      <p>Tower의 현재 ROIC: ~9.6% (섹터 중앙값 10.8% 미만)</p>
+      <p>→ Tower는 현재 시점에서 ROIC가 WACC(8.7%)와 비슷한 수준이므로, 실질적인 가치 창출이 미미합니다. 2028 목표 달성 시 ROIC가 20%+ 수준으로 개선될 것으로 예상되나, 이는 아직 실현되지 않은 잠재력입니다.</p>
+      <p style="margin:0;"><strong>시장은 '현재의 Tower'가 아니라 '2028년의 Tower'에 투자하고 있습니다.</strong> 이 간극이 바로 핵심 투자 판단 포인트입니다.</p>
+    </div>
+
+    <h3>주요 리스크 & 분기별 체크포인트</h3>
+    <div class="card-grid">
+      <div class="card" style="border-left:3px solid var(--danger);">
+        <div style="font-weight:700; color:var(--danger); margin-bottom:8px;">매 분기 확인</div>
+        <p style="font-size:12px; margin:0;">
+          ☐ SiPho 매출 성장률 (QoQ/YoY)<br>
+          ☐ EBITA 마진 개선 추세<br>
+          ☐ CapEx 집행 vs 계획 ($920M 중 얼마 소화)<br>
+          ☐ 고객 선수금 유입 현황<br>
+          ☐ GlobalFoundries 특허 소송 진행<br>
+          ☐ 팹 가동률 변화 (특히 Fab 7)<br>
+          ☐ 경쟁사(TSMC 등)의 SiPho 진출 뉴스
+        </p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--warn);">
+        <div style="font-weight:700; color:var(--warn); margin-bottom:8px;">연간 재검토</div>
+        <p style="font-size:12px; margin:0;">
+          ☐ 내재 CAP 재계산<br>
+          ☐ 2028 모델 달성 경로 점검<br>
+          ☐ ROIC 산출 및 WACC 대비 비교<br>
+          ☐ 생애주기 단계 재판별<br>
+          ☐ 섹터 페이드 비율 업데이트<br>
+          ☐ 금리 환경 변화에 따른 WACC 재계산
+        </p>
+      </div>
+    </div>
+
+    <h3>한계와 가정 (Limitations & Assumptions)</h3>
+    <div class="assumptions">
+      <p style="margin-bottom:8px;">이 분석이 의존하는 핵심 가정:</p>
+      <p style="font-size:13px; margin-bottom:4px;">1. 경영진의 2028 목표(매출 $2.8B, 순이익 $750M)를 기본 시나리오로 사용 — 이는 현재 매출의 1.8배, 순이익의 3.4배에 해당하는 공격적 목표</p>
+      <p style="font-size:13px; margin-bottom:4px;">2. 이스라엘 우대세율(~15%)이 장기 지속된다고 가정 — OECD Pillar Two(글로벌 최저세율 15%) 적용으로 변동 가능</p>
+      <p style="font-size:13px; margin-bottom:4px;">3. AI 데이터센터 투자 사이클이 2028년 이후에도 구조적 성장을 지속한다고 가정</p>
+      <p style="font-size:13px; margin-bottom:8px;">4. 확신도 낮은 지점: 2030년 이후 매출 성장률과 EBITA 마진의 지속 가능성, TSMC 등 대형 경쟁사의 SiPho 시장 진입 시 마진 압축 정도</p>
+      <p style="font-size:13px; margin:0;">5. 이 결론이 틀릴 수 있는 조건: AI CapEx 사이클 조기 정점, SiPho 기술의 급격한 범용화(commoditization), 또는 대체 기술(InP 기반 등)의 부상</p>
+    </div>
+
+    <div class="data-source" style="margin-top:24px;">
+      <strong>데이터 출처 및 기준 시점:</strong><br>
+      주가: ~$280 (2026.05.22 종가 기준, StockTitan/Google Finance)<br>
+      재무 데이터: SEC Form 6-K, Tower Semiconductor 실적 발표 자료 (Q1 2026: 2026.05.13 발표)<br>
+      무위험이자율: FRED 10Y Treasury (4.51%, 2026.05.26)<br>
+      ERP: 프로젝트 표준 가정 4.75% (다모다란 2026년 1월 Implied ERP 4.23% 참고)<br>
+      기대인플레이션: FRED 10Y Breakeven (2.45%, 2026.05)<br>
+      페이드 비율: CAP 프레임워크 반도체 및 반도체 장비 섹터 0.25<br>
+      파운드리 시장 점유율: TrendForce Q1 2025 데이터<br>
+      경쟁사 재무: 각사 최신 실적 발표 기준<br><br>
+      이 보고서는 정보 제공 목적이며, 투자 추천이 아닙니다. 모든 투자에는 원금 손실 위험이 있습니다.
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container">
+    CAP 기반 투자 분석 보고서 — Tower Semiconductor (TSEM)<br>
+    분석 기준일: 2026년 5월 27일 | 프레임워크: Mauboussin CAP Framework (2026.04.14)
+  </div>
+</div>
+
+</body>
+</html>

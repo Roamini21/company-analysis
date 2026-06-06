@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FRVO | Fervo Energy 기업 분석 보고서</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0c0f14;
+  --bg-secondary: #131821;
+  --bg-card: #181e2a;
+  --bg-accent: #1c2433;
+  --text-primary: #e8eaed;
+  --text-secondary: #9aa0ad;
+  --text-muted: #5f6677;
+  --accent-fire: #f26522;
+  --accent-gold: #d4a853;
+  --accent-teal: #2ec4b6;
+  --accent-blue: #4a9eff;
+  --accent-red: #ef4444;
+  --accent-green: #22c55e;
+  --border: #252d3d;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Source Sans 3', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+
+/* HERO */
+.hero {
+  position: relative;
+  padding: 80px 0 60px;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(242,101,34,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(242,101,34,0.1);
+  border: 1px solid rgba(242,101,34,0.25);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-fire);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 24px;
+}
+.hero-tag .dot {
+  width: 6px; height: 6px;
+  background: var(--accent-fire);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--text-primary) 40%, var(--accent-fire) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 20px;
+  color: var(--text-secondary);
+  font-weight: 300;
+  max-width: 700px;
+  margin-bottom: 32px;
+}
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.hero-meta-item {
+  display: flex;
+  flex-direction: column;
+}
+.hero-meta-item .label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.hero-meta-item .value {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.hero-meta-item .value.up { color: var(--accent-green); }
+.hero-meta-item .value.fire { color: var(--accent-fire); }
+
+/* SECTION */
+section {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+}
+.section-number {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent-fire);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+section h2 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 28px 0 12px;
+  color: var(--accent-gold);
+}
+section p {
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+/* CARDS */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: border-color 0.3s;
+}
+.card:hover { border-color: var(--accent-fire); }
+.card .card-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.card .card-value {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.card .card-note {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* TABLES */
+.table-wrap {
+  overflow-x: auto;
+  margin: 24px 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+thead {
+  background: var(--bg-accent);
+}
+th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(37,45,61,0.5);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  white-space: nowrap;
+}
+tr:hover td { background: rgba(242,101,34,0.03); }
+td.highlight { color: var(--accent-fire); font-weight: 600; }
+td.green { color: var(--accent-green); }
+td.red { color: var(--accent-red); }
+td.label-cell {
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* PROGRESS BAR */
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 12px 0;
+}
+.progress-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  width: 160px;
+  flex-shrink: 0;
+}
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-accent);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+
+/* SWOT */
+.swot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.swot-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 24px;
+  border-left: 4px solid;
+}
+.swot-card.strength { border-left-color: var(--accent-green); }
+.swot-card.weakness { border-left-color: var(--accent-red); }
+.swot-card.opportunity { border-left-color: var(--accent-blue); }
+.swot-card.threat { border-left-color: var(--accent-gold); }
+.swot-card h4 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.swot-card.strength h4 { color: var(--accent-green); }
+.swot-card.weakness h4 { color: var(--accent-red); }
+.swot-card.opportunity h4 { color: var(--accent-blue); }
+.swot-card.threat h4 { color: var(--accent-gold); }
+.swot-card ul {
+  list-style: none;
+  padding: 0;
+}
+.swot-card li {
+  padding: 6px 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-left: 16px;
+  position: relative;
+}
+.swot-card li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+
+/* CALLOUT */
+.callout {
+  background: linear-gradient(135deg, rgba(242,101,34,0.08), rgba(212,168,83,0.05));
+  border: 1px solid rgba(242,101,34,0.2);
+  border-radius: 12px;
+  padding: 28px;
+  margin: 28px 0;
+}
+.callout-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-fire);
+  margin-bottom: 12px;
+}
+.callout p {
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+/* PORTER */
+.porter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.porter-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+.porter-item .force-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.porter-item .force-level {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.force-high { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+.force-medium { background: rgba(212,168,83,0.15); color: var(--accent-gold); }
+.force-low { background: rgba(34,197,94,0.15); color: var(--accent-green); }
+.porter-item .force-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* TIMELINE */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+  margin: 24px 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 24px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -28px; top: 6px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent-fire);
+  border: 2px solid var(--bg-primary);
+}
+.timeline-item .tl-date {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent-fire);
+  margin-bottom: 4px;
+}
+.timeline-item .tl-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* CONFIDENCE */
+.confidence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  margin: 4px 4px 4px 0;
+}
+.conf-high { background: rgba(34,197,94,0.12); color: var(--accent-green); }
+.conf-med { background: rgba(212,168,83,0.12); color: var(--accent-gold); }
+.conf-low { background: rgba(239,68,68,0.12); color: var(--accent-red); }
+
+/* FOOTER */
+.footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.footer p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 { font-size: 36px; }
+  .swot-grid { grid-template-columns: 1fr; }
+  .hero-meta { gap: 20px; }
+  .container { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-tag"><span class="dot"></span> IPO 직후 · 프리-레버뉴 단계</div>
+  <h1>Fervo Energy (FRVO)</h1>
+  <p class="hero-sub">차세대 강화 지열 시스템(EGS) 개발 기업. 수평 시추 기술과 수압파쇄를 결합하여 지열 에너지의 지리적 제약을 해제하고 AI 데이터센터 전력 수요를 공략하는 선도 기업.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="label">주가 (5/15)</span>
+      <span class="value">$40.55</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">시가총액</span>
+      <span class="value fire">$11.5B</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">IPO 가격</span>
+      <span class="value">$27.00</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">IPO 대비</span>
+      <span class="value up">+50.2%</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">거래소 · 티커</span>
+      <span class="value">NASDAQ : FRVO</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="label">섹터</span>
+      <span class="value">유틸리티 (독립발전)</span>
+    </div>
+  </div>
+</header>
+
+<!-- 1. 기업 개요 -->
+<section>
+  <div class="section-number">01 — 기업 개요</div>
+  <h2>Fervo Energy란?</h2>
+  
+  <p>Fervo Energy는 2017년 CEO Tim Latimer(전 BHP 시추 엔지니어, 스탠포드 석사)와 CTO Jack Norbeck가 공동 설립한 미국 텍사스 휴스턴 기반의 차세대 지열 에너지 개발 기업이다. 핵심 기술은 셰일 혁명에서 입증된 수평 시추(horizontal drilling)와 수압파쇄(hydraulic fracturing) 기법을 지열 발전에 적용하는 '강화 지열 시스템(Enhanced Geothermal Systems, EGS)'이다.</p>
+
+  <p>전통 지열 발전은 자연적으로 열수가 존재하는 극히 제한된 지역에서만 가능했지만, Fervo의 EGS 기술은 지하 고온 암반에 인공 저수지를 조성하여 사실상 어디서든 지열 발전을 가능하게 한다. 냉수를 주입정으로 보내 지하 고온 암반을 통과시킨 후, 가열된 물을 생산정으로 회수하여 발전하는 폐쇄 순환 구조다.</p>
+
+  <p>2026년 5월 13일 나스닥에 IPO하며 약 $1.89B를 조달했다. 주당 $27로 7,000만 주를 발행했으며, 첫 거래일에 33% 이상 급등하여 시가총액이 $10B를 돌파했다. 역대 최대 클린에너지 IPO로 기록되었다.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-label">설립</div>
+      <div class="card-value">2017</div>
+      <div class="card-note">Houston, TX</div>
+    </div>
+    <div class="card">
+      <div class="card-label">직원 수</div>
+      <div class="card-value">~199</div>
+      <div class="card-note">석유·가스 인력 90%+ 활용</div>
+    </div>
+    <div class="card">
+      <div class="card-label">IPO 조달액</div>
+      <div class="card-value">$1.89B</div>
+      <div class="card-note">2026.5.13 상장</div>
+    </div>
+    <div class="card">
+      <div class="card-label">PPA 백로그</div>
+      <div class="card-value">$7.2B</div>
+      <div class="card-note">658 MW 계약 체결</div>
+    </div>
+  </div>
+
+  <h3>주요 투자자</h3>
+  <p>Bill Gates의 Breakthrough Energy Ventures(시리즈 A부터 참여), Alphabet/Google(고객이자 투자자), Devon Energy(셰일 혁명 선구자), B Capital, CalSTRS(캘리포니아 교직원 퇴직연금), CPP Investments, Mitsubishi Heavy Industries, Mitsui, Mercuria, Liberty Mutual 등 에너지·테크·기관투자 3대 축이 고르게 참여하고 있다.</p>
+
+  <h3>핵심 프로젝트 파이프라인</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="tl-date">Project Red — 네바다 (가동 중)</div>
+      <div class="tl-text">3.5 MW 파일럿. 2023년 상업 가동 시작. 600일 이상 무중단 운영. Google에 전력 공급 중. 세계 최초 수평 시추 EGS 상업 프로젝트.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-date">Cape Station Phase 1 — 유타 (건설 중)</div>
+      <div class="tl-text">~100 MW. 2026년 말 최초 전력 공급, 2027년 초 100 MW 가동 목표. 24개 시추 중 20개 완료. 단일 정에서 10 MW 생산 기록 달성(Project Red의 3배). 현 capex ~$7,000/kW → $5,500/kW 목표.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-date">Cape Station Phase 2 — 유타 (계획)</div>
+      <div class="tl-text">400 MW 추가. 2028년 가동 목표. 예상 capex $2.2B. Southern California Edison 320 MW PPA 체결. 최대 2 GW까지 확장 허가 보유, 기술적으로 4 GW 가능성.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-date">Corsac Station — 네바다 (초기 개발)</div>
+      <div class="tl-text">115 MW. Google의 네바다 데이터센터에 전력 공급 예정. NV Energy를 통한 PPA 체결.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="tl-date">Google 3 GW 프레임워크 계약</div>
+      <div class="tl-text">구속력 있는 PPA는 아니지만, 향후 대규모 전력 공급 구조의 로드맵. 데이터센터 전력 수요 증가에 따른 확장 옵션.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 생애주기 -->
+<section>
+  <div class="section-number">02 — 생애주기 단계 판별</div>
+  <h2>도입기(Introduction Stage)</h2>
+
+  <p>Fervo Energy는 현금흐름표 패턴으로 보면 명확히 <strong>도입기</strong>에 해당한다. 영업현금흐름은 마이너스(2025년 순손실 $57.8M, 매출 $138K에 불과), 투자현금흐름도 대규모 마이너스(Cape Station 건설 등), 재무현금흐름은 IPO 및 시리즈 펀딩을 통한 대규모 유입이다. 이는 CAP 프레임워크의 5단계 매트릭스에서 전형적인 도입기(영업 유출 / 투자 유출 / 재무 유입) 패턴이다.</p>
+
+  <div class="callout">
+    <div class="callout-title">CAP 프레임워크 적용 시 주의점</div>
+    <p>도입기 기업에는 전통적 DCF + CAP 역산이 적합하지 않다. 매출이 사실상 없고, NOPAT이 음수이므로 시장 내재 CAP를 역산하는 것은 무의미하다. 대신 실질옵션(Real Options), TAM 분석, 프로젝트별 NPV 적산, 그리고 PPA 백로그 기반의 가치 평가가 더 적절하다. 이 보고서에서는 정성적 해자 분석과 피어 비교 밸류에이션에 초점을 맞춘다.</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>현금흐름 항목</th><th>2024</th><th>2025</th><th>방향</th><th>판별</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">영업 현금흐름</td><td class="red">대규모 유출</td><td class="red">대규모 유출</td><td>-</td><td rowspan="3" class="highlight" style="vertical-align:middle;">도입기</td></tr>
+        <tr><td class="label-cell">투자 현금흐름</td><td class="red">대규모 유출</td><td class="red">대규모 유출</td><td>-</td></tr>
+        <tr><td class="label-cell">재무 현금흐름</td><td class="green">대규모 유입</td><td class="green">대규모 유입</td><td>+</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 3. 기술적 해자 -->
+<section>
+  <div class="section-number">03 — Fervo만의 기술적 해자</div>
+  <h2>경쟁 우위 원천 분석</h2>
+
+  <h3>1. 시추 학습 곡선에서의 선행자 우위</h3>
+  <p>Fervo는 지금까지 40개의 수평 지열 정을 시추했으며, 이는 업계에서 압도적 1위다. Project Red에서 Cape Station으로 넘어가며 시추 시간을 70% 단축했고, 시추 비용은 정당 $9.4M에서 $4.8M으로 절반 이하로 감소했다. 학습곡선 비율은 계획 18%를 크게 상회하는 35%를 실현했는데, 이는 초기 셰일 혁명에서 관찰된 학습률과 유사한 수준이다. Devon Energy CTO는 이를 "셰일 혁명 초기와 같다"고 평가했다.</p>
+
+  <h3>2. 수직적 데이터 우위</h3>
+  <p>Fervo는 분산형 광섬유 센싱(DAS/DTS)과 AI 기반 분석 알고리즘을 사용하여 지하 저수지 모델링과 유체 흐름 최적화를 수행한다. Project Red에서 축적한 600일 이상의 연속 운영 데이터는 경쟁사가 단기간에 복제할 수 없는 핵심 자산이다. 이 데이터는 Cape Station의 정 설계와 자극(stimulation) 최적화에 직접 반영되었다.</p>
+
+  <h3>3. 석유·가스 기술의 크로스오버 적용력</h3>
+  <p>Halliburton의 VersaFlex 라이너 행거, PDC 비트, 머드 쿨러 등 셰일 산업에서 검증된 장비와 기술을 지열 환경에 맞게 최적화했다. Helmerich & Payne, Devon Energy, Liberty Energy 등 O&G 대형 서비스 기업들과의 직접 파트너십은 기술 전이 속도를 가속화하는 동시에, 후발 주자가 동일한 파트너십을 구축하기 어렵게 만든다.</p>
+
+  <h3>4. 규제 및 정치적 해자</h3>
+  <p>지열 에너지는 미국에서 초당파적 지지를 받는 유일한 클린에너지 중 하나다. 바이든 행정부의 IRA(인플레이션 감축법)에서 재생에너지 세액공제를 받았고, 트럼프 행정부의 OBBB(One Big Beautiful Bill)에서도 풍력·태양광 세액공제는 축소했으나 지열은 유지했다. 에너지부 장관 Chris Wright는 Liberty Energy(Fervo 파트너)의 전 CEO다.</p>
+
+  <h3>5. 전환 비용 및 고객 고착(Lock-in)</h3>
+  <p>658 MW의 장기 PPA(평균 15년)와 $7.2B의 매출 백로그는 이미 체결된 계약이다. Google과의 3 GW 프레임워크 협약은 추가적인 수요 파이프라인을 확보한다. 기저 부하(baseload) 전력은 한번 계약되면 대체가 극히 어려운 구조다.</p>
+
+  <div class="confidence-badge conf-high">신뢰도 높음 ~75%</div>
+  <span style="font-size:13px; color:var(--text-muted);">학습곡선 데이터, PPA 계약, 파일럿 실증 결과에 기반. 다만 상업 규모 장기 운영 실적은 아직 미확인.</span>
+</section>
+
+<!-- 4. Porter's 5 Forces -->
+<section>
+  <div class="section-number">04 — 포터의 5 Forces</div>
+  <h2>산업 구조 분석</h2>
+
+  <div class="porter-grid">
+    <div class="porter-item">
+      <div class="force-name">신규 진입 위협</div>
+      <div class="force-level force-low">낮음~중간</div>
+      <div class="force-desc">EGS는 자본집약적(현재 $7,000/kW), 기술적 학습곡선이 높으며, 40정 이상의 시추 경험을 보유한 기업이 Fervo뿐. 다만 O&G 메이저들의 진입 가능성 존재(SLB+Ormat 제휴).</div>
+    </div>
+    <div class="porter-item">
+      <div class="force-name">기존 경쟁 강도</div>
+      <div class="force-level force-low">낮음</div>
+      <div class="force-desc">EGS 상업화 기업이 극소수. Ormat는 전통 지열 중심, Eavor는 폐쇄형 루프 다른 기술. Fervo가 EGS에서 유일한 상업 스케일 플레이어.</div>
+    </div>
+    <div class="porter-item">
+      <div class="force-name">공급자 교섭력</div>
+      <div class="force-level force-medium">중간</div>
+      <div class="force-desc">시추 장비·서비스(H&P, Halliburton 등)에 의존하나, O&G 산업 규모 대비 지열 수요가 소규모여서 가격 교섭력은 제한적. 터빈은 Turboden ORC 사용.</div>
+    </div>
+    <div class="porter-item">
+      <div class="force-name">구매자 교섭력</div>
+      <div class="force-level force-medium">중간~높음</div>
+      <div class="force-desc">Google, SCE 등 대형 구매자. 하지만 24/7 탄소프리 기저부하 전원의 희소성이 Fervo의 가격 협상력을 높임. AI 전력 수요 급증이 판매자 우위 시장 형성.</div>
+    </div>
+    <div class="porter-item">
+      <div class="force-name">대체재 위협</div>
+      <div class="force-level force-medium">중간</div>
+      <div class="force-desc">소형 모듈 원자로(SMR, X-Energy 등), 천연가스+CCS, 배터리 저장이 경쟁. 그러나 지열은 연료비 없음, 24/7 가동, 탄소 무배출의 '삼위일체' 강점. 풍력·태양광은 간헐성 문제로 직접 대체재 아님.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 피어 비교 -->
+<section>
+  <div class="section-number">05 — 피어그룹 비교</div>
+  <h2>경쟁사 및 유사 기업 벤치마크</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>구분</th>
+          <th>FRVO (Fervo Energy)</th>
+          <th>ORA (Ormat Technologies)</th>
+          <th>XE (X-Energy)</th>
+          <th>Eavor Technologies</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label-cell">기술</td>
+          <td>EGS (강화 지열)</td>
+          <td>전통 지열 + EGS 진출</td>
+          <td>소형 모듈 원자로(SMR)</td>
+          <td>폐쇄형 루프 지열</td>
+        </tr>
+        <tr>
+          <td class="label-cell">상장 여부</td>
+          <td>NASDAQ (2026.5)</td>
+          <td>NYSE (2004~)</td>
+          <td>NYSE (2026.4)</td>
+          <td>비상장</td>
+        </tr>
+        <tr>
+          <td class="label-cell">시가총액</td>
+          <td class="highlight">~$11.5B</td>
+          <td>~$7.8B</td>
+          <td>~$7-8B</td>
+          <td>비공개</td>
+        </tr>
+        <tr>
+          <td class="label-cell">연간 매출</td>
+          <td class="red">$138K (2025)</td>
+          <td class="green">$990M (2025)</td>
+          <td class="red">미미 (프리-레버뉴)</td>
+          <td>미미</td>
+        </tr>
+        <tr>
+          <td class="label-cell">순이익</td>
+          <td class="red">-$57.8M</td>
+          <td class="green">$124M</td>
+          <td class="red">대규모 적자</td>
+          <td>적자</td>
+        </tr>
+        <tr>
+          <td class="label-cell">설립</td>
+          <td>2017</td>
+          <td>1965</td>
+          <td>2009</td>
+          <td>2017</td>
+        </tr>
+        <tr>
+          <td class="label-cell">가동 용량</td>
+          <td>3.5 MW (파일럿)</td>
+          <td>~1,000 MW+</td>
+          <td>0 (개발 중)</td>
+          <td>0 (파일럿)</td>
+        </tr>
+        <tr>
+          <td class="label-cell">파이프라인</td>
+          <td>658 MW 계약, 2.6 GW 개발</td>
+          <td>글로벌 다각화</td>
+          <td>12+ 원자로 계약</td>
+          <td>독일 파일럿</td>
+        </tr>
+        <tr>
+          <td class="label-cell">주요 고객</td>
+          <td>Google, SCE, Shell</td>
+          <td>글로벌 유틸리티</td>
+          <td>Dow, 미국 정부</td>
+          <td>독일 유틸리티</td>
+        </tr>
+        <tr>
+          <td class="label-cell">핵심 투자자</td>
+          <td>BEV, Google, Devon</td>
+          <td>기관투자자</td>
+          <td>Amazon, Ares</td>
+          <td>bp, Temasek</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">핵심 관찰: Fervo vs Ormat 밸류에이션 역전</div>
+    <p>Fervo의 시가총액($11.5B)이 60년 업력에 연간 $990M 매출을 올리는 Ormat($7.8B)을 이미 크게 상회한다. 이는 시장이 Fervo의 EGS 기술이 지열 산업의 TAM을 근본적으로 확장할 것이라는 기대를 반영하는 것이다. 전통 지열의 미국 설비용량은 2.7 GW에 불과하지만, DOE는 EGS로 2050년까지 90 GW가 가능하다고 추산한다. 한편, X-Energy(SMR)와의 유사한 밸류에이션은 '차세대 기저부하 클린에너지'라는 테마 프리미엄을 공유하고 있음을 시사한다.</p>
+  </div>
+</section>
+
+<!-- 6. 밸류에이션 -->
+<section>
+  <div class="section-number">06 — 밸류에이션 분석</div>
+  <h2>현재 밸류에이션 해석</h2>
+
+  <p>Fervo는 사실상 프리-레버뉴 기업이므로 전통적인 P/E, EV/EBITDA 배수 분석은 불가능하다. 대신 PPA 백로그 대비 기업가치, MW당 밸류에이션, 그리고 유사 기업 비교를 통해 시장이 내재하는 기대치를 파악한다.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-label">EV / PPA 백로그</div>
+      <div class="card-value">~1.6x</div>
+      <div class="card-note">$11.5B / $7.2B 백로그</div>
+    </div>
+    <div class="card">
+      <div class="card-label">EV / 계약 MW</div>
+      <div class="card-value">$17.5M</div>
+      <div class="card-note">$11.5B / 658 MW</div>
+    </div>
+    <div class="card">
+      <div class="card-label">EV / 건설중+계약 MW</div>
+      <div class="card-value">$3.5M</div>
+      <div class="card-note">파이프라인 3.3 GW 포함시</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Ormat EV/MW 비교</div>
+      <div class="card-value">~$7.8M</div>
+      <div class="card-note">$7.8B / ~1,000 MW (가동중)</div>
+    </div>
+  </div>
+
+  <h3>시장이 내재하는 가정</h3>
+  <p>현재 $11.5B 시가총액이 정당화되려면, 시장은 대략 다음을 가정하고 있다고 추론할 수 있다:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>가정 항목</th><th>내재 추정치</th><th>신뢰도</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">658 MW PPA 완전 이행</td><td>2028년까지 가동 개시</td><td><span class="confidence-badge conf-high">높음 ~70%</span></td></tr>
+        <tr><td class="label-cell">연간 매출 (정상화 시)</td><td>~$480M (658 MW × ~$82/MWh × 8,760h × CF)</td><td><span class="confidence-badge conf-med">중간 ~55%</span></td></tr>
+        <tr><td class="label-cell">비용 절감 궤적</td><td>$7,000/kW → $3,000/kW (5~7년 내)</td><td><span class="confidence-badge conf-med">중간 ~50%</span></td></tr>
+        <tr><td class="label-cell">추가 파이프라인 전환</td><td>2.6 GW 중 상당 부분 계약 전환</td><td><span class="confidence-badge conf-low">낮음 ~35%</span></td></tr>
+        <tr><td class="label-cell">Google 3 GW 구체화</td><td>일부라도 구속력 있는 PPA로 전환</td><td><span class="confidence-badge conf-med">중간 ~45%</span></td></tr>
+        <tr><td class="label-cell">기술적 리스크</td><td>Cape Station이 상업 규모에서 파일럿과 동등한 성능 달성</td><td><span class="confidence-badge conf-med">중간 ~60%</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>간이 역산: PPA 기반 가치 평가</h3>
+  <p>보수적으로 658 MW가 2028년까지 모두 가동된다고 가정하면, 용량 계수(Capacity Factor) 90%, 평균 PPA 가격 $80/MWh, 운영 마진 50%(연료비 없음), 15년 평균 잔여 계약 기간, WACC 10%를 적용시:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>항목</th><th>수치</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">연간 총 발전량</td><td>658 MW × 8,760h × 90% = 5,190 GWh</td></tr>
+        <tr><td class="label-cell">연간 매출</td><td>5,190 GWh × $80/MWh = ~$415M</td></tr>
+        <tr><td class="label-cell">연간 NOPAT (50% 마진 가정)</td><td>~$208M</td></tr>
+        <tr><td class="label-cell">15년 현재가치 (10% WACC)</td><td>~$1,580M</td></tr>
+        <tr><td class="label-cell">최종가치 (g=2.5%)</td><td>~$1,290M (PV)</td></tr>
+        <tr><td class="label-cell">총 기업가치 (기존 PPA만)</td><td class="highlight">~$2,870M</td></tr>
+        <tr><td class="label-cell">현 시가총액과의 갭</td><td class="red">~$8,630M (75%가 성장 옵션 가치)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>현재 시가총액의 약 75%가 기존 계약이 아닌 <strong>성장 옵션(Growth Option)</strong>에서 비롯된다. 이는 Google 3 GW 프레임워크, 2.6 GW 선행개발, 38 GW+ 초기개발 파이프라인, 그리고 비용 절감에 따른 경쟁력 확대에 대한 기대를 포함한다. 이러한 구조는 도입기/초기 성장 기업에서 흔히 관찰되나, 실행 리스크가 매우 높다.</p>
+</section>
+
+<!-- 7. SWOT -->
+<section>
+  <div class="section-number">07 — SWOT 분석</div>
+  <h2>강점 · 약점 · 기회 · 위협</h2>
+
+  <div class="swot-grid">
+    <div class="swot-card strength">
+      <h4>Strengths (강점)</h4>
+      <ul>
+        <li>업계 유일의 상업 스케일 EGS 운영 경험 (40정 시추, 600일+ 운영 데이터)</li>
+        <li>35% 학습곡선으로 시추 비용·시간 급속 개선</li>
+        <li>$7.2B PPA 백로그, 투자등급 구매자(SCE, Google, Shell)</li>
+        <li>Bill Gates, Google, Devon Energy 등 전략적 투자자 포트폴리오</li>
+        <li>O&G 인력·장비 즉시 활용 가능 (전환 비용 최소화)</li>
+        <li>24/7 탄소무배출 기저부하 — 풍력·태양광이 불가능한 가치 제안</li>
+        <li>초당파적 정치 지지 (IRA + OBBB 양쪽 세액공제 유지)</li>
+      </ul>
+    </div>
+
+    <div class="swot-card weakness">
+      <h4>Weaknesses (약점)</h4>
+      <ul>
+        <li>프리-레버뉴 단계: 2025년 매출 $138K, 순손실 $57.8M</li>
+        <li>현 capex $7,000/kW — 천연가스 대비 2배+ 높음</li>
+        <li>단일 기술, 단일 국가(미국) 집중</li>
+        <li>Cape Station Phase 2 자금($2.2B) 대부분 미조달</li>
+        <li>상업 규모 장기 운영 실적 부재 (파일럿 3.5 MW vs 계획 500 MW)</li>
+        <li>직원 ~199명, 급속 조직 확장 리스크</li>
+        <li>IPO 직후 3일 거래 데이터, 유동성·가격 발견 불안정</li>
+      </ul>
+    </div>
+
+    <div class="swot-card opportunity">
+      <h4>Opportunities (기회)</h4>
+      <ul>
+        <li>AI 데이터센터 전력 수요 폭증 — 24/7 클린에너지 프리미엄 확대</li>
+        <li>미국 EGS TAM: DOE 추산 2050년 90 GW (현 지열 설비의 33배)</li>
+        <li>비용 절감 시 $3,000/kW → 가장 저렴한 firm power가 될 가능성</li>
+        <li>Google 3 GW 프레임워크의 구속력 있는 PPA 전환</li>
+        <li>글로벌 확장: 아이슬란드, 인도네시아, 호주 등 지열 잠재 시장</li>
+        <li>직접열 공급(district heating), 리튬 추출 등 부가 수익원</li>
+        <li>O&G 메이저들의 전략적 인수 대상 가능성</li>
+      </ul>
+    </div>
+
+    <div class="swot-card threat">
+      <h4>Threats (위협)</h4>
+      <ul>
+        <li>Cape Station 상업 가동 지연 또는 성능 미달 시 신뢰 붕괴</li>
+        <li>유도 지진(induced seismicity) 리스크 — 규제 강화 가능</li>
+        <li>SMR(소형 원자로), 가스+CCS 등 대체 기저부하 기술 발전</li>
+        <li>SLB+Ormat 등 대형 플레이어의 EGS 진입</li>
+        <li>금리 상승 시 자본집약적 프로젝트의 WACC 상승</li>
+        <li>IRA/OBBB 세액공제 변경 또는 폐지 리스크</li>
+        <li>IPO 락업 해제(통상 180일) 시 매도 압력</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 8. 기술 딥다이브 -->
+<section>
+  <div class="section-number">08 — 기술 딥다이브</div>
+  <h2>EGS 기술의 핵심과 차별점</h2>
+
+  <h3>기존 지열 vs EGS vs 폐쇄루프 비교</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>구분</th><th>전통 지열</th><th>EGS (Fervo)</th><th>폐쇄루프 (Eavor)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="label-cell">원리</td><td>자연 열수 저수지 이용</td><td>인공 저수지 조성 (수압파쇄)</td><td>폐쇄 파이프 순환 (파쇄 불필요)</td></tr>
+        <tr><td class="label-cell">지리적 제약</td><td class="red">극히 제한적</td><td class="green">대폭 완화</td><td class="green">매우 유연</td></tr>
+        <tr><td class="label-cell">출력 밀도</td><td>중간</td><td class="highlight">높음 (75 MW/sq mi)</td><td>낮음</td></tr>
+        <tr><td class="label-cell">시추 난이도</td><td>수직 시추</td><td class="red">수평 시추 + 고온 암반</td><td>극심한 장거리 수평 시추</td></tr>
+        <tr><td class="label-cell">유도 지진 리스크</td><td>낮음</td><td>관리 필요</td><td class="green">극히 낮음</td></tr>
+        <tr><td class="label-cell">상업 실증</td><td class="green">수십년</td><td class="highlight">Fervo 파일럿 3년</td><td class="red">파일럿 진행 중</td></tr>
+        <tr><td class="label-cell">비용 궤적</td><td>$4,000~6,000/kW</td><td>$7,000 → $3,000/kW 목표</td><td>미공개</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Fervo의 기술 지표 성과</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-label">최대 유량</div>
+      <div class="card-value">107 kg/s</div>
+      <div class="card-note">Cape Station 30일 테스트. NREL 2035 목표 초과 달성</div>
+    </div>
+    <div class="card">
+      <div class="card-label">단일 정 발전량</div>
+      <div class="card-value">10+ MW</div>
+      <div class="card-note">Project Red 대비 3배. 유틸리티 스케일 입증</div>
+    </div>
+    <div class="card">
+      <div class="card-label">시추 속도(ROP)</div>
+      <div class="card-value">70 ft/hr</div>
+      <div class="card-note">NREL 2035 중간 기술 목표 이미 초과</div>
+    </div>
+    <div class="card">
+      <div class="card-label">열 회수율</div>
+      <div class="card-value">~20%</div>
+      <div class="card-note">DOE/USGS 벤치마크 상회, 상승 추세</div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. 시장 맥락 -->
+<section>
+  <div class="section-number">09 — 시장 맥락</div>
+  <h2>AI 전력 수요와 지열의 전략적 위치</h2>
+
+  <p>Fervo IPO의 핵심 촉매는 AI 데이터센터 전력 수요의 폭발적 증가다. 하이퍼스케일러(Google, Microsoft, Amazon, Meta)는 탄소중립 목표와 함께 24/7 안정 전력을 확보해야 하는데, 풍력·태양광은 간헐성 문제가 있고, 원자력은 10년+ 건설 기간이 걸린다. EGS 지열은 "지금 건설 가능하고, 24/7 가동되며, 탄소가 없는" 유일한 선택지로 부상하고 있다.</p>
+
+  <p>Bill Gates는 지열 에너지의 글로벌 전력 점유율 전망을 기존 5%에서 20%로 상향 조정했다. DOE의 Enhanced Geothermal Shot 목표는 2050년까지 미국 내 90 GW인데, 현재 미국 전체 지열 설비가 2.7 GW인 점을 감안하면 시장이 33배 이상 확장될 수 있다. 글로벌 EGS 시장은 2025년 약 $2B에서 2033년 $7B까지 연평균 15% 성장이 전망된다.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-label">현 미국 지열 설비</div>
+      <div class="card-value">2.7 GW</div>
+      <div class="card-note">전체 발전용량의 0.2%</div>
+    </div>
+    <div class="card">
+      <div class="card-label">DOE EGS 목표 (2050)</div>
+      <div class="card-value">90 GW</div>
+      <div class="card-note">현 용량의 33배</div>
+    </div>
+    <div class="card">
+      <div class="card-label">USGS 추산 (미서부)</div>
+      <div class="card-value">135 GW</div>
+      <div class="card-note">Great Basin 단독</div>
+    </div>
+    <div class="card">
+      <div class="card-label">글로벌 EGS 시장 (2033E)</div>
+      <div class="card-value">$7B</div>
+      <div class="card-note">CAGR ~15%</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. 리스크 -->
+<section>
+  <div class="section-number">10 — 핵심 리스크 요인</div>
+  <h2>투자 검토 시 주요 위험 요소</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>리스크 범주</th><th>구체적 위험</th><th>영향</th><th>발생 가능성</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="label-cell">실행 리스크</td>
+          <td>Cape Station이 예정대로 가동되지 못하거나 성능 미달</td>
+          <td class="red">매우 높음</td>
+          <td><span class="confidence-badge conf-med">중간 ~30%</span></td>
+        </tr>
+        <tr>
+          <td class="label-cell">스케일업 리스크</td>
+          <td>3.5 MW 파일럿 → 500 MW 상업 설비 전환 과정의 기술적 불확실성</td>
+          <td class="red">높음</td>
+          <td><span class="confidence-badge conf-med">중간 ~35%</span></td>
+        </tr>
+        <tr>
+          <td class="label-cell">자금 조달</td>
+          <td>Phase 2($2.2B) 프로젝트 파이낸싱 미확보</td>
+          <td class="red">높음</td>
+          <td><span class="confidence-badge conf-med">중간 ~25%</span></td>
+        </tr>
+        <tr>
+          <td class="label-cell">밸류에이션</td>
+          <td>현 시가총액의 75%가 성장 옵션 — IPO 열기 냉각 시 조정 압력</td>
+          <td>중간</td>
+          <td><span class="confidence-badge conf-high">높음 ~60%</span></td>
+        </tr>
+        <tr>
+          <td class="label-cell">유도 지진</td>
+          <td>수압파쇄에 따른 미소지진 → 규제 강화 또는 프로젝트 중단</td>
+          <td>중간</td>
+          <td><span class="confidence-badge conf-low">낮음 ~15%</span></td>
+        </tr>
+        <tr>
+          <td class="label-cell">비용 절감 실패</td>
+          <td>$7,000/kW에서 $3,000/kW로의 학습곡선이 정체</td>
+          <td>높음</td>
+          <td><span class="confidence-badge conf-med">중간 ~30%</span></td>
+        </tr>
+        <tr>
+          <td class="label-cell">경쟁 격화</td>
+          <td>SLB+Ormat EGS 제휴, O&G 메이저 진입</td>
+          <td>중간</td>
+          <td><span class="confidence-badge conf-med">중간 ~40%</span></td>
+        </tr>
+        <tr>
+          <td class="label-cell">정책 변경</td>
+          <td>세액공제(PTC/ITC) 축소 또는 폐지</td>
+          <td>중간</td>
+          <td><span class="confidence-badge conf-low">낮음 ~20%</span></td>
+        </tr>
+        <tr>
+          <td class="label-cell">락업 해제</td>
+          <td>IPO 후 180일 락업 만료 시 내부자 매도</td>
+          <td>중간</td>
+          <td><span class="confidence-badge conf-high">높음 ~70%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 11. 종합 판단 -->
+<section>
+  <div class="section-number">11 — 종합 판단 자료</div>
+  <h2>분석 요약 및 관전 포인트</h2>
+
+  <div class="callout">
+    <div class="callout-title">핵심 결론</div>
+    <p>Fervo Energy는 AI 전력 수요와 클린에너지 전환이라는 두 거대 트렌드의 교차점에 위치한, 기술적으로 검증된 EGS 선도 기업이다. 그러나 현 주가($40.55, 시가총액 $11.5B)에는 성공적 상업화, 급격한 비용 절감, 대규모 파이프라인 전환 등 높은 수준의 기대가 이미 반영되어 있으며, 기업가치의 약 75%가 아직 실현되지 않은 성장 옵션에서 비롯된다. 이는 전형적인 도입기 고기대 기업의 밸류에이션 구조이며, 실행 성과에 극도로 민감한 주가 구조를 의미한다.</p>
+  </div>
+
+  <h3>분기별 체크포인트</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>시점</th><th>핵심 확인 사항</th><th>방향성 신호</th></tr></thead>
+      <tbody>
+        <tr><td class="label-cell">2026 Q3~Q4</td><td>Cape Station Phase 1 최초 전력 공급 달성 여부</td><td class="green">달성 시 강한 긍정 / 지연 시 강한 부정</td></tr>
+        <tr><td class="label-cell">2027 Q1</td><td>100 MW 완전 가동 달성, 실제 용량계수 확인</td><td>90%+ 시 긍정</td></tr>
+        <tr><td class="label-cell">2027 H1</td><td>첫 분기 실질 매출 및 운영비 공개</td><td>마진 프로파일 첫 확인</td></tr>
+        <tr><td class="label-cell">2027 H2</td><td>Phase 2 프로젝트 파이낸싱 확보 여부</td><td>$2.2B 조달 성공 시 긍정</td></tr>
+        <tr><td class="label-cell">2028</td><td>500 MW 완전 가동, 비용 $5,500/kW 이하 달성 여부</td><td>학습곡선 궤적 검증</td></tr>
+        <tr><td class="label-cell">2026 Q4</td><td>IPO 락업 해제 (추정 11월)</td><td>매도 압력 vs 내부자 신뢰</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>이 분석이 변경될 수 있는 새로운 증거</h3>
+  <p>다음 사건이 발생하면 분석을 근본적으로 재검토해야 한다: Cape Station에서의 유도 지진 사건 발생, 비용 절감 궤적의 정체 또는 역전, Google 프레임워크의 구속력 있는 PPA 전환 발표, 주요 O&G 메이저의 EGS 대규모 진입 발표, IRA/OBBB 세액공제 정책의 중대한 변경.</p>
+
+  <h3>투자자 유형별 고려사항</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>투자자 성향</th><th>고려사항</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="label-cell">장기 성장 투자자</td>
+          <td>EGS의 TAM 확장 스토리와 Fervo의 기술 선행 우위에 매력을 느낄 수 있으나, IPO 초기 프리미엄이 상당하므로 Phase 1 가동 확인 후 진입 또는 밸류에이션 조정 시 분할 매수가 리스크 관리에 유리할 수 있음</td>
+        </tr>
+        <tr>
+          <td class="label-cell">가치 투자자</td>
+          <td>현재 펀더멘털(매출 $138K) 대비 시가총액($11.5B)의 괴리가 극단적. 전통적 가치 투자 기준으로는 대상이 되기 어려우며, 실적 가시화 후 재평가가 필요</td>
+        </tr>
+        <tr>
+          <td class="label-cell">테마 투자자</td>
+          <td>'AI 전력'과 '차세대 클린에너지'의 교차 테마에 직접적 노출. X-Energy(원자력), Oklo 등과 포트폴리오 차원의 비교 검토 추천</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>
+    데이터 기준: 2026년 5월 15일 | 주가 출처: Yahoo Finance, Robinhood | 재무 데이터: SEC S-1 Filing, Heatmap News, PitchBook<br>
+    산업 데이터: DOE, EIA, NREL, Columbia University CGEP | 프레임워크: Mauboussin CAP Framework (2026.4)<br>
+    이 보고서는 정보 제공 목적이며 투자 추천이 아닙니다. 투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.
+  </p>
+</footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARM Holdings (ARM) — CAP 기반 투자 분석 보고서</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2236;
+  --bg-card-hover: #1f2a42;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+  --accent-violet: #8b5cf6;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border: #1e293b;
+  --gradient-blue: linear-gradient(135deg, #3b82f6, #06b6d4);
+  --gradient-warm: linear-gradient(135deg, #f59e0b, #f43f5e);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  font-size: 15px;
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* HERO */
+.hero {
+  position: relative;
+  padding: 80px 0 60px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0f1729 0%, var(--bg-primary) 100%);
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(59,130,246,0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 30%, rgba(6,182,212,0.06) 0%, transparent 50%);
+  animation: heroGlow 12s ease-in-out infinite alternate;
+}
+@keyframes heroGlow {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(-2%,2%); }
+}
+.hero-content { position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: 20px;
+  background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.3);
+  font-size: 12px; font-weight: 500; color: var(--accent-blue);
+  margin-bottom: 20px; letter-spacing: 0.5px;
+}
+.hero-badge .dot { width:6px; height:6px; border-radius:50%; background:var(--accent-emerald); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.hero-ticker { font-family: 'Playfair Display', serif; font-size: 64px; font-weight: 900; letter-spacing: -2px; background: var(--gradient-blue); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.hero-name { font-size: 22px; font-weight: 300; color: var(--text-secondary); margin-top: 4px; }
+.hero-tagline { font-size: 16px; color: var(--text-muted); margin-top: 16px; max-width: 700px; line-height: 1.8; }
+.hero-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 40px; }
+.hero-metric {
+  padding: 20px; border-radius: 12px;
+  background: rgba(26,34,54,0.8); border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+.hero-metric .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.hero-metric .value { font-family:'JetBrains Mono',monospace; font-size: 22px; font-weight: 600; margin-top: 4px; }
+.hero-metric .value.blue { color: var(--accent-blue); }
+.hero-metric .value.cyan { color: var(--accent-cyan); }
+.hero-metric .value.emerald { color: var(--accent-emerald); }
+.hero-metric .value.amber { color: var(--accent-amber); }
+.hero-metric .sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* CONCLUSION BANNER */
+.conclusion-banner {
+  margin: 40px 0;
+  padding: 32px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1));
+  border: 1px solid rgba(59,130,246,0.2);
+  position: relative;
+  overflow: hidden;
+}
+.conclusion-banner::after {
+  content:''; position:absolute; top:0; left:0; width:4px; height:100%;
+  background: var(--gradient-blue);
+}
+.conclusion-banner h2 { font-size: 18px; font-weight: 700; color: var(--accent-blue); margin-bottom: 12px; }
+.conclusion-banner p { font-size: 15px; line-height: 1.9; color: var(--text-secondary); }
+.conclusion-banner .highlight { color: var(--accent-amber); font-weight: 700; }
+
+/* SECTIONS */
+.section { padding: 60px 0; border-top: 1px solid var(--border); }
+.section-header { margin-bottom: 36px; }
+.section-num { font-family:'JetBrains Mono'; font-size: 12px; color: var(--accent-blue); letter-spacing: 2px; text-transform: uppercase; }
+.section-title { font-size: 28px; font-weight: 700; margin-top: 8px; letter-spacing: -0.5px; }
+.section-desc { color: var(--text-secondary); margin-top: 8px; font-size: 14px; }
+
+/* CARDS */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+.card {
+  padding: 28px; border-radius: 14px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  transition: background 0.3s, border-color 0.3s;
+}
+.card:hover { background: var(--bg-card-hover); border-color: rgba(59,130,246,0.3); }
+.card-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; display:flex; align-items:center; gap:10px; }
+.card-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+.card-icon.blue { background:rgba(59,130,246,0.15); color:var(--accent-blue); }
+.card-icon.cyan { background:rgba(6,182,212,0.15); color:var(--accent-cyan); }
+.card-icon.emerald { background:rgba(16,185,129,0.15); color:var(--accent-emerald); }
+.card-icon.amber { background:rgba(245,158,11,0.15); color:var(--accent-amber); }
+.card-icon.rose { background:rgba(244,63,94,0.15); color:var(--accent-rose); }
+.card-icon.violet { background:rgba(139,92,246,0.15); color:var(--accent-violet); }
+.card p { color: var(--text-secondary); font-size: 14px; line-height: 1.8; }
+
+/* REVENUE FLOW DIAGRAM */
+.flow-diagram {
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:16px;
+  padding: 40px 20px;
+  background: var(--bg-card); border-radius: 16px; border:1px solid var(--border);
+  margin: 24px 0;
+}
+.flow-box {
+  padding: 16px 24px; border-radius: 12px;
+  text-align:center; min-width:140px;
+  font-size:13px; font-weight:500;
+}
+.flow-box.source { background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); color:var(--accent-blue); }
+.flow-box.process { background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.3); color:var(--accent-violet); }
+.flow-box.output { background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:var(--accent-emerald); }
+.flow-arrow { font-size:20px; color:var(--text-muted); }
+.flow-box .big { font-size:18px; font-weight:700; display:block; margin-top:4px; }
+
+/* SWOT */
+.swot-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.swot-box { padding:24px; border-radius:14px; }
+.swot-box.s { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); }
+.swot-box.w { background:rgba(244,63,94,0.08); border:1px solid rgba(244,63,94,0.2); }
+.swot-box.o { background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); }
+.swot-box.t { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); }
+.swot-box h4 { font-size:15px; font-weight:700; margin-bottom:12px; }
+.swot-box.s h4 { color:var(--accent-emerald); }
+.swot-box.w h4 { color:var(--accent-rose); }
+.swot-box.o h4 { color:var(--accent-blue); }
+.swot-box.t h4 { color:var(--accent-amber); }
+.swot-box ul { list-style:none; }
+.swot-box li { font-size:13px; color:var(--text-secondary); padding:4px 0; padding-left:16px; position:relative; line-height:1.7; }
+.swot-box li::before { content:'›'; position:absolute; left:0; color:var(--text-muted); font-weight:700; }
+
+/* TABLES */
+.table-wrap { overflow-x:auto; margin:24px 0; border-radius:12px; border:1px solid var(--border); }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { background:var(--bg-card); color:var(--text-muted); font-weight:600; text-transform:uppercase; font-size:11px; letter-spacing:0.5px; padding:12px 14px; text-align:right; white-space:nowrap; border-bottom:1px solid var(--border); }
+th:first-child { text-align:left; }
+td { padding:10px 14px; text-align:right; border-bottom:1px solid rgba(30,41,59,0.5); color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:12px; white-space:nowrap; }
+td:first-child { text-align:left; font-family:'Noto Sans KR',sans-serif; font-weight:500; color:var(--text-primary); }
+tr:hover td { background:rgba(59,130,246,0.03); }
+.table-note { font-size:11px; color:var(--text-muted); margin-top:8px; padding:0 4px; }
+
+/* BAR CHART (CSS only) */
+.bar-chart { display:flex; flex-direction:column; gap:12px; padding:24px; background:var(--bg-card); border-radius:14px; border:1px solid var(--border); margin:24px 0; }
+.bar-row { display:flex; align-items:center; gap:12px; }
+.bar-label { width:120px; font-size:12px; color:var(--text-secondary); text-align:right; flex-shrink:0; }
+.bar-track { flex:1; height:28px; background:rgba(255,255,255,0.03); border-radius:6px; overflow:hidden; position:relative; }
+.bar-fill { height:100%; border-radius:6px; display:flex; align-items:center; padding-left:10px; font-family:'JetBrains Mono'; font-size:11px; font-weight:600; color:white; transition: width 1s ease; }
+.bar-fill.blue { background:linear-gradient(90deg,var(--accent-blue),#60a5fa); }
+.bar-fill.cyan { background:linear-gradient(90deg,var(--accent-cyan),#22d3ee); }
+.bar-fill.emerald { background:linear-gradient(90deg,var(--accent-emerald),#34d399); }
+.bar-fill.amber { background:linear-gradient(90deg,var(--accent-amber),#fbbf24); }
+.bar-fill.violet { background:linear-gradient(90deg,var(--accent-violet),#a78bfa); }
+
+/* PIE CHART (CSS) */
+.pie-container { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:40px; padding:30px; background:var(--bg-card); border-radius:14px; border:1px solid var(--border); margin:24px 0; }
+.pie-chart {
+  width:200px; height:200px; border-radius:50%; position:relative;
+  background: conic-gradient(
+    var(--accent-blue) 0% 53%,
+    var(--accent-cyan) 53% 100%
+  );
+}
+.pie-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:100px; height:100px; border-radius:50%; background:var(--bg-card); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.pie-center .val { font-family:'JetBrains Mono'; font-size:20px; font-weight:700; color:var(--accent-blue); }
+.pie-center .lbl { font-size:10px; color:var(--text-muted); }
+.pie-legend { display:flex; flex-direction:column; gap:12px; }
+.pie-legend-item { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-secondary); }
+.pie-legend-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+
+/* MOAT DIAGRAM */
+.moat-layers { display:flex; flex-direction:column; align-items:center; gap:0; margin:24px 0; }
+.moat-ring {
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; text-align:center;
+  font-size:13px; font-weight:600;
+  transition: transform 0.3s;
+}
+.moat-ring:hover { transform: scale(1.03); }
+.moat-ring.outer { width:340px; height:340px; background:rgba(59,130,246,0.06); border:2px solid rgba(59,130,246,0.2); }
+.moat-ring.mid { width:240px; height:240px; background:rgba(6,182,212,0.08); border:2px solid rgba(6,182,212,0.25); }
+.moat-ring.inner { width:150px; height:150px; background:rgba(16,185,129,0.1); border:2px solid rgba(16,185,129,0.3); }
+.moat-ring .ring-text { max-width:80%; line-height:1.5; }
+.moat-ring.outer .ring-text { color:var(--accent-blue); font-size:11px; position:absolute; top:20px; }
+.moat-ring.mid .ring-text { color:var(--accent-cyan); font-size:11px; position:absolute; top:14px; }
+.moat-ring.inner .ring-text { color:var(--accent-emerald); font-size:12px; }
+
+/* SENSITIVITY */
+.sensitivity-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.sens-table { font-size:12px; }
+.sens-table th { font-size:10px; padding:8px 10px; }
+.sens-table td { padding:8px 10px; font-size:11px; }
+.sens-table td.highlight { background:rgba(59,130,246,0.1); color:var(--accent-blue); font-weight:700; }
+
+/* PEER TABLE */
+.peer-table td, .peer-table th { text-align:center; }
+.peer-table td:first-child, .peer-table th:first-child { text-align:left; }
+
+/* CAP GAUGE */
+.cap-gauge { text-align:center; margin:30px 0; }
+.gauge-bar {
+  width:100%; max-width:700px; height:40px; margin:0 auto;
+  background: linear-gradient(90deg, var(--accent-emerald) 0%, var(--accent-blue) 33%, var(--accent-amber) 66%, var(--accent-rose) 100%);
+  border-radius:20px; position:relative;
+}
+.gauge-marker {
+  position:absolute; top:-8px; width:4px; height:56px;
+  background:white; border-radius:2px;
+  box-shadow:0 0 12px rgba(255,255,255,0.5);
+}
+.gauge-labels { display:flex; justify-content:space-between; max-width:700px; margin:8px auto 0; font-size:11px; color:var(--text-muted); }
+.gauge-value { font-family:'JetBrains Mono'; font-size:36px; font-weight:700; color:var(--accent-amber); margin-top:16px; }
+.gauge-desc { font-size:14px; color:var(--text-secondary); margin-top:4px; }
+
+/* SCENARIO CARDS */
+.scenario-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.scenario-card { padding:24px; border-radius:14px; text-align:center; }
+.scenario-card.bull { background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); }
+.scenario-card.base { background:rgba(59,130,246,0.08); border:1px solid rgba(59,130,246,0.2); }
+.scenario-card.bear { background:rgba(244,63,94,0.08); border:1px solid rgba(244,63,94,0.2); }
+.scenario-card h4 { font-size:14px; font-weight:700; margin-bottom:8px; }
+.scenario-card.bull h4 { color:var(--accent-emerald); }
+.scenario-card.base h4 { color:var(--accent-blue); }
+.scenario-card.bear h4 { color:var(--accent-rose); }
+.scenario-card .price { font-family:'JetBrains Mono'; font-size:28px; font-weight:700; margin:8px 0; }
+.scenario-card .detail { font-size:12px; color:var(--text-muted); line-height:1.7; }
+
+/* RISK CHECKLIST */
+.risk-list { display:flex; flex-direction:column; gap:12px; }
+.risk-item { padding:16px 20px; border-radius:10px; background:var(--bg-card); border:1px solid var(--border); display:flex; gap:14px; align-items:flex-start; }
+.risk-dot { width:8px; height:8px; border-radius:50%; margin-top:6px; flex-shrink:0; }
+.risk-dot.high { background:var(--accent-rose); }
+.risk-dot.mid { background:var(--accent-amber); }
+.risk-dot.low { background:var(--accent-emerald); }
+.risk-item .risk-text { font-size:13px; color:var(--text-secondary); line-height:1.7; }
+.risk-item .risk-label { font-weight:700; color:var(--text-primary); }
+
+/* FOOTER */
+.footer { padding:40px 0; border-top:1px solid var(--border); text-align:center; }
+.footer p { font-size:11px; color:var(--text-muted); line-height:1.8; }
+
+/* PROSE */
+.prose { max-width:800px; }
+.prose p { color:var(--text-secondary); font-size:14px; line-height:2; margin-bottom:16px; }
+.prose strong { color:var(--text-primary); font-weight:600; }
+
+/* VALUE CHAIN */
+.value-chain { display:flex; flex-wrap:wrap; align-items:stretch; gap:0; margin:24px 0; }
+.vc-step { flex:1; min-width:120px; padding:16px 12px; text-align:center; position:relative; background:var(--bg-card); border:1px solid var(--border); }
+.vc-step:first-child { border-radius:12px 0 0 12px; }
+.vc-step:last-child { border-radius:0 12px 12px 0; }
+.vc-step .vc-num { font-family:'JetBrains Mono'; font-size:10px; color:var(--accent-blue); }
+.vc-step .vc-name { font-size:12px; font-weight:600; margin-top:4px; color:var(--text-primary); }
+.vc-step .vc-desc { font-size:10px; color:var(--text-muted); margin-top:4px; line-height:1.5; }
+.vc-step .vc-role { font-size:10px; color:var(--accent-cyan); font-weight:600; margin-top:6px; }
+
+/* LIFECYCLE */
+.lifecycle { display:flex; align-items:center; justify-content:center; gap:4px; margin:24px 0; flex-wrap:wrap; }
+.lc-stage { padding:12px 20px; border-radius:8px; font-size:12px; font-weight:600; border:1px solid var(--border); background:var(--bg-card); color:var(--text-muted); transition:all 0.3s; }
+.lc-stage.active { background:rgba(59,130,246,0.15); border-color:var(--accent-blue); color:var(--accent-blue); box-shadow:0 0 20px rgba(59,130,246,0.1); }
+.lc-arrow { color:var(--text-muted); font-size:16px; }
+
+/* ASSUMPTIONS BOX */
+.assumptions-box {
+  padding:24px; border-radius:14px;
+  background: rgba(245,158,11,0.05);
+  border: 1px solid rgba(245,158,11,0.2);
+  margin: 24px 0;
+}
+.assumptions-box h4 { color:var(--accent-amber); font-size:14px; font-weight:700; margin-bottom:12px; }
+.assumptions-box .item { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(245,158,11,0.08); font-size:13px; }
+.assumptions-box .item:last-child { border-bottom:none; }
+.assumptions-box .item .k { color:var(--text-secondary); }
+.assumptions-box .item .v { font-family:'JetBrains Mono'; color:var(--accent-amber); font-weight:600; }
+
+@media (max-width:768px) {
+  .hero-ticker { font-size:40px; }
+  .hero-metrics { grid-template-columns:1fr 1fr; }
+  .swot-grid, .sensitivity-grid, .scenario-grid { grid-template-columns:1fr; }
+  .card-grid { grid-template-columns:1fr; }
+  .value-chain { flex-direction:column; }
+  .vc-step { border-radius:8px !important; }
+  .moat-ring.outer { width:280px; height:280px; }
+  .moat-ring.mid { width:200px; height:200px; }
+  .moat-ring.inner { width:130px; height:130px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="container hero-content">
+    <div class="hero-badge"><span class="dot"></span> CAP 프레임워크 기반 분석 · 2026년 5월 18일</div>
+    <div class="hero-ticker">ARM</div>
+    <div class="hero-name">Arm Holdings plc — 컴퓨팅의 미래를 설계하는 기업</div>
+    <div class="hero-tagline">
+      Arm은 직접 칩을 만들지 않습니다. 대신 전 세계 칩 제조사들이 사용하는 <strong>CPU 설계도(IP)</strong>를 만들어 라이선스료와 로열티를 받는 기업입니다. 스마트폰 CPU의 99% 이상, 그리고 AI 데이터센터 CPU의 약 50%가 Arm 기술로 만들어집니다.
+    </div>
+    <div class="hero-metrics">
+      <div class="hero-metric">
+        <div class="label">주가</div>
+        <div class="value blue">$209</div>
+        <div class="sub">2026.05.16 종가 기준</div>
+      </div>
+      <div class="hero-metric">
+        <div class="label">시가총액</div>
+        <div class="value cyan">$222B</div>
+        <div class="sub">약 308조원</div>
+      </div>
+      <div class="hero-metric">
+        <div class="label">FY2026 매출</div>
+        <div class="value emerald">$4.92B</div>
+        <div class="sub">전년 대비 +23%</div>
+      </div>
+      <div class="hero-metric">
+        <div class="label">P/E (TTM)</div>
+        <div class="value amber">247x</div>
+        <div class="sub">Forward ~98x</div>
+      </div>
+      <div class="hero-metric">
+        <div class="label">총이익률</div>
+        <div class="value blue">97.5%</div>
+        <div class="sub">거의 순수 IP 사업</div>
+      </div>
+      <div class="hero-metric">
+        <div class="label">직원 수</div>
+        <div class="value cyan">9,584</div>
+        <div class="sub">엔지니어 8,058명</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CONCLUSION ===== -->
+<div class="container">
+  <div class="conclusion-banner">
+    <h2>핵심 결론</h2>
+    <p>
+      현재 주가 $209에는 Arm이 약 <span class="highlight">22~25년간</span> 자본비용을 초과하는 수익을 낼 것이라는 시장 기대(내재 CAP)가 반영되어 있습니다. 이는 CAP 프레임워크 기준으로 "<span class="highlight">과도한 낙관</span>" 영역에 해당합니다. Arm AGI CPU 등 성장 모멘텀이 현실화될 경우 정당화 가능하나, 실행 리스크와 RISC-V 경쟁 심화를 감안하면 상당한 기대가 이미 주가에 선반영된 상태입니다. 신규 진입보다는 조정 시 분할 접근이 합리적인 구간으로 판단됩니다.
+    </p>
+  </div>
+</div>
+
+<!-- ===== 1. 기업 개요 ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-title">기업 개요</div>
+      <div class="section-desc">Arm Holdings plc — 반도체 세계의 "설계 표준"</div>
+    </div>
+    <div class="prose">
+      <p>
+        <strong>한 문장 요약:</strong> Arm은 CPU(중앙처리장치)의 설계도를 만들어 전 세계 칩 제조사에게 판매하는, 반도체 산업의 "건축 설계 사무소"와 같은 기업입니다.
+      </p>
+    </div>
+
+    <!-- Timeline -->
+    <div style="margin:32px 0;">
+      <div style="font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:20px;">📜 Arm의 역사 — 헛간에서 시작된 $222B 기업</div>
+      <div style="display:flex;flex-direction:column;gap:0;position:relative;padding-left:28px;">
+        <div style="position:absolute;left:8px;top:8px;bottom:8px;width:2px;background:var(--border);"></div>
+
+        <div style="position:relative;padding:12px 0 12px 24px;">
+          <div style="position:absolute;left:-24px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--accent-blue);border:2px solid var(--bg-primary);"></div>
+          <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--accent-blue);">1978~1985</div>
+          <div style="font-size:14px;font-weight:600;margin:4px 0;">전사(前史) — BBC Micro와 첫 ARM 칩</div>
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+            영국 케임브리지에서 Hermann Hauser와 Chris Curry가 <strong>Acorn Computers</strong>를 설립합니다. Acorn은 영국 정부의 "모든 교실에 컴퓨터를" 프로젝트에 선정되어 <strong>BBC Micro</strong>를 만들었고, 150만 대 이상 팔리며 대성공을 거둡니다. 이 돈으로 Acorn은 자체 프로세서 개발에 도전합니다. 당시 시판 칩들이 너무 비싸서, 케임브리지 대학 출신 엔지니어 <strong>Sophie Wilson</strong>과 <strong>Steve Furber</strong>에게 "저렴하고 빠른 프로세서를 만들어라"는 임무가 주어졌습니다. 예산도 인력도 부족했기에, 설계는 극도로 단순해야 했습니다. 참조 모델은 단 808줄의 BASIC 코드로 작성되었습니다. 1985년 4월 26일 오후 3시, 최초의 ARM 실리콘이 작동합니다. 그런데 놀라운 일이 벌어집니다. <strong>전원이 연결되지 않은 상태에서도 칩이 동작한 것입니다.</strong> 테스트 보드의 배선 오류로 외부 전원 없이 주변 부품의 미세한 누설 전류만으로 구동된 것이었는데, 이 "우연한 발견"이 ARM의 핵심 경쟁력인 <strong>초저전력 설계</strong>의 기원이 됩니다.
+          </div>
+        </div>
+
+        <div style="position:relative;padding:12px 0 12px 24px;">
+          <div style="position:absolute;left:-24px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--accent-cyan);border:2px solid var(--bg-primary);"></div>
+          <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--accent-cyan);">1990</div>
+          <div style="font-size:14px;font-weight:600;margin:4px 0;">헛간에서 출발 — Arm Ltd. 설립</div>
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+            Apple이 PDA(개인용 디지털 단말기) "Newton"에 ARM 칩을 쓰고 싶었지만, 경쟁사인 Acorn의 IP를 직접 사용하기 꺼려했습니다. 그래서 <strong>Acorn, Apple, VLSI Technology</strong> 세 회사가 합작법인을 만듭니다. Apple은 <strong>150만 파운드의 현금</strong>을, Acorn은 <strong>12명의 엔지니어</strong>를, VLSI는 <strong>설계 도구</strong>를 출자했습니다. 1990년 11월 12일, <strong>"Advanced RISC Machines Ltd"</strong>가 케임브리지 외곽의 <strong>17세기 헛간(barn)</strong>을 개조한 사무실에서 공식 출범합니다. 초대 CEO Robin Saxby가 합류하면서 본격적인 성장이 시작됩니다.
+          </div>
+        </div>
+
+        <div style="position:relative;padding:12px 0 12px 24px;">
+          <div style="position:absolute;left:-24px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--accent-emerald);border:2px solid var(--bg-primary);"></div>
+          <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--accent-emerald);">1993~1998</div>
+          <div style="font-size:14px;font-weight:600;margin:4px 0;">IP 라이선싱 모델의 탄생</div>
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+            1993년 Apple Newton이 Arm 아키텍처로 출시되지만 상업적으로 실패합니다. CEO Saxby는 "단일 제품에 의존하면 회사가 지속될 수 없다"고 판단하고, 당시로서는 매우 이례적인 사업 모델을 구상합니다. <strong>칩을 직접 만드는 대신, 설계도(IP)를 여러 회사에 라이선스하는 것</strong>입니다. 이것이 오늘날 Arm의 핵심 비즈니스 모델의 기원입니다. 마치 건축가가 건물을 직접 짓지 않고 설계도를 여러 건설사에 파는 것과 같습니다. 1993년 흑자 전환, 1994년 실리콘밸리와 도쿄 사무소 개설. 1998년 4월 17일 런던증권거래소와 나스닥에 <strong>동시 상장</strong>합니다. IPO 가격 £5.75. 수개월 만에 <strong>10억 달러 기업</strong>으로 성장합니다.
+          </div>
+        </div>
+
+        <div style="position:relative;padding:12px 0 12px 24px;">
+          <div style="position:absolute;left:-24px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--accent-amber);border:2px solid var(--bg-primary);"></div>
+          <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--accent-amber);">2000~2016</div>
+          <div style="font-size:14px;font-weight:600;margin:4px 0;">모바일 혁명 위의 독점 — 스마트폰 99%</div>
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+            2000년대 초 닷컴 버블 붕괴에도 Arm은 성장을 지속합니다. 2005년까지 전 세계 휴대폰의 <strong>98%가 최소 1개의 Arm 프로세서</strong>를 탑재합니다. iPhone(2007)과 안드로이드 스마트폰의 폭발적 성장과 함께 Arm은 모바일 프로세서의 사실상 유일한 설계 표준이 됩니다. Apple의 A시리즈 칩, 삼성 Exynos, 퀄컴 Snapdragon 모두 Arm 기반입니다. 2013년에는 연간 <strong>100억 개</strong> 이상의 Arm 기반 칩이 출하됩니다. 2016년 7월, 일본 소프트뱅크그룹이 <strong>$32B(약 43% 프리미엄)</strong>에 Arm을 인수하며 비상장화합니다. 소프트뱅크의 손정의 회장은 Arm을 IoT(사물인터넷) 시대의 핵심 인프라로 보았습니다.
+          </div>
+        </div>
+
+        <div style="position:relative;padding:12px 0 12px 24px;">
+          <div style="position:absolute;left:-24px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--accent-rose);border:2px solid var(--bg-primary);"></div>
+          <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--accent-rose);">2020~2023</div>
+          <div style="font-size:14px;font-weight:600;margin:4px 0;">NVIDIA 인수 무산 & 나스닥 재상장</div>
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+            2020년 NVIDIA가 <strong>$40B에 Arm 인수</strong>를 시도하지만, EU·영국·미국 반독점 규제당국의 우려와 Google, Microsoft, Qualcomm 등 경쟁사들의 반대로 2022년 2월 무산됩니다. 핵심 쟁점은 "중립적인 IP 공급자가 특정 칩 회사 소유가 되면 생태계가 붕괴된다"는 것이었습니다. 2023년 9월 14일, 소프트뱅크는 Arm을 나스닥에 재상장시킵니다. <strong>IPO 가격 $51</strong>, 첫 거래일 종가 $63.59. 2023년 최대 규모의 IPO였으며, 시가총액 약 $65B로 출발합니다.
+          </div>
+        </div>
+
+        <div style="position:relative;padding:12px 0 12px 24px;">
+          <div style="position:absolute;left:-24px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--accent-violet);border:2px solid var(--bg-primary);"></div>
+          <div style="font-family:'JetBrains Mono';font-size:11px;color:var(--accent-violet);">2026</div>
+          <div style="font-size:14px;font-weight:600;margin:4px 0;">역사적 전환점 — AGI CPU 발표, "설계사"에서 "칩 회사"로</div>
+          <div style="font-size:13px;color:var(--text-secondary);line-height:1.8;">
+            2026년 3월 24일, Arm은 <strong>35년 역사상 최초의 자체 제작 데이터센터 칩 "Arm AGI CPU"</strong>를 발표합니다. TSMC 3nm 공정, 136코어, 300W. Meta가 공동개발 파트너이며, OpenAI, Cerebras, Cloudflare, SAP 등이 초기 고객으로 참여합니다. 이것은 Arm이 "설계도를 파는 회사"에서 "칩 자체를 만들어 파는 회사"로 사업 영역을 확장하는 역사적 전환입니다. 기존 IP 라이선싱의 칩당 로열티가 $0.10~$2인 반면, 완성 칩은 수천 달러에 팔립니다. FY2026 매출 <strong>$4.92B</strong>(+23% YoY), 시가총액 <strong>$222B</strong>. IPO 가격 대비 약 4배로 성장했습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>
+        <strong>Arm이 특별한 이유를 비유로 설명하면:</strong> Arm은 반도체 세계의 "영어"와 같습니다. 전 세계 수십억 개의 기기가 Arm이라는 "언어"로 소통합니다. 한번 Arm 기반으로 소프트웨어를 만들면, 그 소프트웨어는 스마트폰, 노트북, 서버, 자동차, 로봇 어디에서든 동작합니다. 이 보편성이 Arm의 가장 큰 경쟁력이자 해자입니다. 현재까지 <strong>3,500억 개 이상</strong>의 Arm 기반 칩이 출하되었고, <strong>2,200만 명</strong> 이상의 개발자가 Arm 생태계 위에서 소프트웨어를 만들고 있습니다. 소프트뱅크가 약 90%의 지분을 보유하고 있으며, 43개국 21개 사무소에 9,584명(엔지니어 8,058명)이 근무합니다.
+      </p>
+    </div>
+
+    <div class="card-grid" style="margin-top:24px;">
+      <div class="card">
+        <div class="card-title"><div class="card-icon blue">📐</div> 핵심 사업: IP 라이선싱</div>
+        <p>CPU, GPU, NPU(신경처리장치) 등의 설계도를 만들어 칩 제조사에게 사용 권한을 부여합니다. 고객은 이 설계도를 기반으로 자사 칩을 제작합니다. 마치 건축 설계도를 사서 건물을 짓는 것과 비슷합니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon cyan">💰</div> 수익 모델: 이중 엔진</div>
+        <p><strong>라이선스료:</strong> 설계도 사용 계약 시 일시불 또는 분할 납부 ($2.31B, FY26). <strong>로열티:</strong> Arm 기반 칩이 판매될 때마다 칩 가격의 일정 비율을 수령 ($2.61B, FY26). 두 수익원이 거의 동일한 규모입니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon emerald">🚀</div> 신규 성장: AGI CPU</div>
+        <p>2026년 초 최초의 자체 제작 데이터센터용 칩 "Arm AGI CPU"를 발표했습니다. Meta가 공동개발 파트너이며, FY2027-28 동안 $2B 이상의 고객 수주를 확보했습니다. x86 대비 2배의 성능/전력 효율을 목표합니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 2. 수익 구조 ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-title">수익 구조 시각화</div>
+      <div class="section-desc">FY2026 기준 매출 $4.92B의 구성</div>
+    </div>
+
+    <div class="pie-container">
+      <div class="pie-chart" style="background: conic-gradient(var(--accent-cyan) 0% 53%, var(--accent-blue) 53% 100%);">
+        <div class="pie-center">
+          <div class="val">$4.92B</div>
+          <div class="lbl">FY2026 매출</div>
+        </div>
+      </div>
+      <div class="pie-legend">
+        <div class="pie-legend-item">
+          <div class="pie-legend-dot" style="background:var(--accent-cyan);"></div>
+          <div><strong>로열티 수익 — $2.61B (53%)</strong><br><span style="font-size:11px;color:var(--text-muted);">칩 출하마다 수수료 · YoY +21%</span></div>
+        </div>
+        <div class="pie-legend-item">
+          <div class="pie-legend-dot" style="background:var(--accent-blue);"></div>
+          <div><strong>라이선스 수익 — $2.31B (47%)</strong><br><span style="font-size:11px;color:var(--text-muted);">IP 사용권 계약 · YoY +25%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;text-align:center;font-size:14px;font-weight:600;color:var(--text-secondary);">Arm의 돈 버는 흐름도</div>
+    <div class="flow-diagram">
+      <div class="flow-box source">
+        Arm이<br>설계도 개발<br><span class="big">R&D</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box process">
+        칩 설계사에<br>라이선스 판매<br><span class="big">$2.31B</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box process">
+        고객이 칩 제조<br>(TSMC, 삼성 등)<br><span class="big">제조</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box output">
+        칩 판매 시마다<br>Arm에 로열티<br><span class="big">$2.61B</span>
+      </div>
+    </div>
+
+    <div class="bar-chart">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text-primary);">주요 응용 분야별 로열티 성장 동인</div>
+      <div class="bar-row"><div class="bar-label">스마트폰</div><div class="bar-track"><div class="bar-fill blue" style="width:70%;">최대 시장, Armv9 전환</div></div></div>
+      <div class="bar-row"><div class="bar-label">AI 데이터센터</div><div class="bar-track"><div class="bar-fill cyan" style="width:55%;">YoY 2배+, 가장 빠른 성장</div></div></div>
+      <div class="bar-row"><div class="bar-label">자동차</div><div class="bar-track"><div class="bar-fill emerald" style="width:35%;">ADAS, Physical AI</div></div></div>
+      <div class="bar-row"><div class="bar-label">IoT/Edge AI</div><div class="bar-track"><div class="bar-fill violet" style="width:40%;">엣지 컴퓨팅 확대</div></div></div>
+      <div class="bar-row"><div class="bar-label">PC/노트북</div><div class="bar-track"><div class="bar-fill amber" style="width:25%;">Windows on Arm 성장</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 3. 제품/기술 ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-title">핵심 제품 및 기술</div>
+      <div class="section-desc">비전공자를 위한 Arm 기술 해설</div>
+    </div>
+    <div class="prose">
+      <p>
+        Arm의 기술을 이해하려면 "명령어 집합 아키텍처(ISA)"라는 개념을 알아야 합니다. ISA는 쉽게 말해 <strong>"CPU가 이해하는 언어"</strong>입니다. 마치 사람이 한국어나 영어를 쓰듯, CPU도 특정 "언어(ISA)"로 명령을 받아 처리합니다.
+      </p>
+      <p>
+        CPU 설계에는 크게 두 가지 철학이 있습니다. <strong>CISC(Complex Instruction Set Computing)</strong>는 "하나의 명령으로 복잡한 일을 처리"하는 방식으로, Intel의 x86이 대표적입니다. 마치 "책상 위의 책을 2층 서재 왼쪽 세 번째 칸에 꽂아라"라고 한 문장으로 지시하는 것과 같습니다. <strong>RISC(Reduced Instruction Set Computing)</strong>는 "단순한 명령을 매우 빠르게 처리"하는 방식으로, Arm이 대표적입니다. "책을 집어라" → "2층으로 올라가라" → "서재로 가라" → "왼쪽 세 번째 칸에 넣어라"처럼 단순한 명령을 연속으로 처리합니다. 각 명령이 단순하기에 <strong>전력 소비가 적고</strong>, 빠르게 파이프라인 처리가 가능합니다. Arm의 초저전력은 이 RISC 철학에서 비롯된 것입니다.
+      </p>
+      <p>
+        Arm은 이 ISA와 그 위에 올라가는 다양한 제품을 계층적으로 제공합니다. 고객이 "얼마나 많은 부분을 직접 만들고 싶은지"에 따라 선택지가 달라집니다:
+      </p>
+    </div>
+
+    <!-- Product hierarchy diagram -->
+    <div style="display:flex;flex-direction:column;gap:0;margin:24px 0;align-items:center;">
+      <div style="width:100%;max-width:700px;padding:20px 24px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:14px 14px 0 0;text-align:center;">
+        <div style="font-size:12px;color:var(--accent-violet);font-weight:700;">최상위: 완성형 칩 (AGI CPU) — 신규</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Arm이 직접 설계·제조한 완성 칩. 꽂으면 바로 작동. 수천 달러/개</div>
+      </div>
+      <div style="width:90%;max-width:630px;padding:16px 24px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);text-align:center;">
+        <div style="font-size:12px;color:var(--accent-blue);font-weight:700;">CSS (Compute Subsystems) — 완성형 설계도</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">CPU + 메모리컨트롤러 + 인터커넥트가 통합된 "조립 완료" 설계도. 개발기간 단축. 높은 로열티</div>
+      </div>
+      <div style="width:80%;max-width:560px;padding:16px 24px;background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);text-align:center;">
+        <div style="font-size:12px;color:var(--accent-cyan);font-weight:700;">CPU 코어 IP (Cortex 시리즈) — 기본 블록</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">CPU 코어만 제공. 고객이 직접 메모리·보안·통신 등을 추가하여 칩 완성. 기본 로열티</div>
+      </div>
+      <div style="width:70%;max-width:490px;padding:16px 24px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:0 0 14px 14px;text-align:center;">
+        <div style="font-size:12px;color:var(--accent-emerald);font-weight:700;">아키텍처 라이선스 — 최하위 레벨</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">ISA(명령어 집합)만 라이선스. Apple, 삼성 등이 이를 기반으로 완전 자체 설계. 가장 유연하나 전문성 필요</div>
+      </div>
+    </div>
+    <div class="prose">
+      <p style="font-size:12px;color:var(--text-muted);text-align:center;">▲ 위로 갈수록 Arm이 더 많은 가치를 제공하고, 칩당 수익도 높아집니다. Arm AGI CPU는 이 피라미드의 꼭대기에 새로 추가된 제품입니다.</p>
+    </div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title"><div class="card-icon blue">🧠</div> Armv9 아키텍처</div>
+        <p>2021년 발표된 최신 세대 설계. AI 연산 성능을 대폭 강화하고, 보안 기능을 내장했습니다. 스마트폰에서 서버까지 모두 커버합니다. 칩당 로열티가 이전 세대(Armv8) 대비 <strong>약 2배</strong> 높아, Arm의 수익성을 끌어올리는 핵심 동력입니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon cyan">🏗️</div> CSS (Compute Subsystems)</div>
+        <p>"완성형 CPU 설계도"입니다. 기존에는 고객이 Arm의 기본 블록을 사서 직접 조립했다면, CSS는 이미 조립이 완료된 상태로 제공됩니다. 고객의 칩 개발 기간을 크게 단축하며, Arm은 <strong>더 높은 로열티</strong>를 받을 수 있습니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon emerald">⚡</div> Arm AGI CPU (신규)</div>
+        <p>Arm이 최초로 직접 설계한 완성형 데이터센터 칩입니다. AI 에이전트(자율적으로 작동하는 AI)를 처리하기 위해 특별히 설계되었습니다. x86 대비 랙당 2배 성능을 목표로 하며, Meta와 공동개발 중입니다. 이것은 Arm이 "설계도 판매"에서 "칩 자체 판매"로 사업 영역을 확장하는 역사적 전환점입니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon violet">🔧</div> 개발 도구 & 소프트웨어</div>
+        <p>Arm은 하드웨어 설계만이 아니라, 개발자들이 Arm 기반 칩에서 소프트웨어를 만들 수 있는 도구도 제공합니다. 2,200만 개발자의 생태계는 Arm의 가장 강력한 경쟁 우위 중 하나입니다. 일단 이 생태계에 들어오면 빠져나가기 어렵습니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 4. 산업 분석 ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div class="section-title">산업 분석</div>
+      <div class="section-desc">반도체 IP 산업 — 칩 설계의 "원천 기술" 시장</div>
+    </div>
+    <div class="prose">
+      <p>
+        Arm이 속한 산업을 이해하려면 세 가지 층위를 구분해야 합니다. 첫째, Arm이 직접 활동하는 <strong>"반도체 IP 시장"</strong>. 둘째, Arm의 고객이 활동하는 <strong>"반도체 칩 시장"</strong>. 셋째, 칩이 최종적으로 쓰이는 <strong>"최종 응용 시장"</strong>(스마트폰, 데이터센터, 자동차 등)입니다. Arm의 매출은 이 세 층위 모두에 의해 결정됩니다.
+      </p>
+    </div>
+
+    <div class="card-grid" style="margin:24px 0;">
+      <div class="card">
+        <div class="card-title"><div class="card-icon blue">🔬</div> 반도체 IP 시장</div>
+        <p>2026년 약 <strong>$8.5B</strong> 규모, 2030년 <strong>$13.5B</strong> 이상 전망(CAGR ~12%). 칩 설계가 점점 복잡해지면서 "처음부터 직접 다 만드는 것"이 비효율적이 되어, 검증된 설계 블록(IP)을 구매하는 방식이 산업 표준이 되었습니다. Arm이 ~40%로 압도적 1위이며, Synopsys(13%), Imagination(8%), Cadence(5%) 등이 뒤를 잇습니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon cyan">💻</div> 서버 CPU 시장 — 핵심 성장 전장</div>
+        <p>2025년 <strong>$26B</strong>에서 2030년 <strong>$60~$100B</strong>으로 급성장 전망. Intel과 AMD의 x86이 역사적으로 지배해왔으나(현재 ~75%), Arm이 하이퍼스케일러(AWS, Google, MS) 중심으로 빠르게 점유율을 확대하고 있습니다(현재 ~25%, 상위 하이퍼스케일러 내 ~50%). 이 시장의 폭발적 성장을 이끄는 것이 바로 AI입니다.</p>
+      </div>
+    </div>
+
+    <!-- Agentic AI deep dive -->
+    <div style="padding:28px;border-radius:14px;background:linear-gradient(135deg,rgba(59,130,246,0.06),rgba(6,182,212,0.06));border:1px solid rgba(59,130,246,0.15);margin:24px 0;">
+      <div style="font-size:16px;font-weight:700;color:var(--accent-blue);margin-bottom:16px;">🤖 에이전트 AI가 바꾸는 데이터센터 — Arm에게 왜 중요한가?</div>
+      <div class="prose" style="max-width:none;">
+        <p>
+          AI의 진화를 간단히 정리하면 이렇습니다. <strong>1세대(2022~2024):</strong> ChatGPT 같은 챗봇. 사람이 질문하면 AI가 답합니다. 여기서는 GPU(그래픽처리장치)가 핵심이었고, CPU는 부수적이었습니다. <strong>2세대(2025~):</strong> "에이전트 AI(Agentic AI)". AI가 스스로 계획을 세우고, 여러 도구를 호출하고, 여러 단계를 거쳐 자율적으로 작업을 수행합니다. 예를 들어, "다음 주 출장 일정을 잡아줘"라고 하면 AI가 항공편 검색, 호텔 예약, 캘린더 확인, 이메일 발송까지 수십 개의 작업을 연쇄적으로 처리합니다.
+        </p>
+        <p>
+          여기서 핵심 변화가 일어납니다. 챗봇 시대에는 GPU가 "토큰(단어)"을 생성하는 것이 전부였지만, 에이전트 AI에서는 <strong>CPU가 "조율자(orchestrator)"</strong>의 역할을 맡게 됩니다. 어떤 도구를 언제 호출할지, 데이터를 어디서 가져올지, 메모리를 어떻게 관리할지, 보안을 어떻게 유지할지 — 이 모든 복잡한 조율 작업이 CPU의 몫입니다. 모건스탠리에 따르면, 에이전트 AI에서는 전체 처리 시간의 <strong>50~90%가 CPU 측 지연</strong>에서 발생합니다.
+        </p>
+        <p>
+          그 결과, 데이터센터에 필요한 CPU 수가 급증합니다. Arm CEO Rene Haas는 "현재 AI 데이터센터는 기가와트당 약 3,000만 CPU 코어를 사용하지만, 에이전트 AI 시대에는 <strong>1억 2,000만 코어</strong>가 필요할 것"이라고 밝혔습니다. 즉, <strong>CPU 수요가 4배</strong> 증가하는 것입니다. AMD의 CEO Lisa Su도 에이전트 AI로 인해 서버 CPU TAM 성장 전망을 연간 18%에서 <strong>연간 35% 이상</strong>으로 상향했습니다.
+        </p>
+        <p>
+          <strong>왜 Arm이 유리한가?</strong> 에이전트 AI에서는 CPU가 24시간 쉬지 않고 작동합니다. 따라서 "같은 일을 더 적은 전기로" 하는 능력이 결정적입니다. Arm 칩은 x86 대비 <strong>와트당 성능이 2배</strong> 높다고 주장합니다. AWS의 Graviton, Google의 Axion, Microsoft의 Cobalt 등 주요 하이퍼스케일러들이 이미 자체 Arm 기반 CPU를 만들어 쓰고 있으며, AWS는 Arm 기반 Graviton을 포함한 커스텀 실리콘 사업이 <strong>연간 $20B 이상</strong>이고 전년 대비 3자릿수 성장률을 보이고 있다고 밝혔습니다.
+        </p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:20px;">
+        <div style="padding:16px;border-radius:10px;background:rgba(59,130,246,0.1);text-align:center;">
+          <div style="font-family:'JetBrains Mono';font-size:24px;font-weight:700;color:var(--accent-blue);">$100B+</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">2030년 서버 CPU TAM</div>
+        </div>
+        <div style="padding:16px;border-radius:10px;background:rgba(6,182,212,0.1);text-align:center;">
+          <div style="font-family:'JetBrains Mono';font-size:24px;font-weight:700;color:var(--accent-cyan);">4×</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">에이전트 AI로 인한 CPU 코어 수요 증가</div>
+        </div>
+        <div style="padding:16px;border-radius:10px;background:rgba(16,185,129,0.1);text-align:center;">
+          <div style="font-family:'JetBrains Mono';font-size:24px;font-weight:700;color:var(--accent-emerald);">~50%</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">하이퍼스케일러 내 Arm CPU 점유율</div>
+        </div>
+        <div style="padding:16px;border-radius:10px;background:rgba(245,158,11,0.1);text-align:center;">
+          <div style="font-family:'JetBrains Mono';font-size:24px;font-weight:700;color:var(--accent-amber);">2×</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Arm AGI CPU의 x86 대비 성능 주장</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- x86 vs Arm vs RISC-V -->
+    <div style="font-size:15px;font-weight:700;color:var(--text-primary);margin:32px 0 16px;">⚔️ 세 가지 CPU 언어의 경쟁: x86 vs Arm vs RISC-V</div>
+    <div class="prose">
+      <p>
+        CPU의 세계에서 <strong>ISA(Instruction Set Architecture, 명령어 집합 아키텍처)</strong>란 "CPU가 이해하는 언어"입니다. 사람이 한국어·영어·중국어를 쓰듯, CPU도 특정 ISA로 명령을 받아 처리합니다. 현재 세계에서 의미 있는 ISA는 세 개입니다:
+      </p>
+    </div>
+    <div class="card-grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="card" style="border-left:3px solid var(--accent-rose);">
+        <div class="card-title" style="color:var(--accent-rose);">x86</div>
+        <p><strong>만든 곳:</strong> Intel(1978년). AMD도 사용 허가.<br>
+        <strong>특징:</strong> 복잡한 명령어(CISC), 50년 호환성. PC와 서버의 절대 강자.<br>
+        <strong>강점:</strong> SAP, Oracle 등 기업 소프트웨어의 수십 년 검증. "바꾸면 다시 다 테스트해야 해"가 최대 해자.<br>
+        <strong>약점:</strong> 전력 효율이 낮고, 50년 된 호환성 유지가 설계 부담.<br>
+        <strong>점유율:</strong> 데이터센터 ~75%, PC ~85%</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--accent-blue);">
+        <div class="card-title" style="color:var(--accent-blue);">Arm</div>
+        <p><strong>만든 곳:</strong> Arm Holdings(1985년).<br>
+        <strong>특징:</strong> 단순한 명령어(RISC), 저전력 고효율. Apple, 삼성, 퀄컴 등 수백 개 회사가 라이선스.<br>
+        <strong>강점:</strong> 와트당 성능 최고, 3,500억 칩 생태계, 2,200만 개발자. 모바일에서 이미 증명.<br>
+        <strong>약점:</strong> 데이터센터 엔터프라이즈 소프트웨어 생태계 아직 성숙 중.<br>
+        <strong>점유율:</strong> 스마트폰 99%+, 데이터센터 ~25%(급성장)</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--accent-emerald);">
+        <div class="card-title" style="color:var(--accent-emerald);">RISC-V</div>
+        <p><strong>만든 곳:</strong> UC 버클리(2010년). 오픈소스(무료).<br>
+        <strong>특징:</strong> 누구나 무료로 사용·수정 가능. 라이선스 비용 없음.<br>
+        <strong>강점:</strong> 비용 절감, 커스터마이징 자유도, 중국 정부 지원으로 급부상.<br>
+        <strong>약점:</strong> 소프트웨어 생태계 미성숙, 고성능 칩 검증 사례 부족.<br>
+        <strong>점유율:</strong> IoT·임베디드 일부, 서버 시장 &lt;1%</p>
+      </div>
+    </div>
+    <div class="prose" style="margin-top:16px;">
+      <p>
+        핵심 산업 트렌드는 명확합니다. <strong>x86의 독점이 서서히 깨지고 있고, Arm이 그 자리를 채우고 있습니다.</strong> 특히 AI 데이터센터에서 전력 효율이 핵심 경쟁 변수가 되면서, Arm의 구조적 이점이 부각되고 있습니다. RISC-V는 아직 고성능 영역에서 Arm과 경쟁하기 어렵지만, 10년 단위로 보면 가장 큰 장기 위협입니다. 특히 미중 기술 갈등으로 중국이 Arm 대안으로 RISC-V에 집중 투자하고 있어, 이 흐름은 가속될 수 있습니다.
+      </p>
+    </div>
+
+    <div style="margin-top:32px;font-size:14px;font-weight:600;color:var(--text-secondary);text-align:center;">반도체 가치사슬에서 Arm의 위치</div>
+    <div class="value-chain">
+      <div class="vc-step">
+        <div class="vc-num">01</div>
+        <div class="vc-name">IP 설계</div>
+        <div class="vc-desc">CPU/GPU 아키텍처 설계</div>
+        <div class="vc-role">★ Arm의 핵심 영역</div>
+      </div>
+      <div class="vc-step">
+        <div class="vc-num">02</div>
+        <div class="vc-name">칩 설계</div>
+        <div class="vc-desc">IP를 기반으로 칩 설계</div>
+        <div class="vc-role">Apple, 퀄컴, 삼성</div>
+      </div>
+      <div class="vc-step">
+        <div class="vc-num">03</div>
+        <div class="vc-name">EDA 도구</div>
+        <div class="vc-desc">설계 검증 소프트웨어</div>
+        <div class="vc-role">Synopsys, Cadence</div>
+      </div>
+      <div class="vc-step">
+        <div class="vc-num">04</div>
+        <div class="vc-name">파운드리</div>
+        <div class="vc-desc">칩 물리적 제조</div>
+        <div class="vc-role">TSMC, 삼성</div>
+      </div>
+      <div class="vc-step">
+        <div class="vc-num">05</div>
+        <div class="vc-name">최종 제품</div>
+        <div class="vc-desc">스마트폰, 서버, 자동차</div>
+        <div class="vc-role">Apple, AWS, 현대 등</div>
+      </div>
+    </div>
+
+    <div class="bar-chart" style="margin-top:24px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text-primary);">반도체 IP 시장 점유율 (2025년 기준)</div>
+      <div class="bar-row"><div class="bar-label">Arm Holdings</div><div class="bar-track"><div class="bar-fill blue" style="width:80%;">~40%</div></div></div>
+      <div class="bar-row"><div class="bar-label">Synopsys</div><div class="bar-track"><div class="bar-fill cyan" style="width:26%;">~13%</div></div></div>
+      <div class="bar-row"><div class="bar-label">Imagination</div><div class="bar-track"><div class="bar-fill violet" style="width:16%;">~8%</div></div></div>
+      <div class="bar-row"><div class="bar-label">Cadence</div><div class="bar-track"><div class="bar-fill emerald" style="width:10%;">~5%</div></div></div>
+      <div class="bar-row"><div class="bar-label">기타 (SiFive 등)</div><div class="bar-track"><div class="bar-fill amber" style="width:68%;">~34%</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 5. SWOT ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div class="section-title">SWOT 분석</div>
+    </div>
+    <div class="swot-grid">
+      <div class="swot-box s">
+        <h4>💪 강점 (Strengths)</h4>
+        <ul>
+          <li>3,500억+ 칩 출하, 2,200만 개발자 생태계 → 전환비용 극대화</li>
+          <li>총이익률 97.5% — 사실상 무한 확장 가능한 IP 사업 구조</li>
+          <li>스마트폰 CPU 99%+, 하이퍼스케일러 CPU ~50% 점유</li>
+          <li>Armv9 전환으로 칩당 로열티 2배 상승 중</li>
+          <li>무부채 경영, 현금 $3.6B 보유</li>
+        </ul>
+      </div>
+      <div class="swot-box w">
+        <h4>⚠️ 약점 (Weaknesses)</h4>
+        <ul>
+          <li>SBC(주식기반보상)가 매출의 ~22%로 매우 높아 GAAP 수익성 희석</li>
+          <li>소프트뱅크 90% 지분 → 거버넌스 리스크</li>
+          <li>AGI CPU는 미검증 사업, 제조 경험 부재</li>
+          <li>스마트폰 의존도 여전히 높음 (매출의 ~40-50%)</li>
+          <li>퀄컴과 라이선스 분쟁 진행 중 (2026 Q4 재판 예정)</li>
+        </ul>
+      </div>
+      <div class="swot-box o">
+        <h4>🌟 기회 (Opportunities)</h4>
+        <ul>
+          <li>AI 에이전트 시대 → CPU 수요 4배 증가 전망, $100B+ TAM</li>
+          <li>AGI CPU로 "칩 판매" 직접 매출 신설 (FY2031 $15B 목표)</li>
+          <li>데이터센터 x86→Arm 전환 가속 (Google TPU8, NVIDIA Vera)</li>
+          <li>자동차 ADAS/자율주행 시장 급성장</li>
+          <li>Windows on Arm으로 PC 시장 진입 확대</li>
+        </ul>
+      </div>
+      <div class="swot-box t">
+        <h4>🔥 위협 (Threats)</h4>
+        <ul>
+          <li>RISC-V 오픈소스 아키텍처 채택 확대 (라이선스 무료)</li>
+          <li>퀄컴 재판 패소 시 라이선스 수익 구조 타격</li>
+          <li>미중 기술 갈등 → Arm China 매출 리스크</li>
+          <li>반도체 사이클 하강기 진입 가능성</li>
+          <li>AGI CPU 파운드리 물량 확보 불확실성</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 6. 경제적 해자 ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div class="section-title">경제적 해자 (Moat) 분석</div>
+      <div class="section-desc">Arm의 경쟁 우위는 얼마나 깊고 넓은가?</div>
+    </div>
+    <div class="prose">
+      <p>
+        Arm의 해자는 단일 요소가 아니라, 여러 계층의 방어벽이 서로를 강화하는 복합 구조입니다. 이것을 포터의 5 Forces와 해자 분류로 분석하면 다음과 같습니다.
+      </p>
+    </div>
+
+    <div style="text-align:center;margin:32px 0;">
+      <div style="position:relative;display:inline-block;">
+        <div class="moat-ring outer" style="display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:24px;">
+          <div style="font-size:11px;color:var(--accent-blue);font-weight:600;">네트워크 효과 & 생태계</div>
+          <div style="font-size:10px;color:var(--text-muted);max-width:260px;margin-top:4px;">2,200만 개발자 · 3,500억 칩 · 500+ 파트너</div>
+          <div class="moat-ring mid" style="display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:20px;margin-top:10px;">
+            <div style="font-size:11px;color:var(--accent-cyan);font-weight:600;">전환비용 & 특허</div>
+            <div style="font-size:10px;color:var(--text-muted);max-width:160px;margin-top:4px;">6,500+ 특허 · 수년간의 칩 설계 투자</div>
+            <div class="moat-ring inner" style="margin-top:10px;">
+              <div style="font-size:12px;color:var(--accent-emerald);font-weight:700;">ISA<br>독점</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title"><div class="card-icon emerald">🏰</div> 전환비용 (매우 높음)</div>
+        <p>칩 설계사가 Arm에서 다른 아키텍처로 바꾸려면, 수년간의 소프트웨어 생태계, 개발 도구, 엔지니어 교육을 모두 다시 해야 합니다. Apple이 Arm을 쓰기 시작한 이후 자체 칩(M시리즈)까지 만든 것은 Arm 생태계 안에서 더 깊이 들어간 사례입니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon blue">🌐</div> 네트워크 효과</div>
+        <p>"Arm을 쓰는 개발자가 많을수록 → Arm 기반 소프트웨어가 풍부해지고 → 더 많은 칩 제조사가 Arm을 채택하고 → 더 많은 개발자가 유입되는" 선순환 구조입니다. 이것은 RISC-V가 극복해야 할 가장 큰 장벽입니다.</p>
+      </div>
+      <div class="card">
+        <div class="card-title"><div class="card-icon amber">⚖️</div> 차별화 vs 원가 우위</div>
+        <p>Arm은 명확한 <strong>차별화 전략</strong> 기업입니다. NOPAT 마진이 산업 평균의 2배를 크게 초과하며(총이익률 97.5%), 이는 원가 우위가 아닌 IP의 독점적 가치에서 비롯됩니다. 투자자본 회전율보다 마진이 ROIC를 견인하는 전형적인 차별화형 기업입니다.</p>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:24px;">
+      <p>
+        <strong>포터 5 Forces 요약:</strong> 신규 진입 위협은 "낮음"(ISA를 만들고 생태계를 구축하는 데 수십 년 소요), 기존 경쟁은 "중간"(x86과의 경쟁, RISC-V 부상), 공급자 교섭력은 "낮음"(순수 IP 기업으로 물리적 원자재 불필요), 구매자 교섭력은 "중간"(대형 고객 집중도 높지만 대안 부족), 대체재 위협은 "중간-상승"(RISC-V가 가장 큰 장기 위협).
+      </p>
+      <p>
+        <strong>해자 지속 가능성 평가:</strong> 향후 10~15년간은 기존 해자가 유효할 것으로 판단되나, RISC-V 생태계가 성숙해지는 2030년대 이후에는 점진적 침식 가능성이 있습니다. 이것이 반도체 섹터의 페이드 비율(0.25)이 비교적 높은 이유이기도 합니다.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 7. 피어그룹 비교 ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">07</div>
+      <div class="section-title">피어그룹 비교</div>
+      <div class="section-desc">동일 산업 주요 기업과의 비교</div>
+    </div>
+    <div class="table-wrap">
+      <table class="peer-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;">기업</th>
+            <th>역할</th>
+            <th>매출 (TTM)</th>
+            <th>총이익률</th>
+            <th>시가총액</th>
+            <th>P/E (TTM)</th>
+            <th>매출성장</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Arm Holdings</strong></td>
+            <td style="font-size:11px;">CPU IP 설계</td>
+            <td>$4.92B</td>
+            <td>97.5%</td>
+            <td>$222B</td>
+            <td>247x</td>
+            <td>+23%</td>
+          </tr>
+          <tr>
+            <td>Synopsys</td>
+            <td style="font-size:11px;">EDA + IP</td>
+            <td>~$6.8B</td>
+            <td>~80%</td>
+            <td>~$80B</td>
+            <td>~55x</td>
+            <td>~15%</td>
+          </tr>
+          <tr>
+            <td>Cadence</td>
+            <td style="font-size:11px;">EDA + IP</td>
+            <td>~$4.7B</td>
+            <td>~88%</td>
+            <td>~$80B</td>
+            <td>~60x</td>
+            <td>~14%</td>
+          </tr>
+          <tr>
+            <td>Qualcomm</td>
+            <td style="font-size:11px;">Arm 기반 칩 설계</td>
+            <td>~$42B</td>
+            <td>~56%</td>
+            <td>~$215B</td>
+            <td>~17x</td>
+            <td>~10%</td>
+          </tr>
+          <tr>
+            <td>NVIDIA</td>
+            <td style="font-size:11px;">GPU/AI 칩</td>
+            <td>~$130B</td>
+            <td>~75%</td>
+            <td>~$3.2T</td>
+            <td>~40x</td>
+            <td>~80%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-note">출처: 각사 최근 실적 및 웹 검색 기반 추정치. 2026년 5월 기준.</div>
+    <div class="prose" style="margin-top:16px;">
+      <p>
+        Arm은 피어 대비 <strong>가장 높은 총이익률</strong>(97.5%)을 보이며, 이는 사실상 순수 IP 사업의 특성을 반영합니다. 그러나 P/E 247x는 피어 중에서도 가장 높은 수준으로, 시장이 Arm에 대해 극도로 높은 성장 기대를 반영하고 있음을 보여줍니다. Synopsys/Cadence 대비 4~5배 높은 밸류에이션입니다.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 8. 생애주기 & DCF ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">08</div>
+      <div class="section-title">생애주기 판별 & DCF 모델</div>
+      <div class="section-desc">현금흐름표 패턴 분석 및 기업가치 산출</div>
+    </div>
+
+    <div class="prose">
+      <p><strong>현금흐름표 패턴 (FY2026):</strong> 영업활동 +$1,524M(양수) · 투자활동 음수(추정, CapEx 확대) · 재무활동 음수(SBC 관련 세금 등). 이 패턴은 <strong>"+/-/-"로 성숙 단계</strong>에 해당합니다. 다만 매출 23% 성장, AGI CPU 투자 등을 고려하면 "성장→성숙 전환기"로 보는 것이 적절합니다.</p>
+    </div>
+
+    <div class="lifecycle">
+      <div class="lc-stage">도입</div>
+      <div class="lc-arrow">→</div>
+      <div class="lc-stage">성장</div>
+      <div class="lc-arrow">→</div>
+      <div class="lc-stage active">성장↔성숙 전환</div>
+      <div class="lc-arrow">→</div>
+      <div class="lc-stage">성숙</div>
+      <div class="lc-arrow">→</div>
+      <div class="lc-stage">감소</div>
+    </div>
+
+    <div class="assumptions-box">
+      <h4>📊 DCF 모델 핵심 가정</h4>
+      <div class="item"><span class="k">기준일</span><span class="v">2026년 5월 18일</span></div>
+      <div class="item"><span class="k">기준 매출 (FY2026)</span><span class="v">$4,920M</span></div>
+      <div class="item"><span class="k">무위험이자율 (10년 국채)</span><span class="v">4.60%</span></div>
+      <div class="item"><span class="k">자본위험프리미엄 (ERP)</span><span class="v">4.75%</span></div>
+      <div class="item"><span class="k">베타 (조정 후)</span><span class="v">2.09 (원시 2.64, Blume 조정)</span></div>
+      <div class="item"><span class="k">자기자본비용</span><span class="v">14.5%</span></div>
+      <div class="item"><span class="k">WACC (≈자기자본비용, 무부채)</span><span class="v">14.5%</span></div>
+      <div class="item"><span class="k">정규화 세율</span><span class="v">15%</span></div>
+      <div class="item"><span class="k">장기 성장률 (g)</span><span class="v">2.5% (10Y BEI: 2.45%)</span></div>
+      <div class="item"><span class="k">페이드 비율 (반도체)</span><span class="v">0.25</span></div>
+      <div class="item"><span class="k">SBC 처리</span><span class="v">실제 비용으로 반영 (GAAP 기준)</span></div>
+    </div>
+
+    <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin:24px 0 12px;">DCF 테이블 (전시 23 형식)</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left;">항목</th>
+            <th>FY26<br>(기준)</th>
+            <th>FY27</th>
+            <th>FY28</th>
+            <th>FY29</th>
+            <th>FY30</th>
+            <th>FY31</th>
+            <th>FY32</th>
+            <th>FY33</th>
+            <th>FY34</th>
+            <th>FY35</th>
+            <th>FY36</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>매출 ($M)</td>
+            <td>4,920</td><td>5,904</td><td>7,085</td><td>8,147</td><td>9,206</td><td>10,219</td><td>11,139</td><td>11,918</td><td>12,514</td><td>12,889</td><td>13,147</td>
+          </tr>
+          <tr>
+            <td>매출 성장률</td>
+            <td>23%</td><td>20%</td><td>20%</td><td>15%</td><td>13%</td><td>11%</td><td>9%</td><td>7%</td><td>5%</td><td>3%</td><td>2%</td>
+          </tr>
+          <tr>
+            <td>EBITA ($M)</td>
+            <td>1,100</td><td>1,476</td><td>1,984</td><td>2,444</td><td>2,946</td><td>3,475</td><td>3,899</td><td>4,291</td><td>4,631</td><td>4,901</td><td>5,127</td>
+          </tr>
+          <tr>
+            <td>EBITA 마진</td>
+            <td>22.4%</td><td>25.0%</td><td>28.0%</td><td>30.0%</td><td>32.0%</td><td>34.0%</td><td>35.0%</td><td>36.0%</td><td>37.0%</td><td>38.0%</td><td>39.0%</td>
+          </tr>
+          <tr>
+            <td>세율</td>
+            <td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td><td>15%</td>
+          </tr>
+          <tr>
+            <td><strong>NOPAT ($M)</strong></td>
+            <td>935</td><td>1,255</td><td>1,686</td><td>2,077</td><td>2,504</td><td>2,954</td><td>3,314</td><td>3,647</td><td>3,937</td><td>4,166</td><td>4,358</td>
+          </tr>
+          <tr>
+            <td>미래 투자 ($M)</td>
+            <td>—</td><td>750</td><td>900</td><td>1,000</td><td>1,100</td><td>1,150</td><td>1,100</td><td>1,050</td><td>950</td><td>850</td><td>750</td>
+          </tr>
+          <tr>
+            <td><strong>FCF ($M)</strong></td>
+            <td>—</td><td>505</td><td>786</td><td>1,077</td><td>1,404</td><td>1,804</td><td>2,214</td><td>2,597</td><td>2,987</td><td>3,316</td><td>3,608</td>
+          </tr>
+          <tr>
+            <td>FCF 현재가치 ($M)</td>
+            <td>—</td><td>462</td><td>628</td><td>751</td><td>854</td><td>958</td><td>1,025</td><td>1,050</td><td>1,054</td><td>1,021</td><td>969</td>
+          </tr>
+          <tr>
+            <td>연도</td>
+            <td>0</td><td>0.5</td><td>1.5</td><td>2.5</td><td>3.5</td><td>4.5</td><td>5.5</td><td>6.5</td><td>7.5</td><td>8.5</td><td>9.5</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-note">
+      주: 연중 할인(mid-year convention) 적용. 미래 투자 = CapEx + 운전자본 변화 + 무형자산 투자 추정. 
+      EBITA 마진은 GAAP 기준(SBC 비용 포함) 정규화 추정치로, SBC 비중이 매출 대비 축소됨을 가정.
+      금액은 백만 달러 단위이며 반올림.
+    </div>
+
+    <div class="assumptions-box" style="margin-top:24px;background:rgba(59,130,246,0.05);border-color:rgba(59,130,246,0.2);">
+      <h4 style="color:var(--accent-blue);">📐 WACC 및 최종 가치 계산</h4>
+      <div class="item"><span class="k">자기자본비용 = 4.60% + 2.09 × 4.75%</span><span class="v" style="color:var(--accent-blue);">= 14.53% ≈ 14.5%</span></div>
+      <div class="item"><span class="k">부채비율</span><span class="v" style="color:var(--accent-blue);">≈ 0% (무부채)</span></div>
+      <div class="item"><span class="k">WACC</span><span class="v" style="color:var(--accent-blue);">≈ 14.5%</span></div>
+      <div class="item"><span class="k">최종 가치 (페이드 모델, 10년 예측 후)</span><span class="v" style="color:var(--accent-blue);">$28,580M</span></div>
+      <div class="item"><span class="k">최종 가치 현재가치</span><span class="v" style="color:var(--accent-blue);">$7,682M</span></div>
+      <div class="item"><span class="k">FCF 누적 현재가치 (10년)</span><span class="v" style="color:var(--accent-blue);">$8,772M</span></div>
+      <div class="item"><span class="k">기업가치</span><span class="v" style="color:var(--accent-blue);">$16,454M</span></div>
+      <div class="item"><span class="k">현금 추가 / 부채 차감</span><span class="v" style="color:var(--accent-blue);">+ $3,601M</span></div>
+      <div class="item"><span class="k">자본가치</span><span class="v" style="color:var(--accent-blue);">$20,055M</span></div>
+      <div class="item"><span class="k">발행주식 수</span><span class="v" style="color:var(--accent-blue);">1,068M (희석)</span></div>
+      <div class="item"><span class="k"><strong>10년 예측 기준 주당 가치</strong></span><span class="v" style="color:var(--accent-blue);">≈ $19</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 9. 시장 내재 CAP ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">09</div>
+      <div class="section-title">시장 내재 CAP 역산</div>
+      <div class="section-desc">현재 주가 $209에 암묵적으로 반영된 시장 기대</div>
+    </div>
+    <div class="prose">
+      <p>
+        위 DCF 모델에서 10년 예측 시 주당 가치는 약 $19에 불과합니다. 현재 주가 $209와 일치하려면, 예측 기간을 대폭 늘리고 더 높은 성장이 더 오래 지속되어야 합니다. 예측 기간을 점진적으로 확장하면서 주가 일치점을 탐색한 결과:
+      </p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th style="text-align:left;">예측 기간</th><th>산출 주당 가치</th><th>현재 주가 대비</th><th>해석</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>5년</td><td>$8</td><td>-96%</td><td>극단적 과소평가 → 모델 또는 가정 문제</td></tr>
+          <tr><td>10년</td><td>$19</td><td>-91%</td><td>여전히 큰 괴리</td></tr>
+          <tr><td>15년</td><td>$52</td><td>-75%</td><td>매우 낮은 수준</td></tr>
+          <tr><td>20년</td><td>$128</td><td>-39%</td><td>접근하나 부족</td></tr>
+          <tr><td style="color:var(--accent-amber);font-weight:700;">22~25년</td><td style="color:var(--accent-amber);font-weight:700;">$195~$220</td><td style="color:var(--accent-amber);font-weight:700;">≈ 일치</td><td style="color:var(--accent-amber);font-weight:700;">내재 CAP 범위</td></tr>
+          <tr><td>30년</td><td>$380</td><td>+82%</td><td>현재 주가 대비 과소평가</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cap-gauge">
+      <div style="font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:16px;">시장 내재 CAP 위치</div>
+      <div class="gauge-bar">
+        <div class="gauge-marker" style="left:82%;"></div>
+      </div>
+      <div class="gauge-labels">
+        <span>5년 미만<br>매우 비관</span>
+        <span>5~10년<br>비관적</span>
+        <span>10~15년<br>합리적</span>
+        <span>15~20년<br>낙관적</span>
+        <span>20년+<br>과도한 낙관</span>
+      </div>
+      <div class="gauge-value">~23년</div>
+      <div class="gauge-desc">시장은 Arm이 약 23년간 자본비용 초과 수익을 낼 것으로 기대</div>
+    </div>
+
+    <div class="prose">
+      <p>
+        <strong>해석:</strong> 내재 CAP ~23년은 CAP 프레임워크에서 "과도한 낙관" 영역(20년 초과)에 해당합니다. 참고로, 역사적 데이터에 따르면 미국 상장기업 평균 상장 기간은 11.7년이고, 70%의 기업이 초기 주가 정당화에 실패합니다. 다만, 0.7%의 "슈퍼스타" 기업이 전체 부의 75% 이상을 창출하며, Arm은 이 범주에 속할 가능성이 있는 기업입니다.
+      </p>
+      <p>
+        <strong>정당화 가능성:</strong> Arm의 97%+ 총이익률, 압도적 생태계, AI 인프라 전환의 구조적 수혜 등을 고려하면, 20년+ CAP가 완전히 비현실적이지는 않습니다. 그러나 이를 위해서는 AGI CPU의 성공적 상용화, RISC-V 방어, 데이터센터 점유율 지속 확대 등 다수의 낙관적 시나리오가 동시에 실현되어야 합니다. 높은 WACC(14.5%)는 ARM의 높은 변동성을 반영하며, 이 또한 내재 CAP를 높이는 요인입니다.
+      </p>
+      <p>
+        <strong>참고 비교:</strong> Microsoft의 내재 CAP는 17~18년으로, Arm보다 낮습니다. 그러나 Microsoft는 베타 1.05, WACC 9.1%로 훨씬 안정적인 기업입니다. Arm의 높은 WACC(14.5%)가 DCF 가치를 크게 할인하고 있어, 기술적으로 더 긴 CAP가 필요합니다. 만약 Arm이 성숙기에 접어들어 베타가 1.3 수준으로 낮아진다면(WACC ~11%), 내재 CAP는 15~17년으로 낮아져 "약간 낙관적" 범위에 들어옵니다.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 10. 민감도 분석 ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">10</div>
+      <div class="section-title">민감도 & 시나리오 분석</div>
+    </div>
+
+    <div class="sensitivity-grid">
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px;">WACC 변동 시 내재 CAP (기본 성장 가정 유지)</div>
+        <div class="table-wrap">
+          <table class="sens-table">
+            <thead><tr><th>WACC</th><th>10Y 가치</th><th>내재 CAP</th></tr></thead>
+            <tbody>
+              <tr><td>12.5% (-2%p)</td><td>$32</td><td>~18년</td></tr>
+              <tr><td>13.5% (-1%p)</td><td>$24</td><td>~20년</td></tr>
+              <tr class="highlight"><td class="highlight">14.5% (기본)</td><td class="highlight">$19</td><td class="highlight">~23년</td></tr>
+              <tr><td>15.5% (+1%p)</td><td>$15</td><td>~26년</td></tr>
+              <tr><td>16.5% (+2%p)</td><td>$12</td><td>~30년+</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px;">성장률 변동 시 내재 CAP (WACC 14.5% 유지)</div>
+        <div class="table-wrap">
+          <table class="sens-table">
+            <thead><tr><th>성장 시나리오</th><th>10Y 가치</th><th>내재 CAP</th></tr></thead>
+            <tbody>
+              <tr><td>기본 +2%p</td><td>$24</td><td>~19년</td></tr>
+              <tr><td>기본 +1%p</td><td>$21</td><td>~21년</td></tr>
+              <tr class="highlight"><td class="highlight">기본</td><td class="highlight">$19</td><td class="highlight">~23년</td></tr>
+              <tr><td>기본 -1%p</td><td>$16</td><td>~26년</td></tr>
+              <tr><td>기본 -2%p</td><td>$14</td><td>~29년</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;">
+      <div style="font-size:14px;font-weight:600;margin-bottom:16px;color:var(--text-primary);">3가지 시나리오</div>
+      <div class="scenario-grid">
+        <div class="scenario-card bull">
+          <h4>🟢 강세 시나리오</h4>
+          <div class="price" style="color:var(--accent-emerald);">~$310</div>
+          <div class="detail">
+            AGI CPU FY2031 $15B 달성<br>
+            데이터센터 CPU 50%→65%<br>
+            WACC 12% (베타 하락)<br>
+            내재 CAP 15년 정당화
+          </div>
+        </div>
+        <div class="scenario-card base">
+          <h4>🔵 기본 시나리오</h4>
+          <div class="price" style="color:var(--accent-blue);">~$140</div>
+          <div class="detail">
+            AGI CPU 일부 성공 ($5B)<br>
+            매출 CAGR 15%<br>
+            WACC 14.5% 유지<br>
+            내재 CAP 15년 적정
+          </div>
+        </div>
+        <div class="scenario-card bear">
+          <h4>🔴 약세 시나리오</h4>
+          <div class="price" style="color:var(--accent-rose);">~$70</div>
+          <div class="detail">
+            AGI CPU 지연/실패<br>
+            RISC-V 가속, 퀄컴 재판 패소<br>
+            매출 성장 10%대<br>
+            내재 CAP 10년
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 11. 리스크 & 체크포인트 ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">11</div>
+      <div class="section-title">주요 리스크 & 분기별 체크포인트</div>
+    </div>
+    <div class="risk-list">
+      <div class="risk-item">
+        <div class="risk-dot high"></div>
+        <div><div class="risk-text"><span class="risk-label">AGI CPU 실행 리스크 (높음):</span> Arm은 역사상 처음으로 직접 칩을 제조·판매합니다. 파운드리 물량 확보, 제조 경험 부재, Meta 의존도 등이 리스크입니다. 2026 Q4~2027 Q1의 초기 출하량이 핵심 확인 포인트입니다.</div></div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-dot high"></div>
+        <div><div class="risk-text"><span class="risk-label">극단적 밸류에이션 (높음):</span> P/E 247x는 완벽한 실행을 전제합니다. 한 분기라도 기대에 못 미치면 주가가 급락할 수 있습니다. 2026년 1월 저점 $100에서 5월 고점 $239까지 139% 변동을 보인 바 있습니다.</div></div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-dot mid"></div>
+        <div><div class="risk-text"><span class="risk-label">퀄컴 라이선스 분쟁 (중간):</span> 2026년 Q4에 재판 예정입니다. Arm은 퀄컴이 Arm IP를 무단으로 Nuvia(인수한 회사)의 커스텀 칩에 사용했다고 주장합니다. 패소 시 라이선스 수익 구조에 선례적 영향을 미칠 수 있습니다.</div></div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-dot mid"></div>
+        <div><div class="risk-text"><span class="risk-label">RISC-V 장기 위협 (중간):</span> 오픈소스 CPU 아키텍처인 RISC-V는 라이선스 비용이 없어 중국 등에서 채택이 확대되고 있습니다. 현재는 고성능 영역에서 Arm과 경쟁하기 어렵지만, 5~10년 후에는 유의미한 위협이 될 수 있습니다.</div></div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-dot mid"></div>
+        <div><div class="risk-text"><span class="risk-label">스마트폰 시장 둔화 (중간):</span> 메모리 부족으로 인한 스마트폰 출하량 감소 가능성이 있습니다. FY2027 Q1 가이던스 $1.26B(전분기 대비 감소)도 이를 반영합니다.</div></div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-dot low"></div>
+        <div><div class="risk-text"><span class="risk-label">소프트뱅크 지분 희석 (낮음):</span> 소프트뱅크가 90% 지분을 보유하고 있어, 블록딜로 매도 시 단기 수급 압박이 가능합니다. 다만 현재까지 대규모 매도 조짐은 없습니다.</div></div>
+      </div>
+    </div>
+
+    <div class="assumptions-box" style="margin-top:24px;background:rgba(6,182,212,0.05);border-color:rgba(6,182,212,0.2);">
+      <h4 style="color:var(--accent-cyan);">📅 분기별 체크포인트</h4>
+      <div class="item"><span class="k">FY2027 Q1 실적 (2026.07.27 예상)</span><span class="v" style="color:var(--accent-cyan);">$1.26B 가이던스 vs 실제</span></div>
+      <div class="item"><span class="k">AGI CPU 초기 출하 (2026 H2)</span><span class="v" style="color:var(--accent-cyan);">파운드리 물량 확보 여부</span></div>
+      <div class="item"><span class="k">퀄컴 재판 (2026 Q4)</span><span class="v" style="color:var(--accent-cyan);">라이선스 구조 영향</span></div>
+      <div class="item"><span class="k">Armv9 로열티 비중</span><span class="v" style="color:var(--accent-cyan);">칩당 로열티 상승 추세 지속 여부</span></div>
+      <div class="item"><span class="k">데이터센터 로열티 성장률</span><span class="v" style="color:var(--accent-cyan);">YoY 100%+ 유지 여부</span></div>
+      <div class="item"><span class="k">SBC/매출 비율</span><span class="v" style="color:var(--accent-cyan);">22%→ 하락 추세 확인</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 한계 & 가정 ===== -->
+<div class="container">
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">12</div>
+      <div class="section-title">한계와 가정</div>
+    </div>
+    <div class="prose">
+      <p><strong>이 분석이 의존하는 핵심 가정:</strong></p>
+      <p>
+        (1) Arm의 97%+ 총이익률이 장기간 유지된다는 가정. AGI CPU 직접 판매가 확대되면 총이익률이 하락할 수 있습니다(칩 제조는 IP 라이선싱보다 원가가 높습니다).
+        (2) 베타 2.64(원시)는 IPO 후 약 30개월간의 데이터로 산출된 것이며, 통계적 신뢰도가 낮습니다. 베타가 1.5로 낮아지면 WACC ≈ 11.7%가 되어 내재 CAP가 15~17년으로 크게 줄어듭니다.
+        (3) 15% 정규화 세율은 영국 본사의 R&D 세액공제를 반영한 것이나, 향후 글로벌 조세 환경 변화(OECD 최소세율 등) 시 상승할 수 있습니다.
+      </p>
+      <p><strong>확신도가 낮은 지점:</strong> AGI CPU의 장기 수익성, RISC-V의 5~10년 후 경쟁력, 소프트뱅크의 지분 전략.</p>
+      <p><strong>이 결론이 틀릴 수 있는 조건:</strong> AGI CPU가 예상보다 빠르게 $10B+ 매출을 달성하거나, 반대로 RISC-V가 고성능 영역에서 빠르게 Arm을 대체한다면 분석 방향이 크게 달라집니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 데이터 출처 ===== -->
+<div class="container">
+  <div class="section" style="padding-bottom:20px;">
+    <div class="section-header">
+      <div class="section-num">참고</div>
+      <div class="section-title">데이터 출처 및 기준 시점</div>
+    </div>
+    <div class="prose">
+      <p style="font-size:12px;color:var(--text-muted);line-height:2;">
+        주가: CNBC/Yahoo Finance, 2026.05.16 종가 기준 · 
+        재무제표: SEC 6-K 공시(FY2026 Q4, 2026.05.06 발표) · 
+        시장 데이터: Market Cap, Beta — Motley Fool, CNBC · 
+        10Y Treasury: FRED/TradingEconomics, 2026.05.15 기준 4.60% · 
+        10Y BEI: TradingEconomics, 2026.05 기준 2.45% · 
+        ERP: 다모다란 교수 2026년 1월 기준 4.23%, 프레임워크 기본값 4.75% 적용 · 
+        반도체 IP 시장: GlobeNewsWire, Mordor Intelligence, Congruence Market Insights · 
+        애널리스트 컨센서스: StockAnalysis, TIKR, AlphaSpread ·
+        CAP 프레임워크: 카운터포인트 글로벌 리서치, 2026년 4월 14일
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="container">
+    <p>
+      본 자료는 정보 제공 목적으로 작성되었으며, 특정 종목의 매수·매도를 권유하지 않습니다.<br>
+      모든 투자 결정은 투자자 본인의 판단과 책임하에 이루어져야 합니다.<br>
+      CAP 프레임워크 기반 분석 · 2026년 5월 18일 생성
+    </p>
+  </div>
+</div>
+
+</body>
+</html>

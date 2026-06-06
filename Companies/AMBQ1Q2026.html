@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ambiq Micro (AMBQ) · 경쟁우위기간(CAP) 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#11141B; --ink2:#181C26; --ink3:#222837;
+  --paper:#F6F2E9; --paper2:#FBF8F1; --line:#E3DBCB;
+  --amber:#E0A23B; --amber-d:#C0832A; --teal:#1F9E8F; --teal-d:#157d70;
+  --red:#C8554A; --red-d:#a83f35; --slate:#5B6573; --slate-l:#8B93A0;
+  --gold-grad:linear-gradient(135deg,#E0A23B,#C0832A);
+  --ff-disp:'Gowun Batang',serif;
+  --ff-body:'IBM Plex Sans KR',sans-serif;
+  --ff-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff-body);background:var(--paper);color:var(--ink);line-height:1.7;font-weight:300;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 26px}
+h1,h2,h3,h4{font-family:var(--ff-disp);font-weight:700;line-height:1.25;letter-spacing:-.01em}
+.mono{font-family:var(--ff-mono);font-variant-numeric:tabular-nums}
+strong{font-weight:600}
+em{font-style:normal;color:var(--amber-d);font-weight:500}
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--ff-mono);font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--amber-d);font-weight:500;margin-bottom:14px}
+.sec-title{font-size:clamp(26px,4vw,40px);margin-bottom:8px}
+.sec-sub{color:var(--slate);font-size:16px;max-width:680px;margin-bottom:34px}
+p{margin-bottom:14px}
+.lead{font-size:17px}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--ink);color:var(--paper);padding:0;border:none;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(60% 50% at 82% 12%,rgba(224,162,59,.20),transparent 70%),
+  radial-gradient(50% 45% at 8% 92%,rgba(31,158,143,.14),transparent 70%);
+  pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:46px 46px;mask-image:linear-gradient(180deg,black,transparent 88%)}
+.hero-inner{position:relative;padding:54px 0 60px}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;font-family:var(--ff-mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--slate-l);border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:16px;margin-bottom:38px}
+.ticker-badge{display:inline-flex;align-items:center;gap:10px}
+.ticker-badge b{color:var(--amber);font-weight:600;letter-spacing:.1em}
+.hero h1{font-size:clamp(38px,7vw,76px);line-height:1.02;letter-spacing:-.02em;margin-bottom:8px}
+.hero h1 .sub{display:block;font-size:clamp(15px,2.4vw,22px);color:var(--amber);font-weight:400;letter-spacing:.04em;margin-top:14px;font-family:var(--ff-body)}
+.oneliner{font-size:clamp(17px,2.3vw,22px);color:#E7E2D6;max-width:740px;margin:26px 0 0;font-weight:300;line-height:1.55}
+.oneliner b{color:#fff;font-weight:500}
+.verdict-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:42px}
+.vcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 24px;backdrop-filter:blur(4px)}
+.vcard .lbl{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate-l);margin-bottom:10px}
+.vcard .big{font-family:var(--ff-disp);font-size:30px;color:#fff;line-height:1.1}
+.vcard .big.amber{color:var(--amber)}
+.vcard p{font-size:13.5px;color:#C9C4B8;margin:8px 0 0;line-height:1.5}
+@media(max-width:680px){.verdict-row{grid-template-columns:1fr}}
+
+/* ---------- price-vs-scenario gauge ---------- */
+.gauge{margin-top:30px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:26px 26px 20px}
+.gauge .ghead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px;flex-wrap:wrap;gap:6px}
+.gauge .ghead .t{font-family:var(--ff-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate-l)}
+.gauge .ghead .px{font-family:var(--ff-disp);font-size:22px;color:#fff}
+.gbar{position:relative;height:54px;margin:30px 0 8px}
+.gtrack{position:absolute;top:24px;left:0;right:0;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--red) 0%,var(--amber) 52%,var(--teal) 100%);opacity:.85}
+.gpt{position:absolute;top:14px;transform:translateX(-50%);text-align:center}
+.gpt .dot{width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--ink);margin:0 auto;box-shadow:0 0 0 2px rgba(255,255,255,.4)}
+.gpt .v{font-family:var(--ff-mono);font-size:12px;color:#fff;margin-top:7px;font-weight:500}
+.gpt .n{font-size:10px;color:var(--slate-l);letter-spacing:.1em;text-transform:uppercase}
+.gpt.price .dot{background:var(--amber);border-color:#fff;width:18px;height:18px;box-shadow:0 0 16px rgba(224,162,59,.7)}
+.gpt.price .v{color:var(--amber);font-size:13px;font-weight:600}
+
+/* ---------- metric dashboard ---------- */
+.dash{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px}
+.dash .cell{background:var(--paper2);padding:20px 18px}
+.dash .cell .k{font-family:var(--ff-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.dash .cell .v{font-family:var(--ff-disp);font-size:25px;color:var(--ink);line-height:1.05}
+.dash .cell .v small{font-size:14px;color:var(--slate)}
+.dash .cell .d{font-size:12px;margin-top:5px;color:var(--slate)}
+.dash .cell .d.dn{color:var(--red-d)} .dash .cell .d.up{color:var(--teal-d)}
+@media(max-width:760px){.dash{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- generic cards / chips ---------- */
+.chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.08em;padding:5px 12px;border-radius:30px;border:1px solid var(--line);background:var(--paper2);color:var(--slate);text-transform:uppercase}
+.chip.warn{border-color:#E7C7A0;background:#FBEFDD;color:var(--amber-d)}
+.chip.bad{border-color:#E6BDB7;background:#FAE7E4;color:var(--red-d)}
+.chip.good{border-color:#B5DED6;background:#E2F3EF;color:var(--teal-d)}
+.callout{border-left:3px solid var(--amber);background:var(--paper2);padding:18px 22px;border-radius:0 10px 10px 0;margin:22px 0;font-size:15px}
+.callout.teal{border-color:var(--teal)} .callout.red{border-color:var(--red)}
+.note{font-size:12.5px;color:var(--slate-l);font-family:var(--ff-mono)}
+.glossary{background:var(--ink);color:#D7D2C6;border-radius:10px;padding:13px 17px;margin:14px 0;font-size:13.5px;line-height:1.6}
+.glossary b{color:var(--amber)}
+
+/* dl grid */
+.kv{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:24px 0}
+.kv .item{background:var(--paper2);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.kv .item .t{font-family:var(--ff-disp);font-size:16px;margin-bottom:6px;color:var(--ink)}
+.kv .item .x{font-size:14px;color:var(--slate)}
+@media(max-width:680px){.kv{grid-template-columns:1fr}}
+
+footer{background:var(--ink);color:var(--slate-l);padding:40px 0;border:none;font-size:12.5px}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+footer a{color:var(--amber)}
+.toc{position:sticky;top:0;z-index:40;background:rgba(17,20,27,.93);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
+.toc .wrap{display:flex;gap:4px;overflow-x:auto;padding:11px 26px;scrollbar-width:none}
+.toc .wrap::-webkit-scrollbar{display:none}
+.toc a{font-family:var(--ff-mono);font-size:11px;letter-spacing:.06em;color:var(--slate-l);text-decoration:none;white-space:nowrap;padding:6px 11px;border-radius:7px;text-transform:uppercase}
+.toc a:hover{color:var(--amber);background:rgba(255,255,255,.05)}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-grid"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-top">
+      <span class="ticker-badge">◆ <b>NYSE: AMBQ</b> · Ambiq Micro, Inc.</span>
+      <span>경쟁우위기간(CAP) 프레임워크 분석 · 데이터 기준일 2026-06-05</span>
+    </div>
+    <h1>Ambiq Micro
+      <span class="sub">"기기가 배터리로 며칠을 버티게 해주는, 초저전력 엣지 AI 반도체 설계회사"</span>
+    </h1>
+    <p class="oneliner">한 문장 요약 — Ambiq는 <b>전기를 거의 먹지 않는 AI 칩</b>을 설계해 스마트워치·반지·의료기기·산업센서 같은 작은 기기 안에서 인공지능이 항상 켜져 있도록 만드는 회사입니다. 기술은 진짜지만, <b>아직 적자</b>이고 <b>소수 고객에 크게 의존</b>하며, 무엇보다 <em>현재 주가에는 거의 완벽한 미래가 미리 반영</em>되어 있습니다.</p>
+
+    <div class="verdict-row">
+      <div class="vcard">
+        <div class="lbl">생애주기 단계 · Lifecycle</div>
+        <div class="big amber">도입기 (Introduction)</div>
+        <p>현금흐름 패턴이 '영업(−)·투자(−)·재무(+)' — 아직 돈을 벌어들이지 못하고 외부 자금으로 성장하는 초기 단계. 표준 DCF가 가장 어려운 구간입니다.</p>
+      </div>
+      <div class="vcard">
+        <div class="lbl">시장 내재 기대 · Implied</div>
+        <div class="big">매우 낙관적</div>
+        <p>현재 주가는 본 분석의 <b>'기본 시나리오(약 $26)'를 크게 앞서</b> 사실상 <b>'낙관 시나리오(약 $83)'</b> 수준. 내재 CAP가 프레임워크 합리 범위(10~15년)의 상단을 초과합니다.</p>
+      </div>
+    </div>
+
+    <div class="gauge">
+      <div class="ghead">
+        <span class="t">시나리오별 주당가치 vs 현재가</span>
+        <span class="px">현재가 $74.49</span>
+      </div>
+      <div class="gbar">
+        <div class="gtrack"></div>
+        <div class="gpt" style="left:4%"><div class="dot"></div><div class="v">$5</div><div class="n">약세</div></div>
+        <div class="gpt" style="left:30%"><div class="dot"></div><div class="v">$26</div><div class="n">기본</div></div>
+        <div class="gpt price" style="left:86%"><div class="dot"></div><div class="v">$74.49</div><div class="n">현재가</div></div>
+        <div class="gpt" style="left:96%"><div class="dot"></div><div class="v">$83</div><div class="n">강세</div></div>
+      </div>
+      <p class="note" style="margin-top:14px">현재 주가는 '강세(낙관)' 끝단에 위치. 즉 시장은 Ambiq가 향후 10년간 매출 12배 성장(→약 9억 달러)과 34%대 영업이익률 달성에 성공한다는 시나리오를 이미 가격에 반영하고 있습니다.</p>
+    </div>
+  </div>
+</header>
+
+<!-- ============ TOC ============ -->
+<nav class="toc">
+  <div class="wrap">
+    <a href="#summary">핵심결론</a>
+    <a href="#overview">기업개요</a>
+    <a href="#revenue">수익구조</a>
+    <a href="#tech">제품·기술</a>
+    <a href="#industry">산업분석</a>
+    <a href="#swot">SWOT</a>
+    <a href="#moat">경제적해자</a>
+    <a href="#lifecycle">생애주기</a>
+    <a href="#peers">피어비교</a>
+    <a href="#dcf">DCF모델</a>
+    <a href="#impliedcap">내재CAP</a>
+    <a href="#scenario">시나리오</a>
+    <a href="#sensitivity">민감도</a>
+    <a href="#risk">리스크</a>
+    <a href="#final">종합판단</a>
+  </div>
+</nav>
+
+<!-- ============ 0. KEY DASHBOARD + SUMMARY ============ -->
+<section id="summary">
+  <div class="wrap">
+    <div class="eyebrow">01 · Executive Summary</div>
+    <h2 class="sec-title">핵심 결론</h2>
+    <p class="sec-sub">이 회사가 무엇을 하고, 왜 이런 결론이 나오는지를 한눈에.</p>
+
+    <div class="dash">
+      <div class="cell"><div class="k">현재 주가</div><div class="v">$74.49</div><div class="d dn">−12.4% (6/5 종가)</div></div>
+      <div class="cell"><div class="k">시가총액</div><div class="v">$1.59<small>B</small></div><div class="d">≈ 2.2조 원</div></div>
+      <div class="cell"><div class="k">기업가치 (EV)</div><div class="v">$1.39<small>B</small></div><div class="d">시총 − 순현금</div></div>
+      <div class="cell"><div class="k">순현금</div><div class="v">$202<small>M</small></div><div class="d up">무차입 · 약 6년치 실탄</div></div>
+      <div class="cell"><div class="k">매출 (TTM)</div><div class="v">$81.8<small>M</small></div><div class="d up">+6.9% YoY</div></div>
+      <div class="cell"><div class="k">EV / 매출</div><div class="v">11.4<small>x</small></div><div class="d">2026E 기준 (TTM 17x)</div></div>
+      <div class="cell"><div class="k">순이익 (TTM)</div><div class="v" style="color:var(--red-d)">−$28<small>M</small></div><div class="d dn">적자 지속</div></div>
+      <div class="cell"><div class="k">흑자 전환 목표</div><div class="v">'27~'28</div><div class="d">경영진 가이던스</div></div>
+    </div>
+
+    <div class="callout">
+      <strong>결론 (방향성):</strong> Ambiq는 16년간 축적한 <em>초저전력 설계 기술(SPOT)</em>이라는 진짜 차별점을 가졌고, 연 20%대로 커지는 엣지 AI 시장의 정중앙에 있습니다. 그러나 <strong>① 아직 적자</strong>이고 <strong>② 상위 3개 고객이 매출의 71%</strong>를 차지하며 <strong>③ 현재 주가는 거의 완벽한 실행을 전제한 '낙관 시나리오'를 이미 반영</strong>하고 있습니다. 본 프레임워크 기준 <strong>시장 내재 CAP는 합리 범위(10~15년)를 넘어선 20년 이상</strong>으로 추정되며, 이는 "안전마진이 거의 없는" 상태를 의미합니다.
+    </div>
+
+    <div class="kv">
+      <div class="item"><div class="t" style="color:var(--teal-d)">▲ 강세 논리 (Steel-man)</div><div class="x">대체하기 어려운 저전력 기술 + 비용이 거의 안 드는 사업구조(팹리스) + 매출 12배 성장 시 강력한 영업 레버리지. 엣지 AI가 폭발하면 'Lattice·ARM급' 고수익 프랜차이즈가 될 잠재력.</div></div>
+      <div class="item"><div class="t" style="color:var(--red-d)">▼ 약세 논리 (Steel-man)</div><div class="x">고객 3곳에 71% 의존 + 장기계약 없음 + 과거 매출 급등락 전력(2021→2023 −28%) + 회계 내부통제 '중대한 약점' 공시 + 금리 상승 시 고멀티플 직격탄. IPO 70%가 공모가도 정당화 못함.</div></div>
+    </div>
+    <p class="note">데이터 출처: stockanalysis.com / Fiscal.ai(재무), S&amp;P Global·TipRanks(컨센서스), SEC 10-K·S-1, FRED·Damodaran(거시), 회사 IR 및 Q1 2026 실적발표. 모든 수치는 2026-06-05 기준이며, 정밀한 목표가가 아닌 <strong>방향성</strong> 제시가 목적입니다. 매수/매도 권유가 아닙니다.</p>
+  </div>
+</section>
+
+<!-- ============ 1. COMPANY OVERVIEW ============ -->
+<section id="overview">
+  <div class="wrap">
+    <div class="eyebrow">02 · Company</div>
+    <h2 class="sec-title">기업 개요</h2>
+    <p class="sec-sub">전기를 거의 먹지 않는 AI 칩으로, 작은 기기 안에 '항상 켜진 지능'을 넣는 회사.</p>
+
+    <p class="lead">앰비크 마이크로(Ambiq Micro)는 2010년 미국 미시간 대학교 연구실에서 출발한 <strong>반도체 설계 전문 기업</strong>입니다. 본사는 텍사스주 오스틴에 있고, 직원은 약 <strong>202명</strong>으로 매우 작은 회사입니다. 2025년 7월 30일 뉴욕증권거래소(NYSE)에 <strong>공모가 $24</strong>로 상장했습니다.</p>
+
+    <p>이 회사를 이해하는 핵심 키워드는 딱 하나, <em>"전력(배터리)"</em>입니다. 스마트워치, 스마트반지, 무선이어폰, 보청기, 혈당 측정기 같은 기기는 작아서 배터리도 작습니다. 그런데 여기에 인공지능(AI) 기능을 넣으면 전기를 많이 먹어 배터리가 금방 닳습니다. Ambiq는 <strong>"AI를 켜놓아도 배터리가 며칠~몇 주 가게 만드는 칩"</strong>을 설계해 이 문제를 풉니다.</p>
+
+    <div class="glossary">
+      💡 <b>쉽게 풀면</b> — '엣지 AI(Edge AI)'란 인터넷(클라우드) 서버로 데이터를 보내지 않고, <b>기기 자체에서 직접 AI를 돌리는 것</b>을 말합니다. 예: 스마트워치가 인터넷 없이도 심전도(ECG) 이상을 즉시 감지. 빠르고(지연 없음), 사생활 보호에 유리하지만, <b>기기 안에서 돌리려면 전기를 적게 써야</b> 합니다. 바로 이 지점이 Ambiq의 존재 이유입니다.
+    </div>
+
+    <h3 style="font-size:20px;margin:28px 0 4px">설립 배경과 정체성</h3>
+    <p>창업자 Scott Hanson, Dennis Sylvester, David Blaauw 세 사람은 대학에서 <strong>"트랜지스터를 정상 전압보다 훨씬 낮은 전압에서 작동시키는 방법"</strong>을 연구하던 학자들이었습니다. 이 연구가 회사의 핵심 기술인 <strong>SPOT</strong>(Subthreshold Power Optimized Technology, 임계전압 이하 전력최적화 기술)으로 발전했습니다. 16년간 이 한 우물만 판 덕분에, 지금까지 Ambiq 기술이 들어간 기기는 <strong>전 세계 2억 8천만 대 이상</strong>입니다.</p>
+
+    <h3 style="font-size:20px;margin:28px 0 4px">핵심 사업 — '팹리스(Fabless)' 모델</h3>
+    <p>Ambiq는 공장이 없습니다. 칩을 <strong>설계만</strong> 하고, 실제 제조는 세계 최대 파운드리(위탁생산) 업체인 <strong>대만 TSMC</strong>에 맡깁니다. 이런 방식을 '팹리스'라고 부릅니다. 공장을 안 짓기 때문에 거대한 설비투자가 필요 없고(자산이 가벼움), 잘 되면 매출이 늘수록 이익이 빠르게 불어나는 구조입니다. 대신 <strong>제조를 TSMC에 100% 의존</strong>하는 약점도 함께 생깁니다.</p>
+
+    <div class="kv">
+      <div class="item"><div class="t">무엇을 파나</div><div class="x"><b>Apollo</b> 계열 SoC(시스템온칩, 칩 하나에 여러 기능 통합)와 차세대 AI 전용 칩 <b>Atomiq</b>, 그리고 이를 쉽게 쓰게 해주는 소프트웨어 도구들.</div></div>
+      <div class="item"><div class="t">누구에게 파나</div><div class="x">가민(Garmin), 구글(Alphabet), 그리고 다수의 글로벌 소비자·의료·산업 기기 제조사. 과거엔 화웨이가 최대 고객이었음.</div></div>
+      <div class="item"><div class="t">어디서 만드나</div><div class="x">설계는 자체(오스틴), 제조는 TSMC, 패키징·테스트는 소수 외주 업체. 전형적 팹리스 구조.</div></div>
+      <div class="item"><div class="t">규모</div><div class="x">2025년 매출 $72.5M(약 1,000억 원), 직원 202명. 시가총액 기준으로는 '소형주(스몰캡)'.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. REVENUE STRUCTURE ============ -->
+<section id="revenue">
+  <div class="wrap">
+    <div class="eyebrow">03 · Business Model</div>
+    <h2 class="sec-title">수익 구조 — 어떻게 돈을 버나</h2>
+    <p class="sec-sub">"칩을 설계해서 TSMC에 만들게 하고, 기기 제조사에 팔아 매출을 올린다." 단순하지만 고객 집중이라는 함정이 있습니다.</p>
+
+    <!-- value/revenue flow -->
+    <h3 style="font-size:19px;margin-bottom:18px">① 돈이 흐르는 길 (팹리스 가치사슬)</h3>
+    <div style="overflow-x:auto;margin-bottom:8px">
+    <svg viewBox="0 0 980 200" style="min-width:900px;width:100%;font-family:var(--ff-body)">
+      <defs>
+        <marker id="ar" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#C0832A"/></marker>
+      </defs>
+      <!-- boxes -->
+      <g>
+        <rect x="8" y="60" width="150" height="80" rx="12" fill="#181C26"/>
+        <text x="83" y="92" text-anchor="middle" fill="#E0A23B" font-size="14" font-weight="600">Ambiq</text>
+        <text x="83" y="112" text-anchor="middle" fill="#D7D2C6" font-size="11">칩 설계 + 특허 + SW</text>
+        <text x="83" y="128" text-anchor="middle" fill="#8B93A0" font-size="10">(핵심 부가가치)</text>
+      </g>
+      <line x1="158" y1="100" x2="230" y2="100" stroke="#C0832A" stroke-width="2" marker-end="url(#ar)"/>
+      <text x="194" y="92" text-anchor="middle" fill="#5B6573" font-size="10">설계 위탁</text>
+      <g>
+        <rect x="232" y="60" width="150" height="80" rx="12" fill="#FBF8F1" stroke="#E3DBCB"/>
+        <text x="307" y="92" text-anchor="middle" fill="#11141B" font-size="14" font-weight="600">TSMC</text>
+        <text x="307" y="112" text-anchor="middle" fill="#5B6573" font-size="11">웨이퍼 제조</text>
+        <text x="307" y="128" text-anchor="middle" fill="#8B93A0" font-size="10">(파운드리 의존)</text>
+      </g>
+      <line x1="382" y1="100" x2="454" y2="100" stroke="#C0832A" stroke-width="2" marker-end="url(#ar)"/>
+      <g>
+        <rect x="456" y="60" width="150" height="80" rx="12" fill="#FBF8F1" stroke="#E3DBCB"/>
+        <text x="531" y="88" text-anchor="middle" fill="#11141B" font-size="13" font-weight="600">패키징·테스트</text>
+        <text x="531" y="108" text-anchor="middle" fill="#5B6573" font-size="11">외주(OSAT)</text>
+        <text x="531" y="126" text-anchor="middle" fill="#8B93A0" font-size="10">소수 협력사</text>
+      </g>
+      <line x1="606" y1="100" x2="678" y2="100" stroke="#C0832A" stroke-width="2" marker-end="url(#ar)"/>
+      <g>
+        <rect x="680" y="60" width="150" height="80" rx="12" fill="#181C26"/>
+        <text x="755" y="86" text-anchor="middle" fill="#E0A23B" font-size="13" font-weight="600">기기 제조사</text>
+        <text x="755" y="106" text-anchor="middle" fill="#D7D2C6" font-size="10.5">Garmin·구글 등</text>
+        <text x="755" y="124" text-anchor="middle" fill="#8B93A0" font-size="10">칩 구매 → 매출</text>
+      </g>
+      <line x1="830" y1="100" x2="902" y2="100" stroke="#1F9E8F" stroke-width="2" marker-end="url(#ar)"/>
+      <g>
+        <rect x="904" y="66" width="68" height="68" rx="12" fill="#E2F3EF" stroke="#1F9E8F"/>
+        <text x="938" y="96" text-anchor="middle" fill="#157d70" font-size="11" font-weight="600">최종</text>
+        <text x="938" y="112" text-anchor="middle" fill="#157d70" font-size="11" font-weight="600">소비자</text>
+      </g>
+      <!-- money back arrow -->
+      <path d="M755 145 Q 420 195 83 145" stroke="#1F9E8F" stroke-width="1.6" fill="none" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+      <text x="420" y="190" text-anchor="middle" fill="#157d70" font-size="10.5">매출(칩 판매 대금)이 Ambiq로 흘러 들어옴 →</text>
+      <text x="20" y="30" fill="#11141B" font-size="12" font-weight="600">📐 설계는 내가, 생산은 남이</text>
+    </svg>
+    </div>
+    <p>Ambiq의 매출은 거의 전부 <strong>칩(SoC) 판매</strong>에서 나옵니다. 부가가치의 핵심은 '설계와 특허'에 있고, 무거운 제조는 TSMC가 대신합니다. 최근에는 소프트웨어(compressionKIT 등)도 붙여 칩의 가치를 높이고 있지만, 아직은 하드웨어 판매가 중심입니다.</p>
+
+    <!-- revenue history -->
+    <h3 style="font-size:19px;margin:34px 0 6px">② 매출 추이 — '급등 → 급락 → 재가속'의 롤러코스터</h3>
+    <p style="margin-bottom:18px">매출이 매끄럽게 우상향하지 않았다는 점이 중요합니다. 2021~2022년 화웨이(중국) 특수로 $91M까지 치솟았다가, <strong>미·중 갈등으로 중국 비중을 의도적으로 줄이면서 2023년 −28% 급감</strong>했습니다. 이후 가민·구글 등 고품질 고객으로 재편하며 2026년 다시 폭발적으로 반등 중입니다.</p>
+    <div style="overflow-x:auto">
+    <svg viewBox="0 0 940 320" style="min-width:760px;width:100%;font-family:var(--ff-body)">
+      <!-- axis -->
+      <line x1="60" y1="270" x2="900" y2="270" stroke="#E3DBCB" stroke-width="1.5"/>
+      <text x="30" y="275" fill="#8B93A0" font-size="10" text-anchor="end">0</text>
+      <text x="30" y="180" fill="#8B93A0" font-size="10" text-anchor="end">80</text>
+      <text x="30" y="90" fill="#8B93A0" font-size="10" text-anchor="end">160</text>
+      <line x1="60" y1="180" x2="900" y2="180" stroke="#EFE8D8" stroke-width="1" stroke-dasharray="3 4"/>
+      <line x1="60" y1="90" x2="900" y2="90" stroke="#EFE8D8" stroke-width="1" stroke-dasharray="3 4"/>
+      <!-- bars: 2020-51,2021-91,2022e-91,2023-66,2024-76,2025-73,2026E-122,2027E-153,2028E-195 ; scale 160=>180px from y270 -> px per $ =1.125 -->
+      <!-- helper: y=270 - val*1.125 ; barwidth 64 gap -->
+      <g font-size="11" font-family="var(--ff-mono)">
+        <!-- 2020 -->
+        <rect x="72"  y="212.6" width="64" height="57.4" rx="3" fill="#8B93A0"/><text x="104" y="285" text-anchor="middle" fill="#5B6573">2020</text><text x="104" y="205" text-anchor="middle" fill="#5B6573">51</text>
+        <rect x="164" y="167.6" width="64" height="102.4" rx="3" fill="#8B93A0"/><text x="196" y="285" text-anchor="middle" fill="#5B6573">2021</text><text x="196" y="160" text-anchor="middle" fill="#5B6573">91</text>
+        <rect x="256" y="167.6" width="64" height="102.4" rx="3" fill="#C9CCC4"/><text x="288" y="285" text-anchor="middle" fill="#8B93A0">2022*</text><text x="288" y="160" text-anchor="middle" fill="#8B93A0">~91</text>
+        <rect x="348" y="195.8" width="64" height="74.2" rx="3" fill="#C8554A"/><text x="380" y="285" text-anchor="middle" fill="#a83f35">2023</text><text x="380" y="188" text-anchor="middle" fill="#a83f35">66 ▼</text>
+        <rect x="440" y="184.5" width="64" height="85.5" rx="3" fill="#8B93A0"/><text x="472" y="285" text-anchor="middle" fill="#5B6573">2024</text><text x="472" y="177" text-anchor="middle" fill="#5B6573">76</text>
+        <rect x="532" y="187.9" width="64" height="82.1" rx="3" fill="#C8554A"/><text x="564" y="285" text-anchor="middle" fill="#a83f35">2025</text><text x="564" y="180" text-anchor="middle" fill="#a83f35">73 ▼</text>
+        <rect x="624" y="132.8" width="64" height="137.2" rx="3" fill="#E0A23B"/><text x="656" y="285" text-anchor="middle" fill="#C0832A">2026E</text><text x="656" y="125" text-anchor="middle" fill="#C0832A">122 ▲</text>
+        <rect x="716" y="97.9" width="64" height="172.1" rx="3" fill="#E0A23B"/><text x="748" y="285" text-anchor="middle" fill="#C0832A">2027E</text><text x="748" y="90" text-anchor="middle" fill="#C0832A">153</text>
+        <rect x="808" y="50.6" width="64" height="219.4" rx="3" fill="#C0832A" opacity="0.55"/><text x="840" y="285" text-anchor="middle" fill="#C0832A">2028E</text><text x="840" y="43" text-anchor="middle" fill="#C0832A">~195</text>
+      </g>
+      <text x="60" y="305" fill="#8B93A0" font-size="10" font-family="var(--ff-mono)">단위: 백만 달러 · E=추정 · 2022*는 보고된 −28% 성장률로 역산한 추정치 · 회색=과거, 빨강=역성장, 황금=성장</text>
+    </svg>
+    </div>
+    <div class="callout teal">
+      <strong>이 그래프의 핵심:</strong> 2023년의 급감은 '사업 실패'가 아니라 <em>의도적 체질 개선</em>이었습니다. 저마진 중국(화웨이) 매출을 버리고 고마진 고객으로 갈아탄 결과, 매출은 줄었지만 <strong>이익률이 크게 좋아졌습니다(아래 ③).</strong> 다만 이런 고객 의존 구조는 언제든 다시 급등락을 부를 수 있습니다.
+    </div>
+
+    <!-- gross margin trend + customer concentration : two-up -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:30px" id="rev2">
+      <div>
+        <h3 style="font-size:18px;margin-bottom:14px">③ 매출총이익률 — 30% → 45%로 개선</h3>
+        <svg viewBox="0 0 420 240" style="width:100%;font-family:var(--ff-body)">
+          <line x1="40" y1="200" x2="400" y2="200" stroke="#E3DBCB"/>
+          <line x1="40" y1="120" x2="400" y2="120" stroke="#EFE8D8" stroke-dasharray="3 4"/>
+          <line x1="40" y1="60"  x2="400" y2="60"  stroke="#EFE8D8" stroke-dasharray="3 4"/>
+          <text x="32" y="204" fill="#8B93A0" font-size="9" text-anchor="end">0%</text>
+          <text x="32" y="124" fill="#8B93A0" font-size="9" text-anchor="end">30%</text>
+          <text x="32" y="64"  fill="#8B93A0" font-size="9" text-anchor="end">50%</text>
+          <!-- points: 2023 29.7, 2024 31.9, 2025 44.3, 2026E 45.4 ; x:70,180,290,370 ; y=200-pct*2.8 -->
+          <polyline points="70,116.8 180,110.7 290,76 370,72.9" fill="none" stroke="#1F9E8F" stroke-width="3"/>
+          <circle cx="70" cy="116.8" r="5" fill="#1F9E8F"/><text x="70" y="105" text-anchor="middle" font-size="10" fill="#157d70" font-family="var(--ff-mono)">29.7</text>
+          <circle cx="180" cy="110.7" r="5" fill="#1F9E8F"/><text x="180" y="99" text-anchor="middle" font-size="10" fill="#157d70" font-family="var(--ff-mono)">31.9</text>
+          <circle cx="290" cy="76" r="5" fill="#1F9E8F"/><text x="290" y="65" text-anchor="middle" font-size="10" fill="#157d70" font-family="var(--ff-mono)">44.3</text>
+          <circle cx="370" cy="72.9" r="6" fill="#E0A23B"/><text x="370" y="61" text-anchor="middle" font-size="10" fill="#C0832A" font-family="var(--ff-mono)">45.4</text>
+          <text x="70" y="216" text-anchor="middle" font-size="10" fill="#5B6573">2023</text>
+          <text x="180" y="216" text-anchor="middle" font-size="10" fill="#5B6573">2024</text>
+          <text x="290" y="216" text-anchor="middle" font-size="10" fill="#5B6573">2025</text>
+          <text x="370" y="216" text-anchor="middle" font-size="10" fill="#C0832A">2026E</text>
+        </svg>
+        <p class="note" style="margin-top:6px">중국 저가물량을 줄이며 제품 믹스가 고급화 → 100원 팔면 45원이 남는 구조로 개선. 다만 흑자를 내려면 이 45%로 막대한 R&amp;D·판관비(연 $77M)를 덮어야 합니다.</p>
+      </div>
+      <div>
+        <h3 style="font-size:18px;margin-bottom:14px">④ 고객 집중도 — 완화 중이나 여전히 높음</h3>
+        <svg viewBox="0 0 420 240" style="width:100%;font-family:var(--ff-body)">
+          <!-- two stacked bars: Q1'25 top3=86%, Q1'26 top3=71% -->
+          <text x="20" y="60" font-size="11" fill="#5B6573">Q1 2025</text>
+          <rect x="20" y="68" width="380" height="34" rx="5" fill="#EFE8D8"/>
+          <rect x="20" y="68" width="326.8" height="34" rx="5" fill="#C8554A"/>
+          <text x="183" y="90" text-anchor="middle" fill="#fff" font-size="13" font-weight="600" font-family="var(--ff-mono)">상위 3개사 = 86%</text>
+          <text x="20" y="150" font-size="11" fill="#5B6573">Q1 2026</text>
+          <rect x="20" y="158" width="380" height="34" rx="5" fill="#EFE8D8"/>
+          <rect x="20" y="158" width="269.8" height="34" rx="5" fill="#E0A23B"/>
+          <text x="155" y="180" text-anchor="middle" fill="#fff" font-size="13" font-weight="600" font-family="var(--ff-mono)">상위 3개사 = 71%</text>
+          <text x="300" y="180" text-anchor="middle" fill="#C0832A" font-size="11" font-family="var(--ff-mono)">−15%p</text>
+          <text x="20" y="222" font-size="10.5" fill="#8B93A0">2024년 단일 최대고객 비중: 화웨이 41% → 현재 중국 13.7%로 축소</text>
+        </svg>
+        <p class="note" style="margin-top:6px">상장 당시 상위 5개 고객이 매출의 92%. 가민(38%)·구글(25%)·미공개(23%) 구조. 신규 대형 고객이 2026년 양산 진입하며 분산이 진행되지만, <strong>여전히 소수 고객·장기계약 부재가 최대 리스크.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. TECH ============ -->
+<section id="tech">
+  <div class="wrap">
+    <div class="eyebrow">04 · Technology</div>
+    <h2 class="sec-title">제품 · 기술력</h2>
+    <p class="sec-sub">비전공자용 핵심 — "남들은 1볼트로 켜는 트랜지스터를, Ambiq는 0.5볼트 이하 '속삭이는 전압'에서 켠다."</p>
+
+    <h3 style="font-size:19px;margin-bottom:10px">① SPOT — 회사의 심장</h3>
+    <p>모든 반도체는 수십억 개의 <strong>트랜지스터</strong>(전기 스위치)로 이뤄집니다. 보통 칩은 이 스위치를 켜려면 약 1볼트의 전압이 필요합니다. Ambiq의 <strong>SPOT 기술</strong>은 이 스위치를 <em>'문턱전압(threshold) 이하'의 아주 낮은 전압</em>에서도 안정적으로 켜고 끕니다. 전압을 낮추면 전력은 전압의 제곱에 비례해 급감하므로, <strong>전력 소비가 몇 배에서 십 수 배까지 줄어듭니다.</strong></p>
+
+    <div style="overflow-x:auto;margin:18px 0">
+    <svg viewBox="0 0 920 230" style="min-width:760px;width:100%;font-family:var(--ff-body)">
+      <text x="20" y="26" font-size="12" font-weight="600" fill="#11141B">⚡ 전압을 낮추면 전력이 급감한다 (개념도)</text>
+      <!-- normal chip -->
+      <text x="150" y="60" text-anchor="middle" font-size="12" fill="#5B6573">일반 칩</text>
+      <rect x="60" y="70" width="180" height="46" rx="8" fill="#EFE8D8"/>
+      <rect x="60" y="70" width="180" height="46" rx="8" fill="#C8554A" opacity="0.85"/>
+      <text x="150" y="98" text-anchor="middle" fill="#fff" font-size="13" font-weight="600">~1.0V · 전력 100%</text>
+      <!-- arrow -->
+      <text x="455" y="86" text-anchor="middle" font-size="22" fill="#C0832A">→</text>
+      <text x="455" y="108" text-anchor="middle" font-size="10" fill="#5B6573">SPOT 적용</text>
+      <!-- ambiq chip -->
+      <text x="760" y="60" text-anchor="middle" font-size="12" fill="#157d70">Ambiq SPOT 칩</text>
+      <rect x="670" y="70" width="180" height="46" rx="8" fill="#E2F3EF"/>
+      <rect x="670" y="70" width="64" height="46" rx="8" fill="#1F9E8F"/>
+      <text x="760" y="98" text-anchor="middle" fill="#11141B" font-size="12.5" font-weight="600">~0.3–0.5V · 전력 ↓↓</text>
+      <!-- result bar -->
+      <text x="20" y="160" font-size="11.5" fill="#5B6573">최신 칩 Apollo510의 성과 (전작 Apollo4 Plus 대비):</text>
+      <rect x="60" y="172" width="360" height="30" rx="6" fill="#181C26"/>
+      <text x="240" y="192" text-anchor="middle" fill="#E0A23B" font-size="13" font-weight="600">AI 추론 성능 최대 10배 ↑</text>
+      <rect x="440" y="172" width="360" height="30" rx="6" fill="#181C26"/>
+      <text x="620" y="192" text-anchor="middle" fill="#1F9E8F" font-size="13" font-weight="600">에너지 소비 3배 ↓</text>
+    </svg>
+    </div>
+    <div class="glossary">💡 <b>왜 중요한가</b> — 경쟁사도 '저전력'을 말하지만, Ambiq는 트랜지스터 작동 방식 자체(회로 설계의 가장 밑단)를 바꿉니다. 이건 소프트웨어 패치처럼 쉽게 따라 할 수 없고, <b>16년간 쌓은 노하우와 특허</b>가 방어막이 됩니다. 동시에 매우 까다로운 설계라 인력·시간이 많이 들어, 이것이 R&amp;D 비용(매출의 50%+)이 큰 이유이기도 합니다.</div>
+
+    <h3 style="font-size:19px;margin:30px 0 14px">② 제품 라인업</h3>
+    <div class="kv">
+      <div class="item"><div class="t">Apollo 5 계열 (주력·양산 중)</div><div class="x">ARM Cortex-M55(Helium 기술) 기반 SoC. Apollo510 / 510 Lite 등. 스마트워치·반지·웨어러블의 '두뇌'. 현재 매출의 대부분.</div></div>
+      <div class="item"><div class="t">Atomiq (차세대 AI 전용·개발 중)</div><div class="x">신경망 처리장치(NPU)를 품은 칩. '항상 켜진 AI'에 특화. Atomiq110은 2026년 말 시제품(tape-out), 2027년 말 양산 예정. 스마트 안경 수요 주목.</div></div>
+      <div class="item"><div class="t">Apollo 340 (차세대 범용·설계 중)</div><div class="x">2027년 상반기 샘플, 2028년 본격 매출. 의료·산업·스마트홈·스마트그리드 센서 등 더 넓은 고객층 겨냥. 가성비 포지셔닝.</div></div>
+      <div class="item"><div class="t">소프트웨어 (해자 강화)</div><div class="x">neuralSPOT SDK, heartKIT, <b>compressionKIT</b>(데이터 압축으로 메모리·전력 최대 20배 절감). 현재 Ambiq 칩 전용 → 칩 가치를 높이고 묶어두는 역할(lock-in).</div></div>
+    </div>
+
+    <h3 style="font-size:19px;margin:30px 0 14px">③ 제품 로드맵 — 성장의 시간표</h3>
+    <div style="overflow-x:auto">
+    <svg viewBox="0 0 940 170" style="min-width:780px;width:100%;font-family:var(--ff-body)">
+      <line x1="40" y1="90" x2="900" y2="90" stroke="#E3DBCB" stroke-width="2"/>
+      <!-- ticks -->
+      <g font-family="var(--ff-mono)" font-size="11" fill="#5B6573">
+        <line x1="120" y1="84" x2="120" y2="96" stroke="#C0832A" stroke-width="2"/><text x="120" y="118" text-anchor="middle">2026</text>
+        <line x1="370" y1="84" x2="370" y2="96" stroke="#C0832A" stroke-width="2"/><text x="370" y="118" text-anchor="middle">2027</text>
+        <line x1="620" y1="84" x2="620" y2="96" stroke="#C0832A" stroke-width="2"/><text x="620" y="118" text-anchor="middle">2028</text>
+        <line x1="860" y1="84" x2="860" y2="96" stroke="#C0832A" stroke-width="2"/><text x="860" y="118" text-anchor="middle">2029+</text>
+      </g>
+      <!-- milestones -->
+      <g font-size="10.5">
+        <circle cx="150" cy="90" r="6" fill="#E0A23B"/><text x="150" y="62" text-anchor="middle" fill="#C0832A" font-weight="600">신규 대형고객</text><text x="150" y="48" text-anchor="middle" fill="#5B6573">양산 진입</text>
+        <circle cx="300" cy="90" r="6" fill="#1F9E8F"/><text x="300" y="62" text-anchor="middle" fill="#157d70" font-weight="600">Atomiq110</text><text x="300" y="48" text-anchor="middle" fill="#5B6573">tape-out</text>
+        <circle cx="430" cy="90" r="6" fill="#1F9E8F"/><text x="430" y="138" text-anchor="middle" fill="#157d70" font-weight="600">Apollo340 샘플</text>
+        <circle cx="560" cy="90" r="6" fill="#1F9E8F"/><text x="560" y="62" text-anchor="middle" fill="#157d70" font-weight="600">Atomiq110·340</text><text x="560" y="48" text-anchor="middle" fill="#5B6573">고객 양산 시작</text>
+        <circle cx="700" cy="90" r="7" fill="#181C26"/><text x="700" y="138" text-anchor="middle" fill="#11141B" font-weight="600">흑자 전환 목표대</text>
+        <circle cx="860" cy="90" r="6" fill="#8B93A0"/><text x="860" y="62" text-anchor="middle" fill="#5B6573" font-weight="600">규모의</text><text x="860" y="48" text-anchor="middle" fill="#8B93A0">경제 본격화</text>
+      </g>
+    </svg>
+    </div>
+    <p class="note">로드맵의 핵심: <strong>지금 적자는 '미래 제품에 미리 쓰는 R&amp;D' 때문</strong>이며, 실제 이익은 Atomiq·Apollo340가 양산되는 2027~2028년 이후에 나오도록 설계돼 있음. 즉 투자 성패는 '이 시간표를 지킬 수 있는가'에 달려 있습니다.</p>
+  </div>
+</section>
+
+<!-- ============ 4. INDUSTRY ============ -->
+<section id="industry">
+  <div class="wrap">
+    <div class="eyebrow">05 · Industry</div>
+    <h2 class="sec-title">산업 분석 — 엣지 AI 반도체</h2>
+    <p class="sec-sub">연 20% 안팎으로 커지는 시장. AI가 '데이터센터'에서 '내 손목'으로 내려오는 큰 흐름의 수혜.</p>
+
+    <p class="lead">지난 몇 년 AI 붐의 주인공은 데이터센터용 거대 칩(엔비디아 등)이었습니다. 다음 무대는 <strong>'엣지(edge)' — 즉 우리가 쓰는 작은 기기들</strong>입니다. 기기가 직접 AI를 돌리면 빠르고(지연 없음), 사생활이 보호되며, 통신비가 줄기 때문입니다. 특히 <strong>LLM 기반 AI 비서</strong>가 퍼지면서, 실시간으로 기기에서 데이터를 처리하려는 수요가 늘고 있습니다. 단, 작은 기기는 전력이 생명이라 <strong>'저전력'이 절대 조건</strong> — Ambiq의 영역입니다.</p>
+
+    <!-- TAM chart -->
+    <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:28px;align-items:center;margin:26px 0" id="tam2">
+      <div>
+        <h3 style="font-size:18px;margin-bottom:12px">시장 규모 전망 (엣지 AI 칩, 협의)</h3>
+        <svg viewBox="0 0 420 230" style="width:100%;font-family:var(--ff-body)">
+          <line x1="44" y1="190" x2="404" y2="190" stroke="#E3DBCB"/>
+          <!-- 2025 3.67B, 2026 4.44B, 2031 11.54B ; scale 12=>150px ; y=190-val*12.5 -->
+          <rect x="70"  y="144" width="60" height="46" rx="4" fill="#8B93A0"/><text x="100" y="135" text-anchor="middle" font-size="11" font-family="var(--ff-mono)" fill="#5B6573">$3.7B</text><text x="100" y="206" text-anchor="middle" font-size="10" fill="#5B6573">2025</text>
+          <rect x="180" y="135" width="60" height="55" rx="4" fill="#E0A23B"/><text x="210" y="126" text-anchor="middle" font-size="11" font-family="var(--ff-mono)" fill="#C0832A">$4.4B</text><text x="210" y="206" text-anchor="middle" font-size="10" fill="#C0832A">2026</text>
+          <rect x="300" y="46"  width="60" height="144" rx="4" fill="#C0832A" opacity="0.6"/><text x="330" y="37" text-anchor="middle" font-size="11" font-family="var(--ff-mono)" fill="#C0832A">$11.5B</text><text x="330" y="206" text-anchor="middle" font-size="10" fill="#C0832A">2031E</text>
+          <path d="M100 144 L210 135 L330 46" fill="none" stroke="#157d70" stroke-width="2" stroke-dasharray="4 3"/>
+          <text x="220" y="80" font-size="12" font-weight="600" fill="#157d70" font-family="var(--ff-mono)">CAGR ≈ 21%</text>
+        </svg>
+        <p class="note">시장 정의에 따라 추정 편차 큼: '엣지 AI 칩' 협의 $3.7B→$11.5B(’31, ~21%), '엣지 AI 하드웨어' 광의 $26B→$59B(’30, ~18%). 경영진은 2028년 ~$22.5B 규모의 저전력 엣지 AI 반도체 시장을 겨냥한다고 제시.</p>
+      </div>
+      <div>
+        <h3 style="font-size:18px;margin-bottom:12px">Ambiq의 위치</h3>
+        <div style="background:var(--paper2);border:1px solid var(--line);border-radius:14px;padding:22px">
+          <div style="text-align:center">
+            <div style="font-family:var(--ff-disp);font-size:48px;color:var(--amber-d);line-height:1">~2%</div>
+            <p style="font-size:13px;color:var(--slate);margin:4px 0 0">2025년 매출($73M)이 협의 엣지 AI 칩 시장에서 차지하는 비중</p>
+          </div>
+          <hr style="border:none;border-top:1px solid var(--line);margin:18px 0">
+          <p style="font-size:13.5px;margin:0">→ <strong>점유율이 낮다 = 성장 여지가 크다</strong>는 강세 논리의 핵심. 그러나 같은 말은 <strong>'아직 시장의 주류가 아니다'</strong>이기도 합니다. 거대 기업(퀄컴·ARM·삼성 등)도 저전력 엣지를 노리고 있어 경쟁은 치열해질 전망.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- trends -->
+    <h3 style="font-size:18px;margin:24px 0 14px">산업의 큰 흐름 (방향성)</h3>
+    <div class="kv">
+      <div class="item"><div class="t">① 클라우드 → 엣지 이동</div><div class="x">지연·사생활·비용 때문에 추론(inference)을 기기에서 처리하려는 구조적 전환. Ambiq에 순풍.</div></div>
+      <div class="item"><div class="t">② AI 에이전트의 확산</div><div class="x">LLM 비서가 기기에 내려오며 '상시 지능' 수요 급증 → 저전력 NPU 필요성 ↑.</div></div>
+      <div class="item"><div class="t">③ 웨어러블의 고도화</div><div class="x">단순 만보계 → 심전도·혈당 등 의료 플랫폼으로 진화. 더 강한 연산을 더 적은 전력으로.</div></div>
+      <div class="item"><div class="t">④ 비(非)웨어러블 확장</div><div class="x">의료·산업·스마트홈·스마트그리드로 응용 확대 → 소비자 사이클 의존도 완화, 진입장벽 높은 시장 진출.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. SWOT ============ -->
+<section id="swot">
+  <div class="wrap">
+    <div class="eyebrow">06 · SWOT</div>
+    <h2 class="sec-title">SWOT 분석</h2>
+    <p class="sec-sub">강점·약점·기회·위협을 한 판에. 색이 진할수록 투자 판단에서 중요도가 큽니다.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px" class="swot-grid">
+      <div style="background:#E2F3EF;border:1px solid #B5DED6;border-radius:14px;padding:22px 24px">
+        <div style="font-family:var(--ff-disp);font-size:18px;color:#157d70;margin-bottom:12px">강점 · Strengths</div>
+        <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.85;color:#11141B">
+          <li><strong>SPOT 독자기술</strong> — 16년 축적, 따라하기 어려운 회로 밑단의 차별화</li>
+          <li><strong>팹리스 + 높은 총이익률(45%)</strong> — 자산이 가벼워 성장 시 이익 레버리지 큼</li>
+          <li><strong>탄탄한 재무</strong> — 순현금 $202M, 무차입, 약 6년치 실탄</li>
+          <li>2.8억 대 공급 실적 · 가민·구글 등 우량 레퍼런스</li>
+        </ul>
+      </div>
+      <div style="background:#FAE7E4;border:1px solid #E6BDB7;border-radius:14px;padding:22px 24px">
+        <div style="font-family:var(--ff-disp);font-size:18px;color:#a83f35;margin-bottom:12px">약점 · Weaknesses</div>
+        <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.85;color:#11141B">
+          <li><strong>지속 적자</strong> — 영업적자 연 $30M+, 흑자는 2027~2028년 목표</li>
+          <li><strong>극심한 고객 집중</strong> — 상위 3개사 71%, 장기계약 없음</li>
+          <li><strong>회계 내부통제 '중대한 약점'</strong> 공시 (상장 시)</li>
+          <li>제조 TSMC 단일 의존 · 작은 회사 규모(202명)</li>
+        </ul>
+      </div>
+      <div style="background:#FBF4E6;border:1px solid #ECD9B4;border-radius:14px;padding:22px 24px">
+        <div style="font-family:var(--ff-disp);font-size:18px;color:#C0832A;margin-bottom:12px">기회 · Opportunities</div>
+        <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.85;color:#11141B">
+          <li><strong>엣지 AI 시장 연 ~20% 성장</strong> · 점유율 ~2%로 여지 큼</li>
+          <li><strong>AI 에이전트 확산</strong> → '상시 지능' 칩 수요 구조적 증가</li>
+          <li>비웨어러블(의료·산업) 확장 → 사이클 의존 완화, 진입장벽 ↑</li>
+          <li>SPOT <strong>라이선싱</strong> 사업화 가능성(ARM식 모델 잠재력)</li>
+        </ul>
+      </div>
+      <div style="background:#181C26;border:1px solid #2a3140;border-radius:14px;padding:22px 24px">
+        <div style="font-family:var(--ff-disp);font-size:18px;color:#E0A23B;margin-bottom:12px">위협 · Threats</div>
+        <ul style="margin:0;padding-left:18px;font-size:14px;line-height:1.85;color:#E7E2D6">
+          <li><strong>거대 경쟁자</strong> — 퀄컴·ARM·삼성·라티스 등 저전력 엣지 진입</li>
+          <li><strong>금리 상승</strong> 시 고멀티플 성장주 밸류에이션 직격탄</li>
+          <li>핵심 고객 이탈/자체 칩 개발(인소싱) 위험</li>
+          <li>지정학(미·중) · 기술 표준 경쟁의 불확실성</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. MOAT ============ -->
+<section id="moat">
+  <div class="wrap">
+    <div class="eyebrow">07 · Economic Moat</div>
+    <h2 class="sec-title">경제적 해자 (Moat)</h2>
+    <p class="sec-sub">"이 회사는 경쟁자가 쉽게 못 따라오는 '성벽'을 가졌는가?" — CAP가 길어지려면 해자가 필요합니다.</p>
+
+    <div class="glossary">💡 <b>해자(垓子)란</b> — 성을 둘러싼 방어용 연못. 투자에서는 <b>경쟁사가 이익을 빼앗아가지 못하게 막는 지속적 경쟁우위</b>를 뜻합니다. 해자가 깊을수록 높은 수익(ROIC)을 <b>오래(=긴 CAP)</b> 유지할 수 있습니다.</div>
+
+    <!-- moat cards -->
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0" class="moat-grid">
+      <div style="background:var(--paper2);border:1px solid var(--line);border-radius:12px;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:var(--ff-disp);font-size:16px">기술·특허 해자</span><span class="chip good">강함</span></div>
+        <p style="font-size:13.5px;margin:0;color:#3a4150">트랜지스터 작동 전압을 바꾸는 SPOT은 16년 R&amp;D와 특허로 보호됨. 소프트웨어처럼 베끼기 어렵고, 저전력 설계는 '재능+시간' 집약적. <strong>해자의 핵심 원천.</strong></p>
+      </div>
+      <div style="background:var(--paper2);border:1px solid var(--line);border-radius:12px;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:var(--ff-disp);font-size:16px">전환비용 (Lock-in)</span><span class="chip warn">보통</span></div>
+        <p style="font-size:13.5px;margin:0;color:#3a4150">고객이 Ambiq 칩+SDK(neuralSPOT 등)로 제품을 설계하면 교체가 번거로움. compressionKIT는 Ambiq 전용 → 묶어두기 효과. 단, 장기계약이 없어 강제력은 제한적.</p>
+      </div>
+      <div style="background:var(--paper2);border:1px solid var(--line);border-radius:12px;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:var(--ff-disp);font-size:16px">규모의 경제</span><span class="chip bad">약함</span></div>
+        <p style="font-size:13.5px;margin:0;color:#3a4150">아직 적자·소형. 퀄컴·ARM 등 거인 대비 규모의 우위 없음. <strong>오히려 규모는 약점</strong> — 흑자에 필요한 매출($188M)에 미달.</p>
+      </div>
+      <div style="background:var(--paper2);border:1px solid var(--line);border-radius:12px;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-family:var(--ff-disp);font-size:16px">네트워크 효과</span><span class="chip bad">약함</span></div>
+        <p style="font-size:13.5px;margin:0;color:#3a4150">반도체 부품 특성상 직접적 네트워크 효과는 약함. 다만 개발자 생태계(SDK 채택)가 커지면 간접적 이점 가능.</p>
+      </div>
+    </div>
+
+    <!-- Porter 5 forces -->
+    <h3 style="font-size:19px;margin:30px 0 16px">포터의 5가지 경쟁요인</h3>
+    <div style="overflow-x:auto">
+    <svg viewBox="0 0 860 420" style="min-width:720px;width:100%;font-family:var(--ff-body)">
+      <!-- center -->
+      <rect x="310" y="170" width="240" height="80" rx="14" fill="#181C26"/>
+      <text x="430" y="202" text-anchor="middle" fill="#E0A23B" font-size="15" font-weight="600">산업 내 경쟁</text>
+      <text x="430" y="224" text-anchor="middle" fill="#D7D2C6" font-size="11.5">중간~높음 (거인 진입 중)</text>
+      <!-- top: new entrants -->
+      <rect x="310" y="20" width="240" height="68" rx="12" fill="#FAE7E4" stroke="#E6BDB7"/>
+      <text x="430" y="46" text-anchor="middle" fill="#a83f35" font-size="13" font-weight="600">신규 진입 위협 — 높음</text>
+      <text x="430" y="66" text-anchor="middle" fill="#5B6573" font-size="11">퀄컴·ARM·삼성 등 거대기업이 저전력 엣지 주목</text>
+      <line x1="430" y1="88" x2="430" y2="170" stroke="#C0832A" stroke-width="1.6" marker-end="url(#ar)"/>
+      <!-- bottom: substitutes -->
+      <rect x="310" y="332" width="240" height="68" rx="12" fill="#FBF4E6" stroke="#ECD9B4"/>
+      <text x="430" y="358" text-anchor="middle" fill="#C0832A" font-size="13" font-weight="600">대체재 위협 — 중간</text>
+      <text x="430" y="378" text-anchor="middle" fill="#5B6573" font-size="11">범용 MCU·클라우드 처리·고객 자체개발(인소싱)</text>
+      <line x1="430" y1="332" x2="430" y2="250" stroke="#C0832A" stroke-width="1.6" marker-end="url(#ar)"/>
+      <!-- left: suppliers -->
+      <rect x="20" y="170" width="250" height="80" rx="12" fill="#FAE7E4" stroke="#E6BDB7"/>
+      <text x="145" y="196" text-anchor="middle" fill="#a83f35" font-size="13" font-weight="600">공급자 교섭력 — 높음</text>
+      <text x="145" y="216" text-anchor="middle" fill="#5B6573" font-size="11">제조를 TSMC에 단일 의존</text>
+      <text x="145" y="233" text-anchor="middle" fill="#5B6573" font-size="11">→ 가격·생산능력 좌우당함</text>
+      <line x1="270" y1="210" x2="310" y2="210" stroke="#C0832A" stroke-width="1.6" marker-end="url(#ar)"/>
+      <!-- right: buyers -->
+      <rect x="590" y="170" width="250" height="80" rx="12" fill="#FAE7E4" stroke="#E6BDB7"/>
+      <text x="715" y="196" text-anchor="middle" fill="#a83f35" font-size="13" font-weight="600">구매자 교섭력 — 높음</text>
+      <text x="715" y="216" text-anchor="middle" fill="#5B6573" font-size="11">상위 3개사 71%, 장기계약 없음</text>
+      <text x="715" y="233" text-anchor="middle" fill="#5B6573" font-size="11">→ 대형 고객의 협상력 큼</text>
+      <line x1="590" y1="210" x2="550" y2="210" stroke="#C0832A" stroke-width="1.6" marker-end="url(#ar)"/>
+    </svg>
+    </div>
+    <div class="callout red"><strong>해자 종합 판단:</strong> 기술 해자는 진짜이고 깊지만, <em>공급자(TSMC)·구매자(소수 대형고객) 양쪽의 교섭력이 모두 높고</em> 거대 기업의 진입 위협이 큽니다. 즉 <strong>"좋은 기술 해자 + 취약한 협상 위치"</strong>의 조합 — 기술이 곧바로 '오래 지속되는 초과수익'을 보장하진 않습니다. 이는 뒤의 CAP 추정에서 보수적으로 봐야 할 근거입니다.</div>
+
+    <!-- differentiation vs cost -->
+    <h3 style="font-size:19px;margin:30px 0 12px">차별화 vs 원가우위 — Ambiq는 어느 쪽?</h3>
+    <p style="margin-bottom:14px">프레임워크는 기업의 경쟁우위 '유형'을 봅니다. 이익을 '높은 마진(차별화)'으로 버는지, '빠른 자산회전(원가우위/효율)'으로 버는지. Ambiq는 명백히 <strong>차별화형</strong>입니다.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="background:#E2F3EF;border:1px solid #B5DED6;border-radius:12px;padding:18px 20px">
+        <div style="font-family:var(--ff-disp);font-size:15px;color:#157d70;margin-bottom:6px">✓ 차별화형 (해당)</div>
+        <p style="font-size:13.5px;margin:0;color:#11141B">고유 기술로 '대체 불가의 가치(초저전력)'를 제공하고 높은 가격·마진을 받음. 총이익률 45%는 범용 부품(20~30%)보다 높음. <strong>마진=차별화의 증거.</strong></p>
+      </div>
+      <div style="background:var(--paper2);border:1px solid var(--line);border-radius:12px;padding:18px 20px">
+        <div style="font-family:var(--ff-disp);font-size:15px;color:#5B6573;margin-bottom:6px">✗ 원가우위형 (비해당)</div>
+        <p style="font-size:13.5px;margin:0;color:#3a4150">대량생산·저비용으로 싸게 많이 파는 모델이 아님. Ambiq는 '싸게'가 아니라 '전력을 적게'로 승부. 규모도 작아 원가우위와는 거리가 멂.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. LIFECYCLE ============ -->
+<section id="lifecycle">
+  <div class="wrap">
+    <div class="eyebrow">08 · Lifecycle</div>
+    <h2 class="sec-title">기업 생애주기 단계</h2>
+    <p class="sec-sub">현금흐름의 '부호(+/−)'만 봐도 회사가 어느 단계인지 알 수 있습니다. Ambiq는 명확히 '도입기'.</p>
+
+    <div class="glossary">💡 <b>읽는 법</b> — 영업현금흐름(OCF, 장사로 번 현금) · 투자현금흐름(ICF, 설비·투자) · 잉여현금흐름(FCF). Ambiq는 <b>OCF(−)·ICF(−)·FCF(+)</b>. 장사로는 아직 현금을 못 벌지만(OCF−), FCF가 (+)인 건 <b>상장·증자로 받은 외부자금</b> 덕분입니다. 전형적인 <b>도입기</b> 신호입니다.</div>
+
+    <div style="overflow-x:auto;margin:22px 0">
+    <svg viewBox="0 0 940 240" style="min-width:820px;width:100%;font-family:var(--ff-body)">
+      <!-- 5 stages -->
+      <g font-family="var(--ff-mono)" font-size="10.5">
+        <!-- stage boxes -->
+        <rect x="20"  y="60" width="170" height="120" rx="12" fill="#181C26" stroke="#E0A23B" stroke-width="2.5"/>
+        <rect x="206" y="60" width="170" height="120" rx="12" fill="#FBF8F1" stroke="#E3DBCB"/>
+        <rect x="392" y="60" width="170" height="120" rx="12" fill="#FBF8F1" stroke="#E3DBCB"/>
+        <rect x="578" y="60" width="170" height="120" rx="12" fill="#FBF8F1" stroke="#E3DBCB"/>
+        <rect x="764" y="60" width="156" height="120" rx="12" fill="#FBF8F1" stroke="#E3DBCB"/>
+      </g>
+      <!-- labels -->
+      <text x="105" y="50" text-anchor="middle" font-size="14" font-weight="700" font-family="var(--ff-disp)" fill="#C0832A">① 도입기</text>
+      <text x="291" y="50" text-anchor="middle" font-size="13" font-family="var(--ff-disp)" fill="#5B6573">② 성장기</text>
+      <text x="477" y="50" text-anchor="middle" font-size="13" font-family="var(--ff-disp)" fill="#5B6573">③ 성숙기</text>
+      <text x="663" y="50" text-anchor="middle" font-size="13" font-family="var(--ff-disp)" fill="#5B6573">④ 흔들림기</text>
+      <text x="842" y="50" text-anchor="middle" font-size="13" font-family="var(--ff-disp)" fill="#5B6573">⑤ 쇠퇴기</text>
+      <!-- cashflow signs per stage -->
+      <g font-family="var(--ff-mono)" font-size="12" text-anchor="middle">
+        <text x="105" y="92" fill="#E7E2D6">OCF <tspan fill="#C8554A" font-weight="700">−</tspan></text>
+        <text x="105" y="116" fill="#E7E2D6">ICF <tspan fill="#C8554A" font-weight="700">−</tspan></text>
+        <text x="105" y="140" fill="#E7E2D6">FCF <tspan fill="#1F9E8F" font-weight="700">+</tspan></text>
+        <text x="105" y="166" fill="#E0A23B" font-size="11" font-weight="600">← Ambiq 위치</text>
+
+        <text x="291" y="98" fill="#5B6573">OCF <tspan fill="#157d70" font-weight="700">+</tspan></text>
+        <text x="291" y="124" fill="#5B6573">ICF <tspan fill="#C8554A" font-weight="700">−</tspan></text>
+        <text x="291" y="150" fill="#5B6573">FCF <tspan fill="#C8554A" font-weight="700">±</tspan></text>
+
+        <text x="477" y="98" fill="#5B6573">OCF <tspan fill="#157d70" font-weight="700">+</tspan></text>
+        <text x="477" y="124" fill="#5B6573">ICF <tspan fill="#C8554A" font-weight="700">−</tspan></text>
+        <text x="477" y="150" fill="#5B6573">FCF <tspan fill="#157d70" font-weight="700">+</tspan></text>
+
+        <text x="663" y="98" fill="#5B6573">OCF <tspan fill="#157d70" font-weight="700">+</tspan></text>
+        <text x="663" y="124" fill="#5B6573">ICF <tspan fill="#157d70" font-weight="700">+</tspan></text>
+        <text x="663" y="150" fill="#5B6573">FCF <tspan fill="#157d70" font-weight="700">+</tspan></text>
+
+        <text x="842" y="110" fill="#5B6573">OCF <tspan fill="#C8554A" font-weight="700">±</tspan></text>
+        <text x="842" y="134" fill="#5B6573">현금 고갈/감소</text>
+      </g>
+      <!-- progress arrow -->
+      <line x1="20" y1="210" x2="920" y2="210" stroke="#E3DBCB" stroke-width="2" marker-end="url(#ar)"/>
+      <text x="20" y="230" font-size="10" fill="#8B93A0" font-family="var(--ff-mono)">시간 / 성숙도 →</text>
+    </svg>
+    </div>
+
+    <div class="callout"><strong>이것이 분석의 출발점:</strong> Ambiq는 도입기 기업입니다. 프레임워크는 <em>"도입기 기업은 표준 DCF가 매우 불확실하다"</em>고 명시합니다 — 미래 현금흐름의 거의 전부가 '아직 오지 않은 먼 미래'에 있기 때문입니다(본 모델에서도 가치의 93%가 잔존가치). 따라서 정확한 목표가를 맞히려는 시도보다, <strong>"현재 주가에 어떤 가정이 들어있는지"를 역으로 읽는 것</strong>이 훨씬 정직하고 유용합니다. (다음 섹션들의 핵심 접근법)</div>
+    <p style="font-size:13.5px;color:var(--slate)">신뢰도: Ambiq가 '도입기'라는 판단 — <strong>매우 높음 (~95%)</strong>. 현금흐름 부호가 명확하고, 경영진도 흑자 시점을 2027~2028년으로 제시하고 있어 해석의 여지가 거의 없습니다.</p>
+  </div>
+</section>
+
+<!-- ============ 8. PEERS ============ -->
+<section id="peers">
+  <div class="wrap">
+    <div class="eyebrow">09 · Peer Comparison</div>
+    <h2 class="sec-title">피어 그룹 비교</h2>
+    <p class="sec-sub">비슷한 저전력·엣지 반도체 기업들과 나란히 놓으면, Ambiq의 밸류에이션이 '성장 하나로' 정당화되고 있음이 보입니다.</p>
+
+    <div style="overflow-x:auto;margin-bottom:8px">
+    <table style="width:100%;min-width:760px;border-collapse:collapse;font-size:13.5px">
+      <thead>
+        <tr style="background:#181C26;color:#E7E2D6;font-family:var(--ff-mono);font-size:11px;letter-spacing:.04em">
+          <th style="padding:13px 12px;text-align:left">기업 (티커)</th>
+          <th style="padding:13px 10px;text-align:right">시총</th>
+          <th style="padding:13px 10px;text-align:right">매출(TTM)</th>
+          <th style="padding:13px 10px;text-align:right">매출성장</th>
+          <th style="padding:13px 10px;text-align:right">총이익률</th>
+          <th style="padding:13px 10px;text-align:right">EV/매출*</th>
+          <th style="padding:13px 10px;text-align:center">흑자?</th>
+        </tr>
+      </thead>
+      <tbody class="mono">
+        <tr style="background:#FBF4E6;border-bottom:1px solid #E3DBCB;font-weight:600">
+          <td style="padding:12px;font-family:var(--ff-body)"><strong>Ambiq (AMBQ)</strong><br><span style="font-size:11px;color:#C0832A;font-weight:400">초저전력 SoC · 본 분석대상</span></td>
+          <td style="padding:12px 10px;text-align:right">$1.6B</td>
+          <td style="padding:12px 10px;text-align:right">$82M</td>
+          <td style="padding:12px 10px;text-align:right;color:#157d70">+59%</td>
+          <td style="padding:12px 10px;text-align:right">44%</td>
+          <td style="padding:12px 10px;text-align:right;color:#C0832A;font-weight:700">11.4x</td>
+          <td style="padding:12px 10px;text-align:center;color:#a83f35">✗ ('27~'28)</td>
+        </tr>
+        <tr style="border-bottom:1px solid #EFE8D8">
+          <td style="padding:12px;font-family:var(--ff-body)">CEVA<br><span style="font-size:11px;color:#8B93A0">엣지 AI IP 라이선스 · 최근접 비교</span></td>
+          <td style="padding:12px 10px;text-align:right">$1.1B</td>
+          <td style="padding:12px 10px;text-align:right">$112M</td>
+          <td style="padding:12px 10px;text-align:right">+11%</td>
+          <td style="padding:12px 10px;text-align:right">87%</td>
+          <td style="padding:12px 10px;text-align:right">~8x</td>
+          <td style="padding:12px 10px;text-align:center;color:#C0832A">전환 중</td>
+        </tr>
+        <tr style="border-bottom:1px solid #EFE8D8">
+          <td style="padding:12px;font-family:var(--ff-body)">Synaptics (SYNA)<br><span style="font-size:11px;color:#8B93A0">IoT·엣지 인터페이스</span></td>
+          <td style="padding:12px 10px;text-align:right">$5.6B</td>
+          <td style="padding:12px 10px;text-align:right">$1.14B</td>
+          <td style="padding:12px 10px;text-align:right">+10%</td>
+          <td style="padding:12px 10px;text-align:right">54%</td>
+          <td style="padding:12px 10px;text-align:right">~5x</td>
+          <td style="padding:12px 10px;text-align:center;color:#157d70">✓</td>
+        </tr>
+        <tr style="border-bottom:1px solid #EFE8D8">
+          <td style="padding:12px;font-family:var(--ff-body)">Silicon Labs (SLAB)<br><span style="font-size:11px;color:#8B93A0">IoT 무선 SoC · TI 인수 진행</span></td>
+          <td style="padding:12px 10px;text-align:right">$7.0B</td>
+          <td style="padding:12px 10px;text-align:right">$0.74B</td>
+          <td style="padding:12px 10px;text-align:right">+20%</td>
+          <td style="padding:12px 10px;text-align:right">60%</td>
+          <td style="padding:12px 10px;text-align:right">~9x</td>
+          <td style="padding:12px 10px;text-align:center;color:#157d70">✓</td>
+        </tr>
+        <tr>
+          <td style="padding:12px;font-family:var(--ff-body)">Lattice (LSCC)<br><span style="font-size:11px;color:#8B93A0">저전력 FPGA 리더 · 동경(動憬) 비교</span></td>
+          <td style="padding:12px 10px;text-align:right">$21B</td>
+          <td style="padding:12px 10px;text-align:right">$0.57B</td>
+          <td style="padding:12px 10px;text-align:right;color:#157d70">+42%</td>
+          <td style="padding:12px 10px;text-align:right">69%</td>
+          <td style="padding:12px 10px;text-align:right;color:#a83f35;font-weight:700">~36x</td>
+          <td style="padding:12px 10px;text-align:center;color:#157d70">✓✓</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="note" style="margin-bottom:18px">*EV/매출은 AMBQ는 2026E, 그 외는 TTM/NTM 기준 근사치. 모든 수치 2026-06-05 전후. 출처: 각사 IR·SEC, stockanalysis·companiesmarketcap.</p>
+
+    <!-- scatter -->
+    <h3 style="font-size:18px;margin:6px 0 14px">밸류에이션(EV/매출) vs 매출성장률</h3>
+    <div style="overflow-x:auto">
+    <svg viewBox="0 0 900 420" style="min-width:720px;width:100%;font-family:var(--ff-body)">
+      <!-- axes -->
+      <line x1="70" y1="360" x2="860" y2="360" stroke="#E3DBCB" stroke-width="1.5"/>
+      <line x1="70" y1="40" x2="70" y2="360" stroke="#E3DBCB" stroke-width="1.5"/>
+      <text x="465" y="398" text-anchor="middle" font-size="12" fill="#5B6573">매출 성장률 (최근, %) →</text>
+      <text x="28" y="200" text-anchor="middle" font-size="12" fill="#5B6573" transform="rotate(-90 28 200)">EV / 매출 (배) →</text>
+      <!-- y gridlines: 0,10,20,30,40 ; y=360 - val*8 -->
+      <g font-family="var(--ff-mono)" font-size="9" fill="#8B93A0">
+        <line x1="70" y1="280" x2="860" y2="280" stroke="#F1EBDB" stroke-dasharray="3 4"/><text x="62" y="284" text-anchor="end">10x</text>
+        <line x1="70" y1="200" x2="860" y2="200" stroke="#F1EBDB" stroke-dasharray="3 4"/><text x="62" y="204" text-anchor="end">20x</text>
+        <line x1="70" y1="120" x2="860" y2="120" stroke="#F1EBDB" stroke-dasharray="3 4"/><text x="62" y="124" text-anchor="end">30x</text>
+        <line x1="70" y1="40"  x2="860" y2="40"  stroke="#F1EBDB" stroke-dasharray="3 4"/><text x="62" y="44"  text-anchor="end">40x</text>
+        <!-- x ticks: 10,20,30,40,50,60 ; x=70 + val*13 -->
+        <text x="200" y="375" text-anchor="middle">10%</text>
+        <text x="330" y="375" text-anchor="middle">20%</text>
+        <text x="460" y="375" text-anchor="middle">30%</text>
+        <text x="590" y="375" text-anchor="middle">40%</text>
+        <text x="720" y="375" text-anchor="middle">50%</text>
+        <text x="850" y="375" text-anchor="middle">60%</text>
+      </g>
+      <!-- points: x=70+growth*13 , y=360-evsales*8 -->
+      <!-- SYNA 10%,5x -->
+      <circle cx="200" cy="320" r="9" fill="#8B93A0"/><text x="200" y="343" text-anchor="middle" font-size="11" fill="#5B6573">Synaptics</text>
+      <!-- CEVA 11%,8x -->
+      <circle cx="213" cy="296" r="9" fill="#8B93A0"/><text x="213" y="288" text-anchor="middle" font-size="11" fill="#5B6573">CEVA</text>
+      <!-- SLAB 20%,9x -->
+      <circle cx="330" cy="288" r="9" fill="#8B93A0"/><text x="330" y="280" text-anchor="middle" font-size="11" fill="#5B6573">Silicon Labs</text>
+      <!-- Lattice 42%,36x -->
+      <circle cx="616" cy="72" r="11" fill="#C8554A"/><text x="616" y="60" text-anchor="middle" font-size="11" fill="#a83f35" font-weight="600">Lattice</text>
+      <text x="616" y="92" text-anchor="middle" font-size="9" fill="#a83f35">(흑자·프리미엄)</text>
+      <!-- AMBQ 59%,11.4x -->
+      <circle cx="837" cy="269" r="13" fill="#E0A23B" stroke="#11141B" stroke-width="2"/><text x="800" y="250" text-anchor="middle" font-size="12" fill="#C0832A" font-weight="700">Ambiq</text>
+      <text x="800" y="266" text-anchor="middle" font-size="9" fill="#C0832A">11.4x · +59%</text>
+    </svg>
+    </div>
+    <div class="callout"><strong>차트가 말하는 것:</strong> Ambiq(황금)는 <em>'가장 빠르게 성장하지만 아직 적자'</em>인 우상단에 있습니다. 비슷하게 적자이거나 저성장인 동종업체(CEVA·Synaptics·Silicon Labs)는 EV/매출 5~9배에서 거래되는데, Ambiq는 11배 이상. 이 프리미엄은 <strong>오직 '59% 성장'으로만 정당화</strong>됩니다. 한편 Lattice(빨강)는 36배의 초고배수를 받지만, 그건 <strong>이미 30%대 영업이익을 내는 검증된 프랜차이즈</strong>이기 때문입니다.</div>
+    <div class="callout teal"><strong>핵심 통찰 — "시장은 Ambiq를 '미래의 Lattice'로 가격 매기고 있다":</strong> 즉 지금의 높은 성장이 이어지고, <em>장차 Lattice처럼 높은 이익률까지 달성</em>한다는 두 가지를 모두 전제. 둘 중 하나라도 어긋나면 밸류에이션은 동종업계 5~9배 쪽으로 수렴할 위험이 있습니다.</div>
+  </div>
+</section>
+
+<!-- ============ 9. DCF MODEL ============ -->
+<section id="dcf">
+  <div class="wrap">
+    <div class="eyebrow">10 · Valuation Engine</div>
+    <h2 class="sec-title">DCF 모델 (기본 시나리오)</h2>
+    <p class="sec-sub">미래에 벌어들일 현금을 '현재 가치'로 환산해 회사의 가치를 추정합니다. 아래는 이미 상당히 낙관적인 '기본 가정'입니다.</p>
+
+    <div class="glossary">💡 <b>DCF 한 줄 요약</b> — "미래의 1달러는 오늘의 1달러보다 가치가 작다(위험·시간 때문)." 그래서 미래 현금흐름(FCF)을 <b>할인율(WACC)</b>로 깎아 더한 뒤, 순현금을 보태 주식 가치를 구합니다. Ambiq처럼 먼 미래에 이익이 몰린 기업은 결과가 가정에 매우 민감합니다.</div>
+
+    <!-- assumptions strip -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:22px 0">
+      <div style="background:var(--paper2);padding:16px 14px"><div class="k" style="font-family:var(--ff-mono);font-size:10px;letter-spacing:.14em;color:#5B6573;text-transform:uppercase;margin-bottom:6px">할인율 (WACC)</div><div style="font-family:var(--ff-disp);font-size:24px">12.1%</div></div>
+      <div style="background:var(--paper2);padding:16px 14px"><div class="k" style="font-family:var(--ff-mono);font-size:10px;letter-spacing:.14em;color:#5B6573;text-transform:uppercase;margin-bottom:6px">영구성장률</div><div style="font-family:var(--ff-disp);font-size:24px">2.5%</div></div>
+      <div style="background:var(--paper2);padding:16px 14px"><div class="k" style="font-family:var(--ff-mono);font-size:10px;letter-spacing:.14em;color:#5B6573;text-transform:uppercase;margin-bottom:6px">최종 영업이익률</div><div style="font-family:var(--ff-disp);font-size:24px">25%</div></div>
+      <div style="background:var(--paper2);padding:16px 14px"><div class="k" style="font-family:var(--ff-mono);font-size:10px;letter-spacing:.14em;color:#5B6573;text-transform:uppercase;margin-bottom:6px">페이드 비율(반도체)</div><div style="font-family:var(--ff-disp);font-size:24px">0.25</div></div>
+    </div>
+
+    <!-- WACC build-up -->
+    <h3 style="font-size:18px;margin:26px 0 12px">① 할인율(WACC)은 어떻게 나왔나</h3>
+    <div style="overflow-x:auto">
+    <svg viewBox="0 0 880 130" style="min-width:740px;width:100%;font-family:var(--ff-mono)">
+      <g font-size="12">
+        <rect x="10" y="40" width="170" height="56" rx="10" fill="#FBF8F1" stroke="#E3DBCB"/>
+        <text x="95" y="64" text-anchor="middle" font-size="11" fill="#5B6573" font-family="var(--ff-body)">무위험수익률</text>
+        <text x="95" y="84" text-anchor="middle" font-size="15" fill="#11141B" font-weight="600">4.48%</text>
+        <text x="95" y="112" text-anchor="middle" font-size="9.5" fill="#8B93A0" font-family="var(--ff-body)">美 10년 국채</text>
+        <text x="200" y="74" text-anchor="middle" font-size="20" fill="#C0832A">+</text>
+        <rect x="222" y="40" width="120" height="56" rx="10" fill="#FBF8F1" stroke="#E3DBCB"/>
+        <text x="282" y="64" text-anchor="middle" font-size="11" fill="#5B6573" font-family="var(--ff-body)">베타(β)</text>
+        <text x="282" y="84" text-anchor="middle" font-size="15" fill="#11141B" font-weight="600">1.70</text>
+        <text x="362" y="74" text-anchor="middle" font-size="18" fill="#C0832A">×</text>
+        <rect x="384" y="40" width="150" height="56" rx="10" fill="#FBF8F1" stroke="#E3DBCB"/>
+        <text x="459" y="64" text-anchor="middle" font-size="11" fill="#5B6573" font-family="var(--ff-body)">시장위험프리미엄</text>
+        <text x="459" y="84" text-anchor="middle" font-size="15" fill="#11141B" font-weight="600">4.5%</text>
+        <text x="556" y="74" text-anchor="middle" font-size="20" fill="#C0832A">=</text>
+        <rect x="580" y="32" width="290" height="72" rx="12" fill="#181C26"/>
+        <text x="725" y="60" text-anchor="middle" font-size="12" fill="#D7D2C6" font-family="var(--ff-body)">자본비용 ≈ WACC</text>
+        <text x="725" y="86" text-anchor="middle" font-size="22" fill="#E0A23B" font-weight="700">12.1%</text>
+      </g>
+    </svg>
+    </div>
+    <p class="note">부채가 사실상 없어(무차입) 자본비용 ≈ WACC. 베타는 상장 1년 미만이라 신뢰할 과거치가 없어, 소형·고변동·고객집중 반도체 특성을 반영해 1.7로 가정(민감도에서 11~13% 검토). 보수적으로 보면 13~14%도 정당화 가능.</p>
+
+    <!-- DCF table -->
+    <h3 style="font-size:18px;margin:30px 0 12px">② 10년 추정 (기본 시나리오)</h3>
+    <div style="overflow-x:auto">
+    <table style="width:100%;min-width:720px;border-collapse:collapse;font-size:12.5px" class="mono">
+      <thead>
+        <tr style="background:#181C26;color:#E7E2D6;font-size:11px">
+          <th style="padding:11px 8px;text-align:left;font-family:var(--ff-body)">연도</th>
+          <th style="padding:11px 8px;text-align:right">매출</th>
+          <th style="padding:11px 8px;text-align:right">성장%</th>
+          <th style="padding:11px 8px;text-align:right">영업익률%</th>
+          <th style="padding:11px 8px;text-align:right">세후영업익</th>
+          <th style="padding:11px 8px;text-align:right">투자</th>
+          <th style="padding:11px 8px;text-align:right">FCF</th>
+          <th style="padding:11px 8px;text-align:right">현가(PV)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #EFE8D8"><td style="padding:9px 8px;font-family:var(--ff-body)">2026E</td><td style="text-align:right;padding:9px 8px">122</td><td style="text-align:right;padding:9px 8px;color:#157d70">+68</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−24.5</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−30</td><td style="text-align:right;padding:9px 8px">13</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−43</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−41</td></tr>
+        <tr style="border-bottom:1px solid #EFE8D8"><td style="padding:9px 8px;font-family:var(--ff-body)">2027E</td><td style="text-align:right;padding:9px 8px">153</td><td style="text-align:right;padding:9px 8px">+25</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−12.0</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−18</td><td style="text-align:right;padding:9px 8px">15</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−34</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−28</td></tr>
+        <tr style="border-bottom:1px solid #EFE8D8"><td style="padding:9px 8px;font-family:var(--ff-body)">2028E</td><td style="text-align:right;padding:9px 8px">194</td><td style="text-align:right;padding:9px 8px">+27</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−2.0</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−4</td><td style="text-align:right;padding:9px 8px">17</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−21</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−16</td></tr>
+        <tr style="border-bottom:1px solid #EFE8D8;background:#FBF8F1"><td style="padding:9px 8px;font-family:var(--ff-body)">2029E</td><td style="text-align:right;padding:9px 8px">244</td><td style="text-align:right;padding:9px 8px">+26</td><td style="text-align:right;padding:9px 8px;color:#157d70">+5.0</td><td style="text-align:right;padding:9px 8px;color:#157d70">12</td><td style="text-align:right;padding:9px 8px">21</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−9</td><td style="text-align:right;padding:9px 8px;color:#a83f35">−6</td></tr>
+        <tr style="border-bottom:1px solid #EFE8D8"><td style="padding:9px 8px;font-family:var(--ff-body)">2030E</td><td style="text-align:right;padding:9px 8px">298</td><td style="text-align:right;padding:9px 8px">+22</td><td style="text-align:right;padding:9px 8px;color:#157d70">+10.0</td><td style="text-align:right;padding:9px 8px;color:#157d70">30</td><td style="text-align:right;padding:9px 8px">24</td><td style="text-align:right;padding:9px 8px;color:#157d70">6</td><td style="text-align:right;padding:9px 8px;color:#157d70">4</td></tr>
+        <tr style="border-bottom:1px solid #EFE8D8"><td style="padding:9px 8px;font-family:var(--ff-body)">2031E</td><td style="text-align:right;padding:9px 8px">357</td><td style="text-align:right;padding:9px 8px">+20</td><td style="text-align:right;padding:9px 8px;color:#157d70">+14.0</td><td style="text-align:right;padding:9px 8px;color:#157d70">48</td><td style="text-align:right;padding:9px 8px">27</td><td style="text-align:right;padding:9px 8px;color:#157d70">21</td><td style="text-align:right;padding:9px 8px;color:#157d70">11</td></tr>
+        <tr style="border-bottom:1px solid #EFE8D8"><td style="padding:9px 8px;font-family:var(--ff-body)">2032E</td><td style="text-align:right;padding:9px 8px">422</td><td style="text-align:right;padding:9px 8px">+18</td><td style="text-align:right;padding:9px 8px;color:#157d70">+18.0</td><td style="text-align:right;padding:9px 8px;color:#157d70">68</td><td style="text-align:right;padding:9px 8px">30</td><td style="text-align:right;padding:9px 8px;color:#157d70">39</td><td style="text-align:right;padding:9px 8px;color:#157d70">18</td></tr>
+        <tr style="border-bottom:1px solid #EFE8D8"><td style="padding:9px 8px;font-family:var(--ff-body)">2033E</td><td style="text-align:right;padding:9px 8px">485</td><td style="text-align:right;padding:9px 8px">+15</td><td style="text-align:right;padding:9px 8px;color:#157d70">+21.0</td><td style="text-align:right;padding:9px 8px;color:#157d70">90</td><td style="text-align:right;padding:9px 8px">32</td><td style="text-align:right;padding:9px 8px;color:#157d70">58</td><td style="text-align:right;padding:9px 8px;color:#157d70">25</td></tr>
+        <tr style="border-bottom:1px solid #EFE8D8"><td style="padding:9px 8px;font-family:var(--ff-body)">2034E</td><td style="text-align:right;padding:9px 8px">548</td><td style="text-align:right;padding:9px 8px">+13</td><td style="text-align:right;padding:9px 8px;color:#157d70">+23.0</td><td style="text-align:right;padding:9px 8px;color:#157d70">108</td><td style="text-align:right;padding:9px 8px">33</td><td style="text-align:right;padding:9px 8px;color:#157d70">75</td><td style="text-align:right;padding:9px 8px;color:#157d70">29</td></tr>
+        <tr style="border-bottom:2px solid #181C26"><td style="padding:9px 8px;font-family:var(--ff-body)">2035E</td><td style="text-align:right;padding:9px 8px">608</td><td style="text-align:right;padding:9px 8px">+11</td><td style="text-align:right;padding:9px 8px;color:#157d70">+25.0</td><td style="text-align:right;padding:9px 8px;color:#157d70">129</td><td style="text-align:right;padding:9px 8px">36</td><td style="text-align:right;padding:9px 8px;color:#157d70">93</td><td style="text-align:right;padding:9px 8px;color:#157d70">31</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="note" style="margin:8px 0 16px">단위: 백만 달러. NOL(이월결손금 $367M)로 초기 세금은 0 가정. 투자=설비+운전자본+무형자산(팹리스라 소액).</p>
+
+    <!-- value bridge -->
+    <h3 style="font-size:18px;margin:24px 0 12px">③ 가치 합산</h3>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;text-align:center" class="bridge">
+      <div style="background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:16px 8px"><div style="font-size:11px;color:#5B6573;margin-bottom:6px">10년 FCF 현가</div><div style="font-family:var(--ff-disp);font-size:20px">$27M</div></div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:20px;color:#C0832A">+</div>
+      <div style="background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:16px 8px"><div style="font-size:11px;color:#5B6573;margin-bottom:6px">잔존가치 현가</div><div style="font-family:var(--ff-disp);font-size:20px">$333M</div><div style="font-size:10px;color:#a83f35">가치의 93%</div></div>
+      <div style="display:flex;align-items:center;justify-content:center;font-size:20px;color:#C0832A">+</div>
+      <div style="background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:16px 8px"><div style="font-size:11px;color:#5B6573;margin-bottom:6px">순현금</div><div style="font-family:var(--ff-disp);font-size:20px">$202M</div></div>
+    </div>
+    <div style="background:#181C26;border-radius:12px;padding:20px 24px;margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <div><div style="font-family:var(--ff-mono);font-size:11px;color:#8B93A0;letter-spacing:.14em;text-transform:uppercase">기본 시나리오 주당 내재가치</div><div style="font-family:var(--ff-disp);font-size:34px;color:#E0A23B">$26.28</div></div>
+      <div style="text-align:right"><div style="font-family:var(--ff-mono);font-size:11px;color:#8B93A0;letter-spacing:.14em;text-transform:uppercase">현재가 대비</div><div style="font-family:var(--ff-disp);font-size:34px;color:#C8554A">−65%</div><div style="font-size:11px;color:#8B93A0">현재가 $74.49</div></div>
+    </div>
+    <div class="callout red"><strong>중요 — 잔존가치가 93%:</strong> 가치의 거의 전부가 '11년차 이후의 먼 미래'에서 옵니다. 이는 도입기 기업의 숙명이며, 동시에 <em>결과가 가정에 극도로 민감하다</em>는 경고이기도 합니다. 그래서 다음 두 섹션(역산·민감도)이 이 분석의 진짜 핵심입니다. 참고로 이 기본값 $26은 공모가($24)·유상증자가($31)·가장 보수적인 애널리스트 목표가($35)와 같은 영역에 있습니다.</div>
+  </div>
+</section>
+
+<!-- ============ 10. IMPLIED CAP (centerpiece) ============ -->
+<section id="impliedcap" style="background:var(--ink);color:var(--paper);border:none">
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--amber)">11 · The Core Question</div>
+    <h2 class="sec-title" style="color:#fff">시장 내재 CAP 역산</h2>
+    <p class="sec-sub" style="color:#B7B2A6">정확한 가치를 맞히는 대신, 질문을 뒤집습니다 — <strong style="color:#fff">"지금 $74.49라는 가격이 정당화되려면, 시장은 무엇을 믿어야 하는가?"</strong></p>
+
+    <div style="background:rgba(224,162,59,.08);border:1px solid rgba(224,162,59,.3);border-radius:12px;padding:18px 22px;margin-bottom:28px;font-size:14.5px;color:#E7E2D6">
+      💡 <strong style="color:var(--amber)">CAP(경쟁우위기간)란</strong> — 기업이 자본비용을 초과하는 수익(초과수익)을 <strong>지속하는 기간</strong>. CAP가 길수록 가치가 큽니다. 주가를 거꾸로 풀면, '시장이 가정하는 CAP'를 읽어낼 수 있습니다. 이를 프레임워크의 합리 범위와 비교하는 것이 핵심입니다.
+    </div>
+
+    <h3 style="font-size:20px;color:#fff;margin-bottom:6px">$74.49를 정당화하는 세 가지 길 (어느 것도 쉽지 않다)</h3>
+    <p style="color:#B7B2A6;font-size:14px;margin-bottom:22px">기본 시나리오의 경제성을 고정한 채, 현재가를 만들려면 다음 중 <em style="color:var(--amber)">하나</em>가 필요합니다.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px" class="reverse-grid">
+      <div style="background:#1d222e;border:1px solid #2c3342;border-radius:14px;padding:22px">
+        <div style="font-family:var(--ff-mono);font-size:11px;color:var(--amber);letter-spacing:.1em;margin-bottom:10px">방법 A</div>
+        <div style="font-family:var(--ff-disp);font-size:17px;color:#fff;margin-bottom:6px">최종 영업이익률<br><span style="font-size:38px;color:var(--amber)">~80%</span></div>
+        <p style="font-size:13px;color:#B7B2A6;margin:8px 0 0">기본 성장(10년 →$608M)을 유지하면서 가격을 맞추려면 영구 영업이익률이 80% 필요. <strong style="color:#E6BDB7">현실성 거의 없음</strong> — 세계 어떤 반도체 기업도 도달 못함(IP 전업 ARM도 ~40%).</p>
+      </div>
+      <div style="background:#1d222e;border:1px solid #2c3342;border-radius:14px;padding:22px">
+        <div style="font-family:var(--ff-mono);font-size:11px;color:var(--amber);letter-spacing:.1em;margin-bottom:10px">방법 B</div>
+        <div style="font-family:var(--ff-disp);font-size:17px;color:#fff;margin-bottom:6px">고성장 지속 기간<br><span style="font-size:38px;color:var(--amber)">~23년</span></div>
+        <p style="font-size:13px;color:#B7B2A6;margin:8px 0 0">정상 이익률(25%)을 쓰면, <strong>20%대 성장을 약 23년</strong> 이어가 매출이 <strong style="color:#fff">~$6.5B(현재의 90배)</strong>에 도달해야 함. 엣지 AI 시장 전체 규모에 육박하는 수준.</p>
+      </div>
+      <div style="background:#1d222e;border:1px solid #2c3342;border-radius:14px;padding:22px">
+        <div style="font-family:var(--ff-mono);font-size:11px;color:var(--amber);letter-spacing:.1em;margin-bottom:10px">방법 C</div>
+        <div style="font-family:var(--ff-disp);font-size:17px;color:#fff;margin-bottom:6px">내재 할인율<br><span style="font-size:38px;color:var(--amber)">~6.5%</span></div>
+        <p style="font-size:13px;color:#B7B2A6;margin:8px 0 0">기본 경제성에서 가격을 맞추는 할인율은 6.5%. 이는 <strong style="color:#E6BDB7">초우량 안정기업에나 쓰는 낮은 위험률</strong> — 적자·고객집중·소형 반도체에는 부적합(적정 ~12%).</p>
+      </div>
+    </div>
+
+    <!-- implied CAP ruler -->
+    <h3 style="font-size:20px;color:#fff;margin:38px 0 8px">내재 CAP는 프레임워크 합리 범위를 초과</h3>
+    <p style="color:#B7B2A6;font-size:14px;margin-bottom:24px">위 세 방법이 일관되게 가리키는 결론: 현재가는 <strong style="color:#fff">약 20년 이상의 가치창출 기간(CAP)</strong>을 반영. 프레임워크 해석표상 '과도한 낙관' 구간입니다.</p>
+
+    <div style="overflow-x:auto">
+    <svg viewBox="0 0 900 200" style="min-width:760px;width:100%;font-family:var(--ff-body)">
+      <!-- gradient bar -->
+      <defs><linearGradient id="capg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#1F9E8F"/><stop offset="0.45" stop-color="#E0A23B"/><stop offset="0.75" stop-color="#C8554A"/><stop offset="1" stop-color="#8a2f27"/>
+      </linearGradient></defs>
+      <rect x="40" y="80" width="820" height="22" rx="11" fill="url(#capg)"/>
+      <!-- scale ticks: 0,5,10,15,20,25 over width 820 -> 32.8 px/yr -->
+      <g font-family="var(--ff-mono)" font-size="11" fill="#8B93A0" text-anchor="middle">
+        <text x="40" y="128">0년</text><text x="204" y="128">5</text><text x="368" y="128">10</text><text x="532" y="128">15</text><text x="696" y="128">20</text><text x="860" y="128">25+</text>
+      </g>
+      <!-- zone labels above -->
+      <g font-size="10.5" text-anchor="middle">
+        <text x="120" y="66" fill="#1F9E8F">매우 비관 (저평가 후보)</text>
+        <text x="368" y="66" fill="#E0A23B">합리적·중립 (10~15년)</text>
+        <text x="700" y="66" fill="#C8554A">과도한 낙관 (회피 고려)</text>
+      </g>
+      <!-- zone divider lines -->
+      <line x1="204" y1="74" x2="204" y2="108" stroke="#11141B" stroke-width="1" opacity="0.4"/>
+      <line x1="532" y1="74" x2="532" y2="108" stroke="#11141B" stroke-width="1" opacity="0.4"/>
+      <!-- marker for AMBQ at ~20-23yr -->
+      <g>
+        <polygon points="710,108 700,128 720,128" fill="#fff"/>
+        <circle cx="710" cy="80" r="0"/>
+        <rect x="640" y="145" width="150" height="44" rx="9" fill="#E0A23B"/>
+        <text x="715" y="164" text-anchor="middle" fill="#11141B" font-size="12" font-weight="700" font-family="var(--ff-mono)">AMBQ ≈ 20~23년</text>
+        <text x="715" y="180" text-anchor="middle" fill="#3a2a08" font-size="10">현재가가 내포한 CAP</text>
+      </g>
+    </svg>
+    </div>
+
+    <div style="background:rgba(200,85,74,.12);border:1px solid rgba(200,85,74,.4);border-radius:12px;padding:20px 24px;margin-top:26px;font-size:15px;color:#F0E6E3">
+      <strong style="color:#fff">해석:</strong> 현재 주가는 Ambiq가 <em style="color:var(--amber)">20년 넘게</em> 높은 성장과 초과수익을 지속한다는, 거의 '완벽한 시나리오'를 이미 반영합니다. 프레임워크상 이는 <strong style="color:#fff">"안전마진(margin of safety)이 거의 없거나 음(−)인 상태"</strong>를 뜻합니다. 좋은 회사라는 것과, 좋은 가격이라는 것은 별개입니다.
+    </div>
+    <p style="font-size:13px;color:#8B93A0;margin-top:16px">신뢰도: '현재가가 기본 DCF를 크게 상회하는 낙관적 기대를 담고 있다' — <strong style="color:#B7B2A6">높음 (~85%)</strong>. 세 가지 독립적 역산법(80% 이익률 / 23년 / 6.5% 할인율)이 모두 같은 방향을 가리켜 결론이 견고합니다.</p>
+  </div>
+</section>
+
+<!-- ============ 11. SCENARIOS ============ -->
+<section id="scenario">
+  <div class="wrap">
+    <div class="eyebrow">12 · Scenarios</div>
+    <h2 class="sec-title">시나리오 분석</h2>
+    <p class="sec-sub">미래는 하나가 아닙니다. 세 갈래로 나눠 보면, 현재가가 '강세' 끝단에 매달려 있음이 드러납니다.</p>
+
+    <div style="overflow-x:auto;margin-bottom:10px">
+    <svg viewBox="0 0 900 340" style="min-width:740px;width:100%;font-family:var(--ff-body)">
+      <line x1="60" y1="290" x2="860" y2="290" stroke="#E3DBCB" stroke-width="1.5"/>
+      <!-- y scale 0..90 -> 250px from y290 ; px/$ = 2.78 -->
+      <g font-family="var(--ff-mono)" font-size="9" fill="#8B93A0">
+        <line x1="60" y1="290" x2="860" y2="290" stroke="#E3DBCB"/>
+        <line x1="60" y1="234" x2="860" y2="234" stroke="#F1EBDB" stroke-dasharray="3 4"/><text x="52" y="238" text-anchor="end">$20</text>
+        <line x1="60" y1="151" x2="860" y2="151" stroke="#F1EBDB" stroke-dasharray="3 4"/><text x="52" y="155" text-anchor="end">$50</text>
+        <line x1="60" y1="68"  x2="860" y2="68"  stroke="#F1EBDB" stroke-dasharray="3 4"/><text x="52" y="72"  text-anchor="end">$80</text>
+      </g>
+      <!-- price reference line at 74.49 -> y=290-74.49*2.78=290-207=83 -->
+      <line x1="60" y1="83" x2="860" y2="83" stroke="#11141B" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text x="855" y="76" text-anchor="end" font-size="11" fill="#11141B" font-weight="600" font-family="var(--ff-mono)">현재가 $74.49</text>
+      <!-- bars: bear 5 ->y276 ; base 26 ->y217.7 ; bull 83 ->y59.3 -->
+      <g>
+        <rect x="130" y="276" width="150" height="14" rx="4" fill="#C8554A"/>
+        <text x="205" y="265" text-anchor="middle" font-size="13" font-weight="700" fill="#a83f35" font-family="var(--ff-disp)">$5</text>
+        <text x="205" y="312" text-anchor="middle" font-size="13" fill="#5B6573" font-family="var(--ff-disp)">약세 (Bear)</text>
+        <rect x="375" y="217.7" width="150" height="72.3" rx="4" fill="#E0A23B"/>
+        <text x="450" y="206" text-anchor="middle" font-size="15" font-weight="700" fill="#C0832A" font-family="var(--ff-disp)">$26</text>
+        <text x="450" y="312" text-anchor="middle" font-size="13" fill="#5B6573" font-family="var(--ff-disp)">기본 (Base)</text>
+        <rect x="620" y="59.3" width="150" height="230.7" rx="4" fill="#1F9E8F"/>
+        <text x="695" y="49" text-anchor="middle" font-size="15" font-weight="700" fill="#157d70" font-family="var(--ff-disp)">$83</text>
+        <text x="695" y="312" text-anchor="middle" font-size="13" fill="#5B6573" font-family="var(--ff-disp)">강세 (Bull)</text>
+      </g>
+    </svg>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--amber-d);margin-bottom:24px"><strong>현재가($74.49)는 '강세' 시나리오 바로 아래에 위치 — 즉 시장은 사실상 낙관 시나리오를 가격에 반영 중.</strong></p>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px" class="scen-grid">
+      <div style="background:#FAE7E4;border:1px solid #E6BDB7;border-radius:14px;padding:20px">
+        <div style="font-family:var(--ff-disp);font-size:17px;color:#a83f35;margin-bottom:4px">약세 · $5</div>
+        <div style="font-family:var(--ff-mono);font-size:11px;color:#a83f35;margin-bottom:12px">WACC 13% · 최종이익률 12%</div>
+        <p style="font-size:13px;margin:0;color:#11141B">고객 이탈·경쟁 심화로 성장이 빠르게 둔화. 흑자 전환 지연, 이익률도 낮게 정착. 엣지 AI에서 '주류'가 되지 못하는 경우.</p>
+      </div>
+      <div style="background:#FBF4E6;border:1px solid #ECD9B4;border-radius:14px;padding:20px">
+        <div style="font-family:var(--ff-disp);font-size:17px;color:#C0832A;margin-bottom:4px">기본 · $26</div>
+        <div style="font-family:var(--ff-mono);font-size:11px;color:#C0832A;margin-bottom:12px">WACC 12.1% · 최종이익률 25%</div>
+        <p style="font-size:13px;margin:0;color:#11141B">10년간 매출 8배(→$608M), 이익률 25%로 안착. <strong>이미 상당히 성공적인 시나리오</strong>임에도 현재가의 약 1/3 수준.</p>
+      </div>
+      <div style="background:#E2F3EF;border:1px solid #B5DED6;border-radius:14px;padding:20px">
+        <div style="font-family:var(--ff-disp);font-size:17px;color:#157d70;margin-bottom:4px">강세 · $83</div>
+        <div style="font-family:var(--ff-mono);font-size:11px;color:#157d70;margin-bottom:12px">WACC 10% · 최종이익률 34%</div>
+        <p style="font-size:13px;margin:0;color:#11141B">엣지 AI 승자 등극 + SPOT 라이선싱 성공. 10년 매출 12.6배(→$916M), Lattice급 34% 이익률. 거의 완벽한 실행.</p>
+      </div>
+    </div>
+    <div class="callout">확률은 정해진 게 아니지만(방향성 참고), 본 분석의 가중 견해: <strong>기본 시나리오가 가장 그럴듯</strong>하며, 강세는 가능하나 '여러 일이 동시에 잘 풀려야' 성립합니다. 현재가는 그 강세를 기본값처럼 가정하고 있어, 잘 풀려도 추가 상승 여력은 제한적이고, 어긋나면 하방이 큰 <strong>비대칭(downside-skewed) 구조</strong>로 보입니다.</div>
+  </div>
+</section>
+
+<!-- ============ 12. SENSITIVITY ============ -->
+<section id="sensitivity">
+  <div class="wrap">
+    <div class="eyebrow">13 · Sensitivity</div>
+    <h2 class="sec-title">민감도 분석</h2>
+    <p class="sec-sub">가정 두 개(할인율 × 최종이익률)를 동시에 흔들어 봅니다. <strong>기본 성장</strong>에서는 어떤 조합도 현재가에 못 미칩니다.</p>
+
+    <div style="overflow-x:auto">
+    <table style="width:100%;min-width:640px;border-collapse:collapse;font-size:13px;text-align:center" class="mono">
+      <thead>
+        <tr>
+          <th style="padding:10px;background:#181C26;color:#E7E2D6;font-family:var(--ff-body);font-size:12px" colspan="2" rowspan="2"></th>
+          <th style="padding:10px;background:#181C26;color:#E7E2D6;font-family:var(--ff-body);font-size:12px" colspan="5">최종 영업이익률 →</th>
+        </tr>
+        <tr style="background:#222837;color:#B7B2A6;font-size:11px">
+          <th style="padding:8px">16%</th><th style="padding:8px">20%</th><th style="padding:8px">25%</th><th style="padding:8px">30%</th><th style="padding:8px">34%</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding:8px;background:#222837;color:#B7B2A6;font-size:11px" rowspan="5">할인율<br>(WACC)<br>↓</td><td style="padding:8px;background:#FBF8F1;font-weight:600">10.0%</td><td style="padding:9px;background:#fae7e4">$23</td><td style="padding:9px;background:#fbeede">$29</td><td style="padding:9px;background:#fbeede">$35</td><td style="padding:9px;background:#fdf4e3">$42</td><td style="padding:9px;background:#f4ebd8;font-weight:600">$48</td></tr>
+        <tr><td style="padding:8px;background:#FBF8F1;font-weight:600">11.0%</td><td style="padding:9px;background:#fae7e4">$21</td><td style="padding:9px;background:#fae7e4">$25</td><td style="padding:9px;background:#fbeede">$31</td><td style="padding:9px;background:#fbeede">$36</td><td style="padding:9px;background:#fdf4e3">$40</td></tr>
+        <tr><td style="padding:8px;background:#FBF4E6;font-weight:700">12.1%★</td><td style="padding:9px;background:#fae7e4">$19</td><td style="padding:9px;background:#fae7e4">$22</td><td style="padding:9px;background:#fbeede;outline:2px solid #C0832A;font-weight:700">$26</td><td style="padding:9px;background:#fbeede">$31</td><td style="padding:9px;background:#fbeede">$34</td></tr>
+        <tr><td style="padding:8px;background:#FBF8F1;font-weight:600">13.0%</td><td style="padding:9px;background:#f7ddd9">$17</td><td style="padding:9px;background:#fae7e4">$20</td><td style="padding:9px;background:#fae7e4">$24</td><td style="padding:9px;background:#fae7e4">$27</td><td style="padding:9px;background:#fbeede">$30</td></tr>
+        <tr><td style="padding:8px;background:#FBF8F1;font-weight:600">14.0%</td><td style="padding:9px;background:#f7ddd9">$16</td><td style="padding:9px;background:#f7ddd9">$18</td><td style="padding:9px;background:#fae7e4">$21</td><td style="padding:9px;background:#fae7e4">$24</td><td style="padding:9px;background:#fae7e4">$27</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="note" style="margin-top:10px">★ = 기본 가정. 단위: 주당 달러. 모든 값이 현재가 $74.49보다 한참 아래.</p>
+
+    <div class="callout red"><strong>결정적 발견:</strong> 가장 낙관적인 모서리(할인율 10% + 이익률 34%)에서도 주당 가치는 <strong>$48</strong> — 여전히 현재가($74.49)에 못 미칩니다. 즉 <em>'기본 성장'으로는 아무리 이익률·할인율을 유리하게 잡아도 현재가가 안 나옵니다.</em> 현재가가 성립하려면, 이 표의 이익률·할인율 위에 <strong>'강세 시나리오의 더 빠른 성장(매출 →$916M)'까지</strong> 얹어야 합니다. 이것이 현재가에 안전마진이 없다고 보는 핵심 근거입니다.</div>
+
+    <!-- fade scenarios -->
+    <h3 style="font-size:18px;margin:28px 0 14px">페이드(초과수익 소멸 속도) 가정의 영향</h3>
+    <p style="margin-bottom:16px">'페이드'는 기업의 초과수익이 시간이 지나며 평균으로 되돌아가는 속도입니다. 반도체 업종 평균값(0.25)을 기준으로, 더 느리면(해자 강함) 가치가 커지고, 빠르면 작아집니다.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px" class="fade-grid">
+      <div style="background:#E2F3EF;border:1px solid #B5DED6;border-radius:12px;padding:18px;text-align:center">
+        <div style="font-family:var(--ff-mono);font-size:11px;color:#157d70">낙관 · 페이드 낮음</div>
+        <div style="font-family:var(--ff-disp);font-size:20px;color:#157d70;margin:4px 0">강한 해자 가정</div>
+        <p style="font-size:12.5px;color:#11141B;margin:0">초과수익이 오래 지속 → CAP·가치 ↑. 그래도 기본 성장으론 현재가 도달엔 부족.</p>
+      </div>
+      <div style="background:#FBF4E6;border:1px solid #ECD9B4;border-radius:12px;padding:18px;text-align:center">
+        <div style="font-family:var(--ff-mono);font-size:11px;color:#C0832A">중립 · 0.25 (반도체)</div>
+        <div style="font-family:var(--ff-disp);font-size:20px;color:#C0832A;margin:4px 0">본 분석 기준</div>
+        <p style="font-size:12.5px;color:#11141B;margin:0">업종 평균. 기본 시나리오 $26의 토대.</p>
+      </div>
+      <div style="background:#FAE7E4;border:1px solid #E6BDB7;border-radius:12px;padding:18px;text-align:center">
+        <div style="font-family:var(--ff-mono);font-size:11px;color:#a83f35">비관 · 페이드 높음</div>
+        <div style="font-family:var(--ff-disp);font-size:20px;color:#a83f35;margin:4px 0">빠른 경쟁 잠식</div>
+        <p style="font-size:12.5px;color:#11141B;margin:0">거인들이 진입해 초과수익을 빠르게 깎는 경우 → 가치 추가 하락.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13. RISK ============ -->
+<section id="risk">
+  <div class="wrap">
+    <div class="eyebrow">14 · Risks & Monitoring</div>
+    <h2 class="sec-title">리스크 & 점검 체크리스트</h2>
+    <p class="sec-sub">현재가가 낙관을 반영하는 만큼, '낙관을 깨뜨릴 수 있는 것들'을 알아두는 게 중요합니다.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:30px" class="risk-grid">
+      <div style="background:var(--paper2);border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:16px 18px"><strong style="color:#a83f35">고객 집중 (최대 리스크)</strong><p style="font-size:13.5px;margin:6px 0 0;color:#3a4150">상위 3개사 71%, 장기계약 없음. 한 고객만 이탈해도 매출 급변동. 과거 화웨이(41%) 사례가 전례.</p></div>
+      <div style="background:var(--paper2);border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:16px 18px"><strong style="color:#a83f35">밸류에이션 (현재가 자체)</strong><p style="font-size:13.5px;margin:6px 0 0;color:#3a4150">기본 DCF의 ~3배. 성장 둔화·금리 상승 시 멀티플 수축으로 주가 변동성 큼.</p></div>
+      <div style="background:var(--paper2);border-left:4px solid var(--amber);border-radius:0 10px 10px 0;padding:16px 18px"><strong style="color:#C0832A">금리·거시</strong><p style="font-size:13.5px;margin:6px 0 0;color:#3a4150">美 10년 국채 4.48%, 에너지·지정학 발 인플레로 연내 추가 인상 가능성 거론. 고멀티플 성장주에 직접 역풍.</p></div>
+      <div style="background:var(--paper2);border-left:4px solid var(--amber);border-radius:0 10px 10px 0;padding:16px 18px"><strong style="color:#C0832A">제조 의존 (TSMC)</strong><p style="font-size:13.5px;margin:6px 0 0;color:#3a4150">생산 100% TSMC. 공급 차질·지정학(대만) 리스크에 노출. 가격 협상력도 제한적.</p></div>
+      <div style="background:var(--paper2);border-left:4px solid var(--amber);border-radius:0 10px 10px 0;padding:16px 18px"><strong style="color:#C0832A">회계 내부통제 '중대한 약점'</strong><p style="font-size:13.5px;margin:6px 0 0;color:#3a4150">상장 시 공시된 거버넌스 약점. 재무 신뢰성·재작성 위험. 개선 진행 여부 확인 필요.</p></div>
+      <div style="background:var(--paper2);border-left:4px solid var(--amber);border-radius:0 10px 10px 0;padding:16px 18px"><strong style="color:#C0832A">실행·경쟁</strong><p style="font-size:13.5px;margin:6px 0 0;color:#3a4150">Atomiq·Apollo340 로드맵 지연 시 흑자 전환 지연. 퀄컴·ARM·삼성 등 거인의 저전력 진입.</p></div>
+    </div>
+
+    <div class="glossary" style="background:#FBF4E6;color:#3a2e12;border:1px solid #ECD9B4">📊 <b style="color:#C0832A">IPO 기저율(base rate) 유의</b> — 역사적으로 신규상장 기업의 <b>약 70%는 공모가조차 장기적으로 정당화하지 못했고</b>, 막대한 부(富)는 극소수(약 0.7%)에서 나왔습니다. Ambiq가 그 '극소수'에 들 수도 있지만, 현재가는 이미 그렇게 된다고 가정합니다. 확률적으로 기대치를 냉정히 볼 필요가 있습니다.</div>
+
+    <h3 style="font-size:19px;margin:28px 0 14px">분기마다 확인할 5가지 (낙관 검증 지표)</h3>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px" class="check-grid">
+      <div style="background:#181C26;border-radius:10px;padding:16px 12px;color:#E7E2D6"><div style="font-family:var(--ff-mono);font-size:22px;color:#E0A23B">①</div><div style="font-size:12.5px;margin-top:6px">매출 성장률이 50%+를 유지하는가</div></div>
+      <div style="background:#181C26;border-radius:10px;padding:16px 12px;color:#E7E2D6"><div style="font-family:var(--ff-mono);font-size:22px;color:#E0A23B">②</div><div style="font-size:12.5px;margin-top:6px">상위 3개사 비중이 계속 낮아지는가(고객 분산)</div></div>
+      <div style="background:#181C26;border-radius:10px;padding:16px 12px;color:#E7E2D6"><div style="font-family:var(--ff-mono);font-size:22px;color:#E0A23B">③</div><div style="font-size:12.5px;margin-top:6px">분기 매출이 흑자분기점($47M)에 다가가는가</div></div>
+      <div style="background:#181C26;border-radius:10px;padding:16px 12px;color:#E7E2D6"><div style="font-family:var(--ff-mono);font-size:22px;color:#E0A23B">④</div><div style="font-size:12.5px;margin-top:6px">Atomiq·Apollo340 일정이 지켜지는가</div></div>
+      <div style="background:#181C26;border-radius:10px;padding:16px 12px;color:#E7E2D6"><div style="font-family:var(--ff-mono);font-size:22px;color:#E0A23B">⑤</div><div style="font-size:12.5px;margin-top:6px">총이익률이 45%+에서 유지·개선되는가</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14. FINAL ============ -->
+<section id="final" style="background:var(--ink);color:var(--paper);border:none">
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--amber)">15 · Synthesis</div>
+    <h2 class="sec-title" style="color:#fff">종합 판단</h2>
+    <p class="sec-sub" style="color:#B7B2A6">좋은 회사인가와 좋은 가격인가를 분리해서 봅니다.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:30px" class="final-grid">
+      <div style="background:#1d222e;border:1px solid #2c3342;border-radius:14px;padding:24px">
+        <div style="font-family:var(--ff-disp);font-size:19px;color:#1F9E8F;margin-bottom:10px">회사로서 (Quality)</div>
+        <p style="font-size:14.5px;color:#D7D2C6;margin:0">진짜 기술 해자(SPOT)를 갖춘, 성장하는 엣지 AI 시장의 유망 플레이어. 자산이 가볍고 재무가 튼튼하며(순현금 $202M), 경영진은 흑자 경로를 구체적으로 제시. <strong style="color:#fff">기업의 '질'은 매력적</strong>입니다.</p>
+      </div>
+      <div style="background:#1d222e;border:1px solid #2c3342;border-radius:14px;padding:24px">
+        <div style="font-family:var(--ff-disp);font-size:19px;color:#C8554A;margin-bottom:10px">가격으로서 (Valuation)</div>
+        <p style="font-size:14.5px;color:#D7D2C6;margin:0">현재가는 기본 시나리오($26)의 약 3배이자 강세 시나리오($83)에 근접. 내재 CAP가 20년+로 프레임워크 합리 범위를 초과. <strong style="color:#fff">'질'에 비해 '값'이 매우 비싼 상태</strong>로, 안전마진이 거의 없습니다.</p>
+      </div>
+    </div>
+
+    <div style="background:rgba(224,162,59,.1);border:1px solid rgba(224,162,59,.35);border-radius:14px;padding:26px 28px;margin-bottom:28px">
+      <div style="font-family:var(--ff-disp);font-size:20px;color:var(--amber);margin-bottom:12px">한 문단 결론</div>
+      <p style="font-size:15.5px;color:#F0EBDF;margin:0;line-height:1.75">Ambiq는 <strong style="color:#fff">"기술은 진짜, 가격은 완벽을 가정"</strong>인 전형적 사례입니다. 도입기 기업으로서 가치의 거의 전부가 먼 미래에 있고, 시장은 이미 <em style="color:var(--amber)">20년 넘는 가치창출(CAP)</em>—매출 10배 이상 성장과 Lattice급 이익률 달성—을 현재가에 반영해 두었습니다. 따라서 모든 일이 잘 풀려도 추가 상승 여력은 제한적인 반면, 고객 집중·실행 지연·금리 상승 중 하나라도 어긋나면 하방이 큰 <strong style="color:#fff">비대칭적 위험구조</strong>로 판단됩니다. 본 문서는 매수·매도를 권하지 않으며, 핵심은 <strong style="color:#fff">"무엇을 사느냐"보다 "어떤 기대가 이미 가격에 들어있느냐"</strong>를 분명히 아는 데 있습니다.</p>
+    </div>
+
+    <!-- Bayesian confidence -->
+    <h3 style="font-size:19px;color:#fff;margin-bottom:16px">판단별 신뢰도 (베이지안)</h3>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13.5px;color:#D7D2C6;margin-bottom:5px"><span>Ambiq는 '도입기' 단계다</span><span class="mono" style="color:#1F9E8F">매우 높음 ~95%</span></div>
+        <div style="background:#2c3342;border-radius:6px;height:9px"><div style="width:95%;height:100%;background:#1F9E8F;border-radius:6px"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13.5px;color:#D7D2C6;margin-bottom:5px"><span>현재가는 기본 DCF를 크게 웃도는 낙관적 기대를 반영한다</span><span class="mono" style="color:#E0A23B">높음 ~85%</span></div>
+        <div style="background:#2c3342;border-radius:6px;height:9px"><div style="width:85%;height:100%;background:#E0A23B;border-radius:6px"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:13.5px;color:#D7D2C6;margin-bottom:5px"><span>현재가에서 향후 시장수익률을 밑돌 가능성</span><span class="mono" style="color:#C8554A">중간·불확실 ~55–60%</span></div>
+        <div style="background:#2c3342;border-radius:6px;height:9px"><div style="width:58%;height:100%;background:#C8554A;border-radius:6px"></div></div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:#8B93A0;margin-top:18px">세 번째 항목의 신뢰도가 낮은(불확실한) 이유: 모멘텀과 '엣지 AI 내러티브'는 펀더멘털과 무관하게 상당 기간 지속될 수 있고, 강세 시나리오도 비록 까다롭지만 <em style="color:#B7B2A6">불가능하지는 않기</em> 때문입니다. 새로운 증거(대형 신규고객 공시, 흑자분기점 근접, 로드맵 차질 등)가 나오면 이 판단은 갱신되어야 합니다. <strong style="color:#B7B2A6">이 분석을 뒤집을 핵심 증거</strong>는 ① 고객 집중의 빠른 해소 + ② 예상보다 이른 흑자 전환 + ③ Atomiq의 강한 초기 채택입니다.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div style="font-family:var(--ff-disp);font-size:16px;color:#E7E2D6;margin-bottom:6px">Ambiq Micro (NYSE: AMBQ) · 경쟁우위기간(CAP) 분석</div>
+      <div>데이터 기준일 2026-06-05 · 정밀 목표가가 아닌 방향성 제시 목적 · 매수/매도 권유 아님</div>
+    </div>
+    <div style="max-width:420px;text-align:right">
+      출처: 회사 IR·SEC(10-K/S-1·Q1 2026 실적), stockanalysis.com·Fiscal.ai·companiesmarketcap(재무), S&amp;P Global·TipRanks(컨센서스), Mordor·Grand View·MarketsandMarkets(시장규모), FRED·Damodaran(거시·ERP). 모든 추정에는 불확실성이 따릅니다.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Stop Systems (OSS) — CAP 프레임워크 심층 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#11151c; --ink2:#1c2430; --paper:#f4f0e7; --paper2:#ebe5d8; --card:#fbf9f3;
+  --amber:#bf7314; --amber-soft:#e0a64b; --teal:#1f6b6b; --teal-soft:#3a9b96;
+  --red:#a8341f; --green:#2e6b3a; --line:#d7cfbe; --line2:#c4b9a2;
+  --muted:#5d5847; --shadow:0 1px 0 rgba(0,0,0,.04),0 8px 28px -18px rgba(20,16,8,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Newsreader",Georgia,serif;font-size:18px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 12% -10%, #efe9dc 0, transparent 45%),radial-gradient(circle at 90% 0, #efe7d6 0, transparent 40%);}
+.wrap{max-width:1080px;margin:0 auto;padding:0 26px}
+h1,h2,h3,h4,.mono,.lbl,.stat-v,.tag,.kicker,.num{font-family:"Archivo",system-ui,sans-serif}
+.mono,.dat,.lbl,.tag,.kicker,code{font-family:"JetBrains Mono",ui-monospace,monospace}
+h2{font-size:30px;line-height:1.12;font-weight:900;letter-spacing:-.01em;margin:0 0 6px}
+h3{font-size:21px;font-weight:700;letter-spacing:-.01em;margin:30px 0 8px}
+h4{font-size:15px;font-weight:700;margin:0 0 8px}
+p{margin:0 0 15px}
+a{color:var(--teal)}
+strong{font-weight:600}
+.kicker{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);font-weight:700}
+small{font-size:13.5px;color:var(--muted)}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--ink);color:#e9e3d4;padding:54px 0 40px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(90deg,rgba(191,115,20,.07) 1px,transparent 1px),linear-gradient(rgba(191,115,20,.07) 1px,transparent 1px);
+  background-size:34px 34px;mask-image:radial-gradient(circle at 80% 20%,#000,transparent 75%)}
+.hero .wrap{position:relative}
+.tick{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.tick .sym{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;letter-spacing:.12em;
+  border:1px solid #4a4334;color:var(--amber-soft);padding:4px 11px;border-radius:4px}
+.tick .ex{font-size:12px;letter-spacing:.18em;color:#8b8266;font-family:"JetBrains Mono",monospace}
+.hero h1{font-size:46px;line-height:1.02;font-weight:900;letter-spacing:-.02em;margin:14px 0 6px;color:#fbf7ec}
+.hero .one{font-size:19px;color:#c8c0a9;max-width:760px;margin:0 0 24px;font-family:"Newsreader",serif;font-style:italic}
+.verdict{border:1px solid #4a4334;border-left:4px solid var(--amber);background:#191e26;
+  border-radius:8px;padding:18px 20px;margin:6px 0 26px}
+.verdict .vh{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.2em;color:var(--amber-soft);text-transform:uppercase;margin-bottom:7px}
+.verdict p{margin:0;color:#e4ddca;font-size:17px}
+.verdict b{color:#fff}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:0;border:1px solid #3a3428;border-radius:8px;overflow:hidden}
+.stat{padding:13px 14px;border-right:1px solid #3a3428;background:#161b22}
+.stat:last-child{border-right:none}
+.stat .l{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.13em;color:#8b8266;text-transform:uppercase}
+.stat .v{font-family:"Archivo",sans-serif;font-weight:700;font-size:20px;color:#f3eddd;margin-top:3px;line-height:1}
+.stat .s{font-size:11px;color:#a39a80;margin-top:3px;font-family:"JetBrains Mono",monospace}
+.stat .up{color:var(--teal-soft)} .stat .dn{color:#d98e6a}
+
+/* ---------- LAYOUT ---------- */
+section{padding:46px 0;border-bottom:1px solid var(--line)}
+section:nth-of-type(even){background:linear-gradient(180deg,#f1ece0,#f4f0e7)}
+.sec-no{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--amber);letter-spacing:.18em;font-weight:700}
+.lead{font-size:20px;line-height:1.55;color:#2b2c28}
+.divider-band{background:var(--ink2);color:#e9e3d4;text-align:center;padding:30px 0}
+.divider-band .kicker{color:var(--amber-soft)}
+.divider-band h2{color:#fbf7ec;margin-top:6px}
+.divider-band p{color:#bdb49b;max-width:680px;margin:8px auto 0}
+
+/* cards & callouts */
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 24px;box-shadow:var(--shadow);margin:18px 0}
+.note{border-left:3px solid var(--teal);background:#eef3f1;border-radius:0 8px 8px 0;padding:14px 18px;margin:16px 0;font-size:16px}
+.note.amber{border-color:var(--amber);background:#f6efe2}
+.note.red{border-color:var(--red);background:#f6ebe6}
+.note .nh{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:5px;color:var(--teal)}
+.note.amber .nh{color:var(--amber)} .note.red .nh{color:var(--red)}
+.defn{font-size:14.5px;background:#fff;border:1px dashed var(--line2);border-radius:8px;padding:11px 15px;margin:10px 0;color:#3a382f}
+.defn b{font-family:"Archivo",sans-serif;color:var(--amber)}
+
+/* confidence chip */
+.conf{display:inline-flex;align-items:center;gap:7px;font-family:"JetBrains Mono",monospace;font-size:12px;
+  background:var(--ink);color:#f0ead9;padding:4px 10px;border-radius:20px;letter-spacing:.04em}
+.conf .dot{width:7px;height:7px;border-radius:50%}
+.conf.hi .dot{background:#5fb37a} .conf.mid .dot{background:var(--amber-soft)} .conf.lo .dot{background:#d98e6a}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:14px 0;background:var(--card);border-radius:8px;overflow:hidden}
+.dat table,table.dat{font-family:"JetBrains Mono",monospace;font-size:13px}
+th,td{padding:9px 11px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+thead th{background:var(--ink2);color:#e9e3d4;font-family:"Archivo",sans-serif;font-weight:700;font-size:12px;letter-spacing:.03em;border-bottom:none}
+tbody tr:nth-child(even){background:#f5f1e8}
+tbody tr:hover{background:#efe8d8}
+td.pos{color:var(--green)} td.neg{color:var(--red)}
+.hl-row{background:#fbeed5 !important;font-weight:700}
+caption{caption-side:bottom;font-size:12px;color:var(--muted);text-align:left;padding-top:8px;font-family:"JetBrains Mono",monospace}
+
+/* grids */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* flow / pills */
+.flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:18px 0}
+.flow .step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);padding:14px;text-align:center;position:relative}
+.flow .step .si{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--amber);letter-spacing:.1em}
+.flow .step .st{font-family:"Archivo",sans-serif;font-weight:700;font-size:15px;margin:5px 0 4px}
+.flow .step .sd{font-size:13px;color:var(--muted);line-height:1.4}
+.flow .arr{display:flex;align-items:center;color:var(--amber);font-weight:700;font-size:20px;padding:0 4px}
+@media(max-width:760px){.flow .arr{transform:rotate(90deg);width:100%;justify-content:center;padding:4px 0}}
+
+/* SWOT */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.swot .q{border-radius:10px;padding:18px 20px;border:1px solid}
+.swot .s{background:#edf4ee;border-color:#bcd6c2}
+.swot .w{background:#f7ede6;border-color:#e2c4b0}
+.swot .o{background:#eef2f6;border-color:#bcccdb}
+.swot .t{background:#f6ece9;border-color:#e0bdb4}
+.swot h4{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-family:"JetBrains Mono",monospace}
+.swot .s h4{color:var(--green)} .swot .w h4{color:var(--amber)} .swot .o h4{color:var(--teal)} .swot .t h4{color:var(--red)}
+.swot ul{margin:6px 0 0;padding-left:18px;font-size:14.5px}
+.swot li{margin-bottom:6px;line-height:1.45}
+
+ul.clean{list-style:none;padding-left:0;margin:10px 0}
+ul.clean li{padding-left:22px;position:relative;margin-bottom:9px}
+ul.clean li:before{content:"▸";position:absolute;left:0;color:var(--amber);font-family:"Archivo",sans-serif}
+
+.bars{margin:16px 0}
+.barrow{display:grid;grid-template-columns:120px 1fr 64px;align-items:center;gap:10px;margin:7px 0;font-size:13px}
+.barrow .bl{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink2)}
+.bartrack{background:#e6dfce;border-radius:4px;height:22px;overflow:hidden;border:1px solid var(--line)}
+.barfill{height:100%;border-radius:3px 0 0 3px;display:flex;align-items:center}
+.barrow .bv{font-family:"JetBrains Mono",monospace;font-weight:700;text-align:right;font-size:13px}
+
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;font-family:"JetBrains Mono",monospace;color:var(--muted);margin:6px 0 0}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+
+.toc{columns:2;column-gap:30px;font-size:14.5px;font-family:"JetBrains Mono",monospace}
+.toc a{display:block;color:var(--ink2);text-decoration:none;padding:4px 0;border-bottom:1px dotted var(--line)}
+.toc a:hover{color:var(--amber)}
+.toc .nn{color:var(--amber);margin-right:8px}
+
+figcaption{font-size:12.5px;color:var(--muted);font-family:"JetBrains Mono",monospace;margin-top:6px;text-align:center}
+.chartbox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;margin:16px 0;box-shadow:var(--shadow)}
+@media(max-width:760px){
+  .stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2n){border-right:none}
+  .grid2,.grid3,.grid4,.swot{grid-template-columns:1fr}
+  .hero h1{font-size:34px}.toc{columns:1}h2{font-size:25px}
+  .barrow{grid-template-columns:96px 1fr 56px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="tick">
+      <span class="sym">NASDAQ : OSS</span>
+      <span class="ex">ONE STOP SYSTEMS, INC. · 컴퓨터 하드웨어 / 기술</span>
+    </div>
+    <h1>견고한 엣지 AI의 작은 도전자,<br>그러나 시장은 25년의 꿈을 가격에 담았다</h1>
+    <p class="one">“군용·산업 현장의 가혹한 환경에서도 데이터센터급 AI 연산을 돌릴 수 있는, 견고하게 무장한 GPU 서버를 만드는 미국의 소형 하드웨어 회사.”</p>
+
+    <div class="verdict">
+      <div class="vh">한 줄 결론 (CAP 프레임워크)</div>
+      <p>현재 주가 <b>$18.96</b>은 시장이 OSS에 대해 <b>약 25년에 걸친 초과수익(경쟁우위) 지속</b>과 <b>매출 약 43배 성장</b>을 가격에 반영했음을 의미합니다. 이는 프레임워크 기준 <b>“20년 초과 = 과도한 낙관”</b> 구간을 넘어서며, 합리적·심지어 강세 시나리오의 내재가치($3.98~$11.94)를 모두 상회합니다. <b>매수·매도 의견이 아니라</b>, 이 가격에 내포된 기대치가 얼마나 높은지를 보여주는 것이 본 분석의 목적입니다.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="l">주가 (6/1 종가)</div><div class="v">$18.96</div><div class="s up">+4.3% / 장중</div></div>
+      <div class="stat"><div class="l">시가총액</div><div class="v">$470M</div><div class="s">소형주(마이크로캡)</div></div>
+      <div class="stat"><div class="l">EV / 매출(TTM)</div><div class="v">12.4×</div><div class="s dn">하드웨어로는 고가</div></div>
+      <div class="stat"><div class="l">52주 범위</div><div class="v">2.7–20.2</div><div class="s up">약 7배 상승</div></div>
+      <div class="stat"><div class="l">순현금</div><div class="v">+$33M</div><div class="s up">무차입</div></div>
+      <div class="stat"><div class="l">TTM 매출</div><div class="v">$35M</div><div class="s up">+55% (1Q)</div></div>
+    </div>
+    <p style="margin-top:14px"><small>기준 시점: 2026년 6월 1–2일 · 데이터 출처: stockanalysis.com, 회사 IR(GlobeNewswire), SEC 10-K/10-Q, FRED, A. Damodaran(2026), Technavio/Fortune Business Insights. 통화: USD.</small></p>
+  </div>
+</header>
+
+<!-- ============ 목차 ============ -->
+<section id="toc">
+  <div class="wrap">
+    <div class="kicker">목차 · Table of Contents</div>
+    <h2>이 보고서를 읽는 순서</h2>
+    <p class="lead" style="margin-bottom:18px">앞부분(1~7장)은 “이 회사가 무엇을 하고 어떻게 돈을 버는가”를 비전공자 눈높이로 설명합니다. 뒷부분(8~16장)은 현재 주가에 담긴 시장 기대치를 역산하는 정량 분석입니다.</p>
+    <nav class="toc">
+      <a href="#s1"><span class="nn">01</span>기업 개요 — 한 문장 요약</a>
+      <a href="#s2"><span class="nn">02</span>수익 구조 — 어떻게 돈을 버나</a>
+      <a href="#s3"><span class="nn">03</span>제품·기술 — 견고한 AI 서버란</a>
+      <a href="#s4"><span class="nn">04</span>산업 분석 — 엣지·군용 AI 컴퓨팅</a>
+      <a href="#s5"><span class="nn">05</span>SWOT 분석</a>
+      <a href="#s6"><span class="nn">06</span>경제적 해자(Moat)</a>
+      <a href="#s7"><span class="nn">07</span>피어그룹 비교</a>
+      <a href="#s8"><span class="nn">08</span>생애주기 단계 판별</a>
+      <a href="#s9"><span class="nn">09</span>경쟁우위 정성 분석</a>
+      <a href="#s10"><span class="nn">10</span>DCF 모델 (전시 형식)</a>
+      <a href="#s11"><span class="nn">11</span>시장 내재 CAP 역산 ★</a>
+      <a href="#s12"><span class="nn">12</span>민감도 분석</a>
+      <a href="#s13"><span class="nn">13</span>시나리오 분석</a>
+      <a href="#s14"><span class="nn">14</span>종합 판단 자료</a>
+      <a href="#s15"><span class="nn">15</span>한계와 가정</a>
+      <a href="#s16"><span class="nn">16</span>리스크 & 체크포인트</a>
+    </nav>
+  </div>
+</section>
+
+<!-- ============ 1. 기업 개요 ============ -->
+<section id="s1">
+  <div class="wrap">
+    <div class="sec-no">SECTION 01</div>
+    <h2>기업 개요 — 이 회사를 한 문장으로</h2>
+    <p class="lead">One Stop Systems(원스톱시스템즈, 이하 “OSS”)는 <strong>비행기·잠수함·군용 차량·공장처럼 일반 컴퓨터가 망가질 만한 가혹한 환경에서도, 데이터센터급의 강력한 AI 연산을 견디며 수행하는 특수 컴퓨터(서버)를 설계·제조</strong>하는 미국 소형 기술 기업입니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4 style="color:var(--amber)">기본 정보</h4>
+        <table class="dat">
+          <tbody>
+          <tr><td>설립</td><td>1998년 (캘리포니아 Escondido)</td></tr>
+          <tr><td>상장</td><td>2018년 2월 (나스닥)</td></tr>
+          <tr><td>임직원</td><td>약 57명 (초소형 조직)</td></tr>
+          <tr><td>CEO</td><td>Mike Knowles</td></tr>
+          <tr><td>이전 경력</td><td>Curtiss-Wright 방산부문 출신</td></tr>
+          <tr><td>사업 부문</td><td>OSS (미국) · OSS Europe</td></tr>
+          </tbody>
+        </table>
+        <p><small>* 유럽 자회사 Bressner(독일 유통)는 <strong>2025년 12월 30일 $22.4M(매출의 약 0.7배)에 Hiper Euro로 매각</strong>(2018년 $5.6M에 인수 → 세전차익 약 $7.4M). 핵심 시사점: Bressner는 <strong>안정적·흑자 사업</strong>이었는데, OSS는 이를 팔아 <strong>현재 적자인 고성장 “견고한 엣지 AI”에 베팅</strong>한 것입니다. 성장 잠재력을 위해 안정성을 맞바꾼 전략적 선택입니다.</small></p>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--amber)">쉽게 풀어 쓴 사업의 본질</h4>
+        <p style="font-size:16px">엔비디아(NVIDIA)의 강력한 AI 칩(GPU)은 보통 시원한 데이터센터 안에서만 돌아갑니다. 그런데 전쟁터의 장갑차, 바다 위 초계기, 자율주행 트럭 안에서도 그 연산이 필요합니다.</p>
+        <p style="font-size:16px;margin-bottom:0">OSS는 이런 GPU·저장장치를 <strong>충격·진동·열·먼지를 견디는 군용 규격(MIL-STD-810) 케이스</strong>에 정교하게 통합해, “현장에서 작동하는 미니 데이터센터”를 만듭니다. 회사는 이를 <strong>“AI on the Fly”(AIFLY)</strong>라고 부릅니다.</p>
+      </div>
+    </div>
+
+    <div class="defn"><b>용어</b> · <strong>엣지(Edge) 컴퓨팅</strong>: 데이터를 멀리 떨어진 중앙 클라우드로 보내지 않고, 데이터가 “발생하는 현장(가장자리=edge)”에서 바로 처리하는 방식. 통신이 끊기거나 즉각 반응해야 하는 군사·자율주행에 필수입니다.</div>
+
+    <h3>회사가 걸어온 길 — 한 번의 위기와 재편</h3>
+    <p>OSS는 원래 PCIe 확장장치·고밀도 컴퓨팅으로 출발했고, 한때 매출의 큰 부분이 유럽 미디어/방송 고객과 저마진 유통(Bressner)에서 나왔습니다. 그 고객 프로그램이 종료되고 유럽 수요가 약해지면서 <strong>매출이 2022년 $72M 정점에서 급감</strong>했습니다. 이후 회사는 (1) 저마진 유럽 사업을 매각하고, (2) CEO 교체와 함께 <strong>고마진 군용·산업 “견고한 엣지 AI”로 사업을 재편</strong>했습니다. 그 결과가 지금의 고성장·고마진(매출총이익률 ~50%)·무차입 구조입니다.</p>
+
+    <div class="note amber">
+      <div class="nh">핵심 관전 포인트</div>
+      OSS는 “작지만 빠르게 성장 중이고, 막 흑자 문턱을 넘으려는” 전환기 기업입니다. 매출총이익률은 이미 우량(약 50%)하지만, 고정비(판관비·R&D)를 덮을 만큼 매출 규모가 크지 않아 <strong>영업이익은 아직 적자</strong>입니다. 이 한 가지 사실이 뒤(8~11장)의 밸류에이션 전체를 좌우합니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 수익 구조 ============ -->
+<section id="s2">
+  <div class="wrap">
+    <div class="sec-no">SECTION 02</div>
+    <h2>수익 구조 — OSS는 어떻게 돈을 버는가</h2>
+    <p class="lead">OSS의 매출은 크게 <strong>두 종류의 매출</strong>이, <strong>두 개의 시장</strong>으로 흘러가는 단순한 구조입니다. 핵심은 “고객 맞춤형 견고한 컴퓨터를 만들어 판다”는 것입니다.</p>
+
+    <h3>① 매출의 두 종류</h3>
+    <div class="flow">
+      <div class="step">
+        <div class="si">REVENUE TYPE 1 · 약 88%</div>
+        <div class="st">제품 매출 (Product)</div>
+        <div class="sd">완성된 견고한 서버·GPU 가속기·플래시 저장장치를 판매. <br>1Q26: <strong>$7.06M</strong></div>
+      </div>
+      <div class="arr">＋</div>
+      <div class="step">
+        <div class="si">REVENUE TYPE 2 · 약 12%</div>
+        <div class="st">고객 자금 개발 (Customer-funded Dev.)</div>
+        <div class="sd">고객(주로 방산)이 비용을 대고, OSS가 시제품·맞춤 시스템을 설계·개발. <br>1Q26: <strong>$1.01M</strong></div>
+      </div>
+    </div>
+    <div class="defn"><b>왜 중요한가</b> · “고객 자금 개발”은 OSS가 <strong>고객 돈으로 R&D를 하면서 미래의 양산 물량을 선점</strong>하는 통로입니다. 개발이 끝나면 그 고객의 양산 제품 매출(반복 매출)로 이어질 수 있어, 회사가 강조하는 “플랫폼 incumbent(고착 공급자)” 전략의 핵심 입구입니다.</div>
+
+    <h3>② 두 개의 시장 — 방산과 상업</h3>
+    <div class="grid2">
+      <div class="card">
+        <h4 style="color:var(--teal)">🛡️ 방산 / 정부 (성장 견인차)</h4>
+        <ul class="clean" style="font-size:15px">
+          <li><strong>P-8A 포세이돈</strong> 해상초계기용 데이터 저장 — 방산 프라임으로부터 <strong>$10.5M 규모</strong> 수주</li>
+          <li><strong>버지니아급 잠수함</strong> 전자 베이 탑재</li>
+          <li>美 육군 <strong>지상차량 360° 상황인식</strong> 프로그램 연산·스위칭 모듈</li>
+          <li>전투차량 <strong>강화 영상 시스템</strong> 시제품 연산 시스템</li>
+          <li>美 특수전사령부(<strong>USSOCOM</strong>)와 공동연구개발협약(CRADA)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--amber)">🏭 상업 (다각화)</h4>
+        <ul class="clean" style="font-size:15px">
+          <li><strong>의료영상 OEM</strong> — 액침냉각 서버 제품 (1Q26 성장 견인)</li>
+          <li>자율주행 <strong>트럭·농기계·건설/광업 장비</strong></li>
+          <li><strong>Andretti</strong> 모터스포츠 실시간 분석</li>
+          <li>대체에너지 <strong>데이터센터용 “자율 에너지 노드”</strong></li>
+        </ul>
+        <p style="margin:6px 0 0"><small>상업 시장은 방산보다 잠재 규모가 크지만 경쟁도 치열합니다.</small></p>
+      </div>
+    </div>
+
+    <h3>매출 흐름 한눈에 보기</h3>
+    <div class="flow">
+      <div class="step"><div class="si">투입</div><div class="st">NVIDIA GPU · Intel CPU</div><div class="sd">부품 조달</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="si">OSS의 부가가치</div><div class="st">견고화 설계·통합·SW</div><div class="sd">MIL 규격 통합·냉각·Ion 소프트웨어</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="si">납품</div><div class="st">방산 프라임 · OEM · 정부</div><div class="sd">직접/리셀러</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="si">매출</div><div class="st">제품 + 개발수익</div><div class="sd">매출총이익률 ~50%</div></div>
+    </div>
+
+    <h3>매출 추이 — 위기, 그리고 재편 후의 성장</h3>
+    <div class="chartbox">
+      <div class="bars">
+        <div class="barrow"><div class="bl">FY2021</div><div class="bartrack"><div class="barfill" style="width:85.6%;background:#9aa39a"></div></div><div class="bv">$62.0M</div></div>
+        <div class="barrow"><div class="bl">FY2022</div><div class="bartrack"><div class="barfill" style="width:100%;background:#9aa39a"></div></div><div class="bv">$72.4M</div></div>
+        <div class="barrow"><div class="bl">FY2023</div><div class="bartrack"><div class="barfill" style="width:84.1%;background:#9aa39a"></div></div><div class="bv">$60.9M</div></div>
+        <div class="barrow"><div class="bl">FY2024</div><div class="bartrack"><div class="barfill" style="width:33.9%;background:var(--teal)"></div></div><div class="bv">$24.6M</div></div>
+        <div class="barrow"><div class="bl">FY2025</div><div class="bartrack"><div class="barfill" style="width:44.5%;background:var(--teal)"></div></div><div class="bv">$32.2M</div></div>
+        <div class="barrow"><div class="bl">TTM(1Q26)</div><div class="bartrack"><div class="barfill" style="width:48.4%;background:var(--amber)"></div></div><div class="bv">$35.1M</div></div>
+      </div>
+      <div class="legend">
+        <span><i class="sw" style="background:#9aa39a"></i>유럽(Bressner) 포함 — 구 사업구조</span>
+        <span><i class="sw" style="background:var(--teal)"></i>지속사업만 (재편 후)</span>
+        <span><i class="sw" style="background:var(--amber)"></i>최근 12개월</span>
+      </div>
+      <figcaption>출처: stockanalysis.com 표준 손익계산서. FY2021–2023 매출은 매각된 Bressner/유럽 사업을 포함하므로, 현재 사업과의 직접 비교는 FY2024 이후가 적절합니다.</figcaption>
+    </div>
+    <div class="note">
+      <div class="nh">해석</div>
+      2022→2024의 “절벽”은 회사가 망가진 것이 아니라 <strong>저마진 유럽 사업이 빠진 효과</strong>가 큽니다. 비교 가능한 지속사업 기준으로는 <strong>$24.6M(24년) → $32.2M(25년) → $35.1M(TTM)</strong>로 연 30%대 성장 중이며, 회사는 FY2026 <strong>20~25% 성장</strong>을 가이던스로 제시했습니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. 제품·기술 ============ -->
+<section id="s3">
+  <div class="wrap">
+    <div class="sec-no">SECTION 03</div>
+    <h2>제품·기술 — “견고한 AI 서버”란 무엇인가</h2>
+    <p class="lead">OSS의 기술력은 화려한 신소재가 아니라, <strong>“최신 AI 칩을, 깨지지 않게, 식혀가며, 좁은 공간에 통합하는 엔지니어링 노하우”</strong>에 있습니다. 비전공자를 위해 핵심 제품 4가지를 쉽게 풀어봅니다.</p>
+
+    <div class="grid2">
+      <div class="card"><h4 style="color:var(--amber)">① 견고화 서버 (Rugged Server)</h4><p style="font-size:15px;margin:0">일반 서버를 충격·진동·고온·먼지에 견디게 만든 버전. 비유하면 <strong>일반 노트북 vs 군용 토프북(Toughbook)</strong>의 차이. 미군 표준 <strong>MIL-STD-810</strong>을 통과해 장갑차·항공기에 탑재됩니다.</p></div>
+      <div class="card"><h4 style="color:var(--amber)">② GPU 연산 가속기 (Compute Accelerator)</h4><p style="font-size:15px;margin:0">AI 계산의 핵심인 <strong>엔비디아 GPU 여러 개를 고밀도로 묶어</strong> 데이터센터급 성능을 작은 상자에 담는 모듈. AI의 “두뇌” 역할.</p></div>
+      <div class="card"><h4 style="color:var(--amber)">③ 플래시 저장 어레이 (Flash Storage)</h4><p style="font-size:15px;margin:0">센서가 쏟아내는 방대한 데이터를 <strong>초고속으로 기록·저장</strong>. 초계기·잠수함의 정찰 데이터 저장이 대표 용도(P-8A 사례).</p></div>
+      <div class="card"><h4 style="color:var(--amber)">④ Ion Accelerator™ 소프트웨어</h4><p style="font-size:15px;margin:0">하드웨어를 묶어주는 <strong>저장·관리 소프트웨어</strong>(SAN/NAS/데이터 레코딩). 하드웨어에 SW를 더해 차별화와 “고착(lock-in)”을 노리는 부분.</p></div>
+    </div>
+
+    <div class="defn"><b>용어</b> · <strong>MIL-STD-810</strong>: 미 국방부의 환경 내구성 시험 규격. 온도·진동·충격·습도 등 24개 항목을 통과해야 하며, 군 납품의 사실상 통행증입니다. · <strong>전도냉각(conduction-cooled)</strong>: 팬 없이 금속 전도로 열을 빼는 방식 — 먼지·습기 환경에서 유리.</div>
+
+    <h3>“견고한 AI 서버”가 만들어지는 과정</h3>
+    <div class="flow">
+      <div class="step"><div class="si">STEP 1</div><div class="st">고객 요구 정의</div><div class="sd">탑재 플랫폼·환경·성능 사양 (고객 자금 개발)</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="si">STEP 2</div><div class="st">부품 선정</div><div class="sd">NVIDIA GPU · Intel CPU · 플래시</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="si">STEP 3</div><div class="st">견고화 설계</div><div class="sd">MIL 규격 케이스·냉각·진동 격리</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="si">STEP 4</div><div class="st">통합·시험</div><div class="sd">HW+Ion SW 통합, 환경 시험</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="si">STEP 5</div><div class="st">납품·양산</div><div class="sd">프로그램 양산 → 반복 매출</div></div>
+    </div>
+
+    <div class="note amber">
+      <div class="nh">기술력에 대한 균형 잡힌 시각</div>
+      OSS의 강점은 <strong>“통합·견고화 엔지니어링과 빠른 맞춤 대응”</strong>입니다. 다만 핵심 연산 성능 자체는 NVIDIA/Intel 칩에 의존하므로, <strong>독자적 반도체 IP는 없습니다.</strong> 즉 “남들이 못 만드는 칩”이 아니라 “남들이 귀찮아하는 극한 환경 통합을 잘하는” 유형의 차별화입니다. (해자 분석은 6·9장 참조)
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. 산업 분석 ============ -->
+<section id="s4">
+  <div class="wrap">
+    <div class="sec-no">SECTION 04</div>
+    <h2>산업 분석 — 엣지·군용 AI 컴퓨팅 시장</h2>
+    <p class="lead">OSS가 속한 시장은 <strong>“AI를 현장(엣지)으로, 그것도 가혹한 군사·산업 환경으로 가져가는”</strong> 분야입니다. 구조적으로 성장하는 시장이지만, 동시에 거대 방산기업들이 노리는 격전지이기도 합니다.</p>
+
+    <h3>시장 규모(TAM)와 성장률</h3>
+    <table>
+      <thead><tr><th>시장 정의 (출처)</th><th>현재</th><th>미래</th><th>연성장률</th></tr></thead>
+      <tbody>
+        <tr><td>군용 엣지 컴퓨팅 (Fortune BI)</td><td>$3.7B (2026)</td><td>$10.3B (2034)</td><td class="pos">13.9%</td></tr>
+        <tr><td>견고한 군용 컴퓨터 (Next Move)</td><td>$4.8B (2024)</td><td>$7.0B (2030)</td><td class="pos">~6%</td></tr>
+        <tr><td>국방 AI·분석 (GMI)</td><td>$11.5B (2025)</td><td>$35.8B (2034)</td><td class="pos">13.4%</td></tr>
+        <tr class="hl-row"><td>OSS 현재 매출 (점유율)</td><td colspan="2">약 $35M = 좁은 시장의 &lt;1%</td><td class="pos">+30%대</td></tr>
+      </tbody>
+      <caption>시장 규모는 정의에 따라 편차가 큼(여러 조사기관 상충 → 본 표는 범위로 제시). 공통점: 모두 두 자릿수에 가까운 성장률, 그리고 OSS의 매우 낮은 현재 점유율.</caption>
+    </table>
+
+    <div class="note">
+      <div class="nh">두 갈래 해석 (경쟁 가설 유지)</div>
+      <strong>낙관:</strong> 시장이 충분히 크고(수조 원대) 빠르게 커서, OSS가 1%→3~5% 점유만 해도 매출이 수배가 됩니다(성장 여지 충분). · <strong>신중:</strong> 점유율이 낮다는 것은 곧 <strong>OSS의 기술이 아직 시장 표준이 아니며</strong>, Lockheed·Northrop·RTX 같은 프라임과 Mercury·Curtiss-Wright 같은 전문기업이 같은 파이를 노린다는 뜻이기도 합니다.
+    </div>
+
+    <h3>산업 가치사슬(Value Chain) 속 OSS의 위치</h3>
+    <div class="flow">
+      <div class="step"><div class="si">① 반도체</div><div class="st">NVIDIA · Intel · AMD</div><div class="sd">연산·칩 (가치사슬의 두뇌)</div></div>
+      <div class="arr">→</div>
+      <div class="step" style="border-color:var(--amber);border-width:2px;background:#fbf2e0"><div class="si" style="color:var(--amber)">② 견고화 통합 ← OSS</div><div class="st">럭기드 서버·모듈</div><div class="sd">Mercury, Curtiss-Wright, OSS, Crystal Group</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="si">③ 프라임 통합</div><div class="st">플랫폼 통합</div><div class="sd">Lockheed, Northrop, RTX, GD, BAE</div></div>
+      <div class="arr">→</div>
+      <div class="step"><div class="si">④ 최종 사용자</div><div class="st">국방부·군·OEM</div><div class="sd">항공기·함정·차량</div></div>
+    </div>
+    <p><small>OSS는 ② 단계의 <strong>“랙·서버 수준 통합”</strong>에 위치합니다. 경쟁사 Mercury·Curtiss-Wright는 주로 더 작은 보드(VPX 모듈) 수준에서 강하고, OSS는 GPU를 묶은 완성 서버 단위에서 차별화를 시도합니다. 프라임(③)에 부품을 공급하거나, 때로 직접 정부(④)에 납품합니다.</small></p>
+
+    <h3>산업의 흐름과 미래 방향성</h3>
+    <ul class="clean">
+      <li><strong>AI의 현장 이동(Edge AI):</strong> 자율무기·드론·정찰이 늘며, “끊긴 통신 환경에서도 스스로 판단”하는 현장 AI 수요 급증.</li>
+      <li><strong>국방 현대화·자율화:</strong> JADC2(전 영역 통합 지휘통제), 무인 시스템 확산이 견고한 연산 수요를 끌어올림.</li>
+      <li><strong>골든돔(Golden Dome) 미사일 방어:</strong> 약 $175B 규모로 거론되는 차세대 방어 프로그램 — 업계 전반의 잠재 호재(경쟁사 Mercury도 기회로 언급).</li>
+      <li><strong>역풍:</strong> 미 연방예산·국방예산의 정치적 불확실성, 메모리 등 부품 공급망 리스크(회사가 직접 경고).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 5. SWOT ============ -->
+<section id="s5">
+  <div class="wrap">
+    <div class="sec-no">SECTION 05</div>
+    <h2>SWOT 분석</h2>
+    <p class="lead">강점·약점·기회·위협을 한눈에. OSS는 “재무는 튼튼하지만 규모와 수익성이 아직 입증되지 않은 도전자”라는 성격이 SWOT 전반에 드러납니다.</p>
+    <div class="swot">
+      <div class="q s">
+        <h4>STRENGTHS · 강점</h4>
+        <ul>
+          <li>매출총이익률 <strong>약 50%</strong> — 경쟁사(28~37%)보다 높음</li>
+          <li><strong>무차입 + 순현금 $33M</strong> 전쟁자금 → 파산 위험 낮고 M&A 여력</li>
+          <li>실제 군 플랫폼 탑재 실적(P-8A·잠수함·장갑차)으로 검증됨</li>
+          <li>수주잔고 신호 양호: 1Q 수주 $15M, <strong>book-to-bill 1.8배</strong></li>
+          <li>“비전통 소기업”으로 프라임보다 <strong>빠른 맞춤 대응</strong></li>
+        </ul>
+      </div>
+      <div class="q w">
+        <h4>WEAKNESSES · 약점</h4>
+        <ul>
+          <li><strong>아직 영업적자</strong>(GAAP) — 흑자 지속성 미입증</li>
+          <li>매출 $35M의 <strong>초소형 규모</strong> → 고정비 레버리지 부족</li>
+          <li><strong>고객 집중</strong>: 소수 방산 프로그램 의존도 큼</li>
+          <li>독자 반도체 IP 없음 — NVIDIA/Intel 의존</li>
+          <li>임직원 57명 — 대형 다년 프로그램 동시 수행 능력 제한</li>
+        </ul>
+      </div>
+      <div class="q o">
+        <h4>OPPORTUNITIES · 기회</h4>
+        <ul>
+          <li>시장 자체가 <strong>연 13%대 성장</strong>, 점유율 &lt;1%로 여지 큼</li>
+          <li>“플랫폼 incumbent” 전략 성공 시 <strong>반복 매출·잠금효과</strong></li>
+          <li>골든돔·자율무기 등 <strong>국방 AI 메가트렌드</strong></li>
+          <li>의료·자율주행 등 <strong>상업 엣지 AI</strong> 확장</li>
+          <li>현금으로 <strong>볼트온 M&A</strong> → 규모·기술 보강 가능</li>
+        </ul>
+      </div>
+      <div class="q t">
+        <h4>THREATS · 위협</h4>
+        <ul>
+          <li>Lockheed·Northrop·RTX 등 <strong>프라임의 내재화</strong>(직접 제작)</li>
+          <li>Mercury·Curtiss-Wright의 <strong>자금력·규모 우위</strong></li>
+          <li><strong>국방예산·정치</strong> 변동 및 프로그램 취소</li>
+          <li>메모리 등 <strong>부품 공급망</strong> 차질(회사 직접 경고)</li>
+          <li>NVIDIA/Intel의 <strong>엣지향 직접 솔루션</strong> 출시 가능성</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. MOAT ============ -->
+<section id="s6">
+  <div class="wrap">
+    <div class="sec-no">SECTION 06</div>
+    <h2>경제적 해자(Moat) 분석</h2>
+    <p class="lead">“해자(Moat)”란 경쟁자가 쉽게 침범하지 못하게 하는 지속적 경쟁우위입니다. OSS의 해자는 <strong>존재하지만 아직 “좁고 형성 중(narrow & nascent)”</strong>이라는 것이 균형 잡힌 평가입니다.</p>
+
+    <div class="defn"><b>해자의 4대 원천</b> · ① 무형자산(브랜드·특허) · ② 전환비용 · ③ 네트워크 효과 · ④ 원가우위. 이 잣대로 OSS를 평가합니다.</div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4 style="color:var(--green)">있다고 볼 수 있는 해자</h4>
+        <ul class="clean" style="font-size:15px">
+          <li><strong>인증·검증 장벽:</strong> MIL-STD 인증과 군 플랫폼 탑재 이력은 신규 진입자가 단기간에 못 따라옴. 한번 탑재되면 교체가 어려움(전환비용 ↑).</li>
+          <li><strong>다년 프로그램 고착:</strong> P-8A·잠수함처럼 수명 긴 플랫폼에 들어가면 <strong>수년간 반복 매출</strong>. 이것이 OSS의 “플랫폼 incumbent” 전략의 본질.</li>
+          <li><strong>고객 자금 개발 = 관계 자산:</strong> 고객 돈으로 설계에 깊숙이 관여 → 사양을 OSS에 맞추게 됨(스펙 인 lock-in).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--red)">아직 약하거나 없는 해자</h4>
+        <ul class="clean" style="font-size:15px">
+          <li><strong>원가우위 없음:</strong> 규모가 작아 부품 구매력·생산 단가에서 대형사 대비 열위.</li>
+          <li><strong>네트워크 효과 없음:</strong> 하드웨어 통합 사업 특성상 사용자가 늘수록 가치가 커지는 구조 아님.</li>
+          <li><strong>핵심 IP 의존:</strong> 연산 성능의 원천은 NVIDIA/Intel. OSS 고유 특허 포트폴리오는 경쟁사(Mercury 100+건) 대비 얕음.</li>
+          <li><strong>규모의 해자 미달:</strong> Curtiss-Wright 같은 규모·다각화가 주는 안정성은 아직 없음.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note amber">
+      <div class="nh">해자 종합 판정 <span class="conf mid" style="margin-left:8px"><span class="dot"></span>신뢰도 보통 ~65%</span></div>
+      OSS의 해자는 <strong>“프로그램 단위의 전환비용”에 기반한 좁은 해자</strong>입니다. 이는 실재하지만, 회사가 충분한 수의 다년 프로그램에 “고착 공급자”로 자리 잡아야 비로소 넓고 지속적인 해자로 확장됩니다. <strong>현재는 그 확장이 “진행 중”이며 입증 전</strong>입니다. 이 해자가 넓어질지 여부가 11장 “시장 내재 CAP”가 정당한지의 핵심 질문입니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. PEER ============ -->
+<section id="s7">
+  <div class="wrap">
+    <div class="sec-no">SECTION 07</div>
+    <h2>피어그룹 비교</h2>
+    <p class="lead">OSS를 같은 “견고한 방산 컴퓨팅” 생태계의 두 상장사와 비교하면 위치가 또렷해집니다. <strong>Mercury Systems(중형, 구조조정 중)</strong>와 <strong>Curtiss-Wright(대형, 우량)</strong>가 OSS를 위·아래에서 감쌉니다.</p>
+
+    <table class="dat">
+      <thead><tr><th>지표</th><th>OSS</th><th>Mercury (MRCY)</th><th>Curtiss-Wright (CW)</th></tr></thead>
+      <tbody>
+        <tr><td>시가총액</td><td class="hl-row" style="background:#fbeed5">$0.47B</td><td>$4.7B</td><td>$26B</td></tr>
+        <tr><td>매출(TTM)</td><td>$35M</td><td>$943M</td><td>$3.5B</td></tr>
+        <tr><td>매출 성장</td><td class="pos">+55% (1Q)</td><td>~12%</td><td>~13%</td></tr>
+        <tr><td>매출총이익률</td><td class="pos">~50%</td><td>28.2%</td><td>37.2%</td></tr>
+        <tr><td>영업이익률</td><td class="neg">약 −8%</td><td>~0%</td><td class="pos">19.2%</td></tr>
+        <tr><td>ROIC</td><td class="neg">음수</td><td>~0%</td><td class="pos">15.5%</td></tr>
+        <tr><td>순현금/(순부채)</td><td class="pos">+$33M</td><td>순부채</td><td>−$0.8B</td></tr>
+        <tr><td>베타</td><td>1.15</td><td>~0.84</td><td>0.92</td></tr>
+        <tr><td>EV/매출</td><td class="neg">12.4×</td><td>~5×</td><td>~7.6×</td></tr>
+      </tbody>
+      <caption>출처: stockanalysis.com, 각 사 1Q2026 실적(2026/5). OSS 영업이익률·ROIC는 SBC를 비용으로 본 GAAP 기준(조정 EBITDA는 1Q 소폭 흑자).</caption>
+    </table>
+
+    <h3>비교가 말해주는 3가지</h3>
+    <div class="grid3">
+      <div class="card"><h4 style="color:var(--amber)">① 마진의 역설</h4><p style="font-size:14.5px;margin:0">OSS의 <strong>매출총이익률은 오히려 가장 높습니다(~50%)</strong>. 문제는 단가가 아니라 <strong>규모</strong> — 작아서 고정비를 못 덮어 영업적자. 즉 “규모만 커지면 흑자”라는 것이 강세론의 핵심.</p></div>
+      <div class="card"><h4 style="color:var(--amber)">② 마진 성숙 곡선</h4><p style="font-size:14.5px;margin:0">중형 Mercury조차 영업이익률 ~0%(구조조정 중). 대형·다각화된 CW는 19%(방산전자 부문 ~28%). 이 분야에서 <strong>높은 영업이익률은 “규모+다각화” 후에야</strong> 온다는 증거.</p></div>
+      <div class="card"><h4 style="color:var(--amber)">③ 밸류에이션 프리미엄</h4><p style="font-size:14.5px;margin:0">OSS의 <strong>EV/매출 12.4배</strong>는 흑자인 CW(7.6배)·Mercury(5배)보다 훨씬 높습니다. 적자 소형주가 우량 대형주보다 비싸게 거래 = 시장이 <strong>고성장·고수익 전환을 선반영</strong>.</p></div>
+    </div>
+
+    <div class="chartbox">
+      <h4 style="text-align:center;margin-bottom:14px">EV/매출 배수 비교 — OSS의 프리미엄</h4>
+      <div class="bars">
+        <div class="barrow"><div class="bl">OSS</div><div class="bartrack"><div class="barfill" style="width:100%;background:var(--amber)"></div></div><div class="bv">12.4×</div></div>
+        <div class="barrow"><div class="bl">Curtiss-W.</div><div class="bartrack"><div class="barfill" style="width:61%;background:var(--teal)"></div></div><div class="bv">7.6×</div></div>
+        <div class="barrow"><div class="bl">Mercury</div><div class="bartrack"><div class="barfill" style="width:40%;background:var(--teal)"></div></div><div class="bv">5.0×</div></div>
+      </div>
+      <figcaption>적자·초소형인 OSS가 흑자·대형 피어보다 매출 대비 1.6~2.5배 높은 배수에 거래됩니다.</figcaption>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIVIDER → CAP FRAMEWORK ============ -->
+<div class="divider-band">
+  <div class="wrap">
+    <div class="kicker">PART II · 정량 분석</div>
+    <h2>경쟁우위 기간(CAP) 프레임워크</h2>
+    <p>지금부터는 “적정가”를 맞히려는 것이 아니라, <strong>현재 주가 $18.96에 시장이 어떤 가정을 심어두었는지를 거꾸로 풀어내는(reverse-engineering)</strong> 작업입니다. 핵심 질문: “이 가격이 정당하려면, OSS는 얼마나 오래·얼마나 크게 초과수익을 내야 하는가?”</p>
+  </div>
+</div>
+
+<!-- ============ 8. LIFECYCLE ============ -->
+<section id="s8">
+  <div class="wrap">
+    <div class="sec-no">SECTION 08</div>
+    <h2>생애주기 단계 판별</h2>
+    <p class="lead">기업은 사람처럼 생애주기가 있고, 단계마다 적합한 분석법이 다릅니다. <strong>현금흐름표의 부호(+/−) 조합</strong>으로 단계를 읽습니다. 결론부터: OSS는 <strong>“도입기에서 성장기로 막 넘어가는 전환점”</strong>에 있습니다.</p>
+
+    <div class="defn"><b>왜 이게 중요한가</b> · CAP/DCF 분석은 <strong>이미 흑자(초과수익)를 내는 성장·성숙기 기업</strong>에 가장 잘 맞습니다. 도입기 기업은 DCF보다 TAM·실물옵션으로 봐야 합니다. OSS는 정확히 그 <strong>경계선</strong>에 있어, 10~13장의 DCF는 “이미 검증된 수익”이 아니라 <strong>“미래에 흑자가 될 것”이라는 가정 위에</strong> 세워집니다. (이 한계는 15장에서 명시)</p></div>
+
+    <table class="dat">
+      <thead><tr><th>단계</th><th>영업CF</th><th>투자CF</th><th>재무CF</th><th>OSS 해당?</th></tr></thead>
+      <tbody>
+        <tr><td>도입(Introduction)</td><td class="neg">−</td><td class="neg">−</td><td class="pos">+</td><td>과거(’22~’24) ✓</td></tr>
+        <tr class="hl-row"><td>성장(Growth)</td><td class="pos">+</td><td class="neg">−</td><td class="pos">+</td><td>← 지금 진입 중</td></tr>
+        <tr><td>성숙(Mature)</td><td class="pos">+</td><td class="neg">−</td><td class="neg">−</td><td>미래 목표</td></tr>
+        <tr><td>정리(Shake-out)</td><td>혼합</td><td>혼합</td><td>혼합</td><td>해당 없음</td></tr>
+        <tr><td>감소(Decline)</td><td class="neg">−</td><td class="pos">+</td><td>혼합</td><td>해당 없음</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid2">
+      <div class="card">
+        <h4 style="color:var(--amber)">OSS의 현금흐름 신호</h4>
+        <ul class="clean" style="font-size:15px">
+          <li><strong>과거(’22~’24):</strong> 영업적자·잉여현금흐름 마이너스, 증자로 자금 조달 → 전형적 <strong>도입기</strong>.</li>
+          <li><strong>FY2025:</strong> 잉여현금흐름 −$6.4M(여전히 음수)이나, Bressner 매각으로 현금 유입.</li>
+          <li><strong>1Q2026:</strong> 영업현금흐름 <strong>+$4.0M(흑자 전환)</strong> — 단, 상당 부분은 매출채권 $6.2M 회수(일회성 운전자본 효과).</li>
+          <li><strong>판정:</strong> 핵심 영업은 손익분기 부근. <strong>도입→성장 전환기.</strong></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--amber)">전환기가 의미하는 것</h4>
+        <p style="font-size:15px">전환기 기업의 가치는 <strong>“얼마나 빨리, 얼마나 높은 수익성으로 성장기에 안착하느냐”</strong>에 달려 있습니다. OSS의 매출 +55%, book-to-bill 1.8배, 조정 EBITDA 흑자 전환은 <strong>성장기 진입의 초기 증거</strong>입니다.</p>
+        <p style="font-size:15px;margin-bottom:0">그러나 “초기 증거”와 “지속 입증”은 다릅니다. <strong>한두 분기의 흑자가 구조적 흑자로 굳어질지</strong>가 관건이며, 이는 분기 체크포인트(16장)의 1순위 항목입니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. 경쟁우위 정성 ============ -->
+<section id="s9">
+  <div class="wrap">
+    <div class="sec-no">SECTION 09</div>
+    <h2>경쟁우위 정성 분석 — 포터의 5 Forces</h2>
+    <p class="lead">산업 구조가 OSS에 유리한지를 5가지 힘으로 평가합니다. 종합하면 OSS의 산업 매력도는 <strong>“중간 — 진입장벽은 있으나 강자가 많은 격전지”</strong>입니다.</p>
+
+    <table>
+      <thead><tr><th>경쟁 요인</th><th>강도</th><th>OSS에 대한 함의</th></tr></thead>
+      <tbody>
+        <tr><td>신규 진입 위협</td><td>중–낮</td><td>MIL 인증·검증 장벽이 보호막. 다만 자금력 있는 신규자(또는 프라임)는 진입 가능.</td></tr>
+        <tr><td>기존 경쟁 강도</td><td class="neg">높음</td><td>Mercury·Curtiss-Wright·Crystal 등 + 프라임. <strong>가장 큰 부담.</strong></td></tr>
+        <tr><td>공급자 교섭력</td><td class="neg">높음</td><td>NVIDIA·Intel·메모리에 의존 → 부품 가격·공급 통제력 약함(회사가 메모리 리스크 직접 경고).</td></tr>
+        <tr><td>구매자 교섭력</td><td>중</td><td>국방 고객은 강하지만, 일단 스펙 인(spec-in)되면 교체가 어려워 균형.</td></tr>
+        <tr><td>대체재 위협</td><td>중</td><td>프라임 내재화, NVIDIA의 엣지 직접 솔루션이 잠재 대체재.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>차별화 vs 원가우위 — 데이터로 판별</h3>
+    <p>프레임워크는 <strong>높은 NOPAT 마진 = 차별화 전략</strong>, <strong>높은 투자자본 회전율 = 원가우위</strong>로 봅니다. OSS는?</p>
+    <div class="defn"><b>용어</b> · <strong>NOPAT</strong>(세후영업이익): 영업이익에서 세금을 뺀, 자본구조와 무관한 순수 영업 수익력. · <strong>ROIC</strong>: 투자한 자본 대비 NOPAT 수익률. · <strong>투자자본 회전율</strong>: 매출 ÷ 투자자본(자본을 얼마나 효율적으로 굴리는가).</div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4 style="color:var(--teal)">차별화 신호 (있음, 단 미완성)</h4>
+        <p style="font-size:15px;margin:0">매출총이익률 ~50%는 피어(28~37%)를 능가 → <strong>차별화 가격결정력의 징후</strong>. 견고화·맞춤 엔지니어링·SW가 그 원천. <br><strong>그러나</strong> 고정비를 못 덮어 <strong>NOPAT은 아직 음수</strong> → 차별화가 “이익”으로 전환되지 못한 상태.</p>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--amber)">원가우위 신호 (없음)</h4>
+        <p style="font-size:15px;margin:0">자산이 가벼워(PP&E ~$0.5M) 투자자본 회전율은 구조적으로 높을 수 있으나, 이는 <strong>원가우위라기보다 외주 기반의 자산경량성</strong>. 규모가 작아 실제 구매·생산 단가는 대형사 대비 불리.</p>
+      </div>
+    </div>
+
+    <div class="note red">
+      <div class="nh">정성 분석 종합 <span class="conf mid" style="margin-left:8px"><span class="dot"></span>신뢰도 보통 ~65%</span></div>
+      OSS는 <strong>“차별화 지향이나 아직 수익으로 입증되지 않은” 기업</strong>입니다. 프레임워크 실증에 따르면 지속적 초과수익(상위 20% ROIC) 기업의 핵심은 “평균의 2.8배 NOPAT 마진”인데, OSS는 매출총이익은 높지만 <strong>NOPAT 마진이 아직 음수</strong>입니다. 즉 “해자의 재료(높은 매출총이익률)”는 있으나 “해자의 결과(높은 ROIC)”는 아직 없습니다. 이 간극을 메우는 열쇠는 오직 <strong>매출 규모 확대를 통한 고정비 레버리지</strong>입니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. DCF ============ -->
+<section id="s10">
+  <div class="wrap">
+    <div class="sec-no">SECTION 10</div>
+    <h2>DCF 모델 — 기본 시나리오 (전시 형식)</h2>
+    <p class="lead">먼저 <strong>합리적-낙관적 기본 가정</strong>으로 OSS의 미래 현금흐름을 추정해 “펀더멘털 기반 가치”를 구합니다. 이 값을 주가와 비교하면, 시장이 얼마나 더 낙관적인지 가늠할 수 있습니다.</p>
+
+    <h3>자본비용(WACC) 산출 — CAPM</h3>
+    <div class="defn"><b>WACC</b>(가중평균자본비용): 미래 현금흐름을 “현재가치”로 깎을 때 쓰는 할인율 = 투자자가 이 위험을 감수하고 요구하는 최소 수익률. OSS는 <strong>사실상 무차입</strong>이라 WACC ≈ 자기자본비용입니다.</div>
+    <table class="dat">
+      <tbody>
+        <tr><td>무위험 이자율 (10년 美 국채, 6/1)</td><td>4.45%</td></tr>
+        <tr><td>베타 (주가의 시장 민감도)</td><td>1.15</td></tr>
+        <tr><td>주식위험프리미엄(ERP, 프레임워크 표준)</td><td>4.75%</td></tr>
+        <tr class="hl-row"><td>= 자기자본비용 = WACC (기본)</td><td>약 10.0%</td></tr>
+        <tr><td>참고: Damodaran 2026.1 내재 ERP 4.23% 적용 시</td><td>9.3%</td></tr>
+        <tr><td>참고: 마이크로캡 규모 위험 반영 시</td><td>12~14%</td></tr>
+      </tbody>
+      <caption>출처: FRED(국채), A. Damodaran 2026 ERP, stockanalysis(베타). 마이크로캡의 높은 변동성·유동성 위험을 고려하면 10%는 다소 낮은(관대한) 할인율일 수 있음 → 민감도 12장 참조.</caption>
+    </table>
+
+    <h3>기본 시나리오 연도별 추정 (DCF 전시 테이블)</h3>
+    <p><small>가정: 매출 성장 22.5%→7%로 점감(회사 가이던스 20~25%, 애널리스트 컨센서스 향후 2년 ~18% 사이로 설정) / EBITA 마진 2%→13%로 상승 / 세율 21%(단기 NOL로 실효세율은 더 낮음) / 터미널 성장 2.5% / 페이드 0.18(기술하드웨어) / 터미널 ROIIC 25% / 연중(mid-year) 할인. 단위: $M.</small></p>
+    <table class="dat">
+      <thead><tr><th>연도</th><th>매출</th><th>성장%</th><th>EBITA</th><th>마진%</th><th>NOPAT</th><th>투자</th><th>FCF</th><th>FCF현가</th></tr></thead>
+      <tbody>
+        <tr><td>1 (’26E)</td><td>39.5</td><td>22.5</td><td>0.8</td><td>2.0</td><td>0.6</td><td>2.4</td><td class="neg">−1.7</td><td class="neg">−1.67</td></tr>
+        <tr><td>2</td><td>47.4</td><td>20.0</td><td>1.9</td><td>4.0</td><td>1.5</td><td>2.6</td><td class="neg">−1.1</td><td class="neg">−0.96</td></tr>
+        <tr><td>3</td><td>55.9</td><td>18.0</td><td>3.4</td><td>6.0</td><td>2.6</td><td>2.8</td><td class="neg">−0.2</td><td class="neg">−0.15</td></tr>
+        <tr><td>4</td><td>64.8</td><td>16.0</td><td>5.2</td><td>8.0</td><td>4.1</td><td>3.0</td><td class="pos">1.1</td><td>0.78</td></tr>
+        <tr><td>5</td><td>73.9</td><td>14.0</td><td>7.4</td><td>10.0</td><td>5.8</td><td>3.1</td><td class="pos">2.7</td><td>1.79</td></tr>
+        <tr><td>6</td><td>82.8</td><td>12.0</td><td>9.5</td><td>11.5</td><td>7.5</td><td>3.1</td><td class="pos">4.4</td><td>2.63</td></tr>
+        <tr><td>7</td><td>91.5</td><td>10.5</td><td>11.9</td><td>13.0</td><td>9.4</td><td>3.1</td><td class="pos">6.3</td><td>3.41</td></tr>
+        <tr><td>8</td><td>99.7</td><td>9.0</td><td>13.0</td><td>13.0</td><td>10.2</td><td>3.0</td><td class="pos">7.3</td><td>3.56</td></tr>
+        <tr><td>9</td><td>107.7</td><td>8.0</td><td>14.0</td><td>13.0</td><td>11.1</td><td>2.9</td><td class="pos">8.1</td><td>3.61</td></tr>
+        <tr><td>10</td><td>115.2</td><td>7.0</td><td>15.0</td><td>13.0</td><td>11.8</td><td>2.8</td><td class="pos">9.0</td><td>3.64</td></tr>
+      </tbody>
+    </table>
+
+    <table class="dat" style="margin-top:8px">
+      <tbody>
+        <tr><td>명시적 기간 FCF 현가 합계</td><td>$16.6M</td></tr>
+        <tr><td>최종가치(10년 말, 페이드 모델)</td><td>$127.0M</td></tr>
+        <tr><td>최종가치의 현재가치 (EV의 75%)</td><td>$49.0M</td></tr>
+        <tr><td>= 기업가치(EV)</td><td>$65.6M</td></tr>
+        <tr><td>+ 순현금</td><td>$33.0M</td></tr>
+        <tr><td>= 자기자본가치</td><td>$98.6M</td></tr>
+        <tr class="hl-row"><td>÷ 주식수(24.77M) = 주당 가치</td><td>$3.98</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note red">
+      <div class="nh">기본 시나리오 결과</div>
+      합리적-낙관적 가정(10년간 매출 $32M→$115M, 터미널 마진 13%, WACC 10%)으로 산출한 <strong>주당 가치는 $3.98</strong>입니다. 현재 주가 <strong>$18.96</strong>은 이보다 <strong>약 376% 높습니다.</strong> 또한 기업가치의 <strong>75%가 최종가치</strong>에서 나오는데, 이는 가치의 대부분이 “먼 미래의 안정적 수익”이라는 가정에 의존함을 뜻합니다(=불확실성 큼).
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11. 시장 내재 CAP ============ -->
+<section id="s11">
+  <div class="wrap">
+    <div class="sec-no">SECTION 11 ★ 핵심</div>
+    <h2>시장 내재 CAP 역산 — 가격에 담긴 기대치</h2>
+    <p class="lead">이제 질문을 뒤집습니다. <strong>“$18.96이 정당하려면, 어떤 가정이 필요한가?”</strong> 필요한 기업가치는 약 <strong>$437M</strong>(자기자본 $470M − 순현금 $33M)인데, 기본 시나리오 EV는 $65.6M에 불과했습니다. 즉 시장은 기본 가정보다 EV를 <strong>약 6.7배</strong> 높게 봅니다. 무엇이 이 격차를 메울까요?</p>
+
+    <div class="defn"><b>CAP</b>(경쟁우위 기간): 기업이 자본비용을 초과하는 수익률(ROIC&gt;WACC)을 유지하는 기간. CAP가 길수록 기업가치가 커집니다. <strong>시장 내재 CAP</strong>는 “현재 주가를 정당화하려면 그 초과수익이 몇 년 지속된다고 가정해야 하는가”입니다.</div>
+
+    <h3>가능성 ①②③ — 격차를 메우는 길을 하나씩 점검</h3>
+    <table>
+      <thead><tr><th>경로</th><th>다른 가정 고정 시 필요한 값</th><th>현실성</th></tr></thead>
+      <tbody>
+        <tr><td><strong>① 터미널 마진</strong>으로만 메우기</td><td>EBITA 마진 <strong>71.8%</strong> 필요</td><td class="neg">비현실적<br>(CW 19%, CW방산부문 28%, Mercury ~0%)</td></tr>
+        <tr><td><strong>② 할인율(WACC)</strong>로만 메우기<br><small>(공격적 성장 $289M + 20% 마진 전제)</small></td><td>WACC <strong>6.5%</strong> 필요<br><small>(10% 가정 시엔 $10.06)</small></td><td class="neg">비현실적<br>(마이크로캡에 국채+α 수준 할인율)</td></tr>
+        <tr><td><strong>③ 기간(CAP)</strong>으로 메우기<br><small>(18% 마진·28% ROIIC·WACC 10% 전제)</small></td><td>약 <strong>25년</strong>의 가치창출 성장<br>매출 $32M → <strong>$1,403M</strong></td><td class="neg">매우 공격적<br>(매출 ~43배 / 프레임워크 “20년 초과” 구간)</td></tr>
+      </tbody>
+      <caption>세 경로 모두, 단독으로는 극단적 가정이 필요. 실제 주가는 이들이 “동시에 어느 정도씩” 낙관적이라는 조합을 반영합니다.</caption>
+    </table>
+
+    <h3>경로 ③ 상세 — 기간이 길어질수록 가치는?</h3>
+    <div class="chartbox">
+      <h4 style="text-align:center;margin-bottom:6px">가치창출 성장 지속 기간별 주당 가치 (18% 마진·ROIIC 28%·WACC 10%)</h4>
+      <div class="bars" style="margin-top:14px">
+        <div class="barrow"><div class="bl">10년 · 매출 $145M</div><div class="bartrack"><div class="barfill" style="width:30%;background:var(--teal)"></div></div><div class="bv">$6.05</div></div>
+        <div class="barrow"><div class="bl">15년 · 매출 $310M</div><div class="bartrack"><div class="barfill" style="width:46%;background:var(--teal)"></div></div><div class="bv">$9.15</div></div>
+        <div class="barrow"><div class="bl">20년 · 매출 $659M</div><div class="bartrack"><div class="barfill" style="width:68%;background:var(--amber-soft)"></div></div><div class="bv">$13.62</div></div>
+        <div class="barrow"><div class="bl">25년 · 매출 $1,403M</div><div class="bartrack"><div class="barfill" style="width:100%;background:var(--amber)"></div></div><div class="bv">$20.02</div></div>
+      </div>
+      <div style="border-top:2px dashed var(--red);margin-top:6px;padding-top:6px;text-align:right">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--red);font-weight:700">— 현재 주가 $18.96 (≈ 24~25년 지점)</span>
+      </div>
+      <figcaption>현재 주가는 “약 25년간 매출이 43배(→$14억)로 성장하며 18% 마진을 내는” 지점에서 비로소 맞춰집니다.</figcaption>
+    </div>
+
+    <div class="note red">
+      <div class="nh">내재 CAP 판정 <span class="conf hi" style="margin-left:8px"><span class="dot"></span>방향성 신뢰도 높음 ~85%</span> <span class="conf mid" style="margin-left:6px"><span class="dot"></span>정확한 햇수 ~60%</span></div>
+      <p style="margin:0 0 8px">현재 주가 $18.96에 내재된 시장 기대치를 CAP로 환산하면 <strong>약 25년 수준</strong>입니다. 프레임워크의 해석 기준표에 따르면:</p>
+      <table class="dat" style="margin:6px 0">
+        <thead><tr><th>내재 CAP</th><th>해석</th><th>방향성</th></tr></thead>
+        <tbody>
+          <tr><td>5년 미만</td><td>시장 매우 비관적</td><td>매수 후보</td></tr>
+          <tr><td>10~15년</td><td>합리적 범위</td><td>중립</td></tr>
+          <tr><td>15~20년</td><td>약간 낙관적</td><td>해자 근거 강력해야</td></tr>
+          <tr class="hl-row"><td>20년 초과 ← OSS(~25년)</td><td>과도한 낙관</td><td>회피 고려 구간</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:0">즉 시장은 OSS를 <strong>“수십 년에 걸쳐 복리로 커지는 슈퍼스타 기업”으로 가격을 매겼습니다.</strong> 비교하자면, 같은 프레임워크로 마이크로소프트의 내재 CAP가 17~18년이었던 점을 감안하면, <strong>매출 $35M의 적자 마이크로캡에 MS보다 긴 CAP가 부여된 셈</strong>입니다. 이 기대가 충족되려면 6장의 “좁은 해자”가 향후 수십 년간 “넓은 해자”로 확장되고, OSS가 거대 경쟁자들을 상대로 거의 완벽하게 실행해야 합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. 민감도 ============ -->
+<section id="s12">
+  <div class="wrap">
+    <div class="sec-no">SECTION 12</div>
+    <h2>민감도 분석 — 어떤 가정이 가치를 좌우하나</h2>
+    <p class="lead">기본 시나리오($3.98)에서 가정을 하나씩 흔들어 봅니다. 결론: <strong>“터미널(장기) 마진”이 압도적 변수</strong>이며, 할인율·성장률·페이드의 영향은 상대적으로 작습니다. 그러나 <strong>어떤 변수도 단독으로는 주가 $18.96 근처에 닿지 못합니다.</strong></p>
+
+    <table class="dat">
+      <thead><tr><th>변수</th><th>비관</th><th>기본</th><th>낙관</th><th>가치 변동폭</th></tr></thead>
+      <tbody>
+        <tr class="hl-row"><td>터미널 EBITA 마진</td><td>8% → $2.71</td><td>13% → $3.98</td><td>25% → $7.04</td><td class="neg">$4.33 (최대)</td></tr>
+        <tr><td>WACC(자본비용)</td><td>13% → $3.02</td><td>10% → $3.98</td><td>9% → $4.48</td><td>$1.46</td></tr>
+        <tr><td>터미널 성장률 g</td><td>0.5% → $3.87</td><td>2.5% → $3.98</td><td>4.5% → $4.10</td><td>$0.23</td></tr>
+        <tr><td>페이드 비율 f</td><td>0.25 → $3.96</td><td>0.18 → $3.98</td><td>0.10 → $4.04</td><td>$0.08 (최소)</td></tr>
+      </tbody>
+      <caption>각 행은 한 변수만 바꾸고 나머지는 기본값 고정. 단위: 주당 $.</caption>
+    </table>
+
+    <div class="chartbox">
+      <h4 style="text-align:center;margin-bottom:12px">토네이도 차트 — 변수별 가치 민감도 (중심 $3.98)</h4>
+      <div class="bars">
+        <div class="barrow"><div class="bl">터미널 마진</div><div class="bartrack" style="background:transparent;border:none"><div style="background:linear-gradient(90deg,var(--red) 0 29%,var(--green) 29% 100%);height:22px;border-radius:4px;width:100%"></div></div><div class="bv">±최대</div></div>
+        <div class="barrow"><div class="bl">WACC</div><div class="bartrack" style="background:transparent;border:none"><div style="background:linear-gradient(90deg,transparent 0 22%,var(--red) 22% 50%,var(--green) 50% 62%,transparent 62% 100%);height:22px;border-radius:4px;width:100%"></div></div><div class="bv">중</div></div>
+        <div class="barrow"><div class="bl">성장률 g</div><div class="bartrack" style="background:transparent;border:none"><div style="background:linear-gradient(90deg,transparent 0 46%,var(--red) 46% 50%,var(--green) 50% 54%,transparent 54% 100%);height:22px;border-radius:4px;width:100%"></div></div><div class="bv">소</div></div>
+        <div class="barrow"><div class="bl">페이드 f</div><div class="bartrack" style="background:transparent;border:none"><div style="background:linear-gradient(90deg,transparent 0 49%,var(--red) 49% 50%,var(--green) 50% 51%,transparent 51% 100%);height:22px;border-radius:4px;width:100%"></div></div><div class="bv">미미</div></div>
+      </div>
+      <div class="legend"><span><i class="sw" style="background:var(--red)"></i>하방(비관)</span><span><i class="sw" style="background:var(--green)"></i>상방(낙관)</span></div>
+      <figcaption>막대가 길수록 가치 영향이 큰 변수. OSS의 가치는 “장기 수익성(마진)을 입증하느냐”에 거의 전적으로 달려 있습니다.</figcaption>
+    </div>
+
+    <div class="note amber">
+      <div class="nh">시사점</div>
+      가장 낙관적인 단일 변수 가정(터미널 마진 25%)으로도 가치는 <strong>$7.04</strong>로, 주가 $18.96의 37% 수준입니다. 따라서 현재 가격은 <strong>“여러 변수가 동시에 매우 낙관적”</strong>이어야만 설명됩니다 — 11장의 “25년 CAP” 결론과 일치합니다. 또한 OSS가 흑자를 입증할수록(터미널 마진 가정의 신뢰도 ↑) 본 분석의 가치는 위로 재평가될 여지가 있다는 점도 함의입니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13. 시나리오 ============ -->
+<section id="s13">
+  <div class="wrap">
+    <div class="sec-no">SECTION 13</div>
+    <h2>시나리오 분석 — 강세 / 기본 / 약세</h2>
+    <p class="lead">세 가지 일관된 미래상으로 가치를 묶어봅니다. 주목할 점: <strong>현재 주가는 강세(Bull) 시나리오의 내재가치($11.94)보다도 약 59% 높습니다.</strong> 즉 “주가까지의 상승”은 강세 가정을 넘어서는 영역에서만 가능합니다.</p>
+
+    <div class="grid3">
+      <div class="card" style="border-top:3px solid var(--green)">
+        <h4 style="color:var(--green)">🐂 강세 (Bull) — $11.94</h4>
+        <p style="font-size:14px;margin:0">15년간 매출 <strong>$32M→$289M</strong>, 터미널 마진 <strong>20%</strong>(=CW급), WACC 9%, 페이드 0.12(강한 해자), ROIIC 30%. 다년 프로그램 incumbent 다수 확보 가정.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--amber)">
+        <h4 style="color:var(--amber)">⚖️ 기본 (Base) — $3.98</h4>
+        <p style="font-size:14px;margin:0">10년간 매출 <strong>$32M→$115M</strong>, 터미널 마진 <strong>13%</strong>, WACC 10%, 페이드 0.18. 견실하지만 “슈퍼스타”는 아닌 성장.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--red)">
+        <h4 style="color:var(--red)">🐻 약세 (Bear) — $1.90</h4>
+        <p style="font-size:14px;margin:0">국방예산·경쟁 압박으로 성장 빠르게 둔화, 터미널 마진 <strong>8%</strong>(Mercury 수준), WACC 13%(마이크로캡), 페이드 0.25.</p>
+      </div>
+    </div>
+
+    <div class="chartbox">
+      <h4 style="text-align:center;margin-bottom:14px">시나리오별 주당 가치 vs 현재 주가</h4>
+      <div class="bars">
+        <div class="barrow"><div class="bl" style="color:var(--red)">약세 Bear</div><div class="bartrack"><div class="barfill" style="width:10%;background:var(--red)"></div></div><div class="bv">$1.90</div></div>
+        <div class="barrow"><div class="bl" style="color:var(--amber)">기본 Base</div><div class="bartrack"><div class="barfill" style="width:21%;background:var(--amber)"></div></div><div class="bv">$3.98</div></div>
+        <div class="barrow"><div class="bl" style="color:var(--green)">강세 Bull</div><div class="bartrack"><div class="barfill" style="width:63%;background:var(--green)"></div></div><div class="bv">$11.94</div></div>
+        <div class="barrow"><div class="bl" style="color:var(--ink)"><strong>현재 주가</strong></div><div class="bartrack"><div class="barfill" style="width:100%;background:repeating-linear-gradient(45deg,var(--ink),var(--ink) 6px,#2a3340 6px,#2a3340 12px)"></div></div><div class="bv">$18.96</div></div>
+      </div>
+      <figcaption>현재 주가(빗금)는 세 펀더멘털 시나리오를 모두 상회합니다. 시장이 강세 시나리오보다 더 낙관적인 전제(11장의 ~25년 CAP)를 반영하고 있다는 의미입니다.</figcaption>
+    </div>
+
+    <div class="note">
+      <div class="nh">균형 잡힌 시각 (반대 가설의 강한 복원)</div>
+      강세 시나리오가 “불가능”한 것은 아닙니다. OSS가 실제로 P-8A·잠수함·장갑차 같은 <strong>수명 긴 플랫폼의 단독 공급자</strong>로 자리 잡고, 매출총이익률 50%를 규모의 경제로 영업이익률 20%까지 전환하며, 국방 AI 메가트렌드를 타면 — <strong>$289M 매출·20% 마진 기업</strong>으로 성장할 수 있습니다. 그 경우 가치는 $12 내외까지 정당화됩니다. 현재 주가는 그조차 넘어, <strong>“강세가 실현되고도 더 멀리 간다”</strong>는 베팅입니다. 본 분석은 이 베팅의 성공 확률을 판정하지 않으며, 그 기대치의 크기만을 투명하게 보여줍니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14. 종합 판단 ============ -->
+<section id="s14">
+  <div class="wrap">
+    <div class="sec-no">SECTION 14</div>
+    <h2>종합 판단 자료</h2>
+    <p class="lead">CAP 프레임워크가 OSS에 대해 알려주는 핵심은 단순합니다: <strong>이것은 “시장이 너무 비관적이라 저평가된” 종목이 아니라, “시장이 매우 낙관적이라 향후 25년의 완벽한 실행이 이미 가격에 반영된” 종목입니다.</strong></p>
+
+    <h3>판단의 베이지안 요약</h3>
+    <table>
+      <thead><tr><th>명제</th><th>신뢰도</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>현재 주가는 매우 낙관적 기대(내재 CAP &gt;20년)를 반영</td><td><span class="conf hi"><span class="dot"></span>높음 ~85%</span></td><td>강세 시나리오로도 가치($12)가 주가($19)에 못 미침. 가정을 관대하게 줘도 결론 유지.</td></tr>
+        <tr><td>정확한 내재 CAP 수치(약 25년)</td><td><span class="conf mid"><span class="dot"></span>보통 ~60%</span></td><td>가정한 마진·ROIIC·매출경로에 따라 햇수는 변동. 단 “매우 김”이라는 방향은 견고.</td></tr>
+        <tr><td>OSS의 사업·시장이 구조적으로 성장 중</td><td><span class="conf hi"><span class="dot"></span>높음 ~80%</span></td><td>시장 13% CAGR, 매출 +55%, B2B 1.8배, 실제 군 프로그램 탑재.</td></tr>
+        <tr><td>OSS가 “넓은 해자”를 확보할 것(강세 실현)</td><td><span class="conf lo"><span class="dot"></span>낮음 ~30%</span></td><td>거대 경쟁자·프라임 내재화·부품 의존·소규모. 실행 난도 매우 높음.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>내재 CAP의 섹터 평균 대비 합리성</h3>
+    <p>기술하드웨어 섹터의 평균적 초과수익 지속성(페이드 0.17~0.20)은 “평균적 해자”를 함의합니다. 시장이 OSS에 부여한 <strong>~25년 CAP는 섹터 평균을 크게 상회</strong>하며, 이는 곧 시장이 OSS를 “섹터 평균보다 훨씬 강하고 오래 가는 해자를 가진 예외적 기업”으로 본다는 뜻입니다. 그러나 9장에서 보았듯 <strong>OSS의 해자는 아직 “좁고 형성 중”</strong>이라, 이 둘 사이에 상당한 간극이 존재합니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4 style="color:var(--green)">상방 재평가를 부를 새 증거 (확인 시 가치 ↑)</h4>
+        <ul class="clean" style="font-size:15px">
+          <li><strong>GAAP 영업이익률의 구조적 흑자 전환 및 상승</strong> — 터미널 마진 가정의 신뢰도를 직접 높임</li>
+          <li><strong>대형 다년 단독공급 프로그램 다수 확보</strong> — 반복 매출·백로그로 CAP 연장 정당화</li>
+          <li>매출총이익률 ~50% 유지하며 매출 규모 확대(고정비 레버리지 작동)</li>
+          <li>현금을 활용한 성공적 볼트온 M&A(규모·기술 보강)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--red)">하방 재평가를 부를 새 증거 (확인 시 가치 ↓)</h4>
+        <ul class="clean" style="font-size:15px">
+          <li>국방예산 삭감·정부 셧다운, 핵심 프로그램 취소/지연</li>
+          <li>매출총이익률이 가이던스(~40%) 이하로 후퇴, 다시 손익분기 근처로</li>
+          <li>특정 고객/프로그램 집중에서 오는 매출 충격</li>
+          <li>경쟁 심화(프라임 내재화, NVIDIA 직접 솔루션)로 가격 압박</li>
+          <li>성장 자금 위한 대규모 증자(주식 희석)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 15. 한계와 가정 ============ -->
+<section id="s15">
+  <div class="wrap">
+    <div class="sec-no">SECTION 15</div>
+    <h2>한계와 가정 (Limitations &amp; Assumptions)</h2>
+    <p class="lead">본 분석의 결론이 어떤 토대 위에 서 있고, 어디가 취약한지를 투명하게 밝힙니다. <strong>이 섹션을 읽지 않으면 위 숫자들을 과신할 위험이 있습니다.</strong></p>
+
+    <div class="note red">
+      <div class="nh">가장 중요한 한계 — 프레임워크 적합성</div>
+      CAP/DCF 프레임워크는 <strong>이미 자본비용을 초과하는 수익(양의 NOPAT·ROIC)을 내는 기업</strong>에 가장 잘 맞습니다. 그런데 OSS는 <strong>아직 영업적자(NOPAT 음수)</strong>입니다. 실제로 <strong>FY2025 지속사업은 SBC를 더한 조정 EBITDA 기준으로도 −$0.8M 적자</strong>였고(전년 −$12.8M에서 개선), 흑자 전환은 <strong>2026년 1분기에야 처음(+$0.18M)</strong> 나타났습니다. 따라서 “현재 초과수익이 몇 년 지속되는가”를 깨끗이 역산할 수 없고, 본 분석의 DCF는 부득이 <strong>“미래에 흑자가 될 것”이라는 가정(특히 터미널 마진)</strong> 위에 세워졌습니다. 결과적으로 여기서 말하는 “내재 CAP”는 순수한 기간 개념이라기보다 <strong>“규모 + 마진 + 지속기간”이 결합된 종합적 낙관도 지표</strong>로 해석해야 합니다.
+    </div>
+
+    <h4>이 결론이 의존하는 핵심 가정</h4>
+    <ul class="clean">
+      <li><strong>터미널 EBITA 마진:</strong> 기본 13%(피어 벤치마크 기반). OSS는 이 마진을 <strong>한 번도 규모 있게 달성한 적이 없음</strong> — 가장 불확실하면서 가장 영향 큰 변수(12장).</li>
+      <li><strong>WACC 10%:</strong> CAPM(베타 1.15) 기준. 마이크로캡의 변동성·유동성 위험을 감안하면 <strong>실제 요구수익률은 더 높을 수 있어, 10%는 오히려 가치를 관대하게(높게) 산출</strong>. 베타 1.15도 7배 급등한 변동성 대비 낮아 보임.</li>
+      <li><strong>매출 경로·ROIIC:</strong> 역산된 내재 CAP 햇수는 가정한 성장 곡선과 ROIIC(25~28%)에 따라 달라짐. 다른 형태를 써도 “매우 긴 CAP”라는 방향은 유지되나 정확한 햇수는 변동.</li>
+      <li><strong>장기 성장률 2.5%:</strong> 프레임워크 표준(FRED 10년 기대 인플레 ~2.34%와 근접). 가치 영향은 작음.</li>
+    </ul>
+
+    <h4>데이터·방법론상 유의점</h4>
+    <ul class="clean">
+      <li>FY2025 순이익 $5.09M은 <strong>Bressner 매각 차익 $8.19M(일회성)</strong> 때문이며, 핵심 영업은 적자. 본 분석은 일관되게 <strong>지속사업 기준</strong>을 사용.</li>
+      <li>1Q26 영업현금흐름 +$4.0M의 상당액은 <strong>매출채권 회수($6.2M)라는 일회성 운전자본 효과</strong> — 반복 가능한 영업현금창출력으로 보기 어려움.</li>
+      <li>애널리스트 커버리지가 3곳으로 얕고, 목표주가 $18은 <strong>현재가보다 낮음</strong>(컨센서스도 추가 상방을 보지 않음).</li>
+      <li>시장 규모(TAM)는 조사기관마다 정의·수치가 상충 → 범위로 제시.</li>
+    </ul>
+
+    <div class="note amber">
+      <div class="nh">밸류에이션이 말하지 못하는 것 — 타이밍과 모멘텀</div>
+      DCF는 “장기 내재가치”를 다룰 뿐 <strong>“언제 주가가 그쪽으로 움직일지”는 말하지 못합니다.</strong> OSS는 모멘텀·투기 수요가 강한 종목입니다: 저점 $1.85 대비 약 <strong>10배 급등</strong>, 시가총액은 Q4 실적(3/18) 때 $231M에서 6/1 <strong>$470M으로 2.5개월 만에 약 2배</strong>. 한 분석은 <strong>지난 3년간 EPS가 정체였으나 주가는 연 78% 상승</strong>했다고 지적합니다(주가가 이익을 크게 앞섬). 또 <strong>2배 레버리지 단일종목 ETF(OSSL) 출시(2026.5)</strong>, 공매도 잔고 급증(5/15 기준 약 <strong>370만 주, 2주 만에 +115%</strong>, 발행주식의 ~15%), 기관 보유 32.7%의 상당수가 <strong>Jane Street·Marshall Wace·Millennium 등 퀀트/단기 트레이딩 펀드</strong>라는 점은 모두 “장기 확신”보다 “단기 수급”이 주가를 움직이고 있을 가능성을 시사합니다. 이런 수급은 펀더멘털과 무관하게 주가를 장기간 “비싼” 상태로 유지하거나 더 끌어올릴 수도, 급반전(숏스퀴즈 또는 급락)시킬 수도 있습니다. 펀더멘털 분석과 별개의 위험 요인입니다.
+    </div>
+    <p style="margin-top:14px"><small>본 분석은 정보 제공을 위한 것으로, 특정 매매를 권유하지 않습니다. 개인의 포트폴리오 맥락·위험성향은 반영되지 않았습니다. 모든 추정은 위 가정에 따른 것이며 실제와 다를 수 있습니다.</small></p>
+  </div>
+</section>
+
+<!-- ============ 16. 리스크 & 체크포인트 ============ -->
+<section id="s16">
+  <div class="wrap">
+    <div class="sec-no">SECTION 16</div>
+    <h2>주요 리스크 &amp; 분기별 체크포인트</h2>
+    <p class="lead">이 종목을 추적한다면, 아래 항목들이 “투자 논리가 유지되는지/무너지는지”를 가르는 신호입니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4 style="color:var(--red)">주요 리스크 (영향 × 가능성)</h4>
+        <ul class="clean" style="font-size:15px">
+          <li><strong>수익성 미입증 (높음 × 중):</strong> 흑자가 일회성에 그치고 구조적 적자로 회귀.</li>
+          <li><strong>고객/프로그램 집중 (높음 × 높음):</strong> <strong>단일 고객이 1Q26 매출의 약 51%·매출채권의 약 61%</strong>. 공급처도 ~37% 집중. 한 프로그램 차질이 실적을 크게 흔들 수 있음.</li>
+          <li><strong>국방예산·정치 (높음 × 중):</strong> 예산 삭감·셧다운·프로그램 취소.</li>
+          <li><strong>경쟁·내재화 (중 × 중):</strong> 프라임 자체 제작, NVIDIA 엣지 직접 진출.</li>
+          <li><strong>공급망 (중 × 중):</strong> 메모리 등 부품 가격·가용성(회사 직접 경고).</li>
+          <li><strong>밸류에이션·모멘텀 (높음 × 중):</strong> 높은 기대치 미달 시 급격한 디레이팅.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--teal)">분기별 체크포인트</h4>
+        <ul class="clean" style="font-size:15px">
+          <li>☐ 매출 성장률이 가이던스(20~25%)에 부합하는가</li>
+          <li>☐ <strong>GAAP 영업이익률</strong>이 흑자로 굳어지는가 (1순위)</li>
+          <li>☐ 매출총이익률이 ~40% 이상 유지되는가</li>
+          <li>☐ <strong>book-to-bill &gt; 1.0</strong> 및 수주잔고 추이</li>
+          <li>☐ 신규 대형/다년 프로그램 수주 여부</li>
+          <li>☐ 주식수 증가(희석) 및 현금 소진 속도</li>
+          <li>☐ 운전자본 효과 제외한 <strong>순수 영업현금흐름</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="nh">연간 재검토 항목</div>
+      ① 내재 CAP 재계산(주가·금리 변화 반영) · ② 자본비용 재산정(국채금리·베타) · ③ 섹터 페이드 비율 업데이트 · ④ 해자 원천 재평가(다년 프로그램 incumbent 확보 진척) · ⑤ 생애주기 단계 재판별(성장기 안착 여부). 특히 <strong>내재 CAP가 진입 시점 대비 추가로 크게 상승</strong>했다면, 그만큼 기대치가 더 높아져 실망 위험이 커졌다는 신호입니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer style="background:var(--ink);color:#bdb49b;padding:40px 0 56px">
+  <div class="wrap">
+    <div class="kicker" style="color:var(--amber-soft)">방법론 &amp; 출처</div>
+    <h2 style="color:#fbf7ec;font-size:22px;margin:6px 0 14px">데이터 출처와 기준 시점</h2>
+    <div class="grid2" style="gap:24px">
+      <div>
+        <p style="font-size:14px;color:#cfc7af;margin-bottom:8px"><strong style="color:#fff">시장·재무 데이터</strong> (기준 2026-06-01~02)</p>
+        <ul style="font-size:13px;line-height:1.7;color:#a99f86;font-family:'JetBrains Mono',monospace;padding-left:18px">
+          <li>주가·통계: stockanalysis.com (6/1 종가 $18.96)</li>
+          <li>실적: OSS 1Q2026·FY2025 IR (GlobeNewswire), SEC 10-K/10-Q</li>
+          <li>피어: Mercury(MRCY)·Curtiss-Wright(CW) 1Q2026 실적</li>
+        </ul>
+      </div>
+      <div>
+        <p style="font-size:14px;color:#cfc7af;margin-bottom:8px"><strong style="color:#fff">거시·산업 데이터</strong></p>
+        <ul style="font-size:13px;line-height:1.7;color:#a99f86;font-family:'JetBrains Mono',monospace;padding-left:18px">
+          <li>10년 국채 4.45%: FRED / 美 재무부 (6/1)</li>
+          <li>ERP: A. Damodaran 2026 (내재 4.23%) / 표준 4.75%</li>
+          <li>기대 인플레 2.34%: FRED 10Y BEI (’26.3)</li>
+          <li>TAM: Technavio·Fortune BI·GMI·Next Move</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:12.5px;color:#8b8266;margin-top:22px;line-height:1.7;font-family:'JetBrains Mono',monospace">
+      방법론: 경쟁우위 기간(CAP) 기반 역(逆)DCF. 페이드 모델 최종가치, 연중(mid-year) 할인, CAPM 자본비용. 모든 DCF·민감도·시나리오 수치는 본 분석에서 직접 계산. 비판적 사고 프로토콜(논리·사실 이중검증, 반대가설 복원, 양화사 정밀성, 한계 명시) 적용.<br><br>
+      ※ 본 자료는 정보 제공 목적이며 특정 종목의 매수·매도 권유가 아닙니다. 추정치는 명시된 가정에 의존하며 실제 결과와 다를 수 있습니다. 투자 판단과 그 결과는 전적으로 이용자 본인에게 있습니다.
+    </p>
+    <p style="font-size:11px;color:#5d5847;margin-top:18px;font-family:'JetBrains Mono',monospace">ONE STOP SYSTEMS, INC. (NASDAQ: OSS) · CAP FRAMEWORK ANALYSIS · 생성 2026-06-04</p>
+  </div>
+</footer>
+
+</body>
+</html>

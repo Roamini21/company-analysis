@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloudflare (NET) — CAP 프레임워크 장기 투자 분석</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Serif+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F4EE; --ink:#1C1B19; --ink-soft:#56534C; --ink-faint:#8C887E;
+    --orange:#F6821F; --orange-deep:#C25C0C; --navy:#0F2B33; --navy-2:#143A45;
+    --teal:#2E6E7E; --sand:#EFE9DD; --sand-2:#E7DFD0; --line:#DAD2C2;
+    --green:#2C7A4B; --red:#B23A2E; --gold:#B0822F; --blue:#2B5C7A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:'Pretendard',sans-serif; line-height:1.75; font-size:16.5px;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(rgba(28,27,25,.022) 1px, transparent 1px);
+    background-size:4px 4px;
+  }
+  .serif{font-family:'Noto Serif KR',serif;}
+  .mono{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 26px;}
+  h1,h2,h3,h4{font-family:'Noto Serif KR',serif; line-height:1.3; font-weight:700;}
+  p{margin:0 0 1em;}
+  a{color:var(--orange-deep);}
+  .em{color:var(--orange-deep); font-weight:700;}
+  .neg{color:var(--red); font-weight:600;} .pos{color:var(--green); font-weight:600;}
+
+  /* ---------- HERO ---------- */
+  .hero{background:var(--navy); color:#F4EFE6; padding:62px 0 50px; position:relative; overflow:hidden;}
+  .hero::before{content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(900px 380px at 82% -8%, rgba(246,130,31,.30), transparent 60%),
+      radial-gradient(620px 320px at 8% 116%, rgba(46,110,126,.40), transparent 60%);}
+  .hero .wrap{position:relative;}
+  .kicker{font-family:'IBM Plex Mono',monospace; letter-spacing:.34em; text-transform:uppercase;
+    font-size:11.5px; color:var(--orange); margin-bottom:20px; font-weight:500;}
+  .hero h1{font-size:clamp(34px,6.4vw,62px); font-weight:900; color:#FCF8F0; letter-spacing:-.01em;}
+  .hero h1 .tk{color:var(--orange); font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:.62em; vertical-align:.12em;}
+  .hero .sub{font-size:18px; color:#CFC7B7; max-width:660px; margin-top:18px; line-height:1.7;}
+  .hero .meta{display:flex; flex-wrap:wrap; gap:22px 34px; margin-top:30px;
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#A9B4B0;}
+  .hero .meta b{color:#F4EFE6; font-weight:600;}
+  .rule{height:3px;width:64px;background:var(--orange);margin:0 0 26px;border-radius:2px;}
+
+  /* verdict */
+  .verdict{margin-top:38px; background:rgba(255,255,255,.05); border:1px solid rgba(244,239,230,.16);
+    border-left:4px solid var(--orange); border-radius:12px; padding:26px 28px;}
+  .verdict .vh{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.24em;
+    text-transform:uppercase; color:var(--orange); margin-bottom:12px;}
+  .verdict p{font-size:18.5px; color:#F1ECE2; line-height:1.66; margin:0;}
+  .verdict .big{font-size:23px; font-weight:700; color:#fff;} 
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:56px 0; border-bottom:1px solid var(--line);}
+  .sec-no{font-family:'IBM Plex Mono',monospace; color:var(--orange-deep); font-size:13px;
+    letter-spacing:.2em; font-weight:600;}
+  h2.title{font-size:clamp(25px,4vw,36px); margin:6px 0 6px; letter-spacing:-.01em;}
+  .lede{font-size:17.5px; color:var(--ink-soft); max-width:760px; margin-bottom:30px;}
+  h3.sub-h{font-size:21px; margin:36px 0 12px; color:var(--navy);}
+  h4.mini{font-size:16px; margin:20px 0 8px; color:var(--navy-2); font-weight:700;}
+
+  /* one-liner card */
+  .oneliner{background:linear-gradient(120deg,var(--sand),var(--sand-2));
+    border:1px solid var(--line); border-radius:14px; padding:24px 26px; margin:24px 0;
+    position:relative;}
+  .oneliner .q{font-family:'Noto Serif KR',serif; font-size:21px; font-weight:700; color:var(--navy); line-height:1.6;}
+  .oneliner .lbl{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--orange-deep); margin-bottom:10px;}
+
+  /* stat grid */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:8px 0 4px;}
+  .stat{background:#fff; border:1px solid var(--line); border-radius:12px; padding:18px 16px;}
+  .stat .v{font-family:'IBM Plex Mono',monospace; font-size:23px; font-weight:600; color:var(--navy); letter-spacing:-.02em;}
+  .stat .v.o{color:var(--orange-deep);}
+  .stat .k{font-size:12.5px; color:var(--ink-faint); margin-top:5px; line-height:1.45;}
+  @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr);}}
+
+  /* callout / note */
+  .note{background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin:20px 0;}
+  .note.warn{border-left:4px solid var(--gold); background:#FCFAF4;}
+  .note.risk{border-left:4px solid var(--red);}
+  .note.key{border-left:4px solid var(--orange); background:linear-gradient(180deg,#FFF8F0,#fff);}
+  .note h4{font-family:'Noto Serif KR',serif; font-size:16.5px; margin-bottom:8px; color:var(--navy);}
+
+  /* generic text block */
+  .prose p{margin-bottom:1.05em;} .prose{max-width:830px;}
+  .term{border-bottom:1.5px dotted var(--orange); cursor:help; font-weight:600;}
+
+  /* confidence chip */
+  .chip{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px;
+    padding:3px 9px; border-radius:20px; font-weight:600; letter-spacing:.02em; vertical-align:middle;}
+  .chip.hi{background:#E6F0E9; color:var(--green); border:1px solid #BFD9C8;}
+  .chip.mid{background:#FBF1E0; color:var(--gold); border:1px solid #E7D3AC;}
+  .chip.lo{background:#F7E7E4; color:var(--red); border:1px solid #E6C4BD;}
+
+  figure{margin:26px 0;}
+  figcaption{font-size:13px; color:var(--ink-faint); margin-top:10px; text-align:center; font-family:'IBM Plex Mono',monospace;}
+  svg{display:block; max-width:100%; height:auto;}
+
+  /* tables */
+  table{width:100%; border-collapse:collapse; font-size:14px; margin:8px 0;}
+  .tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:#fff;}
+  th,td{padding:11px 13px; text-align:right; border-bottom:1px solid var(--line);}
+  th:first-child,td:first-child{text-align:left;}
+  thead th{background:var(--navy); color:#EDE7DA; font-family:'IBM Plex Mono',monospace;
+    font-size:12px; font-weight:500; letter-spacing:.02em; border-bottom:none;}
+  tbody tr:nth-child(even){background:var(--sand);}
+  td.mono,th.mono{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
+  tr.hl{background:#FFF3E4 !important; font-weight:700;}
+  tr.hl td{color:var(--navy);}
+  caption{caption-side:bottom; font-size:12.5px; color:var(--ink-faint); padding-top:10px; text-align:left;}
+
+  ul.clean{list-style:none; padding:0; margin:14px 0;}
+  ul.clean li{position:relative; padding-left:26px; margin-bottom:11px; color:var(--ink-soft);}
+  ul.clean li::before{content:"›"; position:absolute; left:6px; top:-1px; color:var(--orange); font-weight:700; font-size:18px;}
+  ul.clean li b{color:var(--ink);}
+
+  .twocol{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  @media(max-width:760px){.twocol{grid-template-columns:1fr;}}
+
+  .tag{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:2px 8px;
+    border:1px solid var(--line); border-radius:6px; color:var(--ink-soft); margin:2px 3px 2px 0;}
+
+  footer{background:var(--navy); color:#B9C2BF; padding:40px 0 50px; font-size:13px;}
+  footer a{color:var(--orange);}
+  .src{font-family:'IBM Plex Mono',monospace; font-size:12px; color:#94A0A0; line-height:1.9;}
+
+  .toc{display:flex; flex-wrap:wrap; gap:8px; margin-top:30px;}
+  .toc a{font-family:'IBM Plex Mono',monospace; font-size:12px; text-decoration:none;
+    color:#CFC7B7; border:1px solid rgba(244,239,230,.2); padding:6px 11px; border-radius:20px;}
+  .toc a:hover{border-color:var(--orange); color:var(--orange);}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">CAP 프레임워크 · 장기 주식 분석 · 2026.05.30 기준</div>
+    <h1>Cloudflare <span class="tk">NYSE: NET</span></h1>
+    <p class="sub">전 세계 인터넷 트래픽의 상당 부분이 지나가는 '연결성 클라우드(Connectivity Cloud)' 기업.
+      현재 주가에 시장이 어떤 기대를 심어 놓았는지 — <b>경쟁 우위 기간(CAP)</b>의 관점에서 역산합니다.</p>
+    <div class="meta">
+      <span>주가 <b>≈ $226</b></span>
+      <span>시가총액 <b>≈ $79B (약 110조 원)</b></span>
+      <span>52주 범위 <b>$158.83 – $260.00</b></span>
+      <span>FY2025 매출 <b>$2,168M (+30%)</b></span>
+      <span>생애주기 <b>성장(Growth) 단계</b></span>
+    </div>
+
+    <div class="verdict">
+      <div class="vh">핵심 결론 (Executive Summary)</div>
+      <p><span class="big">현재 주가 $226은, 보수적 가정(주식보상 비용처리 · 자본비용 11%)으로는 산출되는 가치(약 $45)의 5배에 달합니다.</span>
+      이는 "Cloudflare가 향후 <b>약 15년 이상</b> 매년 <b>~25%</b>의 고성장을 이어가 매출이 <b>$55~70B(현재의 25~30배)</b>에 도달하고, 동시에 최고 수준의 수익성을 확보한다"는 — 즉 <b>매우 긴 경쟁 우위 기간(CAP)</b>을 시장이 가격에 반영하고 있다는 뜻입니다.
+      해자는 견고하지만(신뢰도 <span class="chip hi">높음 ~70%</span>), 가격이 내포한 기대치는 프레임워크 기준 '낙관~과도한 낙관' 구간에 위치합니다 <span class="chip hi">높음 ~85%</span>.</p>
+    </div>
+
+    <nav class="toc">
+      <a href="#overview">1. 기업 개요</a>
+      <a href="#revenue">2. 수익 구조</a>
+      <a href="#tech">3. 제품·기술</a>
+      <a href="#industry">4. 산업 분석</a>
+      <a href="#lifecycle">5. 생애주기</a>
+      <a href="#moat">6. 경제적 해자</a>
+      <a href="#porter">7. 경쟁 우위</a>
+      <a href="#swot">8. SWOT</a>
+      <a href="#peers">9. 피어 비교</a>
+      <a href="#dcf">10. DCF 모델</a>
+      <a href="#cap">11. 내재 CAP</a>
+      <a href="#sensi">12. 민감도·시나리오</a>
+      <a href="#risk">13. 리스크·종합</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= 1. 기업 개요 ================= -->
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-no">01 / OVERVIEW</div>
+    <h2 class="title">기업 개요 — Cloudflare는 무엇을 하는 회사인가</h2>
+    <p class="lede">처음 접하는 분을 위해, 전문 용어를 모두 풀어서 설명합니다.</p>
+
+    <div class="oneliner">
+      <div class="lbl">한 문장 요약</div>
+      <div class="q">"Cloudflare는 전 세계에 깔아 둔 거대한 컴퓨터 네트워크를 빌려주어, 웹사이트·앱을
+        <span class="em">더 빠르게(성능)</span>, <span class="em">더 안전하게(보안)</span> 만들고,
+        그 위에서 <span class="em">프로그램까지 실행(개발 플랫폼)</span>하게 해 주는 회사입니다."</div>
+    </div>
+
+    <div class="prose">
+      <h3 class="sub-h">설립 배경</h3>
+      <p>Cloudflare(클라우드플레어)는 <b>2009년</b> 매슈 프린스(Matthew Prince), 미셸 재틀린(Michelle Zatlyn), 리 할로웨이(Lee Holloway)가 공동 창업했고, 본사는 미국 샌프란시스코에 있습니다. <b>2019년 9월</b> 뉴욕증권거래소(NYSE)에 티커 <b>NET</b>으로 상장했습니다. 출발점은 "웹사이트로 들어오는 나쁜 트래픽(해킹·공격)을 걸러내고, 좋은 트래픽은 더 빠르게 전달하자"는 단순한 아이디어였습니다.</p>
+
+      <h4 class="mini">핵심 비유 — "인터넷의 경비원 겸 고속도로"</h4>
+      <p>여러분이 어떤 웹사이트(예: 쇼핑몰)에 접속하면, 원래는 그 회사의 서버(데이터가 저장된 본진, '오리진origin'이라고 부릅니다)까지 직접 연결됩니다. Cloudflare는 이용자와 그 서버 <b>사이에 끼어드는 중간 정거장</b> 역할을 합니다(이를 <span class="term" title="요청을 대신 받아 뒤의 진짜 서버로 전달해 주는 중계 서버">리버스 프록시</span>라고 합니다). 이 중간 정거장은 전 세계 <b>310개 이상 도시, 120개국 이상</b>에 흩어져 있어, 이용자와 가장 가까운 곳에서 응답합니다.</p>
+      <ul class="clean">
+        <li><b>경비원 역할(보안):</b> 공격성 트래픽을 입구에서 차단해 본진 서버를 보호합니다.</li>
+        <li><b>고속도로 휴게소 역할(성능):</b> 자주 쓰는 데이터(이미지·동영상 등)를 이용자 근처에 미리 저장(<span class="term" title="콘텐츠를 가까운 곳에 미리 복사해 두는 것">캐싱</span>)해 두어 로딩을 빠르게 합니다.</li>
+        <li><b>작은 공장 역할(개발):</b> 그 중간 정거장 안에서 고객이 만든 프로그램 코드를 직접 돌릴 수도 있습니다(엣지 컴퓨팅).</li>
+      </ul>
+
+      <h3 class="sub-h">핵심 사업 — 4개의 큰 축</h3>
+    </div>
+
+    <div class="twocol">
+      <div class="note key"><h4>① 애플리케이션 보안 (Security)</h4>
+        <p style="margin:0;color:var(--ink-soft)">해킹·자동화 공격·디도스(DDoS, 트래픽 폭탄으로 사이트를 마비시키는 공격)를 막아 줍니다. 웹 방화벽(WAF), 봇 차단, API 보안 등.</p></div>
+      <div class="note key"><h4>② 애플리케이션 성능 (Performance)</h4>
+        <p style="margin:0;color:var(--ink-soft)">콘텐츠 전송 네트워크(<span class="term" title="Content Delivery Network: 전 세계에 콘텐츠를 분산 저장해 빠르게 전달하는 망">CDN</span>), 로드 밸런싱, DNS(주소 안내소), 동영상 스트리밍 등 '빠르게'를 담당.</p></div>
+      <div class="note key"><h4>③ 제로 트러스트 · 네트워크 (Zero Trust)</h4>
+        <p style="margin:0;color:var(--ink-soft)">"아무도 무조건 믿지 않는다"는 원칙의 기업용 보안망(<span class="term" title="Secure Access Service Edge: 네트워크와 보안을 클라우드에서 통합 제공">SASE</span>). 재택근무·지점 연결을 안전하게 묶어 줍니다.</p></div>
+      <div class="note key"><h4>④ 개발자 플랫폼 (Developer)</h4>
+        <p style="margin:0;color:var(--ink-soft)">Workers(엣지에서 코드 실행), R2(저장소), Workers AI(엣지에서 AI 추론), D1·KV 등. 개발자가 서버 없이 바로 서비스를 올립니다.</p></div>
+    </div>
+
+    <div class="note warn"><h4>왜 'Connectivity Cloud(연결성 클라우드)'라고 부르나</h4>
+      <p style="margin:0">아마존 AWS·마이크로소프트 Azure 같은 거대 클라우드(<span class="term" title="대규모 데이터센터를 운영하는 초대형 클라우드 사업자">하이퍼스케일러</span>)가 '데이터를 저장·연산하는 중앙 창고'라면, Cloudflare는 그 창고들과 이용자, 사무실, 기기들을 <b>안전하고 빠르게 이어 주는 '연결망'</b>에 특화합니다. 회사는 스스로를 이렇게 정의합니다. 핵심 자산은 거대한 글로벌 네트워크 그 자체입니다.</p></div>
+  </div>
+</section>
+
+<!-- ================= 2. 수익 구조 ================= -->
+<section id="revenue">
+  <div class="wrap">
+    <div class="sec-no">02 / BUSINESS MODEL</div>
+    <h2 class="title">수익 구조 — 이 회사는 어떻게 돈을 버는가</h2>
+    <p class="lede">핵심은 <b>구독(Subscription)</b>입니다. 매달/매년 정기적으로 받는 반복 매출이 대부분이라 예측 가능성이 높습니다.</p>
+
+    <figure>
+      <svg viewBox="0 0 980 430" role="img" aria-label="Cloudflare 수익 구조 인포그래픽">
+        <defs>
+          <linearGradient id="gFunnel" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#2E6E7E"/><stop offset="1" stop-color="#F6821F"/>
+          </linearGradient>
+          <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 z" fill="#C25C0C"/></marker>
+        </defs>
+        <!-- title -->
+        <text x="24" y="34" font-family="'Noto Serif KR',serif" font-size="18" font-weight="700" fill="#0F2B33">고객 깔때기(Funnel): 무료 → 유료, 그리고 점점 더 많이 쓰게 만들기</text>
+
+        <!-- funnel layers -->
+        <g font-family="Pretendard" font-size="13" fill="#fff">
+          <polygon points="40,70 470,70 430,108 80,108" fill="#9FB3B0"/>
+          <text x="255" y="94" text-anchor="middle" fill="#1C1B19" font-weight="600">무료 사용자 (수백만) — 1.1.1.1 DNS, 개인 사이트 등</text>
+          <polygon points="80,114 430,114 398,152 112,152" fill="#5E8E97"/>
+          <text x="255" y="138" text-anchor="middle" font-weight="600">유료 전환: Pro · Business 요금제 (소규모 사업자)</text>
+          <polygon points="112,158 398,158 366,196 144,196" fill="#2E6E7E"/>
+          <text x="255" y="182" text-anchor="middle" font-weight="600">기업(Enterprise) 계약 — 약 296,000 유료 고객</text>
+          <polygon points="144,202 366,202 334,244 176,244" fill="#C25C0C"/>
+          <text x="255" y="227" text-anchor="middle" font-weight="600">대형 고객: 4,416곳이 연 $100K+ 지출</text>
+        </g>
+
+        <!-- arrow down -->
+        <line x1="255" y1="252" x2="255" y2="282" stroke="#C25C0C" stroke-width="2" marker-end="url(#ar)"/>
+        <rect x="40" y="288" width="430" height="118" rx="10" fill="#EFE9DD" stroke="#DAD2C2"/>
+        <text x="60" y="314" font-family="'Noto Serif KR',serif" font-size="14" font-weight="700" fill="#0F2B33">'대지의 확장(Land &amp; Expand)' 엔진</text>
+        <text x="60" y="338" font-family="Pretendard" font-size="12.5" fill="#56534C">처음엔 하나의 기능만 쓰다가,</text>
+        <text x="60" y="357" font-family="Pretendard" font-size="12.5" fill="#56534C">보안→성능→개발 플랫폼으로 사용 제품을 늘립니다.</text>
+        <text x="60" y="382" font-family="'IBM Plex Mono',monospace" font-size="13" font-weight="600" fill="#C25C0C">달러 기준 순유지율(DBNR) ≈ 119~120%</text>
+        <text x="60" y="399" font-family="Pretendard" font-size="11" fill="#8C887E">= 기존 고객이 작년보다 평균 19~20% 더 지출 (해지보다 증액이 큼)</text>
+
+        <!-- right: revenue mix conceptual -->
+        <g>
+          <rect x="510" y="70" width="440" height="336" rx="10" fill="#fff" stroke="#DAD2C2"/>
+          <text x="532" y="98" font-family="'Noto Serif KR',serif" font-size="14" font-weight="700" fill="#0F2B33">매출의 성격</text>
+          <!-- recurring bar -->
+          <text x="532" y="128" font-family="Pretendard" font-size="12.5" fill="#56534C">반복(구독) 매출 비중</text>
+          <rect x="532" y="136" width="392" height="22" rx="5" fill="#EFE9DD"/>
+          <rect x="532" y="136" width="372" height="22" rx="5" fill="#2E6E7E"/>
+          <text x="912" y="152" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#fff" font-weight="600">대부분</text>
+
+          <text x="532" y="190" font-family="Pretendard" font-size="12.5" fill="#56534C">매출총이익률 (Gross Margin)</text>
+          <rect x="532" y="198" width="392" height="22" rx="5" fill="#EFE9DD"/>
+          <rect x="532" y="198" width="293" height="22" rx="5" fill="#F6821F"/>
+          <text x="818" y="214" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#fff" font-weight="600">≈ 75%</text>
+          <text x="532" y="238" font-family="Pretendard" font-size="10.5" fill="#8C887E">매출 $1당 약 75센트가 직접비용을 뺀 이익 (SW 기업 특유의 고마진)</text>
+
+          <!-- product areas -->
+          <text x="532" y="272" font-family="Pretendard" font-size="12.5" fill="#56534C">제품 영역 (요금에 묶여 함께 팔림)</text>
+          <g font-family="'IBM Plex Mono',monospace" font-size="11" fill="#0F2B33">
+            <rect x="532" y="284" width="120" height="30" rx="6" fill="#FBEFE0" stroke="#F6821F"/><text x="592" y="303" text-anchor="middle">보안</text>
+            <rect x="662" y="284" width="120" height="30" rx="6" fill="#E7F0F0" stroke="#2E6E7E"/><text x="722" y="303" text-anchor="middle">성능/CDN</text>
+            <rect x="792" y="284" width="132" height="30" rx="6" fill="#EFE9DD" stroke="#B0822F"/><text x="858" y="303" text-anchor="middle">Zero Trust</text>
+            <rect x="532" y="320" width="180" height="30" rx="6" fill="#E8EEF2" stroke="#2B5C7A"/><text x="622" y="339" text-anchor="middle">개발자(Workers·R2·AI)</text>
+            <rect x="722" y="320" width="202" height="30" rx="6" fill="#F2ECF0" stroke="#7A5C7A"/><text x="823" y="339" text-anchor="middle">'펀드 풀(Pool of Funds)' 대형계약</text>
+          </g>
+          <text x="532" y="378" font-family="Pretendard" font-size="11.5" fill="#56534C" font-weight="600">최근 추세:</text>
+          <text x="532" y="396" font-family="Pretendard" font-size="11" fill="#8C887E">$1M+ 초대형 계약이 전년 대비 +73% — 대기업 침투가 빠르게 진행</text>
+        </g>
+      </svg>
+      <figcaption>그림 2-1. 수익 구조: 깔때기로 고객을 모으고, '대지의 확장'으로 1인당 지출을 키운다 (출처: 회사 IR, FY2025 ·Q1 FY2026)</figcaption>
+    </figure>
+
+    <div class="prose">
+      <p>요약하면 Cloudflare의 매출 공식은 <b>"(유료 고객 수) × (고객 1인당 지출액)"</b>이며, 두 항이 동시에 커지고 있습니다. 특히 고객이 시간이 지날수록 더 많은 제품을 쓰게 되는 <b>DBNR ~120%</b> 구조 덕분에, 신규 고객을 거의 안 늘려도 매출이 매년 약 20%씩 자라는 힘이 내장돼 있습니다.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="v o">~296K</div><div class="k">총 유료 고객 수</div></div>
+      <div class="stat"><div class="v o">4,416</div><div class="k">연 $100K+ 지출 대형 고객</div></div>
+      <div class="stat"><div class="v">~120%</div><div class="k">달러 기준 순유지율(DBNR)</div></div>
+      <div class="stat"><div class="v">$2.14B</div><div class="k">잔여계약매출(RPO) · +42~48%</div></div>
+    </div>
+    <p style="font-size:13px;color:var(--ink-faint);margin-top:8px"><b>RPO(잔여계약매출)</b>란 이미 계약했지만 아직 매출로 잡히지 않은 '예약된 미래 매출'로, 향후 성장의 예고편 역할을 합니다.</p>
+  </div>
+</section>
+
+<!-- ================= 3. 제품·기술 ================= -->
+<section id="tech">
+  <div class="wrap">
+    <div class="sec-no">03 / PRODUCT &amp; TECHNOLOGY</div>
+    <h2 class="title">제품·서비스와 기술력 — '어떻게' 작동하는가</h2>
+    <p class="lede">Cloudflare의 진짜 자산은 <b>전 세계에 분산된 네트워크 그 자체</b>입니다. 이용자가 사이트에 접속할 때 무슨 일이 벌어지는지 따라가 봅니다.</p>
+
+    <figure>
+      <svg viewBox="0 0 980 300" role="img" aria-label="Cloudflare 작동 흐름도">
+        <defs><marker id="ar2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2E6E7E"/></marker></defs>
+        <!-- user -->
+        <g><circle cx="80" cy="150" r="40" fill="#EFE9DD" stroke="#2E6E7E" stroke-width="2"/>
+          <text x="80" y="146" text-anchor="middle" font-family="Pretendard" font-size="13" font-weight="700" fill="#0F2B33">이용자</text>
+          <text x="80" y="164" text-anchor="middle" font-family="Pretendard" font-size="11" fill="#56534C">(전 세계)</text></g>
+        <line x1="124" y1="150" x2="196" y2="150" stroke="#2E6E7E" stroke-width="2.5" marker-end="url(#ar2)"/>
+
+        <!-- cloudflare edge -->
+        <rect x="200" y="58" width="430" height="184" rx="16" fill="#0F2B33"/>
+        <text x="415" y="86" text-anchor="middle" font-family="'Noto Serif KR',serif" font-size="15" font-weight="700" fill="#F6821F">Cloudflare 엣지 네트워크 (가장 가까운 도시)</text>
+        <g font-family="Pretendard" font-size="11.5" fill="#EDE7DA">
+          <rect x="218" y="100" width="120" height="46" rx="8" fill="#143A45"/><text x="278" y="120" text-anchor="middle" font-weight="600" fill="#fff">①보안 검문</text><text x="278" y="136" text-anchor="middle" font-size="10">공격 차단(WAF·봇·DDoS)</text>
+          <rect x="348" y="100" width="120" height="46" rx="8" fill="#143A45"/><text x="408" y="120" text-anchor="middle" font-weight="600" fill="#fff">②캐시 확인</text><text x="408" y="136" text-anchor="middle" font-size="10">저장된 콘텐츠 즉시 전달</text>
+          <rect x="478" y="100" width="134" height="46" rx="8" fill="#143A45"/><text x="545" y="120" text-anchor="middle" font-weight="600" fill="#fff">③코드 실행</text><text x="545" y="136" text-anchor="middle" font-size="10">Workers·Workers AI</text>
+          <rect x="218" y="156" width="394" height="64" rx="8" fill="#102F38" stroke="#2E6E7E" stroke-dasharray="3 3"/>
+          <text x="415" y="178" text-anchor="middle" font-size="12" fill="#9FE0D6" font-weight="600">핵심: 모든 검문·처리가 '이용자 근처'에서 끝난다 → 빠르고 안전</text>
+          <text x="415" y="200" text-anchor="middle" font-size="11" fill="#CFC7B7">310+ 도시 · 120+ 개국에 동일한 기능이 복제되어 있음</text>
+        </g>
+        <line x1="634" y1="150" x2="706" y2="150" stroke="#2E6E7E" stroke-width="2.5" marker-end="url(#ar2)" stroke-dasharray="5 4"/>
+        <text x="670" y="140" text-anchor="middle" font-family="Pretendard" font-size="10" fill="#8C887E">필요할 때만</text>
+
+        <!-- origin -->
+        <g><rect x="710" y="112" width="76" height="76" rx="10" fill="#EFE9DD" stroke="#C25C0C" stroke-width="2"/>
+          <text x="748" y="146" text-anchor="middle" font-family="Pretendard" font-size="12" font-weight="700" fill="#0F2B33">고객</text>
+          <text x="748" y="163" text-anchor="middle" font-family="Pretendard" font-size="12" font-weight="700" fill="#0F2B33">본진 서버</text></g>
+        <text x="748" y="206" text-anchor="middle" font-family="Pretendard" font-size="10.5" fill="#8C887E">(오리진 origin)</text>
+
+        <!-- benefit callout -->
+        <g><rect x="812" y="100" width="150" height="100" rx="10" fill="#FBEFE0" stroke="#F6821F"/>
+          <text x="887" y="124" text-anchor="middle" font-family="Pretendard" font-size="11.5" font-weight="700" fill="#C25C0C">결과</text>
+          <text x="887" y="146" text-anchor="middle" font-family="Pretendard" font-size="10.5" fill="#56534C">본진 부하 ↓</text>
+          <text x="887" y="164" text-anchor="middle" font-family="Pretendard" font-size="10.5" fill="#56534C">속도 ↑ · 공격 차단</text>
+          <text x="887" y="182" text-anchor="middle" font-family="Pretendard" font-size="10.5" fill="#56534C">비용 절감</text>
+        </g>
+      </svg>
+      <figcaption>그림 3-1. 한 번의 접속에서 벌어지는 일 — 보안·캐시·코드 실행이 모두 이용자 근처(엣지)에서 처리된다</figcaption>
+    </figure>
+
+    <div class="prose">
+      <h3 class="sub-h">핵심 제품을 비전공자 언어로</h3>
+      <h4 class="mini">CDN (콘텐츠 전송 네트워크)</h4>
+      <p>인기 유튜브 영상을 서울 사람이 볼 때 미국 서버까지 갈 필요 없이, 가까운 한국 서버에서 받으면 빠르겠죠. CDN은 이렇게 <b>콘텐츠를 전 세계에 미리 복사해 두고, 가장 가까운 곳에서 전달</b>하는 기술입니다. Cloudflare의 출발점이자 지금도 큰 매출원입니다.</p>
+      <h4 class="mini">보안: WAF · 봇 관리 · DDoS 방어</h4>
+      <p><b>WAF(웹 방화벽)</b>는 사이트로 들어오는 요청 중 해킹 시도를 걸러내는 문지기입니다. <b>봇 관리</b>는 사람인 척하는 자동 프로그램(가격 긁어가기, 계정 탈취 시도 등)을 식별합니다. <b>DDoS 방어</b>는 수많은 좀비 컴퓨터가 한꺼번에 트래픽을 퍼부어 사이트를 마비시키는 공격을, 거대한 네트워크 용량으로 흡수해 막습니다.</p>
+      <h4 class="mini">제로 트러스트 / SASE</h4>
+      <p>과거엔 "사내망 안에 들어오면 믿는다"는 방식이었지만, 재택·클라우드 시대엔 위험합니다. <b>제로 트러스트</b>는 "매 접속마다 누구인지·권한이 있는지 확인"하는 방식이고, 이를 네트워크와 묶어 클라우드로 제공하는 것이 <b>SASE</b>입니다. 기업 보안 시장에서 Zscaler 등과 경쟁하는 성장 영역입니다.</p>
+      <h4 class="mini">Workers · Workers AI (엣지 컴퓨팅 / AI 추론)</h4>
+      <p><b>Workers</b>는 개발자가 서버를 따로 빌리지 않고도, Cloudflare의 전 세계 네트워크 위에서 바로 코드를 돌릴 수 있게 합니다(<span class="term" title="필요할 때만 코드가 실행되고 사용한 만큼만 과금되는 방식">서버리스</span>). <b>Workers AI</b>는 한발 더 나아가, AI 모델의 '추론(질문에 답하는 단계)'을 이용자 근처에서 빠르게 실행합니다. 최근 AI 에이전트(스스로 일을 처리하는 AI)가 늘면서, 그 작업이 Cloudflare 네트워크 위에서 돌아가는 사례가 증가하고 있습니다(예: Anthropic과의 협업).</p>
+
+      <div class="note key"><h4>기술력의 본질 = '규모와 위치'</h4>
+        <p style="margin:0">Cloudflare의 기술적 강점은 화려한 단일 발명품이 아니라, <b>전 세계 곳곳에 동일한 기능을 복제해 둔 네트워크의 규모</b>에 있습니다. 트래픽이 많이 지날수록 더 많은 공격 패턴을 학습해 보안이 똑똑해지고(데이터 우위), 한 번 깔아 둔 망에 새 제품을 추가하는 한계비용이 낮습니다. 이것이 다음 장의 '해자(垓子)'로 직결됩니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 4. 산업 분석 ================= -->
+<section id="industry">
+  <div class="wrap">
+    <div class="sec-no">04 / INDUSTRY</div>
+    <h2 class="title">산업 분석 — Cloudflare가 헤엄치는 바다</h2>
+    <p class="lede">Cloudflare는 세 개의 큰 산업이 겹치는 지점에 있습니다: <b>CDN·엣지 컴퓨팅</b>, <b>사이버 보안</b>, 그리고 새롭게 떠오르는 <b>AI 인프라</b>.</p>
+
+    <figure>
+      <svg viewBox="0 0 980 360" role="img" aria-label="인터넷 인프라 가치사슬">
+        <text x="24" y="30" font-family="'Noto Serif KR',serif" font-size="17" font-weight="700" fill="#0F2B33">인터넷 인프라 가치사슬(Value Chain) 속 Cloudflare의 위치</text>
+        <defs><marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#8C887E"/></marker></defs>
+        <!-- chain boxes -->
+        <g font-family="Pretendard">
+          <rect x="24" y="60" width="150" height="74" rx="10" fill="#EFE9DD" stroke="#DAD2C2"/>
+          <text x="99" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#0F2B33">콘텐츠·앱 제작자</text>
+          <text x="99" y="108" text-anchor="middle" font-size="10.5" fill="#56534C">쇼핑몰·미디어·게임</text>
+          <text x="99" y="123" text-anchor="middle" font-size="10.5" fill="#56534C">SaaS·핀테크·정부</text>
+
+          <rect x="200" y="60" width="150" height="74" rx="10" fill="#EFE9DD" stroke="#DAD2C2"/>
+          <text x="275" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#0F2B33">호스팅/클라우드</text>
+          <text x="275" y="108" text-anchor="middle" font-size="10.5" fill="#56534C">AWS·Azure·GCP</text>
+          <text x="275" y="123" text-anchor="middle" font-size="10.5" fill="#56534C">(데이터 저장·연산)</text>
+
+          <rect x="376" y="46" width="228" height="160" rx="14" fill="#0F2B33"/>
+          <text x="490" y="74" text-anchor="middle" font-size="14" font-weight="700" fill="#F6821F" font-family="'Noto Serif KR',serif">연결·전달·보호 계층</text>
+          <text x="490" y="98" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">← Cloudflare 핵심 영역</text>
+          <text x="490" y="122" text-anchor="middle" font-size="10.5" fill="#CFC7B7">CDN · 보안 · 제로트러스트</text>
+          <text x="490" y="139" text-anchor="middle" font-size="10.5" fill="#CFC7B7">엣지 컴퓨팅 · AI 추론</text>
+          <text x="490" y="168" text-anchor="middle" font-size="10.5" fill="#9FE0D6">"창고(클라우드)와 소비자를 잇는 고속도로+검문소"</text>
+          <text x="490" y="186" text-anchor="middle" font-size="10" fill="#8FA6A3">경쟁: Akamai·Fastly / Zscaler·PANW / 하이퍼스케일러</text>
+
+          <rect x="630" y="60" width="150" height="74" rx="10" fill="#EFE9DD" stroke="#DAD2C2"/>
+          <text x="705" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#0F2B33">통신망(ISP)</text>
+          <text x="705" y="108" text-anchor="middle" font-size="10.5" fill="#56534C">통신사 백본·해저케이블</text>
+
+          <rect x="806" y="60" width="150" height="74" rx="10" fill="#EFE9DD" stroke="#DAD2C2"/>
+          <text x="881" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#0F2B33">최종 이용자</text>
+          <text x="881" y="108" text-anchor="middle" font-size="10.5" fill="#56534C">PC·모바일·IoT·AI에이전트</text>
+        </g>
+        <line x1="174" y1="97" x2="198" y2="97" stroke="#8C887E" stroke-width="2" marker-end="url(#ar3)"/>
+        <line x1="350" y1="97" x2="374" y2="97" stroke="#8C887E" stroke-width="2" marker-end="url(#ar3)"/>
+        <line x1="604" y1="97" x2="628" y2="97" stroke="#8C887E" stroke-width="2" marker-end="url(#ar3)"/>
+        <line x1="780" y1="97" x2="804" y2="97" stroke="#8C887E" stroke-width="2" marker-end="url(#ar3)"/>
+
+        <!-- trends band -->
+        <rect x="24" y="240" width="932" height="100" rx="12" fill="#FBF6EE" stroke="#E7D3AC"/>
+        <text x="44" y="266" font-family="'Noto Serif KR',serif" font-size="14" font-weight="700" fill="#0F2B33">산업을 밀어 올리는 3대 트렌드</text>
+        <g font-family="Pretendard" font-size="11.5" fill="#56534C">
+          <text x="44" y="292" font-weight="700" fill="#C25C0C">① AI 재편</text><text x="44" y="310" >추론을 이용자 근처(엣지)에서 — Cloudflare엔</text><text x="44" y="326">"역사상 가장 큰 순풍"(CEO)</text>
+          <text x="356" y="292" font-weight="700" fill="#C25C0C">② 제로트러스트 통합</text><text x="356" y="310">분산된 보안 도구를 하나의 클라우드</text><text x="356" y="326">플랫폼으로 통합하려는 수요</text>
+          <text x="690" y="292" font-weight="700" fill="#C25C0C">③ 에이전트 경제</text><text x="690" y="310">자율 AI가 대신 트래픽을 일으킴 →</text><text x="690" y="326">네트워크·실행·보안 수요 증가</text>
+        </g>
+      </svg>
+      <figcaption>그림 4-1. 가치사슬: Cloudflare는 '창고(클라우드)'와 '소비자'를 잇는 연결·보호 계층을 장악하려 한다</figcaption>
+    </figure>
+
+    <div class="prose">
+      <h3 class="sub-h">시장 규모와 성장성</h3>
+      <p>핵심 시장인 <b>CDN</b>은 한 시장조사(Precedence Research) 기준 <b>2025~2034년 연평균 약 18%</b> 성장이 전망됩니다. 여기에 사이버 보안(특히 제로 트러스트/SASE)과 엣지 AI 추론이 더해지면, Cloudflare가 노리는 전체 시장(TAM)은 수천억 달러 규모로 확대됩니다. 즉 <b>산업 자체가 빠르게 커지는 우호적 환경</b>입니다 <span class="chip hi">높음 ~80%</span>.</p>
+      <h3 class="sub-h">산업 구조의 특징과 미래 방향</h3>
+      <ul class="clean">
+        <li><b>두 갈래의 경쟁:</b> 한쪽엔 전통 CDN 강자(Akamai, Fastly), 다른 쪽엔 보안 전문(Zscaler, Palo Alto, CrowdStrike). Cloudflare는 둘을 <b>하나의 플랫폼으로 통합</b>하며 양쪽을 동시에 공략합니다.</li>
+        <li><b>가장 큰 그림자 = 하이퍼스케일러:</b> AWS·Azure·Google은 자체 CDN·엣지·보안 서비스를 갖고 있어, 언제든 Cloudflare 영역으로 더 깊이 들어올 수 있습니다(가장 중요한 구조적 위협).</li>
+        <li><b>미래 방향:</b> 단순 전달망 → <b>'엣지에서 코드와 AI를 실행하는 분산 컴퓨팅 플랫폼'</b>으로 진화. 이 전환에 성공하면 단가·점유율이 올라가지만, 하이퍼스케일러와의 정면 충돌도 깊어집니다.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5. 생애주기 ================= -->
+<section id="lifecycle">
+  <div class="wrap">
+    <div class="sec-no">05 / LIFE-CYCLE STAGE</div>
+    <h2 class="title">생애주기 단계 판별 — '성장(Growth)' 단계</h2>
+    <p class="lede">기업의 단계는 <b>현금흐름표의 부호 패턴</b>으로 읽습니다. 영업·투자·재무 활동에서 돈이 들어오는지(+) 나가는지(−)를 봅니다.</p>
+
+    <figure>
+      <svg viewBox="0 0 980 250" role="img" aria-label="기업 생애주기 5단계">
+        <text x="24" y="28" font-family="'Noto Serif KR',serif" font-size="16" font-weight="700" fill="#0F2B33">5단계 중 Cloudflare의 위치</text>
+        <g font-family="Pretendard">
+          <!-- stages -->
+          <g>
+            <rect x="24" y="60" width="172" height="150" rx="12" fill="#EFE9DD" stroke="#DAD2C2"/>
+            <text x="110" y="86" text-anchor="middle" font-size="14" font-weight="700" fill="#56534C">도입</text>
+            <text x="110" y="116" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#56534C">영업 −</text><text x="110" y="134" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#56534C">투자 −</text><text x="110" y="152" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#56534C">재무 +</text>
+          </g>
+          <!-- growth (highlight) -->
+          <g>
+            <rect x="206" y="48" width="180" height="174" rx="14" fill="#0F2B33" stroke="#F6821F" stroke-width="3"/>
+            <text x="296" y="78" text-anchor="middle" font-size="15" font-weight="800" fill="#F6821F">성장 ★</text>
+            <text x="296" y="106" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="13" fill="#9FE0D6">영업 +</text><text x="296" y="126" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="13" fill="#9FE0D6">투자 −</text><text x="296" y="146" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="13" fill="#9FE0D6">재무 +</text>
+            <text x="296" y="176" text-anchor="middle" font-size="10.5" fill="#CFC7B7">← Cloudflare</text>
+            <text x="296" y="194" text-anchor="middle" font-size="9.5" fill="#8FA6A3">(전환사채 발행=재무 +)</text>
+          </g>
+          <g>
+            <rect x="396" y="60" width="172" height="150" rx="12" fill="#EFE9DD" stroke="#DAD2C2"/>
+            <text x="482" y="86" text-anchor="middle" font-size="14" font-weight="700" fill="#56534C">성숙</text>
+            <text x="482" y="116" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#56534C">영업 +</text><text x="482" y="134" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#56534C">투자 −</text><text x="482" y="152" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#56534C">재무 −</text>
+          </g>
+          <g>
+            <rect x="578" y="60" width="172" height="150" rx="12" fill="#EFE9DD" stroke="#DAD2C2"/>
+            <text x="664" y="86" text-anchor="middle" font-size="14" font-weight="700" fill="#56534C">정리</text>
+            <text x="664" y="125" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#56534C">혼합</text><text x="664" y="143" text-anchor="middle" font-size="10" fill="#8C887E">(보통 회피)</text>
+          </g>
+          <g>
+            <rect x="760" y="60" width="196" height="150" rx="12" fill="#EFE9DD" stroke="#DAD2C2"/>
+            <text x="858" y="86" text-anchor="middle" font-size="14" font-weight="700" fill="#56534C">감소</text>
+            <text x="858" y="116" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#56534C">영업 −</text><text x="858" y="134" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#56534C">투자 +</text><text x="858" y="152" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#56534C">재무 혼합</text>
+          </g>
+        </g>
+      </svg>
+      <figcaption>그림 5-1. Dickinson(2011) 생애주기 매트릭스 — Cloudflare는 영업(+)·투자(−)·재무(+)의 전형적 '성장' 패턴</figcaption>
+    </figure>
+
+    <div class="prose">
+      <p>FY2025 Cloudflare의 현금흐름은 <b>영업활동 +$603M</b>(영업으로 현금을 벌고), <b>투자활동 −</b>(네트워크 증설 등에 투자), <b>재무활동 +</b>(2025년 약 $33억의 전환사채를 발행해 현금 조달)의 패턴입니다. 이는 교과서적인 <b>성장 단계</b>입니다 <span class="chip hi">높음 ~95%</span>.</p>
+      <div class="note key"><h4>이 단계가 분석 방법을 결정한다</h4>
+        <p style="margin:0">성장·성숙 단계 기업은 <b>DCF + CAP 분석</b>이 적합합니다. 따라서 본 보고서는 미래 현금흐름을 추정하고, 현재 주가가 내포한 '경쟁 우위 기간(CAP)'을 역산하는 접근을 사용합니다. 다만 성장 단계는 미래 가정에 따라 가치가 크게 흔들리므로(예측 불확실성 ↑), 결과는 점추정보다 '범위'로 해석해야 합니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 6. 해자 ================= -->
+<section id="moat">
+  <div class="wrap">
+    <div class="sec-no">06 / ECONOMIC MOAT</div>
+    <h2 class="title">경제적 해자 — 경쟁자가 쉽게 넘지 못하는 '성벽'</h2>
+    <p class="lede">'해자(垓子, Moat)'는 성을 둘러싼 물길처럼, 경쟁사의 침입을 막아 초과 수익을 오래 지키게 해 주는 구조적 강점을 뜻합니다.</p>
+
+    <figure>
+      <svg viewBox="0 0 980 290" role="img" aria-label="Cloudflare 해자 구성">
+        <text x="24" y="28" font-family="'Noto Serif KR',serif" font-size="16" font-weight="700" fill="#0F2B33">Cloudflare의 네 기둥 해자</text>
+        <g font-family="Pretendard">
+          <!-- pillar 1 -->
+          <rect x="24" y="56" width="226" height="210" rx="12" fill="#0F2B33"/>
+          <text x="137" y="92" text-anchor="middle" font-size="32">🌐</text>
+          <text x="137" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#F6821F">규모의 경제</text>
+          <text x="137" y="150" text-anchor="middle" font-size="11" fill="#EDE7DA">310+ 도시 글로벌 망</text>
+          <text x="137" y="170" text-anchor="middle" font-size="11" fill="#CFC7B7">을 새로 까는 데 드는</text>
+          <text x="137" y="188" text-anchor="middle" font-size="11" fill="#CFC7B7">막대한 자본·시간이</text>
+          <text x="137" y="206" text-anchor="middle" font-size="11" fill="#CFC7B7">진입장벽</text>
+          <text x="137" y="240" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#9FE0D6">강도: 강함</text>
+
+          <rect x="262" y="56" width="226" height="210" rx="12" fill="#143A45"/>
+          <text x="375" y="92" text-anchor="middle" font-size="32">🔁</text>
+          <text x="375" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#F6821F">네트워크 효과</text>
+          <text x="375" y="150" text-anchor="middle" font-size="11" fill="#EDE7DA">트래픽이 많을수록</text>
+          <text x="375" y="170" text-anchor="middle" font-size="11" fill="#CFC7B7">더 많은 공격을 학습</text>
+          <text x="375" y="188" text-anchor="middle" font-size="11" fill="#CFC7B7">→ 보안이 똑똑해지고</text>
+          <text x="375" y="206" text-anchor="middle" font-size="11" fill="#CFC7B7">고객을 더 끌어들임</text>
+          <text x="375" y="240" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#9FE0D6">강도: 중상</text>
+
+          <rect x="500" y="56" width="226" height="210" rx="12" fill="#143A45"/>
+          <text x="613" y="92" text-anchor="middle" font-size="32">🧰</text>
+          <text x="613" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#F6821F">전환비용·생태계</text>
+          <text x="613" y="150" text-anchor="middle" font-size="11" fill="#EDE7DA">Workers로 개발한 코드,</text>
+          <text x="613" y="170" text-anchor="middle" font-size="11" fill="#CFC7B7">여러 제품을 엮어 쓰면</text>
+          <text x="613" y="188" text-anchor="middle" font-size="11" fill="#CFC7B7">갈아타기 어려움</text>
+          <text x="613" y="206" text-anchor="middle" font-size="11" fill="#CFC7B7">(DBNR ~120%가 증거)</text>
+          <text x="613" y="240" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#9FE0D6">강도: 중상</text>
+
+          <rect x="738" y="56" width="218" height="210" rx="12" fill="#0F2B33"/>
+          <text x="847" y="92" text-anchor="middle" font-size="32">🧩</text>
+          <text x="847" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#F6821F">통합 플랫폼</text>
+          <text x="847" y="150" text-anchor="middle" font-size="11" fill="#EDE7DA">보안·성능·개발을</text>
+          <text x="847" y="170" text-anchor="middle" font-size="11" fill="#CFC7B7">한 곳에서 제공 →</text>
+          <text x="847" y="188" text-anchor="middle" font-size="11" fill="#CFC7B7">여러 벤더를 쓸 필요가</text>
+          <text x="847" y="206" text-anchor="middle" font-size="11" fill="#CFC7B7">없는 편의성·원가우위</text>
+          <text x="847" y="240" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#9FE0D6">강도: 중</text>
+        </g>
+      </svg>
+      <figcaption>그림 6-1. 네 기둥이 서로를 강화한다: 규모 → 데이터 → 더 나은 제품 → 더 많은 고객 → 더 큰 규모</figcaption>
+    </figure>
+
+    <div class="note warn"><h4>해자의 지속 가능성 평가 <span class="chip hi">신뢰도 ~70%</span></h4>
+      <p style="margin:0 0 .6em 0"><b>지속에 유리한 점:</b> 글로벌 망은 모방에 막대한 자본·시간이 들고, 트래픽 기반 보안 데이터 우위는 시간이 갈수록 누적됩니다. 5년 매출 CAGR <b>약 37%</b>는 해자가 실제로 작동 중임을 보여 줍니다.</p>
+      <p style="margin:0"><b>지속을 위협하는 점:</b> 진짜 위협은 동급 스타트업이 아니라 <b>하이퍼스케일러(AWS·Azure·Google)</b>입니다. 이들은 자본·고객·자체 네트워크를 모두 갖춰, 마음만 먹으면 가격·기능으로 압박할 수 있습니다. 따라서 해자는 '넓지만(wide), 영구 불변은 아닌' 성격으로 평가합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 7. 경쟁 우위 ================= -->
+<section id="porter">
+  <div class="wrap">
+    <div class="sec-no">07 / COMPETITIVE FORCES</div>
+    <h2 class="title">경쟁 우위 정성 분석 — 포터의 5가지 힘</h2>
+    <p class="lede">산업의 매력도와 기업의 협상력을, 마이클 포터의 다섯 가지 경쟁 요인으로 점검합니다(점수가 낮을수록 Cloudflare에 유리).</p>
+
+    <figure>
+      <svg viewBox="0 0 980 360" role="img" aria-label="포터의 5 Forces">
+        <g font-family="Pretendard">
+          <!-- center -->
+          <circle cx="490" cy="180" r="74" fill="#0F2B33"/>
+          <text x="490" y="172" text-anchor="middle" font-size="14" font-weight="700" fill="#F6821F">Cloudflare</text>
+          <text x="490" y="192" text-anchor="middle" font-size="11" fill="#CFC7B7">산업 내 경쟁 강도</text>
+          <text x="490" y="212" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#9FE0D6">높음(치열)</text>
+          <!-- top: new entrants -->
+          <rect x="360" y="22" width="260" height="64" rx="10" fill="#FBEFE0" stroke="#F6821F"/>
+          <text x="490" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#C25C0C">신규 진입 위협 · 낮음~중</text>
+          <text x="490" y="66" text-anchor="middle" font-size="10.5" fill="#56534C">글로벌 망 구축에 막대한 자본 필요(장벽 높음)</text>
+          <text x="490" y="80" text-anchor="middle" font-size="10" fill="#8C887E">단, 하이퍼스케일러는 이미 진입 가능</text>
+          <line x1="490" y1="86" x2="490" y2="104" stroke="#8C887E" stroke-width="2"/>
+          <!-- bottom: substitutes -->
+          <rect x="360" y="274" width="260" height="64" rx="10" fill="#E7F0F0" stroke="#2E6E7E"/>
+          <text x="490" y="298" text-anchor="middle" font-size="13" font-weight="700" fill="#2E6E7E">대체재 위협 · 중</text>
+          <text x="490" y="318" text-anchor="middle" font-size="10.5" fill="#56534C">하이퍼스케일러 자체 CDN/보안,</text>
+          <text x="490" y="332" text-anchor="middle" font-size="10" fill="#8C887E">오픈소스·자체구축(DIY)</text>
+          <line x1="490" y1="256" x2="490" y2="274" stroke="#8C887E" stroke-width="2"/>
+          <!-- left: suppliers -->
+          <rect x="24" y="148" width="250" height="64" rx="10" fill="#EFE9DD" stroke="#DAD2C2"/>
+          <text x="149" y="172" text-anchor="middle" font-size="13" font-weight="700" fill="#0F2B33">공급자 교섭력 · 낮음~중</text>
+          <text x="149" y="192" text-anchor="middle" font-size="10.5" fill="#56534C">대역폭·데이터센터·하드웨어</text>
+          <text x="149" y="206" text-anchor="middle" font-size="10" fill="#8C887E">규모로 비용 협상력 보유</text>
+          <line x1="274" y1="180" x2="416" y2="180" stroke="#8C887E" stroke-width="2"/>
+          <!-- right: buyers -->
+          <rect x="706" y="148" width="250" height="64" rx="10" fill="#EFE9DD" stroke="#DAD2C2"/>
+          <text x="831" y="172" text-anchor="middle" font-size="13" font-weight="700" fill="#0F2B33">구매자 교섭력 · 중</text>
+          <text x="831" y="192" text-anchor="middle" font-size="10.5" fill="#56534C">전환비용↑로 약화되나, 대형</text>
+          <text x="831" y="206" text-anchor="middle" font-size="10" fill="#8C887E">고객은 가격 협상력 보유</text>
+          <line x1="706" y1="180" x2="564" y2="180" stroke="#8C887E" stroke-width="2"/>
+        </g>
+      </svg>
+      <figcaption>그림 7-1. 종합: 진입장벽은 높지만 '하이퍼스케일러'라는 거대 경쟁자의 존재가 산업 매력도를 일부 깎는다</figcaption>
+    </figure>
+
+    <div class="prose">
+      <h3 class="sub-h">차별화 전략 vs 원가 우위 — 어느 쪽인가</h3>
+      <p>CAP 프레임워크는 초과 수익의 원천을 둘로 나눕니다. <b>차별화</b>(남다른 가치로 비싸게 받기, 높은 이익률로 나타남)와 <b>원가 우위</b>(같은 것을 더 싸게 만들기, 높은 자본 회전율로 나타남)입니다.</p>
+      <div class="twocol">
+        <div class="note"><h4>차별화 신호 (강함)</h4>
+          <p style="margin:0;color:var(--ink-soft)">매출총이익률 <b>~75%</b>로 SW 업계 상위권. 통합 플랫폼·강한 브랜드·DBNR ~120%의 가격결정력은 전형적 <b>차별화</b> 특성입니다.</p></div>
+        <div class="note"><h4>원가 우위 신호 (부분적)</h4>
+          <p style="margin:0;color:var(--ink-soft)">단일 거대 망 위에 제품을 얹는 구조는 한계비용을 낮춰 <b>원가 우위</b>도 일부 제공. 다만 네트워크 증설 자본지출이 커 자본 회전율은 압도적이진 않습니다.</p></div>
+      </div>
+      <div class="note warn"><h4>중요한 단서 — '아직' 2배 마진은 아니다</h4>
+        <p style="margin:0">프레임워크상 '지속 가능한 해자'의 실증 기준은 "NOPAT 마진이 산업 평균의 2배 이상"입니다. Cloudflare는 <b>주식보상(SBC)을 비용으로 반영하면 현재 영업이익이 마이너스</b>(FY2025 GAAP 영업이익률 −9.3%)여서, 이 기준을 아직 충족하지 못합니다. 즉 <b>차별화의 잠재력은 명확하나(높은 매출총이익률), 그것이 '순수 초과이익'으로 전환되는지는 향후 마진 개선으로 입증되어야 합니다.</b> 이 점이 뒤의 밸류에이션에서 핵심 쟁점이 됩니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 8. SWOT ================= -->
+<section id="swot">
+  <div class="wrap">
+    <div class="sec-no">08 / SWOT</div>
+    <h2 class="title">SWOT 분석</h2>
+    <p class="lede">강점(S)·약점(W)·기회(O)·위협(T)을 한눈에 정리합니다.</p>
+
+    <figure>
+      <svg viewBox="0 0 980 470" role="img" aria-label="SWOT 분석">
+        <g font-family="Pretendard" font-size="12.5">
+          <!-- S -->
+          <rect x="20" y="20" width="460" height="210" rx="14" fill="#E9F1EB" stroke="#2C7A4B"/>
+          <text x="44" y="52" font-family="'Noto Serif KR',serif" font-size="17" font-weight="700" fill="#2C7A4B">S · 강점</text>
+          <text x="44" y="82" fill="#33403a">• 모방 어려운 글로벌 네트워크(310+ 도시)</text>
+          <text x="44" y="108" fill="#33403a">• 매출 5년 CAGR 약 37%, +30~34% 고성장 지속</text>
+          <text x="44" y="134" fill="#33403a">• 매출총이익률 ~75%, DBNR ~120%(강한 가격력)</text>
+          <text x="44" y="160" fill="#33403a">• 보안·성능·개발을 묶은 통합 플랫폼</text>
+          <text x="44" y="186" fill="#33403a">• 순현금 상태($4.1B 현금 vs $3.5B 전환사채)</text>
+          <text x="44" y="212" fill="#33403a">• 강한 창업자 리더십과 개발자 커뮤니티</text>
+          <!-- W -->
+          <rect x="500" y="20" width="460" height="210" rx="14" fill="#FBF1E0" stroke="#B0822F"/>
+          <text x="524" y="52" font-family="'Noto Serif KR',serif" font-size="17" font-weight="700" fill="#9a7026">W · 약점</text>
+          <text x="524" y="82" fill="#4a4022">• GAAP 기준 적자 지속(영업이익률 −9%)</text>
+          <text x="524" y="108" fill="#4a4022">• 주식보상(SBC)이 매출의 ~21%로 매우 큼</text>
+          <text x="524" y="134" fill="#4a4022">• AI 트래픽 증가로 매출총이익률 하락 압력</text>
+          <text x="524" y="160" fill="#4a4022">• 극단적으로 높은 밸류에이션(P/S ~24배)</text>
+          <text x="524" y="186" fill="#4a4022">• 주식 발행에 따른 지분 희석 위험</text>
+          <text x="524" y="212" fill="#4a4022">• '펀드 풀' 계약 확대로 매출 예측 변동성</text>
+          <!-- O -->
+          <rect x="20" y="244" width="460" height="206" rx="14" fill="#E7F0F0" stroke="#2E6E7E"/>
+          <text x="44" y="276" font-family="'Noto Serif KR',serif" font-size="17" font-weight="700" fill="#2E6E7E">O · 기회</text>
+          <text x="44" y="306" fill="#26403f">• AI 추론·에이전트 트래픽의 엣지 이동(최대 순풍)</text>
+          <text x="44" y="332" fill="#26403f">• 제로트러스트/SASE 보안 통합 수요 확대</text>
+          <text x="44" y="358" fill="#26403f">• CDN 시장 연 ~18% 성장 + TAM 확장</text>
+          <text x="44" y="384" fill="#26403f">• 'AI 우선' 구조조정으로 영업 레버리지 개선 여지</text>
+          <text x="44" y="410" fill="#26403f">• 대기업·정부 침투 가속($1M+ 계약 +73%)</text>
+          <text x="44" y="436" fill="#26403f">• Workers 기반 개발 플랫폼의 신규 수익화</text>
+          <!-- T -->
+          <rect x="500" y="244" width="460" height="206" rx="14" fill="#F7E7E4" stroke="#B23A2E"/>
+          <text x="524" y="276" font-family="'Noto Serif KR',serif" font-size="17" font-weight="700" fill="#B23A2E">T · 위협</text>
+          <text x="524" y="306" fill="#4a2420">• 하이퍼스케일러(AWS·Azure·GCP)의 침투(최대 위협)</text>
+          <text x="524" y="332" fill="#4a2420">• 고밸류 성장주에 대한 시장 평가 위축 위험</text>
+          <text x="524" y="358" fill="#4a2420">• Zscaler·PANW·Akamai 등과의 가격 경쟁</text>
+          <text x="524" y="384" fill="#4a2420">• 데이터 주권·프라이버시 규제 강화</text>
+          <text x="524" y="410" fill="#4a2420">• 'AI 우선' 인력 감축의 실행 리스크</text>
+          <text x="524" y="436" fill="#4a2420">• 거버넌스 논란(일부 자문사 이사 반대 등)</text>
+        </g>
+      </svg>
+      <figcaption>그림 8-1. SWOT 종합 — 강점·기회는 '성장'을, 약점·위협은 '수익성 전환과 밸류에이션'을 가리킨다</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ================= 9. 피어 비교 ================= -->
+<section id="peers">
+  <div class="wrap">
+    <div class="sec-no">09 / PEER GROUP</div>
+    <h2 class="title">피어그룹 비교 — 경쟁사 대비 위치</h2>
+    <p class="lede">같은 바다의 주요 경쟁사와 비교합니다. Cloudflare는 <b>가장 높은 성장률</b>과 <b>가장 비싼 밸류에이션</b>이 동시에 특징입니다.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>기업 (티커)</th><th class="mono">시가총액</th><th class="mono">매출(TTM)</th>
+          <th class="mono">매출성장</th><th class="mono">매출총이익률</th><th class="mono">GAAP 영업이익률</th><th>포지션</th>
+        </tr></thead>
+        <tbody>
+          <tr class="hl"><td><b>Cloudflare (NET)</b></td><td class="mono">~$79B</td><td class="mono">$2.2B</td><td class="mono pos">+30~34%</td><td class="mono">~75%</td><td class="mono neg">−9%</td><td>고성장 통합 플랫폼</td></tr>
+          <tr><td>Zscaler (ZS)</td><td class="mono">~$30B</td><td class="mono">$2.7B</td><td class="mono">~23%</td><td class="mono">~77%</td><td class="mono">손익분기 근처</td><td>제로트러스트 선두</td></tr>
+          <tr><td>Akamai (AKAM)</td><td class="mono">~$17B</td><td class="mono">$4.2B</td><td class="mono">~7%</td><td class="mono">~59%</td><td class="mono pos">흑자(순익률 ~11%)</td><td>성숙한 CDN 강자</td></tr>
+          <tr><td>Fastly (FSLY)</td><td class="mono">~$1.5B</td><td class="mono">~$0.6B</td><td class="mono">~8~10%</td><td class="mono">~?</td><td class="mono neg">적자</td><td>소형 프로그래머블 CDN</td></tr>
+        </tbody>
+        <caption>표 9-1. 주요 경쟁사 비교 (2026년 1~5월 각 사 공시·집계치 기준, 근사값). 그 밖에 AWS·Azure·Google(하이퍼스케일러), Palo Alto·CrowdStrike(보안)와도 경쟁.</caption>
+      </table>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 980 280" role="img" aria-label="피어 매출성장 vs 밸류에이션">
+        <text x="24" y="28" font-family="'Noto Serif KR',serif" font-size="15" font-weight="700" fill="#0F2B33">매출 성장률 (막대) — Cloudflare가 압도적</text>
+        <g font-family="'IBM Plex Mono',monospace" font-size="12">
+          <!-- axis -->
+          <line x1="150" y1="60" x2="150" y2="210" stroke="#DAD2C2"/>
+          <!-- bars: scale 1% = 4px -->
+          <rect x="152" y="72" width="136" height="30" rx="4" fill="#F6821F"/><text x="120" y="92" text-anchor="end" font-family="Pretendard" font-weight="700" fill="#0F2B33">NET</text><text x="298" y="92" font-size="11" fill="#C25C0C">+34%</text>
+          <rect x="152" y="112" width="92" height="30" rx="4" fill="#2E6E7E"/><text x="120" y="132" text-anchor="end" font-family="Pretendard" font-weight="700" fill="#0F2B33">ZS</text><text x="254" y="132" font-size="11" fill="#2E6E7E">+23%</text>
+          <rect x="152" y="152" width="36" height="30" rx="4" fill="#9FB3B0"/><text x="120" y="172" text-anchor="end" font-family="Pretendard" font-weight="700" fill="#0F2B33">FSLY</text><text x="198" y="172" font-size="11" fill="#56534C">+9%</text>
+          <rect x="152" y="192" width="28" height="30" rx="4" fill="#B0967A"/><text x="120" y="212" text-anchor="end" font-family="Pretendard" font-weight="700" fill="#0F2B33">AKAM</text><text x="190" y="212" font-size="11" fill="#56534C">+7%</text>
+        </g>
+        <!-- valuation note -->
+        <g font-family="Pretendard">
+          <rect x="560" y="60" width="396" height="162" rx="12" fill="#FBF6EE" stroke="#E7D3AC"/>
+          <text x="582" y="88" font-size="14" font-weight="700" fill="#0F2B33" font-family="'Noto Serif KR',serif">밸류에이션 대비표 (매출 대비 시총, P/S)</text>
+          <text x="582" y="118" font-family="'IBM Plex Mono',monospace" font-size="13" fill="#C25C0C" font-weight="600">NET   ≈ 24~31배  ← 매우 높음</text>
+          <text x="582" y="142" font-family="'IBM Plex Mono',monospace" font-size="13" fill="#2E6E7E">ZS    ≈ 11배</text>
+          <text x="582" y="166" font-family="'IBM Plex Mono',monospace" font-size="13" fill="#56534C">AKAM  ≈ 4배</text>
+          <text x="582" y="198" font-family="Pretendard" font-size="11" fill="#56534C">→ 시장은 성장의 대가로 NET에 큰 프리미엄 지불</text>
+        </g>
+      </svg>
+      <figcaption>그림 9-1. Cloudflare는 성장률이 가장 높지만(좌), 매출 대비 밸류에이션도 동종 대비 2~7배 비싸다(우)</figcaption>
+    </figure>
+
+    <div class="note key"><h4>피어 비교의 시사점</h4>
+      <p style="margin:0">Akamai는 'Cloudflare의 미래 거울'일 수 있습니다 — 한때 고성장 CDN이었으나 지금은 <b>성장 +7%, 흑자, P/S 4배</b>의 성숙 기업이 되었습니다. 시장이 Cloudflare에 부여한 ~24배 밸류에이션은 "Cloudflare는 Akamai의 길을 가지 않고, 훨씬 오래 고성장을 유지할 것"이라는 강한 베팅입니다. 이 베팅의 합리성을 다음 장의 CAP 역산으로 정량화합니다.</p></div>
+  </div>
+</section>
+
+<!-- ================= 10. DCF 모델 ================= -->
+<section id="dcf">
+  <div class="wrap">
+    <div class="sec-no">10 / DCF MODEL</div>
+    <h2 class="title">현금흐름할인(DCF) 모델 — 기업의 '내재 가치' 추정</h2>
+    <p class="lede">DCF는 "미래에 벌어들일 현금을, 위험을 반영해 오늘 가치로 환산하면 얼마인가"를 계산하는 방법입니다. 미래 돈은 오늘 돈보다 가치가 낮으므로 '할인'합니다.</p>
+
+    <div class="prose">
+      <h4 class="mini">이 모델의 핵심 선택 — 주식보상(SBC)을 '비용'으로 본다</h4>
+      <p>Cloudflare는 직원에게 현금 대신 <b>주식</b>을 많이 줍니다(매출의 ~21%). 회계상 '조정 영업이익'에서는 이를 빼주지만, 주주 입장에서 보면 <b>지분이 희석되는 실질 비용</b>입니다. 본 모델은 이를 정직하게 <b>비용으로 차감</b>합니다. 이 한 가지 선택이 보수적 결과의 가장 큰 이유이며, 시장·증권가의 낙관적 평가와 갈리는 분기점입니다.</p>
+    </div>
+
+    <h3 class="sub-h">자본비용(WACC) 산출 — '할인율'을 정하기</h3>
+    <figure>
+      <svg viewBox="0 0 980 188" role="img" aria-label="WACC 산출">
+        <g font-family="Pretendard">
+          <rect x="20" y="20" width="210" height="148" rx="12" fill="#EFE9DD" stroke="#DAD2C2"/>
+          <text x="125" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0F2B33">① 무위험 수익률</text>
+          <text x="125" y="74" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="22" font-weight="600" fill="#0F2B33">4.45%</text>
+          <text x="125" y="98" text-anchor="middle" font-size="11" fill="#56534C">미국 10년물 국채</text>
+          <text x="125" y="114" text-anchor="middle" font-size="11" fill="#56534C">(2026.5.29)</text>
+          <text x="125" y="146" text-anchor="middle" font-size="10.5" fill="#8C887E">"가장 안전한 투자의 수익"</text>
+
+          <text x="245" y="100" font-size="22" fill="#C25C0C" font-weight="700">+</text>
+
+          <rect x="266" y="20" width="320" height="148" rx="12" fill="#EFE9DD" stroke="#DAD2C2"/>
+          <text x="426" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0F2B33">② 위험 프리미엄 (베타 × 시장 위험)</text>
+          <text x="426" y="78" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="20" font-weight="600" fill="#0F2B33">1.47 × 4.75% = 6.98%</text>
+          <text x="426" y="104" text-anchor="middle" font-size="11" fill="#56534C">베타 1.47 = 시장보다 약 1.5배 출렁이는 위험</text>
+          <text x="426" y="122" text-anchor="middle" font-size="11" fill="#56534C">(5년 베타를 1로 보정한 값)</text>
+          <text x="426" y="146" text-anchor="middle" font-size="10.5" fill="#8C887E">시장위험 프리미엄 4.75% 적용</text>
+
+          <text x="600" y="100" font-size="22" fill="#C25C0C" font-weight="700">=</text>
+
+          <rect x="620" y="20" width="340" height="148" rx="12" fill="#0F2B33"/>
+          <text x="790" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#F6821F">③ 자기자본비용 ≈ WACC</text>
+          <text x="790" y="86" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="30" font-weight="600" fill="#fff">11.0%</text>
+          <text x="790" y="112" text-anchor="middle" font-size="11" fill="#CFC7B7">순현금 기업이라 자본비용 ≈ WACC</text>
+          <text x="790" y="138" text-anchor="middle" font-size="10.5" fill="#9FE0D6">참고) 위험프리미엄 4.23%(Damodaran) 적용 시 ≈ 10.7%</text>
+        </g>
+      </svg>
+      <figcaption>그림 10-1. WACC = 무위험수익률 + (베타 × 시장위험프리미엄). 본 분석 기준 할인율 <b>11%</b></figcaption>
+    </figure>
+
+    <h3 class="sub-h">기준 시나리오 현금흐름 추정 (전시 형식)</h3>
+    <p style="color:var(--ink-soft);max-width:830px">매출은 컨센서스를 반영해 +30%에서 장기 +2.5%로 점차 둔화(fade)한다고 가정합니다. '경제적 잉여현금흐름(FCF)'은 회사가 보고하는 FCF 마진에서 주식보상 비용을 차감해 산출했습니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>연도</th><th class="mono">매출($M)</th><th class="mono">성장률</th><th class="mono">EBITA마진(추정)</th>
+          <th class="mono">보고FCF마진</th><th class="mono">SBC(비용)</th><th class="mono">경제적FCF마진</th>
+          <th class="mono">경제적FCF($M)</th><th class="mono">FCF 현재가치($M)</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>2026E</td><td class="mono">2,818</td><td class="mono">+30%</td><td class="mono neg">−6%</td><td class="mono">14%</td><td class="mono">18%</td><td class="mono neg">−4.0%</td><td class="mono neg">−113</td><td class="mono neg">−107</td></tr>
+          <tr><td>2028E</td><td class="mono">4,438</td><td class="mono">+24%</td><td class="mono">2%</td><td class="mono">18%</td><td class="mono">15%</td><td class="mono">3.0%</td><td class="mono">133</td><td class="mono">103</td></tr>
+          <tr><td>2030E</td><td class="mono">6,337</td><td class="mono">+18%</td><td class="mono">8%</td><td class="mono">22%</td><td class="mono">12%</td><td class="mono">10.0%</td><td class="mono">634</td><td class="mono">396</td></tr>
+          <tr><td>2032E</td><td class="mono">8,380</td><td class="mono">+14%</td><td class="mono">13%</td><td class="mono">25%</td><td class="mono">10%</td><td class="mono">15.0%</td><td class="mono">1,257</td><td class="mono">638</td></tr>
+          <tr><td>2035E</td><td class="mono">11,304</td><td class="mono">+9%</td><td class="mono">16.5%</td><td class="mono">27%</td><td class="mono">8%</td><td class="mono">18.5%</td><td class="mono">2,091</td><td class="mono">776</td></tr>
+          <tr><td>2038E</td><td class="mono">13,847</td><td class="mono">+6%</td><td class="mono">19%</td><td class="mono">28%</td><td class="mono">8%</td><td class="mono">20.0%</td><td class="mono">2,769</td><td class="mono">751</td></tr>
+          <tr><td>2040E</td><td class="mono">15,194</td><td class="mono">+4%</td><td class="mono">20%</td><td class="mono">28%</td><td class="mono">8%</td><td class="mono">20.0%</td><td class="mono">3,039</td><td class="mono">669</td></tr>
+        </tbody>
+        <caption>표 10-1. 기준 시나리오(WACC 11%). 일부 연도만 표시. EBITA마진은 영업수익성 참고치이며, 가치 계산은 '경제적 FCF'(보고 FCF − SBC) 기준.</caption>
+      </table>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 980 300" role="img" aria-label="경제적 잉여현금흐름 추이">
+        <text x="24" y="26" font-family="'Noto Serif KR',serif" font-size="15" font-weight="700" fill="#0F2B33">경제적 잉여현금흐름(FCF) 추이 — 초기 적자에서 점진적 흑자 전환</text>
+        <line x1="60" y1="240" x2="952" y2="240" stroke="#8C887E" stroke-width="1"/>
+        <text x="40" y="244" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="10" fill="#8C887E">0</text>
+        <g font-family="'IBM Plex Mono',monospace" font-size="9.5" fill="#56534C" text-anchor="middle">
+          <!-- 15 bars, x from 66, step 59, width 38 -->
+          <rect x="66"  y="240" width="38" height="7"   fill="#B23A2E"/><text x="85"  y="262">26</text><text x="85" y="237" fill="#B23A2E">-113</text>
+          <rect x="125" y="240" width="38" height="1"   fill="#B23A2E"/><text x="144" y="262">27</text>
+          <rect x="184" y="232" width="38" height="8"   fill="#2C7A4B"/><text x="203" y="262">28</text>
+          <rect x="243" y="219" width="38" height="21"  fill="#2C7A4B"/><text x="262" y="262">29</text>
+          <rect x="302" y="202" width="38" height="38"  fill="#2C7A4B"/><text x="321" y="262">30</text>
+          <rect x="361" y="183" width="38" height="57"  fill="#2E6E7E"/><text x="380" y="262">31</text>
+          <rect x="420" y="166" width="38" height="74"  fill="#2E6E7E"/><text x="439" y="262">32</text>
+          <rect x="479" y="148" width="38" height="92"  fill="#2E6E7E"/><text x="498" y="262">33</text>
+          <rect x="538" y="133" width="38" height="107" fill="#2E6E7E"/><text x="557" y="262">34</text>
+          <rect x="597" y="116" width="38" height="124" fill="#F6821F"/><text x="616" y="262">35</text>
+          <rect x="656" y="99"  width="38" height="141" fill="#F6821F"/><text x="675" y="262">36</text>
+          <rect x="715" y="85"  width="38" height="155" fill="#F6821F"/><text x="734" y="262">37</text>
+          <rect x="774" y="76"  width="38" height="164" fill="#F6821F"/><text x="793" y="262">38</text>
+          <rect x="833" y="68"  width="38" height="172" fill="#F6821F"/><text x="852" y="262">39</text>
+          <rect x="892" y="60"  width="38" height="180" fill="#C25C0C"/><text x="911" y="262">40</text>
+          <text x="911" y="54" fill="#C25C0C">+3,039</text>
+        </g>
+        <text x="490" y="288" text-anchor="middle" font-family="Pretendard" font-size="11" fill="#8C887E">연도(20XX) · 단위 $M · 적자(빨강)에서 흑자(주황)로</text>
+      </svg>
+      <figcaption>그림 10-2. 모델은 2028년경 흑자 전환, 2040년 경제적 FCF 약 $30억을 가정한다(SBC 비용 반영 후)</figcaption>
+    </figure>
+
+    <div class="note key">
+      <h4>기준 시나리오 가치 종합</h4>
+      <table style="margin-top:6px">
+        <tbody>
+          <tr><td>15년치 FCF의 현재가치 합계</td><td class="mono">$7,740M</td></tr>
+          <tr><td>최종가치(15년 후, 영구성장 2.5%)</td><td class="mono">$36,644M</td></tr>
+          <tr><td>최종가치의 현재가치</td><td class="mono">$7,659M</td></tr>
+          <tr><td>= 기업가치(EV)</td><td class="mono">$15,399M</td></tr>
+          <tr><td>+ 순현금</td><td class="mono">$583M</td></tr>
+          <tr><td>= 자기자본 가치</td><td class="mono">$15,982M</td></tr>
+          <tr class="hl"><td>÷ 주식 수(3.52억 주) = <b>주당 내재가치</b></td><td class="mono"><b>≈ $45</b></td></tr>
+          <tr class="hl"><td>현재 주가</td><td class="mono"><b>≈ $226</b></td></tr>
+        </tbody>
+      </table>
+      <p style="margin:.8em 0 0 0">즉 <b>보수적 기준 시나리오의 내재가치(~$45)는 현재 주가의 약 1/5</b>입니다. 단, 이는 '주식보상 비용처리 + 할인율 11%'라는 보수적 가정의 결과이며, 가정을 완화하면 가치는 크게 올라갑니다(12·13장 참조). 핵심은 "현재 가격이 얼마나 낙관적인 가정을 요구하는가"입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 11. 시장 내재 CAP ================= -->
+<section id="cap">
+  <div class="wrap">
+    <div class="sec-no">11 / MARKET-IMPLIED CAP</div>
+    <h2 class="title">시장 내재 경쟁 우위 기간(CAP) 역산</h2>
+    <p class="lede">이 보고서의 핵심입니다. "적정 가치가 얼마인가"가 아니라, <b>"현재 주가 $226이 성립하려면 시장은 무엇을 믿어야 하는가"</b>를 거꾸로 풉니다.</p>
+
+    <div class="prose">
+      <p><b>CAP(경쟁 우위 기간)</b>란 한 기업이 자본비용을 초과하는 수익(초과이익)을 지속할 수 있는 기간입니다. CAP가 길수록 기업 가치는 커집니다. 시장이 매긴 가격을 역산하면, 시장이 암묵적으로 가정한 CAP의 길이를 읽을 수 있습니다.</p>
+    </div>
+
+    <h3 class="sub-h">주가 $226을 정당화하려면 — 세 갈래의 길</h3>
+    <p style="color:var(--ink-soft);max-width:830px">기준 시나리오 가치는 $45인데 주가는 $226입니다. 이 5배 간극을 메우려면, 아래 셋 중 하나(혹은 조합)가 성립해야 합니다.</p>
+
+    <div class="twocol" style="grid-template-columns:1fr 1fr 1fr;gap:16px">
+      <div class="note" style="border-top:4px solid #B23A2E">
+        <div class="mono" style="font-size:11px;letter-spacing:.15em;color:#B23A2E">경로 A · 할인율</div>
+        <h4 style="margin:8px 0">할인율이 ≈ 4.8% 여야 한다</h4>
+        <p style="margin:0;color:var(--ink-soft);font-size:14.5px">기준 마진·성장을 그대로 두면, $226은 할인율 <b>약 4.8%</b>를 내포합니다. 이는 무위험 국채(4.45%)보다 겨우 높은 수준 — 즉 시장이 <b>주식 위험 프리미엄을 거의 0으로</b> 본다는 뜻. 변동성 큰 성장주에는 비현실적입니다. <span class="chip lo">현실성 낮음</span></p>
+      </div>
+      <div class="note" style="border-top:4px solid #B0822F">
+        <div class="mono" style="font-size:11px;letter-spacing:.15em;color:#9a7026">경로 B · 마진</div>
+        <h4 style="margin:8px 0">최종 마진이 ≈ 82~95% 여야 한다</h4>
+        <p style="margin:0;color:var(--ink-soft);font-size:14.5px">정상 할인율(9~11%)·컨센서스 성장에서 $226을 맞추려면, 최종 경제적 FCF 마진이 <b>82~95%</b>여야 합니다. 비자·마스터카드(~50%)도 넘는, 사실상 존재하지 않는 수준. <span class="chip lo">현실성 매우 낮음</span></p>
+      </div>
+      <div class="note" style="border-top:4px solid #2C7A4B">
+        <div class="mono" style="font-size:11px;letter-spacing:.15em;color:#2C7A4B">경로 C · 성장</div>
+        <h4 style="margin:8px 0">15년간 +24~26% 성장 (가장 그럴듯)</h4>
+        <p style="margin:0;color:var(--ink-soft);font-size:14.5px">할인율 9~10%·최종마진 25%를 가정하면, $226은 <b>향후 15년 매년 +24~26%</b> 성장을 요구합니다. 매출이 <b>$55~70B(현재의 25~30배)</b>에 도달 — 오늘의 오라클보다 큰 규모. 셋 중 가장 현실적이지만 매우 도전적. <span class="chip mid">달성 가능하나 도전적</span></p>
+      </div>
+    </div>
+
+    <div class="note warn" style="margin-top:22px"><h4>핵심: '성장이 식지 않아야' 한다</h4>
+      <p style="margin:0">컨센서스처럼 성장이 점차 둔화(fade)한다면, 할인율을 9%로 낮추고 최종마진을 25%로 높여도 <b>40년을 가정해도 가치는 ~$80에서 멈춥니다</b>. 따라서 $226은 "성장이 오래도록 식지 않는다"는, 즉 <b>예외적으로 긴 경쟁 우위 기간</b>을 전제로만 성립합니다.</p>
+    </div>
+
+    <h3 class="sub-h">내재 CAP — 어디에 위치하는가</h3>
+    <figure>
+      <svg viewBox="0 0 980 230" role="img" aria-label="내재 CAP 척도">
+        <text x="24" y="28" font-family="'Noto Serif KR',serif" font-size="15" font-weight="700" fill="#0F2B33">시장이 가격에 반영한 경쟁 우위 기간(CAP)의 위치</text>
+        <!-- gauge segments: x 80..900 => 0..25yr (32.8px/yr) -->
+        <g>
+          <rect x="80"  y="70" width="164" height="34" fill="#2C7A4B"/>
+          <rect x="244" y="70" width="164" height="34" fill="#7FB08A"/>
+          <rect x="408" y="70" width="164" height="34" fill="#E7C66B"/>
+          <rect x="572" y="70" width="164" height="34" fill="#E8943B"/>
+          <rect x="736" y="70" width="164" height="34" fill="#B23A2E"/>
+        </g>
+        <g font-family="'IBM Plex Mono',monospace" font-size="10.5" fill="#56534C" text-anchor="middle">
+          <text x="80" y="120">0</text><text x="244" y="120">5</text><text x="408" y="120">10</text>
+          <text x="572" y="120">15</text><text x="736" y="120">20</text><text x="900" y="120">25년</text>
+        </g>
+        <g font-family="Pretendard" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="600">
+          <text x="162" y="91">저평가</text><text x="326" y="91">합리적</text><text x="490" y="91" fill="#5a4a1a">합리적~낙관</text><text x="654" y="91">낙관</text><text x="818" y="91">과도한 낙관</text>
+        </g>
+        <!-- Microsoft benchmark marker ~17.5y -->
+        <g>
+          <line x1="654" y1="60" x2="654" y2="104" stroke="#0F2B33" stroke-width="2" stroke-dasharray="3 3"/>
+          <text x="654" y="52" text-anchor="middle" font-family="Pretendard" font-size="10.5" fill="#0F2B33">참고: 대형 SW 벤치마크 ≈ 17~18년</text>
+        </g>
+        <!-- Cloudflare implied band 15 -> 22+ -->
+        <g>
+          <rect x="572" y="140" width="262" height="24" rx="6" fill="rgba(246,130,31,.22)" stroke="#C25C0C"/>
+          <text x="703" y="156" text-anchor="middle" font-family="Pretendard" font-size="12" font-weight="700" fill="#C25C0C">Cloudflare 내재 CAP ≈ 15년 ~ 20년+</text>
+          <line x1="572" y1="140" x2="572" y2="104" stroke="#C25C0C" stroke-width="1.5"/>
+          <line x1="834" y1="140" x2="834" y2="104" stroke="#C25C0C" stroke-width="1.5"/>
+        </g>
+        <text x="80" y="196" font-family="Pretendard" font-size="12" fill="#56534C">관대한 가정(할인율 9%·고마진)에선 ≈ 15년, 프레임워크 표준 가정에선 20년+ — 어느 쪽이든 '낙관' 구간에 위치합니다.</text>
+        <text x="80" y="216" font-family="Pretendard" font-size="11.5" fill="#8C887E">해석: 15~20년 = "약간 낙관적, 해자 근거가 강력해야 정당화" / 20년+ = "과도한 낙관, 신중 구간"</text>
+      </svg>
+      <figcaption>그림 11-1. 시장은 Cloudflare의 경쟁 우위 기간을 대형 소프트웨어 기업(MS 등)에 준하거나 그 이상으로 길게 평가하고 있다 <span class="chip hi">신뢰도 ~85%</span></figcaption>
+    </figure>
+
+    <h3 class="sub-h">외부 평가치와의 삼각 검증 (Triangulation)</h3>
+    <p style="color:var(--ink-soft);max-width:830px">본 모델 결과가 한쪽으로 치우치지 않았는지, 독립적 평가치와 대조합니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>출처 / 방법</th><th class="mono">가치·목표가</th><th>성격</th></tr></thead>
+        <tbody>
+          <tr><td>본 분석 — 기준(보수적, WACC 11%)</td><td class="mono">≈ $45</td><td>SBC 비용처리·할인율 11%</td></tr>
+          <tr><td>본 분석 — 강세 시나리오(WACC 9%, 마진 26%)</td><td class="mono">≈ $114</td><td>관대한 DCF 가정</td></tr>
+          <tr class="hl"><td>Morningstar 적정가치(독립 DCF)</td><td class="mono">$116</td><td>불확실성 'Very High'</td></tr>
+          <tr><td>증권가 목표주가 중앙값</td><td class="mono">≈ $235</td><td>범위 $140~$300, 다수 'Buy'</td></tr>
+          <tr class="hl"><td><b>현재 주가</b></td><td class="mono"><b>≈ $226</b></td><td>강세 시나리오마저 상회</td></tr>
+        </tbody>
+        <caption>표 11-1. 흥미로운 점: 엄밀한 DCF를 쓰는 Morningstar($116)는 주가의 절반 수준인 반면, 멀티플·모멘텀 중심의 증권가 목표가($235)는 주가를 웃돈다.</caption>
+      </table>
+    </div>
+    <div class="note key"><h4>삼각 검증의 결론</h4>
+      <p style="margin:0">본 분석의 <b>강세 시나리오($114)가 Morningstar의 독립 DCF($116)와 거의 일치</b>한다는 점은, 본 모델이 비합리적으로 비관적이지 않음을 보여 줍니다. <b>'엄밀한 현금흐름 기반' 가치(약 $45~$116)는 모두 현재 주가($226)를 크게 밑돕니다.</b> 주가는 사실상 멀티플·모멘텀과 '거의 완벽한 강세 시나리오'에 의해 지탱되고 있습니다 <span class="chip hi">높음 ~85%</span>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 12. 민감도·시나리오 ================= -->
+<section id="sensi">
+  <div class="wrap">
+    <div class="sec-no">12 / SENSITIVITY &amp; SCENARIOS</div>
+    <h2 class="title">민감도 및 시나리오 분석</h2>
+    <p class="lede">가정 하나를 바꾸면 가치가 얼마나 흔들리는지 봅니다. 성장주 가치는 '점'이 아니라 '범위'로 이해해야 합니다.</p>
+
+    <h3 class="sub-h">민감도 표 ① — 할인율(WACC) × 최종 FCF 마진</h3>
+    <p style="color:var(--ink-soft);max-width:830px">행은 장기적으로 도달할 경제적 FCF 마진, 열은 할인율. 셀 값은 주당 내재가치($)입니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>최종 FCF 마진 \ WACC</th><th class="mono">9%</th><th class="mono">10%</th><th class="mono">11% (기준)</th><th class="mono">12%</th></tr></thead>
+        <tbody>
+          <tr><td>14%</td><td class="mono" style="background:#F3DAD4">50</td><td class="mono" style="background:#F3DAD4">42</td><td class="mono" style="background:#F0CFC8">36</td><td class="mono" style="background:#EDC4BB">31</td></tr>
+          <tr><td>18%</td><td class="mono" style="background:#F8E9D2">60</td><td class="mono" style="background:#F3DAD4">50</td><td class="mono" style="background:#F3DAD4">42</td><td class="mono" style="background:#F0CFC8">36</td></tr>
+          <tr class="hl"><td><b>20% (기준)</b></td><td class="mono" style="background:#EAE0CB">66</td><td class="mono" style="background:#F8E9D2">54</td><td class="mono" style="background:#FFF3E4"><b>46</b></td><td class="mono" style="background:#F3DAD4">39</td></tr>
+          <tr><td>24%</td><td class="mono" style="background:#DDE9D9">76</td><td class="mono" style="background:#EAE0CB">62</td><td class="mono" style="background:#F8E9D2">52</td><td class="mono" style="background:#F8E9D2">45</td></tr>
+          <tr><td>28%</td><td class="mono" style="background:#CFE2CC">86</td><td class="mono" style="background:#DDE9D9">71</td><td class="mono" style="background:#EAE0CB">59</td><td class="mono" style="background:#EAE0CB">50</td></tr>
+        </tbody>
+        <caption>표 12-1. 컨센서스 성장 가정 하에서. <b>모든 조합이 현재 주가 $226을 크게 밑돕니다</b> — 가장 관대한 조합(28% 마진·9% 할인율)도 $86.</caption>
+      </table>
+    </div>
+
+    <h3 class="sub-h">민감도 표 ② — 매출 성장률 ±2%p</h3>
+    <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat"><div class="v pos">$56</div><div class="k">성장률 +2%p (매년)</div></div>
+      <div class="stat"><div class="v o">$46</div><div class="k">기준</div></div>
+      <div class="stat"><div class="v neg">$37</div><div class="k">성장률 −2%p (매년)</div></div>
+    </div>
+    <p style="font-size:13px;color:var(--ink-faint);margin-top:8px">기준 마진 20%·WACC 11% 고정. 성장률을 매년 2%p씩 올려도 가치는 $56로, 여전히 주가의 약 1/4입니다.</p>
+
+    <h3 class="sub-h">시나리오 ③ — 강세 / 기본 / 약세, 그리고 페이드(성장 둔화 속도)</h3>
+    <figure>
+      <svg viewBox="0 0 980 240" role="img" aria-label="시나리오별 가치">
+        <text x="24" y="28" font-family="'Noto Serif KR',serif" font-size="15" font-weight="700" fill="#0F2B33">시나리오별 주당 가치 vs 현재 주가 ($226)</text>
+        <!-- scale: 0..240 => x 200..940 (740px), 3.08px per $ -->
+        <line x1="200" y1="50" x2="200" y2="210" stroke="#DAD2C2"/>
+        <!-- price reference line at 226 => x=200+226*3.08=896 -->
+        <line x1="896" y1="44" x2="896" y2="216" stroke="#B23A2E" stroke-width="2" stroke-dasharray="5 4"/>
+        <text x="896" y="38" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="12" fill="#B23A2E" font-weight="700">현재 주가 $226</text>
+        <g font-family="Pretendard" font-size="13" font-weight="700">
+          <!-- bull 114 => width 351 -->
+          <rect x="200" y="58" width="351" height="36" rx="5" fill="#2C7A4B"/>
+          <text x="180" y="80" text-anchor="end" fill="#0F2B33">강세</text>
+          <text x="561" y="80" font-family="'IBM Plex Mono',monospace" fill="#2C7A4B">$114</text>
+          <text x="208" y="80" fill="#fff" font-size="10.5" font-weight="500">WACC 9% · 마진 26% · 느린 페이드 · 매출 $22B(2040)</text>
+          <!-- base 45 => width 139 -->
+          <rect x="200" y="106" width="139" height="36" rx="5" fill="#F6821F"/>
+          <text x="180" y="128" text-anchor="end" fill="#0F2B33">기본</text>
+          <text x="349" y="128" font-family="'IBM Plex Mono',monospace" fill="#C25C0C">$45</text>
+          <text x="208" y="128" fill="#fff" font-size="10.5" font-weight="500">WACC 11% · 마진 20%</text>
+          <!-- bear 16 => width 49 -->
+          <rect x="200" y="154" width="49" height="36" rx="5" fill="#B23A2E"/>
+          <text x="180" y="176" text-anchor="end" fill="#0F2B33">약세</text>
+          <text x="259" y="176" font-family="'IBM Plex Mono',monospace" fill="#B23A2E">$16</text>
+        </g>
+        <text x="200" y="226" font-family="Pretendard" font-size="11" fill="#8C887E">페이드(성장 둔화) 가정: 강세=느리게(낙관) · 기본=중립 · 약세=빠르게(비관). 소프트웨어 섹터 평균 페이드율 0.22 적용.</text>
+      </svg>
+      <figcaption>그림 12-1. 현재 주가($226)는 본 분석의 <b>가장 낙관적인 강세 시나리오($114)마저 약 2배 상회</b>한다</figcaption>
+    </figure>
+
+    <div class="note"><h4>민감도 분석의 종합 해석</h4>
+      <p style="margin:0">세 가지 변수(할인율·마진·성장)를 합리적 범위에서 아무리 우호적으로 움직여도, 엄밀한 현금흐름 기반 가치는 대체로 <b>$45~$116</b> 범위에 머뭅니다. 현재 주가 $226은 이 범위를 벗어나 있어, "여러 우호적 가정이 동시에, 그것도 장기간 충족되어야" 정당화됩니다. 이는 <b>실행 리스크가 가격에 거의 반영돼 있지 않다</b>는 의미이기도 합니다 <span class="chip hi">높음 ~85%</span>.</p></div>
+  </div>
+</section>
+
+<!-- ================= 13. 리스크·종합 ================= -->
+<section id="risk">
+  <div class="wrap">
+    <div class="sec-no">13 / SYNTHESIS, RISKS &amp; LIMITATIONS</div>
+    <h2 class="title">종합 판단 · 리스크 · 한계</h2>
+    <p class="lede">한쪽으로 치우치지 않도록, 낙관론과 신중론을 모두 가장 강한 형태로 제시한 뒤 균형 잡힌 결론을 내립니다.</p>
+
+    <div class="twocol">
+      <div class="note" style="border-left:4px solid #2C7A4B">
+        <h4 style="color:#2C7A4B">강세론을 가장 강하게 말하면 (Bull)</h4>
+        <ul class="clean" style="margin:6px 0 0 0">
+          <li><b>현금은 이미 번다:</b> 보고 기준 FCF는 흑자(마진 ~13%)이고 빠르게 증가 중. 회계 적자는 상당 부분 비현금 주식보상 탓.</li>
+          <li><b>주식보상 정상화:</b> 'AI 우선' 인력 감축(약 20%)으로 SBC/매출 비율이 빠르게 낮아지면, 마진이 본 모델 가정보다 좋아질 수 있음.</li>
+          <li><b>AI라는 거대한 순풍:</b> 엣지 AI 추론·에이전트 트래픽은 Cloudflare 네트워크에 직접적 수요. TAM이 구조적으로 커짐.</li>
+          <li><b>질 높은 컴포더에 9% 할인율은 타당:</b> 순현금·반복매출·높은 유지율을 감안하면 할인율을 낮춰 볼 근거가 있음 → 가치 $200+ 가능.</li>
+        </ul>
+      </div>
+      <div class="note" style="border-left:4px solid #B23A2E">
+        <h4 style="color:#B23A2E">신중론을 가장 강하게 말하면 (Bear)</h4>
+        <ul class="clean" style="margin:6px 0 0 0">
+          <li><b>주식보상은 실재 비용:</b> 매출의 ~21%에 달하는 희석은 주주가 치르는 진짜 대가. 이를 반영하면 아직 이익을 못 냄.</li>
+          <li><b>하이퍼스케일러 위협:</b> AWS·Azure·Google이 본격 가격·기능 공세에 나서면 성장·마진 모두 압박.</li>
+          <li><b>마진의 역풍:</b> AI 트래픽 증가가 매출총이익률을 끌어내릴 수 있음(이미 장기 목표 75~77% 하단 압력).</li>
+          <li><b>안전마진 부재:</b> 주가가 강세 시나리오마저 2배 상회 → 작은 실망에도 큰 조정 위험. 15년간 성장이 식지 않아야 한다는 전제는 역사적으로 드묾.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note key" style="margin-top:22px">
+      <h4>균형 잡힌 종합 — 내재 CAP의 합리성</h4>
+      <p style="margin:0 0 .7em 0">Cloudflare는 <b>진짜 해자를 갖춘 우량 성장 기업</b>입니다(해자 신뢰도 <span class="chip hi">~70%</span>, 성장 단계 <span class="chip hi">~95%</span>). 문제는 사업의 질이 아니라 <b>가격</b>입니다. 현재 주가는 시장이 Cloudflare의 경쟁 우위 기간을 <b>약 15~20년 이상</b>으로 — 대형 소프트웨어 벤치마크에 준하거나 그 이상으로 — 길게 가정해야 성립합니다. 소프트웨어 섹터 평균(페이드율 0.22)과 비교해도, 이는 '평균적 둔화'가 아니라 <b>'예외적으로 느린 둔화'</b>를 요구합니다.</p>
+      <p style="margin:0"><b>결론:</b> 가격은 프레임워크 기준 <b>'낙관~과도한 낙관' 구간</b>에 위치합니다 <span class="chip hi">높음 ~85%</span>. "엄밀한 현금흐름 가치 대비 비싸다"는 판단의 신뢰도는 높지만 <span class="chip hi">~85%</span>, "따라서 향후 수익률이 부진할 것"이라는 더 강한 주장의 신뢰도는 중간입니다 <span class="chip mid">~55~60%</span> — 강세 시나리오가 비현실적이지는 않기 때문입니다. <b>새 증거(아래 체크포인트)에 따라 이 판단은 갱신되어야 합니다.</b></p>
+    </div>
+
+    <h3 class="sub-h">분기별 · 연도별 체크포인트 — 무엇을 보면 판단이 바뀌는가</h3>
+    <div class="twocol">
+      <div class="note"><h4>분기마다 확인 (빠른 신호)</h4>
+        <ul class="clean" style="margin:6px 0 0">
+          <li><b>매출 성장률:</b> +28% 아래로 빠르게 둔화하면 → 약세 가정 강화 / +35% 재가속이면 → 강세 가정 강화</li>
+          <li><b>달러 기준 순유지율(DBNR):</b> 115% 미만으로 하락 시 해자·확장 동력 약화 신호</li>
+          <li><b>매출총이익률:</b> AI 트래픽으로 73% 아래로 내려가는지(마진 역풍 점검)</li>
+          <li><b>SBC/매출 비율:</b> 21%에서 실제로 내려가는지(강세론의 핵심 전제 검증)</li>
+          <li><b>대형 고객($100K+·$1M+) 증가율</b>과 RPO 추이</li>
+        </ul>
+      </div>
+      <div class="note"><h4>연 단위로 확인 (구조적 신호)</h4>
+        <ul class="clean" style="margin:6px 0 0">
+          <li><b>2028년 매출 $5B 목표</b> 달성 경로 (경영진 가이던스 대비)</li>
+          <li><b>하이퍼스케일러의 경쟁 행보</b> (가격 인하·번들·엣지 강화 여부)</li>
+          <li><b>Workers·Workers AI의 실제 수익화</b> 규모와 속도</li>
+          <li><b>GAAP 영업이익의 흑자 전환</b> 시점 (수익성 입증)</li>
+          <li><b>희석 후 주식 수</b> 증가 속도 (전환사채·SBC 영향)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-h">한계와 가정 (Limitations &amp; Assumptions)</h3>
+    <div class="note warn">
+      <p style="margin:0 0 .7em 0">본 분석은 <b>정밀한 적정가가 아니라 방향성과 논리적 일관성</b>을 목표로 합니다. 결과를 좌우하는 핵심 가정과, 결론을 뒤집을 수 있는 조건은 다음과 같습니다.</p>
+      <ul class="clean" style="margin:0">
+        <li><b>가장 민감한 가정 3가지:</b> ① 주식보상(SBC)을 전액 비용 처리 ② 할인율(WACC) 11% ③ 성장 둔화 속도(페이드)와 최종 FCF 마진 20%. 이 셋이 가치의 대부분을 결정합니다.</li>
+        <li><b>결론을 바꿀 새 증거:</b> SBC가 예상보다 훨씬 빠르고 낮게 정상화되거나(예: 매출의 8% 이하), AI 수요로 고성장이 15년 이상 지속되거나, 우량 컴포더로서 할인율을 8~9%로 낮춰야 한다면 — 가치는 본 모델보다 크게 상향됩니다(강세 시나리오로 수렴).</li>
+        <li><b>불확실성 범위:</b> 성장 단계 기업 특성상 가치 범위가 넓습니다. Morningstar도 불확실성을 'Very High'로 분류합니다. 역산된 수치(내재 할인율·마진·CAP)는 입력값에 민감한 <b>예시적 추정</b>입니다.</li>
+        <li><b>데이터 시점:</b> 주가·재무는 특정 시점 스냅숏이며, 변동성이 큰 종목이라 단기간에 달라질 수 있습니다(52주 범위 $159~$260).</li>
+        <li><b>방법론 선택:</b> 'SBC 비용처리 + 시장 기반 할인율'은 보수적 입장입니다. 증권가의 비-GAAP·저할인율 접근을 쓰면 더 높은 값이 나오며, 본 보고서는 그 격차 자체를 '시장의 낙관도'로 해석합니다.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="rule"></div>
+    <h3 style="color:#FCF8F0;font-size:18px;margin-bottom:6px">데이터 출처 및 기준 시점</h3>
+    <p class="src">
+      주가·시가총액·밸류에이션: 시장 데이터 집계(2026년 5월 28~29일 기준, 변동성 큼)<br>
+      재무제표: Cloudflare 미국 SEC 공시(FY2025 연차보고서, FY2026 1분기 보고서) 및 회사 IR 자료<br>
+      컨센서스 추정·목표주가: 증권사 집계치(중앙값 ≈ $235, 범위 $140~$300) · 다수 'Buy'<br>
+      독립 밸류에이션: Morningstar 적정가치 $116(불확실성 'Very High')<br>
+      거시지표: 미국 10년물 국채 수익률 4.45%(FRED) · 시장위험프리미엄 4.75%(표준) / 4.23%(Damodaran, 2026.1)<br>
+      산업 성장률: CDN 시장 연평균 약 18% 전망(시장조사 기관 집계)
+    </p>
+    <p class="src" style="margin-top:18px;color:#7E8B8A">
+      분석 방법: 경쟁 우위 기간(CAP) 프레임워크 · 현금흐름할인(DCF) 및 시장 내재 기대치 역산<br>
+      본 문서는 특정 시점 데이터에 기반한 분석 자료이며, 수치는 근사값입니다. 중요한 의사결정 전 원본 공시로 확인을 권합니다.
+    </p>
+    <p class="src" style="margin-top:22px;color:#5f6b6a;font-size:11px">© 2026 · CAP 프레임워크 장기 투자 분석 · Cloudflare (NYSE: NET)</p>
+  </div>
+</footer>
+
+</body>
+</html>

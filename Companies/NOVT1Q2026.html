@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Novanta (NOVT) — 경쟁우위기간(CAP) 기반 장기투자 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#13202e;--ink2:#243748;--paper:#f6f1e7;--paper2:#fffdf8;--line:#d8cdb8;--amber:#c47a1a;--amber-soft:#e9b765;--teal:#1c6b5e;--teal-soft:#5aa597;--red:#a8392c;--red-soft:#d98a7e;--green:#2c7a4d;--blue:#2d5a8a;--gold:#b8902f}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Newsreader',Georgia,serif;color:var(--ink);background:var(--paper);line-height:1.62;font-size:18px;background-image:radial-gradient(var(--line) 0.5px,transparent 0.5px);background-size:26px 26px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px}
+h1,h2,h3,h4{font-family:'Fraunces',Georgia,serif;font-weight:600;line-height:1.12;color:var(--ink)}
+.mono{font-family:'IBM Plex Mono',monospace}
+sup{font-size:.62em}
+.hero{background:var(--ink);color:var(--paper);padding:70px 0 56px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 88% 12%,rgba(196,122,26,.22),transparent 42%),radial-gradient(circle at 8% 92%,rgba(28,107,94,.20),transparent 46%)}
+.hero .wrap{position:relative;z-index:2}
+.kicker{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber-soft);margin-bottom:20px}
+.hero h1{font-size:clamp(36px,6vw,68px);font-weight:700;color:#fff;letter-spacing:-.015em;margin-bottom:8px}
+.hero h1 .tick{color:var(--amber-soft);font-weight:500}
+.hero .sub{font-size:clamp(18px,2.4vw,23px);color:#cdd6de;max-width:760px;margin-top:14px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#9fb0bd}
+.hero .meta b{color:#fff;font-weight:500}
+.verdict{background:linear-gradient(180deg,var(--ink2),var(--ink))}
+.verdict-card{background:var(--paper2);color:var(--ink);margin:-34px auto 0;max-width:1024px;border-radius:6px;box-shadow:0 24px 60px rgba(19,32,46,.32);padding:38px 44px;position:relative;border:1px solid var(--line)}
+.verdict-card .tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:var(--red);padding:5px 12px;border-radius:3px;margin-bottom:18px}
+.verdict-card h2{font-size:clamp(21px,3vw,29px);font-weight:600;line-height:1.3;margin-bottom:8px}
+.verdict-card .lead{font-size:18px;color:var(--ink2);margin-top:14px}
+.bignum-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px}
+.bignum{border-left:3px solid var(--amber);padding-left:14px}
+.bignum .n{font-family:'Fraunces',serif;font-size:clamp(24px,4vw,38px);font-weight:700;line-height:1;color:var(--ink)}
+.bignum .n.red{color:var(--red)}.bignum .n.teal{color:var(--teal)}
+.bignum .l{font-size:13px;color:var(--ink2);margin-top:7px;line-height:1.35}
+section{padding:56px 0 8px}
+.snum{font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.2em;color:var(--amber);font-weight:500}
+.shead{font-size:clamp(26px,4vw,40px);font-weight:600;letter-spacing:-.01em;margin:6px 0 6px}
+.sdesc{font-size:17px;color:var(--ink2);max-width:800px;margin-bottom:30px}
+.divider{height:1px;background:var(--line);max-width:1080px;margin:42px auto 0}
+p{margin-bottom:16px}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic;color:var(--ink2)}
+a{color:var(--teal);text-decoration:none;border-bottom:1px solid var(--teal-soft)}
+.plain{background:#fff;border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:5px;padding:18px 22px;margin:22px 0;font-size:16.5px}
+.plain .lab{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);font-weight:600;display:block;margin-bottom:6px}
+.note{background:#fbf6ec;border:1px dashed var(--amber);border-radius:5px;padding:16px 20px;margin:20px 0;font-size:15.5px;color:var(--ink2)}
+.note .lab{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:600;display:block;margin-bottom:5px}
+.conf{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:2px 9px;border-radius:20px;border:1px solid;vertical-align:middle;margin-left:4px;font-weight:500}
+.conf.hi{color:var(--green);border-color:var(--green);background:rgba(44,122,77,.07)}
+.conf.mid{color:var(--amber);border-color:var(--amber);background:rgba(196,122,26,.07)}
+.conf.lo{color:var(--red);border-color:var(--red);background:rgba(168,57,44,.07)}
+.cards{display:grid;gap:18px;margin:24px 0}
+.c3{grid-template-columns:repeat(3,1fr)}.c2{grid-template-columns:repeat(2,1fr)}.c4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--paper2);border:1px solid var(--line);border-radius:6px;padding:22px}
+.card h4{font-size:18px;margin-bottom:8px}
+.card .ico{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--amber);letter-spacing:.1em;margin-bottom:10px;font-weight:600}
+.card p{font-size:15px;color:var(--ink2);margin-bottom:0}
+.statstrip{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper2);margin:22px 0}
+.statstrip>div{padding:20px;border-right:1px solid var(--line)}
+.statstrip>div:last-child{border-right:none}
+.statstrip .v{font-family:'Fraunces',serif;font-size:25px;font-weight:700}
+.statstrip .k{font-size:13px;color:var(--ink2);margin-top:5px}
+table.data{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px;background:var(--paper2);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+table.data th{background:var(--ink);color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:12px;padding:11px 12px;text-align:right;border-bottom:2px solid var(--ink)}
+table.data th:first-child{text-align:left}
+table.data td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:13.5px}
+table.data td:first-child{text-align:left;font-family:'Newsreader',serif;font-size:15px}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.hl td{background:#fbf4e6;font-weight:600}
+table.data tr.tot td{background:var(--ink2);color:#fff;font-weight:600}
+table.data .pos{color:var(--green)}table.data .neg{color:var(--red)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+figure{margin:26px 0;text-align:center}
+figcaption{font-size:13.5px;color:var(--ink2);margin-top:12px;font-family:'IBM Plex Mono',monospace}
+svg{max-width:100%;height:auto}
+.pullquote{font-family:'Fraunces',serif;font-size:clamp(21px,3vw,28px);font-weight:500;line-height:1.32;color:var(--ink);border-top:2px solid var(--amber);border-bottom:1px solid var(--line);padding:24px 0;margin:34px 0;max-width:860px}
+.pullquote .by{display:block;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink2);margin-top:12px;font-weight:400}
+ul.clean{list-style:none;margin:14px 0}
+ul.clean li{padding:7px 0 7px 26px;position:relative;font-size:16px;color:var(--ink2);border-bottom:1px dotted var(--line)}
+ul.clean li:before{content:"▸";position:absolute;left:2px;color:var(--amber);top:9px}
+ul.clean li:last-child{border-bottom:none}
+ul.clean li b{color:var(--ink)}
+.foot{background:var(--ink);color:#9fb0bd;padding:46px 0 60px;margin-top:60px;font-size:14px}
+.foot h4{color:#fff;font-size:16px;margin-bottom:14px}
+.foot a{color:var(--amber-soft);border:none}
+.srclist{columns:2;column-gap:40px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.85}
+@media(max-width:760px){.bignum-row,.statstrip,.c3,.c4{grid-template-columns:repeat(2,1fr)}.c2{grid-template-columns:1fr}.verdict-card{padding:28px 22px}.srclist{columns:1}body{font-size:17px}.statstrip>div:nth-child(2){border-right:none}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<div class="kicker">경쟁우위기간(CAP) 프레임워크 · 장기 주식 분석</div>
+<h1>Novanta <span class="tick">· NOVT</span></h1>
+<div class="sub">의료·첨단산업 장비의 “심장”을 만드는 정밀 부품 회사.<br>시장은 이 회사에 <em>거의 영구적인 우위</em>를 가격에 반영하고 있습니다.</div>
+<div class="meta"><span>현재가 <b>≈ $168</b></span><span>시가총액 <b>≈ $6.0–6.9B</b></span><span>섹터 <b>기술·정밀계측기</b></span><span>기준일 <b>2026-06-05</b></span><span>거래소 <b>NASDAQ</b></span></div>
+</div></header>
+<div class="verdict"><div class="verdict-card">
+<span class="tag">핵심 결론 (먼저 읽으세요)</span>
+<h2>Novanta는 “진짜 해자”를 가진 우량 기업이지만, 현재 주가($168)는 규율 있는 현금흐름할인(DCF) 가치(≈$58)의 약 <span style="color:var(--red)">2.9배</span>입니다. 시장은 25~30년 이상 지속되는 초과수익(사실상 영구적 우위)을 가격에 담고 있습니다.</h2>
+<p class="lead">회사가 나쁜 게 아니라 <strong>기대가 매우 높다</strong>는 뜻입니다. CAP 프레임워크 기준 시장 내재 기대치는 “과도한 낙관” 구간에 있습니다. <span class="conf hi">확신도 높음 ~80%</span></p>
+<div class="bignum-row">
+<div class="bignum"><div class="n red">25–30년+</div><div class="l">시장 내재 경쟁우위기간(CAP). “합리적” 상단(15년)을 크게 초과</div></div>
+<div class="bignum"><div class="n">2.9×</div><div class="l">현재가 ÷ 기본 시나리오 DCF 가치($58)</div></div>
+<div class="bignum"><div class="n teal">11.0%</div><div class="l">연결 ROIC ≈ WACC(10.9%). 영업권 제외 시 22.8%</div></div>
+<div class="bignum"><div class="n">≈5–6%</div><div class="l">현재가가 내포한 할인율(정상 성장 가정). 합리적 자본비용보다 크게 낮음</div></div>
+</div>
+</div></div>
+<!-- 01 기업개요 -->
+<section id="overview"><div class="wrap">
+<div class="snum">01 / 기업 개요</div>
+<h2 class="shead">노반타는 무엇을 하는 회사인가</h2>
+<p class="sdesc">한 문장 요약: <strong>병원 수술장비·반도체 장비·로봇·레이저 가공기 같은 “정밀 기계” 안에 들어가는 핵심 부품(레이저·광학·정밀모터·영상)을 만들어, 그 기계를 만드는 대형 제조사(OEM)에 납품하는 부품 전문 기업</strong>입니다.</p>
+<div class="plain"><span class="lab">쉽게 말하면</span>
+애플·삼성이 카메라·칩을 부품사에서 사오듯, 의료기기·산업장비 회사들도 “정밀하게 빛을 쏘고(레이저), 정확히 움직이고(모터), 정밀하게 보는(카메라)” 핵심 부품을 노반타에서 사옵니다. 노반타는 <strong>“보이지 않지만 없으면 안 되는 부품”</strong>을 파는 회사입니다. 금광에서 금 캐는 사람보다 곡괭이·청바지를 파는 사람이 꾸준히 돈 번다는 말처럼, 노반타가 바로 그 “곡괭이” 포지션입니다.
+</div>
+<div class="cards c2">
+<div class="card"><div class="ico">기본 정보</div><h4>1968년 설립 · 미국 매사추세츠 베드퍼드</h4><p>전신은 GSI Group, 현 사명 Novanta. 직원 약 3,000명. 의료·생명과학·첨단산업 OEM에 부품·서브시스템 공급. NASDAQ 상장(NOVT), Russell 2000·3000 편입 중소형 기술주. 배당 없음.</p></div>
+<div class="card"><div class="ico">사업 모델</div><h4>“디자인-인(Design-in)” 부품 공급</h4><p>고객 장비의 <em>설계 단계</em>부터 노반타 부품이 채택(design-in)됩니다. 한번 설계에 들어가면 제품 수명 내내 교체가 어려워(인증·재검증 비용) 장기 매출이 잠깁니다. 직접 영업 + 유통망으로 판매.</p></div>
+</div>
+<div class="statstrip">
+<div><div class="v">$980.6M</div><div class="k">FY2025 매출 (+3.3%)</div></div>
+<div><div class="v">~3,000</div><div class="k">임직원 수</div></div>
+<div><div class="v">2,000+</div><div class="k">보유 특허(추정)<sup>주</sup></div></div>
+<div><div class="v">2개</div><div class="k">사업 부문(세그먼트)</div></div>
+</div>
+<p>노반타는 30건 이상의 인수합병(M&A)으로 성장한 <strong>“연쇄 인수형 컴파운더(serial acquirer)”</strong>입니다. Cambridge Technology, Synrad, Laser Quantum, ARGES, WOM, NDS, JADAK, Celera Motion, ATI Industrial Automation, Keonn 등 수많은 전문 브랜드를 인수해 하나의 그룹으로 묶었습니다. 각 브랜드는 좁지만 깊은 틈새 지위(레이저 스캐닝, CO₂ 레이저, 광학 엔코더, 수술실 영상 등)를 갖습니다.</p>
+<div class="note"><span class="lab">데이터 주석</span>특허 수(2,000+)는 전략분석 매체 추정치로 회사 공식 공시는 아닙니다. <span class="conf mid">확신도 중간 ~60%</span></div>
+</div><div class="divider"></div></section>
+
+<!-- 02 수익구조 -->
+<section id="revenue"><div class="wrap">
+<div class="snum">02 / 수익 구조</div>
+<h2 class="shead">노반타는 어떻게 돈을 버는가</h2>
+<p class="sdesc">매출은 두 개의 사업 부문에서 거의 반반씩 나옵니다. 다만 “고객이 누구냐(최종시장)”로 보면 의료(53%)가 산업(47%)보다 약간 큽니다.</p>
+<figure>
+<svg viewBox="0 0 760 360" role="img" aria-label="노반타 매출 구조 도넛 차트">
+<!-- 왼쪽 도넛: 세그먼트 -->
+<g transform="translate(150,170)">
+<circle r="100" fill="none" stroke="#e7ddca" stroke-width="44"/>
+<!-- Automation 51% : 0~183.6deg -->
+<circle r="100" fill="none" stroke="#1c6b5e" stroke-width="44" stroke-dasharray="320.4 628.3" transform="rotate(-90)"/>
+<!-- Medical 49% : 나머지 -->
+<circle r="100" fill="none" stroke="#c47a1a" stroke-width="44" stroke-dasharray="307.9 628.3" stroke-dashoffset="-320.4" transform="rotate(-90)"/>
+<text y="-6" text-anchor="middle" font-family="Fraunces" font-size="26" font-weight="700" fill="#13202e">$980.6M</text>
+<text y="16" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#243748">FY2025 매출</text>
+</g>
+<g font-family="Newsreader" font-size="14" fill="#243748">
+<rect x="270" y="120" width="14" height="14" fill="#1c6b5e"/><text x="292" y="132">자동화 지원기술 (Automation Enabling)</text><text x="292" y="150" font-family="IBM Plex Mono" font-size="13" fill="#13202e" font-weight="600">$500.8M · 51% · 총이익률 47.8%</text>
+<rect x="270" y="178" width="14" height="14" fill="#c47a1a"/><text x="292" y="190">의료 솔루션 (Medical Solutions)</text><text x="292" y="208" font-family="IBM Plex Mono" font-size="13" fill="#13202e" font-weight="600">$479.8M · 49% · 총이익률 41.6%</text>
+<line x1="270" y1="232" x2="720" y2="232" stroke="#d8cdb8"/>
+<text x="270" y="256" font-size="13" fill="#243748">최종시장 기준(Q1’26): 의료 <tspan font-weight="600" fill="#c47a1a">~53%</tspan> · 첨단산업 <tspan font-weight="600" fill="#1c6b5e">~47%</tspan></text>
+<text x="270" y="278" font-size="13" fill="#243748">FY2025 조직성장 -0.5% → Q1’26 +3% → Q2’26 가이드 +6~8%</text>
+</g>
+</svg>
+<figcaption>매출 구성 — 회사 공시(FY2025 실적 발표) 기준. 자동화 부문이 매출이 약간 크고 마진도 높음.</figcaption>
+</figure>
+<div class="plain"><span class="lab">돈 버는 흐름 (3단계)</span>
+<strong>① 만든다</strong> — 노반타가 레이저·광학·모터·카메라 부품을 설계·제조 → <strong>② 끼워 넣는다</strong> — 의료/산업 장비 제조사(OEM)가 자기 장비 설계에 노반타 부품을 “채택(design-in)” → <strong>③ 따라 판다</strong> — OEM이 장비를 팔 때마다 노반타 부품이 같이 팔리고, 이후 교체·소모품·서비스로 추가 매출(연금 같은 반복 매출)이 발생.
+</div>
+<p>핵심은 <strong>“B2B 부품 매출 + 반복 매출”</strong> 구조라는 점입니다. 의료 부문에는 일회용 소모품(insufflator용 디스포저블 등)과 서비스·캘리브레이션이 포함돼 경기 영향이 덜한 안정적 현금흐름을 만듭니다. 산업 부문은 반도체·전자 제조, 레이저 가공, 첨단 로봇 등 <em>설비투자 사이클</em>에 더 민감합니다. 최근에는 AI 데이터센터 인프라·첨단 로봇·수술 로봇 수요가 새로운 성장축으로 부상하고 있습니다. <span class="conf hi">확신도 높음 ~80%</span></p>
+</div><div class="divider"></div></section>
+<!-- 03 제품/기술 -->
+<section id="tech"><div class="wrap">
+<div class="snum">03 / 제품 · 서비스 · 기술력</div>
+<h2 class="shead">노반타의 3대 핵심 기술</h2>
+<p class="sdesc">노반타의 기술은 크게 세 갈래입니다 — <strong>빛(포토닉스)</strong>, <strong>봄(비전·영상)</strong>, <strong>움직임(정밀모션)</strong>. 모두 “1mm의 수천분의 1” 단위의 정밀함이 핵심입니다.</p>
+<div class="cards c3">
+<div class="card"><div class="ico">① 포토닉스 (빛/레이저)</div><h4>빛을 정밀하게 쏘고·휘고·자른다</h4><p><strong>레이저 빔 스티어링·스캐닝, CO₂·고체·초고속 레이저, 광학 엔진.</strong> 레이저 눈 수술, DNA 시퀀싱 장비, 반도체·전자 가공, 정밀 마킹에 쓰입니다.<br><br><em>쉽게:</em> 레이저 포인터를 “초정밀 로봇 팔”처럼 원하는 위치에 마이크로초 단위로 정확히 조준·이동시키는 부품.</p></div>
+<div class="card"><div class="ico">② 비전 (봄/영상)</div><h4>수술실·검사장비의 “눈”</h4><p><strong>의료급 영상·디스플레이, 수술실 통합(영상 녹화·전송), 머신비전, RFID 식별.</strong> 최소침습·로봇 수술, 첨단 영상진단에 탑재. NDS·JADAK 브랜드.<br><br><em>쉽게:</em> 외과의가 보는 고화질 수술 화면과 “이 도구가 무엇인지” 자동 인식하는 카메라·태그 시스템.</p></div>
+<div class="card"><div class="ico">③ 정밀모션 (움직임)</div><h4>로봇·장비를 미세하게 움직인다</h4><p><strong>광학·유도 엔코더, 정밀모터·서보드라이브, 로봇 말단장치(EOAT), 공기베어링 스핀들.</strong> 로봇 관절, 반도체 리소그래피, 의료 자동화에 사용. Celera Motion·ATI 브랜드.<br><br><em>쉽게:</em> 로봇 팔이 “머리카락 굵기보다 정밀하게” 움직이고, 그 위치를 실시간으로 정확히 읽어내는 부품.</p></div>
+</div>
+<figure>
+<svg viewBox="0 0 920 150" role="img" aria-label="제품 제공 흐름도">
+<defs><marker id="ar" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#c47a1a"/></marker></defs>
+<g font-family="Newsreader" font-size="13.5" text-anchor="middle">
+<g><rect x="8" y="44" width="150" height="62" rx="6" fill="#13202e"/><text x="83" y="70" fill="#fff" font-weight="600">설계·R&D</text><text x="83" y="90" fill="#cdd6de" font-size="11.5">고객 요구 맞춤 엔지니어링</text></g>
+<line x1="160" y1="75" x2="196" y2="75" stroke="#c47a1a" stroke-width="2" marker-end="url(#ar)"/>
+<g><rect x="200" y="44" width="150" height="62" rx="6" fill="#1c6b5e"/><text x="275" y="70" fill="#fff" font-weight="600">핵심부품 제조</text><text x="275" y="90" fill="#d7ece7" font-size="11.5">레이저·광학·모터·영상</text></g>
+<line x1="352" y1="75" x2="388" y2="75" stroke="#c47a1a" stroke-width="2" marker-end="url(#ar)"/>
+<g><rect x="392" y="44" width="150" height="62" rx="6" fill="#c47a1a"/><text x="467" y="66" fill="#fff" font-weight="600">OEM 장비에</text><text x="467" y="84" fill="#fff" font-weight="600">디자인-인</text></g>
+<line x1="544" y1="75" x2="580" y2="75" stroke="#c47a1a" stroke-width="2" marker-end="url(#ar)"/>
+<g><rect x="584" y="44" width="150" height="62" rx="6" fill="#243748"/><text x="659" y="70" fill="#fff" font-weight="600">장비 양산·판매</text><text x="659" y="90" fill="#cdd6de" font-size="11.5">부품 매출 동반</text></g>
+<line x1="736" y1="75" x2="772" y2="75" stroke="#c47a1a" stroke-width="2" marker-end="url(#ar)"/>
+<g><rect x="776" y="44" width="138" height="62" rx="6" fill="#b8902f"/><text x="845" y="66" fill="#fff" font-weight="600">소모품·서비스</text><text x="845" y="84" fill="#fff" font-size="11.5">반복 매출</text></g>
+</g></svg>
+<figcaption>제품 제공 흐름 — 설계부터 반복 매출까지. “디자인-인” 단계가 해자의 출발점.</figcaption>
+</figure>
+<div class="plain"><span class="lab">기술력의 핵심 한 줄</span>
+노반타의 강점은 “세계 최고의 레이저” 같은 단일 기술이 아니라, <strong>“의료급 신뢰성 + 극한 정밀도 + 고객 장비에 맞춘 통합 엔지니어링”</strong>의 결합입니다. 부품 자체보다 “고객의 어려운 기술 문제를 같이 풀어주는 능력”이 진짜 상품입니다. <span class="conf hi">확신도 높음 ~75%</span>
+</div>
+</div><div class="divider"></div></section>
+
+<!-- 04 산업분석 -->
+<section id="industry"><div class="wrap">
+<div class="snum">04 / 산업 분석</div>
+<h2 class="shead">어떤 산업에, 어디쯤 서 있는가</h2>
+<p class="sdesc">노반타는 “정밀 포토닉스·모션 부품” 산업에 속하며, 이 부품들은 다시 ① 의료기기 ② 첨단산업(반도체·전자·로봇·레이저 가공) 두 거대 최종시장으로 흘러갑니다.</p>
+<h3 style="font-size:21px;margin:6px 0 14px">산업 가치사슬(Value Chain) — 노반타의 위치</h3>
+<figure>
+<svg viewBox="0 0 920 200" role="img" aria-label="산업 가치사슬">
+<g font-family="Newsreader" font-size="13" text-anchor="middle">
+<rect x="10" y="70" width="150" height="60" rx="6" fill="#e7ddca" stroke="#d8cdb8"/><text x="85" y="96" font-weight="600" fill="#13202e">원재료·소자</text><text x="85" y="114" font-size="11" fill="#243748">광학유리·다이오드·자석</text>
+<text x="178" y="104" fill="#c47a1a" font-size="18">→</text>
+<rect x="196" y="55" width="180" height="90" rx="6" fill="#13202e"/><text x="286" y="88" fill="#fff" font-weight="700" font-size="15">노반타 (여기)</text><text x="286" y="108" fill="#e9b765" font-size="11.5">핵심 부품·서브시스템</text><text x="286" y="126" fill="#cdd6de" font-size="11">레이저·광학·모터·영상</text>
+<text x="394" y="104" fill="#c47a1a" font-size="18">→</text>
+<rect x="412" y="70" width="170" height="60" rx="6" fill="#1c6b5e"/><text x="497" y="92" fill="#fff" font-weight="600">OEM 장비 제조사</text><text x="497" y="110" fill="#d7ece7" font-size="11">수술로봇·반도체장비·</text><text x="497" y="124" fill="#d7ece7" font-size="11">진단기·레이저가공기</text>
+<text x="600" y="104" fill="#c47a1a" font-size="18">→</text>
+<rect x="618" y="70" width="150" height="60" rx="6" fill="#243748"/><text x="693" y="96" fill="#fff" font-weight="600">병원·공장</text><text x="693" y="114" fill="#cdd6de" font-size="11">최종 사용처</text>
+<text x="786" y="104" fill="#c47a1a" font-size="18">→</text>
+<rect x="804" y="70" width="106" height="60" rx="6" fill="#b8902f"/><text x="857" y="96" fill="#fff" font-weight="600">환자·</text><text x="857" y="114" fill="#fff" font-weight="600">생산성</text>
+</g></svg>
+<figcaption>노반타는 가치사슬의 “상류 핵심부품” 위치 — 교체가 어렵고 고객 의존도가 높은 길목.</figcaption>
+</figure>
+<div class="cards c3">
+<div class="card"><div class="ico">산업 구조</div><h4>틈새 과점 + 파편화 공존</h4><p>각 부품 카테고리(레이저 스캐닝, 엔코더 등)는 소수 전문기업이 나눠 갖는 <strong>틈새 과점</strong>. 동시에 전체 “포토닉스·정밀부품” 산업은 수백 개 중소 전문사로 파편화 → 노반타에 <strong>M&A로 통합할 기회</strong>를 제공.</p></div>
+<div class="card"><div class="ico">성장 동력</div><h4>구조적 메가트렌드 다수</h4><p><strong>최소침습·로봇 수술, DNA 시퀀싱·정밀의료, 반도체·AI 데이터센터 설비, 첨단·휴머노이드 로봇, 공장 자동화.</strong> 모두 “더 정밀한 빛·영상·모션”을 요구 → 노반타 부품 수요 증가.</p></div>
+<div class="card"><div class="ico">사이클·리스크</div><h4>산업 설비투자에 민감</h4><p>산업 부문은 반도체·전자 <strong>설비투자(capex) 사이클</strong>에 출렁임. 2023~24년 산업 침체·재고조정으로 조직성장 부진했으나, 2025말~2026 반등 중. 의료 부문이 완충 역할.</p></div>
+</div>
+<p><strong>산업의 미래 방향:</strong> 장비가 점점 더 “정밀·자동·지능화”되면서 핵심 부품의 부가가치 비중이 커지고 있습니다. 특히 ① <strong>수술 로봇·최소침습</strong>(노반타 영상·모션이 직접 수혜), ② <strong>AI 데이터센터·반도체</strong>(레이저·정밀모션 수요), ③ <strong>휴머노이드/첨단 로봇</strong>(엔코더·모터·말단장치)이 향후 5~10년 성장축으로 거론됩니다. 경영진은 Q1’26 실적에서 “AI 기반 첨단산업·반도체, 첨단 로봇, 수술 로봇” 수요가 동반 가속 중이라고 밝혔습니다. <span class="conf mid">확신도 중간 ~65% (사이클 타이밍 불확실)</span></p>
+<div class="note"><span class="lab">비판적 점검 — 선후 인과 주의</span>최근 부킹 급증(+37%)·신제품 매출 +50%가 <em>구조적</em> 성장 전환인지, 산업 재고조정 종료 후의 <em>사이클성</em> 반등인지는 아직 1~2분기 데이터만으로 단정하기 어렵습니다. “AI 수요 언급 직후 주가 급등” = “AI가 실적을 보장” 으로 비약하지 않도록 주의가 필요합니다.</div>
+</div><div class="divider"></div></section>
+<!-- 05 SWOT -->
+<section id="swot"><div class="wrap">
+<div class="snum">05 / SWOT 분석</div>
+<h2 class="shead">강점·약점·기회·위협</h2>
+<figure>
+<svg viewBox="0 0 920 470" role="img" aria-label="SWOT 분석">
+<style>.st{font-family:Newsreader;font-size:13.5px;fill:#243748}.sh{font-family:Fraunces;font-size:17px;font-weight:700}.sl{font-family:IBM Plex Mono;font-size:11px;letter-spacing:.15em}</style>
+<g><rect x="6" y="6" width="450" height="220" rx="7" fill="#eef4f1" stroke="#1c6b5e" stroke-width="1.5"/>
+<text x="26" y="34" class="sl" fill="#1c6b5e">STRENGTHS · 강점</text><text x="26" y="58" class="sh" fill="#13202e">탄탄한 내재 경쟁력</text>
+<text x="26" y="86" class="st">• 디자인-인 기반 높은 전환비용·고착성</text>
+<text x="26" y="110" class="st">• 영업권 제외 ROIC ~23%, 조정EBITDA마진 22.5%</text>
+<text x="26" y="134" class="st">• 의료 비중 ~53% → 안정적 반복 매출</text>
+<text x="26" y="158" class="st">• 순현금 +$121M, 강한 재무 유연성</text>
+<text x="26" y="182" class="st">• 30건+ M&A 통합 역량(컴파운더 트랙레코드)</text>
+<text x="26" y="206" class="st">• 부킹 +37%, 신제품 매출 +50%(Q1’26)</text></g>
+<g><rect x="464" y="6" width="450" height="220" rx="7" fill="#fbf1e6" stroke="#c47a1a" stroke-width="1.5"/>
+<text x="484" y="34" class="sl" fill="#c47a1a">WEAKNESSES · 약점</text><text x="484" y="58" class="sh" fill="#13202e">자본배분·구조적 한계</text>
+<text x="484" y="86" class="st">• 연결 ROIC ~11% ≈ WACC → 가치창출 얇음</text>
+<text x="484" y="110" class="st">• 영업권 $647M (M&A 프리미엄 부담)</text>
+<text x="484" y="134" class="st">• GAAP 순이익률 5.5%, EPS의 큰 조정 폭</text>
+<text x="484" y="158" class="st">• 중소형주·높은 베타(~1.6), 변동성 큼</text>
+<text x="484" y="182" class="st">• 2025 조직성장 -0.5%, FCF -66% 급감</text>
+<text x="484" y="206" class="st">• 매출 ~$1B로 대형 경쟁사 대비 규모 작음</text></g>
+<g><rect x="6" y="234" width="450" height="220" rx="7" fill="#eef2f7" stroke="#2d5a8a" stroke-width="1.5"/>
+<text x="26" y="262" class="sl" fill="#2d5a8a">OPPORTUNITIES · 기회</text><text x="26" y="286" class="sh" fill="#13202e">구조적 성장 + M&A 파이프라인</text>
+<text x="26" y="314" class="st">• 수술 로봇·최소침습·정밀의료 확대</text>
+<text x="26" y="338" class="st">• AI 데이터센터·반도체 설비 수요</text>
+<text x="26" y="362" class="st">• 휴머노이드·첨단 로봇(엔코더·모터)</text>
+<text x="26" y="386" class="st">• “역대 최대” 인수 파이프라인 + 실탄</text>
+<text x="26" y="410" class="st">• 지역 생산(중국 등) 통한 마진·원가 개선</text>
+<text x="26" y="434" class="st">• NVIDIA Halos 등 AI 생태계 협력</text></g>
+<g><rect x="464" y="234" width="450" height="220" rx="7" fill="#f9eeec" stroke="#a8392c" stroke-width="1.5"/>
+<text x="484" y="262" class="sl" fill="#a8392c">THREATS · 위협</text><text x="484" y="286" class="sh" fill="#13202e">사이클·밸류에이션·관세</text>
+<text x="484" y="314" class="st">• 산업 설비투자 사이클 둔화 위험</text>
+<text x="484" y="338" class="st">• 관세·운임 비용 상승(마진 압박)</text>
+<text x="484" y="362" class="st">• 대형 경쟁사(MKS·Coherent) 통합 공세</text>
+<text x="484" y="386" class="st">• 고객 집중·OEM 의존(특정 고객 감소 위험)</text>
+<text x="484" y="410" class="st">• 의료기기 규제·인증 리스크</text>
+<text x="484" y="434" class="st">• 높은 밸류에이션 → 실망 시 큰 하락폭</text></g>
+</svg>
+<figcaption>SWOT 종합 — 내재 경쟁력은 강하나, 자본배분(M&A 프리미엄)과 밸류에이션이 핵심 약점.</figcaption>
+</figure>
+</div><div class="divider"></div></section>
+
+<!-- 06 해자 -->
+<section id="moat"><div class="wrap">
+<div class="snum">06 / 경제적 해자 (Moat)</div>
+<h2 class="shead">노반타만의 “성벽”은 무엇인가</h2>
+<p class="sdesc">해자란 경쟁자가 쉽게 따라올 수 없는 구조적 우위입니다. 노반타의 해자는 한 가지가 아니라 여러 겹입니다 — 다만 “제품 단위” 해자와 “회사 전체” 수익성은 구분해야 합니다.</p>
+<figure>
+<svg viewBox="0 0 760 300" role="img" aria-label="해자 다층 구조">
+<g text-anchor="middle" font-family="Newsreader">
+<ellipse cx="380" cy="150" rx="360" ry="120" fill="#f3ece0" stroke="#d8cdb8"/>
+<ellipse cx="380" cy="150" rx="270" ry="92" fill="#e7ddca" stroke="#d8cdb8"/>
+<ellipse cx="380" cy="150" rx="175" ry="62" fill="#1c6b5e"/>
+<text x="380" y="146" fill="#fff" font-family="Fraunces" font-size="16" font-weight="700">핵심 자산</text>
+<text x="380" y="166" fill="#d7ece7" font-size="11.5">독자 기술·특허 2,000+ · 의료 인증</text>
+<text x="380" y="58" fill="#13202e" font-size="13" font-weight="600">① 전환비용 (가장 강함)</text>
+<text x="380" y="246" fill="#243748" font-size="12.5">③ 규모·M&A 통합 · 글로벌 공급망</text>
+<text x="140" y="150" fill="#243748" font-size="12.5" text-anchor="middle">② 무형자산</text>
+<text x="620" y="150" fill="#243748" font-size="12.5" text-anchor="middle">② 기술 전문성</text>
+</g></svg>
+<figcaption>해자 다층 구조 — 가장 단단한 안쪽은 “전환비용”과 “독자기술·인증”.</figcaption>
+</figure>
+<div class="cards c2">
+<div class="card"><div class="ico">① 전환비용 (가장 강함)</div><h4>한번 설계에 들어가면 못 바꾼다</h4><p>노반타 부품이 OEM 장비(특히 의료기기)에 디자인-인 되면, 교체 시 <strong>재설계·재인증·재검증</strong> 비용·시간이 막대합니다. 의료기기는 규제 인증까지 다시 받아야 해 사실상 제품 수명 내내 고착됩니다. <span class="conf hi">확신도 높음 ~80%</span></p></div>
+<div class="card"><div class="ico">② 무형자산·기술</div><h4>독자 기술 + 의료급 신뢰성</h4><p>2,000+ 특허(추정), 수십 년 축적된 정밀 포토닉스·모션 노하우, 의료급 품질·규제 대응 역량. 신규 진입자가 단기에 복제하기 어렵습니다. <span class="conf mid">확신도 중간 ~65%</span></p></div>
+<div class="card"><div class="ico">③ 규모·통합 우위</div><h4>파편화 산업의 통합자</h4><p>다수 틈새 브랜드를 인수·통합해 “원스톱 서브시스템”을 제공 → 대형 OEM이 한 곳에서 통합 솔루션을 받을 수 있게 함. 다만 이 우위는 <em>비싼 M&A</em>로 산 것이라 수익성 희석을 동반. <span class="conf mid">확신도 중간 ~60%</span></p></div>
+<div class="card" style="border-left:4px solid var(--red)"><div class="ico" style="color:var(--red)">⚠ 해자의 함정</div><h4>“제품 해자” ≠ “주주 수익”</h4><p>제품 단위 ROIC(영업권 제외)는 ~23%로 강력하나, M&A 프리미엄(영업권 $647M)을 포함한 <strong>연결 ROIC는 ~11%로 WACC와 거의 동일</strong>. 즉 좋은 사업을 <em>비싸게 사면</em> 주주 가치 창출은 얇아집니다. <span class="conf hi">확신도 높음 ~80%</span></p></div>
+</div>
+<div class="pullquote">“노반타의 해자는 진짜다 — 단, 그 해자에서 나오는 초과수익의 상당 부분이 인수 가격(영업권)으로 빠져나간다. 사업의 질과 <em>주주 입장의 자본수익률</em>은 다른 이야기다.”<span class="by">— 본 분석의 핵심 통찰</span></div>
+</div><div class="divider"></div></section>
+<!-- 07 생애주기 -->
+<section id="lifecycle"><div class="wrap">
+<div class="snum">07 / 생애주기 단계 판별</div>
+<h2 class="shead">노반타는 “성숙기 컴파운더”</h2>
+<p class="sdesc">현금흐름표의 부호 패턴(영업/투자/재무)으로 기업의 생애주기를 판별합니다. CAP·DCF 분석은 성장·성숙기 기업에 가장 적합합니다.</p>
+<div class="scroll"><table class="data">
+<tr><th>현금흐름 (FY2025, $M)</th><th>금액</th><th>부호</th><th>해석</th></tr>
+<tr><td>영업활동 현금흐름</td><td>+64.1</td><td class="pos">유입 (+)</td><td>본업에서 현금 창출</td></tr>
+<tr><td>투자활동 현금흐름</td><td>-74.3</td><td class="neg">유출 (−)</td><td>M&A($64M)+capex 중심</td></tr>
+<tr><td>재무활동 현금흐름</td><td>+276.3</td><td class="pos">유입 (+)<sup>*</sup></td><td>전환사채 $614M 조달(부채상환)</td></tr>
+</table></div>
+<div class="plain"><span class="lab">판별 결과</span>
+영업(+)·투자(−) 패턴에 자사주 매입($39M)·부채상환을 병행하는 모습은 <strong>“성숙기(Mature)” 기업의 전형</strong>입니다. 다만 노반타는 M&A를 성장 레버로 쓰는 “성숙기 + 인수형 성장” 하이브리드입니다. 조직 매출 성장은 한 자릿수로 성숙했고(FY2025 -0.5%, 2026 가이드 중간 한 자릿수), 자본을 자사주·M&A로 환원·재배치합니다. <strong>CAP·DCF 분석에 적합한 단계</strong>입니다. <span class="conf hi">확신도 높음 ~80%</span><br><span style="font-size:13px"><sup>*</sup>2025년 재무활동(+)은 전환사채(TEU) $614M 조달이라는 일회성 요인. 평년에는 (−)에 가까움 → 성숙기 해석 강화.</span>
+</div>
+<div class="statstrip">
+<div><div class="v">도입</div><div class="k">✕</div></div>
+<div><div class="v">성장</div><div class="k">△ (M&A 성장 일부)</div></div>
+<div><div class="v" style="color:var(--teal)">성숙 ✓</div><div class="k">현 위치</div></div>
+<div><div class="v">감소</div><div class="k">✕</div></div>
+</div>
+</div><div class="divider"></div></section>
+
+<!-- 08 경쟁우위 정성 -->
+<section id="forces"><div class="wrap">
+<div class="snum">08 / 경쟁 우위 정성 분석</div>
+<h2 class="shead">포터의 5가지 힘 + 전략 유형</h2>
+<p class="sdesc">산업의 매력도와 노반타의 방어력을 다섯 가지 경쟁 압력으로 평가합니다. (■ = 압력 강함, □ = 압력 약함 = 노반타에 유리)</p>
+<div class="scroll"><table class="data">
+<tr><th>경쟁 압력</th><th>강도</th><th>평가</th></tr>
+<tr><td>신규 진입 위협</td><td style="color:var(--green)">낮음 □□</td><td style="text-align:left;font-family:Newsreader;font-size:14px">기술·특허·의료인증·디자인-인 장벽 높음. 단기 진입 어려움</td></tr>
+<tr><td>기존 경쟁 강도</td><td style="color:var(--amber)">중간 ■□</td><td style="text-align:left;font-family:Newsreader;font-size:14px">틈새별 소수 전문사 경쟁. 대형사(MKS·Coherent)는 규모로 압박</td></tr>
+<tr><td>공급자 교섭력</td><td style="color:var(--green)">낮음 □□</td><td style="text-align:left;font-family:Newsreader;font-size:14px">광학·전자 부품 공급 다변화. 일부 핵심 부품 의존은 존재</td></tr>
+<tr><td>구매자 교섭력</td><td style="color:var(--amber)">중간 ■□</td><td style="text-align:left;font-family:Newsreader;font-size:14px">대형 OEM은 협상력 보유하나, 디자인-인 후엔 전환비용이 구매자를 묶음</td></tr>
+<tr><td>대체재 위협</td><td style="color:var(--green)">낮음 □□</td><td style="text-align:left;font-family:Newsreader;font-size:14px">정밀·의료급 요구가 까다로워 저가 대체 어려움(특히 의료)</td></tr>
+<tr class="hl"><td>종합</td><td>유리</td><td style="text-align:left;font-family:Newsreader;font-size:14px"><strong>전반적으로 방어력 있는 산업 구조.</strong> 핵심 압력은 “대형사 통합 공세”와 “OEM 집중”</td></tr>
+</table></div>
+<h3 style="font-size:21px;margin:24px 0 12px">차별화 vs 원가 우위 — 어느 쪽인가?</h3>
+<div class="scroll"><table class="data">
+<tr><th>지표 (FY2025)</th><th>노반타</th><th>시사점</th></tr>
+<tr><td>조정 EBITDA 마진</td><td>22.5%</td><td style="text-align:left;font-family:Newsreader;font-size:14px">높은 마진 → <strong>차별화 전략</strong> 신호</td></tr>
+<tr><td>총이익률(GAAP)</td><td>44.4%</td><td style="text-align:left;font-family:Newsreader;font-size:14px">부품사로서 높은 편 → 가격 결정력</td></tr>
+<tr><td>투자자본 회전율(매출/IC)</td><td>0.78x</td><td style="text-align:left;font-family:Newsreader;font-size:14px">낮음(영업권 탓) → 원가/회전 우위는 아님</td></tr>
+<tr><td>NOPAT 마진(정상화)</td><td>14.1%</td><td style="text-align:left;font-family:Newsreader;font-size:14px">산업 평균 상회 → 차별화 확인</td></tr>
+</table></div>
+<div class="plain"><span class="lab">결론</span>
+노반타는 <strong>원가 우위가 아니라 “차별화(고마진·고기능 정밀부품)” 전략</strong>으로 해자를 만듭니다. 실증적으로도 지속 가능한 우위는 원가보다 차별화에서 더 자주 나옵니다. 단, 차별화 우위가 “주주 수익률”로 온전히 전환되려면 M&A를 비싸게 사지 않아야 합니다. <span class="conf hi">확신도 높음 ~75%</span>
+</div>
+</div><div class="divider"></div></section>
+<!-- 09 피어 -->
+<section id="peers"><div class="wrap">
+<div class="snum">09 / 피어그룹 비교</div>
+<h2 class="shead">경쟁사 대비 어디에 서 있나</h2>
+<p class="sdesc">레이저·포토닉스·정밀계측 분야의 주요 상장사와 비교. 노반타는 “고마진·저사이클(의료 비중)”이 특징이며, 밸류에이션은 <strong>프리미엄</strong>입니다.</p>
+<div class="scroll"><table class="data">
+<tr><th>기업 (티커)</th><th>매출(연)</th><th>매출성장</th><th>EBITDA마진</th><th>EV/EBITDA<sup>F</sup></th><th>주요 최종시장</th></tr>
+<tr class="hl"><td>Novanta (NOVT)</td><td>~$1.05B</td><td>~6%<sup>조직</sup></td><td>~23.6%</td><td>~27x</td><td style="text-align:left;font-family:Newsreader;font-size:14px">의료·첨단산업</td></tr>
+<tr><td>MKS Inc. (MKSI)</td><td>~$4.3B</td><td>~9%</td><td>~26%</td><td>~17x</td><td style="text-align:left;font-family:Newsreader;font-size:14px">반도체·전자(고레버리지)</td></tr>
+<tr><td>Coherent (COHR)</td><td>~$7B</td><td class="pos">~21–27%</td><td>~22%</td><td>~44x</td><td style="text-align:left;font-family:Newsreader;font-size:14px">AI데이터센터·통신·산업</td></tr>
+<tr><td>IPG Photonics (IPGP)</td><td>~$1B</td><td>~11–17%</td><td>~14%</td><td>~24x</td><td style="text-align:left;font-family:Newsreader;font-size:14px">파이버레이저·산업가공</td></tr>
+<tr><td>AMETEK (AME)<sup>주</sup></td><td>~$7B</td><td>~5–10%</td><td>~30%</td><td>~21x</td><td style="text-align:left;font-family:Newsreader;font-size:14px">정밀계측 컴파운더(벤치마크)</td></tr>
+</table></div>
+<figure>
+<svg viewBox="0 0 760 260" role="img" aria-label="EV/EBITDA 비교 막대">
+<style>.bl{font-family:IBM Plex Mono;font-size:12px;fill:#243748}.bv{font-family:Fraunces;font-size:14px;font-weight:700}</style>
+<g font-family="Newsreader">
+<line x1="150" y1="20" x2="150" y2="220" stroke="#d8cdb8"/>
+<!-- scale max 44 -> width 560 -->
+<g><text x="142" y="44" text-anchor="end" class="bl">NOVT</text><rect x="150" y="32" width="343" height="22" fill="#c47a1a"/><text x="500" y="48" class="bv" fill="#c47a1a">27x</text></g>
+<g><text x="142" y="80" text-anchor="end" class="bl">MKSI</text><rect x="150" y="68" width="216" height="22" fill="#1c6b5e"/><text x="373" y="84" class="bv" fill="#1c6b5e">17x</text></g>
+<g><text x="142" y="116" text-anchor="end" class="bl">COHR</text><rect x="150" y="104" width="560" height="22" fill="#243748"/><text x="717" y="120" class="bv" fill="#243748">44x</text></g>
+<g><text x="142" y="152" text-anchor="end" class="bl">IPGP</text><rect x="150" y="140" width="305" height="22" fill="#2d5a8a"/><text x="462" y="156" class="bv" fill="#2d5a8a">24x</text></g>
+<g><text x="142" y="188" text-anchor="end" class="bl">AME</text><rect x="150" y="176" width="267" height="22" fill="#b8902f"/><text x="424" y="192" class="bv" fill="#b8902f">21x</text></g>
+<text x="150" y="238" class="bl" fill="#243748">선행 EV/EBITDA 배수 (높을수록 비쌈) — NOVT는 컴파운더(AME)·반도체(MKSI) 대비 프리미엄</text>
+</g></svg>
+<figcaption>선행 EV/EBITDA 비교 — COHR(AI 데이터센터 열풍)이 최고, 그 다음이 노반타. 사업 모델이 가장 유사한 AME(21x)·MKSI(17x) 대비 노반타(27x)는 25~60% 프리미엄.</figcaption>
+</figure>
+<div class="note"><span class="lab">데이터 주석 · 비교의 한계</span>배수는 2026년 5~6월 시점의 컨센서스/추정 기반이며 출처(FactSet·Morningstar·회사공시)별로 차이가 있습니다. <sup>F</sup>선행(forward) 기준. <sup>주</sup>AMETEK 수치는 사업모델 벤치마크용 근사치(미검증). COHR·IPGP는 산업 사이클·AI 노출이 달라 직접 비교에 주의. <span class="conf mid">확신도 중간 ~65%</span></div>
+<p><strong>해석:</strong> 노반타가 MKSI·AME보다 높은 배수를 받는 이유는 ① 의료 비중에 따른 <em>낮은 사이클성</em>, ② 높은 마진, ③ 조직 성장 재가속 기대 때문입니다. 그러나 성장률 자체는 COHR·IPGP보다 낮습니다(조직 ~6%). 즉 <strong>“성장은 보통인데 배수는 높은” 프리미엄 품질주</strong>로 가격이 매겨져 있습니다. <span class="conf hi">확신도 높음 ~75%</span></p>
+<h3 style="font-size:21px;margin:26px 0 12px">매출·마진 추이 (2021→2026E)</h3>
+<figure>
+<svg viewBox="0 0 760 280" role="img" aria-label="매출 마진 추이">
+<style>.ax{font-family:IBM Plex Mono;font-size:11px;fill:#7a6f5c}.yr{font-family:IBM Plex Mono;font-size:11.5px;fill:#243748}</style>
+<g>
+<!-- bars: revenue, max ~1050 -> height scale -->
+<line x1="60" y1="210" x2="720" y2="210" stroke="#13202e" stroke-width="1.5"/>
+<!-- 2021 707, 22 861, 23 882, 24 949, 25 981, 26E 1048 ; scale 1100->180px -->
+<g text-anchor="middle" font-family="Newsreader">
+<g><rect x="78" y="94" width="64" height="116" fill="#d8cdb8"/><text x="110" y="226" class="yr">2021</text><text x="110" y="86" class="ax" fill="#243748">707</text></g>
+<g><rect x="186" y="69" width="64" height="141" fill="#cdbf9f"/><text x="218" y="226" class="yr">2022</text><text x="218" y="61" class="ax" fill="#243748">861</text></g>
+<g><rect x="294" y="66" width="64" height="144" fill="#c0ae84"/><text x="326" y="226" class="yr">2023</text><text x="326" y="58" class="ax" fill="#243748">882</text></g>
+<g><rect x="402" y="55" width="64" height="155" fill="#a8946a"/><text x="434" y="226" class="yr">2024</text><text x="434" y="47" class="ax" fill="#243748">949</text></g>
+<g><rect x="510" y="50" width="64" height="160" fill="#1c6b5e"/><text x="542" y="226" class="yr">2025</text><text x="542" y="42" class="ax" fill="#243748">981</text></g>
+<g><rect x="618" y="39" width="64" height="171" fill="#c47a1a"/><text x="650" y="226" class="yr">2026E</text><text x="650" y="31" class="ax" fill="#c47a1a" font-weight="700">~1048</text></g>
+</g>
+<!-- margin line (adj EBITDA margin): 21,22.1,17.8GAAP... use adj EBITDA margin approx: 21.x,21,21,22.1,22.5,23.6 -->
+<polyline points="110,150 218,150 326,150 434,138 542,134 650,124" fill="none" stroke="#a8392c" stroke-width="2.5"/>
+<g fill="#a8392c"><circle cx="110" cy="150" r="3.5"/><circle cx="218" cy="150" r="3.5"/><circle cx="326" cy="150" r="3.5"/><circle cx="434" cy="138" r="3.5"/><circle cx="542" cy="134" r="3.5"/><circle cx="650" cy="124" r="3.5"/></g>
+<text x="650" y="116" class="ax" fill="#a8392c" font-weight="700" text-anchor="middle">~23.6%</text>
+<text x="60" y="252" class="ax">막대 = 매출($M) · 빨간선 = 조정 EBITDA 마진(%) · 2026E는 회사 가이던스 중간값</text>
+</g></svg>
+<figcaption>매출은 꾸준히 우상향하나 성장률은 2021~22 고성장(+20%) 후 한 자릿수로 둔화. 마진은 완만히 개선 중.</figcaption>
+</figure>
+</div><div class="divider"></div></section>
+<!-- 10 WACC -->
+<section id="wacc"><div class="wrap">
+<div class="snum">10 / 자본비용(WACC) 및 수익성</div>
+<h2 class="shead">할인율과 ROIC — 가치의 출발점</h2>
+<p class="sdesc">미래 현금흐름을 “오늘의 가치”로 환산할 때 쓰는 할인율(WACC)과, 회사가 투자한 돈으로 얼마를 버는지(ROIC)를 계산합니다.</p>
+<div class="cards c2">
+<div class="card"><div class="ico">WACC 계산 (CAPM)</div><h4>기본 10.9% / 다모다란 10.2%</h4>
+<ul class="clean" style="margin-top:8px">
+<li>무위험이자율(10년 국채, 6/4): <b>4.48%</b></li>
+<li>조정 베타(원시 1.62→1로 회귀): <b>1.40</b></li>
+<li>주식위험프리미엄(ERP): <b>4.75%</b>(프레임워크) vs <b>4.23%</b>(다모다란 2026)</li>
+<li>자기자본비용: <b>11.1%</b> / 10.4%</li>
+<li>세후 부채비용 ~4.7%, 부채비중 3.5%</li>
+<li>→ <b>WACC 10.9%</b> (다모다란 ERP 시 10.2%)</li>
+</ul></div>
+<div class="card"><div class="ico">ROIC 분해 (핵심)</div><h4>연결 11.0% vs 영업권 제외 22.8%</h4>
+<ul class="clean" style="margin-top:8px">
+<li>정상화 NOPAT: <b>$138M</b></li>
+<li>투하자본(영업권 포함): <b>$1,252M</b></li>
+<li>연결 ROIC: <b style="color:var(--amber)">11.0%</b> ≈ WACC 10.9%</li>
+<li>투하자본(영업권 제외): <b>$605M</b></li>
+<li>영업권 제외 ROIC: <b style="color:var(--teal)">22.8%</b></li>
+<li>영업권($647M) = 과거 M&A 프리미엄</li>
+</ul></div>
+</div>
+<figure>
+<svg viewBox="0 0 760 200" role="img" aria-label="ROIC 비교">
+<style>.rl{font-family:IBM Plex Mono;font-size:12px;fill:#243748}.rv{font-family:Fraunces;font-size:18px;font-weight:700}</style>
+<g font-family="Newsreader">
+<line x1="200" y1="20" x2="200" y2="150" stroke="#d8cdb8"/>
+<text x="190" y="46" text-anchor="end" class="rl">영업권 제외 ROIC</text><rect x="200" y="32" width="456" height="26" fill="#1c6b5e"/><text x="666" y="51" class="rv" fill="#1c6b5e">22.8%</text>
+<text x="190" y="92" text-anchor="end" class="rl">연결 ROIC</text><rect x="200" y="78" width="220" height="26" fill="#c47a1a"/><text x="430" y="97" class="rv" fill="#c47a1a">11.0%</text>
+<text x="190" y="132" text-anchor="end" class="rl">WACC(자본비용)</text><rect x="200" y="118" width="218" height="26" fill="#a8392c" opacity=".85"/><text x="428" y="137" class="rv" fill="#a8392c">10.9%</text>
+<line x1="418" y1="20" x2="418" y2="150" stroke="#a8392c" stroke-dasharray="4 3"/>
+<text x="200" y="178" class="rl">초록(사업 자체)은 자본비용을 크게 상회 / 주황(연결)은 자본비용과 거의 동일</text>
+</g></svg>
+<figcaption>ROIC 분해 — “사업의 질”(영업권 제외 23%)과 “주주가 산 가격 포함 수익률”(연결 11%)의 큰 격차가 노반타 분석의 핵심.</figcaption>
+</figure>
+<div class="plain"><span class="lab">이게 왜 중요한가</span>
+DCF에서 “성장이 가치를 만드는가”는 <strong>증분투하자본수익률(ROIIC)이 WACC보다 높은가</strong>에 달려 있습니다. 만약 미래 성장이 주로 <em>비싼 M&A</em>(연결 ROIC ~11%)로 온다면 성장해도 주주가치는 거의 안 늘고, 주로 <em>조직 성장</em>(영업권 제외 ~23%)으로 온다면 가치가 크게 늡니다. <strong>현재 주가는 후자(고수익 조직성장)를 강하게 가정</strong>합니다. <span class="conf hi">확신도 높음 ~80%</span>
+</div>
+<div class="note"><span class="lab">가정 충돌 명시 (데이터 원칙)</span>프레임워크 표준 ERP는 4.75%이나, 다모다란 2026 내재 ERP는 <strong>4.23%</strong>입니다. 또한 장기성장률은 표준 2.5% vs FRED 10년 기대인플레 <strong>2.33%</strong>입니다. 본 분석은 보수적으로 표준값(ERP 4.75%, g 2.5%)을 기본으로 쓰되, 민감도에서 다모다란/저베타 케이스를 함께 제시합니다.</div>
+</div><div class="divider"></div></section>
+
+<!-- 11 DCF -->
+<section id="dcf"><div class="wrap">
+<div class="snum">11 / DCF 모델 결과</div>
+<h2 class="shead">현금흐름할인 — 기본 시나리오</h2>
+<p class="sdesc">정상화 EBITA(=조정영업이익 $175.4M)에서 출발해 매출·마진·재투자를 추정하고, 연도별 잉여현금흐름(FCF)을 현재가치로 할인합니다. 가정: 명시적 15년, WACC 10.9%, 성장 9%→완만감소, ROIIC 20%, 최종마진 21%, 페이드 0.20(IT), 연중할인.</p>
+<div class="scroll"><table class="data">
+<tr><th>연도</th><th>매출$M</th><th>성장%</th><th>EBITA$M</th><th>마진%</th><th>NOPAT$M</th><th>재투자$M</th><th>FCF$M</th><th>PV FCF$M</th></tr>
+<tr><td>2026</td><td>1,069</td><td>9.0</td><td>198</td><td>18.5</td><td>156</td><td>70</td><td>86</td><td>81</td></tr>
+<tr><td>2027</td><td>1,162</td><td>8.7</td><td>222</td><td>19.1</td><td>175</td><td>77</td><td>99</td><td>84</td></tr>
+<tr><td>2028</td><td>1,261</td><td>8.5</td><td>249</td><td>19.8</td><td>196</td><td>83</td><td>113</td><td>87</td></tr>
+<tr><td>2029</td><td>1,365</td><td>8.2</td><td>278</td><td>20.4</td><td>219</td><td>90</td><td>129</td><td>90</td></tr>
+<tr><td>2030</td><td>1,473</td><td>8.0</td><td>309</td><td>21.0</td><td>244</td><td>97</td><td>146</td><td>92</td></tr>
+<tr><td>2032</td><td>1,705</td><td>7.5</td><td>358</td><td>21.0</td><td>282</td><td>105</td><td>177</td><td>90</td></tr>
+<tr><td>2035</td><td>2,086</td><td>6.7</td><td>438</td><td>21.0</td><td>345</td><td>115</td><td>230</td><td>86</td></tr>
+<tr><td>2040</td><td>2,780</td><td>5.4</td><td>584</td><td>21.0</td><td>459</td><td>124</td><td>335</td><td>75</td></tr>
+<tr class="hl"><td>PV(FCF) 15년 합</td><td colspan="7">$1,276M</td></tr>
+<tr class="hl"><td>최종가치(페이드) → 현재가치</td><td colspan="7">$4,454M → PV $993M (EV의 44%)</td></tr>
+<tr class="tot"><td>기업가치(EV)</td><td colspan="7">$2,269M</td></tr>
+<tr class="tot"><td>+ 순현금 $121M → 자본가치</td><td colspan="7">$2,390M</td></tr>
+<tr class="tot"><td>÷ 완전희석주식 41M → <b>주당가치</b></td><td colspan="7"><b>$58.30</b></td></tr>
+</table></div>
+<div class="plain"><span class="lab">핵심 포인트</span>
+이 기본 시나리오(이미 성장 9%·마진개선 등 <em>꽤 우호적</em> 가정)에서도 주당가치는 <strong>$58</strong>로, 현재가 $168의 약 1/3입니다. 즉 “합리적 가정의 DCF”로는 현재가가 정당화되지 않습니다. <span class="conf hi">확신도 높음 ~80%</span>
+</div>
+</div><div class="divider"></div></section>
+<!-- 12 내재 CAP -->
+<section id="cap"><div class="wrap">
+<div class="snum">12 / 시장 내재 CAP 및 해석</div>
+<h2 class="shead">시장은 “몇 년의 초과수익”을 가격에 담았나</h2>
+<p class="sdesc">현재 주가($168)에 도달하려면 명시적 고수익 기간(=경쟁우위기간 CAP)을 얼마나 길게 가정해야 하는지 역산합니다. 규율 있는 WACC에서는 <strong>유한한 기간으로 정당화되지 않습니다(∞)</strong>.</p>
+<figure>
+<svg viewBox="0 0 760 210" role="img" aria-label="CAP 해석 게이지">
+<style>.gl{font-family:IBM Plex Mono;font-size:11px}.gt{font-family:Newsreader;font-size:12.5px;fill:#243748}</style>
+<g>
+<rect x="40" y="70" width="136" height="34" fill="#2c7a4d"/><text x="108" y="92" text-anchor="middle" fill="#fff" class="gl">5–10년</text>
+<rect x="176" y="70" width="136" height="34" fill="#5aa597"/><text x="244" y="92" text-anchor="middle" fill="#fff" class="gl">10–15년</text>
+<rect x="312" y="70" width="136" height="34" fill="#e9b765"/><text x="380" y="92" text-anchor="middle" fill="#13202e" class="gl">15–20년</text>
+<rect x="448" y="70" width="272" height="34" fill="#a8392c"/><text x="584" y="92" text-anchor="middle" fill="#fff" class="gl">20년+ · 과도한 낙관</text>
+<text x="108" y="124" text-anchor="middle" class="gt">비관(매수후보)</text>
+<text x="244" y="124" text-anchor="middle" class="gt">합리적</text>
+<text x="380" y="124" text-anchor="middle" class="gt">약간 낙관</text>
+<text x="584" y="124" text-anchor="middle" class="gt">회피 고려 구간</text>
+<!-- pointer at ~27 years (far right) -->
+<polygon points="610,58 600,40 620,40" fill="#13202e"/>
+<line x1="610" y1="58" x2="610" y2="70" stroke="#13202e" stroke-width="2"/>
+<text x="610" y="32" text-anchor="middle" font-family="Fraunces" font-size="14" font-weight="700" fill="#13202e">NOVT ≈ 25–30년+</text>
+<text x="40" y="170" class="gt" font-size="13">규율 WACC(10.2~10.9%) 기준 → 유한 CAP로는 도달 불가(∞). 완전 강세(저WACC·고성장·강한해자)에서야 ~30년.</text>
+</g></svg>
+<figcaption>CAP 해석 밴드 — 노반타의 시장 내재 CAP는 “과도한 낙관” 구간 깊숙이 위치.</figcaption>
+</figure>
+<h3 style="font-size:21px;margin:20px 0 12px">시장 내재 CAP 매트릭스 (년) — WACC 10.9%</h3>
+<p style="font-size:15px;color:var(--ink2);margin-bottom:12px">행=명시적기간 성장률, 열=ROIIC(증분수익률). <strong>∞</strong>=어떤 기간으로도 $168 도달 불가. 색이 붉을수록 비현실적.</p>
+<div class="scroll"><table class="data">
+<tr><th>성장 ＼ ROIIC</th><th>13%</th><th>16%</th><th>20%</th><th>25%</th><th>30%</th></tr>
+<tr><td>6% (조직 현실)</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td></tr>
+<tr><td>8%</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td></tr>
+<tr><td>10%</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td></tr>
+<tr><td>12% (M&A 포함 고성장)</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f3d9d4">∞</td><td style="background:#f6e6c8">71.0</td><td style="background:#f6e6c8">62.3</td></tr>
+<tr><td>15% (매우 공격적)</td><td style="background:#f6e6c8">76.7</td><td style="background:#f6e6c8">55.4</td><td style="background:#fbf4e6">43.2</td><td style="background:#fbf4e6">36.8</td><td style="background:#eef4f1">33.6</td></tr>
+</table></div>
+<div class="plain"><span class="lab">읽는 법</span>
+조직 현실에 가까운 성장(6~10%)에서는 <strong>ROIIC가 아무리 높아도(30%) 현재가를 정당화할 수 없습니다(∞)</strong>. 12% 이상 고성장 + 25% 이상 고수익을 동시에 가정해야 비로소 “유한하지만 60~70년”이라는 비현실적 CAP가 나옵니다. 다모다란 WACC(10.2%)로 낮춰도 여전히 30~50년대입니다. <span class="conf hi">확신도 높음 ~80%</span>
+</div>
+<h3 style="font-size:21px;margin:24px 0 12px">현재가가 “역으로” 말해주는 것</h3>
+<div class="cards c3">
+<div class="card" style="border-left:4px solid var(--red)"><div class="ico" style="color:var(--red)">내재 할인율</div><h4>≈ 5–6%</h4><p>성장 8~10%·정상 가정에서 $168이 되려면 할인율이 5~6%여야 합니다. 이는 무위험이자율(4.48%)에 거의 프리미엄이 없는 수준 — 주식에 비현실적.</p></div>
+<div class="card" style="border-left:4px solid var(--red)"><div class="ico" style="color:var(--red)">내재 영구성장</div><h4>≈ 9–10%</h4><p>WACC 10.9%를 유지하면, 현재가는 사실상 “영구 9~10% 성장”을 요구합니다. 영원히 두 자릿수에 가까운 성장은 어떤 기업도 달성하기 어렵습니다.</p></div>
+<div class="card" style="border-left:4px solid var(--red)"><div class="ico" style="color:var(--red)">내재 미래규모</div><h4>매출 ~4.8배</h4><p>무성장 기준 현재 EV를 정당화할 NOPAT은 현재의 5.3배 → 매출 ~$4.7B(현 ~$1B의 4.8배). 7% 성장 시 23년, 9% 성장 시 18년 소요.</p></div>
+</div>
+</div><div class="divider"></div></section>
+
+<!-- 13 강세 시나리오 DCF -->
+<section id="bull"><div class="wrap">
+<div class="snum">13 / 시나리오 분석</div>
+<h2 class="shead">강세 / 기본 / 약세</h2>
+<p class="sdesc">세 가지 미래를 비교합니다. <strong>오직 “완전 강세”(저WACC·고성장·고수익·강한해자)에서만</strong> 현재가에 근접합니다.</p>
+<div class="scroll"><table class="data">
+<tr><th>시나리오</th><th>WACC</th><th>성장</th><th>ROIIC</th><th>최종마진</th><th>페이드</th><th>내재 CAP</th><th>15~18년 가치</th></tr>
+<tr><td>약세</td><td>10.9%</td><td>6%</td><td>14%</td><td>19%</td><td>0.25</td><td class="neg">∞</td><td>~$51</td></tr>
+<tr class="hl"><td>기본</td><td>10.9%</td><td>9%</td><td>20%</td><td>21%</td><td>0.20</td><td class="neg">∞</td><td>~$58</td></tr>
+<tr><td>강세(저베타)</td><td>9.0%</td><td>12%</td><td>27%</td><td>22%</td><td>0.10</td><td>~30년</td><td>~$118</td></tr>
+</table></div>
+<div class="scroll"><table class="data">
+<tr><th>강세 DCF (요약)</th><th>2026</th><th>2030</th><th>2034</th><th>2038</th><th>2042</th></tr>
+<tr><td>매출 $M</td><td>1,098</td><td>1,685</td><td>2,482</td><td>3,508</td><td>4,755</td></tr>
+<tr><td>EBITA 마진 %</td><td>18.7</td><td>22.0</td><td>22.0</td><td>22.0</td><td>22.0</td></tr>
+<tr><td>FCF $M</td><td>90</td><td>174</td><td>275</td><td>414</td><td>595</td></tr>
+<tr class="hl"><td>18년 주당가치</td><td colspan="5">$118.31 (최종가치 비중 51%) — 현재가 $168 도달엔 ~30년 필요</td></tr>
+</table></div>
+<div class="plain"><span class="lab">시나리오 종합</span>
+약세·기본에서는 어떤 기간으로도 $168이 안 나오고, <strong>모든 변수를 동시에 낙관(WACC를 11%→9%로 낮추고, 성장 12%, 수익 27%, 거의 영구 해자 f=0.10)</strong>해야 비로소 ~30년 CAP로 현재가가 설명됩니다. 즉 현재가는 “한두 가지가 잘 되는” 정도가 아니라 <strong>“거의 모든 것이 최선”</strong>을 요구합니다. <span class="conf hi">확신도 높음 ~80%</span>
+</div>
+</div><div class="divider"></div></section>
+<!-- 14 민감도 -->
+<section id="sens"><div class="wrap">
+<div class="snum">14 / 민감도 분석</div>
+<h2 class="shead">가정이 바뀌면 가치는 얼마나?</h2>
+<p class="sdesc">핵심 변수(WACC·페이드·성장·ROIIC)를 흔들어 주당가치($)의 변화를 봅니다. 명시적 15년 고정. 색이 진할수록 현재가($168)에 가까움 — 어느 칸도 $168에 닿지 못함에 주목.</p>
+<h3 style="font-size:19px;margin:8px 0 10px">A. WACC × 페이드비율 (성장9%·ROIIC20%·마진21%)</h3>
+<div class="scroll"><table class="data">
+<tr><th>WACC ＼ 페이드 f</th><th>0.10 (강한해자)</th><th>0.18</th><th>0.20 (IT평균)</th><th>0.30 (약한해자)</th></tr>
+<tr><td>9.0% (저베타)</td><td style="background:#dfe9e4">$78</td><td style="background:#dfe9e4">$77</td><td style="background:#dfe9e4">$76</td><td style="background:#dfe9e4">$76</td></tr>
+<tr><td>10.2% (다모다란)</td><td style="background:#eef2ee">$65</td><td style="background:#eef2ee">$64</td><td style="background:#eef2ee">$64</td><td style="background:#eef2ee">$64</td></tr>
+<tr class="hl"><td>10.9% (기본)</td><td>$59</td><td>$58</td><td>$58</td><td>$58</td></tr>
+<tr><td>11.9% (고베타)</td><td style="background:#faf0ed">$52</td><td style="background:#faf0ed">$52</td><td style="background:#faf0ed">$52</td><td style="background:#faf0ed">$51</td></tr>
+</table></div>
+<h3 style="font-size:19px;margin:22px 0 10px">B. 성장률 × ROIIC (WACC 10.2%·마진21%·f0.18)</h3>
+<div class="scroll"><table class="data">
+<tr><th>성장 ＼ ROIIC</th><th>14%</th><th>18%</th><th>22%</th><th>27%</th></tr>
+<tr><td>6%</td><td style="background:#faf0ed">$51</td><td style="background:#faf0ed">$54</td><td style="background:#f5ece8">$57</td><td style="background:#f5ece8">$59</td></tr>
+<tr><td>9%</td><td style="background:#f5ece8">$56</td><td style="background:#eef2ee">$62</td><td style="background:#eef2ee">$66</td><td style="background:#eef2ee">$69</td></tr>
+<tr><td>12%</td><td style="background:#eef2ee">$62</td><td style="background:#e6ede9">$71</td><td style="background:#dfe9e4">$78</td><td style="background:#dfe9e4">$83</td></tr>
+<tr><td>15%</td><td style="background:#dfe9e4">$70</td><td style="background:#d3e3dc">$83</td><td style="background:#c9dcd3">$93</td><td style="background:#bfd6cb">$101</td></tr>
+</table></div>
+<div class="plain"><span class="lab">민감도 종합</span>
+가장 우호적인 단일 칸(WACC 9%·강한해자, 또는 성장 15%·ROIIC 27%)에서도 $78~$101로, <strong>현재가 $168에는 한참 못 미칩니다.</strong> 즉 결론(고평가)은 어느 한 가정에 의존하지 않고 <em>가정의 넓은 범위에서 견고</em>합니다. <span class="conf hi">확신도 높음 ~80%</span>
+</div>
+</div><div class="divider"></div></section>
+
+<!-- 15 리스크 -->
+<section id="risk"><div class="wrap">
+<div class="snum">15 / 주요 리스크 및 체크포인트</div>
+<h2 class="shead">무엇이 결론을 바꿀 수 있나</h2>
+<div class="cards c2">
+<div class="card"><div class="ico" style="color:var(--red)">하방 리스크</div><h4>고평가 → 실망 시 큰 하락</h4><p>밸류에이션이 높아 <strong>성장 둔화·마진 미스·산업 사이클 하강</strong> 시 멀티플 압축으로 큰 폭 조정 가능. 관세·운임 비용 상승이 마진을 압박 중.</p></div>
+<div class="card"><div class="ico" style="color:var(--red)">자본배분 리스크</div><h4>비싼 M&A의 가치 파괴</h4><p>“역대 최대 파이프라인” + 순현금 → 공격적 M&A 가능성. 비싸게 인수하면 연결 ROIC가 더 희석되어 “성장하지만 주주가치는 정체”될 수 있음.</p></div>
+<div class="card"><div class="ico" style="color:var(--blue)">상방 리스크(강세)</div><h4>조직성장 구조적 가속</h4><p>AI 데이터센터·수술로봇·휴머노이드 수요가 <strong>구조적</strong>으로 자리잡고 조직성장이 두 자릿수로 지속되면, 고수익 조직성장이 가치를 끌어올려 현재가 정당화에 근접.</p></div>
+<div class="card"><div class="ico" style="color:var(--blue)">품질 재평가</div><h4>저베타·저할인율 정착</h4><p>의료 비중 확대로 시장이 노반타를 “저변동·고품질 컴파운더”로 재평가(베타↓, WACC↓)하면 적정가치가 상향. 단 현재가는 이를 이미 상당 부분 선반영.</p></div>
+</div>
+<h3 style="font-size:21px;margin:24px 0 12px">분기별 체크포인트 (다음 검증 단계)</h3>
+<ul class="clean">
+<li><b>조직 매출 성장률</b> — Q2’26 가이드 6~8% 달성 여부, 두 자릿수 지속 가능성 (구조 vs 사이클 판별)</li>
+<li><b>부킹·book-to-bill</b> — +37% 부킹·1.10 비율의 추세 지속 여부 (수요 모멘텀 확인)</li>
+<li><b>조정 EBITDA 마진</b> — 관세·운임·중국 생산이전 비용 흡수하며 23%→확대되는지</li>
+<li><b>잉여현금흐름 회복</b> — 2025 WC 급증($75M) 정상화, 2026 OCF 가이드 $145~185M 달성</li>
+<li><b>M&A 규모·배수</b> — 인수 시 지불 멀티플과 증분 ROIC (가치창출 vs 희석)</li>
+<li><b>전환사채(2028 만기) 희석</b> — 주가 $134 임계가 대비 위치 → 최종 주식수 확정</li>
+</ul>
+<div class="note"><span class="lab">매도 고려 트리거 (참고)</span>내재 CAP가 진입 시점 대비 +50% 추가 확대 / ROIC 2년 연속 하락 / 성숙→정리 단계 전환 / 투자논리 핵심가정(고수익 조직성장) 붕괴 시 재평가 필요.</div>
+</div><div class="divider"></div></section>
+<!-- 16 종합 판단 -->
+<section id="verdict2"><div class="wrap">
+<div class="snum">16 / 종합 판단 자료</div>
+<h2 class="shead">균형 잡힌 결론</h2>
+<div class="pullquote">“좋은 회사와 좋은 주식은 다르다. 노반타는 전자(좋은 회사)일 가능성이 높지만, $168에서는 후자(좋은 주식)가 되기 위한 기대치가 이미 극단적으로 높다.”</div>
+<div class="cards c2">
+<div class="card" style="border-left:4px solid var(--blue)"><div class="ico" style="color:var(--blue)">강세 논리 (강하게 복원)</div><h4>왜 매수자가 옳을 수 있는가</h4>
+<ul class="clean" style="margin-top:6px">
+<li>사업 자체 ROIC ~23%는 <b>진짜 고수익 프랜차이즈</b></li>
+<li>디자인-인 전환비용은 <b>견고한 해자</b> (특히 의료)</li>
+<li>부킹 +37%·신제품 +50%는 <b>조직 가속의 실제 증거</b></li>
+<li>AI·수술로봇·휴머노이드는 <b>다년 구조적 수요</b></li>
+<li>의료 비중 확대 → <b>저변동성 품질 프리미엄</b> 정당화 가능</li>
+<li>순현금+파이프라인 → <b>가치창출형 M&A 옵션</b></li>
+</ul>
+<p style="margin-top:10px;font-size:13.5px">→ 이 모두가 실현되면 ~30년 CAP·저할인율로 현재가 설명 가능.</p></div>
+<div class="card" style="border-left:4px solid var(--red)"><div class="ico" style="color:var(--red)">신중 논리</div><h4>왜 기대치가 과도한가</h4>
+<ul class="clean" style="margin-top:6px">
+<li>연결 ROIC ~11% ≈ WACC → <b>주주 관점 가치창출 얇음</b></li>
+<li>조직성장은 최근까지 <b>부진(2025 -0.5%)</b>, 반등의 지속성 미확인</li>
+<li>현재가는 <b>5~6% 할인율 또는 9~10% 영구성장</b> 요구</li>
+<li>기본·약세에선 <b>어떤 기간으로도 정당화 불가(∞)</b></li>
+<li>관세·운임·M&A 희석 등 <b>실행 리스크</b> 다수</li>
+<li>높은 멀티플 = <b>안전마진 부재</b></li>
+</ul>
+<p style="margin-top:10px;font-size:13.5px">→ CAP 프레임워크상 “과도한 낙관(20년+)” 구간.</p></div>
+</div>
+<div class="plain"><span class="lab">베이지안 종합 판단</span>
+객관적 증거(연결 ROIC≈WACC, 내재 할인율 ~5%, 광범위 민감도에서 가치 ≤$101)는 <strong>“현재가가 매우 높은 기대치를 반영한다”</strong>를 강하게 지지합니다 <span class="conf hi">확신도 높음 ~80%</span>. 다만 “회사의 질이 낮다”는 뜻은 결코 아니며 <span class="conf hi">~85%로 우량 사업</span>, 강세 시나리오가 현실화될 <em>가능성</em>도 배제할 수 없습니다 <span class="conf mid">~25~35%</span>. 결론을 바꿀 핵심 증거는 <strong>“조직성장이 구조적으로 두 자릿수에서 지속되는지”</strong>이며, 이는 향후 2~4분기 부킹·조직성장·마진 데이터로 검증 가능합니다.
+</div>
+<div class="statstrip">
+<div><div class="v" style="color:var(--red)">$58</div><div class="k">기본 DCF 가치 (현재가의 35%)</div></div>
+<div><div class="v">$76–101</div><div class="k">우호적 가정 상단 범위</div></div>
+<div><div class="v" style="color:var(--teal)">$168</div><div class="k">현재 시장가 (강세 풀세트 ~30년 CAP)</div></div>
+<div><div class="v">~$172</div><div class="k">월가 목표가(참고, 훨씬 우호적 가정)</div></div>
+</div>
+<p style="font-size:14.5px;color:var(--ink2)">※ 월가 평균 목표가(~$172)가 본 분석의 DCF 가치보다 훨씬 높은 이유는, 셀사이드가 일반적으로 <strong>더 낮은 할인율, 페이드 미적용(영구 멀티플), 더 공격적 성장</strong>을 쓰기 때문입니다. CAP 프레임워크는 의도적으로 “시장 기대를 회의적으로 역산”하는 도구이므로 목표가와의 차이는 자연스럽습니다.</p>
+</div><div class="divider"></div></section>
+
+<!-- 17 한계와 가정 -->
+<section id="limits"><div class="wrap">
+<div class="snum">17 / 한계와 가정 (Limitations &amp; Assumptions)</div>
+<h2 class="shead">이 분석이 틀릴 수 있는 지점</h2>
+<div class="cards c2">
+<div class="card"><div class="ico">핵심 가정</div><h4>결론이 의존하는 전제</h4><p>① 정상화 EBITA = 조정영업이익($175.4M, 일회성 제외). ② WACC 10.9%(조정베타 1.4, ERP 4.75%). ③ 페이드 0.20(IT 섹터). ④ 완전희석 41M주·순현금 $121M. ⑤ 성장은 결국 인플레(2.5%)로 수렴.</p></div>
+<div class="card"><div class="ico">확신도 낮은 지점</div><h4>취약한 부분</h4><p>• 적정 베타(1.1~1.6) 논쟁 → WACC 9~12% 폭. • 증분 ROIC가 조직(23%)에 가까울지 연결(11%)에 가까울지(자본배분 의존). • 조직성장 가속의 구조성 vs 사이클성. • TEU 희석 정확한 주식수(40~41M).</p></div>
+<div class="card"><div class="ico">결론이 바뀌는 조건</div><h4>반증 시나리오</h4><p>만약 ⓐ 시장이 NOVT를 베타 ~1.0·WACC ~8.5%로 영구 재평가하고, ⓑ 조직성장이 구조적으로 12%+ 지속되며, ⓒ 해자가 사실상 영구(f≈0.10)임이 입증되면 → 현재가는 “합리적”으로 재해석될 수 있음.</p></div>
+<div class="card"><div class="ico">다음 검증 단계</div><h4>추가 조사 과제</h4><p>• 10-K의 세그먼트별 ROIC·증분수익 분해. • M&A별 인수 멀티플·사후 수익률 추적. • 고객 집중도(상위 고객 비중) 공시 확인. • 의료 vs 산업 마진·성장 분리 추세. • 경쟁사 디자인-인 침투 모니터링.</p></div>
+</div>
+<div class="note"><span class="lab">방법론·데이터 한계</span>본 분석은 “적정가치 산출”이 아니라 <strong>“현재가에 내재된 시장 기대(CAP)를 역산”</strong>하는 접근입니다. 정밀한 점 추정이 아닌 방향성·논리적 일관성을 목적으로 합니다. 일부 데이터 제공처(stockanalysis.com 개요 페이지 등)는 시점 지연·캐시 이슈가 있어, 재무는 회사 공시(8-K/보도자료)를 우선 사용했습니다. 거시(국채·ERP·인플레)는 일자별 변동이 있습니다.</div>
+</div></section>
+
+<!-- FOOT -->
+<footer class="foot"><div class="wrap">
+<h4>데이터 출처 및 기준 시점</h4>
+<p style="color:#cdd6de;margin-bottom:18px">분석 기준일 <b style="color:#fff">2026년 6월 5일</b> · 주가 ~$168 (2026-06-03/04 종가 기준, Yahoo/TradingView/Morningstar 교차확인) · 재무: Novanta FY2025 연간 및 Q1 2026 실적(회사 8-K/보도자료) · 거시: 10년 국채 4.48%(6/4), 다모다란 2026 내재 ERP 4.23%, FRED 10년 기대인플레 2.33%(3월).</p>
+<div class="srclist" style="color:#9fb0bd">
+<div>· Novanta 8-K, FY2025 실적 (businesswire, 2026-02-23)</div>
+<div>· Novanta 8-K, Q1 2026 실적 (SEC, 2026-05-11)</div>
+<div>· Novanta TEU 발행 공시 (2025-11)</div>
+<div>· stockanalysis.com — 재무제표(검증용)</div>
+<div>· Yahoo Finance / TradingView / Morningstar — 주가·배수</div>
+<div>· Damodaran 2026 ERP Update (SSRN/substack)</div>
+<div>· FRED — DGS10, T10YIE</div>
+<div>· MKS·Coherent·IPG 8-K 및 multiples.vc — 피어</div>
+<div>· Q1’26 실적 콜 트랜스크립트 (Motley Fool/Globe&Mail)</div>
+<div>· 경쟁/해자 맥락 — MatrixBCG, ZoomInfo 등(정성)</div>
+</div>
+<p style="margin-top:22px;font-size:12.5px;color:#7a8794">본 자료는 CAP 프레임워크에 따른 정보 제공용 분석이며 특정 종목의 매수·매도를 권유하지 않습니다. 모든 추정치에는 불확실성이 있으며, 투자 판단과 책임은 이용자 본인에게 있습니다.</p>
+</div></footer>
+</body></html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAP SE 종합 분석 · 기업·산업·밸류에이션</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Noto+Serif+KR:wght@500;700;900&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F1ECE0; --paper-2:#E8E1D1; --panel:#FBF8F1;
+  --ink:#17140E; --ink-2:#3B362B; --ink-soft:#736A59; --line:#D7CEBB;
+  --gold:#A9761B; --gold-deep:#7E560F; --teal:#2C6B5B; --clay:#9F4329; --navy:#1E2D43;
+  --shadow:0 1px 2px rgba(30,20,5,.06),0 12px 40px -18px rgba(30,20,5,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-weight:400;line-height:1.74;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(120% 80% at 50% -10%, #F7F2E7 0%, var(--paper) 46%, #ECE5D6 100%);}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.wrap{max-width:1000px;margin:0 auto;padding:0 26px}
+.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+.mast{padding:64px 0 34px;border-bottom:2.5px solid var(--ink);position:relative}
+.kicker{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold-deep);font-weight:500}
+.ticker-row{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin:14px 0 6px}
+.ticker{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(58px,10vw,104px);line-height:.9;letter-spacing:-.02em}
+.cony{font-family:"Noto Serif KR",serif;font-weight:700;font-size:clamp(19px,2.8vw,28px);color:var(--ink-2)}
+.mast-meta{display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--ink-soft);font-family:"IBM Plex Mono",monospace;margin-top:10px}
+.mast-meta b{color:var(--ink);font-weight:500}
+.headline{font-family:"Noto Serif KR",serif;font-weight:700;font-size:clamp(21px,3.2vw,31px);line-height:1.42;margin:30px 0 0;max-width:26ch;letter-spacing:-.01em}
+.headline em{font-style:normal;color:var(--gold-deep);background:linear-gradient(transparent 62%, rgba(169,118,27,.22) 62%)}
+
+.lede{font-family:"Noto Serif KR",serif;font-size:18.5px;line-height:1.8;color:var(--ink-2);border-left:3px solid var(--gold);padding:6px 0 6px 24px;margin:40px 0 8px}
+.lede b{color:var(--ink);font-weight:700}
+
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:36px 0 8px;box-shadow:var(--shadow)}
+.metric{background:var(--panel);padding:18px 18px 16px}
+.metric .lab{font-size:11px;letter-spacing:.05em;color:var(--ink-soft);text-transform:uppercase;font-family:"IBM Plex Mono",monospace}
+.metric .num{font-family:"Fraunces",serif;font-weight:600;font-size:29px;line-height:1.05;margin-top:7px}
+.metric .sub{font-size:11.5px;color:var(--ink-soft);margin-top:3px}
+.metric .num.pos{color:var(--teal)} .metric .num.gold{color:var(--gold-deep)}
+
+.partdiv{margin:78px 0 8px;padding:30px 0 22px;border-top:3px solid var(--ink);border-bottom:1px solid var(--line);display:flex;align-items:baseline;gap:20px}
+.partdiv .pn{font-family:"Fraunces",serif;font-weight:900;font-size:54px;line-height:.8;color:var(--gold);letter-spacing:-.03em}
+.partdiv .pt{font-family:"Noto Serif KR",serif;font-weight:900;font-size:clamp(22px,3.4vw,32px);letter-spacing:-.01em}
+.partdiv .pd{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-soft);margin-top:6px;letter-spacing:.02em}
+
+section{padding:50px 0 8px;border-top:1px solid var(--line)}
+.sec-h{display:flex;align-items:baseline;gap:16px;margin-bottom:6px}
+.sec-no{font-family:"Fraunces",serif;font-weight:900;font-size:22px;color:var(--gold);min-width:46px}
+h2{font-family:"Noto Serif KR",serif;font-weight:900;font-size:clamp(22px,3vw,30px);margin:0;letter-spacing:-.01em;line-height:1.26}
+.sec-sub{color:var(--ink-soft);font-size:14px;margin:2px 0 26px 62px;font-family:"IBM Plex Mono",monospace}
+@media(max-width:640px){.sec-sub,.tight{margin-left:0}}
+h3{font-family:"Noto Serif KR",serif;font-weight:700;font-size:18.5px;margin:32px 0 10px;color:var(--ink)}
+p{margin:0 0 16px;font-size:15.5px}
+.tight{margin-left:62px}
+.lead1{font-family:"Noto Serif KR",serif;font-size:19px;font-weight:500;line-height:1.7;color:var(--ink);background:var(--paper-2);border-radius:10px;padding:20px 24px;margin:0 0 22px}
+.lead1 b{color:var(--gold-deep);font-weight:700}
+
+.cre{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin:20px 0;box-shadow:var(--shadow)}
+.cre .tag{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep);font-weight:500}
+.cre p{margin:8px 0 0} .cre .claim{font-family:"Noto Serif KR",serif;font-weight:700;font-size:17px;color:var(--ink)}
+
+.conf{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:500;padding:3px 9px;border-radius:20px;border:1px solid currentColor;vertical-align:middle;letter-spacing:.02em;white-space:nowrap}
+.conf::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.conf.hi{color:var(--teal)} .conf.mid{color:var(--gold-deep)} .conf.lo{color:var(--clay)}
+
+.chart-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:26px 24px 18px;margin:24px 0;box-shadow:var(--shadow)}
+.chart-card .ctitle{font-family:"Noto Serif KR",serif;font-weight:700;font-size:16px;margin-bottom:2px}
+.chart-card .cnote{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;font-family:"IBM Plex Mono",monospace}
+svg.chart{width:100%;height:auto;display:block;overflow:visible}
+.grid{stroke:var(--line);stroke-width:1}
+.tick{stroke:var(--ink-soft);stroke-width:1}
+.ax-y,.ax-x{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--ink-soft);text-anchor:middle}
+.ax-y{text-anchor:end}
+.ax-title{font-family:"IBM Plex Sans KR",sans-serif;font-size:12px;fill:var(--ink-2);text-anchor:middle;font-weight:500}
+.area{fill:rgba(44,107,91,.10)}
+.vline{fill:none;stroke:var(--teal);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.8s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.priceline{stroke:var(--clay);stroke-width:1.6;stroke-dasharray:6 4}
+.price-lab{font-family:"IBM Plex Mono",monospace;font-size:12px;fill:var(--clay);font-weight:500}
+.markline{stroke:var(--ink);stroke-width:1;stroke-dasharray:2 3;opacity:.55}
+.mdot{fill:var(--gold);stroke:var(--panel);stroke-width:2.5}.mdot2{fill:var(--navy);stroke:var(--panel);stroke-width:2.5}
+.mlab{font-family:"Noto Serif KR",serif;font-weight:700;font-size:13px;fill:var(--ink)}
+.mlab2{font-family:"IBM Plex Mono",monospace;font-size:12px;fill:var(--navy);font-weight:500}
+.zone{opacity:.82}.zlab{font-family:"IBM Plex Sans KR";font-size:12.5px;fill:#fff;text-anchor:middle;font-weight:600}
+.ztick{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--ink-soft);text-anchor:middle}
+.uband{fill:none;stroke:var(--ink);stroke-width:1.4;stroke-dasharray:4 3}
+.ubandlab{font-family:"IBM Plex Mono",monospace;font-size:11.5px;fill:var(--ink-2);text-anchor:middle;font-weight:500}
+.ptr{fill:var(--ink)}.ptrline{stroke:var(--ink);stroke-width:2}
+.ptrlab{font-family:"Noto Serif KR",serif;font-weight:700;font-size:14px;fill:var(--ink);text-anchor:middle}
+.basevert{stroke:var(--gold);stroke-width:2;stroke-dasharray:3 3}
+.baselab{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--gold-deep);text-anchor:middle;font-weight:500}
+.tbar{fill:var(--navy);opacity:.85}
+.trow{font-family:"IBM Plex Sans KR";font-size:13px;fill:var(--ink-2);font-weight:500}
+.tend{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--ink-soft)}
+.scbar{opacity:.9}.scrow{font-family:"Noto Serif KR";font-weight:700;font-size:14px;fill:var(--ink)}
+.scnote{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--ink-soft)}
+.scval{font-family:"Fraunces",serif;font-weight:600;font-size:16px;fill:var(--ink)}
+.scval2{font-family:"IBM Plex Mono",monospace;font-size:13px;fill:var(--ink);font-weight:500}
+.seg{opacity:.9}.seglab{font-family:"IBM Plex Sans KR";font-size:12.5px;fill:#fff;text-anchor:middle;font-weight:600}
+.segval{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:#fff;text-anchor:middle;opacity:.9}
+.spreadlab{font-family:"IBM Plex Sans KR";font-size:12px;fill:var(--ink-soft)}
+.spreadbig{font-family:"Fraunces",serif;font-weight:900;font-size:24px;fill:var(--teal)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--ink-2);font-family:"IBM Plex Mono",monospace}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:2px;display:inline-block}
+
+/* new diagrams */
+.tl-year{font-family:"Fraunces",serif;font-weight:900;font-size:15px;fill:var(--gold-deep)}
+.tl-lab{font-family:"Noto Serif KR";font-weight:700;font-size:13px;fill:var(--ink)}
+.tl-desc{font-family:"IBM Plex Sans KR";font-size:10.5px;fill:var(--ink-soft)}
+.mod-ko{font-family:"Noto Serif KR";font-weight:700;font-size:13.5px;fill:var(--ink)}
+.mod-en{font-family:"IBM Plex Mono",monospace;font-size:10px;fill:var(--ink-soft)}
+.hub-t1{font-family:"Fraunces",serif;font-weight:900;font-size:19px;fill:var(--paper)}
+.hub-t2{font-family:"Noto Serif KR";font-weight:700;font-size:14px;fill:var(--gold)}
+.hub-t3{font-family:"IBM Plex Sans KR";font-size:10.5px;fill:#cfc6b4}
+.vc-head{font-family:"Noto Serif KR";font-weight:700;font-size:13px;fill:#fff}
+.vc-role{font-family:"Noto Serif KR";font-weight:700;font-size:14.5px;fill:var(--ink)}
+.vc-ex{font-family:"IBM Plex Mono",monospace;font-size:10.5px;fill:var(--ink-soft)}
+.vc-tag{font-family:"IBM Plex Sans KR";font-weight:600;font-size:11px;fill:var(--gold-deep)}
+.vc-note{font-family:"IBM Plex Sans KR";font-size:12px;fill:var(--ink-2);font-weight:500}
+.pf-title{font-family:"Noto Serif KR";font-weight:700;font-size:13.5px;fill:var(--ink)}
+.pf-rate{font-family:"IBM Plex Sans KR";font-weight:700;font-size:12px;fill:#fff}
+.pf-desc{font-family:"IBM Plex Sans KR";font-size:11px;fill:var(--ink-soft)}
+.pf-ctitle{font-family:"Noto Serif KR";font-weight:700;font-size:15px;fill:var(--paper)}
+.pf-cdesc{font-family:"IBM Plex Sans KR";font-size:11px;fill:#cfc6b4}
+.ev-lab{font-family:"IBM Plex Sans KR";font-size:11px;font-weight:500;fill:var(--ink-2)}
+.mf-title{font-family:"Noto Serif KR";font-weight:700;font-size:14px;fill:#fff}
+.mf-line{font-family:"Noto Serif KR";font-weight:700;font-size:13.5px;fill:var(--ink)}
+.mf-desc{font-family:"IBM Plex Sans KR";font-size:11px;fill:var(--ink-soft)}
+.mf-sub{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--ink-2);font-weight:500}
+.mf-arrowlab{font-family:"Noto Serif KR";font-weight:900;font-size:14px;fill:var(--gold-deep)}
+.mf-arrowlab2{font-family:"IBM Plex Sans KR";font-size:10px;fill:var(--ink-soft)}
+
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;background:var(--panel);box-shadow:var(--shadow);border:1px solid var(--line)}
+th{background:var(--ink);color:var(--paper);font-family:"IBM Plex Sans KR";font-weight:600;text-align:left;padding:11px 14px;font-size:12.5px;letter-spacing:.02em}
+th.r,td.r{text-align:right}
+td{padding:10px 14px;border-top:1px solid var(--line);color:var(--ink-2)}
+tr.hl td{background:rgba(169,118,27,.12);font-weight:600;color:var(--ink)}
+tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+.tbl-note{font-size:12px;color:var(--ink-soft);margin-top:-6px;font-family:"IBM Plex Mono",monospace}
+
+.agrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:22px 0;box-shadow:var(--shadow)}
+.acell{background:var(--panel);padding:15px 16px}
+.acell .k{font-size:11.5px;color:var(--ink-soft);font-family:"IBM Plex Mono",monospace;letter-spacing:.03em}
+.acell .v{font-family:"Fraunces",serif;font-weight:600;font-size:22px;margin-top:5px}
+.acell .n{font-size:11.5px;color:var(--ink-soft);margin-top:3px}
+
+.callout{background:var(--ink);color:var(--paper);border-radius:12px;padding:26px 28px;margin:26px 0;box-shadow:var(--shadow)}
+.callout .ct{font-family:"Noto Serif KR";font-weight:900;font-size:18px;color:var(--gold);margin-bottom:8px}
+.callout p{color:#E7E0D0;margin:8px 0 0}.callout b{color:#fff}.callout .conf{color:#E0B964}
+
+.info{background:var(--paper-2);border-left:3px solid var(--teal);border-radius:0 10px 10px 0;padding:18px 22px;margin:20px 0}
+.info .it{font-family:"Noto Serif KR";font-weight:700;font-size:15px;color:var(--teal);margin-bottom:6px}
+.info p{margin:6px 0 0;font-size:14.5px}
+
+.hyp{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
+@media(max-width:640px){.hyp{grid-template-columns:1fr}}
+.hcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;box-shadow:var(--shadow)}
+.hcard.h1{border-top:4px solid var(--teal)}.hcard.h2{border-top:4px solid var(--clay)}
+.hcard .hh{font-family:"Noto Serif KR";font-weight:700;font-size:16px;margin-bottom:4px}
+.hcard .hr{font-family:"Fraunces",serif;font-weight:900;font-size:28px;margin:6px 0}
+.hcard.h1 .hr{color:var(--teal)}.hcard.h2 .hr{color:var(--clay)}
+.hcard p{font-size:13.5px;margin:6px 0 0;color:var(--ink-2)}
+
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0}
+@media(max-width:640px){.swot{grid-template-columns:1fr}}
+.sw{border-radius:12px;padding:22px;box-shadow:var(--shadow)}
+.sw h4{margin:0 0 12px;font-family:"Noto Serif KR";font-weight:900;font-size:17px;display:flex;align-items:center;gap:10px}
+.sw .badge{font-family:"Fraunces",serif;font-weight:900;font-size:22px;width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff}
+.sw ul{margin:0;padding-left:2px;list-style:none}
+.sw li{font-size:13.5px;padding:7px 0 7px 22px;position:relative;color:var(--ink-2);border-bottom:1px dotted var(--line)}
+.sw li:last-child{border-bottom:none}
+.sw li::before{content:"";position:absolute;left:2px;top:14px;width:8px;height:8px;border-radius:2px}
+.sw.s{background:linear-gradient(160deg,rgba(44,107,91,.12),var(--panel))}.sw.s .badge{background:var(--teal)}.sw.s li::before{background:var(--teal)}
+.sw.w{background:linear-gradient(160deg,rgba(159,67,41,.10),var(--panel))}.sw.w .badge{background:var(--clay)}.sw.w li::before{background:var(--clay)}
+.sw.o{background:linear-gradient(160deg,rgba(169,118,27,.12),var(--panel))}.sw.o .badge{background:var(--gold)}.sw.o li::before{background:var(--gold)}
+.sw.t{background:linear-gradient(160deg,rgba(30,45,67,.12),var(--panel))}.sw.t .badge{background:var(--navy)}.sw.t li::before{background:var(--navy)}
+
+.checks{list-style:none;padding:0;margin:18px 0}
+.checks li{padding:13px 0 13px 34px;border-bottom:1px solid var(--line);position:relative;font-size:14.5px}
+.checks li::before{content:"";position:absolute;left:4px;top:18px;width:14px;height:14px;border:2px solid var(--gold);border-radius:3px}
+.checks li b{font-family:"Noto Serif KR";font-weight:700;color:var(--ink)}
+.checks li .m{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft)}
+ul.clean{list-style:none;padding:0;margin:14px 0}
+ul.clean li{padding:8px 0 8px 24px;position:relative;font-size:14.5px;color:var(--ink-2);border-bottom:1px dotted var(--line)}
+ul.clean li::before{content:"▸";position:absolute;left:2px;color:var(--gold);font-weight:700}
+
+.footer{border-top:2.5px solid var(--ink);margin-top:60px;padding:34px 0 90px;font-size:12.5px;color:var(--ink-soft);line-height:1.85;font-family:"IBM Plex Mono",monospace}
+.footer b{color:var(--ink-2)}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+.mast .kicker,.mast .ticker-row,.mast .mast-meta,.mast .headline{opacity:0;transform:translateY(16px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+.mast .ticker-row{animation-delay:.12s}.mast .mast-meta{animation-delay:.24s}.mast .headline{animation-delay:.36s}
+@keyframes rise{to{opacity:1;transform:none}}
+</style></head><body><div class="wrap">
+<header class="mast">
+  <div class="kicker">Equity Research · 기업 · 산업 · 경쟁우위기간(CAP)</div>
+  <div class="ticker-row"><span class="ticker">SAP</span><span class="cony">SAP SE · 무엇을 하는 회사이고, 어떻게 돈을 벌며, 주가엔 무엇이 반영됐는가</span></div>
+  <div class="mast-meta"><span>분석 기준일 <b>2026-05-30</b></span><span>SAP.DE <b>€155.26</b> (독일 Xetra)</span><span>ADR(NYSE) <b>~$181</b></span><span>본사 <b>독일 발도르프</b> · 창업 <b>1972</b></span></div>
+  <p class="headline">세계 거래의 상당 부분이 거쳐 가는 <em>기업용 소프트웨어 1위</em> 기업. 현재 주가엔 약 <em>7년</em>의 초과수익 지속이 반영돼 있습니다.</p>
+</header>
+<p class="lede">SAP는 전 세계 대기업의 회계·공급망·인사·구매를 하나로 묶어 처리하는 <b>전사적자원관리(ERP) 소프트웨어</b>의 글로벌 1위 기업입니다. 회사 측 표현으로는 <b>"세계 거래 매출의 약 77%가 SAP 시스템을 거친다"</b>고 할 만큼 산업 인프라에 가깝습니다. 현재 주가(€155.26)를 역산하면 시장은 SAP가 자본비용을 초과하는 수익을 <b>약 7년(기본 6.8년)</b> 더 지속한다고 보고 있으며, 이는 "다소 비관~합리적" 구간으로 <b>과열은 아닙니다</b>. <span class="conf mid">중간 · 70%</span></p>
+<p class="tight" style="font-size:14.5px;color:var(--ink-soft)">2025년 3월 유럽 시가총액 1위에 올랐던 SAP는, 2026년 1월 29일 실적 발표에서 클라우드 성장 둔화 신호가 나오며 2020년 이후 최대 낙폭을 기록했고 고점 대비 약 45% 하락했습니다. 이 보고서는 ① 기업과 산업을 처음 보는 사람도 이해하도록 설명하고, ② 최근 주가 하락의 배경을 정리한 뒤, ③ 경쟁우위기간(CAP) 관점에서 현재 밸류에이션을 진단합니다.</p>
+<div class="metrics reveal">
+  <div class="metric"><div class="lab">시장 내재 CAP</div><div class="num gold">~7년</div><div class="sub">기본 6.8년 · 범위 5–18년</div></div>
+  <div class="metric"><div class="lab">현재가 / ADR</div><div class="num">€155.26</div><div class="sub">~$181 · 고점比 −45%</div></div>
+  <div class="metric"><div class="lab">FY2025 매출</div><div class="num">€36.8B</div><div class="sub">+11% (고정환율)</div></div>
+  <div class="metric"><div class="lab">클라우드 성장</div><div class="num pos">+26%</div><div class="sub">백로그 €77B</div></div>
+  <div class="metric"><div class="lab">전 세계 고객</div><div class="num">44만+</div><div class="sub">~280개국 · 클라우드 28만+</div></div>
+  <div class="metric"><div class="lab">ROIC vs WACC</div><div class="num pos">~17%/7.2%</div><div class="sub">스프레드 ≈ +10%p</div></div>
+</div>
+<p class="tight tbl-note">출처: SAP FY2025 실적(IFRS)·2026 가이던스, Xetra 종가(2026-05-29), EUR/USD 1.166. "77%·44만 고객"은 SAP 자체 발표 기준.</p><div class="partdiv reveal"><span class="pn">I</span><div><div class="pt">기업과 산업의 이해</div><div class="pd">SAP는 무엇을 하고, 어떻게 돈을 벌며, 어떤 산업에 속하는가</div></div></div>
+<section class="reveal"><div class="sec-h"><span class="sec-no">01</span><h2>기업 개요 — 한 문장과 50년</h2></div>
+<div class="sec-sub">설립 배경 · 핵심 사업 · 성장의 역사</div>
+<div class="tight">
+<div class="lead1">한 문장 요약: <b>SAP는 대기업이 회사를 운영하는 데 필요한 모든 핵심 업무(돈·물건·사람·거래)를 하나의 소프트웨어로 묶어 실시간으로 처리하게 해 주는, 독일에 본사를 둔 세계 1위 기업용 소프트웨어 회사</b>입니다.</div>
+<p>SAP는 1972년 4월 1일, IBM을 나온 다섯 명의 엔지니어(디트마어 호프, 하소 플라트너, 클라우스 벨렌로이터, 클라우스 치라, 한스-베르너 헥토어)가 독일에서 창업했습니다. 이름 SAP는 독일어 "Systemanalyse und Programmentwicklung(시스템 분석과 프로그램 개발)"의 약자로, 지금은 "Systems, Applications and Products in Data Processing(데이터 처리의 시스템·응용·제품)"로 풀어 씁니다. 창업자들의 발상은 단순했습니다 — 회사마다 제각각 만들던 업무 프로그램을, <b>표준화된 하나의 패키지 소프트웨어</b>로 바꾸고, 그것을 <b>실시간(Real-time, 이름의 'R')</b>으로 돌리자는 것이었습니다.</p>
+<p>이 발상은 ERP라는 거대한 산업을 사실상 만들어 냈습니다. 현재 SAP는 ~110개국에 진출해 직원 10만 명 이상을 두고 있으며, 회사 발표 기준 전 세계 <b>44만 곳 이상의 기업·공공 고객</b>이 SAP를 사용합니다. CEO는 1999년 학생 인턴으로 입사해 2020년부터 단독 대표를 맡고 있는 크리스티안 클라인(이사회 의장 겸임, 계약 2030년까지)이며, 재무책임자(CFO)는 도미니크 아잠(계약 2028년까지)입니다.</p>
+
+<div class="chart-card">
+  <div class="ctitle">SAP 50여 년의 핵심 변곡점</div>
+  <div class="cnote">메인프레임 → 클라이언트-서버 → 인메모리 → 클라우드 → AI로 이어진 다섯 번의 전환</div>
+  <svg viewBox="0 0 940 250" class="chart" role="img" aria-label="SAP 50년 연혁 타임라인"><line x1="30" y1="140" x2="910" y2="140" stroke="var(--ink)" stroke-width="2.5"/><circle cx="30.0" cy="140" r="6.5" fill="var(--gold)" stroke="var(--panel)" stroke-width="2.5"/><line x1="30.0" y1="133" x2="30.0" y2="122.0" stroke="var(--line)" stroke-width="1.2"/><text x="30.0" y="100.0" class="tl-year" text-anchor="middle">1972</text><text x="30.0" y="114.0" class="tl-lab" text-anchor="middle">창업</text><text x="30.0" y="128.0" class="tl-desc" text-anchor="middle">前 IBM 5인</text><circle cx="144.1" cy="140" r="6.5" fill="var(--gold)" stroke="var(--panel)" stroke-width="2.5"/><line x1="144.1" y1="147" x2="144.1" y2="158.0" stroke="var(--line)" stroke-width="1.2"/><text x="144.1" y="170.0" class="tl-year" text-anchor="middle">1979</text><text x="144.1" y="184.0" class="tl-lab" text-anchor="middle">R/2</text><text x="144.1" y="198.0" class="tl-desc" text-anchor="middle">ERP 개념 탄생</text><circle cx="290.7" cy="140" r="6.5" fill="var(--gold)" stroke="var(--panel)" stroke-width="2.5"/><line x1="290.7" y1="133" x2="290.7" y2="122.0" stroke="var(--line)" stroke-width="1.2"/><text x="290.7" y="100.0" class="tl-year" text-anchor="middle">1988</text><text x="290.7" y="114.0" class="tl-lab" text-anchor="middle">상장</text><circle cx="355.9" cy="140" r="6.5" fill="var(--gold)" stroke="var(--panel)" stroke-width="2.5"/><line x1="355.9" y1="147" x2="355.9" y2="158.0" stroke="var(--line)" stroke-width="1.2"/><text x="355.9" y="170.0" class="tl-year" text-anchor="middle">1992</text><text x="355.9" y="184.0" class="tl-lab" text-anchor="middle">R/3</text><text x="355.9" y="198.0" class="tl-desc" text-anchor="middle">클라이언트–서버</text><circle cx="665.6" cy="140" r="6.5" fill="var(--gold)" stroke="var(--panel)" stroke-width="2.5"/><line x1="665.6" y1="133" x2="665.6" y2="122.0" stroke="var(--line)" stroke-width="1.2"/><text x="665.6" y="100.0" class="tl-year" text-anchor="middle">2011</text><text x="665.6" y="114.0" class="tl-lab" text-anchor="middle">HANA</text><text x="665.6" y="128.0" class="tl-desc" text-anchor="middle">인메모리 DB</text><circle cx="730.7" cy="140" r="6.5" fill="var(--gold)" stroke="var(--panel)" stroke-width="2.5"/><line x1="730.7" y1="147" x2="730.7" y2="158.0" stroke="var(--line)" stroke-width="1.2"/><text x="730.7" y="170.0" class="tl-year" text-anchor="middle">2015</text><text x="730.7" y="184.0" class="tl-lab" text-anchor="middle">S/4HANA</text><text x="730.7" y="198.0" class="tl-desc" text-anchor="middle">차세대 코어</text><circle cx="828.5" cy="140" r="6.5" fill="var(--gold)" stroke="var(--panel)" stroke-width="2.5"/><line x1="828.5" y1="133" x2="828.5" y2="122.0" stroke="var(--line)" stroke-width="1.2"/><text x="828.5" y="100.0" class="tl-year" text-anchor="middle">2021</text><text x="828.5" y="114.0" class="tl-lab" text-anchor="middle">RISE</text><text x="828.5" y="128.0" class="tl-desc" text-anchor="middle">클라우드 전환</text><circle cx="893.7" cy="140" r="6.5" fill="var(--gold)" stroke="var(--panel)" stroke-width="2.5"/><line x1="893.7" y1="147" x2="893.7" y2="158.0" stroke="var(--line)" stroke-width="1.2"/><text x="893.7" y="170.0" class="tl-year" text-anchor="middle">2025</text><text x="893.7" y="184.0" class="tl-lab" text-anchor="middle">시총 1위</text><text x="893.7" y="198.0" class="tl-desc" text-anchor="middle">유럽 최대</text><circle cx="910.0" cy="140" r="6.5" fill="var(--gold)" stroke="var(--panel)" stroke-width="2.5"/><line x1="910.0" y1="133" x2="910.0" y2="122.0" stroke="var(--line)" stroke-width="1.2"/><text x="910.0" y="100.0" class="tl-year" text-anchor="middle">2026</text><text x="910.0" y="114.0" class="tl-lab" text-anchor="middle">Business AI</text><text x="910.0" y="128.0" class="tl-desc" text-anchor="middle">자율형 기업</text></svg>
+</div>
+<p>특히 1992년 <b>R/3</b>는 큰 메인프레임 없이 일반 서버와 PC로 ERP를 돌릴 수 있게 만들어 SAP를 세계적 기업으로 키웠고, 2011년 <b>HANA</b>(뒤에서 설명)와 2015년 <b>S/4HANA</b>는 데이터 처리 속도를 비약적으로 높인 차세대 코어입니다. 2021년 <b>RISE with SAP</b>부터는 고객을 클라우드로 옮기는 전환이 회사의 최우선 과제가 되었습니다.</p>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">02</span><h2>무엇을 하는 회사인가 — ERP를 쉽게</h2></div>
+<div class="sec-sub">핵심 제품과 기술을 비전공자 눈높이로</div>
+<div class="tight">
+<div class="info"><div class="it">ERP가 뭔가요? — 한 줄 비유</div>
+<p>ERP(전사적자원관리)는 회사의 <b>'중앙 신경계'이자 '경영 장부의 끝판왕'</b>입니다. 영업부가 주문을 받으면 → 창고의 재고가 자동으로 줄고 → 구매부에 발주가 잡히고 → 회계부의 매출·원가 장부가 동시에 갱신되고 → 인사부의 급여·인력 데이터까지 한 흐름으로 연결됩니다. 이 모든 부서가 <b>같은 데이터 한 벌</b>을 실시간으로 공유하게 만드는 것이 ERP의 본질입니다. 부서마다 따로 엑셀을 쓰면 숫자가 어긋나지만, ERP에선 '하나의 진실(single source of truth)'만 존재합니다.</p></div>
+
+<p>SAP의 대표 제품 <b>S/4HANA</b>는 바로 이 ERP의 최신 세대입니다. 'S'는 Simple(단순함), '4'는 4세대, 'HANA'는 그 아래에서 데이터를 처리하는 엔진의 이름입니다. 아래 그림처럼, 가운데의 '디지털 코어'를 중심으로 재무·공급망·영업·제조·구매·인사 같은 업무 모듈이 붙어 하나의 시스템으로 돌아갑니다.</p>
+
+<div class="chart-card">
+  <div class="ctitle">S/4HANA 디지털 코어와 주요 업무 모듈</div>
+  <div class="cnote">하나의 통합 데이터 위에서 모든 부서가 연결 — 이것이 ERP의 핵심 가치</div>
+  <svg viewBox="0 0 940 440" class="chart" role="img" aria-label="S/4HANA 디지털 코어와 업무 모듈"><line x1="470.0" y1="128.0" x2="470.0" y2="44.0" stroke="var(--line)" stroke-width="1.6"/><rect x="382.0" y="13.0" width="176" height="62" rx="9" fill="var(--panel)" stroke="var(--gold)" stroke-width="1.4"/><text x="470.0" y="40.0" class="mod-ko" text-anchor="middle">재무·회계</text><text x="470.0" y="58.0" class="mod-en" text-anchor="middle">Finance</text><line x1="549.7" y1="174.0" x2="622.4" y2="132.0" stroke="var(--line)" stroke-width="1.6"/><rect x="534.4" y="101.0" width="176" height="62" rx="9" fill="var(--panel)" stroke="var(--gold)" stroke-width="1.4"/><text x="622.4" y="128.0" class="mod-ko" text-anchor="middle">공급망 관리</text><text x="622.4" y="146.0" class="mod-en" text-anchor="middle">Supply Chain</text><line x1="549.7" y1="266.0" x2="622.4" y2="308.0" stroke="var(--line)" stroke-width="1.6"/><rect x="534.4" y="277.0" width="176" height="62" rx="9" fill="var(--panel)" stroke="var(--gold)" stroke-width="1.4"/><text x="622.4" y="304.0" class="mod-ko" text-anchor="middle">영업·고객경험</text><text x="622.4" y="322.0" class="mod-en" text-anchor="middle">Sales / CX</text><line x1="470.0" y1="312.0" x2="470.0" y2="396.0" stroke="var(--line)" stroke-width="1.6"/><rect x="382.0" y="365.0" width="176" height="62" rx="9" fill="var(--panel)" stroke="var(--gold)" stroke-width="1.4"/><text x="470.0" y="392.0" class="mod-ko" text-anchor="middle">제조·생산</text><text x="470.0" y="410.0" class="mod-en" text-anchor="middle">Manufacturing</text><line x1="390.3" y1="266.0" x2="317.6" y2="308.0" stroke="var(--line)" stroke-width="1.6"/><rect x="229.6" y="277.0" width="176" height="62" rx="9" fill="var(--panel)" stroke="var(--gold)" stroke-width="1.4"/><text x="317.6" y="304.0" class="mod-ko" text-anchor="middle">구매·조달</text><text x="317.6" y="322.0" class="mod-en" text-anchor="middle">Procurement</text><line x1="390.3" y1="174.0" x2="317.6" y2="132.0" stroke="var(--line)" stroke-width="1.6"/><rect x="229.6" y="101.0" width="176" height="62" rx="9" fill="var(--panel)" stroke="var(--gold)" stroke-width="1.4"/><text x="317.6" y="128.0" class="mod-ko" text-anchor="middle">인사 관리</text><text x="317.6" y="146.0" class="mod-en" text-anchor="middle">HR / People</text><circle cx="470.0" cy="220.0" r="92" fill="var(--ink)"/><text x="470.0" y="206.0" class="hub-t1" text-anchor="middle">SAP S/4HANA</text><text x="470.0" y="228.0" class="hub-t2" text-anchor="middle">디지털 코어</text><text x="470.0" y="250.0" class="hub-t3" text-anchor="middle">하나의 통합 데이터</text></svg>
+</div>
+
+<h3>핵심 기술 ① — HANA: '인메모리' 데이터베이스</h3>
+<p>일반적인 데이터베이스는 정보를 하드디스크에 저장하고 필요할 때 꺼내 읽습니다. 책을 매번 서고에서 찾아오는 것과 비슷해 느립니다. <b>HANA</b>는 데이터를 컴퓨터의 <b>메모리(RAM) 위에 통째로 올려두고</b> 처리합니다. 책을 전부 책상 위에 펼쳐 둔 셈이라, 며칠 걸리던 분석이 몇 초로 줄어듭니다. 이 속도가 실시간 경영 판단과 AI 분석의 토대가 됩니다.</p>
+
+<h3>핵심 기술 ② — Fiori UX와 모듈식 구조</h3>
+<p>과거의 ERP는 복잡한 녹색 텍스트 화면이었지만, SAP는 <b>Fiori</b>라는 현대적이고 직관적인 화면을 입혔습니다. 또 기업은 필요한 모듈만 골라 도입할 수 있어, 작은 회사부터 글로벌 대기업까지 단계적으로 확장할 수 있습니다(중소기업용 Business One·GROW, 대기업용 RISE).</p>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">03</span><h2>어떻게 돈을 버는가 — 수익 구조</h2></div>
+<div class="sec-sub">'한 번 팔기'에서 '매달 받기'로 — 비즈니스 모델의 대전환</div>
+<div class="tight">
+<p>SAP의 수익 모델은 지난 10년간 근본적으로 바뀌었습니다. 과거에는 소프트웨어를 <b>한 번에 비싸게 팔고(라이선스)</b>, 매년 그 약 22%를 유지보수비로 받았습니다. 현금은 한꺼번에 들어오지만 성장은 더뎠죠. 지금은 <b>클라우드 구독(SaaS)</b> — 즉 매년 사용료를 받는 모델로 옮겨가고 있습니다. 한 번에 들어오는 돈은 줄지만, <b>매년 반복되는 예측 가능한 매출</b>이 쌓이고 고객당 매출도 키울 수 있습니다.</p>
+
+<div class="chart-card">
+  <div class="ctitle">수익 모델의 전환: 라이선스 판매 → 클라우드 구독</div>
+  <div class="cnote">2027년 구형 제품 지원 종료가 이 전환을 강제로 가속시킨다</div>
+  <svg viewBox="0 0 940 330" class="chart" role="img" aria-label="SAP 수익 모델 전환"><rect x="30.0" y="40" width="380" height="220" rx="12" fill="var(--panel)" stroke="var(--ink-soft)" stroke-width="2"/><rect x="30.0" y="40" width="380" height="40" rx="12" fill="var(--ink-soft)"/><rect x="30.0" y="60" width="380" height="20" fill="var(--ink-soft)"/><text x="220.0" y="66.0" class="mf-title" text-anchor="middle">과거 모델 (온프레미스)</text><text x="50.0" y="110.0" class="mf-line">▸ 라이선스 1회 판매</text><text x="50.0" y="127.0" class="mf-desc">계약 시 큰 일시 매출</text><text x="50.0" y="156.0" class="mf-line">▸ 연 유지보수 ~22%</text><text x="50.0" y="173.0" class="mf-desc">반복적이나 저성장</text><text x="220.0" y="248.0" class="mf-sub" text-anchor="middle">현금 일시 유입 · 성장 둔화</text><rect x="530.0" y="40" width="380" height="220" rx="12" fill="var(--panel)" stroke="var(--teal)" stroke-width="2"/><rect x="530.0" y="40" width="380" height="40" rx="12" fill="var(--teal)"/><rect x="530.0" y="60" width="380" height="20" fill="var(--teal)"/><text x="720.0" y="66.0" class="mf-title" text-anchor="middle">현재 모델 (클라우드)</text><text x="550.0" y="110.0" class="mf-line">▸ 구독료(SaaS) 반복 매출</text><text x="550.0" y="127.0" class="mf-desc">매년 갱신, 예측 가능</text><text x="550.0" y="156.0" class="mf-line">▸ RISE/GROW 전환 + 추가판매</text><text x="550.0" y="173.0" class="mf-desc">고객당 매출 확대</text><text x="720.0" y="248.0" class="mf-sub" text-anchor="middle">반복매출 · 이연수익 현금 선수취</text><path d="M424.0 150 L516.0 150" stroke="var(--gold)" stroke-width="3" marker-end="url(#mfarrow)"/><defs><marker id="mfarrow" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="var(--gold)"/></marker></defs><text x="470.0" y="135" class="mf-arrowlab" text-anchor="middle">전환</text><text x="470.0" y="178" class="mf-arrowlab2" text-anchor="middle">2027년 지원종료가</text><text x="470.0" y="194" class="mf-arrowlab2" text-anchor="middle">전환을 가속</text></svg>
+</div>
+
+<p>그 결과 2025년 매출 €36.8B의 구성은 아래와 같습니다. <b>클라우드(€21.0B, 전체의 57%)</b>가 성장을 견인하고, 전통적 <b>소프트웨어 지원(약 €10.5B)</b>은 고객이 클라우드로 옮겨가며 완만히 줄어듭니다. 이 둘의 상쇄가 전체 성장률을 낮추는 구조적 원인입니다.</p>
+
+<div class="chart-card">
+  <div class="ctitle">FY2025 매출 구성 (총 €36.8B)</div>
+  <div class="cnote">클라우드가 성장 엔진 / 소프트웨어 지원은 감소 — 둘의 상쇄가 전체 성장 둔화의 원인</div>
+  <svg viewBox="0 0 800 150" class="chart" role="img" aria-label="FY2025 매출 구성"><rect x="20.0" y="30" width="434.5" height="54" fill="var(--teal)" class="seg"/><text x="237.2" y="55.0" class="seglab">클라우드</text><text x="237.2" y="72.0" class="segval">€21.0B</text><rect x="454.5" y="30" width="217.0" height="54" fill="var(--navy)" class="seg"/><text x="563.0" y="55.0" class="seglab">SW 지원</text><text x="563.0" y="72.0" class="segval">€10.5B</text><rect x="671.5" y="30" width="88.1" height="54" fill="var(--gold)" class="seg"/><text x="715.5" y="55.0" class="seglab">서비스</text><text x="715.5" y="72.0" class="segval">€4.3B</text><rect x="759.5" y="30" width="20.5" height="54" fill="var(--clay)" class="seg"/></svg>
+  <div class="legend">
+    <span><i class="dot" style="background:var(--teal)"></i>클라우드 €21.0B (+26% cc)</span>
+    <span><i class="dot" style="background:var(--navy)"></i>SW 지원 ~€10.5B (감소)</span>
+    <span><i class="dot" style="background:var(--gold)"></i>서비스 €4.3B</span>
+    <span><i class="dot" style="background:var(--clay)"></i>SW 라이선스 €1.0B (−29%)</span>
+  </div>
+</div>
+
+<div class="info"><div class="it">왜 이연수익(선수금)이 중요한가</div>
+<p>구독 모델에서는 고객이 서비스를 쓰기 전에 1년치 사용료를 미리 냅니다. 그래서 SAP의 잉여현금흐름(€8.2B)이 회계상 이익(NOPAT)보다 큽니다 — 받은 현금이 매출로 인식되기 전에 먼저 들어오기 때문입니다. 이 '현금 선수취'는 구독 기업의 강점입니다.</p></div>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">04</span><h2>기술력과 AI 전략</h2></div>
+<div class="sec-sub">왜 'AI 시대'에 SAP가 유리하다고 주장하는가</div>
+<div class="tight">
+<p>SAP의 AI 전략은 단순한 챗봇이 아니라 <b>"기업의 실제 업무를 대신 실행하는 AI"</b>를 지향합니다. 2026년 5월 Sapphire 행사에서 SAP는 BTP(개발 플랫폼)·Business Data Cloud(데이터)·Business AI를 하나로 합친 <b>SAP Business AI Platform</b>과, 50개 이상의 전문 AI 비서를 탑재한 <b>Autonomous Suite(자율형 스위트)</b>를 공개했습니다.</p>
+<ul class="clean">
+<li><b>Joule(줄):</b> S/4HANA·SuccessFactors·Ariba 등 SAP 전 제품에 내장된 AI 비서. 질문에 답할 뿐 아니라 송금·재고 조정 같은 작업을 직접 수행합니다. 예: 2026년 1분기 출시된 '현금관리 에이전트'는 은행 명세서를 자동 분석해 수작업 시간을 최대 80% 줄입니다.</li>
+<li><b>Knowledge Graph + Domain Models:</b> SAP 코드와 고객의 실제 업무 데이터로 학습한 'AI용 업무 지도'. 일반 AI가 모르는 'S/4HANA의 회계 전표 처리 로직' 같은 SAP 고유 규칙을 이해합니다.</li>
+<li><b>개방형 파트너십:</b> AWS(데이터 무복사 연동)·Microsoft·Google Cloud·NVIDIA·Palantir·Accenture, 그리고 Anthropic·Mistral·Cohere 등 여러 AI 모델을 골라 쓸 수 있게 했습니다.</li>
+<li><b>AI·데이터 인수:</b> Reltio(마스터데이터, 2026.3)·Dremio(데이터 레이크하우스, 2026.5)·Prior Labs(2026.5)·WalkMe·LeanIX·Signavio 등으로 데이터·프로세스 역량을 보강했습니다.</li>
+</ul>
+
+<div class="cre">
+  <span class="tag">주장 · 근거 · 증거</span>
+  <p class="claim">SAP의 AI 경쟁력은 '모델'이 아니라 '독점적 업무 데이터와 맥락'에서 나옵니다. <span class="conf mid">중간 · 60%</span></p>
+  <p><b>근거 —</b> AI가 실제 업무를 정확히 수행하려면 '회사의 거래·규정·프로세스'라는 맥락이 필요한데, 그 데이터의 상당수가 이미 SAP 안에 있습니다. <b>증거 —</b> 가트너는 2026년 말까지 기업 앱의 40%가 작업특화 AI 에이전트를 탑재할 것으로 전망(2025년 5% 미만)했고, SAP는 50개+ 도메인 비서로 이를 선점하려 합니다. 다만 경쟁자(Microsoft·Oracle)도 같은 데이터-맥락 전략을 펴고 있어, '독점'이라기보다 '유리한 출발점'으로 보는 것이 균형 잡힌 시각입니다.</p>
+</div>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">05</span><h2>산업 분석 — 기업용 소프트웨어와 ERP</h2></div>
+<div class="sec-sub">시장 규모 · 성장성 · 가치사슬 · 경쟁 구조 · 미래 방향</div>
+<div class="tight">
+<p>SAP가 속한 시장은 크게 보면 <b>기업용 소프트웨어(Enterprise Software)</b>, 좁게 보면 그 핵심인 <b>ERP 소프트웨어</b>입니다. 조사기관마다 정의가 달라 ERP 시장 규모는 <b>2025년 약 700억 달러, 2026년 약 790억 달러</b>로 추정되며(연 9~10% 성장), 특히 <b>클라우드 ERP</b>는 2025년 약 470억 달러에서 2035년 약 2,800억 달러로 연 ~20% 고성장이 예상됩니다. 2026년 기준 ERP 도입의 <b>약 83%가 클라우드·하이브리드</b> 방식으로, '온프레미스(자체 서버) → 클라우드'라는 산업 전체의 대이동이 진행 중입니다. <span class="conf mid">시장 규모 추정 중간 · 60%</span></p>
+
+<div class="chart-card">
+  <div class="ctitle">기업용 소프트웨어 가치사슬 — SAP의 위치</div>
+  <div class="cnote">인프라(①) 위에 소프트웨어(②)가 올라가고, 파트너(③)가 고객(④)에 구축한다</div>
+  <svg viewBox="0 0 940 360" class="chart" role="img" aria-label="엔터프라이즈 소프트웨어 가치사슬"><rect x="20.0" y="70" width="200" height="150" rx="12" fill="var(--panel)" stroke="var(--navy)" stroke-width="2"/><rect x="20.0" y="70" width="200" height="34" rx="12" fill="var(--navy)"/><rect x="20.0" y="88" width="200" height="16" fill="var(--navy)"/><text x="120.0" y="93.0" class="vc-head" text-anchor="middle">① 클라우드 인프라</text><text x="120.0" y="134.0" class="vc-role" text-anchor="middle">하이퍼스케일러</text><text x="120.0" y="166.0" class="vc-ex" text-anchor="middle">AWS · Azure · Google Cloud</text><path d="M224.0 145.0 L249.3 145.0" stroke="var(--ink-soft)" stroke-width="2" marker-end="url(#vcarrow)"/><rect x="253.3" y="70" width="200" height="150" rx="12" fill="var(--panel)" stroke="var(--gold-deep)" stroke-width="2"/><rect x="253.3" y="70" width="200" height="34" rx="12" fill="var(--gold-deep)"/><rect x="253.3" y="88" width="200" height="16" fill="var(--gold-deep)"/><text x="353.3" y="93.0" class="vc-head" text-anchor="middle">② 소프트웨어 / 플랫폼</text><text x="353.3" y="134.0" class="vc-role" text-anchor="middle">애플리케이션 벤더</text><text x="353.3" y="166.0" class="vc-ex" text-anchor="middle">SAP · Oracle · Microsoft</text><text x="353.3" y="194.0" class="vc-tag" text-anchor="middle">◆ 분석 대상</text><path d="M457.3 145.0 L482.7 145.0" stroke="var(--ink-soft)" stroke-width="2" marker-end="url(#vcarrow)"/><rect x="486.7" y="70" width="200" height="150" rx="12" fill="var(--panel)" stroke="var(--teal)" stroke-width="2"/><rect x="486.7" y="70" width="200" height="34" rx="12" fill="var(--teal)"/><rect x="486.7" y="88" width="200" height="16" fill="var(--teal)"/><text x="586.7" y="93.0" class="vc-head" text-anchor="middle">③ 구축 · 컨설팅</text><text x="586.7" y="134.0" class="vc-role" text-anchor="middle">시스템 통합(SI) 파트너</text><text x="586.7" y="166.0" class="vc-ex" text-anchor="middle">Accenture · Deloitte · IBM</text><path d="M690.7 145.0 L716.0 145.0" stroke="var(--ink-soft)" stroke-width="2" marker-end="url(#vcarrow)"/><rect x="720.0" y="70" width="200" height="150" rx="12" fill="var(--panel)" stroke="var(--clay)" stroke-width="2"/><rect x="720.0" y="70" width="200" height="34" rx="12" fill="var(--clay)"/><rect x="720.0" y="88" width="200" height="16" fill="var(--clay)"/><text x="820.0" y="93.0" class="vc-head" text-anchor="middle">④ 최종 사용</text><text x="820.0" y="134.0" class="vc-role" text-anchor="middle">글로벌 기업 고객</text><text x="820.0" y="166.0" class="vc-ex" text-anchor="middle">제조 · 금융 · 유통 · 공공</text><defs><marker id="vcarrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="var(--ink-soft)"/></marker></defs><text x="470.0" y="264.0" class="vc-note" text-anchor="middle">SAP는 인프라(①) 위에서 소프트웨어를 공급하고, 파트너(③)가 고객(④)에 구축한다 · 매출의 큰 부분이 SAP 시스템을 거쳐 발생</text></svg>
+</div>
+
+<p>가치사슬을 풀어 보면: 맨 아래에 아마존·마이크로소프트·구글의 <b>클라우드 인프라</b>가 있고, 그 위에서 SAP·오라클·마이크로소프트가 <b>소프트웨어</b>를 공급합니다. 기업이 SAP를 도입할 때는 보통 액센추어·딜로이트·IBM 같은 <b>시스템 통합(SI) 파트너</b>가 수개월~수년에 걸쳐 구축하는데, 이 구축비와 복잡성 자체가 강력한 진입장벽이자 전환비용이 됩니다.</p>
+
+<h3>산업의 트렌드와 미래 방향</h3>
+<ul class="clean">
+<li><b>클라우드 전환의 가속:</b> 자체 서버 유지 부담과 유연성 때문에 구독형 클라우드로 빠르게 이동 중입니다.</li>
+<li><b>AI 에이전트의 부상:</b> 단순 자동화를 넘어 'AI가 업무를 끝까지 실행'하는 단계로 진입. 업계 전체의 차별화 포인트가 되었습니다.</li>
+<li><b>버티컬(산업특화) 경쟁:</b> 제조·의료·유통·금융 등 산업별 맞춤 기능을 가진 벤더가 범용 제품보다 우위를 갖습니다.</li>
+<li><b>생태계·파트너 경쟁력:</b> 구축 파트너와 개발자 커뮤니티의 규모가 시장 지위를 좌우합니다.</li>
+<li><b>신규 진입:</b> 2026년 인도 Zoho가 AI 기반 클라우드 ERP로 중소기업 시장에 진입하는 등 저변이 넓어지고 있습니다.</li>
+</ul>
+<p>경쟁 구조는 <b>대형 ERP는 SAP·오라클·마이크로소프트의 과점</b>, 중견·중소 시장은 NetSuite(오라클)·Microsoft Dynamics·Sage·Infor·Epicor 등이 경쟁하는 형태입니다.</p>
+</div></section><div class="partdiv reveal"><span class="pn">II</span><div><div class="pt">경쟁우위 · 주가 · 동종업계</div><div class="pd">해자의 실체, 최근 주가 내러티브, 경쟁사 대비 위치</div></div></div>
+<section class="reveal"><div class="sec-h"><span class="sec-no">06</span><h2>경제적 해자(Moat) 분석</h2></div>
+<div class="sec-sub">초과수익이 왜, 얼마나 오래 지속될 수 있는가</div>
+<div class="tight">
+<p>SAP의 해자는 <b>전환비용(switching cost)</b>에서 나옵니다. ERP는 회사의 '기록 시스템'이라 한 번 깔면 맞춤 코드·축적된 데이터·연동 시스템·숙련 인력이 얽혀, 다른 제품으로 바꾸는 데 막대한 비용과 위험이 따릅니다. 아래 포터의 5가지 경쟁요인으로 보면 산업 구조 자체가 기존 강자에게 유리합니다.</p>
+
+<div class="chart-card">
+  <div class="ctitle">포터의 5가지 경쟁요인(Five Forces)</div>
+  <div class="cnote">신규 진입 위협이 낮고(높은 진입장벽), 전환비용이 구매자 교섭력을 억제 — 기존 강자에 유리</div>
+  <svg viewBox="0 0 940 500" class="chart" role="img" aria-label="포터의 5가지 경쟁요인"><rect x="320.0" y="202.0" width="300" height="96" rx="10" fill="var(--ink)"/><text x="470.0" y="234.0" class="pf-ctitle" text-anchor="middle">산업 내 경쟁 강도</text><rect x="436.0" y="244.0" width="68" height="22" rx="11" fill="var(--gold-deep)"/><text x="470.0" y="259.0" class="pf-rate" text-anchor="middle">중간</text><text x="470.0" y="284.0" class="pf-cdesc" text-anchor="middle">Oracle·MS·Salesforce 등과 경쟁하나 대형 ERP는 과점</text><rect x="320.0" y="30.0" width="300" height="96" rx="10" fill="var(--panel)" stroke="var(--teal)" stroke-width="2"/><text x="470.0" y="56.0" class="pf-title" text-anchor="middle">신규 진입 위협</text><rect x="436.0" y="64.0" width="68" height="22" rx="11" fill="var(--teal)"/><text x="470.0" y="79.0" class="pf-rate" text-anchor="middle">낮음</text><text x="470.0" y="104.0" class="pf-desc" text-anchor="middle">막대한 구축비·전환비용이 진입장벽</text><rect x="40.0" y="202.0" width="260" height="96" rx="10" fill="var(--panel)" stroke="var(--gold-deep)" stroke-width="2"/><text x="170.0" y="228.0" class="pf-title" text-anchor="middle">공급자 교섭력</text><rect x="136.0" y="236.0" width="68" height="22" rx="11" fill="var(--gold-deep)"/><text x="170.0" y="251.0" class="pf-rate" text-anchor="middle">중간</text><text x="170.0" y="276.0" class="pf-desc" text-anchor="middle">하이퍼스케일러 의존도 상승</text><rect x="640.0" y="202.0" width="260" height="96" rx="10" fill="var(--panel)" stroke="var(--gold-deep)" stroke-width="2"/><text x="770.0" y="228.0" class="pf-title" text-anchor="middle">구매자 교섭력</text><rect x="736.0" y="236.0" width="68" height="22" rx="11" fill="var(--gold-deep)"/><text x="770.0" y="251.0" class="pf-rate" text-anchor="middle">중간</text><text x="770.0" y="276.0" class="pf-desc" text-anchor="middle">전환비용 높지만 대형 고객은 협상력</text><rect x="320.0" y="374.0" width="300" height="96" rx="10" fill="var(--panel)" stroke="var(--gold-deep)" stroke-width="2"/><text x="470.0" y="400.0" class="pf-title" text-anchor="middle">대체재 위협</text><rect x="436.0" y="408.0" width="68" height="22" rx="11" fill="var(--gold-deep)"/><text x="470.0" y="423.0" class="pf-rate" text-anchor="middle">중간</text><text x="470.0" y="448.0" class="pf-desc" text-anchor="middle">제3자 유지보수·자체개발·신흥 SaaS</text><line x1="470.0" y1="250.0" x2="470.0" y2="126.0" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 3"/><line x1="470.0" y1="250.0" x2="300.0" y2="250.0" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 3"/><line x1="470.0" y1="250.0" x2="640.0" y2="250.0" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 3"/><line x1="470.0" y1="250.0" x2="470.0" y2="374.0" stroke="var(--line)" stroke-width="1.4" stroke-dasharray="3 3"/></svg>
+</div>
+
+<div class="chart-card">
+  <div class="ctitle">해자의 실증: ROIC가 자본비용(WACC)을 크게 상회</div>
+  <div class="cnote">초과수익(spread)의 존재 자체가 경제적 해자의 정량적 증거</div>
+  <svg viewBox="0 0 800 210" class="chart" role="img" aria-label="ROIC 대 WACC 스프레드"><text x="70.0" y="198" class="ax-x">0%</text><line x1="70.0" y1="24" x2="70.0" y2="146.0" class="grid"/><text x="217.5" y="198" class="ax-x">5%</text><line x1="217.5" y1="24" x2="217.5" y2="146.0" class="grid"/><text x="365.0" y="198" class="ax-x">10%</text><line x1="365.0" y1="24" x2="365.0" y2="146.0" class="grid"/><text x="512.5" y="198" class="ax-x">15%</text><line x1="512.5" y1="24" x2="512.5" y2="146.0" class="grid"/><text x="660.0" y="198" class="ax-x">20%</text><line x1="660.0" y1="24" x2="660.0" y2="146.0" class="grid"/><rect x="70" y="43.0" width="501.5" height="32" rx="4" fill="var(--teal)" class="scbar"/><text x="581.5" y="64.0" class="scval2">ROIC ≈ 17%</text><rect x="70" y="101.0" width="212.4" height="32" rx="4" fill="var(--ink-soft)" class="scbar"/><text x="292.4" y="122.0" class="scval2">WACC ≈ 7.2%</text><text x="670" y="88.0" class="spreadlab">초과수익</text><text x="670" y="110.0" class="spreadbig">≈ +10%p</text></svg>
+</div>
+
+<div class="cre">
+  <span class="tag">주장 · 근거 · 증거</span>
+  <p class="claim">SAP는 측정 가능한 경제적 해자를 보유합니다. <span class="conf hi">높음 · 85%</span></p>
+  <p><b>근거 —</b> 영업권을 포함한 보수적 기준으로도 투하자본이익률(ROIC)이 약 17%로, 자본비용(WACC) 약 7.2%를 10%p가량 상회합니다. <b>증거 —</b> 무형자산 중심의 자산경량 구조라 영업권을 빼면 ROIC는 훨씬 높습니다. 핵심 카탈리스트는 <b>2027년 말 구형 ERP(ECC) 표준 지원 종료</b>(유료 연장 시 2030년까지)로, 기존 고객 중 약 20~33%만 이전을 마쳐 수년간 강제 전환 수요가 남아 있습니다. <span class="conf hi">높음 · 75%</span></p>
+</div>
+
+<h3>반대편 — 해자를 위협하는 요인(균형 시각)</h3>
+<ul class="clean">
+<li><b>제3자 유지보수:</b> Rimini Street 등이 SAP 시스템을 2040년까지 지원하며 유지보수비를 약 50% 절감해, 일부 고객의 클라우드 이전을 늦출 수 있습니다.</li>
+<li><b>전환 시점의 재평가:</b> 2027년 이전 시점은 경쟁사로 갈아탈 수 있는 '재검토 순간'이기도 합니다.</li>
+<li><b>API 정책 논란:</b> 2026년 SAP의 새 API 정책이 일부 고객·파트너의 개방성 우려를 낳았습니다.</li>
+<li><b>성장률 비판:</b> SAP의 'Rule of 50' 점수는 약 22%로, ServiceNow(54)·Microsoft/Workday/Salesforce(~42)보다 낮습니다 — 지원 매출 감소가 전체 성장률을 끌어내린 결과로 정당한 비판입니다.</li>
+</ul>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">07</span><h2>SWOT 분석</h2></div>
+<div class="sec-sub">강점 · 약점 · 기회 · 위협 한눈에</div>
+<div class="tight">
+<div class="swot">
+  <div class="sw s"><h4><span class="badge">S</span>강점 Strengths</h4><ul>
+    <li>세계 1위 ERP · 44만+ 고객, 거래의 ~77%가 SAP 경유(자체 발표)</li>
+    <li>매우 높은 전환비용 → ROIC 17% vs WACC 7.2%, 약 10%p 초과수익</li>
+    <li>클라우드 백로그 €77B(+30%cc) — 미래 매출 가시성 높음</li>
+    <li>강력한 현금창출(FCF €8.2B)과 순현금 재무구조</li>
+  </ul></div>
+  <div class="sw w"><h4><span class="badge">W</span>약점 Weaknesses</h4><ul>
+    <li>전체 매출 성장률 +8~11%로 동종 대비 최하위(지원 매출 감소 탓)</li>
+    <li>'Rule of 50' 약 22% — 성장+수익성 합산 점수 낮음</li>
+    <li>구축 복잡성·긴 도입 기간 → 중소기업 침투에 한계</li>
+    <li>영업마진 ~30%로 Oracle·Microsoft(40%+)보다 낮음</li>
+  </ul></div>
+  <div class="sw o"><h4><span class="badge">O</span>기회 Opportunities</h4><ul>
+    <li>2027 ECC 지원 종료 → 수년간 강제 클라우드 전환 수요</li>
+    <li>Business AI·자율형 스위트 → 고객당 매출(업셀) 확대</li>
+    <li>주권 클라우드(정부·방산) 등 신규 수요</li>
+    <li>클라우드 ERP 시장 연 ~20% 고성장</li>
+  </ul></div>
+  <div class="sw t"><h4><span class="badge">T</span>위협 Threats</h4><ul>
+    <li>Microsoft·Oracle·Salesforce·Workday·ServiceNow와 경쟁 심화</li>
+    <li>제3자 유지보수(Rimini)로 전환 지연 가능</li>
+    <li>AI가 ERP 가치를 잠식할 수 있다는 시장 우려(2025년 디레이팅 원인)</li>
+    <li>강한 유로·환율, 금리 변동이 실적·밸류에이션에 영향</li>
+  </ul></div>
+</div>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">08</span><h2>최근 주가 내러티브</h2></div>
+<div class="sec-sub">왜 고점 대비 약 45% 하락했는가 — 사건의 흐름</div>
+<div class="tight">
+<p>SAP 주가는 2024년 강세장에서 가파르게 올라 <b>2025년 3월 유럽 시가총액 1위</b>(고점 약 €283)에 올랐습니다. 그러나 2025년 중반부터 <b>"AI가 ERP의 가치를 잠식할 수 있다"</b>는 시장의 우려로 점진적으로 디레이팅(밸류에이션 하락)됐고, 결정타는 <b>2026년 1월 29일 실적 발표</b>였습니다.</p>
+
+<div class="chart-card">
+  <div class="ctitle">SAP 주가 흐름과 핵심 사건 (2024–2026, 개념도)</div>
+  <div class="cnote">실제 종가 기반 주요 변곡점 · 일별 정밀 차트가 아닌 흐름 요약</div>
+  <svg viewBox="0 0 940 420" class="chart" role="img" aria-label="SAP 주가 내러티브 2024-2026"><line x1="58" y1="359.5" x2="910" y2="359.5" class="grid"/><text x="50" y="363.5" class="ax-y">€100</text><line x1="58" y1="287.1" x2="910" y2="287.1" class="grid"/><text x="50" y="291.1" class="ax-y">€150</text><line x1="58" y1="214.8" x2="910" y2="214.8" class="grid"/><text x="50" y="218.8" class="ax-y">€200</text><line x1="58" y1="142.4" x2="910" y2="142.4" class="grid"/><text x="50" y="146.4" class="ax-y">€250</text><line x1="58" y1="70.0" x2="910" y2="70.0" class="grid"/><text x="50" y="74.0" class="ax-y">€300</text><text x="199.4" y="396.0" class="ax-x"></text><text x="385.4" y="396.0" class="ax-x">'25</text><text x="571.4" y="396.0" class="ax-x"></text><text x="757.5" y="396.0" class="ax-x">'26</text><text x="199.4" y="412.0" class="ax-title">2024</text><text x="571.4" y="412.0" class="ax-title">2025</text><text x="831.9" y="412.0" class="ax-title">2026</text><polyline points="58.0,350.8 180.8,287.1 292.4,214.8 430.1,127.9 459.8,94.6 590.0,142.4 727.7,164.1 772.3,195.9 779.8,258.2 794.7,261.1 809.5,287.1 869.1,304.5 910.0,279.5" fill="none" stroke="var(--clay)" stroke-width="2.6" stroke-linejoin="round" pathLength="1" class="vline" style="stroke:var(--clay)"/><circle cx="459.8" cy="94.6" r="6" fill="var(--gold-deep)" stroke="var(--panel)" stroke-width="2.5"/><line x1="459.8" y1="94.6" x2="459.8" y2="74.6" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="2 2"/><text x="459.8" y="64.6" class="ev-lab" text-anchor="middle">2025.3 유럽 시총 1위</text><text x="459.8" y="79.6" class="ev-lab" text-anchor="middle">고점 ≈ €283</text><circle cx="779.8" cy="258.2" r="6" fill="var(--clay)" stroke="var(--panel)" stroke-width="2.5"/><line x1="779.8" y1="258.2" x2="779.8" y2="306.2" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="2 2"/><text x="779.8" y="316.2" class="ev-lab" text-anchor="middle">2026.1.29 실적 쇼크</text><text x="779.8" y="331.2" class="ev-lab" text-anchor="middle">−11~17%, 2020년 이후 최대 낙폭</text><circle cx="910.0" cy="279.5" r="6" fill="var(--ink)" stroke="var(--panel)" stroke-width="2.5"/><line x1="910.0" y1="279.5" x2="910.0" y2="259.5" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="2 2"/><text x="910.0" y="249.5" class="ev-lab" text-anchor="middle">현재 €155</text><text x="910.0" y="264.5" class="ev-lab" text-anchor="middle">고점比 −45%</text></svg>
+</div>
+
+<div class="cre">
+  <span class="tag">무슨 일이 있었나 (2026.1.29)</span>
+  <p class="claim">'실적은 괜찮았지만 미래 가이던스가 실망스러웠다'가 핵심입니다.</p>
+  <p>SAP의 2025년 4분기 매출(€9.68B)과 연간 실적은 시장 기대에 부합했습니다. 그러나 ① <b>현재 클라우드 백로그(CCB) 성장률이 25%</b>로 시장 기대(약 26%)에 1%p 못 미쳤고, 회사가 과거 "25%면 실망스러울 것"이라 시사했던 터라 우려가 증폭됐습니다. ② <b>2026년 클라우드 가이던스</b>가 기대를 밑돌았고, CFO는 클라우드 백로그 성장이 "다소 둔화"될 것이라며 <b>예상보다 큰 둔화</b>라고 인정했습니다. 그 결과 주가는 장중 11~17% 급락해 <b>2020년 10월 이후 최대 일일 낙폭</b>을 기록했고, 2025년 고점 대비 시가총액 약 1,500억 달러가 증발했습니다.</p>
+</div>
+
+<h3>회사의 설명과 시장의 반응</h3>
+<p>SAP는 둔화의 이유로 ① 고객이 <b>더 큰 전환 프로젝트</b>로 옮겨가며 매출 인식이 늦어지고, ② <b>주권 클라우드(정부·방산)</b> 수요는 영업 주기가 길고 해지 조항 때문에 백로그에 잘 안 잡힌다고 설명했습니다. 경영진은 "2027년까지 매출 성장이 가속될 토대"라고 강조했지만, 시장은 단기 둔화에 더 무게를 뒀습니다. 일부 애널리스트는 "1%p 차이에 대한 과잉 반응"이라는 시각도 보였습니다. <span class="conf mid">내러티브 해석 중간 · 65%</span></p>
+<p style="font-size:14px;color:var(--ink-soft)">참고: 이 하락으로 현재 밸류에이션은 2025년의 과열을 상당 부분 되돌렸고, 본 보고서가 추정한 '시장 내재 CAP ~7년'이라는 비교적 보수적인 수준으로 내려왔습니다. 즉 주가 하락이 곧바로 '저평가'를 뜻하진 않지만, '과열은 해소됐다'는 점은 분명합니다.</p>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">09</span><h2>동종업계 비교(Peer Group)</h2></div>
+<div class="sec-sub">성장 · 수익성 · 밸류에이션의 상대적 위치</div>
+<div class="tight">
+<table>
+<thead><tr><th>기업</th><th class="r">시총</th><th class="r">매출</th><th class="r">총성장</th><th class="r">클라우드 성장</th><th class="r">영업마진(비GAAP)</th><th class="r">선행 P/E</th></tr></thead>
+<tbody>
+<tr class="hl"><td>SAP</td><td class="r mono">~$207B</td><td class="r mono">€36.8B</td><td class="r mono">+8–11%</td><td class="r mono">+25–27%</td><td class="r mono">~30%</td><td class="r mono">~23x</td></tr>
+<tr><td>Oracle</td><td class="r mono">~$586B</td><td class="r mono">~$57B</td><td class="r mono">+14%</td><td class="r mono">+34%</td><td class="r mono">~42–44%</td><td class="r mono">—</td></tr>
+<tr><td>Microsoft</td><td class="r mono">~$3.5T</td><td class="r mono">$300B+</td><td class="r mono">+18%</td><td class="r mono">고성장</td><td class="r mono">~45%+</td><td class="r mono">—</td></tr>
+<tr><td>Salesforce</td><td class="r mono">~$200B</td><td class="r mono">$41.5B</td><td class="r mono">+10%</td><td class="r mono">—</td><td class="r mono">~33%</td><td class="r mono">~14x</td></tr>
+<tr><td>ServiceNow</td><td class="r mono">~$112B</td><td class="r mono">$13.3B</td><td class="r mono">+22%</td><td class="r mono">—</td><td class="r mono">~30%</td><td class="r mono">~21x</td></tr>
+<tr><td>Workday</td><td class="r mono">~$60B</td><td class="r mono">$8.8B</td><td class="r mono">+14%</td><td class="r mono">—</td><td class="r mono">~29%</td><td class="r mono">—</td></tr>
+</tbody>
+</table>
+<p style="font-size:14.5px">읽는 법: SAP는 대형 레거시 벤더 중 <b>클라우드 성장률은 최상위</b>지만 지원 매출 감소로 <b>전체 성장률은 최하위</b>입니다. 영업마진 ~30%는 견조하나 Oracle·Microsoft(40%+)보다 낮습니다. 선행 P/E ~23x는 Salesforce(~14x)보다 비싸고 ServiceNow와 비슷하며, '성장 대비'로는 ServiceNow에 다소 할인되어 거래됩니다. <span class="conf mid">중간 · 60%</span></p>
+<p class="tbl-note">주: Oracle의 RPO 급증($523B)은 AI·인프라(OCI) 비중이 커 순수 애플리케이션 비교와 성격이 다름. 수치는 2026년 5월경 각사 최근 분기 기준 근사치.</p>
+</div></section><div class="partdiv reveal"><span class="pn">III</span><div><div class="pt">경쟁우위기간(CAP) 밸류에이션</div><div class="pd">현재 주가에 시장이 반영한 '초과수익 지속 기간'을 역산</div></div></div>
+<section class="reveal"><div class="sec-h"><span class="sec-no">10</span><h2>DCF 분석 결과</h2></div>
+<div class="sec-sub">명시적 기간(N)을 늘려가며 주당가치가 현재가와 만나는 지점을 탐색</div>
+<div class="tight">
+<div class="info"><div class="it">이 분석의 접근법 — '적정가' 대신 '내재 기대치'</div>
+<p>보통의 가치평가는 '이 주식의 적정가는 얼마'를 맞히려 합니다. 이 보고서는 반대로 갑니다. <b>현재 주가를 사실로 받아들이고, 그 가격이 정당화되려면 시장이 무엇을 기대해야 하는지</b>를 역으로 풉니다. 핵심 변수는 <b>경쟁우위기간(CAP)</b> — 회사가 자본비용보다 높은 수익(초과수익)을 낼 수 있는 기간입니다. CAP가 길수록 가치가 커집니다.</p></div>
+<p>가치창출(ROIC&gt;WACC)이 지속되는 기간 N을 1년씩 늘리며 주당가치를 계산했습니다. 이 곡선이 현재가(€155.26)와 교차하는 지점이 <b>시장이 가격에 반영한 CAP</b>입니다.</p>
+<div class="chart-card">
+  <div class="ctitle">명시적 가치창출 기간 N에 따른 주당 내재가치</div>
+  <div class="cnote">초록 곡선이 붉은 현재가 선과 만나는 N ≈ 6.8년 → 시장 내재 CAP</div>
+  <svg viewBox="0 0 800 460" class="chart" role="img" aria-label="설명기간 N에 따른 주당 내재가치 곡선"><line x1="70" y1="352.4" x2="770" y2="352.4" class="grid"/><text x="60" y="356.4" class="ax-y">€120</text><line x1="70" y1="291.5" x2="770" y2="291.5" class="grid"/><text x="60" y="295.5" class="ax-y">€140</text><line x1="70" y1="230.6" x2="770" y2="230.6" class="grid"/><text x="60" y="234.6" class="ax-y">€160</text><line x1="70" y1="169.6" x2="770" y2="169.6" class="grid"/><text x="60" y="173.6" class="ax-y">€180</text><line x1="70" y1="108.7" x2="770" y2="108.7" class="grid"/><text x="60" y="112.7" class="ax-y">€200</text><line x1="70" y1="47.8" x2="770" y2="47.8" class="grid"/><text x="60" y="51.8" class="ax-y">€220</text><line x1="70.0" y1="406" x2="70.0" y2="411" class="tick"/><text x="70.0" y="428.0" class="ax-x">1</text><line x1="166.6" y1="406" x2="166.6" y2="411" class="tick"/><text x="166.6" y="428.0" class="ax-x">5</text><line x1="287.2" y1="406" x2="287.2" y2="411" class="tick"/><text x="287.2" y="428.0" class="ax-x">10</text><line x1="407.9" y1="406" x2="407.9" y2="411" class="tick"/><text x="407.9" y="428.0" class="ax-x">15</text><line x1="528.6" y1="406" x2="528.6" y2="411" class="tick"/><text x="528.6" y="428.0" class="ax-x">20</text><line x1="649.3" y1="406" x2="649.3" y2="411" class="tick"/><text x="649.3" y="428.0" class="ax-x">25</text><line x1="770.0" y1="406" x2="770.0" y2="411" class="tick"/><text x="770.0" y="428.0" class="ax-x">30</text><text x="420" y="452" class="ax-title">명시적 가치창출 기간 N (년)</text><polygon points="70.0,406.0 70.0,389.6 94.1,362.0 118.3,334.5 142.4,307.1 166.6,280.1 190.7,260.6 214.8,242.1 239.0,224.8 263.1,208.7 287.2,193.9 311.4,180.3 335.5,168.0 359.7,157.0 383.8,147.4 407.9,139.0 432.1,131.8 456.2,124.8 480.3,118.2 504.5,111.7 528.6,105.5 552.8,99.5 576.9,93.7 601.0,88.0 625.2,82.6 649.3,77.4 673.4,72.4 697.6,67.5 721.7,62.8 745.9,58.3 770.0,53.9 770.0,406.0" class="area"/><polyline points="70.0,389.6 94.1,362.0 118.3,334.5 142.4,307.1 166.6,280.1 190.7,260.6 214.8,242.1 239.0,224.8 263.1,208.7 287.2,193.9 311.4,180.3 335.5,168.0 359.7,157.0 383.8,147.4 407.9,139.0 432.1,131.8 456.2,124.8 480.3,118.2 504.5,111.7 528.6,105.5 552.8,99.5 576.9,93.7 601.0,88.0 625.2,82.6 649.3,77.4 673.4,72.4 697.6,67.5 721.7,62.8 745.9,58.3 770.0,53.9" class="vline" pathLength="1"/><line x1="70" y1="245.0" x2="770" y2="245.0" class="priceline"/><text x="766" y="237.0" class="price-lab" text-anchor="end">현재가 €155.26</text><line x1="211.1" y1="34" x2="211.1" y2="406" class="markline"/><circle cx="211.1" cy="245.0" r="6" class="mdot"/><text x="221.1" y="50.0" class="mlab">시장 내재 CAP ≈ 6.8년</text></svg>
+</div>
+<table>
+<thead><tr><th>명시적 기간 N (년)</th><th class="r">주당가치 (EUR)</th><th class="r">ADR (USD)</th><th class="r">잔존가치 비중</th></tr></thead>
+<tbody><tr><td class="mono">1</td><td class="mono">€107.78</td><td class="mono">$126</td><td class="mono">96%</td></tr><tr><td class="mono">3</td><td class="mono">€125.88</td><td class="mono">$147</td><td class="mono">89%</td></tr><tr><td class="mono">5</td><td class="mono">€143.73</td><td class="mono">$168</td><td class="mono">83%</td></tr><tr class="hl"><td class="mono">7</td><td class="mono">€156.20</td><td class="mono">$182</td><td class="mono">76%</td></tr><tr><td class="mono">10</td><td class="mono">€172.05</td><td class="mono">$201</td><td class="mono">67%</td></tr><tr><td class="mono">12</td><td class="mono">€180.53</td><td class="mono">$211</td><td class="mono">62%</td></tr><tr><td class="mono">15</td><td class="mono">€190.08</td><td class="mono">$222</td><td class="mono">54%</td></tr><tr><td class="mono">18</td><td class="mono">€196.90</td><td class="mono">$230</td><td class="mono">47%</td></tr><tr><td class="mono">20</td><td class="mono">€201.07</td><td class="mono">$234</td><td class="mono">43%</td></tr><tr><td class="mono">25</td><td class="mono">€210.28</td><td class="mono">$245</td><td class="mono">34%</td></tr><tr><td class="mono">30</td><td class="mono">€218.00</td><td class="mono">$254</td><td class="mono">28%</td></tr></tbody>
+</table>
+<p class="tbl-note">중간연도 할인(mid-year) 적용. 강조행(N=7)이 현재가와 가장 근접. 잔존가치 비중이 N에 따라 96%→43%로 하락 — 짧은 CAP일수록 가치의 대부분이 먼 미래의 영구가치에 의존.</p>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">11</span><h2>자본비용과 최종가치 가정</h2></div>
+<div class="sec-sub">모든 결론의 토대가 되는 입력값 — 투명하게 공개</div>
+<div class="tight">
+<div class="agrid">
+  <div class="acell"><div class="k">무위험수익률 (RF)</div><div class="v">2.95%</div><div class="n">독일 10년 분트, 2026-05-29</div></div>
+  <div class="acell"><div class="k">베타 (β)</div><div class="v">1.00</div><div class="n">원시 0.71–0.97, 섹터로 회귀</div></div>
+  <div class="acell"><div class="k">주식위험프리미엄</div><div class="v">4.5%</div><div class="n">Damodaran(4.23%)+프레임워크 중간</div></div>
+  <div class="acell"><div class="k">자기자본비용</div><div class="v">7.45%</div><div class="n">RF + β×ERP</div></div>
+  <div class="acell"><div class="k">WACC</div><div class="v">7.23%</div><div class="n">부채비중 ~4.3% 반영</div></div>
+  <div class="acell"><div class="k">영구성장률 g</div><div class="v">2.0%</div><div class="n">ECB 목표 인플레이션(EUR)</div></div>
+  <div class="acell"><div class="k">페이드 비율 f</div><div class="v">0.20</div><div class="n">IT 섹터(SW 0.22)</div></div>
+  <div class="acell"><div class="k">법인세율</div><div class="v">29%</div><div class="n">2026 가이던스 기준</div></div>
+  <div class="acell"><div class="k">순현금</div><div class="v">+€2.0B</div><div class="n">현금−금융부채(리스 포함)</div></div>
+  <div class="acell"><div class="k">발행주식수</div><div class="v">1,166M</div><div class="n">자사주 제외</div></div>
+</div>
+<p style="font-size:14.5px">영업 경로 가정: 초기 매출성장 9.5%에서 연 0.4%p씩 둔화(하한 3.5%), EBITA 마진 28.3%→32%로 5년간 개선 후 유지, 증분 ROIC 30%(잉여현금흐름 전환율 ~70%). 주식보상비용(SBC)은 실제 비용으로 처리해 더하지 않았습니다. '페이드 비율'은 초과수익이 시간이 지나며 서서히 소멸한다고 보는 정도로, 값이 클수록 빨리 사라진다고 가정합니다.</p>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">12</span><h2>시장 내재 CAP과 해석</h2></div>
+<div class="sec-sub">핵심 산출물 — 그리고 통화 선택이라는 가장 큰 변수</div>
+<div class="tight">
+<div class="chart-card">
+  <div class="ctitle">시장 내재 CAP의 위치와 해석 구간</div>
+  <div class="cnote">기본값 ≈ 6.8년은 "다소 비관·합리" 경계 / 점선 박스는 통화 가정에 따른 불확실성 범위</div>
+  <svg viewBox="0 0 800 210" class="chart" role="img" aria-label="시장 내재 CAP 해석 구간"><rect x="30.0" y="70" width="148.0" height="46" fill="#7B9A5B" class="zone"/><text x="104.0" y="97.0" class="zlab">매우 비관</text><text x="30.0" y="134.0" class="ztick">0</text><rect x="178.0" y="70" width="148.0" height="46" fill="#A9B86A" class="zone"/><text x="252.0" y="97.0" class="zlab">다소 비관</text><text x="178.0" y="134.0" class="ztick">5</text><rect x="326.0" y="70" width="148.0" height="46" fill="#C9A24B" class="zone"/><text x="400.0" y="97.0" class="zlab">중립·합리</text><text x="326.0" y="134.0" class="ztick">10</text><rect x="474.0" y="70" width="148.0" height="46" fill="#C77F3A" class="zone"/><text x="548.0" y="97.0" class="zlab">다소 낙관</text><text x="474.0" y="134.0" class="ztick">15</text><rect x="622.0" y="70" width="148.0" height="46" fill="#A4432F" class="zone"/><text x="696.0" y="97.0" class="zlab">과도 낙관</text><text x="622.0" y="134.0" class="ztick">20</text><text x="770.0" y="134.0" class="ztick">25년+</text><rect x="178.0" y="60" width="384.8" height="66" class="uband"/><text x="370.4" y="52.0" class="ubandlab">통화·WACC 가정에 따른 범위 ≈ 5–18년</text><polygon points="223.6,58.0 241.6,58.0 232.6,70.0" class="ptr"/><line x1="232.6" y1="70" x2="232.6" y2="116" class="ptrline"/><text x="232.6" y="156.0" class="ptrlab">기본 시나리오 ≈ 6.8년</text></svg>
+</div>
+<div class="callout">
+  <div class="ct">결정적 갈림길 — 어느 통화로 할인할 것인가</div>
+  <p><b>가장 약한 고리는 WACC이며, WACC는 기준통화에 좌우됩니다.</b> SAP는 EUR로 보고하므로 EUR 일관 할인율이 1차적으로 정합적입니다. 그러나 글로벌 USD 기반 투자자에게는 달러 금리 적용도 유효한 관점입니다.</p>
+  <p style="margin-top:14px"><b>EUR 기준</b> (분트 2.95%, WACC ~7.2%, g 2.0%) → 내재 CAP <b>≈ 7년</b><br><b>USD 기준</b> (미 국채 4.4%, WACC ~8.65%, g 2.5%) → 내재 CAP <b>≈ 18년</b></p>
+  <p style="margin-top:14px">두 값의 차이가 결론의 성격을 바꿉니다. <span class="conf">방향성 신뢰도 중간 · 60%</span></p>
+</div>
+<div class="hyp">
+  <div class="hcard h1"><div class="hh">가설 H1 — EUR 일관 기준</div><div class="hr">≈ 7년</div><p>보고통화와 일치하는 분트 금리 사용. 해석: 합리적~다소 저렴. 견고한 해자라면 7년 지속은 보수적 기대.</p></div>
+  <div class="hcard h2"><div class="hh">가설 H2 — USD 투자자 기준</div><div class="hr">≈ 18년</div><p>달러 금리로 할인. 해석: 다소 낙관. 18년 지속을 요구하므로 견고한 해자가 전제.</p></div>
+</div>
+<p style="font-size:14px;color:var(--ink-soft)">어느 가설이 옳은지는 투자자 자신의 요구수익률·기준통화에 달려 있습니다. 본 분석은 보고통화 정합성을 근거로 H1을 1차 기준선으로 두되 두 가설을 함께 유지합니다.</p>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">13</span><h2>민감도 분석</h2></div>
+<div class="sec-sub">어떤 가정이 결론을 가장 크게 흔드는가</div>
+<div class="tight">
+<div class="chart-card">
+  <div class="ctitle">민감도 토네이도 — 가정별 내재 CAP 변동폭</div>
+  <div class="cnote">막대가 길수록 영향이 큰 변수. 자본비용(WACC)이 압도적 1순위, 초기 성장률이 2순위</div>
+  <svg viewBox="0 0 800 342" class="chart" role="img" aria-label="민감도 토네이도"><line x1="448.2" y1="24" x2="448.2" y2="310.0" class="basevert"/><text x="448.2" y="18.0" class="baselab">기본 6.8년</text><text x="150.0" y="332" class="ax-x">0</text><line x1="150.0" y1="24" x2="150.0" y2="310.0" class="grid"/><text x="237.1" y="332" class="ax-x">2</text><line x1="237.1" y1="24" x2="237.1" y2="310.0" class="grid"/><text x="324.3" y="332" class="ax-x">4</text><line x1="324.3" y1="24" x2="324.3" y2="310.0" class="grid"/><text x="411.4" y="332" class="ax-x">6</text><line x1="411.4" y1="24" x2="411.4" y2="310.0" class="grid"/><text x="498.6" y="332" class="ax-x">8</text><line x1="498.6" y1="24" x2="498.6" y2="310.0" class="grid"/><text x="585.7" y="332" class="ax-x">10</text><line x1="585.7" y1="24" x2="585.7" y2="310.0" class="grid"/><text x="672.9" y="332" class="ax-x">12</text><line x1="672.9" y1="24" x2="672.9" y2="310.0" class="grid"/><text x="760.0" y="332" class="ax-x">14</text><line x1="760.0" y1="24" x2="760.0" y2="310.0" class="grid"/><rect x="311.2" y="41.0" width="396.5" height="24" rx="3" class="tbar"/><text x="138" y="57.0" class="trow" text-anchor="end">자본비용 (WACC ±1%p)</text><text x="305.2" y="57.0" class="tend" text-anchor="end">3.7</text><text x="713.7" y="57.0" class="tend">12.8</text><rect x="372.2" y="87.0" width="305.0" height="24" rx="3" class="tbar"/><text x="138" y="103.0" class="trow" text-anchor="end">초기 매출성장 (±2%p)</text><text x="366.2" y="103.0" class="tend" text-anchor="end">5.1</text><text x="683.2" y="103.0" class="tend">12.1</text><rect x="380.9" y="133.0" width="139.4" height="24" rx="3" class="tbar"/><text x="138" y="149.0" class="trow" text-anchor="end">증분 ROIC / FCF전환</text><text x="374.9" y="149.0" class="tend" text-anchor="end">5.3</text><text x="526.4" y="149.0" class="tend">8.5</text><rect x="398.4" y="179.0" width="113.3" height="24" rx="3" class="tbar"/><text x="138" y="195.0" class="trow" text-anchor="end">최종 EBITA 마진</text><text x="392.4" y="195.0" class="tend" text-anchor="end">5.7</text><text x="517.6" y="195.0" class="tend">8.3</text><rect x="415.8" y="225.0" width="47.9" height="24" rx="3" class="tbar"/><text x="138" y="241.0" class="trow" text-anchor="end">페이드 비율</text><text x="409.8" y="241.0" class="tend" text-anchor="end">6.1</text><text x="469.7" y="241.0" class="tend">7.2</text><rect x="433.2" y="271.0" width="30.5" height="24" rx="3" class="tbar"/><text x="138" y="287.0" class="trow" text-anchor="end">영구성장률 g</text><text x="427.2" y="287.0" class="tend" text-anchor="end">6.5</text><text x="469.7" y="287.0" class="tend">7.2</text><text x="455" y="316" class="ax-title">가정 변동 시 시장 내재 CAP (년)</text></svg>
+</div>
+<table>
+<thead><tr><th>변수</th><th class="r">하향</th><th class="r">기본</th><th class="r">상향</th><th>해석</th></tr></thead>
+<tbody>
+<tr class="hl"><td>WACC (±1%p)</td><td class="r mono">3.7년</td><td class="r mono">6.8년</td><td class="r mono">12.8년</td><td>지배적 변수 · 볼록(convex)</td></tr>
+<tr><td>초기 매출성장 (±2%p)</td><td class="r mono">12.1년</td><td class="r mono">6.8년</td><td class="r mono">5.1년</td><td>성장 낮을수록 더 긴 CAP 필요</td></tr>
+<tr><td>증분 ROIC (20→100%)</td><td class="r mono">8.5년</td><td class="r mono">6.8년</td><td class="r mono">5.3년</td><td>FCF 전환율 영향</td></tr>
+<tr><td>최종 EBITA 마진</td><td class="r mono">8.3년</td><td class="r mono">6.8년</td><td class="r mono">5.7년</td><td>30%↔34%</td></tr>
+<tr><td>페이드 비율 f</td><td class="r mono">6.1년</td><td class="r mono">6.8년</td><td class="r mono">7.2년</td><td>둔감</td></tr>
+<tr><td>영구성장률 g</td><td class="r mono">7.2년</td><td class="r mono">6.8년</td><td class="r mono">6.5년</td><td>둔감</td></tr>
+</tbody>
+</table>
+<p class="tbl-note">결론: 내재 CAP 추정의 신뢰도는 본질적으로 WACC 추정의 신뢰도에 종속됩니다. 페이드·영구성장률 같은 터미널 가정에는 둔감하여, 장기 가정 논쟁보다 할인율 합의가 훨씬 중요합니다.</p>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">14</span><h2>시나리오 분석</h2></div>
+<div class="sec-sub">현재가를 정당화하려면 각 시나리오에서 몇 년의 CAP가 필요한가</div>
+<div class="tight">
+<div class="chart-card">
+  <div class="ctitle">시나리오별 "현재가 정당화에 필요한 CAP"</div>
+  <div class="cnote">낙관 시 2.8년이면 충분(주가가 싸 보임) / 비관 시 42년 필요(사실상 정당화 불가)</div>
+  <svg viewBox="0 0 800 228" class="chart" role="img" aria-label="시나리오별 내재 CAP"><rect x="120.0" y="20" width="128.0" height="182" fill="#7B9A5B" opacity="0.10"/><rect x="248.0" y="20" width="128.0" height="182" fill="#A9B86A" opacity="0.10"/><rect x="376.0" y="20" width="128.0" height="182" fill="#C9A24B" opacity="0.10"/><rect x="504.0" y="20" width="128.0" height="182" fill="#C77F3A" opacity="0.10"/><rect x="632.0" y="20" width="128.0" height="182" fill="#A4432F" opacity="0.10"/><text x="120.0" y="220" class="ax-x">0</text><text x="248.0" y="220" class="ax-x">5</text><text x="376.0" y="220" class="ax-x">10</text><text x="504.0" y="220" class="ax-x">15</text><text x="632.0" y="220" class="ax-x">20</text><text x="760.0" y="220" class="ax-x">25년+</text><rect x="120" y="38.0" width="71.7" height="30" rx="4" fill="var(--teal)" class="scbar"/><text x="108" y="51.0" class="scrow" text-anchor="end">낙관 (Bull)</text><text x="199.7" y="58.0" class="scval">2.8년</text><text x="108" y="67.0" class="scnote" text-anchor="end">AI 순풍·고마진·저페이드</text><rect x="120" y="96.0" width="175.2" height="30" rx="4" fill="var(--gold)" class="scbar"/><text x="108" y="109.0" class="scrow" text-anchor="end">기본 (Base)</text><text x="303.2" y="116.0" class="scval">6.8년</text><text x="108" y="125.0" class="scnote" text-anchor="end">컨센서스 수준</text><rect x="120" y="154.0" width="640.0" height="30" rx="4" fill="var(--clay)" class="scbar"/><polygon points="760.0,154.0 774.0,169.0 760.0,184.0" fill="var(--clay)" opacity="0.5"/><text x="108" y="167.0" class="scrow" text-anchor="end">비관 (Bear)</text><text x="780.0" y="174.0" class="scval">42.0년</text><text x="108" y="183.0" class="scnote" text-anchor="end">둔화·저마진·빠른 소멸</text></svg>
+</div>
+<ul class="clean">
+<li><b>낙관(Bull) 2.8년:</b> AI 순풍으로 성장 12%·마진 34%·느린 페이드를 가정하면 현재가는 2.8년의 초과수익만으로 정당화됩니다 — 저평가로 보입니다.</li>
+<li><b>기본(Base) 6.8년:</b> 컨센서스 수준 가정. "다소 비관~합리" 경계.</li>
+<li><b>비관(Bear) 42년:</b> 성장 둔화·마진 30%·빠른 경쟁 소멸을 가정하면 42년이라는 비현실적 CAP가 필요 — 이 경우 현재가는 비쌉니다.</li>
+</ul>
+<p style="font-size:14.5px">세 시나리오의 폭이 매우 넓다는 사실 자체가 핵심입니다. 결과는 'SAP의 미래 펀더멘털을 어떻게 보느냐'에 크게 의존하며, 본 가격대는 비관이 아닌 한 무리한 수준은 아닙니다. <span class="conf mid">중간 · 65%</span></p>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">15</span><h2>주가 → CAP 역산</h2></div>
+<div class="sec-sub">주가가 오를수록 요구되는 CAP는 가속적으로 늘어난다</div>
+<div class="tight">
+<div class="chart-card">
+  <div class="ctitle">주가별 시장 내재 CAP (기본 경제 가정 고정)</div>
+  <div class="cnote">곡선의 볼록성: 고가로 갈수록 내재 CAP가 급격히 길어짐 → 상단 매수의 위험</div>
+  <svg viewBox="0 0 800 440" class="chart" role="img" aria-label="주가별 내재 CAP 역산"><line x1="64" y1="386.0" x2="770" y2="386.0" class="grid"/><text x="54" y="390.0" class="ax-y">0년</text><line x1="64" y1="321.0" x2="770" y2="321.0" class="grid"/><text x="54" y="325.0" class="ax-y">10년</text><line x1="64" y1="256.1" x2="770" y2="256.1" class="grid"/><text x="54" y="260.1" class="ax-y">20년</text><line x1="64" y1="191.1" x2="770" y2="191.1" class="grid"/><text x="54" y="195.1" class="ax-y">30년</text><line x1="64" y1="126.1" x2="770" y2="126.1" class="grid"/><text x="54" y="130.1" class="ax-y">40년</text><line x1="64" y1="61.2" x2="770" y2="61.2" class="grid"/><text x="54" y="65.2" class="ax-y">50년</text><text x="92.2" y="408.0" class="ax-x">€120</text><line x1="92.2" y1="386" x2="92.2" y2="391" class="tick"/><text x="205.2" y="408.0" class="ax-x">€140</text><line x1="205.2" y1="386" x2="205.2" y2="391" class="tick"/><text x="318.2" y="408.0" class="ax-x">€160</text><line x1="318.2" y1="386" x2="318.2" y2="391" class="tick"/><text x="431.1" y="408.0" class="ax-x">€180</text><line x1="431.1" y1="386" x2="431.1" y2="391" class="tick"/><text x="544.1" y="408.0" class="ax-x">€200</text><line x1="544.1" y1="386" x2="544.1" y2="391" class="tick"/><text x="657.0" y="408.0" class="ax-x">€220</text><line x1="657.0" y1="386" x2="657.0" y2="391" class="tick"/><text x="770.0" y="408.0" class="ax-x">€240</text><line x1="770.0" y1="386" x2="770.0" y2="391" class="tick"/><text x="417" y="432" class="ax-title">주가 (EUR)</text><polyline points="64.0,374.3 92.2,370.7 120.5,367.1 148.7,363.5 177.0,359.9 205.2,356.2 233.4,352.2 261.7,347.2 289.9,341.8 318.2,336.2 346.4,330.2 374.6,323.8 402.9,316.7 431.1,308.9 459.4,299.8 487.6,288.7 515.8,274.7 544.1,259.5 572.3,242.9 600.6,224.6 628.8,204.4 657.0,181.6 685.3,155.6 713.5,125.3 741.8,89.0 770.0,43.7" class="vline" pathLength="1"/><line x1="291.4" y1="341.5" x2="291.4" y2="386" class="markline"/><circle cx="291.4" cy="341.5" r="6" class="mdot"/><text x="299.4" y="333.5" class="mlab">현재가 €155 → 6.8년</text><circle cx="657.0" cy="181.6" r="6" class="mdot2"/><text x="649.0" y="171.6" class="mlab2" text-anchor="end">평균 목표가 €220 → 31년</text></svg>
+</div>
+<table>
+<thead><tr><th>주가 (EUR)</th><th>ADR (USD)</th><th class="r">내재 CAP</th><th>해석</th></tr></thead>
+<tbody>
+<tr><td class="mono">€120</td><td class="mono">$140</td><td class="r mono">2.4년</td><td>매우 비관 (저평가 후보 구간)</td></tr>
+<tr class="hl"><td class="mono">€155.26</td><td class="mono">$181</td><td class="r mono">6.8년</td><td>현재가 · 다소 비관~합리</td></tr>
+<tr><td class="mono">€180</td><td class="mono">$210</td><td class="r mono">11.9년</td><td>중립~합리</td></tr>
+<tr><td class="mono">€200</td><td class="mono">$233</td><td class="r mono">19.5년</td><td>다소 낙관</td></tr>
+<tr><td class="mono">€220</td><td class="mono">$257</td><td class="r mono">31.5년</td><td>평균 목표가 · 과도한 낙관</td></tr>
+<tr><td class="mono">€240</td><td class="mono">$280</td><td class="r mono">52.7년</td><td>극단적 낙관</td></tr>
+</tbody>
+</table>
+<p class="tbl-note">참고: 애널리스트 평균 목표가(~€220 / ~$256, 컨센서스 "매수")는 EUR 기준 약 31.5년의 CAP를 내포합니다. 이는 USD 기준 할인율(H2)을 암묵적으로 적용하거나 본 모델보다 높은 성장·마진을 가정해야 정합적입니다 — 본 분석 가정과 시장 목표가 사이의 간극을 보여줍니다.</p>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">★</span><h2>리스크와 분기별 체크포인트</h2></div>
+<div class="sec-sub">결론을 뒤집을 수 있는 신호를 무엇으로 추적할 것인가</div>
+<div class="tight">
+<ul class="checks">
+<li><b>클라우드 백로그(CCB) 성장률</b><br><span class="m">+20% 아래로 둔화 시 성장 가정 하향 → 내재 CAP 상승(주가가 비싸 보임). 1월 쇼크의 진앙</span></li>
+<li><b>소프트웨어 지원 매출 감소 속도</b><br><span class="m">감소 가속 시 전체 성장률 추가 압박. 클라우드 성장과의 상쇄 균형이 관건</span></li>
+<li><b>비IFRS 영업마진 추이</b><br><span class="m">30%→32% 경로 이탈(정체) 시 마진 가정 하향. AI 비용효율(€20억 목표) 달성 여부</span></li>
+<li><b>독일 분트 10년 수익률 & EUR/USD</b><br><span class="m">금리 변동은 WACC에 직접 작용하는 최대 변수. ECB 회의 일정 주시</span></li>
+<li><b>제3자 유지보수 채택 확산</b><br><span class="m">Rimini Street 등 확대 시 클라우드 전환율 하락 → 성장·지속성 약화</span></li>
+<li><b>2027 ECC 전환 실행</b><br><span class="m">RISE/GROW 전환 건수, 경쟁사 이탈률. 전환 시점은 해자 재평가의 순간</span></li>
+<li><b>주식보상비용(SBC)과 희석</b><br><span class="m">실제 비용으로 처리했으므로 규모 확대 시 NOPAT·주당가치에 직접 영향</span></li>
+</ul>
+</div></section>
+<section class="reveal" style="background:var(--panel);border-radius:14px;padding:40px 34px;margin-top:40px;box-shadow:var(--shadow);border:1px solid var(--line)">
+<div class="sec-h"><span class="sec-no">∴</span><h2>한계와 가정</h2></div>
+<div class="sec-sub" style="margin-left:62px">이 분석을 신중하게 읽기 위한 전제 · 신뢰도 · 반증 조건</div>
+<div class="tight">
+<h3>핵심 가정과 신뢰도(베이지안)</h3>
+<ul class="clean">
+<li>시장 내재 CAP 중심값(≈7년) <b>방향성</b> — <span class="conf mid">중간 · 60%</span> 통화/WACC 선택에 크게 의존</li>
+<li>경제적 해자(전환비용)의 <b>존재와 지속성</b> — <span class="conf hi">높음 · 80%</span></li>
+<li>ROIC가 WACC를 초과(스프레드 ~10%p) — <span class="conf hi">높음 · 85%</span></li>
+<li>2027 ECC 종료가 향후 수년 클라우드 성장 견인 — <span class="conf hi">높음 · 75%</span></li>
+<li>클라우드 30%대 성장의 5년+ 지속 — <span class="conf mid">중간 · 55%</span></li>
+<li>최종 EBITA 마진 32% 도달 — <span class="conf mid">중간 · 50%</span></li>
+<li>ERP 시장 규모 추정(~$700~790억) — <span class="conf mid">중간 · 60%</span> 기관별 정의 상이</li>
+<li>"현재가가 과열은 아니다"라는 종합 판단 — <span class="conf mid">중간 · 70%</span></li>
+</ul>
+<h3>가장 약한 고리</h3>
+<p><b>1) WACC와 통화 선택.</b> 민감도상 단일 최대 변수이며, EUR↔USD 선택만으로 내재 CAP가 7년↔18년으로 달라집니다. 본 분석은 보고통화 정합성을 근거로 EUR 기준을 1차선으로 삼았으나, 이는 가정의 선택이지 객관적 진실이 아닙니다. <b>2) 증분 ROIC/FCF 전환율.</b> 30% 가정은 자산경량 모델에 근거하나 실제 재투자율에 따라 ±2년의 영향을 줍니다.</p>
+<h3>결론을 바꿀 새로운 증거</h3>
+<ul class="clean">
+<li>분트 수익률의 의미 있는 변동(예: 2.95%→4%) → WACC 상승 → 내재 CAP 상향(주가가 비싸 보임)</li>
+<li>클라우드 백로그 성장률이 20% 아래로 둔화 → 성장 가정 하향</li>
+<li>비IFRS 영업마진이 30%에서 정체 → 마진 가정 하향</li>
+<li>제3자 유지보수 확산 또는 2027 전환 실행 차질 → 해자 재평가</li>
+</ul>
+<h3>방법론적 한계</h3>
+<ul class="clean">
+<li>DCF는 단일 시점의 시장 가격을 역산하는 도구이며, 미래 펀더멘털 자체를 예측하지 않습니다.</li>
+<li>비IFRS 영업이익을 EBITA 대용치로 사용(SBC 비용 처리, 인수 무형자산 상각 가산). 회계 기준 선택에 따라 수치가 달라질 수 있습니다.</li>
+<li>peer 수치는 회계 기준·사업 구성이 상이하여 직접 비교에 한계가 있습니다(특히 Oracle 인프라 비중).</li>
+<li>주가 흐름도(섹션 08)는 주요 변곡점 기반 개념도이며 일별 정밀 차트가 아닙니다.</li>
+</ul>
+</div></section>
+<section class="reveal"><div class="sec-h"><span class="sec-no">⊕</span><h2>종합 판단 자료</h2></div>
+<div class="sec-sub">의사결정은 독자의 몫 — 본 절은 판단의 재료만 제시</div>
+<div class="tight">
+<p>SAP는 세계 거래 인프라에 가까운 1위 ERP 기업으로, 측정 가능한 해자(ROIC−WACC ~10%p)와 2027년 강제 전환이라는 카탈리스트를 갖고 있습니다. 반면 지원 매출 감소로 전체 성장률은 동종 최하위이며, AI 잠식 우려가 2025년 디레이팅을 불렀습니다. 현재 주가는 EUR 기준 약 7년의 초과수익 지속을 반영해 "다소 비관~합리" 구간이며, 2025년 고점 대비 −45%로 과거의 과열은 상당 부분 해소됐습니다.</p>
+<div class="agrid">
+  <div class="acell"><div class="k">강점</div><div class="v" style="font-size:17px;color:var(--teal)">측정된 해자</div><div class="n">전환비용·2027 전환·강한 현금흐름</div></div>
+  <div class="acell"><div class="k">균형 요인</div><div class="v" style="font-size:17px;color:var(--gold-deep)">밸류 위치</div><div class="n">EUR 합리, USD 다소 낙관 — 통화 의존</div></div>
+  <div class="acell"><div class="k">약점/위험</div><div class="v" style="font-size:17px;color:var(--clay)">성장 둔화</div><div class="n">지원매출 감소·제3자 지원·AI 경쟁</div></div>
+</div>
+<p style="font-size:14px;color:var(--ink-soft)">본 분석은 정보 제공을 목적으로 하며, 특정 종목의 매수·매도나 보유 비중을 권유하지 않습니다. 모든 가정과 출처는 위에 명시했으며, 새로운 분기 데이터가 확인되면 결론은 재평가되어야 합니다.</p>
+</div></section>
+<div class="footer">
+<b>사용 데이터 및 출처</b><br>
+SAP SE FY2025 실적(IFRS, 6-K)·2026 가이던스·1분기(2026-04-24) 실적 · Xetra 종가 2026-05-29(SAP.DE €155.26) · EUR/USD 1.166 · 독일 10년 분트(2.95%, tradingeconomics) · Damodaran 내재 ERP(2026-01) · 애널리스트 컨센서스 · 동종업계 최근 분기 공시 · 주가 내러티브: Reuters·Yahoo Finance·Investing.com·IG(2026.1.29 보도) · 산업 통계: Fortune Business Insights·Allied Market Research·Spherical Insights·market.us(2026) · 기업 연혁·전략: SAP 뉴스센터·SAP Sapphire 2026·Bloomberg·TIME·Fortune.<br><br>
+<b>방법론</b> 페이드(fade) 기반 잔존가치를 적용한 경쟁우위기간(CAP) 역산 DCF. 중간연도 할인, 주식보상비용 비용 처리, 보고통화(EUR) 기준 산정 후 ADR 환산. 모든 수치는 근사치이며 분석 기준일 2026-05-30 시점의 공개 정보에 기반합니다.<br><br>
+SAP · 기업·산업·CAP 종합 분석 · 2026-05-30
+</div></div>
+<script>
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.10});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script></body></html>

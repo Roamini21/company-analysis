@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFQ 양자 센싱 포커스 분석</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#030712;--s1:#111827;--s2:#1f2937;--brd:#374151;--brd2:rgba(55,65,81,.4);--t:#e5e7eb;--td:#9ca3af;--td2:#6b7280;--blue:#60a5fa;--green:#34d399;--red:#f87171;--amber:#fbbf24;--purple:#a78bfa;--cyan:#22d3ee}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--t);font-size:13px;line-height:1.7}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px}
+.hdr{margin-bottom:28px}
+.ticker{font-size:32px;font-weight:900;background:linear-gradient(135deg,var(--green),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:inline}
+.hdr-sub{font-size:12px;color:var(--td2);margin:2px 0 10px}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;border:1px solid}
+.b-green{background:rgba(52,211,153,.1);color:var(--green);border-color:rgba(52,211,153,.25)}
+.b-purple{background:rgba(167,139,250,.1);color:var(--purple);border-color:rgba(167,139,250,.25)}
+.b-amber{background:rgba(251,191,36,.1);color:var(--amber);border-color:rgba(251,191,36,.25)}
+.b-blue{background:rgba(96,165,250,.1);color:var(--blue);border-color:rgba(96,165,250,.25)}
+.b-red{background:rgba(248,113,113,.1);color:var(--red);border-color:rgba(248,113,113,.25)}
+.b-gray{background:rgba(156,163,175,.08);color:var(--td);border-color:rgba(156,163,175,.2)}
+.tabs{display:flex;gap:4px;margin-bottom:24px;overflow-x:auto;padding-bottom:4px}
+.tab{padding:7px 14px;font-size:12px;font-weight:500;border-radius:8px;border:1px solid transparent;background:none;color:var(--td2);cursor:pointer;white-space:nowrap;transition:.2s}
+.tab:hover{color:var(--td);border-color:var(--brd)}
+.tab.active{background:rgba(96,165,250,.12);color:var(--blue);border-color:rgba(96,165,250,.3)}
+.panel{display:none}.panel.active{display:block}
+h3{font-size:15px;font-weight:700;color:#fff;margin:24px 0 12px}
+h3:first-child{margin-top:0}
+p{margin-bottom:10px;color:var(--td)}
+.card{background:var(--s1);border:1px solid var(--brd2);border-radius:10px;padding:16px;margin-bottom:12px}
+.card-accent{border-left:2px solid var(--blue)}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.ct-blue{color:var(--blue)}.ct-green{color:var(--green)}.ct-red{color:var(--red)}.ct-amber{color:var(--amber)}.ct-purple{color:var(--purple)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.metric{text-align:center;padding:12px;border-radius:8px;background:rgba(17,24,39,.8);border:1px solid var(--brd2)}
+.metric .label{font-size:10px;color:var(--td2);margin-bottom:3px}
+.metric .val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700}
+.metric .sub{font-size:10px;color:var(--td2);margin-top:3px}
+.verdict-box{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.06));border:1px solid rgba(96,165,250,.18);border-radius:12px;padding:18px 20px;margin-bottom:16px}
+.verdict-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.alert{border-radius:8px;padding:14px 16px;margin:14px 0;font-size:12px;line-height:1.7}
+.alert-amber{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);color:#fcd34d}
+.alert-red{background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.2);color:#fca5a5}
+.alert-blue{background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.18);color:var(--blue)}
+.alert-purple{background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.18);color:#c4b5fd}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--s2);padding:8px 10px;text-align:left;font-weight:500;color:var(--td2);font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--brd2);position:sticky;top:0}
+td{padding:7px 10px;border-bottom:1px solid rgba(55,65,81,.25);font-size:11px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--brd2);border-radius:8px;margin:12px 0}
+.tbl-wrap table{margin:0}
+tr:hover{background:rgba(96,165,250,.02)}
+.mono{font-family:'JetBrains Mono',monospace}
+ul.items{list-style:none;padding:0}
+ul.items li{padding:5px 0 5px 18px;position:relative;font-size:12px;color:var(--td);line-height:1.6}
+ul.items li::before{content:'▸';position:absolute;left:0;color:var(--td2)}
+strong{color:#fff}
+.swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.swot-card{border-radius:10px;padding:14px;border:1px solid var(--brd2)}
+.swot-card h4{font-size:12px;font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.swot-card ul{list-style:none;padding:0}
+.swot-card li{padding:4px 0 4px 14px;position:relative;font-size:11px;color:var(--td);line-height:1.6}
+.swot-card li::before{content:'▸';position:absolute;left:0;color:var(--td2)}
+.s-green{background:rgba(52,211,153,.04)}.s-red{background:rgba(248,113,113,.04)}.s-blue{background:rgba(96,165,250,.04)}.s-amber{background:rgba(251,191,36,.04)}
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sc-card{border-radius:10px;background:var(--s1);padding:14px;text-align:left}
+.sc-card .sc-val{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;margin:4px 0}
+.sc-card .sc-prob{font-size:10px;color:var(--td2);margin-bottom:8px}
+.cross-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.cross-item{padding:10px 12px;border-radius:8px;background:rgba(17,24,39,.6);font-size:11px;color:var(--td)}
+.product-card{border:1px solid var(--brd2);border-radius:10px;background:rgba(17,24,39,.5);padding:14px;margin-bottom:10px}
+.product-card .pc-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.product-card .pc-name{font-size:13px;font-weight:700;color:#fff}
+.pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px}
+.pc-grid .lbl{color:var(--td2)}
+.pc-grid .tam{color:var(--blue)}
+.option-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.opt-card{padding:10px 12px;border-radius:8px;background:rgba(17,24,39,.6);font-size:11px}
+.footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--brd2);font-size:10px;color:var(--td2);line-height:1.8}
+@media(max-width:768px){.swot-grid,.scenario-grid,.grid2,.cross-grid,.pc-grid,.option-grid{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <span class="ticker">INFQ</span> <span style="font-size:14px;color:var(--td2);margin-left:8px">Infleqtion, Inc.</span>
+  <div class="hdr-sub">양자 센싱 포커스 · 테마/성장주 분석 · 2026.5.5 기준</div>
+  <div class="badges">
+    <span class="badge b-green">양자 센싱 = 단기 캐시카우 후보</span>
+    <span class="badge b-purple">양자 컴퓨팅 = 장기 콜옵션</span>
+    <span class="badge b-amber">현재 주가 $12.50 = 기대값 대비 프리미엄</span>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs" id="tabBar">
+  <button class="tab active" onclick="showTab(0)">테마 분석</button>
+  <button class="tab" onclick="showTab(1)">양자 센싱 딥다이브</button>
+  <button class="tab" onclick="showTab(2)">SWOT</button>
+  <button class="tab" onclick="showTab(3)">TAM & 시장 기회</button>
+  <button class="tab" onclick="showTab(4)">성장 시나리오</button>
+  <button class="tab" onclick="showTab(5)">종합 판단</button>
+</div>
+
+<!-- ============ TAB 0: 테마 분석 ============ -->
+<div class="panel active" id="p0">
+  <div class="verdict-box">
+    <div class="verdict-label">핵심 투자 테제</div>
+    <p style="color:var(--t);font-size:13px">INFQ의 단기~중기 가치는 양자 <strong style="color:var(--blue)">컴퓨팅</strong>보다 양자 <strong style="color:var(--green)">센싱</strong>에 있습니다. 양자 센싱은 이미 상업적으로 배포 가능한 제품이 존재하며, GPS-denied 환경에서의 국방 PNT(위치·항법·시각) 수요라는 구조적 테일윈드를 보유하고 있습니다. 양자 컴퓨팅은 장기 콜옵션(call option)으로 취급하는 것이 합리적입니다.</p>
+  </div>
+
+  <h3>왜 양자 센싱에 주목해야 하는가</h3>
+  <div class="grid3">
+    <div class="card card-accent"><div class="card-title ct-blue">1. 기술 성숙도</div>
+      <p style="font-size:11px">양자 컴퓨팅은 아직 "양자 우위"를 상업적으로 입증하지 못했으나, 양자 센싱(원자시계, 관성센서)은 <strong>이미 배포 가능한 제품</strong>이 존재. Infleqtion의 Tiqker 광학 원자시계는 GPS 대비 나노초→피코초 수준의 정밀도를 제공하며, 2026년 4월 Safran과 통합 솔루션을 상용 출시.</p>
+    </div>
+    <div class="card card-accent"><div class="card-title ct-blue">2. 구조적 수요 동인</div>
+      <p style="font-size:11px">GPS/GNSS 재밍·스푸핑 위협이 2026년 "일상적 운영 리스크"로 격상(발틱해, 중동). 미 국방부는 GPS 대안 PNT에 연간 $30M+ 투자 중이며, 의회는 FY26에 추가 $30M 배정. Assured PNT 시장은 2030년까지 <strong>$4.83B (CAGR 29.1%)</strong>로 성장 전망.</p>
+    </div>
+    <div class="card card-accent"><div class="card-title ct-blue">3. 매출 가시성</div>
+      <p style="font-size:11px">INFQ 매출의 대부분이 센싱 제품에서 발생. 경영진: "센싱 매출이 현금을 창출하여 컴퓨팅 플랫폼 성장에 재투입." 2025 Booked & Awarded $50M 중 상당 부분이 센싱 관련 계약. NASA QGG Pathfinder, ARPA-E 전력망 최적화, 국방부 정밀 타이밍 조달 계약 이행 중.</p>
+    </div>
+  </div>
+
+  <h3>분석의 기본 단위 (Unit Economics)</h3>
+  <p style="font-size:11px">도입기 기업 분석에서 가장 중요한 것은 "기업이 어떻게 돈을 버는가"의 기본 단위입니다.</p>
+  <div class="grid2">
+    <div style="border-radius:10px;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.15);padding:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px">양자 센싱 (캐시카우 후보)</div>
+      <ul class="items" style="font-size:11px">
+        <li>제품: Tiqker(원자시계), RF 수신기, 관성센서</li>
+        <li>단가: 센서당 수만~수십만 달러 (B2G/B2B)</li>
+        <li>수익 모델: 하드웨어 판매 + 유지보수/서비스</li>
+        <li>매출총이익률: ~55% (GAAP 2025)</li>
+        <li>핵심 고객: 국방부, NASA, 동맹국 군대, 통신사</li>
+        <li>반복 매출 가능성: 유지보수, 교체, 업그레이드 주기</li>
+      </ul>
+    </div>
+    <div style="border-radius:10px;background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.15);padding:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:8px">양자 컴퓨팅 (콜옵션)</div>
+      <ul class="items" style="font-size:11px">
+        <li>제품: 중성원자 양자 컴퓨터 (3대 판매 실적)</li>
+        <li>단가: 시스템당 수백만~수천만 달러</li>
+        <li>수익 모델: 시스템 판매 + 클라우드 접근(Superstaq)</li>
+        <li>매출 기여: 현재 소규모, 극히 lumpy</li>
+        <li>핵심 마일스톤: 30 논리큐비트(2026), 100(2028)</li>
+        <li>상업적 킬러앱: 아직 미확인 (재료과학, 최적화 등 연구단계)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>경쟁 포지셔닝: 왜 INFQ가 독특한가</h3>
+  <p style="font-size:11px">상장 양자 기업 중 "센싱 + 컴퓨팅" 풀스택을 갖춘 기업은 INFQ가 유일합니다.</p>
+  <div class="grid3" style="margin-top:8px">
+    <div class="card"><div class="card-title ct-blue">기술 시너지</div><p style="font-size:11px">센싱과 컴퓨팅 모두 중성원자 기반 → 핵심 레이저/진공/광학 기술 공유. R&D 비용 분산.</p></div>
+    <div class="card"><div class="card-title ct-green">매출 브릿지</div><p style="font-size:11px">센싱이 단기 캐시플로우 생성 → 컴퓨팅 R&D 자금 조달 → 외부 자금 의존도 감소.</p></div>
+    <div class="card"><div class="card-title ct-purple">고객 파이프라인</div><p style="font-size:11px">국방부·NASA 센싱 관계 → 양자 컴퓨팅 도입 시 기존 관계 활용 가능.</p></div>
+  </div>
+</div>
+
+<!-- ============ TAB 1: 양자 센싱 딥다이브 ============ -->
+<div class="panel" id="p1">
+  <h3 style="margin-top:0">Infleqtion 양자 센싱 제품 라인</h3>
+
+  <div class="product-card">
+    <div class="pc-head"><span class="pc-name">Tiqker™ 양자 광학 원자시계</span> <span class="badge b-green">상용 출시</span></div>
+    <div class="pc-grid">
+      <div><span class="lbl">타겟 시장:</span> GPS-denied PNT, 통신 동기화, 금융 타임스탬프, 데이터센터</div>
+      <div><span class="lbl">차별적 우위:</span> GPS 나노초 → 피코초 정밀도 (1000배+). GPS 없이 독립 운용 가능.</div>
+      <div><span class="lbl">파트너:</span> Safran Electronics & Defense (White Rabbit/SecureSync 통합 완료)</div>
+      <div><span class="lbl">계약:</span> 국방부 정밀 타이밍 조달 계약 이행 중, Quantum Corridor 실증 완료</div>
+      <div style="grid-column:1/-1"><span class="lbl">TAM:</span> <span class="tam">원자시계 세그먼트: 2035년 $400M+ (GMInsights). Assured PNT: 2030년 $4.83B</span></div>
+    </div>
+  </div>
+  <div class="product-card">
+    <div class="pc-head"><span class="pc-name">양자 RF 수신기 (Hedgehog)</span> <span class="badge b-amber">개발/초기 배포</span></div>
+    <div class="pc-grid">
+      <div><span class="lbl">타겟 시장:</span> 전자전(EW), 스펙트럼 모니터링, 신호정보(SIGINT), 통신</div>
+      <div><span class="lbl">차별적 우위:</span> 기존 안테나 대비 소형화, 광대역 수신, 잡음 내성. 재밍 환경에서 우수.</div>
+      <div><span class="lbl">파트너:</span> SAIC 등 방산업체와 협력</div>
+      <div><span class="lbl">계약:</span> 영국 정부 관련 계약 (매출 13% UK)</div>
+      <div style="grid-column:1/-1"><span class="lbl">TAM:</span> <span class="tam">전자전 시장: 2030년 $25B+ (글로벌). 양자 RF는 아직 니치.</span></div>
+    </div>
+  </div>
+  <div class="product-card">
+    <div class="pc-head"><span class="pc-name">양자 관성센서 (Inertial Sensing)</span> <span class="badge b-amber">개발 중</span></div>
+    <div class="pc-grid">
+      <div><span class="lbl">타겟 시장:</span> GPS-denied 항법, 자율주행, 우주 탐사, 해저 탐사</div>
+      <div><span class="lbl">차별적 우위:</span> 기존 MEMS/FOG/RLG 대비 드리프트 없는 장기 항법.</div>
+      <div><span class="lbl">파트너:</span> NASA(QGG Pathfinder → ISS 탑재), World View(성층권 테스트)</div>
+      <div><span class="lbl">계약:</span> NASA QGG Pathfinder, ISS 양자 하드웨어 발사(2026.4)</div>
+      <div style="grid-column:1/-1"><span class="lbl">TAM:</span> <span class="tam">관성항법 시장: 2030년 $15B+ (기존 기술 포함). 양자급 관성센서는 프리미엄 니치.</span></div>
+    </div>
+  </div>
+
+  <h3>Safran 파트너십의 전략적 의미</h3>
+  <div class="alert alert-blue">
+    Safran Electronics & Defense는 항공우주·국방 PNT 분야 글로벌 리더(연매출 €27B+, 직원 10만+)입니다. INFQ-Safran 파트너십은 단순 기술 통합을 넘어 <strong>글로벌 방산 유통 채널</strong>에 대한 접근을 의미합니다. Safran의 White Rabbit/SecureSync 고객 기반(NATO 동맹국 군대, 통신사)에 Tiqker를 즉시 제안할 수 있는 구조이며, 이는 직원 205명의 소규모 기업이 독자적으로 구축하기 극히 어려운 Go-to-Market 역량입니다. <strong style="color:var(--amber)">확신도: 중간(~55%)</strong> — 파트너십의 실제 매출 전환 속도는 아직 미확인.
+  </div>
+
+  <h3>양자 센싱 경쟁 구도</h3>
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>기업</th><th>기술</th><th>주요 제품</th><th>장점</th><th>약점</th></tr>
+      <tr style="background:rgba(96,165,250,.04)"><td><strong style="color:var(--blue)">Infleqtion (INFQ)</strong></td><td>Cold Atom</td><td>원자시계, RF수신기, 관성센서</td><td>풀스택, Safran 유통, 상장 자금</td><td>소규모, 신생 상장기업</td></tr>
+      <tr><td>AOSense</td><td>Cold Atom</td><td>원자관성센서, 중력계</td><td>NASA 납품 실적, 높은 정밀도</td><td>비상장, 제한된 규모</td></tr>
+      <tr><td>Honeywell/Quantinuum</td><td>이온트랩/NV다이아몬드</td><td>자기센서, PNT</td><td>방산 유통망, 대규모 R&D</td><td>양자센싱은 부차적 사업</td></tr>
+      <tr><td>Microchip Tech</td><td>전통 원자시계</td><td>루비듐/세슘 시계</td><td>가격 경쟁력, 대량 생산</td><td>양자급 정밀도 부족</td></tr>
+      <tr><td>SandboxAQ</td><td>다양</td><td>AI+양자 센싱 플랫폼</td><td>Google 스핀오프, AI 통합</td><td>비상장, 센싱 전용 아님</td></tr>
+      <tr><td>Collins Aerospace</td><td>전통 PNT</td><td>MAPS GEN II</td><td>국방부 대형계약($583M)</td><td>양자 기술 아닌 전통 PNT</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ============ TAB 2: SWOT ============ -->
+<div class="panel" id="p2">
+  <p style="font-size:11px;color:var(--td2)">양자 센싱 사업에 포커스한 SWOT 분석입니다.</p>
+  <div class="swot-grid">
+    <div class="swot-card s-green">
+      <h4 style="color:var(--green)">💪 강점 (Strengths)</h4>
+      <ul>
+        <li>상장 양자기업 중 유일한 '센싱+컴퓨팅' 풀스택 → 기술 시너지 및 비용 분산</li>
+        <li>Tiqker 원자시계 상용 출시 완료, Safran과 통합 검증 → 즉시 배포 가능</li>
+        <li>중성원자 기술: 상온 근접 운용, 확장성, 소형화 잠재력(PIC 통합)</li>
+        <li>현금 $550M+, 부채 $0 → 13년+ 캐시 런웨이, 동종 대비 2위 재무 포지션</li>
+        <li>NASA ISS 탑재, 국방부/DARPA/ARPA-E 계약 → 정부 검증 실적</li>
+        <li>Safran 파트너십 → 글로벌 방산 유통망, NATO 동맹국 고객 확보 가능</li>
+        <li>매출 100% 유기적(Organic), 인수 의존 아닌 자체 성장</li>
+      </ul>
+    </div>
+    <div class="swot-card s-red">
+      <h4 style="color:var(--red)">⚠️ 약점 (Weaknesses)</h4>
+      <ul>
+        <li>직원 205명 소규모 → 대형 방산 계약 이행 능력 의문</li>
+        <li>매출 70% 미국 정부 집중 → 단일 고객/정책 의존 리스크</li>
+        <li>GAAP 영업손실 −$35.3M, NOPAT 음수 → 자력 현금창출 미입증</li>
+        <li>SPAC 상장 3개월 차 → 베타/변동성 데이터 불충분</li>
+        <li>센싱 vs 컴퓨팅 매출 세분화 미공개 → 센싱 수익성 파악 불가</li>
+        <li>경영진 VC 배경 → 방산업 장기 조달 사이클 경험 의문</li>
+        <li>캐시번 $36M/년 + 2026 증가 예고 → 흑자전환 장기간 소요</li>
+      </ul>
+    </div>
+    <div class="swot-card s-blue">
+      <h4 style="color:var(--blue)">🚀 기회 (Opportunities)</h4>
+      <ul>
+        <li>GPS/GNSS 재밍·스푸핑 급증 → Assured PNT 시장 CAGR 29.1% ($4.83B by 2030)</li>
+        <li>양자센서 시장 CAGR 12~25% (2035년 $1.5~1.9B), 국방 비중 40%+</li>
+        <li>미 의회 FY26 PNT 추가 예산 $30M+, 상업 PNT 실증 $15M 별도</li>
+        <li>호르무즈 해협 봉쇄, 중동 분쟁 → GPS 위협 현실화, 대안 PNT 가속</li>
+        <li>5G/데이터센터 정밀 타이밍 수요 → 상업 시장 (금융, 통신, 자율주행)</li>
+        <li>PIC 기술로 센서 크기·비용 '수 자릿수 개선' → 대량 생산 가능성</li>
+        <li>양자 컴퓨팅 상업화 시 '2단 로켓' → 현재 가격에 무료 콜옵션</li>
+        <li>NATO, AUKUS, 인도태평양 동맹국 양자 PNT 도입 확대</li>
+      </ul>
+    </div>
+    <div class="swot-card s-amber">
+      <h4 style="color:var(--amber)">⛔ 위협 (Threats)</h4>
+      <ul>
+        <li>Collins Aerospace MAPS GEN II ($583M) 등 전통 PNT 대형업체 경쟁</li>
+        <li>Honeywell/Quantinuum, SandboxAQ 등 대기업 양자센싱 진출 가속</li>
+        <li>QuEra(동일 중성원자) 등 비상장사의 센싱 제품 출시 가능성</li>
+        <li>양자 섹터 전체 버블 붕괴 시 심리적 contagion → 동반 하락</li>
+        <li>국방 예산 삭감/정권 교체 → 정부 조달 지연 또는 취소</li>
+        <li>양자 센서 소형화·가격 하락 지연 → 상업 시장 진입 지연</li>
+        <li>수출 통제(ITAR, EAR) 강화 → 국제 매출 제약</li>
+        <li>IonQ SkyWater 인수로 수직통합 후 센싱 확장 가능성</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title ct-purple">SWOT 크로스 분석: 핵심 전략 시사점</div>
+    <div class="cross-grid">
+      <div class="cross-item"><strong style="color:var(--green)">SO(강점×기회):</strong> Safran 유통망 + PNT 시장 폭발 = 센싱 매출 가속. PIC 소형화로 상업 시장 진입 시 대량생산 우위.</div>
+      <div class="cross-item"><strong style="color:var(--red)">WO(약점×기회):</strong> 소규모 조직으로 급성장 시장 대응 한계. Safran에 Go-to-Market 의존도 심화 가능.</div>
+      <div class="cross-item"><strong style="color:var(--blue)">ST(강점×위협):</strong> $550M 현금으로 경쟁 격화 기간 버틸 여력 충분. NASA/국방부 실적으로 대기업 대비 기술 신뢰도 확보.</div>
+      <div class="cross-item"><strong style="color:var(--amber)">WT(약점×위협):</strong> 정부 집중 + 예산 삭감 = 최악 시나리오. SPAC 변동성 + 섹터 버블 = 단기 하방 리스크 큼.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB 3: TAM ============ -->
+<div class="panel" id="p3">
+  <h3 style="margin-top:0">TAM → SAM → SOM 분석</h3>
+  <p style="font-size:11px">도입기 기업에서 TAM 분석은 DCF보다 유용한 방향성 지표입니다. TAM을 "INFQ가 가치를 창출하면서 점유할 수 있는 범위"로 정의합니다.</p>
+
+  <div class="grid3">
+    <div class="metric"><div class="label">TAM (양자센서 글로벌 2035)</div><div class="val" style="color:var(--blue)">$1.5~1.9B</div><div class="sub">CAGR 12~16%</div></div>
+    <div class="metric"><div class="label">SAM (국방PNT+통신 타이밍)</div><div class="val" style="color:var(--green)">~$800M</div><div class="sub">TAM의 40~50%</div></div>
+    <div class="metric"><div class="label">SOM (INFQ 현실적 점유)</div><div class="val" style="color:var(--purple)">$80~200M</div><div class="sub">SAM의 10~25% (장기 목표)</div></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title ct-blue">TAM 구성 (양자 센싱 관련 시장, 2030~2035 기준)</div>
+    <div class="tbl-wrap" style="margin:0">
+      <table>
+        <tr><th>시장 세그먼트</th><th style="text-align:right">2025</th><th style="text-align:right">2030E</th><th style="text-align:right">2035E</th><th style="text-align:right">CAGR</th><th>INFQ 관련성</th></tr>
+        <tr><td>양자센서 전체</td><td class="mono" style="text-align:right">$0.4B</td><td class="mono" style="text-align:right">$0.7~1.0B</td><td class="mono" style="text-align:right">$1.5~1.9B</td><td class="mono" style="text-align:right">12~16%</td><td>직접 (핵심 시장)</td></tr>
+        <tr><td>&nbsp;&nbsp;원자시계 세그먼트</td><td class="mono" style="text-align:right">$130M</td><td class="mono" style="text-align:right">$250M</td><td class="mono" style="text-align:right">$400M+</td><td class="mono" style="text-align:right">12%</td><td>Tiqker 직접 경쟁</td></tr>
+        <tr><td>&nbsp;&nbsp;Cold-Atom (중성원자)</td><td class="mono" style="text-align:right">44% 점유</td><td class="mono" style="text-align:right">확대 중</td><td class="mono" style="text-align:right">50%+</td><td class="mono" style="text-align:right">—</td><td>INFQ 핵심 기술</td></tr>
+        <tr><td>Assured PNT (국방)</td><td class="mono" style="text-align:right">$1.1B</td><td class="mono" style="text-align:right">$4.83B</td><td class="mono" style="text-align:right">$8B+</td><td class="mono" style="text-align:right">29%</td><td>Tiqker + 관성센서</td></tr>
+        <tr><td>GPS Anti-Jam</td><td class="mono" style="text-align:right">$3B+</td><td class="mono" style="text-align:right">$5B+</td><td class="mono" style="text-align:right">$8B+</td><td class="mono" style="text-align:right">~10%</td><td>간접 (보완재)</td></tr>
+        <tr><td>양자컴퓨팅 전체</td><td class="mono" style="text-align:right">$1.6B</td><td class="mono" style="text-align:right">$7.3B</td><td class="mono" style="text-align:right">$25B+</td><td class="mono" style="text-align:right">35%</td><td>콜옵션 (장기)</td></tr>
+      </table>
+    </div>
+    <p style="font-size:10px;color:var(--td2);margin-top:8px">출처: GMInsights, Mordor Intelligence, BCC Research, ResearchAndMarkets. 조사기관별 편차 큼.</p>
+  </div>
+
+  <h3>기준 금리 현실 점검 (Base Rate Check)</h3>
+  <div class="alert alert-amber">
+    <ul class="items">
+      <li><strong>기업 생존율:</strong> 상장 기업 100개 중 18개만 장기 생존 (1976-2019). 도입기 기업 중 3년 내 성장단계 진입은 29%에 불과.</li>
+      <li><strong>도입기 주식 성과:</strong> 도입기 기업 포트폴리오의 연간 초과수익률은 1.8%로 전 단계 중 최저, 변동성(26.7%)은 최고 (1990-2024).</li>
+      <li><strong>성장률 지속성:</strong> 3년간 20%+ 성장 기업 중 향후 3년간 20%+ 유지는 31%. 마이너스 전환은 22%.</li>
+      <li><strong>양자 섹터 특수성:</strong> 상업적 "킬러 앱" 미확인, 양자 우위 일정 불확실. P/S 배수 94~735배는 역사적으로 지속 불가능.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ TAB 4: 시나리오 ============ -->
+<div class="panel" id="p4">
+  <h3 style="margin-top:0">센싱 중심 성장 시나리오 (5년: 2026~2030)</h3>
+  <p style="font-size:11px;color:var(--td2)">양자 컴퓨팅은 별도 분리하여 "콜옵션 가치"로만 반영합니다.</p>
+
+  <div class="scenario-grid">
+    <div class="sc-card" style="border:1px solid rgba(52,211,153,.25)">
+      <div style="font-size:13px;font-weight:900;color:var(--green)">강세</div>
+      <div class="sc-val" style="color:var(--green)">$15~25</div>
+      <div class="sc-prob">확률: 15~20% | 2030 매출: $200~300M</div>
+      <p style="font-size:11px;color:var(--td)">Safran 채널 통해 NATO 대규모 계약, PIC 소형화 성공으로 상업 시장 진입. 센싱 EBITA 마진 30%+.</p>
+      <div style="font-size:10px;color:var(--td2);font-weight:700;margin-top:8px">핵심 드라이버:</div>
+      <ul class="items" style="font-size:10px">
+        <li>Safran 채널 NATO 5개국+ 대량 조달</li>
+        <li>PIC 소형화→원자시계 가격 1/5 하락</li>
+        <li>5G/데이터센터 타이밍 상업 시장 개화</li>
+        <li>양자컴퓨팅 마일스톤 서프라이즈</li>
+      </ul>
+    </div>
+    <div class="sc-card" style="border:1px solid rgba(96,165,250,.25)">
+      <div style="font-size:13px;font-weight:900;color:var(--blue)">기본</div>
+      <div class="sc-val" style="color:var(--blue)">$6~12</div>
+      <div class="sc-prob">확률: 40~50% | 2030 매출: $80~120M</div>
+      <p style="font-size:11px;color:var(--td)">센싱 매출 CAGR 25~30%, 국방 중심 안정 성장. 마진 개선 점진적. 컴퓨팅은 연구 단계 유지.</p>
+      <div style="font-size:10px;color:var(--td2);font-weight:700;margin-top:8px">핵심 드라이버:</div>
+      <ul class="items" style="font-size:10px">
+        <li>국방부/NASA 계약 순차 이행</li>
+        <li>Safran 파트너십 점진적 매출 기여</li>
+        <li>컴퓨팅 로드맵 부분 달성 (30 큐비트)</li>
+        <li>캐시번 연 $40~50M 유지</li>
+      </ul>
+    </div>
+    <div class="sc-card" style="border:1px solid rgba(248,113,113,.25)">
+      <div style="font-size:13px;font-weight:900;color:var(--red)">약세</div>
+      <div class="sc-val" style="color:var(--red)">$1~4</div>
+      <div class="sc-prob">확률: 25~35% | 2030 매출: $40~60M</div>
+      <p style="font-size:11px;color:var(--td)">정부 예산 삭감, 계약 지연. 전통 PNT 업체에 시장 뺏김. 양자 섹터 버블 붕괴.</p>
+      <div style="font-size:10px;color:var(--td2);font-weight:700;margin-top:8px">핵심 드라이버:</div>
+      <ul class="items" style="font-size:10px">
+        <li>국방 예산 삭감/조달 지연</li>
+        <li>Collins/Honeywell이 PNT 시장 장악</li>
+        <li>양자 섹터 전체 50%+ 조정</li>
+        <li>기술 로드맵 실패 → 추가 자금 필요</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>확률 가중 기대값</h3>
+  <div class="grid4">
+    <div class="metric"><div class="label">강세 ($20 × 17.5%)</div><div class="val" style="color:var(--green)">$3.50</div></div>
+    <div class="metric"><div class="label">기본 ($9 × 45%)</div><div class="val" style="color:var(--blue)">$4.05</div></div>
+    <div class="metric"><div class="label">약세 ($2.5 × 30%)</div><div class="val" style="color:var(--red)">$0.75</div></div>
+    <div class="metric"><div class="label">확률 가중 기대값</div><div class="val" style="color:var(--amber)">~$8.30</div><div class="sub">vs 현재 $12.50</div></div>
+  </div>
+
+  <div class="alert alert-amber" style="margin-top:16px">
+    <strong>해석:</strong> 확률 가중 기대값 ~$8.30은 현재 주가 $12.50 대비 약 <strong>34% 하방</strong>에 위치. 현 주가는 기본 시나리오 상단~강세 시나리오 하단을 반영 중. 양자 컴퓨팅 "콜옵션 가치"는 미포함 → 양자 우위 조기 달성 시 비선형적 상승 가능. <strong>확신도: 낮음(~35%)</strong>
+  </div>
+
+  <h3>실제옵션(Real Option) 관점</h3>
+  <div class="alert alert-purple">
+    INFQ를 실제옵션 묶음(portfolio of real options)으로 볼 수 있습니다:
+  </div>
+  <div class="option-grid">
+    <div class="opt-card"><div style="font-weight:700;color:var(--green);margin-bottom:4px">옵션 1: 센싱 캐시카우</div><div style="color:var(--td)">행사 조건: Safran 채널 대량 조달 계약. 내재 가치: 센싱 매출 $100M+ 시 $3~6/주.</div></div>
+    <div class="opt-card"><div style="font-weight:700;color:var(--purple);margin-bottom:4px">옵션 2: 양자 컴퓨팅 상업화</div><div style="color:var(--td)">행사 조건: 100+ 논리큐비트 + 킬러앱. 내재 가치: 컴퓨팅 매출 $500M+ 시 $10~30+/주.</div></div>
+    <div class="opt-card"><div style="font-weight:700;color:var(--blue);margin-bottom:4px">옵션 3: M&A 타겟</div><div style="color:var(--td)">행사 조건: 빅테크 양자센싱 역량 확보 필요. 내재 가치: 전략적 프리미엄 50~100%.</div></div>
+  </div>
+</div>
+
+<!-- ============ TAB 5: 종합 판단 ============ -->
+<div class="panel" id="p5">
+  <div class="verdict-box">
+    <div class="verdict-label">종합 판단</div>
+    <p style="color:var(--t);font-size:13px">INFQ는 양자 센싱이라는 <strong>단기 상업화 가능한 사업</strong>과 양자 컴퓨팅이라는 <strong>장기 콜옵션</strong>을 동시에 보유한 구조적으로 독특한 자산입니다. 현재 주가 $12.50은 확률 가중 기대값 ~$8.30 대비 프리미엄을 반영하고 있어, 시장은 기본 시나리오 이상의 결과를 기대하는 것으로 보입니다. 이 프리미엄이 정당화되려면 <strong style="color:var(--amber)">Safran 채널의 실제 매출 전환</strong>과 <strong style="color:var(--amber)">논리 큐비트 30개 달성</strong>이 2026년 하반기에 가시화되어야 합니다.</p>
+  </div>
+
+  <h3>모니터링 매트릭스</h3>
+  <div class="tbl-wrap">
+    <table>
+      <tr><th>지표</th><th>강세 신호</th><th>약세 신호</th><th>확인 시기</th></tr>
+      <tr><td><strong>센싱 매출 비중</strong></td><td style="color:var(--green)">분기별 센싱 매출 공개, 50%+</td><td style="color:var(--red)">센싱/컴퓨팅 미구분 지속</td><td style="color:var(--td2)">Q2 2026</td></tr>
+      <tr><td><strong>Safran 파트너십</strong></td><td style="color:var(--green)">NATO 국가 대량 주문 발표</td><td style="color:var(--red)">공동 마케팅만, 실 매출 없음</td><td style="color:var(--td2)">2026 하반기</td></tr>
+      <tr><td><strong>논리 큐비트</strong></td><td style="color:var(--green)">30개 달성 + 외부 검증</td><td style="color:var(--red)">지연 또는 경쟁사 추월</td><td style="color:var(--td2)">Q3~Q4 2026</td></tr>
+      <tr><td><strong>캐시번 추이</strong></td><td style="color:var(--green)">캐시번 감소 or 유지</td><td style="color:var(--red)">캐시번 $50M+ 급증</td><td style="color:var(--td2)">매 분기</td></tr>
+      <tr><td><strong>파이프라인 전환</strong></td><td style="color:var(--green)">$300M 중 20%+ 계약 전환</td><td style="color:var(--red)">전환율 10% 미만</td><td style="color:var(--td2)">2026 연말</td></tr>
+      <tr><td><strong>P/S 배수</strong></td><td style="color:var(--green)">동종 대비 디스카운트 유지</td><td style="color:var(--red)">동종과 수렴 (80x+)</td><td style="color:var(--td2)">지속 관찰</td></tr>
+      <tr><td><strong>양자 PNT 예산</strong></td><td style="color:var(--green)">국방부 양자PNT 전용 예산 신설</td><td style="color:var(--red)">전통 PNT 회귀, 양자 축소</td><td style="color:var(--td2)">FY27 예산안</td></tr>
+    </table>
+  </div>
+
+  <h3>한계와 가정</h3>
+  <div class="alert alert-purple">
+    <p style="margin-bottom:8px"><strong style="color:var(--purple)">핵심 가정:</strong> 양자 센싱 TAM이 실제로 CAGR 12~16%로 성장한다는 전제. 시장 조사기관별 추정치가 2배 이상 차이남(2035년 $1.5B vs $1.9B).</p>
+    <p style="margin-bottom:8px"><strong style="color:var(--purple)">확신도 낮은 지점:</strong> (1) Safran 파트너십의 실제 매출 기여도 미확인, (2) 센싱/컴퓨팅 매출 구분 미공개 → 센싱 성장률 추정 불가, (3) 시나리오별 확률 배분은 주관적 판단.</p>
+    <p style="margin-bottom:8px"><strong style="color:var(--purple)">결론이 틀릴 조건:</strong> (1) 양자 컴퓨팅 킬러 앱 확보 시 → 현 주가 정당화 가능, (2) INFQ가 M&A 타겟 → 전략적 프리미엄, (3) 양자 섹터 버블 붕괴 시 펀더멘털 무관 하락.</p>
+    <p><strong style="color:var(--purple)">다음 검증 단계:</strong> Q2 2026 실적에서 센싱/컴퓨팅 매출 세분화 확인, Safran 매출 기여 공개, 논리 큐비트 30개 달성 확인.</p>
+  </div>
+
+  <div class="footer">
+    <p>데이터 기준: 2026.5.5 | 주가 $12.50 | 시가총액 $2.69B | 재무: 2025 FY 감사보고서 | TAM: GMInsights, Mordor Intelligence, BCC Research, ResearchAndMarkets 종합 | PNT 시장: ResearchAndMarkets FY26 | ERP: 다모다란 2026.1 (4.23%) | 10Y UST: 4.38% (5/1) | BEI: 2.46% (4/26)</p>
+    <p style="margin-top:8px;color:#4b5563">본 분석은 정보 제공 목적이며, 특정 증권의 매수·매도를 권유하지 않습니다.</p>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+function showTab(idx) {
+  document.querySelectorAll('.panel').forEach((p,i)=>{p.classList.toggle('active',i===idx)});
+  document.querySelectorAll('.tab').forEach((t,i)=>{t.classList.toggle('active',i===idx)});
+}
+</script>
+</body>
+</html>

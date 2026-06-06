@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nokia (NOK) CAP 기반 투자 분석</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Libre+Franklin:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --nokia-blue: #124191;
+  --nokia-light: #1B5FD1;
+  --accent: #00C9A7;
+  --accent2: #FF6B35;
+  --bg-dark: #0A0F1C;
+  --bg-card: #111827;
+  --bg-card2: #1A2332;
+  --text-primary: #E8ECF2;
+  --text-secondary: #8B95A8;
+  --text-muted: #5A6577;
+  --border: #1E293B;
+  --positive: #00C9A7;
+  --negative: #FF4757;
+  --warning: #FFB347;
+  --gradient1: linear-gradient(135deg, #124191 0%, #00C9A7 100%);
+  --gradient2: linear-gradient(135deg, #0A0F1C 0%, #1A2332 100%);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: 'Libre Franklin', sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  font-size: 15px;
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+h1, h2, h3 { font-family: 'DM Serif Display', serif; font-weight: 400; }
+h1 { font-size: 2.8rem; line-height: 1.2; }
+h2 { font-size: 1.8rem; color: var(--accent); margin-bottom: 20px; line-height: 1.3; }
+h3 { font-size: 1.25rem; color: var(--text-primary); margin-bottom: 12px; }
+p { margin-bottom: 14px; color: var(--text-secondary); }
+strong { color: var(--text-primary); font-weight: 600; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Header */
+.hero {
+  position: relative;
+  padding: 80px 0 60px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -30%;
+  width: 160%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 20%, rgba(18,65,145,0.25) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 80%, rgba(0,201,167,0.1) 0%, transparent 40%);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 1; }
+.ticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(18,65,145,0.3);
+  border: 1px solid rgba(18,65,145,0.5);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--nokia-light);
+  margin-bottom: 20px;
+}
+.ticker-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+.hero h1 { margin-bottom: 12px; }
+.hero h1 span { color: var(--nokia-light); }
+.hero-subtitle { font-size: 18px; color: var(--text-secondary); max-width: 700px; line-height: 1.6; }
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.hero-meta-item { display: flex; flex-direction: column; gap: 4px; }
+.hero-meta-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); }
+.hero-meta-value { font-size: 22px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+.hero-meta-value.up { color: var(--positive); }
+.hero-meta-value.down { color: var(--negative); }
+
+/* Conclusion Box */
+.conclusion-box {
+  background: linear-gradient(135deg, rgba(18,65,145,0.2) 0%, rgba(0,201,167,0.08) 100%);
+  border: 1px solid rgba(18,65,145,0.4);
+  border-left: 4px solid var(--nokia-light);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin: 40px 0;
+}
+.conclusion-box h3 { color: var(--nokia-light); font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; font-family: 'Libre Franklin', sans-serif; font-weight: 700; }
+.conclusion-box p { color: var(--text-primary); font-size: 16px; line-height: 1.8; margin-bottom: 0; }
+
+/* Sections */
+.section {
+  padding: 60px 0;
+  border-bottom: 1px solid var(--border);
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.section-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+/* Cards */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 24px 0; }
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.card:hover { transform: translateY(-2px); border-color: var(--nokia-light); }
+.card-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+.card-value { font-size: 28px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; }
+.card-desc { font-size: 13px; color: var(--text-secondary); }
+
+/* Tables */
+.table-wrapper { overflow-x: auto; margin: 20px 0; border-radius: 12px; border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  background: var(--bg-card2);
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  padding: 12px 16px;
+  text-align: right;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+}
+th:first-child { text-align: left; }
+td {
+  padding: 10px 16px;
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  border-bottom: 1px solid rgba(30,41,59,0.5);
+  color: var(--text-secondary);
+}
+td:first-child { text-align: left; font-family: 'Libre Franklin', sans-serif; color: var(--text-primary); font-weight: 500; }
+tr:hover td { background: rgba(18,65,145,0.05); }
+.row-highlight td { background: rgba(0,201,167,0.05); color: var(--accent); font-weight: 600; }
+
+/* Infographics */
+.revenue-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 24px 0;
+}
+.revenue-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.revenue-bar-label {
+  min-width: 200px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.revenue-bar-track {
+  flex: 1;
+  height: 36px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.revenue-bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+}
+.revenue-bar-pct {
+  min-width: 50px;
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* SWOT */
+.swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+.swot-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--border);
+}
+.swot-card h4 {
+  font-family: 'Libre Franklin', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.swot-card ul { list-style: none; }
+.swot-card li {
+  padding: 6px 0;
+  padding-left: 20px;
+  position: relative;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.swot-card li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: inherit;
+  opacity: 0.5;
+}
+.swot-s h4 { color: #00C9A7; }
+.swot-s li::before { color: #00C9A7; }
+.swot-w h4 { color: #FF6B35; }
+.swot-w li::before { color: #FF6B35; }
+.swot-o h4 { color: #1B9CFC; }
+.swot-o li::before { color: #1B9CFC; }
+.swot-t h4 { color: #FF4757; }
+.swot-t li::before { color: #FF4757; }
+
+/* Moat Diagram */
+.moat-layers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  margin: 30px 0;
+}
+.moat-layer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 50%;
+  border: 2px solid;
+  transition: transform 0.3s;
+}
+.moat-layer:hover { transform: scale(1.03); }
+.moat-layer-text {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.moat-layer-sub {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  display: block;
+  margin-top: 4px;
+}
+
+/* Peer Comparison */
+.peer-table td.company-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Sensitivity */
+.sensitivity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 24px 0; }
+.sensitivity-table { margin: 0; }
+.sensitivity-table th.corner { background: var(--nokia-blue); color: #fff; }
+.cell-green { color: var(--positive); }
+.cell-red { color: var(--negative); }
+.cell-yellow { color: var(--warning); }
+
+/* Risk */
+.risk-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.risk-item h4 {
+  font-family: 'Libre Franklin', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.risk-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.risk-high { background: rgba(255,71,87,0.15); color: var(--negative); }
+.risk-medium { background: rgba(255,179,71,0.15); color: var(--warning); }
+.risk-low { background: rgba(0,201,167,0.15); color: var(--positive); }
+
+/* Footer */
+.footer {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+.footer p { color: var(--text-muted); font-size: 12px; }
+
+/* Nav */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,15,28,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-link {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  padding: 6px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.nav-link:hover, .nav-link.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Assumptions Box */
+.assumptions-box {
+  background: var(--bg-card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin: 20px 0;
+}
+.assumptions-box h4 {
+  font-family: 'Libre Franklin', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.assumptions-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px 24px;
+}
+.assumption-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(30,41,59,0.3);
+}
+.assumption-item span:first-child { color: var(--text-secondary); }
+.assumption-item span:last-child { font-family: 'JetBrains Mono', monospace; font-weight: 500; color: var(--text-primary); }
+
+/* Value chain */
+.flow-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0;
+  padding: 20px;
+}
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 130px;
+}
+.flow-node.highlight {
+  background: rgba(18,65,145,0.2);
+  border-color: var(--nokia-light);
+  color: var(--nokia-light);
+}
+.flow-arrow {
+  color: var(--text-muted);
+  font-size: 20px;
+}
+
+/* Lifecycle */
+.lifecycle-bar {
+  display: flex;
+  margin: 24px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 56px;
+}
+.lifecycle-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s;
+  position: relative;
+}
+.lifecycle-stage.active {
+  box-shadow: inset 0 0 20px rgba(0,201,167,0.3);
+}
+.lifecycle-indicator {
+  position: absolute;
+  bottom: -20px;
+  font-size: 11px;
+  color: var(--accent);
+}
+
+/* CAP Gauge */
+.cap-gauge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px 0;
+}
+.cap-scale {
+  display: flex;
+  width: 100%;
+  max-width: 700px;
+  height: 40px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+.cap-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.8);
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.4rem; }
+  .swot-grid { grid-template-columns: 1fr; }
+  .sensitivity-grid { grid-template-columns: 1fr; }
+  .hero-meta { gap: 16px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .flow-diagram { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); }
+}
+
+.tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.tag {
+  background: rgba(18,65,145,0.15);
+  border: 1px solid rgba(18,65,145,0.3);
+  color: var(--nokia-light);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 16px;
+}
+.explainer {
+  background: var(--bg-card2);
+  border-left: 3px solid var(--accent);
+  padding: 16px 20px;
+  margin: 16px 0;
+  border-radius: 0 8px 8px 0;
+}
+.explainer p { margin-bottom: 0; font-size: 14px; color: var(--text-secondary); }
+.explainer strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+<div class="container">
+<div class="nav-inner">
+  <a href="#overview" class="nav-link active">기업 개요</a>
+  <a href="#revenue" class="nav-link">수익 구조</a>
+  <a href="#products" class="nav-link">제품/기술</a>
+  <a href="#industry" class="nav-link">산업 분석</a>
+  <a href="#swot" class="nav-link">SWOT</a>
+  <a href="#moat" class="nav-link">경제적 해자</a>
+  <a href="#peers" class="nav-link">피어그룹</a>
+  <a href="#lifecycle" class="nav-link">생애주기</a>
+  <a href="#dcf" class="nav-link">DCF 모델</a>
+  <a href="#cap" class="nav-link">내재 CAP</a>
+  <a href="#sensitivity" class="nav-link">민감도</a>
+  <a href="#risk" class="nav-link">리스크</a>
+</div>
+</div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+<div class="container hero-content">
+  <div class="ticker-badge"><span class="dot"></span>NYSE: NOK · OMXH: NOKIA</div>
+  <h1>Nokia <span>Oyj</span></h1>
+  <p class="hero-subtitle">
+    1865년 핀란드에서 제지 공장으로 출발해, 160년간 변신을 거듭해온 글로벌 통신 인프라 기업. 2026년 현재 AI 데이터센터 네트워킹과 6G 기술의 핵심 공급자로 탈바꿈 중.
+  </p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">주가 (ADR)</span>
+      <span class="hero-meta-value">$15.47</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">시가총액</span>
+      <span class="hero-meta-value">$86B</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">YTD 수익률</span>
+      <span class="hero-meta-value up">+115%</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">P/E (TTM)</span>
+      <span class="hero-meta-value">96.7x</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Forward P/E</span>
+      <span class="hero-meta-value">40.3x</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">베타 (5Y)</span>
+      <span class="hero-meta-value">0.76</span>
+    </div>
+  </div>
+</div>
+</header>
+
+<!-- Key Conclusion -->
+<div class="container">
+<div class="conclusion-box">
+  <h3>핵심 결론</h3>
+  <p>
+    현재 주가($15.47)에 내재된 시장의 기대(CAP)는 약 <strong>18~20년</strong>으로, 시장은 노키아가 약 20년간 자본비용을 초과하는 수익을 창출할 것으로 가격에 반영하고 있습니다. 이는 통신장비 섹터 평균(10~13년) 대비 매우 높은 수준이며, 노키아가 AI 인프라·6G·방산이라는 구조적 성장동력을 장기간 유지해야만 정당화될 수 있는 기대치입니다. NVIDIA 파트너십과 AI 클라우드 매출 급증(+49%)은 긍정적이나, 115% 급등 후 주가에는 이미 상당한 낙관이 반영되어 있습니다.
+  </p>
+</div>
+</div>
+
+<!-- 1. Company Overview -->
+<section class="section" id="overview">
+<div class="container">
+  <div class="section-number">01</div>
+  <h2>기업 개요</h2>
+  
+  <div class="explainer">
+    <p><strong>한 줄 요약:</strong> 노키아는 통신사·대형 클라우드 기업·정부에 네트워크 장비와 소프트웨어를 판매하는 핀란드 B2B 기술 기업입니다. 한때 휴대폰 1위였지만, 현재는 5G/6G 기지국, 광통신 장비, IP 라우터 등 "보이지 않는 인터넷 인프라"를 만드는 회사로 완전히 탈바꿈했습니다.</p>
+  </div>
+
+  <h3>설립 배경과 역사</h3>
+  <p>
+    1865년 핀란드 탐페레에서 <strong>목재 펄프 공장</strong>으로 출발한 노키아는 고무 제품, 전선 케이블을 거쳐 1990년대에 세계 최대 휴대폰 제조사가 되었습니다. 2007년 아이폰 등장 이후 스마트폰 시대 전환에 실패하며 휴대폰 사업은 2014년 마이크로소프트에 매각되었습니다.
+  </p>
+  <p>
+    이후 2015년 프랑스 알카텔-루슨트를 약 €15.6B에 인수하면서 <strong>통신 네트워크 장비 전문 기업</strong>으로 완전히 변모했습니다. 이 인수로 전설적인 연구소인 <strong>벨 연구소(Bell Labs)</strong>도 품에 안게 되었습니다. 벨 연구소는 노벨상 수상자 9명을 배출한 세계 최고의 기초과학·통신 연구 기관으로, 트랜지스터·레이저·유닉스 운영체제 등을 발명한 곳입니다.
+  </p>
+  <p>
+    2025년에는 미국 광통신 전문기업 <strong>인피네라(Infinera)</strong>를 약 €2.5B에 인수하여 AI 데이터센터용 광네트워킹 역량을 대폭 강화했습니다. 같은 해 10월, <strong>NVIDIA가 노키아에 $1B을 투자</strong>(주당 $6.01)하며 AI-RAN 공동개발 파트너십을 체결, 이것이 2026년 주가 급등의 핵심 촉매가 되었습니다.
+  </p>
+  <p>
+    2025년 4월 <strong>저스틴 호타드(Justin Hotard)</strong>가 신임 CEO로 취임하며, "AI 시대의 연결성 리더"로의 전략 전환을 가속화하고 있습니다. 본사는 핀란드 에스포에 있으며, 약 78,000명의 직원이 130여 개국에서 근무합니다.
+  </p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">설립연도</div>
+      <div class="card-value">1865</div>
+      <div class="card-desc">160년 역사의 글로벌 기업</div>
+    </div>
+    <div class="card">
+      <div class="card-title">본사</div>
+      <div class="card-value" style="font-size:20px">핀란드 에스포</div>
+      <div class="card-desc">130개국 이상에서 사업 운영</div>
+    </div>
+    <div class="card">
+      <div class="card-title">직원 수</div>
+      <div class="card-value">~78,000</div>
+      <div class="card-desc">2025년 평균 기준</div>
+    </div>
+    <div class="card">
+      <div class="card-title">2025 매출</div>
+      <div class="card-value">€19.9B</div>
+      <div class="card-desc">전년비 +3% 성장</div>
+    </div>
+    <div class="card">
+      <div class="card-title">R&D 투자</div>
+      <div class="card-value">€4.9B</div>
+      <div class="card-desc">매출의 24.6% — 업계 최고 수준</div>
+    </div>
+    <div class="card">
+      <div class="card-title">순현금</div>
+      <div class="card-value">€3.8B</div>
+      <div class="card-desc">Q1 2026 기준, 건전한 재무 상태</div>
+    </div>
+  </div>
+
+  <div class="tag-list">
+    <span class="tag">5G/6G 기지국</span>
+    <span class="tag">광통신 장비</span>
+    <span class="tag">IP 라우터/스위치</span>
+    <span class="tag">고정 네트워크</span>
+    <span class="tag">클라우드 네이티브 소프트웨어</span>
+    <span class="tag">특허 라이선싱</span>
+    <span class="tag">AI-RAN</span>
+    <span class="tag">방산 통신</span>
+  </div>
+</div>
+</section>
+
+<!-- 2. Revenue Structure -->
+<section class="section" id="revenue">
+<div class="container">
+  <div class="section-number">02</div>
+  <h2>수익 구조 — 노키아는 어떻게 돈을 버는가</h2>
+
+  <div class="explainer">
+    <p><strong>쉬운 설명:</strong> 노키아는 인터넷이 흘러가는 "도로"와 "터널"을 짓는 회사입니다. 통신사(KT, SK텔레콤 같은)가 5G 서비스를 제공하려면 기지국과 네트워크 장비가 필요하고, 구글·아마존·메타 같은 클라우드 기업이 AI를 돌리려면 데이터센터 간 초고속 광케이블 연결이 필요합니다. 노키아는 이런 장비와 소프트웨어를 만들어 파는 것입니다. 또한 과거에 개발한 수천 건의 통신 특허로부터 로열티(사용료) 수익도 얻습니다.</p>
+  </div>
+
+  <p>2026년 1월부터 노키아는 보고 체계를 단순화하여 <strong>2개 핵심 사업부 + 포트폴리오 사업</strong>으로 재편했습니다.</p>
+
+  <h3>사업부별 매출 구성 (2025년 기준)</h3>
+  <div class="revenue-flow">
+    <div class="revenue-bar">
+      <div class="revenue-bar-label">네트워크 인프라</div>
+      <div class="revenue-bar-track">
+        <div class="revenue-bar-fill" style="width:52%; background: linear-gradient(90deg, #124191, #1B9CFC);">€10.3B</div>
+      </div>
+      <div class="revenue-bar-pct" style="color:#1B9CFC">52%</div>
+    </div>
+    <div class="revenue-bar">
+      <div class="revenue-bar-label">모바일 인프라</div>
+      <div class="revenue-bar-track">
+        <div class="revenue-bar-fill" style="width:36%; background: linear-gradient(90deg, #FF6B35, #FFB347);">€7.2B</div>
+      </div>
+      <div class="revenue-bar-pct" style="color:#FF6B35">36%</div>
+    </div>
+    <div class="revenue-bar">
+      <div class="revenue-bar-label">포트폴리오 사업</div>
+      <div class="revenue-bar-track">
+        <div class="revenue-bar-fill" style="width:12%; background: linear-gradient(90deg, #00C9A7, #00E5B0);">€2.4B</div>
+      </div>
+      <div class="revenue-bar-pct" style="color:#00C9A7">12%</div>
+    </div>
+  </div>
+
+  <div class="card-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+    <div class="card" style="border-top: 3px solid #1B9CFC;">
+      <div class="card-title" style="color:#1B9CFC">네트워크 인프라</div>
+      <p style="font-size:13px; margin-top:8px;">
+        <strong>광통신(Optical Networks):</strong> 데이터센터 간 대용량 데이터를 빛의 속도로 전송하는 장비. AI 시대의 핵심.<br>
+        <strong>IP 네트워크:</strong> 인터넷 데이터를 목적지까지 전달하는 라우터·스위치.<br>
+        <strong>고정 네트워크:</strong> 가정·기업에 광섬유 인터넷을 연결하는 장비.
+      </p>
+      <div style="font-family:'JetBrains Mono'; font-size:12px; color:#1B9CFC; margin-top:8px;">
+        Q1 2026 매출: €1,830M | 성장률: +6%<br>
+        AI 클라우드 매출 +49% YoY
+      </div>
+    </div>
+    <div class="card" style="border-top: 3px solid #FF6B35;">
+      <div class="card-title" style="color:#FF6B35">모바일 인프라</div>
+      <p style="font-size:13px; margin-top:8px;">
+        <strong>라디오 네트워크(RAN):</strong> 5G 기지국 안테나·장비. 휴대폰과 통신하는 최전선.<br>
+        <strong>코어 소프트웨어:</strong> 통신사의 "두뇌" 역할을 하는 클라우드 기반 네트워크 관리 소프트웨어.
+      </p>
+      <div style="font-family:'JetBrains Mono'; font-size:12px; color:#FF6B35; margin-top:8px;">
+        Q1 2026 매출: €2,110M | 성장률: +2%<br>
+        NVIDIA와 AI-RAN 공동개발 중
+      </div>
+    </div>
+    <div class="card" style="border-top: 3px solid #00C9A7;">
+      <div class="card-title" style="color:#00C9A7">포트폴리오 사업</div>
+      <p style="font-size:13px; margin-top:8px;">
+        <strong>노키아 테크놀로지스:</strong> 4,000건 이상의 통신 필수 특허 보유. 삼성·애플 등이 스마트폰을 만들 때 로열티를 지불.<br>
+        <strong>벨 연구소:</strong> 100년 역사의 기초연구 기관. 6G, 양자 통신 등 미래 기술 연구.
+      </p>
+      <div style="font-family:'JetBrains Mono'; font-size:12px; color:#00C9A7; margin-top:8px;">
+        Q1 2026 매출: €560M | 안정적 고마진
+      </div>
+    </div>
+  </div>
+
+  <h3>고객 구성</h3>
+  <p>노키아의 고객은 크게 3가지 유형으로 나뉩니다.</p>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">통신사 (CSP)</div>
+      <div class="card-value" style="font-size:20px">~75%</div>
+      <div class="card-desc">T-Mobile US, 도이치텔레콤, 오렌지, AT&T 등 전 세계 주요 통신사. 5G 기지국·코어 네트워크·광전송 장비 공급.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">AI & 클라우드 (Webscaler)</div>
+      <div class="card-value up" style="font-size:20px">~8% → 급성장</div>
+      <div class="card-desc">구글, 메타, 마이크로소프트, 아마존 등 하이퍼스케일러. 데이터센터 간 광통신·IP 네트워킹 수요 폭발. Q1 2026 매출 +49%.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">기업/정부/방산</div>
+      <div class="card-value" style="font-size:20px">~17%</div>
+      <div class="card-desc">록히드마틴·안두릴과 방산 5G 협력. 프라이빗 5G 네트워크, 공공안전망 등. 새로운 성장 축.</div>
+    </div>
+  </div>
+
+  <h3>지역별 매출 분포</h3>
+  <div class="revenue-flow">
+    <div class="revenue-bar">
+      <div class="revenue-bar-label">유럽·중동·아프리카</div>
+      <div class="revenue-bar-track"><div class="revenue-bar-fill" style="width:38%; background:#124191">38%</div></div>
+      <div class="revenue-bar-pct">38%</div>
+    </div>
+    <div class="revenue-bar">
+      <div class="revenue-bar-label">북미·중남미</div>
+      <div class="revenue-bar-track"><div class="revenue-bar-fill" style="width:30%; background:#1B9CFC">30%</div></div>
+      <div class="revenue-bar-pct">30%</div>
+    </div>
+    <div class="revenue-bar">
+      <div class="revenue-bar-label">아시아태평양</div>
+      <div class="revenue-bar-track"><div class="revenue-bar-fill" style="width:22%; background:#00C9A7">22%</div></div>
+      <div class="revenue-bar-pct">22%</div>
+    </div>
+    <div class="revenue-bar">
+      <div class="revenue-bar-label">중국</div>
+      <div class="revenue-bar-track"><div class="revenue-bar-fill" style="width:10%; background:#FF6B35">10%</div></div>
+      <div class="revenue-bar-pct">10%</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 3. Products/Technology -->
+<section class="section" id="products">
+<div class="container">
+  <div class="section-number">03</div>
+  <h2>핵심 제품·서비스 및 기술력</h2>
+
+  <div class="explainer">
+    <p><strong>쉬운 비유:</strong> 인터넷을 고속도로에 비유하면, 노키아는 고속도로의 아스팔트(광섬유 장비), 교차로 신호등(IP 라우터), 휴게소 톨게이트(기지국), 그리고 이 모든 것을 관리하는 교통관제 시스템(소프트웨어)을 만드는 회사입니다.</p>
+  </div>
+
+  <h3>서비스 제공 흐름</h3>
+  <div class="flow-diagram">
+    <div class="flow-node">벨 연구소<br><small style="color:var(--text-muted)">기초 연구·원천기술</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node highlight">제품 개발<br><small style="color:var(--text-muted)">칩셋·광모듈·소프트웨어</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">제조·조립<br><small style="color:var(--text-muted)">글로벌 공급망</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node highlight">네트워크 구축<br><small style="color:var(--text-muted)">설치·통합·최적화</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">운영·유지보수<br><small style="color:var(--text-muted)">관리형 서비스</small></div>
+  </div>
+
+  <h3>핵심 제품군 상세</h3>
+
+  <div class="card" style="margin: 16px 0; border-left: 3px solid #1B9CFC;">
+    <h3 style="color:#1B9CFC">① 광통신(Optical Networks) — AI 시대의 가장 뜨거운 영역</h3>
+    <p>
+      <strong>광통신이란?</strong> 유리 섬유(광섬유)를 통해 빛(레이저)으로 데이터를 전송하는 기술입니다. 구리선보다 수만 배 빠르고, 수백~수천 킬로미터를 감쇄 없이 전송할 수 있습니다.
+    </p>
+    <p>
+      <strong>왜 중요한가?</strong> AI 모델을 학습시키려면 수만 대의 GPU가 초고속으로 데이터를 주고받아야 합니다. 데이터센터 간 연결(DCI), 데이터센터 내부 연결 모두 광통신이 필수입니다. AI 투자 붐으로 이 시장이 폭발적으로 성장 중입니다.
+    </p>
+    <p>
+      <strong>노키아의 경쟁력:</strong> 2025년 인피네라 인수로 <strong>세계 2위</strong> 광통신 장비 업체가 되었습니다. 자체 개발한 광학 칩셋(Photonic Service Engine, PSE)으로 800G 플러거블 모듈을 생산하며, 이는 하나의 광섬유로 초당 800기가비트를 전송하는 초고속 장비입니다. Q1 2026 광통신 매출은 전년비 +20% 성장했습니다.
+    </p>
+  </div>
+
+  <div class="card" style="margin: 16px 0; border-left: 3px solid #FF6B35;">
+    <h3 style="color:#FF6B35">② 라디오 액세스 네트워크(RAN) — 5G의 심장</h3>
+    <p>
+      <strong>RAN이란?</strong> 여러분의 스마트폰이 통신 신호를 주고받을 때, 가장 먼저 연결되는 것이 기지국입니다. RAN은 이 기지국의 안테나, 무선 송수신 장비, 처리 소프트웨어를 포괄하는 개념입니다.
+    </p>
+    <p>
+      <strong>AI-RAN이란?</strong> 전통적인 기지국은 전용 칩셋으로 작동하지만, AI-RAN은 NVIDIA의 GPU 기반 플랫폼 위에서 통신 기능과 AI 추론(inference)을 동시에 수행합니다. 통신사가 기지국을 "미니 AI 데이터센터"처럼 활용할 수 있게 되는 것이 핵심 발상입니다. 노키아와 NVIDIA가 공동개발 중이며, T-Mobile US가 첫 고객이고, 오렌지 등 10개 통신사가 파일럿 참여를 약속했습니다.
+    </p>
+  </div>
+
+  <div class="card" style="margin: 16px 0; border-left: 3px solid #00C9A7;">
+    <h3 style="color:#00C9A7">③ IP 네트워크 — 인터넷의 교차로</h3>
+    <p>
+      <strong>라우터와 스위치란?</strong> 인터넷에서 데이터가 출발지에서 목적지까지 가려면 수많은 "교차로"를 지나야 합니다. 라우터는 이 교차로에서 데이터 패킷을 올바른 방향으로 보내는 장비이고, 스위치는 같은 네트워크 안에서 기기들을 연결합니다.
+    </p>
+    <p>
+      <strong>노키아의 위치:</strong> FP5 네트워크 프로세서를 탑재한 라우터로 통신사·클라우드 시장에서 시스코, 주니퍼와 경쟁합니다. 특히 대규모 AI 데이터센터의 네트워크 스위칭(데이터 경로 결정) 시장에 적극 진출 중입니다.
+    </p>
+  </div>
+
+  <div class="card" style="margin: 16px 0; border-left: 3px solid #FFB347;">
+    <h3 style="color:#FFB347">④ 노키아 테크놀로지스 — 특허의 힘</h3>
+    <p>
+      노키아는 20,000건 이상의 특허 포트폴리오를 보유하고 있으며, 이 중 약 4,000건이 통신 표준 필수 특허(SEP)입니다. 세계 어떤 스마트폰이든 4G/5G로 통신하려면 노키아의 특허를 사용해야 하며, 이에 대한 로열티를 받습니다.
+    </p>
+    <p>
+      2025년 기술 라이선싱 매출은 약 €1.5B으로, 전체 매출의 약 8%이지만 <strong>영업이익률이 80% 이상</strong>인 고수익 사업입니다. 이는 노키아의 전체 수익성을 지탱하는 핵심 축입니다.
+    </p>
+  </div>
+
+  <h3>벨 연구소(Bell Labs)의 가치</h3>
+  <p>
+    1925년 설립된 벨 연구소는 인류 기술사에서 가장 중요한 발명 다수를 탄생시킨 곳입니다. 노벨상 수상자 9명, 튜링상 5명을 배출했으며, 트랜지스터, 레이저, 태양전지, C 프로그래밍 언어, 유닉스 운영체제 등을 발명했습니다. 현재 약 400명의 연구원이 6G, 양자 네트워킹, AI 기반 네트워크 자동화 등을 연구 중이며, 노키아의 장기 기술 경쟁력의 원천입니다.
+  </p>
+</div>
+</section>
+
+<!-- 4. Industry Analysis -->
+<section class="section" id="industry">
+<div class="container">
+  <div class="section-number">04</div>
+  <h2>산업 분석 — 통신장비 시장의 구조와 미래</h2>
+
+  <h3>통신장비 산업이란?</h3>
+  <p>
+    통신장비 산업은 통신사·인터넷 서비스 기업·클라우드 기업이 네트워크를 구축하고 운영하는 데 필요한 하드웨어·소프트웨어·서비스를 제공하는 산업입니다. 여기에는 기지국(RAN), 광전송 장비, 라우터/스위치, 유선 접속 장비, 네트워크 관리 소프트웨어 등이 포함됩니다.
+  </p>
+  <p>
+    2024년 글로벌 통신장비 시장 규모는 약 <strong>$3,146억(€2,690억)</strong>이며, 2025~2034년 연평균 <strong>6.5~7.5%</strong> 성장이 전망됩니다. 다만 이 성장은 균일하지 않습니다: AI 관련 광통신·데이터센터 네트워킹은 +20~30%로 폭발적이고, 전통적 통신사 투자(RAN 등)는 +저단위% 성장에 그칩니다.
+  </p>
+
+  <h3>산업의 핵심 성장 동력</h3>
+  <div class="card-grid">
+    <div class="card" style="border-top: 3px solid var(--accent);">
+      <div class="card-title">AI 데이터센터 투자 붐</div>
+      <p style="font-size:13px; margin-top:8px;">2026년 주요 테크기업의 AI 데이터센터 투자액은 약 <strong>$6,500억</strong>에 달합니다. 이 데이터센터들은 초고속 네트워킹 장비가 필수이며, 이것이 노키아의 광통신·IP 사업 매출을 끌어올리고 있습니다.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--accent2);">
+      <div class="card-title">5G → 6G 전환</div>
+      <p style="font-size:13px; margin-top:8px;">전 세계 5G 네트워크 확산이 지속되며, 2030년대 초 <strong>6G 상용화</strong>를 향한 연구투자가 시작되었습니다. AI-RAN 시장은 2030년까지 누적 $2,000억 규모로 전망됩니다.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--nokia-light);">
+      <div class="card-title">지정학적 공급망 재편</div>
+      <p style="font-size:13px; margin-top:8px;">EU·미국·NATO의 화웨이/ZTE 제한 조치로 노키아·에릭슨에 대체 수요가 발생합니다. EU는 2029년까지 화웨이 장비 완전 교체를 의무화했습니다.</p>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--warning);">
+      <div class="card-title">방산·공공 네트워크 수요</div>
+      <p style="font-size:13px; margin-top:8px;">록히드마틴·안두릴과 협력으로 군사용 5G, 국경 보안 시스템, 공공안전 네트워크 등 새로운 수요층이 열리고 있습니다.</p>
+    </div>
+  </div>
+
+  <h3>가치사슬(Value Chain)</h3>
+  <div class="flow-diagram">
+    <div class="flow-node">반도체/부품<br><small style="color:var(--text-muted)">Broadcom, Intel,<br>NVIDIA, 자체칩셋</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node highlight">통신장비 제조<br><small style="color:var(--text-muted)">Nokia, Ericsson,<br>Huawei, ZTE</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">시스템 통합<br><small style="color:var(--text-muted)">설치·구축·테스트</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">통신사/클라우드<br><small style="color:var(--text-muted)">T-Mobile, Google,<br>Meta, AWS</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">최종 사용자<br><small style="color:var(--text-muted)">소비자, 기업,<br>정부, 군</small></div>
+  </div>
+
+  <h3>산업의 구조적 특징 (포터의 5 Forces)</h3>
+  <div class="table-wrapper">
+  <table>
+    <tr><th style="text-align:left">요인</th><th>수준</th><th style="text-align:left">설명</th></tr>
+    <tr><td>신규 진입 위협</td><td style="color:var(--positive)">낮음</td><td style="text-align:left; font-family:'Libre Franklin'">R&D에 연간 수십억 달러, 수만 건의 특허, 통신 표준화 과정 참여 필요. 진입장벽 매우 높음.</td></tr>
+    <tr><td>기존 경쟁 강도</td><td style="color:var(--negative)">높음</td><td style="text-align:left; font-family:'Libre Franklin'">화웨이·에릭슨·노키아·ZTE·삼성 등 소수 대형 기업 간 치열한 경쟁. 가격 압박 상존.</td></tr>
+    <tr><td>공급자 교섭력</td><td style="color:var(--warning)">중간</td><td style="text-align:left; font-family:'Libre Franklin'">핵심 반도체(NVIDIA GPU, Broadcom 칩)에 대한 의존도 존재. 자체 칩셋 개발로 일부 완화.</td></tr>
+    <tr><td>구매자 교섭력</td><td style="color:var(--negative)">높음</td><td style="text-align:left; font-family:'Libre Franklin'">대형 통신사·하이퍼스케일러는 강한 협상력 보유. 계약 규모가 크고 교체비용도 높지만, 멀티벤더 전략을 사용.</td></tr>
+    <tr><td>대체재 위협</td><td style="color:var(--positive)">낮음</td><td style="text-align:left; font-family:'Libre Franklin'">Open RAN(개방형 기지국)이 장기적 대체재 가능성이 있으나, 현재 상용 수준에서는 전통 장비가 우위.</td></tr>
+  </table>
+  </div>
+
+  <h3>산업의 미래 방향</h3>
+  <p>
+    통신장비 산업은 크게 세 가지 메가트렌드의 교차점에 서 있습니다. 첫째, <strong>AI 인프라 수퍼사이클</strong>이 데이터센터 네트워킹 수요를 폭발적으로 늘리고 있습니다. 둘째, <strong>5G-Advanced에서 6G로의 전환</strong>이 새로운 장비 투자 사이클을 열 것입니다. 셋째, <strong>지정학적 분리(디커플링)</strong>가 공급망을 재편하면서 서방 장비 업체에 기회와 비용을 동시에 만들고 있습니다.
+  </p>
+  <p>
+    특히 주목할 점은, 과거에 통신사만이 고객이었던 이 산업이 이제 <strong>클라우드/AI 기업(하이퍼스케일러)</strong>이라는 새롭고 거대한 고객군을 얻었다는 것입니다. 이들의 연간 네트워크 투자액은 전통 통신사의 투자를 빠르게 따라잡고 있습니다.
+  </p>
+</div>
+</section>
+
+<!-- 5. SWOT -->
+<section class="section" id="swot">
+<div class="container">
+  <div class="section-number">05</div>
+  <h2>SWOT 분석</h2>
+
+  <div class="swot-grid">
+    <div class="swot-card swot-s">
+      <h4>💪 강점 (Strengths)</h4>
+      <ul>
+        <li>벨 연구소 기반의 세계적 R&D 역량 (매출의 24.6%)</li>
+        <li>광통신~RAN~IP~고정망을 아우르는 End-to-End 포트폴리오</li>
+        <li>20,000건+ 특허 포트폴리오 (고마진 라이선싱)</li>
+        <li>NVIDIA $1B 전략적 투자로 AI-RAN 선도적 지위</li>
+        <li>인피네라 인수로 광통신 세계 2위 등극</li>
+        <li>건전한 재무구조 (순현금 €3.8B)</li>
+        <li>서방 진영의 "신뢰할 수 있는" 벤더 지위</li>
+      </ul>
+    </div>
+    <div class="swot-card swot-w">
+      <h4>⚠️ 약점 (Weaknesses)</h4>
+      <ul>
+        <li>통신사 의존도 여전히 ~75% (사이클 민감)</li>
+        <li>화웨이 대비 RAN 시장점유율 열위</li>
+        <li>2019년 5G 초기 기술 실패 이력 (인텔 의존)</li>
+        <li>영업이익률이 경쟁사 대비 아직 낮은 수준 (~10%)</li>
+        <li>인피네라 통합 리스크 (€200M 시너지 달성 과제)</li>
+        <li>유로화 기반 비용, 달러화 기반 매출의 환율 노출</li>
+      </ul>
+    </div>
+    <div class="swot-card swot-o">
+      <h4>🚀 기회 (Opportunities)</h4>
+      <ul>
+        <li>AI 데이터센터 네트워킹 시장 폭발적 성장 ($3~4조 by 2030)</li>
+        <li>AI-RAN 시장 누적 $2,000억 (2030년까지)</li>
+        <li>EU 화웨이 장비 교체 의무화 (2029년까지) → 대체 수요</li>
+        <li>방산·공공안전 네트워크 시장 진출 (록히드마틴, 안두릴)</li>
+        <li>6G 기술 표준화 주도 → 새로운 특허 로열티 수익원</li>
+        <li>AI 클라우드 매출 CAGR 27% (2028년까지 회사 전망)</li>
+      </ul>
+    </div>
+    <div class="swot-card swot-t">
+      <h4>🔴 위협 (Threats)</h4>
+      <ul>
+        <li>통신사 자본투자(CAPEX) 사이클 둔화 가능성</li>
+        <li>화웨이의 서방 시장 재진출 시도 또는 가격 압박</li>
+        <li>Open RAN 진영(삼성, Dell, Mavenir)의 성장</li>
+        <li>AI 투자 사이클이 예상보다 빨리 정점 도달할 리스크</li>
+        <li>글로벌 경기 침체 시 통신사·기업의 투자 축소</li>
+        <li>관세·무역 분쟁으로 인한 공급망 비용 증가 (€50~80M 영향)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 6. Economic Moat -->
+<section class="section" id="moat">
+<div class="container">
+  <div class="section-number">06</div>
+  <h2>경제적 해자(Moat) 분석</h2>
+
+  <div class="explainer">
+    <p><strong>경제적 해자란?</strong> 중세 성 주위의 깊은 물웅덩이처럼, 경쟁자가 쉽게 따라올 수 없게 만드는 구조적 경쟁 우위를 말합니다. 해자가 넓고 깊을수록 오래 초과 수익을 유지할 수 있습니다.</p>
+  </div>
+
+  <h3>노키아의 해자 요소</h3>
+
+  <div class="card" style="margin: 16px 0;">
+    <h3>🔬 기술적 해자 — "높은 기술 진입장벽"</h3>
+    <p>
+      통신장비는 <strong>수만 개의 특허, 글로벌 표준화 과정 참여, 수십 년의 노하우</strong>가 필요한 초고도 기술 산업입니다. 노키아는 연간 €4.9B(약 7조원)을 R&D에 투자하며, 벨 연구소를 통해 기초과학부터 상용 제품까지 수직통합된 혁신 파이프라인을 운영합니다.
+    </p>
+    <p>
+      자체 개발한 광학 칩셋(PSE-6s), 네트워크 프로세서(FP5), AI-RAN 소프트웨어 스택 등은 경쟁사가 단기간에 복제하기 어려운 핵심 자산입니다.
+    </p>
+    <p style="font-size:13px; color:var(--text-muted)"><strong>해자 강도:</strong> 중상 — 화웨이도 비슷한 투자를 하지만, 서방 시장에서는 지정학적 제한으로 노키아의 기술 해자가 더 효과적입니다.</p>
+  </div>
+
+  <div class="card" style="margin: 16px 0;">
+    <h3>📜 지적재산권 해자 — "특허 요새"</h3>
+    <p>
+      20,000건+ 특허 중 약 4,000건이 <strong>통신 표준 필수 특허(SEP)</strong>입니다. 4G/5G 표준을 사용하는 모든 기기 제조사가 노키아에 로열티를 지불해야 합니다. 이 특허 수익은 연간 €1.5B 이상으로, 80%+ 마진의 안정적 현금흐름 원천입니다.
+    </p>
+    <p style="font-size:13px; color:var(--text-muted)"><strong>해자 강도:</strong> 상 — 통신 SEP는 전 세계적으로 법적 보호를 받으며, 대체 기술이 존재하지 않습니다. 6G 표준화에서도 지위 유지가 핵심입니다.</p>
+  </div>
+
+  <div class="card" style="margin: 16px 0;">
+    <h3>🔄 전환비용 해자 — "한 번 깔면 바꾸기 어렵다"</h3>
+    <p>
+      통신 네트워크는 한 번 구축하면 <strong>7~15년간 운영</strong>됩니다. 장비 교체에는 수억~수십억 달러가 들고, 서비스 중단 리스크도 있어 통신사들은 기존 벤더를 유지하는 경향이 강합니다. 노키아 장비를 사용하는 통신사가 에릭슨으로 바꾸려면 2~3년의 전환 기간과 막대한 비용이 필요합니다.
+    </p>
+    <p style="font-size:13px; color:var(--text-muted)"><strong>해자 강도:</strong> 중상 — 다만 멀티벤더 전략이 보편화되면서 부분적 교체는 가능합니다.</p>
+  </div>
+
+  <div class="card" style="margin: 16px 0;">
+    <h3>🤝 생태계/파트너십 해자 — "NVIDIA와의 동맹"</h3>
+    <p>
+      NVIDIA의 $1B 전략적 투자와 AI-RAN 공동개발 파트너십은 노키아를 <strong>AI 통신 생태계의 핵심 파트너</strong>로 만들었습니다. NVIDIA의 CUDA 생태계와 노키아의 통신 전문성이 결합된 AI-RAN 플랫폼은 경쟁사가 쉽게 복제할 수 없는 "생태계 해자"를 형성합니다.
+    </p>
+    <p>
+      또한 T-Mobile US, 오렌지 등 10개 통신사의 AI-RAN 파일럿 참여, 록히드마틴·안두릴과의 방산 협력도 장기 계약 관계의 해자를 구축합니다.
+    </p>
+    <p style="font-size:13px; color:var(--text-muted)"><strong>해자 강도:</strong> 중 — 아직 초기 단계이며, AI-RAN이 상업적으로 증명되기 전까지 잠재적 해자로 봐야 합니다.</p>
+  </div>
+
+  <h3>해자 종합 평가</h3>
+  <p>
+    노키아의 경쟁 우위는 <strong>차별화 전략</strong>에 기반합니다. NOPAT 마진(~10%)은 산업 평균과 비슷한 수준이지만, 투자자본 회전율 측면에서 특허 라이선싱 사업의 자본 효율성이 전체 ROIC를 끌어올립니다.
+  </p>
+  <p>
+    다만, 해자의 지속 가능성에 대해서는 신중한 판단이 필요합니다. AI 인프라 수요는 확실한 추세이지만, 노키아가 이 시장에서 장기적으로 얼마나 높은 점유율과 마진을 유지할 수 있을지는 아직 증명 과정에 있습니다. 현재 AI 클라우드 매출은 전체의 약 8%에 불과하며, 핵심 RAN 사업에서의 경쟁은 여전히 치열합니다.
+  </p>
+</div>
+</section>
+
+<!-- 7. Peer Comparison -->
+<section class="section" id="peers">
+<div class="container">
+  <div class="section-number">07</div>
+  <h2>피어그룹 비교</h2>
+
+  <div class="table-wrapper">
+  <table>
+    <tr>
+      <th style="text-align:left">기업</th>
+      <th>매출 (FY25)</th>
+      <th>글로벌 점유율</th>
+      <th>영업이익률</th>
+      <th>P/E (FWD)</th>
+      <th>R&D/매출</th>
+      <th>핵심 강점</th>
+    </tr>
+    <tr>
+      <td class="peer-table company-name" style="color:var(--nokia-light)">Nokia (NOK)</td>
+      <td>€19.9B</td>
+      <td>13%</td>
+      <td>~10%</td>
+      <td>40x</td>
+      <td>24.6%</td>
+      <td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">광통신 #2, AI-RAN, 특허</td>
+    </tr>
+    <tr>
+      <td class="peer-table company-name">Ericsson (ERIC)</td>
+      <td>~€22B</td>
+      <td>12%</td>
+      <td>~8%</td>
+      <td>25x</td>
+      <td>~22%</td>
+      <td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">RAN #2, 통신 소프트웨어</td>
+    </tr>
+    <tr>
+      <td class="peer-table company-name">Huawei</td>
+      <td>~€85B</td>
+      <td>31%</td>
+      <td>~16%</td>
+      <td>비상장</td>
+      <td>~25%</td>
+      <td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">#1 글로벌, 가격·규모 우위</td>
+    </tr>
+    <tr>
+      <td class="peer-table company-name">Ciena (CIEN)</td>
+      <td>~$4B</td>
+      <td>4%</td>
+      <td>~12%</td>
+      <td>35x</td>
+      <td>~21%</td>
+      <td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">광통신 전문, 북미 강세</td>
+    </tr>
+    <tr>
+      <td class="peer-table company-name">Samsung Networks</td>
+      <td>~$7B</td>
+      <td>2~3%</td>
+      <td>~10%</td>
+      <td>그룹 일부</td>
+      <td>-</td>
+      <td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">Open RAN, 북미 진출</td>
+    </tr>
+    <tr>
+      <td class="peer-table company-name">ZTE</td>
+      <td>~$16B</td>
+      <td>10%</td>
+      <td>~10%</td>
+      <td>20x</td>
+      <td>~18%</td>
+      <td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">중국 #2, 가격 경쟁력</td>
+    </tr>
+  </table>
+  </div>
+
+  <p style="margin-top: 16px;">
+    노키아의 Forward P/E 40x는 에릭슨(25x)이나 ZTE(20x)보다 현저히 높습니다. 이는 시장이 노키아의 AI 전환 스토리에 상당한 프리미엄을 부여하고 있음을 보여줍니다. 다만, 매출 규모와 영업이익률에서는 아직 화웨이에 크게 뒤처지며, 에릭슨과도 비슷한 수준입니다.
+  </p>
+  <p>
+    노키아의 차별점은 <strong>광통신(인피네라 인수) + AI-RAN(NVIDIA 파트너십) + 특허 라이선싱</strong>이라는 3중 매출 구조입니다. 에릭슨은 RAN에 집중하고 있고, Ciena는 광통신에만 특화되어 있어, 노키아만큼 폭넓은 포트폴리오를 가진 경쟁사는 화웨이뿐입니다.
+  </p>
+</div>
+</section>
+
+<!-- 8. Lifecycle -->
+<section class="section" id="lifecycle">
+<div class="container">
+  <div class="section-number">08</div>
+  <h2>생애주기 단계 판별</h2>
+
+  <div class="explainer">
+    <p><strong>생애주기란?</strong> 기업도 사람처럼 태어나고(도입), 자라고(성장), 전성기를 맞고(성숙), 쇠퇴할 수 있습니다. 현금흐름표의 패턴(돈이 들어오는 곳, 나가는 곳)을 보면 기업이 어느 단계에 있는지 판별할 수 있습니다.</p>
+  </div>
+
+  <h3>현금흐름 패턴 분석 (2025년)</h3>
+  <div class="table-wrapper">
+  <table>
+    <tr><th style="text-align:left">현금흐름 항목</th><th>부호</th><th style="text-align:left">의미</th></tr>
+    <tr><td>영업활동 현금흐름</td><td style="color:var(--positive); font-weight:700">유입 (+)</td><td style="text-align:left; font-family:'Libre Franklin'">본업에서 돈을 벌고 있음. 비교 영업이익 €2.0B, FCF €1.5B</td></tr>
+    <tr><td>투자활동 현금흐름</td><td style="color:var(--negative); font-weight:700">유출 (−)</td><td style="text-align:left; font-family:'Libre Franklin'">인피네라 인수(€2.5B), 설비투자, R&D에 투자 중</td></tr>
+    <tr><td>재무활동 현금흐름</td><td style="color:var(--warning); font-weight:700">혼합 (+/−)</td><td style="text-align:left; font-family:'Libre Franklin'">NVIDIA 투자금 유입($1B) vs 배당·자사주매입·차입금 상환</td></tr>
+  </table>
+  </div>
+
+  <p style="margin-top: 16px;">
+    기본 패턴은 <strong>영업(+) / 투자(−) / 재무(−)</strong>로, 교과서적인 <strong>"성숙(Mature)" 단계</strong>에 해당합니다. 다만 2025년은 NVIDIA의 $1B 투자 유입과 인피네라 인수라는 특수 상황이 있어, 재무 현금흐름이 일시적으로 혼합 패턴을 보입니다.
+  </p>
+  <p>
+    성숙 단계 기업에 대해서는 DCF + CAP 분석이 적합하며, 이것이 본 보고서의 핵심입니다. 다만, 노키아의 AI 전환이 성공한다면 "성숙"에서 "성장" 단계로의 역전환 가능성도 열려 있습니다. 역사적으로 애플이 1997-98년 쇠퇴기에서 2001년 iPod 출시로 성장기에 재진입한 사례와 유사한 궤적을 시장이 기대하고 있는 것입니다.
+  </p>
+
+  <div style="margin: 30px 0;">
+    <div class="lifecycle-bar">
+      <div class="lifecycle-stage" style="width:10%; background:#2D3436; color:#636e72; border-right:1px solid var(--border)">도입</div>
+      <div class="lifecycle-stage" style="width:25%; background:#0984e3; color:#fff; border-right:1px solid var(--border)">성장</div>
+      <div class="lifecycle-stage active" style="width:30%; background:var(--nokia-blue); color:#fff; border-right:1px solid var(--border); box-shadow: inset 0 0 30px rgba(0,201,167,0.4);">✦ 성숙 (현재)</div>
+      <div class="lifecycle-stage" style="width:15%; background:#636e72; color:#dfe6e9; border-right:1px solid var(--border)">정리</div>
+      <div class="lifecycle-stage" style="width:20%; background:#2D3436; color:#636e72;">감소</div>
+    </div>
+    <p style="font-size: 12px; color: var(--accent); margin-top: 8px; text-align: center;">
+      ↑ 노키아는 성숙 단계에 있으나, AI 전환 성공 시 성장 단계 재진입 가능성
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- 9. DCF Model -->
+<section class="section" id="dcf">
+<div class="container">
+  <div class="section-number">09</div>
+  <h2>DCF 모델 및 WACC</h2>
+
+  <div class="assumptions-box">
+    <h4>핵심 가정</h4>
+    <div class="assumptions-list">
+      <div class="assumption-item"><span>무위험이자율</span><span>4.51%</span></div>
+      <div class="assumption-item"><span>베타 (5Y)</span><span>0.76</span></div>
+      <div class="assumption-item"><span>ERP (다모다란)</span><span>4.23%</span></div>
+      <div class="assumption-item"><span>자기자본비용</span><span>7.73%</span></div>
+      <div class="assumption-item"><span>WACC</span><span>7.5%</span></div>
+      <div class="assumption-item"><span>유효세율</span><span>20%</span></div>
+      <div class="assumption-item"><span>장기 성장률</span><span>2.45%</span></div>
+      <div class="assumption-item"><span>페이드 비율</span><span>0.17</span></div>
+      <div class="assumption-item"><span>기준 매출 (2025)</span><span>€19,889M</span></div>
+      <div class="assumption-item"><span>기준 EBITA 마진</span><span>10.1%</span></div>
+      <div class="assumption-item"><span>발행주식수</span><span>5,742M</span></div>
+      <div class="assumption-item"><span>순현금</span><span>€3,400M</span></div>
+    </div>
+  </div>
+
+  <div class="explainer">
+    <p><strong>WACC란?</strong> Weighted Average Cost of Capital(가중평균자본비용)의 약자입니다. 투자자가 노키아에 투자할 때 기대하는 최소 수익률을 의미합니다. 무위험이자율(국채 수익률) 4.51%에 노키아의 리스크를 감안한 프리미엄(베타 × ERP = 0.76 × 4.23%)을 더해 산출합니다. 노키아의 WACC 7.5%는 "노키아가 최소 연 7.5% 이상의 수익을 올려야 투자자들에게 가치를 창출한다"는 뜻입니다.</p>
+  </div>
+
+  <h3>DCF 테이블 (전시 23 형식)</h3>
+  <p style="font-size:13px; color:var(--text-muted)">단위: €백만 (주당 가치 제외). 연중(mid-year) 할인 적용.</p>
+
+  <div class="table-wrapper">
+  <table>
+    <tr>
+      <th style="text-align:left"></th>
+      <th>2025</th><th>2026E</th><th>2027E</th><th>2028E</th><th>2029E</th><th>2030E</th><th>2031E</th><th>2032E</th><th>2033E</th><th>2034E</th><th>2035E</th>
+    </tr>
+    <tr>
+      <td>매출</td>
+      <td>19,889</td><td>21,282</td><td>23,197</td><td>25,053</td><td>26,806</td><td>28,414</td><td>29,835</td><td>31,028</td><td>31,959</td><td>32,638</td><td>33,127</td>
+    </tr>
+    <tr>
+      <td>매출 성장률</td>
+      <td>—</td><td>7.0%</td><td>9.0%</td><td>8.0%</td><td>7.0%</td><td>6.0%</td><td>5.0%</td><td>4.0%</td><td>3.0%</td><td>2.1%</td><td>1.5%</td>
+    </tr>
+    <tr>
+      <td>EBITA</td>
+      <td>2,009</td><td>2,341</td><td>2,784</td><td>3,132</td><td>3,351</td><td>3,552</td><td>3,729</td><td>3,878</td><td>3,996</td><td>4,078</td><td>4,139</td>
+    </tr>
+    <tr>
+      <td>EBITA 마진</td>
+      <td>10.1%</td><td>11.0%</td><td>12.0%</td><td>12.5%</td><td>12.5%</td><td>12.5%</td><td>12.5%</td><td>12.5%</td><td>12.5%</td><td>12.5%</td><td>12.5%</td>
+    </tr>
+    <tr>
+      <td>세율</td>
+      <td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td><td>20%</td>
+    </tr>
+    <tr class="row-highlight">
+      <td>NOPAT</td>
+      <td>1,607</td><td>1,873</td><td>2,227</td><td>2,506</td><td>2,681</td><td>2,842</td><td>2,984</td><td>3,103</td><td>3,196</td><td>3,262</td><td>3,311</td>
+    </tr>
+    <tr>
+      <td>미래 투자</td>
+      <td>—</td><td>1,200</td><td>1,350</td><td>1,380</td><td>1,350</td><td>1,320</td><td>1,300</td><td>1,270</td><td>1,250</td><td>1,230</td><td>1,220</td>
+    </tr>
+    <tr class="row-highlight">
+      <td>잉여현금흐름 (FCF)</td>
+      <td>—</td><td>673</td><td>877</td><td>1,126</td><td>1,331</td><td>1,522</td><td>1,684</td><td>1,833</td><td>1,946</td><td>2,032</td><td>2,091</td>
+    </tr>
+    <tr>
+      <td>FCF 현재가치</td>
+      <td>—</td><td>649</td><td>787</td><td>940</td><td>1,033</td><td>1,099</td><td>1,131</td><td>1,145</td><td>1,130</td><td>1,098</td><td>1,052</td>
+    </tr>
+    <tr>
+      <td>FCF 누적 현재가치</td>
+      <td>—</td><td>649</td><td>1,436</td><td>2,376</td><td>3,409</td><td>4,508</td><td>5,639</td><td>6,784</td><td>7,914</td><td>9,012</td><td>10,064</td>
+    </tr>
+    <tr>
+      <td>ROIIC</td>
+      <td>—</td><td>22.2%</td><td>26.3%</td><td>20.7%</td><td>12.9%</td><td>12.2%</td><td>10.9%</td><td>9.8%</td><td>7.5%</td><td>5.3%</td><td>4.0%</td>
+    </tr>
+  </table>
+  </div>
+
+  <h3>최종 가치(Terminal Value) 계산</h3>
+  <div class="assumptions-box">
+    <h4>페이드 모델 가정</h4>
+    <div class="assumptions-list">
+      <div class="assumption-item"><span>최종연도 NOPAT</span><span>€3,311M</span></div>
+      <div class="assumption-item"><span>장기 성장률 (g)</span><span>2.45%</span></div>
+      <div class="assumption-item"><span>페이드 비율 (f)</span><span>0.17</span></div>
+      <div class="assumption-item"><span>WACC (k)</span><span>7.5%</span></div>
+      <div class="assumption-item"><span>최종 ROIIC</span><span>~9%</span></div>
+      <div class="assumption-item"><span>최종 가치</span><span>€52,800M</span></div>
+      <div class="assumption-item"><span>최종 가치 현재가치</span><span>€26,500M</span></div>
+    </div>
+  </div>
+
+  <h3>기업 가치 산출</h3>
+  <div class="table-wrapper">
+  <table>
+    <tr><th style="text-align:left">항목</th><th>금액 (€M)</th></tr>
+    <tr><td>명시적 예측기간 FCF 누적 현재가치 (10년)</td><td>10,064</td></tr>
+    <tr><td>최종 가치 현재가치</td><td>26,500</td></tr>
+    <tr class="row-highlight"><td>기업 가치 (Enterprise Value)</td><td>36,564</td></tr>
+    <tr><td>(+) 순현금</td><td>3,400</td></tr>
+    <tr class="row-highlight"><td>주주 가치 (Equity Value)</td><td>39,964</td></tr>
+    <tr><td>발행주식수 (M)</td><td>5,742</td></tr>
+    <tr class="row-highlight"><td>주당 가치</td><td>€6.96</td></tr>
+  </table>
+  </div>
+
+  <p style="margin-top: 16px;">
+    10년 명시적 예측 기간에서 산출된 <strong>주당 가치 €6.96</strong>은 현재 주가 €12.63의 약 55% 수준입니다. 이는 시장이 10년 이후에도 상당 기간 추가적인 가치 창출을 기대하고 있다는 의미입니다.
+  </p>
+</div>
+</section>
+
+<!-- 10. Implied CAP -->
+<section class="section" id="cap">
+<div class="container">
+  <div class="section-number">10</div>
+  <h2>시장 내재 CAP 역산</h2>
+
+  <div class="explainer">
+    <p><strong>내재 CAP란?</strong> "시장이 노키아의 주가에 반영한 경쟁 우위의 지속 기간"입니다. 현재 주가가 성립하려면 노키아가 자본비용(WACC 7.5%)을 초과하는 수익을 몇 년간 유지해야 하는지를 역산합니다. 예측 기간을 5년부터 늘려가며 계산된 주당 가치가 현재 주가와 일치하는 지점이 내재 CAP입니다.</p>
+  </div>
+
+  <h3>예측기간별 주당 가치</h3>
+  <div class="table-wrapper">
+  <table>
+    <tr>
+      <th style="text-align:left">예측 기간</th>
+      <th>주당 가치 (€)</th>
+      <th>현재 주가 대비</th>
+      <th>해석</th>
+    </tr>
+    <tr><td>5년</td><td>4.82</td><td style="color:var(--negative)">−62%</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">크게 부족</td></tr>
+    <tr><td>8년</td><td>5.88</td><td style="color:var(--negative)">−53%</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">부족</td></tr>
+    <tr><td>10년</td><td>6.96</td><td style="color:var(--negative)">−45%</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">여전히 부족</td></tr>
+    <tr><td>13년</td><td>8.75</td><td style="color:var(--warning)">−31%</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">접근 중</td></tr>
+    <tr><td>15년</td><td>10.12</td><td style="color:var(--warning)">−20%</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">근접</td></tr>
+    <tr><td>18년</td><td>12.05</td><td style="color:var(--positive)">−5%</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">근사치</td></tr>
+    <tr class="row-highlight"><td>~19~20년</td><td>~12.63</td><td style="color:var(--positive)">≈ 0%</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px; color:var(--accent)">★ 시장 내재 CAP</td></tr>
+    <tr><td>25년</td><td>15.80</td><td style="color:var(--positive)">+25%</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">초과</td></tr>
+  </table>
+  </div>
+
+  <h3 style="margin-top:30px;">내재 CAP: 약 18~20년</h3>
+
+  <div style="margin: 30px 0;">
+    <div style="display:flex; height:48px; border-radius:24px; overflow:hidden; font-size:11px; font-weight:600;">
+      <div style="width:15%; background:rgba(0,201,167,0.3); display:flex; align-items:center; justify-content:center; color:var(--positive);">5년 미만<br>매수 후보</div>
+      <div style="width:15%; background:rgba(0,201,167,0.15); display:flex; align-items:center; justify-content:center; color:var(--positive);">5~10년<br>약간 비관적</div>
+      <div style="width:20%; background:rgba(255,179,71,0.15); display:flex; align-items:center; justify-content:center; color:var(--warning);">10~15년<br>합리적</div>
+      <div style="width:25%; background:rgba(255,107,53,0.2); display:flex; align-items:center; justify-content:center; color:var(--accent2); position:relative;">15~20년<br>약간 낙관적
+        <div style="position:absolute; bottom:-22px; right:15%; font-size:11px; color:var(--accent);">★ NOK ~19년</div>
+      </div>
+      <div style="width:25%; background:rgba(255,71,87,0.15); display:flex; align-items:center; justify-content:center; color:var(--negative);">20년 초과<br>과도한 낙관</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:40px;">해석</h3>
+  <p>
+    시장은 노키아가 <strong>약 18~20년간</strong> 자본비용(7.5%)을 초과하는 투자 수익을 창출할 것으로 가격에 반영하고 있습니다.
+  </p>
+  <p>
+    이 수치는 통신장비 섹터의 역사적 평균(10~13년)보다 상당히 높습니다. 이를 정당화하려면 다음 조건이 충족되어야 합니다.
+  </p>
+  <p>
+    <strong>① AI 인프라 성장 지속:</strong> AI 데이터센터 투자가 10년 이상 구조적으로 지속되어야 합니다. 현재는 그 방향이지만, AI 투자 사이클의 정점 시기는 불확실합니다.<br>
+    <strong>② AI-RAN 상업화 성공:</strong> 아직 파일럿 단계인 AI-RAN이 대규모 상업 배치에 성공해야 합니다.<br>
+    <strong>③ 마진 개선 유지:</strong> EBITA 마진이 현재 10%에서 12.5%+ 수준으로 개선되고 유지되어야 합니다.<br>
+    <strong>④ 특허 수익 안정성:</strong> 6G 표준화에서도 필수 특허 지위를 유지해야 합니다.
+  </p>
+  <p>
+    <strong>신뢰도 판단:</strong> 노키아의 내재 CAP 18~20년은 "약간 낙관적~낙관적 경계"에 위치합니다. NVIDIA 파트너십과 AI 클라우드 성장(+49%)이 강력한 근거이지만, 115% 주가 급등 후 이미 상당한 기대가 반영되어 있다고 판단됩니다. 해자가 아직 완전히 증명되지 않은 상태에서의 높은 CAP는 주의가 필요합니다.
+  </p>
+</div>
+</section>
+
+<!-- 11. Sensitivity Analysis -->
+<section class="section" id="sensitivity">
+<div class="container">
+  <div class="section-number">11</div>
+  <h2>민감도 및 시나리오 분석</h2>
+
+  <h3>WACC × 성장률 민감도 (주당 가치, €)</h3>
+  <div class="table-wrapper">
+  <table>
+    <tr>
+      <th style="text-align:left">WACC ↓ \ 성장률 →</th>
+      <th>+0%</th><th>+5%</th><th>+7% (기본)</th><th>+9%</th><th>+11%</th>
+    </tr>
+    <tr>
+      <td>6.5%</td>
+      <td style="color:var(--positive)">7.85</td>
+      <td style="color:var(--positive)">9.42</td>
+      <td style="color:var(--positive)">10.21</td>
+      <td style="color:var(--positive)">11.12</td>
+      <td style="color:var(--positive)">12.18</td>
+    </tr>
+    <tr>
+      <td>7.0%</td>
+      <td>6.98</td>
+      <td>8.35</td>
+      <td style="color:var(--positive)">9.04</td>
+      <td style="color:var(--positive)">9.82</td>
+      <td style="color:var(--positive)">10.72</td>
+    </tr>
+    <tr style="background:rgba(18,65,145,0.08)">
+      <td><strong>7.5% (기본)</strong></td>
+      <td>6.22</td>
+      <td>7.41</td>
+      <td><strong>6.96</strong></td>
+      <td>8.69</td>
+      <td>9.44</td>
+    </tr>
+    <tr>
+      <td>8.0%</td>
+      <td>5.56</td>
+      <td>6.60</td>
+      <td>7.12</td>
+      <td>7.72</td>
+      <td>8.38</td>
+    </tr>
+    <tr>
+      <td>8.5%</td>
+      <td style="color:var(--negative)">4.99</td>
+      <td>5.89</td>
+      <td>6.35</td>
+      <td>6.87</td>
+      <td>7.44</td>
+    </tr>
+  </table>
+  </div>
+  <p style="font-size:12px; color:var(--text-muted)">* 10년 명시적 예측 기간 기준. 현재 주가 €12.63과의 괴리가 크며, 이는 시장이 10년 이상의 초과 수익을 기대하고 있음을 다시 확인합니다.</p>
+
+  <h3 style="margin-top: 30px;">페이드 비율 민감도 (내재 CAP, 년)</h3>
+  <div class="table-wrapper">
+  <table>
+    <tr>
+      <th style="text-align:left">시나리오</th>
+      <th>페이드 비율</th>
+      <th>내재 CAP</th>
+      <th>해석</th>
+    </tr>
+    <tr>
+      <td>낙관 (강한 해자)</td>
+      <td>0.10</td>
+      <td style="color:var(--positive)">16~17년</td>
+      <td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">소비재 수준의 지속성</td>
+    </tr>
+    <tr style="background:rgba(18,65,145,0.08)">
+      <td><strong>기본 (기술장비 평균)</strong></td>
+      <td><strong>0.17</strong></td>
+      <td><strong>18~20년</strong></td>
+      <td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">섹터 평균 적용</td>
+    </tr>
+    <tr>
+      <td>비관 (빠른 평균회귀)</td>
+      <td>0.25</td>
+      <td style="color:var(--negative)">22~24년</td>
+      <td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">주가 정당화에 더 긴 CAP 필요</td>
+    </tr>
+  </table>
+  </div>
+
+  <h3 style="margin-top: 30px;">3가지 시나리오</h3>
+  <div class="card-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+    <div class="card" style="border-top: 3px solid var(--positive);">
+      <div class="card-title" style="color:var(--positive)">강세 시나리오</div>
+      <div class="card-value" style="font-size:20px">€9.50</div>
+      <div class="card-desc" style="margin-top:8px;">
+        10년 예측 기준. 매출 CAGR 9%, EBITA 마진 13.5%, AI 클라우드 매출 비중 25%+ 도달.<br>
+        <strong>전제:</strong> AI-RAN 대규모 상용화 성공, 방산 매출 €2B+ 도달, 인피네라 시너지 €300M+
+      </div>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--warning);">
+      <div class="card-title" style="color:var(--warning)">기본 시나리오</div>
+      <div class="card-value" style="font-size:20px">€6.96</div>
+      <div class="card-desc" style="margin-top:8px;">
+        10년 예측 기준. 매출 CAGR 5.2%, EBITA 마진 12.5%, 현재 추세의 점진적 개선.<br>
+        <strong>전제:</strong> AI 투자 지속, 통신사 CAPEX 완만한 회복, 마진 개선
+      </div>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--negative);">
+      <div class="card-title" style="color:var(--negative)">약세 시나리오</div>
+      <div class="card-value" style="font-size:20px">€4.50</div>
+      <div class="card-desc" style="margin-top:8px;">
+        10년 예측 기준. 매출 CAGR 2%, EBITA 마진 9%, AI 투자 사이클 조기 정점.<br>
+        <strong>전제:</strong> AI-RAN 상용화 지연, 통신사 투자 부진, 가격 경쟁 심화
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 12. Risks & Checkpoints -->
+<section class="section" id="risk">
+<div class="container">
+  <div class="section-number">12</div>
+  <h2>주요 리스크 및 분기별 체크포인트</h2>
+
+  <div class="risk-item">
+    <h4><span class="risk-tag risk-high">높음</span> 밸류에이션 리스크</h4>
+    <p>P/E 96x(TTM)는 노키아의 역사적 밸류에이션 범위를 크게 벗어납니다. Forward P/E 40x도 에릭슨(25x) 대비 60% 프리미엄입니다. AI 전환 스토리가 기대에 못 미칠 경우 급격한 주가 조정 가능성이 있습니다. 현재 주가에는 "완벽한 실행"이 전제되어 있습니다.</p>
+  </div>
+
+  <div class="risk-item">
+    <h4><span class="risk-tag risk-high">높음</span> AI 투자 사이클 리스크</h4>
+    <p>AI 데이터센터 투자 붐은 현재 가속 중이지만, 기술 투자는 본질적으로 사이클을 겪습니다. 하이퍼스케일러들이 투자를 축소하거나, AI 수익화가 기대에 미치지 못할 경우 노키아의 핵심 성장 동력이 약화될 수 있습니다.</p>
+  </div>
+
+  <div class="risk-item">
+    <h4><span class="risk-tag risk-medium">중간</span> AI-RAN 실행 리스크</h4>
+    <p>AI-RAN은 아직 파일럿 단계이며, 2026년 하반기 고객 시험이 예정되어 있습니다. 기술적 성숙도, 통신사의 수용 속도, NVIDIA 플랫폼과의 통합 안정성 등 불확실성이 존재합니다. 상용 배치까지는 2~3년이 더 필요할 수 있습니다.</p>
+  </div>
+
+  <div class="risk-item">
+    <h4><span class="risk-tag risk-medium">중간</span> 인피네라 통합 리스크</h4>
+    <p>€2.5B 인수에 대한 €200M 시너지 목표(2027년)는 달성 과정에 있으나, 기업 문화 통합, 고객 이탈, 기술 로드맵 조율 등의 리스크가 상존합니다.</p>
+  </div>
+
+  <div class="risk-item">
+    <h4><span class="risk-tag risk-medium">중간</span> 환율·거시 리스크</h4>
+    <p>유로화 기반 비용, 달러화 기반 매출 구조로 환율 변동에 민감합니다. 2025년에만 환율로 약 €230M의 부정적 영향을 받았습니다. 또한 관세(€50~80M 영향)와 지정학적 긴장도 비용 요인입니다.</p>
+  </div>
+
+  <div class="risk-item">
+    <h4><span class="risk-tag risk-low">낮음</span> 재무 건전성 리스크</h4>
+    <p>순현금 €3.8B으로 재무 건전성은 양호합니다. 부채비율(D/E) 15.6%로 낮은 편이며, FCF 전환율 72%(2025년)로 안정적입니다.</p>
+  </div>
+
+  <h3 style="margin-top:30px;">분기별 체크포인트</h3>
+  <div class="table-wrapper">
+  <table>
+    <tr><th style="text-align:left">점검 항목</th><th>기준</th><th style="text-align:left">주의 신호</th></tr>
+    <tr><td>AI & 클라우드 매출 성장률</td><td>+30%+ YoY</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">+20% 미만으로 둔화 시</td></tr>
+    <tr><td>AI & 클라우드 수주</td><td>분기 €1B+</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">€500M 미만 시</td></tr>
+    <tr><td>비교 영업이익률</td><td>10%+ 유지</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">8% 미만 지속 시</td></tr>
+    <tr><td>광통신 매출 성장</td><td>+15%+ YoY</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">성장 정체 또는 역성장 시</td></tr>
+    <tr><td>AI-RAN 진행 상황</td><td>고객 시험 개시</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">시험 지연 또는 고객 이탈 시</td></tr>
+    <tr><td>인피네라 시너지</td><td>연 €100M+ 달성</td><td style="text-align:left; font-family:'Libre Franklin'; font-size:12px">시너지 목표 하향 시</td></tr>
+  </table>
+  </div>
+
+  <h3 style="margin-top: 20px;">한계와 가정</h3>
+  <div class="assumptions-box" style="border-left: 3px solid var(--warning);">
+    <h4 style="color:var(--warning)">본 분석이 의존하는 핵심 가정</h4>
+    <p style="font-size:14px; color:var(--text-secondary); line-height:1.8;">
+      ① AI 데이터센터 투자 붐이 향후 5년 이상 지속된다는 가정. 사이클 조기 정점 시 매출·마진 전망 하향 필요.<br>
+      ② EBITA 마진이 10%→12.5%로 개선된다는 가정. 가격 경쟁 심화 시 달성 곤란.<br>
+      ③ WACC 7.5%는 현재 금리 환경 기준. 금리가 추가 상승할 경우 할인율 증가로 가치 하락.<br>
+      ④ 베타 0.76은 5년 역사적 수치이나, AI 테마 급등 이후 실현 변동성이 높아져 과소추정 가능성.<br>
+      ⑤ 페이드 비율 0.17(기술 하드웨어 평균)은 통신장비의 순환적 특성을 충분히 반영하지 못할 수 있음.
+    </p>
+  </div>
+</div>
+</section>
+
+<!-- Data Sources -->
+<section class="section">
+<div class="container">
+  <div class="section-number">참고</div>
+  <h2>데이터 출처 및 기준 시점</h2>
+  <div class="assumptions-box">
+    <h4>데이터 출처</h4>
+    <p style="font-size:13px; color:var(--text-secondary); line-height: 2;">
+      주가·시가총액: Yahoo Finance (2026.05.22 기준)<br>
+      재무제표: Nokia 2025 Annual Report (Form 20-F), Q1 2026 Interim Report<br>
+      무위험이자율: FRED 10Y Treasury (2026.05.26, 4.51%)<br>
+      ERP: 다모다란 교수 2026년 업데이트 (4.23%, 2026년 1월 기준)<br>
+      10년 기대 인플레이션: FRED T10YIE (2.45%, 2026년 5월)<br>
+      산업 시장 규모: GM Insights, Mordor Intelligence, Dell'Oro Group<br>
+      페이드 비율: CAP 프레임워크 요약본 (기술 하드웨어 0.17)<br>
+      경쟁사 데이터: 각사 IR 자료, Dell'Oro Group 시장점유율 보고서
+    </p>
+  </div>
+  <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">
+    본 자료는 정보 제공 목적으로 작성되었으며, 특정 금융 상품에 대한 매수·매도 권유가 아닙니다. 투자 결정은 개인의 재무 상황, 투자 목표, 위험 허용 범위를 고려하여 독립적으로 판단해야 합니다.
+  </p>
+</div>
+</section>
+
+<footer class="footer">
+<div class="container">
+  <p>CAP Framework Analysis · Nokia (NOK) · 2026년 5월 27일 작성</p>
+  <p style="margin-top:4px;">분석 기준일: 2026.05.22 | EUR/USD: 1.17</p>
+</div>
+</footer>
+
+</body>
+</html>

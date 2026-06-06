@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLTR · 팔란티어 완전 분석 — 기업·기술·내러티브 &amp; 경쟁우위기간(CAP)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0d12; --bg2:#0f141b; --bg3:#141b25; --bg4:#1a222e;
+    --ink:#e9eef5; --dim:#9aa8ba; --faint:#5f6f82; --line:#222c3a; --line2:#2d3a4c;
+    --amber:#f0b53f; --amber2:#e89a2c; --amberglow:rgba(240,181,63,.16);
+    --teal:#56c8bd; --teal2:#3da89d;
+    --red:#e5594f; --redbg:rgba(229,89,79,.10);
+    --green:#52b788; --greenbg:rgba(82,183,136,.10);
+    --serif:'Noto Serif KR',serif; --sans:'Noto Sans KR',sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.78;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  ::selection{background:var(--amber);color:#0a0d12}
+  b{font-weight:500;color:var(--ink)}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;opacity:.35;
+    mask-image:radial-gradient(ellipse 80% 70% at 70% 40%,#000 10%,transparent 75%)}
+  .orb{position:absolute;top:50%;right:-6%;transform:translateY(-50%);width:760px;height:760px;pointer-events:none}
+  .orb::before{content:"";position:absolute;inset:25%;border-radius:50%;
+    background:radial-gradient(circle at 38% 35%,#f7c965,#e08f24 35%,#6e3d12 70%,transparent 78%);
+    filter:blur(2px);box-shadow:0 0 120px 30px var(--amberglow),0 0 220px 60px rgba(240,181,63,.07)}
+  .ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(240,181,63,.18);animation:spin 60s linear infinite}
+  .ring.r2{inset:9%;border-color:rgba(86,200,189,.12);animation-duration:90s;animation-direction:reverse}
+  .ring.r3{inset:18%;border-style:dashed;border-color:rgba(240,181,63,.10);animation-duration:120s}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .hero-inner{position:relative;z-index:2}
+  .kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.42em;color:var(--amber);text-transform:uppercase;
+    margin-bottom:26px;display:flex;align-items:center;gap:14px}
+  .kicker::before{content:"";width:42px;height:1px;background:var(--amber)}
+  .ticker{font-family:var(--serif);font-weight:900;font-size:clamp(4rem,14vw,10.5rem);line-height:.82;
+    letter-spacing:-.02em;background:linear-gradient(180deg,#fff,#aeb9c8);-webkit-background-clip:text;
+    background-clip:text;color:transparent}
+  .ticker .ex{color:var(--amber);-webkit-text-fill-color:var(--amber);font-size:.34em;vertical-align:super;
+    margin-left:.1em;font-weight:700}
+  .company{font-family:var(--sans);font-weight:300;font-size:clamp(1.05rem,2.6vw,1.55rem);color:var(--dim);
+    margin-top:18px;letter-spacing:.02em;max-width:680px}
+  .company b{color:var(--ink);font-weight:500}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:14px 40px;margin-top:44px;font-family:var(--mono);font-size:.84rem}
+  .hero-meta div{display:flex;flex-direction:column;gap:4px}
+  .hero-meta span{color:var(--faint);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase}
+  .hero-meta b{color:var(--ink);font-weight:500;font-size:1.18rem}
+  .hero-meta .up{color:var(--green)}
+  .scrolldown{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-family:var(--mono);
+    font-size:.64rem;letter-spacing:.3em;color:var(--faint);text-transform:uppercase;display:flex;
+    flex-direction:column;align-items:center;gap:8px;animation:bob 2.4s ease-in-out infinite;z-index:2}
+  .scrolldown::after{content:"";width:1px;height:34px;background:linear-gradient(var(--faint),transparent)}
+  @keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,7px)}}
+
+  /* table of contents */
+  .toc{display:flex;flex-wrap:wrap;gap:10px;margin-top:40px;position:relative;z-index:2;max-width:760px}
+  .toc a{font-family:var(--mono);font-size:.68rem;color:var(--dim);border:1px solid var(--line2);
+    padding:6px 11px;border-radius:30px;text-decoration:none;transition:.2s}
+  .toc a:hover{border-color:var(--amber);color:var(--amber)}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:92px 0;border-bottom:1px solid var(--line);position:relative}
+  .secnum{font-family:var(--mono);font-size:.74rem;letter-spacing:.3em;color:var(--amber);margin-bottom:14px}
+  .secnum.teal{color:var(--teal)}
+  .h2{font-family:var(--serif);font-weight:700;font-size:clamp(1.8rem,4.2vw,2.9rem);line-height:1.14;
+    letter-spacing:-.01em;margin-bottom:20px}
+  .lead{font-size:1.05rem;color:var(--dim);max-width:780px;font-weight:300;line-height:1.9}
+  .body{font-size:1rem;color:var(--dim);max-width:800px;font-weight:300;line-height:1.95}
+  .body p{margin-bottom:16px}
+  .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.24em;color:var(--faint);text-transform:uppercase;margin-bottom:26px}
+  .chapter-divider{background:linear-gradient(180deg,var(--bg),var(--bg2));text-align:center;padding:70px 0}
+  .chapter-divider .cd-k{font-family:var(--mono);font-size:.72rem;letter-spacing:.4em;color:var(--teal);text-transform:uppercase}
+  .chapter-divider .cd-t{font-family:var(--serif);font-weight:900;font-size:clamp(2rem,6vw,3.4rem);margin-top:14px;line-height:1.1}
+  .chapter-divider .cd-d{color:var(--dim);max-width:600px;margin:18px auto 0;font-size:1rem}
+
+  /* reveal */
+  .rev{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+  .rev.in{opacity:1;transform:none}
+
+  /* confidence badge */
+  .conf{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.7rem;
+    letter-spacing:.06em;padding:5px 12px;border-radius:30px;border:1px solid var(--line2);
+    background:var(--bg3);color:var(--dim);vertical-align:middle}
+  .conf .dot{width:7px;height:7px;border-radius:50%}
+  .conf.hi .dot{background:var(--green)} .conf.hi{color:#a9e0c4;border-color:rgba(82,183,136,.4)}
+  .conf.mid .dot{background:var(--amber)} .conf.mid{color:#f0d291;border-color:rgba(240,181,63,.4)}
+  .conf.lo .dot{background:var(--red)} .conf.lo{color:#f0a59e;border-color:rgba(229,89,79,.4)}
+
+  /* cards / grids */
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
+  .card{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:26px}
+  .card.accent{border-color:rgba(240,181,63,.35);background:linear-gradient(160deg,var(--bg3),var(--bg2))}
+  .stat{font-family:var(--mono)}
+  .stat .v{font-size:2.05rem;font-weight:700;color:var(--ink);line-height:1}
+  .stat .v.amber{color:var(--amber)} .stat .v.teal{color:var(--teal)} .stat .v.red{color:var(--red)} .stat .v.green{color:var(--green)}
+  .stat .l{font-family:var(--sans);font-size:.82rem;color:var(--dim);margin-top:10px;font-weight:300}
+  .stat .s{font-family:var(--mono);font-size:.68rem;color:var(--faint);margin-top:6px;letter-spacing:.04em}
+
+  /* one-liner box */
+  .oneliner{background:linear-gradient(150deg,#1a130a,#11141b 60%);border:1px solid rgba(240,181,63,.35);
+    border-radius:18px;padding:38px 42px;position:relative;overflow:hidden}
+  .oneliner::before{content:"\201C";position:absolute;top:6px;left:22px;font-family:var(--serif);font-size:7rem;
+    color:rgba(240,181,63,.14);line-height:1}
+  .oneliner .ol-k{font-family:var(--mono);font-size:.7rem;letter-spacing:.3em;color:var(--amber);text-transform:uppercase;position:relative}
+  .oneliner p{font-family:var(--serif);font-weight:500;font-size:clamp(1.25rem,3vw,1.7rem);line-height:1.5;margin-top:14px;position:relative;color:var(--ink)}
+
+  /* verdict block */
+  .verdict{background:linear-gradient(150deg,#1a130a,#11141b 60%);border:1px solid rgba(240,181,63,.35);
+    border-radius:18px;padding:42px;position:relative;overflow:hidden}
+  .verdict::before{content:"";position:absolute;top:-40%;right:-10%;width:340px;height:340px;border-radius:50%;
+    background:radial-gradient(circle,var(--amberglow),transparent 70%)}
+  .verdict-tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.3em;color:var(--amber);text-transform:uppercase}
+  .verdict h3{font-family:var(--serif);font-weight:700;font-size:clamp(1.4rem,3.4vw,2.1rem);margin:14px 0 16px;line-height:1.3;position:relative}
+  .verdict p{color:var(--dim);max-width:800px;position:relative;font-size:1.02rem}
+
+  /* gauge */
+  .gauge{position:relative;margin:8px 0 4px}
+  .gauge-track{height:14px;border-radius:8px;background:linear-gradient(90deg,#1d3a2e,#2c4a1f 22%,#4a3a16 48%,#3a1f1a 78%,#3a1517);
+    position:relative;overflow:visible;border:1px solid var(--line2)}
+  .gauge-band{position:absolute;top:-5px;bottom:-5px;border-radius:8px;border:1.5px dashed var(--teal);
+    background:rgba(86,200,189,.10)}
+  .gauge-mark{position:absolute;top:-14px;width:2px;height:42px;background:var(--amber)}
+  .gauge-mark::after{content:attr(data-l);position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+    font-family:var(--mono);font-size:.72rem;color:var(--amber);white-space:nowrap;font-weight:700}
+  .gauge-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.66rem;color:var(--faint);margin-top:16px}
+
+  /* tables */
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--bg2)}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:.82rem;min-width:520px}
+  th{background:var(--bg4);color:var(--dim);font-weight:500;text-align:right;padding:13px 14px;
+    font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--line2);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left}
+  td{padding:11px 14px;text-align:right;border-bottom:1px solid var(--line);color:var(--ink);white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--bg3)}
+  .tsum td{background:rgba(240,181,63,.07);font-weight:700;border-top:1px solid var(--line2)}
+  td .pos{color:var(--green)} td .neg{color:var(--red)}
+  .rowlabel{color:var(--dim)!important;font-family:var(--sans);font-weight:400}
+  .hm td{text-align:center;font-weight:500}
+  .hm .hl{outline:2px solid var(--amber);outline-offset:-2px;color:var(--amber);font-weight:700}
+
+  /* product feature block */
+  .feature{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--bg2);margin-bottom:22px}
+  .feature-head{display:flex;align-items:center;gap:18px;padding:26px 30px;border-bottom:1px solid var(--line);
+    background:linear-gradient(120deg,var(--bg3),var(--bg2))}
+  .feature-badge{font-family:var(--mono);font-weight:700;font-size:1.5rem;width:64px;height:64px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#0a0d12}
+  .fb-gotham{background:linear-gradient(135deg,#7fa8c9,#4a6f93)} .fb-foundry{background:linear-gradient(135deg,#f0b53f,#e89a2c)}
+  .fb-apollo{background:linear-gradient(135deg,#9b8cc9,#6a5a93)} .fb-aip{background:linear-gradient(135deg,#56c8bd,#3da89d)}
+  .feature-head .ft{font-family:var(--serif);font-weight:700;font-size:1.5rem;line-height:1.1}
+  .feature-head .fs{font-family:var(--mono);font-size:.7rem;color:var(--faint);letter-spacing:.08em;margin-top:5px}
+  .feature-tag{margin-left:auto;font-family:var(--mono);font-size:.66rem;padding:6px 13px;border-radius:30px;
+    border:1px solid var(--line2);color:var(--dim);white-space:nowrap}
+  .feature-body{padding:30px}
+  .feature-body .fsec{font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;color:var(--amber);text-transform:uppercase;margin:0 0 8px}
+  .feature-body .ftxt{font-size:.98rem;color:var(--dim);font-weight:300;line-height:1.9;margin-bottom:22px}
+  .feature-body .ftxt:last-child{margin-bottom:0}
+  .fgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-bottom:22px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:var(--mono);font-size:.68rem;color:var(--dim);background:var(--bg4);border:1px solid var(--line2);
+    padding:5px 11px;border-radius:7px}
+  .chip.hot{color:var(--amber);border-color:rgba(240,181,63,.4)}
+  .example{background:var(--bg3);border-left:3px solid var(--teal);border-radius:0 10px 10px 0;padding:16px 20px;margin-top:14px}
+  .example .ex-l{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;color:var(--teal);text-transform:uppercase;margin-bottom:6px}
+  .example p{font-size:.92rem;color:var(--dim);font-weight:300}
+
+  /* ontology before/after */
+  .ont{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center}
+  .ont-box{border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--bg2)}
+  .ont-box.before{border-color:rgba(229,89,79,.25)} .ont-box.after{border-color:rgba(82,183,136,.3)}
+  .ont-box h4{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+  .ont-box.before h4{color:var(--red)} .ont-box.after h4{color:var(--green)}
+  .ont-arrow{font-family:var(--mono);color:var(--amber);font-size:1.4rem;text-align:center}
+  .silo{font-family:var(--mono);font-size:.72rem;color:var(--dim);background:var(--bg4);border:1px dashed var(--line2);
+    border-radius:7px;padding:8px 10px;margin-bottom:7px}
+  .objnode{display:inline-block;font-family:var(--mono);font-size:.72rem;color:var(--ink);background:rgba(82,183,136,.12);
+    border:1px solid rgba(82,183,136,.35);border-radius:20px;padding:5px 11px;margin:3px}
+
+  /* flow diagram */
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .flow-step{flex:1;min-width:150px;padding:22px 18px;border-right:1px solid var(--line);background:var(--bg2);position:relative}
+  .flow-step:last-child{border-right:none}
+  .flow-step .fn{font-family:var(--mono);font-size:.64rem;color:var(--amber);letter-spacing:.1em}
+  .flow-step .fh{font-weight:500;color:var(--ink);margin:6px 0 6px;font-size:.96rem}
+  .flow-step .fd{font-size:.82rem;color:var(--dim);font-weight:300;line-height:1.6}
+  .flow-step .layer-tag{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:.6rem;color:var(--faint)}
+
+  /* split bars */
+  .split{display:flex;height:54px;border-radius:10px;overflow:hidden;border:1px solid var(--line2)}
+  .split div{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.78rem;
+    color:#0a0d12;font-weight:700}
+  .legrow{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-top:10px}
+
+  /* bar chart */
+  .bars{display:flex;align-items:flex-end;gap:10px;height:240px;padding-top:20px}
+  .bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:8px;height:100%}
+  .bar .col{width:100%;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--teal),var(--teal2));
+    position:relative;transition:height 1.1s cubic-bezier(.16,1,.3,1);min-height:3px}
+  .bar.proj .col{background:linear-gradient(180deg,var(--amber),var(--amber2));opacity:.92}
+  .bar .col .top{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-family:var(--mono);
+    font-size:.64rem;color:var(--dim);white-space:nowrap}
+  .bar .yr{font-family:var(--mono);font-size:.62rem;color:var(--faint)}
+  .legend{display:flex;flex-wrap:wrap;gap:22px;font-family:var(--mono);font-size:.7rem;color:var(--dim);margin-top:18px}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:middle}
+
+  /* timeline */
+  .tl{position:relative;margin-top:10px;padding-left:30px}
+  .tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;
+    background:linear-gradient(var(--amber),var(--teal),var(--line))}
+  .tl-item{position:relative;padding:0 0 26px}
+  .tl-item::before{content:"";position:absolute;left:-30px;top:5px;width:14px;height:14px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--amber)}
+  .tl-item .yr{font-family:var(--mono);font-size:.78rem;color:var(--amber);font-weight:700}
+  .tl-item .t{font-weight:500;color:var(--ink);margin:2px 0 3px}
+  .tl-item .d{font-size:.92rem;color:var(--dim);font-weight:300}
+
+  /* swot */
+  .swot{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .swot .q{border-radius:14px;padding:24px;border:1px solid var(--line)}
+  .swot .q h4{font-family:var(--serif);font-size:1.15rem;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .swot .q h4 .tag{font-family:var(--mono);font-size:.64rem;padding:3px 8px;border-radius:5px}
+  .swot .s{border-color:rgba(82,183,136,.3);background:var(--greenbg)} .swot .s .tag{background:var(--green);color:#06140d}
+  .swot .w{border-color:rgba(229,89,79,.3);background:var(--redbg)} .swot .w .tag{background:var(--red);color:#1a0606}
+  .swot .o{border-color:rgba(86,200,189,.3);background:rgba(86,200,189,.08)} .swot .o .tag{background:var(--teal);color:#04140f}
+  .swot .t{border-color:rgba(240,181,63,.3);background:rgba(240,181,63,.07)} .swot .t .tag{background:var(--amber);color:#160f02}
+  .swot ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .swot li{font-size:.9rem;color:var(--dim);font-weight:300;padding-left:16px;position:relative;line-height:1.6}
+  .swot li::before{content:"\203A";position:absolute;left:0;color:var(--faint)}
+
+  /* bull bear */
+  .bb{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .bb .col-b{border-radius:16px;padding:28px;border:1px solid var(--line)}
+  .bb .bull{border-color:rgba(82,183,136,.3);background:linear-gradient(160deg,rgba(82,183,136,.07),var(--bg2))}
+  .bb .bear{border-color:rgba(229,89,79,.3);background:linear-gradient(160deg,rgba(229,89,79,.06),var(--bg2))}
+  .bb h4{font-family:var(--serif);font-size:1.3rem;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+  .bb .bull h4{color:var(--green)} .bb .bear h4{color:var(--red)}
+  .bb .sub{font-family:var(--mono);font-size:.68rem;color:var(--faint);margin-bottom:18px;letter-spacing:.04em}
+  .bb ul{list-style:none;display:flex;flex-direction:column;gap:14px}
+  .bb li{font-size:.93rem;color:var(--dim);font-weight:300;padding-left:20px;position:relative;line-height:1.7}
+  .bb .bull li::before{content:"\25B2";position:absolute;left:0;color:var(--green);font-size:.7rem;top:5px}
+  .bb .bear li::before{content:"\25BC";position:absolute;left:0;color:var(--red);font-size:.7rem;top:5px}
+  .bb li b{color:var(--ink)}
+
+  /* interpretation scale */
+  .iscale{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .iscale .row{display:grid;grid-template-columns:120px 1fr;gap:0;border-bottom:1px solid var(--line);align-items:stretch}
+  .iscale .row:last-child{border-bottom:none}
+  .iscale .rg{font-family:var(--mono);font-size:.82rem;font-weight:700;padding:16px 18px;display:flex;align-items:center}
+  .iscale .tx{padding:16px 18px;font-size:.92rem;color:var(--dim);font-weight:300;border-left:1px solid var(--line)}
+  .iscale .row.cur{background:rgba(229,89,79,.10)}
+  .iscale .row.cur .rg{color:var(--red)} .iscale .row.cur .tx{color:var(--ink)}
+  .iscale .b1 .rg{color:var(--green)} .iscale .b2 .rg{color:var(--teal)} .iscale .b3 .rg{color:var(--amber)}
+
+  /* checklist */
+  .check{display:flex;flex-direction:column;gap:12px}
+  .check .item{display:flex;gap:14px;align-items:flex-start;background:var(--bg2);border:1px solid var(--line);
+    border-radius:10px;padding:16px 18px}
+  .check .mk{font-family:var(--mono);color:var(--amber);font-size:.9rem;margin-top:2px;flex-shrink:0}
+  .check .item .ct{font-size:.94rem;color:var(--ink);font-weight:400}
+  .check .item .cd{font-size:.86rem;color:var(--dim);font-weight:300;margin-top:3px}
+
+  /* note */
+  .note{background:var(--bg2);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;padding:20px 24px}
+  .note.teal{border-left-color:var(--teal)} .note.red{border-left-color:var(--red)} .note.green{border-left-color:var(--green)}
+  .note p{font-size:.94rem;color:var(--dim);font-weight:300}
+
+  ul.plain{list-style:none;display:flex;flex-direction:column;gap:13px;margin-top:6px}
+  ul.plain li{font-size:.96rem;color:var(--dim);font-weight:300;padding-left:22px;position:relative;line-height:1.7}
+  ul.plain li::before{content:"\2014";position:absolute;left:0;color:var(--amber)}
+
+  .mt40{margin-top:40px}.mt28{margin-top:28px}.mt20{margin-top:20px}.mt14{margin-top:14px}.mb14{margin-bottom:14px}.mb28{margin-bottom:28px}
+
+  footer{padding:70px 0 90px;background:var(--bg2)}
+  .disc{font-size:.8rem;color:var(--faint);font-weight:300;line-height:1.9;max-width:880px}
+  .disc b{color:var(--dim)}
+  .footmark{font-family:var(--serif);font-weight:900;font-size:2rem;color:var(--line2);margin-bottom:20px}
+
+  @media(max-width:820px){
+    .g2,.g3,.g4,.swot,.bb,.fgrid{grid-template-columns:1fr}
+    .ont{grid-template-columns:1fr} .ont-arrow{transform:rotate(90deg)}
+    .orb{width:440px;right:-30%}
+    section{padding:60px 0}
+    .iscale .row{grid-template-columns:90px 1fr}
+    .hero-meta{gap:14px 26px}
+    .feature-head{flex-wrap:wrap}.feature-tag{margin-left:0}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-grid"></div>
+  <div class="orb"><div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div></div>
+  <div class="wrap hero-inner">
+    <div class="kicker">기업 완전 분석 · 기술 · 내러티브 · 경쟁우위기간(CAP)</div>
+    <div class="ticker">PLTR<span class="ex">▲</span></div>
+    <div class="company"><b>Palantir Technologies Inc.</b> · 나스닥 상장 · 흩어진 데이터를 하나로 묶어 사람과 AI가 즉시 판단·실행하게 만드는 '기업·정부용 운영체제' 소프트웨어 회사</div>
+    <div class="hero-meta">
+      <div><span>종가 (5/29)</span><b>$156.30</b></div>
+      <div><span>당일 변동</span><b class="up">+9.0%</b></div>
+      <div><span>시가총액</span><b>$374.7B</b></div>
+      <div><span>주력 제품</span><b>Gotham·Foundry·Apollo·AIP</b></div>
+    </div>
+    <div class="toc">
+      <a href="#s01">기업 개요</a><a href="#s02">온톨로지</a><a href="#s03">4대 플랫폼</a><a href="#s04">기술 수준</a>
+      <a href="#s05">수익 구조</a><a href="#s06">산업 분석</a><a href="#s07">경쟁/피어</a><a href="#s08">해자</a>
+      <a href="#s09">SWOT</a><a href="#s10">주가 내러티브</a><a href="#s11">CAP 분석</a>
+    </div>
+  </div>
+  <div class="scrolldown">SCROLL</div>
+</header>
+
+<!-- ============ CHAPTER 1 ============ -->
+<div class="chapter-divider">
+  <div class="wrap">
+    <div class="cd-k">PART 1 — 이 회사는 무엇을 하는가</div>
+    <div class="cd-t">데이터의 무질서를<br>질서로 바꾸는 회사</div>
+    <div class="cd-d">팔란티어를 이해하려면 단 하나의 개념만 잡으면 됩니다. 흩어진 데이터를 '의미 단위'로 재조립한다는 것. 그 아이디어가 어떻게 정부와 기업의 핵심 시스템이 되었는지 차근차근 풀어봅니다.</div>
+  </div>
+</div>
+
+<!-- ============ 01 기업 개요 ============ -->
+<section id="s01">
+  <div class="wrap">
+    <div class="secnum rev">01 / 기업 개요</div>
+    <h2 class="h2 rev">9·11 테러가 만든 회사,<br>그리고 '먼 곳을 보는 돌'</h2>
+
+    <div class="oneliner rev mt28">
+      <div class="ol-k">한 문장 요약</div>
+      <p>팔란티어는 조직 곳곳에 흩어진 방대한 데이터를 한데 묶어, 사람과 AI가 실시간으로 더 나은 결정을 내리고 곧바로 실행하게 해 주는 '데이터 운영체제'를 만드는 회사입니다.</p>
+    </div>
+
+    <div class="body mt40 rev">
+      <p><b>모든 큰 조직에는 같은 고민이 있습니다.</b> 데이터가 너무 많고, 너무 흩어져 있다는 것입니다. 인사 시스템, 회계 시스템, 공장 센서, 영업관리(CRM), 자재관리(ERP), 수십 년 된 낡은 데이터베이스 — 이들은 서로 말이 통하지 않습니다. 그래서 정작 중요한 순간에 "지금 우리 회사(또는 전장, 또는 병원)에서 무슨 일이 벌어지고 있는가?"라는 단순한 질문에 즉시 답하지 못합니다.</p>
+      <p><b>팔란티어의 핵심 아이디어는 이렇습니다.</b> 그 흩어진 데이터를 전부 가져와 가장 작은 의미 단위로 쪼갠 다음, 조직의 '실제 모습'을 그대로 비추는 하나의 살아있는 디지털 모형으로 다시 엮습니다. 그러면 사람도, AI도 그 위에서 질문하고 판단하고, 나아가 실제 행동(주문 승인, 재고 이동, 작전 지시)까지 실행할 수 있습니다.</p>
+      <p><b>출발점은 2003년, 9·11 테러 직후였습니다.</b> 페이팔(PayPal) 공동창업자 피터 틸(현 회장)과 철학 박사 출신의 알렉스 카프(현 CEO), 그리고 조 론스데일 등이 함께 세웠습니다. 이들의 통찰은 단순했습니다 — 페이팔은 컴퓨터 알고리즘과 사람의 판단을 결합해 온라인 사기범을 잡아냈는데, 같은 방식이면 테러 위협도 추적할 수 있지 않을까? 회사 이름은 톨킨의 소설에 나오는 '팔란티르(palantír)', 즉 멀리 떨어진 곳의 일을 볼 수 있는 마법의 수정구슬에서 따왔습니다.</p>
+      <p><b>첫 고객은 미국 정보기관이었습니다.</b> 2005년 CIA의 벤처투자 조직(In-Q-Tel)이 초기 투자자로 참여했고, 이후 오랫동안 팔란티어 소프트웨어는 기밀 대테러 작전에 쓰였습니다. 이 '가장 까다롭고 위험한 환경에서 검증되었다'는 이력이 오늘날 팔란티어 기술 신뢰도의 뿌리입니다. 2020년 뉴욕증권거래소에 직상장(IPO가 아닌 직접상장)했습니다.</p>
+    </div>
+
+    <div class="grid g4 mt40">
+      <div class="card rev"><div class="stat"><div class="v">2003</div><div class="l">설립 연도</div><div class="s">9·11 직후, 덴버/마이애미</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v">~4,400명</div><div class="l">임직원 수</div><div class="s">소프트웨어 회사 치고 적음</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v amber">2개</div><div class="l">사업 부문</div><div class="s">정부 + 상업</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v teal">2020</div><div class="l">상장 연도</div><div class="s">NYSE 직상장(DPO)</div></div></div>
+    </div>
+
+    <div class="mt40 rev">
+      <div class="eyebrow">연혁 한눈에</div>
+      <div class="tl">
+        <div class="tl-item"><div class="yr">2003</div><div class="t">설립</div><div class="d">피터 틸·알렉스 카프 등이 정보기관용 소프트웨어 회사로 창업</div></div>
+        <div class="tl-item"><div class="yr">2008</div><div class="t">Gotham 출시</div><div class="d">국방·정보·법집행 기관용 분석 플랫폼 — 첫 주력 제품</div></div>
+        <div class="tl-item"><div class="yr">2016</div><div class="t">Foundry 본격화</div><div class="d">민간 기업으로 확장 — "기업의 데이터 운영체제"</div></div>
+        <div class="tl-item"><div class="yr">2021</div><div class="t">Apollo 제품화</div><div class="d">어디든 소프트웨어를 배포하는 인프라를 '세 번째 플랫폼'으로 공식화</div></div>
+        <div class="tl-item"><div class="yr">2023</div><div class="t">AIP 공개</div><div class="d">생성형 AI를 실제 업무에 연결 — 상업 부문 폭발 성장의 기폭제</div></div>
+        <div class="tl-item"><div class="yr">2025–26</div><div class="t">'서구의 AI 운영체제'로 재평가</div><div class="d">매출 +56→85% 가속, GAAP 흑자 정착, 주가 급등과 논쟁의 한가운데</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 온톨로지 ============ -->
+<section id="s02">
+  <div class="wrap">
+    <div class="secnum rev">02 / 핵심 개념 — 온톨로지(Ontology)</div>
+    <h2 class="h2 rev">팔란티어를 이해하는<br>단 하나의 단어</h2>
+    <p class="lead rev">팔란티어의 모든 제품은 '온톨로지'라는 하나의 기술 위에 서 있습니다. 어렵게 들리지만 개념은 직관적입니다. 이것 하나만 이해하면 이 회사의 80%를 이해한 것입니다.</p>
+
+    <div class="body mt40 rev">
+      <p><b>보통의 데이터베이스는 '표(table)'로 데이터를 저장합니다.</b> 행과 열, 숫자와 코드로 가득한 표는 엔지니어가 아니면 알아보기 어렵고, 시스템마다 형식이 달라 서로 연결되지도 않습니다. 같은 사람이 인사 기록에는 'John Smith', 출입 기록에는 'jsmith@회사.com', 또 다른 시스템에는 'JS-0142'로 적혀 있어도, 컴퓨터는 이들이 동일 인물인지 모릅니다.</p>
+      <p><b>온톨로지는 이 표들을 누구나 아는 '현실의 대상'으로 바꿔 줍니다.</b> '고객', '항공기', '주문서', '환자', '공장 설비', '위협 인물' 같은 객체(object)와, 각 객체의 속성(이름·날짜·위치), 그리고 객체들 사이의 관계(이 주문은 이 고객의 것, 이 부품은 이 설비에 들어감)를 정의합니다. 그 결과는 조직의 실제 작동 방식을 그대로 비추는 <b>'디지털 트윈(현실의 디지털 쌍둥이)'</b>입니다.</p>
+    </div>
+
+    <div class="card mt40 rev">
+      <div class="eyebrow">표(데이터) → 의미(온톨로지)로 바뀌는 과정</div>
+      <div class="ont">
+        <div class="ont-box before">
+          <h4>BEFORE · 흩어진 데이터</h4>
+          <div class="silo">HR_DB: emp_id=0142, name="John Smith"</div>
+          <div class="silo">출입로그: user="jsmith@co.com"</div>
+          <div class="silo">급여시스템: PID="JS-0142"</div>
+          <div class="silo">ERP: vendor_contact_4471</div>
+          <p style="font-size:.8rem;color:var(--faint);margin-top:10px;font-family:var(--sans)">서로 연결되지 않는 '죽은' 데이터. 같은 사람·사물도 시스템마다 따로 논다.</p>
+        </div>
+        <div class="ont-arrow">▶</div>
+        <div class="ont-box after">
+          <h4>AFTER · 온톨로지</h4>
+          <div style="margin-bottom:14px">
+            <span class="objnode">👤 직원: 김존</span>
+            <span class="objnode">🏢 부서</span>
+            <span class="objnode">📄 프로젝트</span>
+            <span class="objnode">🔑 접근권한</span>
+          </div>
+          <p style="font-size:.82rem;color:var(--dim);margin-top:4px;font-family:var(--sans)">네 시스템의 기록이 '김존'이라는 <b>하나의 객체</b>로 묶이고, 그가 속한 부서·프로젝트·권한과 자동으로 연결된다. 사람도 AI도 즉시 이해한다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g3 mt40">
+      <div class="card rev"><div class="stat"><div class="v amber" style="font-size:1.3rem">① 의미(Semantic)</div></div><p class="body" style="margin-top:10px;font-size:.92rem">객체·속성·관계 — '무엇이 무엇이고 어떻게 연결되는가'. 조직의 공용 언어가 된다.</p></div>
+      <div class="card rev"><div class="stat"><div class="v amber" style="font-size:1.3rem">② 논리(Logic)</div></div><p class="body" style="margin-top:10px;font-size:.92rem">결정 규칙과 함수 — '이럴 땐 이렇게 한다'. 비즈니스 판단의 로직을 담는다.</p></div>
+      <div class="card rev"><div class="stat"><div class="v amber" style="font-size:1.3rem">③ 행동(Action)</div></div><p class="body" style="margin-top:10px;font-size:.92rem">실제 실행 — 모형 위에서 내린 결정을 원래 시스템에 되돌려 '진짜로' 실행한다(양방향).</p></div>
+    </div>
+
+    <div class="note green mt40 rev"><p><b>왜 이것이 결정적인가:</b> 스노우플레이크·데이터브릭스·마이크로소프트도 '의미 계층(semantic layer)'을 말합니다. 하지만 그들의 것은 데이터 창고 위에 얹은 '읽기용 사전'에 가깝습니다. 팔란티어의 온톨로지는 <b>사람과 AI가 읽을 뿐 아니라 직접 행동(쓰기)까지 하는 '운영 계층'</b>입니다. 게다가 결정과 행동이 다시 모형에 쌓이며 시간이 갈수록 똑똑해집니다. 한 솔루션 엔지니어의 표현을 빌리면 "온톨로지는 회사의 신경계"입니다. 이 차이가 다음에 볼 4대 제품과, 뒤에서 다룰 '경제적 해자'의 원천입니다. <span class="conf hi"><span class="dot"></span>개념 정확도 높음 ~88%</span></p></div>
+  </div>
+</section>
+
+<!-- ============ 03 4대 플랫폼 ============ -->
+<section id="s03">
+  <div class="wrap">
+    <div class="secnum rev">03 / 4대 플랫폼 상세</div>
+    <h2 class="h2 rev">네 개의 제품,<br>하나의 운영체제</h2>
+    <p class="lead rev mb28">팔란티어의 제품은 따로 노는 4개가 아니라, 온톨로지를 중심으로 맞물린 하나의 시스템입니다. 데이터를 모으고(Foundry), 정부 기밀 영역을 다루고(Gotham), 어디든 배포하고(Apollo), 그 위에 AI를 올립니다(AIP). 각각을 비전공자 눈높이로 자세히 풀어봅니다.</p>
+
+    <!-- GOTHAM -->
+    <div class="feature rev">
+      <div class="feature-head">
+        <div class="feature-badge fb-gotham">G</div>
+        <div><div class="ft">Gotham · 고담</div><div class="fs">2008 출시 · 정부 · 국방 · 정보 · 법집행</div></div>
+        <div class="feature-tag">정부 부문 핵심</div>
+      </div>
+      <div class="feature-body">
+        <div class="fsec">한 줄로</div>
+        <p class="ftxt">흩어진 기밀 정보를 하나로 엮어 "위협이 어디에 있는가"를 실시간으로 보여 주고, 분석가가 찾은 위협을 현장 작전으로 넘겨주는 '정보기관용 작전 운영체제'입니다.</p>
+        <div class="fgrid">
+          <div>
+            <div class="fsec">무엇을 하는가</div>
+            <p class="ftxt" style="margin-bottom:0">위성 영상, 센서 신호, 첩보 문서, 통신 기록, 금융 거래, 소셜미디어 등 형식도 출처도 제각각인 데이터를 한데 '융합(data fusion)'합니다. 9·11 당시 여러 기관의 단서가 연결되지 못해 음모를 사전에 막지 못했는데, 고담은 바로 그 '점들을 잇는' 일을 합니다.</p>
+          </div>
+          <div>
+            <div class="fsec">어떻게 작동하나</div>
+            <p class="ftxt" style="margin-bottom:0">특정 인물·차량·건물 객체를 클릭해 "주변을 둘러보기(search around)" 하면 연결된 모든 대상이 떠오릅니다. 지도(지리정보), 관계망 그래프, 시간축으로 동시에 볼 수 있고, 모든 데이터는 출처에 묶여 항목 단위로 접근 권한이 통제됩니다.</p>
+          </div>
+        </div>
+        <div class="fsec">실제 사용 기관</div>
+        <div class="chips mb14">
+          <span class="chip">CIA</span><span class="chip">FBI</span><span class="chip">NSA</span><span class="chip">국토안보부(DHS)</span>
+          <span class="chip">미 해병대·공군</span><span class="chip">특수작전사령부(SOCOM)</span><span class="chip">이민세관단속국(ICE)</span><span class="chip">CDC·IRS·NYPD</span>
+        </div>
+        <div class="example">
+          <div class="ex-l">쉬운 예시</div>
+          <p>한 분석가가 "이 용의자가 특정 금융기관·인물과 연결돼 있는가"를 조사한다고 하자. 고담은 은행 기록·통신 메타데이터·소셜 게시물을 모아 교차 분석해 '관계 지도'를 그려 준다. 과거 분석가 여러 명이 수개월 걸리던 일을 한 사람이 몇 시간 만에 해낸다.</p>
+        </div>
+        <div class="note teal mt20" style="border-radius:10px"><p><b>기술 수준:</b> 약 15년 넘게 세계에서 가장 까다롭고 위험하며 보안이 엄격한 환경에서 실전 검증되었습니다. 이 '검증된 신뢰'는 경쟁사가 단기간에 따라올 수 없는 자산입니다.</p></div>
+      </div>
+    </div>
+
+    <!-- FOUNDRY -->
+    <div class="feature rev">
+      <div class="feature-head">
+        <div class="feature-badge fb-foundry">F</div>
+        <div><div class="ft">Foundry · 파운드리</div><div class="fs">2016 본격화 · 민간 기업 · 상업 부문</div></div>
+        <div class="feature-tag">상업 성장의 토대</div>
+      </div>
+      <div class="feature-body">
+        <div class="fsec">한 줄로</div>
+        <p class="ftxt">"당신 회사의 지저분하고 흩어진 데이터를 쓸모 있게 만들어 드립니다." 기업판 고담으로, 온톨로지를 통해 회사 전체의 디지털 트윈을 만드는 핵심 플랫폼입니다.</p>
+        <div class="fgrid">
+          <div>
+            <div class="fsec">무엇을 하는가</div>
+            <p class="ftxt" style="margin-bottom:0">자재관리(ERP)·고객관리(CRM)·사물인터넷(IoT) 센서·낡은 데이터베이스 등을 200개 이상의 사전 연결장치(커넥터)와 자동 파이프라인으로 끌어와 정형·비정형 데이터를 통합합니다. 그 위에 온톨로지로 회사의 '운영 모형'을 세웁니다.</p>
+          </div>
+          <div>
+            <div class="fsec">누가 어떻게 쓰나</div>
+            <p class="ftxt" style="margin-bottom:0">데이터 엔지니어는 파이프라인으로 데이터를 정제하고, 분석가는 대시보드로 탐색하며, 현업 팀은 코딩 없이 앱을 만드는 'Workshop'으로 실시간 재고 현황판이나 구매 승인 절차 같은 도구를 직접 만듭니다. 모두 같은 모형·같은 보안·같은 감사 추적 위에서요.</p>
+          </div>
+        </div>
+        <div class="fsec">실제 고객 &amp; 활용</div>
+        <div class="chips mb14">
+          <span class="chip">에어버스(항공기 제조)</span><span class="chip">머크(제약)</span><span class="chip">리어(자동차 부품)</span>
+          <span class="chip">항공사·병원·정유·유통</span><span class="chip hot">공급망 최적화</span><span class="chip hot">자금세탁 방지</span><span class="chip hot">예측 정비</span>
+        </div>
+        <div class="example">
+          <div class="ex-l">쉬운 예시</div>
+          <p>유통 매장이라면, 모든 상품·공급처·재고·판매 데이터를 온톨로지로 묶어 실시간 재고 통찰을 얻는다. 결품과 과잉재고를 동시에 줄이고 공급망을 최적화한다. 자동차 부품사 리어는 제조·구매·재무 전반에 파운드리를 확장해 상당한 비용 절감을 보고했다.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- APOLLO -->
+    <div class="feature rev">
+      <div class="feature-head">
+        <div class="feature-badge fb-apollo">A</div>
+        <div><div class="ft">Apollo · 아폴로</div><div class="fs">2021 제품화 · 인프라 · 소프트웨어 배포</div></div>
+        <div class="feature-tag">보이지 않는 배관</div>
+      </div>
+      <div class="feature-body">
+        <div class="fsec">한 줄로</div>
+        <p class="ftxt">"한 번 만든 소프트웨어를 어디에든 자동으로 배포·업데이트한다." 잠수함부터 기밀 클라우드까지, 인터넷이 닿지 않는 곳에도 소프트웨어를 보내는 '관제탑'입니다. 팔란티어가 '세 번째 플랫폼'이라 부르는 핵심 인프라입니다.</p>
+        <div class="fgrid">
+          <div>
+            <div class="fsec">왜 필요한가</div>
+            <p class="ftxt" style="margin-bottom:0">보통의 클라우드 소프트웨어는 하나의 공용 클라우드에서만 돕니다. 하지만 팔란티어 고객 중엔 항공모함, 인터넷이 끊긴 기밀 정부 클라우드, 사내 서버(온프레미스), 현장 장비(엣지)가 있습니다. 일반 SaaS로는 닿을 수 없는 곳들이죠.</p>
+          </div>
+          <div>
+            <div class="fsec">무엇을 하는가</div>
+            <p class="ftxt" style="margin-bottom:0">이런 이질적 환경 전부에 소프트웨어를 자율 배포하고, 운영 중에도 보안 취약점을 찾아 몇 초 만에 패치를 밀어 넣습니다(Day-2 운영). 개발자가 환경에 직접 접근하지 않아도 FedRAMP·IL5 같은 정부 인증 상태를 유지합니다.</p>
+          </div>
+        </div>
+        <div class="example">
+          <div class="ex-l">핵심 비유</div>
+          <p>아폴로는 항공모함, 기밀 시설, 상업용 클라우드에 소프트웨어 업데이트를 '동시에' 밀어 넣을 수 있다. 팔란티어의 표현으로 "SaaS가 한 번도 가 보지 못한 곳에서 도는 SaaS." 이 능력 덕분에 경쟁사가 물리적으로 닿을 수 없는 최고 보안 고객을 확보한다 — 그 자체가 강력한 해자.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AIP -->
+    <div class="feature rev">
+      <div class="feature-head">
+        <div class="feature-badge fb-aip">AI</div>
+        <div><div class="ft">AIP · 인공지능 플랫폼</div><div class="fs">2023 공개 · 생성형 AI · 최근 성장의 엔진</div></div>
+        <div class="feature-tag">현재 성장 동력</div>
+      </div>
+      <div class="feature-body">
+        <div class="fsec">한 줄로</div>
+        <p class="ftxt">챗봇이 아닙니다. 챗GPT 같은 대형언어모델(LLM)을 회사의 실제 데이터·업무에 안전하게 연결해, AI가 답만 하는 게 아니라 '실제 행동'까지 하게 만드는 'AI 통제·실행 계층'입니다.</p>
+        <div class="fgrid">
+          <div>
+            <div class="fsec">무엇이 다른가</div>
+            <p class="ftxt" style="margin-bottom:0">AIP는 외부 LLM 여러 개를 가져다 온톨로지 위에 '접지(grounding)'시킵니다. 즉 AI가 우리 회사 데이터를 근거로만 말하게 하고, 모든 행동에 접근권한·암호화·감사 기록·비용 통제를 입힙니다. '운영 AI(operational AI)' — AI 에이전트가 통제와 추적 가능성 아래 실제 작업을 수행합니다.</p>
+          </div>
+          <div>
+            <div class="fsec">부트캠프(Bootcamp) 영업</div>
+            <p class="ftxt" style="margin-bottom:0">1년 걸리던 영업 대신, 1~5일짜리 '직접 손으로 만들어 보는' 워크숍을 엽니다. 고객이 자기 데이터로 작동하는 AI 사례를 그 자리에서 만듭니다. 전환율이 약 75%에 달해, 판매 주기를 1년에서 며칠로 압축했습니다 — 이른바 '워프 스피드'.</p>
+          </div>
+        </div>
+        <div class="fsec">실제 성과</div>
+        <div class="chips mb14">
+          <span class="chip hot">미국 상업 매출 +130%대</span><span class="chip">월그린: 4,000개 매장에 8개월 만에 AI 워크플로 배포</span>
+          <span class="chip">AIG: 5년 성장률 2배 기대</span><span class="chip">헬스케어 고객: 체험 5주 만에 5년 $26M 계약</span>
+        </div>
+        <div class="example">
+          <div class="ex-l">쉬운 예시</div>
+          <p>고객 상담 직원이 "이 고객의 계약·이력·재고를 모두 반영해 환불해도 되나?"를 물으면, AIP는 회사 데이터 전체를 근거로 답할 뿐 아니라 승인 절차까지 실행한다. 단순 대화가 아니라 '데이터에 근거한, 통제된 행동'이라는 점이 핵심이다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="note mt28 rev"><p><b>네 제품이 맞물리는 방식:</b> Foundry가 데이터를 모아 온톨로지(디지털 트윈)를 만들고 → Gotham이 정부 기밀 영역을 담당하고 → Apollo가 그 소프트웨어를 어디에든 배포·유지하고 → AIP가 그 위에 안전한 AI 실행을 올립니다. 핵심 차별점은 언제나 '온톨로지'라는 공통 토대입니다.</p></div>
+  </div>
+</section>
+
+<!-- ============ 04 기술 수준 & 차별점 ============ -->
+<section id="s04">
+  <div class="wrap">
+    <div class="secnum rev">04 / 기술 수준 &amp; 차별점</div>
+    <h2 class="h2 rev">왜 경쟁사가<br>쉽게 따라오지 못하는가</h2>
+    <p class="lead rev">팔란티어의 강함은 어느 한 제품이 아니라 '조합'에서 나옵니다. 모형(온톨로지) + 배포(Apollo) + 행동하는 AI(AIP) + 사람(전진배치 엔지니어)이 한 묶음으로 움직입니다.</p>
+
+    <div class="grid g2 mt40">
+      <div class="card rev">
+        <div class="eyebrow" style="margin-bottom:14px">전진배치 엔지니어(FDE)</div>
+        <p class="body" style="font-size:.95rem">팔란티어는 자사 엔지니어를 고객 현장에 직접 투입해, 첫 사용 사례를 함께 만들며 그 업무를 깊이 학습합니다. 비용은 많이 들지만, 고객 업무에 맞춤화되고 깊숙이 자리 잡아 쉽게 떼어낼 수 없게 됩니다 — 강력한 락인(lock-in)의 원천입니다.</p>
+      </div>
+      <div class="card rev">
+        <div class="eyebrow" style="margin-bottom:14px">정부 신뢰 &amp; 인증 장벽</div>
+        <p class="body" style="font-size:.95rem">20년 넘게 기밀 환경에서 쌓은 실적과 FedRAMP·IL5 같은 인증은 경쟁사가 갖추는 데 수년이 걸립니다. 한 번 정부의 핵심 시스템이 되면 교체 비용이 막대해 좀처럼 바뀌지 않습니다.</p>
+      </div>
+    </div>
+
+    <div class="note mt40 rev"><p><b>경쟁사 대비 위치 (균형 잡힌 시각):</b> 스노우플레이크·데이터브릭스·마이크로소프트도 '의미 계층'을 갖췄지만, AI 에이전트가 직접 행동하는 양방향 '운영 계층'까지 구현하진 못했습니다. 모틀리풀의 표현대로 "경쟁 온톨로지를 만드는 건 말처럼 쉽지 않으며, 그래서 이 영역에 진짜 경쟁자가 아직 없다"는 평가가 있습니다. <b>다만</b> 상업 시장에선 마이크로소프트·오라클·하이퍼스케일러가 빠르게 추격 중이며, 이 우위가 '얼마나 오래' 갈지가 곧 뒤에서 다룰 주가 논쟁과 CAP 분석의 핵심입니다. <span class="conf mid"><span class="dot"></span>해자 지속성 확신 보통 ~70%</span></p></div>
+  </div>
+</section>
+
+<!-- ============ 05 수익 구조 ============ -->
+<section id="s05">
+  <div class="wrap">
+    <div class="secnum rev">05 / 수익 구조</div>
+    <h2 class="h2 rev">어떻게 돈을 버는가</h2>
+    <p class="lead rev">팔란티어는 정부와 기업에 다년 소프트웨어 계약을 팝니다. 매출은 두 부문(정부·상업)으로 나뉘고, 성장의 무게중심은 빠르게 '미국 상업'으로 이동하고 있습니다.</p>
+
+    <div class="grid g2 mt40">
+      <div class="rev">
+        <div class="eyebrow">부문 구성 (2026년 1분기 매출 $1,632.6M)</div>
+        <div class="card">
+          <div class="split">
+            <div style="width:42.1%;background:linear-gradient(135deg,#56c8bd,#3da89d)">정부 42%</div>
+            <div style="width:57.9%;background:linear-gradient(135deg,#f0b53f,#e89a2c)">상업 58%</div>
+          </div>
+          <div class="legrow"><span>정부 부문</span><span>상업 부문</span></div>
+          <ul class="plain mt20" style="gap:9px">
+            <li><b>미국 매출 +104%</b> ($1,282M) — 성장의 핵심 엔진</li>
+            <li><b>미국 상업 +133%</b> ($595M), 고객사 615곳(+42%) — AIP 부트캠프 효과</li>
+            <li><b>미국 정부 +84%</b> ($687M) — Maven 등 국방 확대</li>
+          </ul>
+        </div>
+      </div>
+      <div class="rev">
+        <div class="eyebrow">돈 버는 구조의 특징</div>
+        <ul class="plain">
+          <li><b>다년 대형 계약:</b> 한 번 도입하면 여러 해에 걸쳐 매출이 발생합니다.</li>
+          <li><b>순달러유지율 약 150%:</b> 기존 고객이 매년 지출을 약 50% 늘립니다. 한 번 들어오면 점점 더 쓴다는 뜻입니다.</li>
+          <li><b>부트캠프 영업:</b> 짧은 워크숍으로 빠르게 고객을 전환(전환율 ~75%).</li>
+          <li><b>전진배치 엔지니어:</b> 초기 구축을 도와 깊이 자리 잡게 합니다.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid g4 mt40">
+      <div class="card rev"><div class="stat"><div class="v">+85%</div><div class="l">매출 성장률(YoY)</div><div class="s">2020년 이후 최고</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v amber">46%</div><div class="l">GAAP 영업이익률</div><div class="s">스톡옵션 비용 반영 후</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v teal">$899M</div><div class="l">분기 영업현금흐름</div><div class="s">자본효율 극대</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v green">145%</div><div class="l">룰 오브 포티</div><div class="s">성장+마진, 사상 최고</div></div></div>
+    </div>
+    <div class="note teal mt20 rev"><p>분기 설비투자(자본적지출)는 단 <b>$7.4M</b>(매출의 0.5% 미만), 순현금 약 <b>$80억</b>, 부채 0. 공장도 재고도 거의 없는 '자산 경량(asset-light)' 모델이라, 매출이 늘수록 현금이 빠르게 쌓입니다. '룰 오브 포티'(매출성장률+이익률이 40을 넘으면 우량으로 보는 업계 기준)가 145%로 사상 최고입니다.</p></div>
+  </div>
+</section>
+
+<!-- ============ 06 산업 분석 ============ -->
+<section id="s06">
+  <div class="wrap">
+    <div class="secnum rev">06 / 산업 분석</div>
+    <h2 class="h2 rev">세 개의 거대 시장이<br>만나는 교차점</h2>
+    <p class="lead rev mb28">팔란티어는 어느 한 산업에만 속하지 않습니다. 기업 데이터 통합, 기업용 AI, 국방·정부 소프트웨어라는 세 시장이 겹치는 자리에 있습니다. 이 위치가 강점이자 동시에 경쟁이 사방에서 오는 이유입니다.</p>
+
+    <div class="grid g3 mt28">
+      <div class="card rev"><div class="eyebrow" style="margin-bottom:12px;color:var(--teal)">① 데이터 통합·분석</div><p class="body" style="font-size:.92rem">흩어진 기업 데이터를 묶는 시장. 경쟁: 스노우플레이크, 데이터브릭스, 그리고 SAP·테라데이터 같은 전통 강자.</p></div>
+      <div class="card rev"><div class="eyebrow" style="margin-bottom:12px;color:var(--amber)">② 기업용 AI(운영 AI)</div><p class="body" style="font-size:.92rem">가장 뜨거운 성장 영역. LLM을 실제 업무에 연결. 경쟁: 마이크로소프트, 오라클, 세일즈포스, 하이퍼스케일러.</p></div>
+      <div class="card rev"><div class="eyebrow" style="margin-bottom:12px;color:#9b8cc9">③ 국방·정부 SW</div><p class="body" style="font-size:.92rem">전통 방산업체와 신생 방산테크(예: 안두릴)가 경쟁. 팔란티어는 '소프트웨어 우선' 접근으로 차별화.</p></div>
+    </div>
+
+    <div class="mt40 rev">
+      <div class="eyebrow">산업 가치사슬에서 팔란티어의 위치</div>
+      <div class="flow">
+        <div class="flow-step"><span class="layer-tag">하부</span><div class="fn">STEP 1</div><div class="fh">데이터 발생</div><div class="fd">ERP·CRM·센서·기밀 첩보 등 원천 데이터</div></div>
+        <div class="flow-step"><span class="layer-tag">인프라</span><div class="fn">STEP 2</div><div class="fh">저장·클라우드</div><div class="fd">AWS·애저·구글클라우드, 스노우플레이크 저장</div></div>
+        <div class="flow-step" style="background:linear-gradient(160deg,rgba(240,181,63,.12),var(--bg2));border-color:var(--amber)"><span class="layer-tag" style="color:var(--amber)">팔란티어</span><div class="fn" style="color:var(--amber)">STEP 3 ★</div><div class="fh">통합·모형·실행</div><div class="fd">온톨로지로 묶고 AIP로 AI를 올려 '결정과 행동'을 만든다</div></div>
+        <div class="flow-step"><span class="layer-tag">모델</span><div class="fn">STEP 4</div><div class="fh">AI 모델</div><div class="fd">오픈AI·앤트로픽 등 LLM(팔란티어가 가져다 씀)</div></div>
+        <div class="flow-step"><span class="layer-tag">결과</span><div class="fn">STEP 5</div><div class="fh">사람·에이전트의 결정</div><div class="fd">실행 결과가 다시 데이터로 피드백</div></div>
+      </div>
+      <p class="body mt20" style="font-size:.95rem">팔란티어는 원천 데이터/클라우드(아래)와 LLM 모델 제공자(옆) 사이에서 이들을 잇는 <b>'논리·오케스트레이션 계층'</b>에 자리합니다. 모델 자체를 만들지 않고, 모델을 '실제 업무에 쓰이게' 만드는 연결조직 역할입니다.</p>
+    </div>
+
+    <div class="mt40 rev">
+      <div class="eyebrow">산업 트렌드와 방향성</div>
+      <ul class="plain">
+        <li><b>'생성형 AI 과열'에서 '행동하는 AI'로:</b> 2024년의 챗봇 열풍을 지나, 기업은 이제 실제 업무를 자동 실행하는 AI 에이전트를 원합니다 — 팔란티어 AIP의 정조준 지점입니다.</li>
+        <li><b>서구 국방비 증가:</b> 약 $1.5조 규모의 2027 회계연도 국방예산 논의, Maven의 '기록 시스템' 지위 등 정부 수요가 구조적으로 확대 중입니다.</li>
+        <li><b>데이터 파편화 심화:</b> 기업이 쓰는 시스템이 늘수록 통합 수요는 커집니다.</li>
+        <li><b>거대한 시장:</b> 일부 전문가는 글로벌 AI 시장이 2034년 약 $3.6조에 이를 수 있다고 봅니다.</li>
+        <li><b>한계도 분명:</b> 팔란티어 고객은 대체로 '서구 가치권' 조직에 한정돼(모닝스타 지적), 지정학적으로 시장 상한이 존재합니다.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 경쟁/피어 ============ -->
+<section id="s07">
+  <div class="wrap">
+    <div class="secnum rev">07 / 경쟁 환경 &amp; 피어 비교</div>
+    <h2 class="h2 rev">성장은 1위, 가격도 1위</h2>
+    <p class="lead rev">성장률은 동종 소프트웨어 기업을 압도하지만, 그 성장에 매겨진 가격(밸류에이션)은 차원이 다릅니다. 아래 배수는 산정방식·시점에 따라 출처별 편차가 있어 보수적으로 표기했습니다.</p>
+
+    <div class="tbl-wrap mt40 rev">
+      <table>
+        <thead><tr><th>기업 (티커)</th><th>매출성장</th><th>EV/매출(선행)</th><th>선행 P/E</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr style="background:rgba(240,181,63,.07)"><td style="color:var(--amber);font-weight:700">Palantir (PLTR)</td><td><span class="pos">~78%</span></td><td style="color:var(--amber);font-weight:700">~48배</td><td style="color:var(--amber);font-weight:700">~110–167배</td><td class="rowlabel">최고 성장 · 최고 밸류</td></tr>
+          <tr><td>CrowdStrike (CRWD)</td><td>~22%</td><td>~18.9배</td><td>~73–93배</td><td class="rowlabel">보안</td></tr>
+          <tr><td>Datadog (DDOG)</td><td>~27%</td><td>~11.4배</td><td>~53–56배</td><td class="rowlabel">관측가능성</td></tr>
+          <tr><td>Palo Alto (PANW)</td><td>~15%</td><td>~11.2배</td><td>—</td><td class="rowlabel">보안</td></tr>
+          <tr><td>ServiceNow (NOW)</td><td>~20%</td><td>—</td><td>~61배</td><td class="rowlabel">매출 PLTR의 ~3배</td></tr>
+          <tr><td>Snowflake (SNOW)</td><td>~30%</td><td>~20배</td><td>—</td><td class="rowlabel">데이터 저장·분석</td></tr>
+          <tr class="tsum"><td>소프트웨어 peer 평균</td><td>—</td><td>~8.5배</td><td>—</td><td class="rowlabel">TIKR 그룹 기준</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid g3 mt28">
+      <div class="card rev"><div class="stat"><div class="v amber">~5.6배</div><div class="l">peer 평균 대비 EV/매출</div><div class="s">48배 ÷ 8.5배</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v teal">~2.5배</div><div class="l">차순위(CRWD) 대비</div><div class="s">48배 ÷ 18.9배</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v red">~80–98배</div><div class="l">후행(TTM) 주가매출배수</div><div class="s">대형 SW 중 최고 수준</div></div></div>
+    </div>
+    <div class="note mt20 rev"><p>해석: 시장은 팔란티어가 단지 빨리 성장할 뿐 아니라, 그 성장이 <b>동종업계 누구보다 오래</b> 지속되리라 가격에 반영하고 있습니다. 이것이 뒤에서 다룰 '비정상적으로 긴 내재 경쟁우위기간(CAP)'으로 직결됩니다. <span class="conf mid"><span class="dot"></span>배수 정확도 보통 ~75%</span></p></div>
+  </div>
+</section>
+
+<!-- ============ 08 경제적 해자 ============ -->
+<section id="s08">
+  <div class="wrap">
+    <div class="secnum rev">08 / 경제적 해자(Moat)</div>
+    <h2 class="h2 rev">무엇이 이익을 지켜 주는가</h2>
+    <p class="lead rev">해자란 경쟁사가 쉽게 침범하지 못하게 막아 주는 구조적 방어막입니다. 팔란티어의 해자는 네 겹입니다.</p>
+    <div class="grid g2 mt40">
+      <div class="card accent rev"><div class="eyebrow" style="margin-bottom:12px">① 전환비용 (가장 강함)</div><p class="body" style="font-size:.93rem">온톨로지가 회사의 '신경계'가 되면, 떼어내는 것은 회사 운영 방식을 통째로 바꾸는 일입니다. 순달러유지율 ~150%가 이를 증명합니다.</p></div>
+      <div class="card rev"><div class="eyebrow" style="margin-bottom:12px">② 정부 인증·신뢰 장벽</div><p class="body" style="font-size:.93rem">FedRAMP·IL5 인증과 20년 기밀 실적은 경쟁사가 수년을 들여도 넘기 어렵습니다. Maven은 美 국방 '기록 시스템'으로 지정.</p></div>
+      <div class="card rev"><div class="eyebrow" style="margin-bottom:12px">③ 기술 복제 난이도</div><p class="body" style="font-size:.93rem">행동까지 하는 양방향 온톨로지 + 어디든 배포하는 Apollo의 조합은 단기 모방이 어렵습니다. "진짜 경쟁자가 아직 없다"는 평가도 있습니다.</p></div>
+      <div class="card rev"><div class="eyebrow" style="margin-bottom:12px">④ 데이터·학습 복리효과</div><p class="body" style="font-size:.93rem">고객이 쓸수록 온톨로지에 결정·행동이 쌓여 모형이 똑똑해지고, 그만큼 더 떼어내기 어려워집니다.</p></div>
+    </div>
+    <div class="note red mt28 rev"><p><b>해자에 대한 솔직한 평가:</b> 정부·전환비용 해자는 증거가 강합니다(확신 높음). 그러나 상업 AIP 시장에서 마이크로소프트·오라클·하이퍼스케일러와의 경쟁이 격화 중이라, 80%대 성장이 '얼마나 오래' 이어질지는 해자만으로 단정할 수 없습니다. 바로 이 불확실성이 다음 두 가지 — 주가 내러티브와 CAP 분석 — 의 본질입니다. <span class="conf mid"><span class="dot"></span>전체 해자 지속성 ~70%</span></p></div>
+  </div>
+</section>
+
+<!-- ============ 09 SWOT ============ -->
+<section id="s09">
+  <div class="wrap">
+    <div class="secnum rev">09 / SWOT</div>
+    <h2 class="h2 rev">강점은 사업, 위협은 가격</h2>
+    <div class="swot mt40 rev">
+      <div class="q s"><h4><span class="tag">S</span>강점 Strengths</h4><ul>
+        <li>80%대 매출 성장 + 46% GAAP 영업이익률 동시 달성</li>
+        <li>순현금 ~$80억, 부채 0, 설비투자 거의 없는 자산 경량 모델</li>
+        <li>정부 기밀 인증·온톨로지 기반 높은 전환비용</li>
+        <li>순달러유지율 ~150%, 부트캠프로 빠른 고객 확보</li></ul></div>
+      <div class="q w"><h4><span class="tag">W</span>약점 Weaknesses</h4><ul>
+        <li>밸류에이션이 실행 실패를 거의 허용하지 않음</li>
+        <li>스톡옵션(SBC) 의존 — 보고이익과 조정이익의 큰 괴리</li>
+        <li>서구 진영 중심으로 총시장(TAM) 제약</li>
+        <li>대규모 정부 계약 의존 — 정책·예산에 민감</li></ul></div>
+      <div class="q o"><h4><span class="tag">O</span>기회 Opportunities</h4><ul>
+        <li>AIP 부트캠프로 상업 고객 빠른 전환·확장</li>
+        <li>약 $1.5조 2027 국방예산 내 Maven 확대</li>
+        <li>기업 AI '행동 단계' 본격화 — 데이터 통합 수요 급증</li>
+        <li>국제·신규 산업으로의 침투 여지</li></ul></div>
+      <div class="q t"><h4><span class="tag">T</span>위협 Threats</h4><ul>
+        <li>MS·오라클·하이퍼스케일러 등 경쟁 격화</li>
+        <li>성장 둔화 시 멀티플 급격 압축(높은 베타 1.3)</li>
+        <li>내부자 매도 누계 $4.3억+ 보고</li>
+        <li>금리 상승 시 장기 고멀티플 주식에 불리</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 주가 내러티브 ============ -->
+<section id="s10">
+  <div class="wrap">
+    <div class="secnum rev">10 / 현재 주가를 움직이는 내러티브</div>
+    <h2 class="h2 rev">10년래 가장 논쟁적인 주식</h2>
+    <p class="lead rev">팔란티어 주가는 강세론과 약세론이 '둘 다 진지하게 설득력 있는' 보기 드문 종목입니다. 이 팽팽한 긴장이 극심한 변동성을 만듭니다. 실제로 5/29 하루에만 +9% 급등했습니다.</p>
+
+    <div class="card mt40 rev">
+      <div class="eyebrow">최근 급등은 왜 일어났나 (5/29, +9%)</div>
+      <p class="body" style="font-size:.96rem">이날 상승은 팔란티어 자체 뉴스가 아니라, <b>스노우플레이크·델(Dell)의 호실적·AI 수요 신호</b>가 기업용 AI 소프트웨어 전반의 투자심리를 끌어올린 '업종 동반 랠리'였습니다. 여기에 국방비 증가 기대가 더해졌습니다. 1년 만의 최고 단기 상승으로, 팔란티어가 '오해받던 정부 계약업체'에서 '서구의 AI 운영체제'로 재평가되는 흐름을 다시 보여 줬습니다. 그만큼 외부 분위기에 크게 출렁이는 종목이라는 뜻이기도 합니다.</p>
+    </div>
+
+    <div class="bb mt28 rev">
+      <div class="col-b bull">
+        <h4>▲ 강세론 (Bull)</h4>
+        <div class="sub">"$1조 기업이 될 수 있다"</div>
+        <ul>
+          <li><b>국방·정부 심화:</b> Maven 기록시스템 지정, $448M 규모 美 해군 'ShipOS' 계약(Foundry+AIP로 잠수함 건조 공급문제를 잡아 속도↑). BofA의 마리아나 페레스 모라는 매수·최고 목표가 $255 제시.</li>
+          <li><b>상업 변곡점:</b> AIP 부트캠프로 미국 상업 +130%대, 한 분기 $10M 이상 계약 53건.</li>
+          <li><b>'AI 배관'으로서의 가치:</b> 온톨로지가 정부·기업 AI의 기반이 되면, 시스템 중심에 선 플랫폼은 역사적으로 거대한 가치를 창출(MS·애플·알파벳처럼). "경쟁 온톨로지는 만들기 어렵다 — 그래서 진짜 경쟁자가 아직 없다."</li>
+          <li><b>거대한 AI 시장:</b> 2034년 약 $3.6조 전망에 올라탈 여지.</li>
+        </ul>
+      </div>
+      <div class="col-b bear">
+        <h4>▼ 약세론 (Bear)</h4>
+        <div class="sub">"$100 아래로 갈 수 있다"</div>
+        <ul>
+          <li><b>극단적 밸류에이션:</b> 선행 P/E ~92–111배, 선행 주가매출배수 ~49배, 후행 ~80–98배 — 우량 동종업체의 3~5배. '영웅적 지속성(heroic durability)'을 전제(제프리스 브렌트 틸, 매도·최저 목표가 $70).</li>
+          <li><b>마이클 버리의 공매도:</b> 과도한 밸류에이션과 성장 지속성 의문을 이유로 숏 포지션을 잡은 것으로 알려짐.</li>
+          <li><b>좋은 실적도 부족:</b> 1분기 매출 +85%·이익 +153%에도 발표(5/4) 후 주가 8% 하락 — 기대치가 이미 너무 높음.</li>
+          <li><b>정부 의존·정책 위험:</b> 정부 매출은 들쭉날쭉(예산 임시변통·사업 취소). 현 행정부와의 밀접한 관계는 정권 교체 시 최대 고객이 흔들릴 위험.</li>
+          <li><b>경쟁·금리:</b> MS·오라클 추격, 장기 자산이라 금리·위험선호 변화에 취약.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note mt28 rev"><p><b>이 줄다리기의 메커니즘:</b> 개인투자자의 확신과 기관투자자의 회의가 충돌합니다. 공매도 잔고는 높지만, 타이밍에서 거듭 틀리며 다소 줄었습니다. 분기 실적이 강세론을 확인해 주면 개인이 몰려들고 기관이 뒤따라 추격하며 변동성이 폭발합니다. 애널리스트 목표가가 <b>$70에서 $255까지(3.6배 차이)</b> 벌어진 것 자체가, 전문가조차 합의하지 못하는 '깊은 불확실성'의 증거입니다. <span class="conf mid"><span class="dot"></span>내러티브는 시장 견해의 균형 보고 ~75%</span></p></div>
+  </div>
+</section>
+
+<!-- ============ CHAPTER 3 ============ -->
+<div class="chapter-divider">
+  <div class="wrap">
+    <div class="cd-k">PART 2 — 그렇다면 가격은 합리적인가</div>
+    <div class="cd-t">주가에 담긴<br>'기대'를 해석하다</div>
+    <div class="cd-d">앞서 본 $70~$255의 논쟁을 감정이 아니라 숫자로 풀어 봅니다. 경쟁우위기간(CAP) 프레임워크는 "적정가를 새로 계산"하지 않고, 현재 주가가 정당화되려면 회사가 초과수익을 몇 년이나 유지해야 하는지를 거꾸로 묻습니다.</div>
+  </div>
+</div>
+
+<!-- ============ 11 방법론 ============ -->
+<section id="s11">
+  <div class="wrap">
+    <div class="secnum teal rev">11 / CAP 분석 방법론</div>
+    <h2 class="h2 rev">주가를 맞히지 않고,<br>주가의 '기대'를 역산한다</h2>
+    <p class="lead rev">경쟁우위기간(Competitive Advantage Period, CAP) 프레임워크는 역(逆) 현금흐름할인법(DCF)입니다. 기업가치를 새로 계산해 "싸다/비싸다"를 단언하는 대신, 현재 주가가 정당화되려면 회사가 경쟁사보다 높은 초과수익을 <b>몇 년이나 유지해야 하는지</b>를 거꾸로 풀어, 그 기간이 역사적·산업적 상식에 비춰 합리적인지 봅니다.</p>
+    <div class="grid g4 mt40">
+      <div class="card rev"><div class="stat"><div class="v teal">①</div><div class="l">생애주기 판별</div><div class="s">현금흐름으로 성장기 확인</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v teal">②</div><div class="l">명시적 DCF 구축</div><div class="s">매출·이익·현금흐름 추정</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v teal">③</div><div class="l">내재 CAP 역산</div><div class="s">DCF가치=현재가가 되는 기간</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v teal">④</div><div class="l">기준선과 대조</div><div class="s">해석 척도로 낙관/비관 판정</div></div></div>
+    </div>
+    <div class="note red mt28 rev"><p><b>핵심 원칙 — 스톡옵션(SBC)은 비용입니다.</b> 팔란티어는 보고이익(GAAP)과 조정이익(Non-GAAP)의 격차가 큽니다. 본 분석의 기본 시나리오는 SBC를 <b>실제 비용으로 처리한 GAAP 영업이익(45% 마진)</b>을 기준으로 합니다. 시장이 흔히 인용하는 '조정 58% 마진'은 SBC를 비용으로 보지 않은 수치이며, 본 보고서는 두 관점을 모두 제시해 차이를 드러냅니다. 앞서 본 강세·약세 논쟁의 상당 부분이 바로 이 회계 처리의 차이에서 나옵니다.</p></div>
+  </div>
+</section>
+
+<!-- ============ 12 핵심 결론 ============ -->
+<section id="s12">
+  <div class="wrap">
+    <div class="secnum teal rev">12 / 핵심 결론</div>
+    <h2 class="h2 rev">현재 주가는 프레임워크 척도의<br>최상단 — '과도한 낙관' 구간</h2>
+    <div class="verdict rev mt28">
+      <div class="verdict-tag">VERDICT · 정보 제공 목적 · 매매 권유 아님</div>
+      <h3>$156의 주가를 정당화하려면 20년을 훨씬 넘는 초과수익 지속 + 수십 년에 걸친 초고성장이 '동시에' 필요합니다.</h3>
+      <p>엄격한 가정(SBC 비용처리)으로는 기간을 무한대로 늘려도 주당가치가 <b>약 $63</b>을 넘기 어렵습니다. 즉 현재 주가의 내재 CAP은 사실상 <b>수렴하지 않습니다(40년+ 이탈)</b>. 시장식 가정(조정마진·낮은 할인율)으로 보아도, 주가가 요구하는 것은 <b>20년 이상의 CAP과 동시에 진행되는 다년간의 초고성장</b>입니다. 두 렌즈 모두 기대가 척도의 극단에 있다는 결론으로 수렴합니다 — 이것이 $70~$255 분산의 본질입니다.</p>
+    </div>
+
+    <div class="mt40 rev">
+      <div class="eyebrow">현재가 vs 프레임워크 내재가치 범위 (SBC 비용처리 · 30년 상한)</div>
+      <div class="gauge">
+        <div class="gauge-track">
+          <div class="gauge-band" style="left:31.2%;width:13.5%"></div>
+          <div class="gauge-mark" data-l="기본 $63" style="left:37.1%"></div>
+          <div class="gauge-mark" data-l="현재가 $156" style="left:91.8%;height:48px;top:-20px"></div>
+        </div>
+        <div class="gauge-scale"><span>$0</span><span>$40</span><span>$80</span><span>$120</span><span>$160</span></div>
+      </div>
+      <p class="lead mt20">프레임워크 적정가치 범위는 <b>약세 $53 · 기본 $63 · 강세 $76</b>. 현재가 $156은 기본값의 <b>약 2.5배</b> 수준입니다.</p>
+    </div>
+
+    <div class="grid g3 mt40">
+      <div class="card accent rev"><div class="stat"><div class="v amber">&gt;40년</div><div class="l">엄격 가정 내재 CAP</div><div class="s">사실상 수렴 불가</div></div><div class="mt14"><span class="conf hi"><span class="dot"></span>확신 높음 ~85%</span></div></div>
+      <div class="card rev"><div class="stat"><div class="v teal">≈48배</div><div class="l">선행 EV/매출</div><div class="s">peer 평균의 ~5.6배</div></div><div class="mt14"><span class="conf hi"><span class="dot"></span>확신 높음 ~90%</span></div></div>
+      <div class="card rev"><div class="stat"><div class="v red">$70–255</div><div class="l">애널리스트 목표가 분산</div><div class="s">SBC·성장 해석차 반영</div></div><div class="mt14"><span class="conf mid"><span class="dot"></span>확신 보통 ~70%</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13 생애주기 + 입력값 ============ -->
+<section id="s13">
+  <div class="wrap">
+    <div class="secnum teal rev">13 / 생애주기 &amp; 밸류에이션 입력값</div>
+    <h2 class="h2 rev">성장기 기업, 그리고 할인율</h2>
+    <div class="grid g2 mt40">
+      <div class="rev">
+        <div class="eyebrow">생애주기 — 성장기(Growth)</div>
+        <div class="card">
+          <svg viewBox="0 0 460 220" style="width:100%;height:auto">
+            <defs><linearGradient id="lc" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#56c8bd"/><stop offset="1" stop-color="#f0b53f"/></linearGradient></defs>
+            <path d="M20,190 C90,186 130,142 180,90 C230,40 300,28 440,22" fill="none" stroke="url(#lc)" stroke-width="2.5"/>
+            <line x1="20" y1="200" x2="440" y2="200" stroke="#2d3a4c" stroke-width="1"/>
+            <text x="55" y="216" fill="#5f6f82" font-family="JetBrains Mono" font-size="10">도입</text>
+            <text x="170" y="216" fill="#f0b53f" font-family="JetBrains Mono" font-size="10" font-weight="700">성장 ◀ 현위치</text>
+            <text x="320" y="216" fill="#5f6f82" font-family="JetBrains Mono" font-size="10">성숙</text>
+            <text x="405" y="216" fill="#5f6f82" font-family="JetBrains Mono" font-size="10">쇠퇴</text>
+            <circle cx="180" cy="90" r="6" fill="#f0b53f"/><circle cx="180" cy="90" r="11" fill="none" stroke="#f0b53f" stroke-opacity=".4"/>
+          </svg>
+          <p class="body mt14" style="font-size:.9rem">영업현금흐름은 강하게 (+)지만 매출이 +56~85%로 폭발하고 시장침투는 초기 — 전형적 성장기입니다. 따라서 명시적 예측 구간을 길게 잡고, 초과수익이 천천히 소멸하는 '페이드 모델'을 적용합니다. <span class="conf hi"><span class="dot"></span>판정 ~88%</span></p>
+        </div>
+      </div>
+      <div class="rev">
+        <div class="eyebrow">WACC(할인율) &amp; 터미널 가정</div>
+        <div class="card">
+          <table style="min-width:auto">
+            <tbody>
+              <tr><td class="rowlabel">무위험수익률(10년 국채)</td><td>4.45%</td></tr>
+              <tr><td class="rowlabel">베타(β)</td><td>1.30</td></tr>
+              <tr><td class="rowlabel">주식위험프리미엄(ERP)</td><td>4.75%</td></tr>
+              <tr class="tsum"><td>= WACC (자기자본비용)</td><td style="color:var(--amber)">10.63%</td></tr>
+              <tr><td class="rowlabel">장기성장률 g</td><td>2.5%</td></tr>
+              <tr><td class="rowlabel">EBITA 마진(기본·GAAP)</td><td style="color:var(--amber)">45%</td></tr>
+              <tr><td class="rowlabel">페이드 계수(IT/SW)</td><td>0.20</td></tr>
+            </tbody>
+          </table>
+          <p class="body mt14" style="font-size:.86rem">팔란티어는 부채가 0이라 WACC=자기자본비용. 45% 마진은 SBC를 비용 처리한 GAAP 기준으로, 마이크로소프트(~45%)와 유사한 업계 최상위권 수치입니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14 DCF Exhibit 23 ============ -->
+<section id="s14">
+  <div class="wrap">
+    <div class="secnum teal rev">14 / DCF 결과</div>
+    <h2 class="h2 rev">기본 시나리오 현금흐름 추정<br><span style="font-family:var(--mono);font-size:.5em;color:var(--faint);font-weight:400;letter-spacing:.05em">15년 명시적 구간 + 페이드 터미널 · 단위 $M</span></h2>
+    <div class="tbl-wrap mt40 rev">
+      <table>
+        <thead><tr><th>연도</th><th>매출</th><th>성장률</th><th>EBITA(45%)</th><th>NOPAT</th><th>FCF</th><th>현재가치(PV)</th></tr></thead>
+        <tbody>
+          <tr><td>2026</td><td>7,832</td><td><span class="pos">75.0%</span></td><td>3,524</td><td>2,820</td><td>2,538</td><td>2,413</td></tr>
+          <tr><td>2027</td><td>11,278</td><td><span class="pos">44.0%</span></td><td>5,075</td><td>4,060</td><td>3,654</td><td>3,141</td></tr>
+          <tr><td>2028</td><td>15,398</td><td>36.5%</td><td>6,929</td><td>5,543</td><td>4,989</td><td>3,876</td></tr>
+          <tr><td>2029</td><td>20,080</td><td>30.4%</td><td>9,036</td><td>7,229</td><td>6,506</td><td>4,569</td></tr>
+          <tr><td>2030</td><td>25,176</td><td>25.4%</td><td>11,329</td><td>9,063</td><td>8,157</td><td>5,178</td></tr>
+          <tr><td>2031</td><td>30,530</td><td>21.3%</td><td>13,738</td><td>10,991</td><td>9,892</td><td>5,676</td></tr>
+          <tr><td>2032</td><td>35,990</td><td>17.9%</td><td>16,196</td><td>12,956</td><td>11,661</td><td>6,049</td></tr>
+          <tr><td>2033</td><td>41,430</td><td>15.1%</td><td>18,644</td><td>14,915</td><td>13,423</td><td>6,295</td></tr>
+          <tr><td>2034</td><td>46,752</td><td>12.8%</td><td>21,039</td><td>16,831</td><td>15,148</td><td>6,421</td></tr>
+          <tr><td>2035</td><td>51,887</td><td>11.0%</td><td>23,349</td><td>18,679</td><td>16,811</td><td>6,442</td></tr>
+          <tr><td>2036–40</td><td class="rowlabel">…74,000</td><td class="rowlabel">9.5→5.6%</td><td>—</td><td>—</td><td class="rowlabel">합산</td><td>29,797</td></tr>
+        </tbody>
+        <tfoot>
+          <tr class="tsum"><td>명시적 구간 PV 합계</td><td colspan="5" class="rowlabel" style="text-align:left;color:var(--faint)">15년 할인 현금흐름</td><td style="color:var(--teal)">80,056</td></tr>
+          <tr class="tsum"><td>터미널가치 PV</td><td colspan="5" class="rowlabel" style="text-align:left;color:var(--faint)">페이드 모델, 2040 기준 현가화</td><td style="color:var(--teal)">60,309</td></tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="grid g4 mt28">
+      <div class="card accent rev"><div class="stat"><div class="v">$140B</div><div class="l">기업가치(EV)</div><div class="s">PV합+터미널</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v">+$8B</div><div class="l">순현금</div><div class="s">현금+유가증권</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v">$148B</div><div class="l">자기자본가치</div><div class="s">÷25.7억 희석주식</div></div></div>
+      <div class="card rev"><div class="stat"><div class="v amber">$58</div><div class="l">주당 내재가치(15년 CAP)</div><div class="s">현재가 $156</div></div></div>
+    </div>
+    <div class="note red mt20 rev"><p>15년이라는 '합리적' CAP을 가정한 기본 시나리오의 주당가치는 <b>약 $58</b>로, 현재가 $156의 <b>약 37%</b>입니다. <span class="conf hi"><span class="dot"></span>모델 산출 ~85%</span></p></div>
+  </div>
+</section>
+
+<!-- ============ 15 내재 CAP ============ -->
+<section id="s15">
+  <div class="wrap">
+    <div class="secnum teal rev">15 / 시장 내재 CAP &amp; 해석</div>
+    <h2 class="h2 rev">주당가치는 $63에서 멈추는데,<br>주가는 $156입니다.</h2>
+    <p class="lead rev">아래 곡선은 기본 가정에서 CAP(초과수익 지속 연수)을 늘릴 때 주당 내재가치가 어떻게 움직이는지 보여 줍니다. 가치는 <b>약 $63에서 점근하며 평평해집니다</b> — 기간을 아무리 늘려도 현재가 $156에 닿지 못합니다.</p>
+    <div class="card mt40 rev">
+      <div class="eyebrow">CAP(연수)별 주당 내재가치 — 엄격 가정(SBC 비용처리)</div>
+      <svg viewBox="0 0 600 300" style="width:100%;height:auto">
+        <defs><linearGradient id="gap" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(229,89,79,.18)"/><stop offset="1" stop-color="rgba(229,89,79,0)"/></linearGradient></defs>
+        <g font-family="JetBrains Mono" font-size="10" fill="#5f6f82">
+          <line x1="50" y1="59.8" x2="560" y2="59.8" stroke="#222c3a"/><text x="8" y="63">$156</text>
+          <line x1="50" y1="130.6" x2="560" y2="130.6" stroke="#1a222e"/><text x="14" y="134">$106</text>
+          <line x1="50" y1="201.4" x2="560" y2="201.4" stroke="#1a222e"/><text x="20" y="205">$56</text>
+          <line x1="50" y1="280" x2="560" y2="280" stroke="#2d3a4c"/><text x="28" y="284">$0</text>
+        </g>
+        <path d="M50,59.8 L560,59.8 L560,191.1 L444,192.5 L348,193.9 L252,198.1 L156,209.4 L50,234.8 Z" fill="url(#gap)"/>
+        <line x1="50" y1="59.8" x2="560" y2="59.8" stroke="#f0b53f" stroke-width="2" stroke-dasharray="7 5"/>
+        <text x="556" y="52" text-anchor="end" font-family="JetBrains Mono" font-size="11" fill="#f0b53f" font-weight="700">현재가 $156</text>
+        <polyline points="60,234.8 156,209.4 252,198.1 348,193.9 444,192.5 540,191.1" fill="none" stroke="#56c8bd" stroke-width="2.5"/>
+        <g fill="#56c8bd"><circle cx="60" cy="234.8" r="4"/><circle cx="156" cy="209.4" r="4"/><circle cx="252" cy="198.1" r="4"/><circle cx="348" cy="193.9" r="4"/><circle cx="444" cy="192.5" r="4"/><circle cx="540" cy="191.1" r="5"/></g>
+        <text x="540" y="183" text-anchor="end" font-family="JetBrains Mono" font-size="11" fill="#56c8bd" font-weight="700">30년 → $63</text>
+        <g font-family="JetBrains Mono" font-size="10" fill="#5f6f82" text-anchor="middle">
+          <text x="60" y="296">5년</text><text x="156" y="296">10년</text><text x="252" y="296">15년</text><text x="348" y="296">20년</text><text x="444" y="296">25년</text><text x="540" y="296">30년</text></g>
+      </svg>
+      <div class="legend"><span><i style="background:var(--teal)"></i>주당 내재가치(가정 고정)</span><span><i style="background:var(--amber)"></i>현재 주가 $156 — 곡선이 닿지 못함</span></div>
+    </div>
+
+    <div class="mt40 rev">
+      <div class="eyebrow">그렇다면 시장은 무엇을 가정하는가 — 성장 지속성(phi) 역산</div>
+      <p class="body mb14" style="font-size:.96rem">$156에 도달하려면 매출 성장의 '지속성'을 극단적으로 높여야 합니다. phi가 클수록(성장이 더 오래 유지될수록) 미래 매출이 커지고 내재 CAP이 짧아집니다.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>성장지속성 phi</th><th>2035 매출(추정)</th><th>2040 매출(추정)</th><th>내재 CAP(엄격 45%)</th><th>내재 CAP(시장식 58%·W9%)</th></tr></thead>
+          <tbody>
+            <tr><td>0.78</td><td>$43B</td><td>$55B</td><td><span class="neg">수렴 안 함</span></td><td><span class="neg">수렴 안 함</span></td></tr>
+            <tr><td>0.82 <span class="rowlabel">(기본)</span></td><td>$52B</td><td>$74B</td><td><span class="neg">수렴 안 함</span></td><td><span class="neg">수렴 안 함</span></td></tr>
+            <tr><td>0.86</td><td>$66B</td><td>$108B</td><td><span class="neg">수렴 안 함</span></td><td style="color:var(--amber)">23년</td></tr>
+            <tr><td>0.90</td><td>$86B</td><td>$178B</td><td style="color:var(--amber)">24년</td><td>12년</td></tr>
+            <tr><td>0.93</td><td>$109B</td><td>$285B</td><td>14년</td><td>10년</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note mt20"><p>읽는 법: 기본 성장경로(phi 0.82, 2035 매출 $52B)에서는 어떤 기간을 가정해도 $156이 정당화되지 않습니다. $156을 '합리적 CAP'으로 설명하려면 <b>2035년 매출 $86B(현재의 19배)~$109B(24배)</b>의 초고성장이 수십 년 이어진다고 가정해야 합니다. <span class="conf hi"><span class="dot"></span>역산 결론 ~82%</span></p></div>
+    </div>
+
+    <div class="mt40 rev">
+      <div class="eyebrow">CAP 해석 척도 — 내재 기간의 의미</div>
+      <div class="iscale">
+        <div class="row b1"><div class="rg">&lt; 5년</div><div class="tx">매우 비관적 — 초과수익 소멸을 빠르게 가정. 통상 저평가 신호.</div></div>
+        <div class="row b2"><div class="rg">10–15년</div><div class="tx">합리적 — 견고한 해자를 가진 우량 기업의 일반적 범위.</div></div>
+        <div class="row b3"><div class="rg">15–20년</div><div class="tx">다소 낙관적 — 매우 강한 경쟁우위를 전제. 마이크로소프트가 이 부근.</div></div>
+        <div class="row cur"><div class="rg">20년+</div><div class="tx"><b>과도한 낙관 — 회피 고려 구간. 팔란티어 현재 주가가 (초고성장 가정과 결합해) 여기에 위치.</b></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 16 민감도 ============ -->
+<section id="s16">
+  <div class="wrap">
+    <div class="secnum teal rev">16 / 민감도 분석</div>
+    <h2 class="h2 rev">$156에 닿으려면 거의 모든 가정이<br>동시에 극단으로 가야 합니다.</h2>
+    <p class="lead rev">할인율(WACC)과 성장지속성(phi)을 동시에 움직였을 때의 주당 내재가치(엄격 45% 마진, 30년)입니다. 앰버 셀이 현재가 $156에 근접하는 영역 — 표 우상단, 즉 <b>낮은 할인율 + 초고성장 지속</b>이 결합돼야만 도달합니다.</p>
+    <div class="tbl-wrap mt40 rev hm">
+      <table>
+        <thead><tr><th>WACC ＼ phi</th><th>0.78</th><th>0.82 (기본)</th><th>0.86</th><th>0.90</th></tr></thead>
+        <tbody>
+          <tr><td class="rowlabel">8.63% (−2%p)</td><td>$68</td><td>$87</td><td>$128</td><td class="hl">$242</td></tr>
+          <tr><td class="rowlabel">9.63% (−1%p)</td><td>$58</td><td>$74</td><td>$106</td><td class="hl">$194</td></tr>
+          <tr><td class="rowlabel">10.63% (기본)</td><td>$50</td><td style="outline:2px solid var(--teal);outline-offset:-2px;color:var(--teal)">$63</td><td>$89</td><td class="hl">$158</td></tr>
+          <tr><td class="rowlabel">11.63% (+1%p)</td><td>$44</td><td>$55</td><td>$76</td><td>$130</td></tr>
+          <tr><td class="rowlabel">12.63% (+2%p)</td><td>$39</td><td>$48</td><td>$66</td><td>$109</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grid g2 mt20">
+      <div class="note teal rev"><p><b>청록 셀 = 기본 가정($63).</b> 현재가와의 괴리가 가장 정직하게 드러나는 지점입니다.</p></div>
+      <div class="note rev"><p><b>앰버 셀 = $156 근접.</b> phi 0.90(2035 매출 $86B) + WACC 8.6~10.6%가 동시에 성립해야 도달 — 둘 다 공격적 가정입니다. <span class="conf hi"><span class="dot"></span>~85%</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 17 시나리오 ============ -->
+<section id="s17">
+  <div class="wrap">
+    <div class="secnum teal rev">17 / 시나리오 종합</div>
+    <h2 class="h2 rev">약세 $53 · 기본 $63 · 강세 $76</h2>
+    <p class="lead rev">SBC를 비용 처리하는 엄격 가정에서 30년이라는 매우 긴 CAP을 상한으로 둔 세 시나리오입니다. 강세(48% 마진·10% 할인율·느린 페이드)에서도 주당 <b>$76</b>로, 현재가 $156의 절반 수준입니다.</p>
+    <div class="grid g3 mt40">
+      <div class="card rev"><div class="eyebrow" style="margin-bottom:14px;color:var(--teal)">약세 · BEAR</div><div class="stat"><div class="v teal">$53</div><div class="l">주당 내재가치</div></div><ul class="plain mt20" style="gap:7px;font-size:.86rem"><li>마진 42% · WACC 11.2%</li><li>페이드 0.30 · ROIIC 15%</li><li>성장 조기 둔화</li></ul></div>
+      <div class="card accent rev"><div class="eyebrow" style="margin-bottom:14px;color:var(--amber)">기본 · BASE</div><div class="stat"><div class="v amber">$63</div><div class="l">주당 내재가치</div></div><ul class="plain mt20" style="gap:7px;font-size:.86rem"><li>마진 45% · WACC 10.63%</li><li>페이드 0.20 · ROIIC 25%</li><li>견고하나 점진 둔화</li></ul></div>
+      <div class="card rev"><div class="eyebrow" style="margin-bottom:14px;color:var(--green)">강세 · BULL</div><div class="stat"><div class="v green">$76</div><div class="l">주당 내재가치</div></div><ul class="plain mt20" style="gap:7px;font-size:.86rem"><li>마진 48% · WACC 10.0%</li><li>페이드 0.10 · ROIIC 35%</li><li>강한 우위 장기 지속</li></ul></div>
+    </div>
+    <div class="card mt40 rev">
+      <div class="eyebrow">현재가 대비 위치 (막대 길이는 $156을 100%로 환산)</div>
+      <div style="display:flex;flex-direction:column;gap:16px;font-family:var(--mono);font-size:.82rem">
+        <div style="display:flex;align-items:center;gap:14px"><span style="width:64px;color:var(--teal)">약세 $53</span><div style="height:22px;width:34%;background:linear-gradient(90deg,#3da89d,#56c8bd);border-radius:5px"></div></div>
+        <div style="display:flex;align-items:center;gap:14px"><span style="width:64px;color:var(--amber)">기본 $63</span><div style="height:22px;width:40%;background:linear-gradient(90deg,#e89a2c,#f0b53f);border-radius:5px"></div></div>
+        <div style="display:flex;align-items:center;gap:14px"><span style="width:64px;color:var(--green)">강세 $76</span><div style="height:22px;width:49%;background:linear-gradient(90deg,#3f9e6e,#52b788);border-radius:5px"></div></div>
+        <div style="display:flex;align-items:center;gap:14px"><span style="width:64px;color:#fff">현재 $156</span><div style="height:22px;width:100%;background:repeating-linear-gradient(45deg,#e5594f,#e5594f 8px,#b8443c 8px,#b8443c 16px);border-radius:5px"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 18 리스크 ============ -->
+<section id="s18">
+  <div class="wrap">
+    <div class="secnum teal rev">18 / 리스크 &amp; 모니터링 체크포인트</div>
+    <h2 class="h2 rev">무엇을 지켜보면 결론이 바뀌는가</h2>
+    <p class="lead rev">CAP 분석의 결론은 고정된 진리가 아니라 <b>새 증거에 따라 갱신되어야 하는 추정</b>입니다. 아래 지표가 핵심 가정을 검증하거나 뒤집습니다.</p>
+    <div class="check mt40 rev">
+      <div class="item"><span class="mk">◇</span><div><div class="ct">미국 상업 매출 성장률의 지속</div><div class="cd">현재 +133%. 이 성장의 '지속 기간'이 phi 가정의 핵심 — 둔화 속도가 곧 내재 CAP을 결정.</div></div></div>
+      <div class="item"><span class="mk">◇</span><div><div class="ct">스톡옵션(SBC) 비율 하락 여부</div><div class="cd">Q1 2026 약 12.4%로 하락 중. 지속 하락 시 GAAP·조정 마진 격차가 좁혀져 '엄격 vs 시장식' 간극이 축소.</div></div></div>
+      <div class="item"><span class="mk">◇</span><div><div class="ct">국방예산 &amp; Maven 기록시스템 지위</div><div class="cd">약 $1.5조 2027 국방예산 내 약 $23억 배정 논의 — 정부 부문 가시성의 핵심 변수.</div></div></div>
+      <div class="item"><span class="mk">◇</span><div><div class="ct">순달러유지율(~150%)·신규 고객 순증</div><div class="cd">유지율 하락은 해자 약화 신호 → CAP 단축 → 적정가치 하향.</div></div></div>
+      <div class="item"><span class="mk">◇</span><div><div class="ct">금리(10년 국채) 방향</div><div class="cd">금리 1%p 상승은 WACC를 높여 모델상 주당가치를 약 13~15% 낮춤(민감도 표 참조).</div></div></div>
+      <div class="item"><span class="mk">◇</span><div><div class="ct">정치 환경·내부자 매도</div><div class="cd">정권 교체 시 최대 고객(정부) 위험. 내부자 매도 누계 $4.3억+를 약한 신호로 관찰.</div></div></div>
+    </div>
+    <div class="note teal mt28 rev"><p><b>베이지안 관점:</b> 상업 매출이 향후 2~3년 +60% 이상을 유지하고 SBC 비율이 한 자릿수로 떨어지면 'phi 0.90·시장식'(내재 CAP 약 12년)이 현실이 되어 현재 주가의 정당성이 상당히 높아집니다(상향 요인). 반대로 +30%대로 빠르게 둔화되면 기본 시나리오($63 부근)로 강하게 회귀합니다.</p></div>
+  </div>
+</section>
+
+<!-- ============ 19 한계와 가정 ============ -->
+<section id="s19">
+  <div class="wrap">
+    <div class="secnum teal rev">19 / 한계와 가정</div>
+    <h2 class="h2 rev">이 분석이 말하지 않는 것</h2>
+    <p class="lead rev">정직한 분석은 자신의 한계를 명시합니다. 아래 전제 위에서 결론을 해석해야 합니다.</p>
+    <ul class="plain mt40 rev">
+      <li><b>모델은 미래를 예측하지 않습니다.</b> DCF의 매출·마진 경로는 '주가에 담긴 기대를 드러내는' 도구이지 실제 실적 전망이 아닙니다. 특히 10년 이후 추정의 불확실성은 매우 큽니다.</li>
+      <li><b>터미널가치가 가치의 약 43%를 차지합니다($60B/$140B).</b> 장기 가정(g 2.5%, 페이드 0.20)에 결과가 민감합니다. 본 페이드 모델은 마이크로소프트 벤치마크 대비 약 10% 보수적으로 검증되었습니다.</li>
+      <li><b>입력값은 단일 시점 추정입니다.</b> 무위험수익률 4.45%·베타 1.30·ERP 4.75%는 2026년 5월 기준이며, 베타는 출처에 따라 1.31~1.49로 편차가 있습니다. 주가 자체가 하루 9% 급등할 만큼 변동성이 높습니다.</li>
+      <li><b>'엄격 vs 시장식'은 가치판단이 아니라 회계 처리 선택입니다.</b> SBC를 비용으로 볼지에 합리적 견해차가 있어, 본 보고서는 두 결과를 모두 제시했습니다.</li>
+      <li><b>질적 해자의 정량화에는 한계가 있습니다.</b> 온톨로지·정부 인증의 강도를 숫자로 환산하는 데 주관이 개입합니다(해자 확신 ~70%).</li>
+      <li><b>광범위한 거시·지정학 변수는 제외했습니다.</b> 경기침체, AI 사이클 전환, 정부 셧다운, 규제 등 외부 충격은 반영되지 않았습니다.</li>
+    </ul>
+    <div class="note red mt28 rev"><p><b>종합 신뢰도:</b> "현재 주가가 프레임워크의 '과도한 낙관' 구간(20년+ CAP)에 있다"는 핵심 결론의 확신은 <b>높음(~82%)</b>입니다. 그러나 "따라서 주가가 하락할 것"이라는 추론은 본 분석의 범위가 아니며, 시장은 비범한 성장 지속을 가격에 반영할 수 있습니다. 두 명제를 혼동하지 마십시오.</p></div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footmark">PLTR · 완전 분석</div>
+    <p class="disc">
+      <b>데이터 기준일:</b> 2026년 5월 29일(금) 종가. 출처 — 팔란티어 10-K/10-Q/8-K 공시 및 공식 문서, FRED, Damodaran 데이터, 시장 컨센서스, 그리고 공개 보도·자료. 제품·기술 설명은 팔란티어 공식 문서와 다수의 공개 분석을 종합했으며, 수치는 산정 방식·시점에 따라 출처별 차이가 있을 수 있습니다.<br><br>
+      <b>면책:</b> 본 보고서는 경쟁우위기간(CAP) 프레임워크를 적용한 <b>교육·정보 제공 목적</b>의 분석이며, 특정 증권의 매수·매도·보유를 권유하지 않습니다. 투자 결정의 책임은 전적으로 투자자 본인에게 있으며, 투자 전 자격을 갖춘 전문가와 상담하시기 바랍니다. 모든 투자에는 원금 손실 위험이 있습니다.
+    </p>
+  </div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.1});
+  document.querySelectorAll('.rev').forEach((el,i)=>{el.style.transitionDelay=(Math.min(i%4,3)*0.05)+'s';io.observe(el);});
+  const bio=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
+    e.target.querySelectorAll('.col').forEach(c=>{const h=c.getAttribute('data-h');if(h){c.style.height='0%';requestAnimationFrame(()=>{setTimeout(()=>{c.style.height=h+'%';},80);});}});
+    bio.unobserve(e.target);}})},{threshold:.3});
+  const rb=document.getElementById('revbars'); if(rb) bio.observe(rb);
+</script>
+</body>
+</html>

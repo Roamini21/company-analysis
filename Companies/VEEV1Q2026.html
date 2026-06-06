@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veeva Systems (VEEV) — 경쟁 우위 기간(CAP) 기반 장기 투자 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F2EA; --paper2:#EFEBE0; --ink:#16201C; --ink2:#3A453F;
+    --emerald:#0E5C49; --teal:#2A8C76; --teal-soft:#cfe5dd;
+    --amber:#C8862A; --amber-soft:#f0dcb8; --terra:#B5532E; --terra-soft:#eccdbf;
+    --slate:#5A6B72; --slate-soft:#d6dde0; --sage:#D8D2C2; --line:#dcd6c6;
+    --card:#FFFFFF; --shadow:0 1px 2px rgba(22,32,28,.05),0 8px 24px -12px rgba(22,32,28,.18);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,sans-serif;line-height:1.7;
+    font-size:16.5px;-webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum"}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.12;letter-spacing:-.01em}
+  a{color:var(--emerald)}
+  /* ---------- HERO ---------- */
+  .hero{background:linear-gradient(155deg,#0c3b30 0%,#0E5C49 48%,#14746A 100%);color:#f3efe4;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;inset:0;background:
+    radial-gradient(700px 400px at 88% -10%,rgba(201,134,42,.22),transparent 60%),
+    radial-gradient(520px 360px at 6% 120%,rgba(42,140,118,.45),transparent 60%);}
+  .hero .wrap{position:relative;z-index:2;padding:62px 22px 56px}
+  .tag{display:inline-flex;align-items:center;gap:9px;font-family:"IBM Plex Mono",monospace;
+    font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#bfe7da;
+    border:1px solid rgba(207,229,221,.35);border-radius:100px;padding:6px 14px;margin-bottom:22px}
+  .tag b{color:#fff}
+  .hero h1{font-size:clamp(34px,5.4vw,60px);color:#fff;margin:.1em 0 .25em;font-weight:600}
+  .hero .sub{font-size:clamp(17px,2.2vw,21px);color:#e7e0cf;max-width:760px;font-family:"Fraunces",serif;font-style:italic;font-weight:400}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:30px;font-size:13.5px;color:#cfe5dd}
+  .hero .meta span b{color:#fff;font-weight:600}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.16);
+    border-radius:14px;overflow:hidden;margin-top:34px}
+  .kpi{background:rgba(8,40,33,.42);padding:18px 16px;backdrop-filter:blur(2px)}
+  .kpi .v{font-family:"Fraunces",serif;font-size:25px;color:#fff;font-weight:600;line-height:1}
+  .kpi .v small{font-size:14px;color:#bfe7da;font-weight:500}
+  .kpi .l{font-size:11.5px;letter-spacing:.04em;color:#bfe7da;margin-top:8px;text-transform:uppercase}
+  /* ---------- SECTIONS ---------- */
+  section{padding:54px 0;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:600;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--amber);display:inline-block}
+  h2.title{font-size:clamp(26px,3.6vw,38px);margin:0 0 8px}
+  .lead{font-size:18px;color:var(--ink2);max-width:820px;font-family:"Fraunces",serif;font-weight:400}
+  h3{font-size:21px;margin:34px 0 12px}
+  p{margin:0 0 15px}
+  .muted{color:var(--ink2)}
+  .small{font-size:14px}
+  .xsmall{font-size:12.5px}
+  /* cards / layout */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 26px;box-shadow:var(--shadow)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .pill{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;
+    padding:3px 10px;border-radius:100px;letter-spacing:.02em;vertical-align:middle}
+  .pill.em{background:var(--teal-soft);color:#0a4034}
+  .pill.am{background:var(--amber-soft);color:#7a4e0e}
+  .pill.te{background:var(--terra-soft);color:#7c331a}
+  .pill.sl{background:var(--slate-soft);color:#324047}
+  .conf{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--slate);border:1px dashed var(--sage);border-radius:8px;padding:2px 8px;display:inline-block}
+  .callout{background:var(--paper2);border-left:4px solid var(--emerald);border-radius:0 12px 12px 0;padding:16px 20px;margin:18px 0}
+  .callout.am{border-left-color:var(--amber)}
+  .callout.te{border-left-color:var(--terra)}
+  .definition{background:#fbf9f3;border:1px solid var(--sage);border-radius:12px;padding:13px 16px;margin:12px 0;font-size:14.5px}
+  .definition b{color:var(--emerald)}
+  ul.clean{margin:8px 0 16px;padding-left:0;list-style:none}
+  ul.clean li{position:relative;padding-left:24px;margin-bottom:10px}
+  ul.clean li::before{content:"";position:absolute;left:4px;top:11px;width:7px;height:7px;border-radius:2px;background:var(--teal);transform:rotate(45deg)}
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--slate);border-bottom:2px solid var(--ink)}
+  tbody tr:hover{background:#fbf9f3}
+  .tblwrap{overflow-x:auto;border-radius:12px;border:1px solid var(--line);background:var(--card)}
+  .tblwrap table{margin:0}
+  .tblwrap th,.tblwrap td{padding:10px 12px}
+  .hi{background:#f1f6f3!important;font-weight:600}
+  /* TOC */
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .toc a{font-size:13px;text-decoration:none;color:var(--ink2);background:#fff;border:1px solid var(--line);
+    padding:6px 13px;border-radius:100px;transition:.15s}
+  .toc a:hover{border-color:var(--emerald);color:var(--emerald)}
+  /* svg helpers */
+  .figure{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 22px 16px;box-shadow:var(--shadow);margin:18px 0}
+  .figcap{font-size:13px;color:var(--slate);margin-top:6px}
+  .figttl{font-family:"Fraunces",serif;font-weight:600;font-size:17px;margin-bottom:4px}
+  svg text{font-family:"IBM Plex Sans",sans-serif}
+  .lbl{font-family:"IBM Plex Mono",monospace}
+  /* footer */
+  footer{background:#0c2c24;color:#cfe5dd;padding:40px 0 48px;font-size:13.5px}
+  footer h3{color:#fff;font-size:18px;margin:0 0 12px}
+  footer a{color:#9fd4c4}
+  .srcgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px 30px;font-size:12.5px}
+  @media(max-width:820px){
+    .grid2,.grid3,.kpis{grid-template-columns:1fr}
+    .kpis{gap:1px}
+    .hero .wrap{padding:46px 22px 42px}
+    body{font-size:16px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="tag">분석 프레임워크 · <b>경쟁 우위 기간(CAP)</b></div>
+    <h1>Veeva Systems</h1>
+    <div class="sub">제약·바이오 산업만을 위한 클라우드 소프트웨어 1위 기업. 현재 주가에 시장이 숨겨 둔 ‘경쟁 우위 지속 기대치’를 역산합니다.</div>
+    <div class="meta">
+      <span>티커 <b>NYSE: VEEV</b></span>
+      <span>분석 기준일 <b>2026년 6월 4일</b></span>
+      <span>업종 <b>생명과학 산업 클라우드 SW</b></span>
+      <span>회계연도 종료 <b>매년 1월 31일</b></span>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="v">~$180</div><div class="l">최근 주가 (범위 174–188)</div></div>
+      <div class="kpi"><div class="v">~$29.7<small>B</small></div><div class="l">시가총액</div></div>
+      <div class="kpi"><div class="v">~12<small>년</small></div><div class="l">시장 내재 CAP (기본)</div></div>
+      <div class="kpi"><div class="v">65<small>%</small></div><div class="l">기업가치 중 ‘성장 가치’ 비중</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ 핵심 결론 ============ -->
+<section id="결론">
+  <div class="eyebrow">핵심 결론</div>
+  <h2 class="title">한 문단 요약</h2>
+  <div class="callout">
+    <p style="margin:0;font-size:17px">
+    현재 주가(~$180)는 Veeva가 자본비용을 초과하는 수익을 <b>약 11~13년</b> 동안 유지한다는 시장 기대를 반영합니다. 이는 프레임워크 기준 <span class="pill em">합리적 범위(10–15년)</span>로, ‘과도한 낙관’도 ‘극단적 비관’도 아닙니다.
+    2025년 10월 고점($306)에서는 약 <b>28년</b>의 경쟁 우위가 가격에 반영되어 있었으나, 이후 약 40% 하락하면서 기대치가 정상 범위로 내려왔습니다.
+    핵심 쟁점은 단 하나입니다 — <b>2025년 9월 Salesforce의 제약 CRM 시장 직접 진입</b>에도 불구하고 Veeva의 해자(규제 검증 락인)가 10년 이상 버틸 수 있는가입니다. <span class="conf">방향성 확신도: 높음 (~80%)</span>
+    </p>
+  </div>
+  <div class="grid3" style="margin-top:8px">
+    <div class="card">
+      <div class="pill em">강점</div>
+      <p class="small" style="margin-top:10px">동종 SaaS 중 <b>최고 수준의 마진·현금 전환율</b>, 부채 0·순현금 $6.56B, 규제 검증에 묶인 강력한 전환비용. 성장률(16%)도 피어 평균을 상회.</p>
+    </div>
+    <div class="card">
+      <div class="pill am">쟁점</div>
+      <p class="small" style="margin-top:10px">Salesforce가 비경쟁 계약 만료 후 ‘Life Sciences Cloud’로 <b>직접 경쟁</b> 시작(40+ 고객 확보 보도). CRM 부문 점유율 방어가 향후 CAP의 분기점.</p>
+    </div>
+    <div class="card">
+      <div class="pill sl">밸류에이션 맥락</div>
+      <p class="small" style="margin-top:10px">애널리스트 목표가 $235–262는 내재 CAP <b>19–23년</b>을 요구 — 이는 ‘약간~과도한 낙관’ 구간. 현재가는 그보다 보수적인 기대를 담고 있음.</p>
+    </div>
+  </div>
+
+  <div class="toc">
+    <a href="#개요">① 기업 개요</a>
+    <a href="#수익">② 수익 구조</a>
+    <a href="#제품">③ 제품·기술력</a>
+    <a href="#산업">④ 산업 분석</a>
+    <a href="#swot">⑤ SWOT</a>
+    <a href="#해자">⑥ 경제적 해자</a>
+    <a href="#피어">⑦ 피어그룹 비교</a>
+    <a href="#생애주기">⑧ 생애주기</a>
+    <a href="#dcf">⑨ DCF·내재 CAP</a>
+    <a href="#민감도">⑩ 민감도</a>
+    <a href="#시나리오">⑪ 시나리오</a>
+    <a href="#종합">⑫ 종합·리스크</a>
+    <a href="#한계">⑬ 한계와 가정</a>
+  </div>
+</section>
+
+<!-- ============ ① 기업 개요 ============ -->
+<section id="개요">
+  <div class="eyebrow">① 기업 개요</div>
+  <h2 class="title">Veeva는 무엇을 하는 회사인가</h2>
+  <p class="lead">한 문장 요약: <b>“신약을 개발하고 파는 제약·바이오 회사들이 일하는 데 꼭 필요한 전용 소프트웨어를, 인터넷(클라우드)으로 빌려주고 매달 사용료를 받는 회사.”</b></p>
+
+  <div class="definition">
+    <b>비전공자용 비유</b> — 식당으로 치면, ‘모든 가게가 쓰는 일반 포스기(Salesforce·Oracle 같은 범용 SW)’ 대신, <b>‘제약회사 전용으로 법규·서류·검사 절차까지 미리 다 맞춰 놓은 특수 포스기’</b>를 만들어 파는 곳입니다. 제약 산업은 규제가 워낙 까다로워서, 범용 제품으로는 충족이 안 되는 ‘틈새’를 정확히 파고든 것이 Veeva의 출발점입니다.
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">설립 배경과 핵심 인물</h3>
+      <ul class="clean small">
+        <li><b>2007년 설립</b> (당초 사명 ‘Verticals onDemand’, 2009년 Veeva로 변경). 본사: 미국 캘리포니아 플레전턴.</li>
+        <li>창업자 <b>피터 가스너(Peter Gassner)</b> — Salesforce에서 기술 담당 부사장을 지낸 인물. 18년째 창업자 겸 CEO로 재직 중. ‘범용 클라우드는 규제 산업에선 부족하다’는 통찰에서 출발.</li>
+        <li>‘버티컬 SaaS(특정 산업 전용 클라우드 소프트웨어)’라는 개념을 사실상 처음 개척. 초기 자본을 거의 쓰지 않고(VC 약 $4–7M 중 일부만 사용) <b>처음부터 흑자 경영</b>을 원칙으로 삼음.</li>
+        <li>2013년 상장, 2021년 <b>공익기업(Public Benefit Corporation)</b>으로 전환, 최근 <b>S&amp;P 500 편입</b>. 임직원 약 7,900명.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">규모 한눈에 (FY2026, 2026년 1월 종료)</h3>
+      <table class="small">
+        <tbody>
+          <tr><td>총매출</td><td class="mono">$3,195M <span class="pill em">+16% YoY</span></td></tr>
+          <tr><td>구독 매출(핵심)</td><td class="mono">$2,684M (84%)</td></tr>
+          <tr><td>영업이익 (GAAP)</td><td class="mono">$916M · 마진 28.7%</td></tr>
+          <tr><td>순이익 (GAAP)</td><td class="mono">$909M</td></tr>
+          <tr><td>고객 수</td><td class="mono">1,552개사</td></tr>
+          <tr><td>현금성 자산</td><td class="mono">$6.56B · 부채 사실상 0</td></tr>
+          <tr><td>2030년 목표</td><td class="mono">매출 런레이트 $6B</td></tr>
+        </tbody>
+      </table>
+      <p class="xsmall muted" style="margin:6px 0 0">고객은 세계 상위 20대 제약사 대부분을 포함. ‘적게 투자하고 많이 버는’ 자본효율형 소프트웨어 사업의 전형.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ② 수익 구조 ============ -->
+<section id="수익">
+  <div class="eyebrow">② 수익 구조 시각화</div>
+  <h2 class="title">이 회사는 어떻게 돈을 버는가</h2>
+  <p class="lead">매출의 84%가 <b>매달·매년 반복되는 구독료(SaaS)</b>입니다. 한 번 도입한 고객은 좀처럼 떠나지 않기 때문에, 이 구독 매출은 예측 가능성이 매우 높습니다.</p>
+
+  <div class="definition">
+    <b>SaaS(사스)란?</b> Software as a Service의 약자. 소프트웨어를 ‘사서 설치’하는 게 아니라, <b>넷플릭스처럼 매달 구독료를 내고 인터넷으로 빌려 쓰는</b> 방식입니다. 회사 입장에선 한 번 고객을 확보하면 해마다 자동으로 매출이 들어오는 구조라 ‘반복 매출(recurring revenue)’이라 부릅니다.
+  </div>
+
+  <div class="figure">
+    <div class="figttl">매출 흐름과 구성 (FY2026, $3,195M)</div>
+    <svg viewBox="0 0 980 360" width="100%" role="img" aria-label="Veeva 매출 구조 흐름도">
+      <!-- LEFT: who pays -->
+      <text x="20" y="30" class="lbl" font-size="12" fill="#5A6B72" letter-spacing="1">누가 돈을 내는가</text>
+      <g font-size="13" fill="#16201C">
+        <rect x="20" y="46" width="190" height="46" rx="9" fill="#fff" stroke="#0E5C49"/>
+        <text x="34" y="68" font-weight="600">상위 20대 제약사</text>
+        <text x="34" y="84" font-size="11" fill="#5A6B72">대부분이 고객</text>
+        <rect x="20" y="104" width="190" height="46" rx="9" fill="#fff" stroke="#2A8C76"/>
+        <text x="34" y="126" font-weight="600">중견 제약·바이오텍</text>
+        <text x="34" y="142" font-size="11" fill="#5A6B72">1,552개 고객사</text>
+        <rect x="20" y="162" width="190" height="46" rx="9" fill="#fff" stroke="#5A6B72"/>
+        <text x="34" y="184" font-weight="600">의료기기 기업</text>
+        <text x="34" y="200" font-size="11" fill="#5A6B72">신규 확장 영역</text>
+      </g>
+      <!-- flow arrows -->
+      <g stroke="#cdbf9a" stroke-width="2" fill="none">
+        <path d="M210 69 C 250 69, 250 150, 300 150"/>
+        <path d="M210 127 H 300"/>
+        <path d="M210 185 C 250 185, 250 150, 300 150"/>
+      </g>
+      <!-- MIDDLE: two engines -->
+      <text x="300" y="30" class="lbl" font-size="12" fill="#5A6B72" letter-spacing="1">무엇에 돈을 내는가 (2개 사업부)</text>
+      <g>
+        <rect x="300" y="78" width="300" height="64" rx="11" fill="#0E5C49"/>
+        <text x="318" y="104" fill="#fff" font-size="14" font-weight="600">R&amp;D · 품질 솔루션</text>
+        <text x="318" y="124" fill="#bfe7da" font-size="12">임상시험·규제서류·품질관리 SW</text>
+        <text x="582" y="118" fill="#fff" font-size="15" font-weight="700" text-anchor="end" class="mono">$1,427M</text>
+
+        <rect x="300" y="158" width="300" height="64" rx="11" fill="#14746A"/>
+        <text x="318" y="184" fill="#fff" font-size="14" font-weight="600">커머셜 솔루션</text>
+        <text x="318" y="204" fill="#cdeee5" font-size="12">영업·마케팅·CRM·데이터 분석</text>
+        <text x="582" y="198" fill="#fff" font-size="15" font-weight="700" text-anchor="end" class="mono">$1,258M</text>
+      </g>
+      <text x="300" y="250" font-size="11.5" fill="#5A6B72">＊위 두 막대는 ‘구독 매출’ 기준. 여기에 도입·컨설팅 서비스 매출이 더해짐.</text>
+
+      <!-- arrows to revenue type -->
+      <g stroke="#cdbf9a" stroke-width="2" fill="none">
+        <path d="M600 110 C 660 110, 660 150, 720 150"/>
+        <path d="M600 190 C 660 190, 660 150, 720 150"/>
+      </g>
+      <!-- RIGHT: revenue type -->
+      <text x="720" y="30" class="lbl" font-size="12" fill="#5A6B72" letter-spacing="1">매출의 ‘성격’</text>
+      <g>
+        <rect x="720" y="70" width="240" height="86" rx="11" fill="#fff" stroke="#0E5C49" stroke-width="2"/>
+        <text x="736" y="96" font-size="14" font-weight="700" fill="#0E5C49">구독료 (SaaS)</text>
+        <text x="736" y="118" font-size="22" font-weight="700" class="mono" fill="#16201C">$2,684M</text>
+        <text x="736" y="140" font-size="12" fill="#5A6B72">전체의 84% · 고마진 · 반복적</text>
+
+        <rect x="720" y="166" width="240" height="64" rx="11" fill="#fbf9f3" stroke="#C8862A"/>
+        <text x="736" y="190" font-size="13.5" font-weight="700" fill="#7a4e0e">전문 서비스·기타</text>
+        <text x="736" y="212" font-size="19" font-weight="700" class="mono" fill="#16201C">$511M <tspan font-size="12" fill="#5A6B72">(16%)</tspan></text>
+      </g>
+      <!-- bottom note bar -->
+      <rect x="20" y="288" width="940" height="54" rx="11" fill="#f1f6f3" stroke="#cfe5dd"/>
+      <text x="40" y="312" font-size="13" fill="#0a4034" font-weight="600">왜 중요한가:</text>
+      <text x="40" y="330" font-size="12.5" fill="#3A453F">구독료가 압도적이라 매출이 ‘한 번 팔고 끝’이 아니라 ‘해마다 자동 갱신’. 서비스 매출은 마진은 낮지만 고객을 더 깊이 묶어두는(락인) 역할.</text>
+    </svg>
+    <div class="figcap">출처: Veeva FY2026 8-K 손익계산서. 구독 매출은 사업부별 합계, 서비스 매출은 별도.</div>
+  </div>
+
+  <div class="callout am">
+    <p style="margin:0" class="small"><b>주목할 회계 포인트 — 주식보상비용(SBC).</b> Veeva는 직원에게 현금 대신 주식을 보상으로 많이 줍니다(연 $473M, 매출의 14.8%). 회사가 강조하는 ‘조정(Non-GAAP) 영업이익률 44.9%’는 이 비용을 빼고 계산한 것이고, <b>실제 회계기준(GAAP) 영업이익률은 28.7%</b>입니다. 본 분석은 보수적 관점에서 <b>주식보상을 ‘진짜 비용’으로 처리</b>하여 GAAP 기준으로 평가했습니다. <span class="conf">이 선택이 내재 CAP를 1~2년 늘립니다(보수적)</span></p>
+  </div>
+</section>
+
+<!-- ============ ③ 제품·기술력 ============ -->
+<section id="제품">
+  <div class="eyebrow">③ 제품 · 서비스 · 기술력</div>
+  <h2 class="title">신약 하나가 세상에 나오는 모든 단계를 소프트웨어로</h2>
+  <p class="lead">Veeva의 제품은 <b>‘볼트(Vault)’라는 하나의 공통 플랫폼</b> 위에 올라간 4개의 ‘클라우드’로 구성됩니다. 신약을 <b>개발 → 검증 → 판매</b>하는 전 과정을 한 회사 소프트웨어로 처리할 수 있다는 점이 최대 강점입니다.</p>
+
+  <div class="definition">
+    <b>‘볼트(Vault)’란?</b> 모든 제품이 공유하는 <b>중앙 금고(데이터 저장·관리 엔진)</b>라고 보면 됩니다. 임상 데이터, 규제 서류, 영업 자료가 모두 한 금고에 들어가 있어 서로 연결됩니다. 경쟁사는 보통 한두 단계만 다루지만, Veeva는 ‘처음부터 끝까지’ 한 금고로 잇는다는 점이 다릅니다.
+  </div>
+
+  <div class="figure">
+    <div class="figttl">신약 라이프사이클과 Veeva 4대 클라우드 (생산·서비스 흐름)</div>
+    <svg viewBox="0 0 980 300" width="100%" role="img" aria-label="신약 개발 단계별 Veeva 제품 흐름도">
+      <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#bba56f"/></marker></defs>
+      <!-- stage track -->
+      <line x1="60" y1="70" x2="920" y2="70" stroke="#e2dcc9" stroke-width="3"/>
+      <g text-anchor="middle">
+        <!-- 4 stages -->
+        <circle cx="160" cy="70" r="9" fill="#0E5C49"/><text x="160" y="44" font-size="13" font-weight="700" fill="#16201C">① 연구·임상</text>
+        <circle cx="400" cy="70" r="9" fill="#14746A"/><text x="400" y="44" font-size="13" font-weight="700" fill="#16201C">② 규제 승인</text>
+        <circle cx="640" cy="70" r="9" fill="#2A8C76"/><text x="640" y="44" font-size="13" font-weight="700" fill="#16201C">③ 생산·품질</text>
+        <circle cx="880" cy="70" r="9" fill="#C8862A"/><text x="880" y="44" font-size="13" font-weight="700" fill="#16201C">④ 판매·마케팅</text>
+      </g>
+      <!-- product cards under each -->
+      <g font-size="11.5">
+        <rect x="70" y="100" width="180" height="92" rx="10" fill="#0E5C49"/>
+        <text x="84" y="124" fill="#fff" font-size="13" font-weight="700">Development Cloud</text>
+        <text x="84" y="146" fill="#cfe9e1">임상시험관리(CTMS),</text>
+        <text x="84" y="162" fill="#cfe9e1">전자문서(eTMF·EDC),</text>
+        <text x="84" y="178" fill="#cfe9e1">안전성·데이터 수집</text>
+
+        <rect x="310" y="100" width="180" height="92" rx="10" fill="#14746A"/>
+        <text x="324" y="124" fill="#fff" font-size="13" font-weight="700">RIM (규제정보관리)</text>
+        <text x="324" y="146" fill="#d6efe6">허가 서류 작성·제출,</text>
+        <text x="324" y="162" fill="#d6efe6">전 세계 규제기관</text>
+        <text x="324" y="178" fill="#d6efe6">대응 추적</text>
+
+        <rect x="550" y="100" width="180" height="92" rx="10" fill="#2A8C76"/>
+        <text x="564" y="124" fill="#fff" font-size="13" font-weight="700">Quality Cloud</text>
+        <text x="564" y="146" fill="#e2f3ee">품질관리(QMS),</text>
+        <text x="564" y="162" fill="#e2f3ee">문서통제·교육,</text>
+        <text x="564" y="178" fill="#e2f3ee">시험실관리(LIMS)</text>
+
+        <rect x="790" y="100" width="180" height="92" rx="10" fill="#C8862A"/>
+        <text x="804" y="124" fill="#fff" font-size="13" font-weight="700">Commercial Cloud</text>
+        <text x="804" y="146" fill="#f6e6c9">Vault CRM(영업),</text>
+        <text x="804" y="162" fill="#f6e6c9">콘텐츠(PromoMats),</text>
+        <text x="804" y="178" fill="#f6e6c9">Crossix 분석</text>
+      </g>
+      <!-- platform bar -->
+      <rect x="70" y="214" width="900" height="40" rx="10" fill="#16201C"/>
+      <text x="520" y="239" fill="#fff" text-anchor="middle" font-size="13.5" font-weight="600">공통 기반 ＝ Veeva Vault 플랫폼 + Veeva Data Cloud(의사·기관 마스터 데이터) + Veeva AI(2025~)</text>
+      <g stroke="#bba56f" stroke-width="2" fill="none" marker-end="url(#ar)">
+        <path d="M250 146 H 308"/><path d="M490 146 H 548"/><path d="M730 146 H 788"/>
+      </g>
+      <text x="60" y="284" font-size="11.5" fill="#5A6B72">＊한 신약이 연구실에서 약국까지 가는 모든 단계의 데이터·서류·업무가 동일 플랫폼 위에서 연결됨 → 경쟁사로 갈아타기 어려운 핵심 이유.</text>
+    </svg>
+    <div class="figcap">Veeva 제품 포트폴리오를 신약 라이프사이클 단계에 매핑. CTMS·eTMF·EDC·RIM·QMS·LIMS는 각각 임상·규제·품질 업무의 표준 약어.</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">기술력의 본질 — ‘규제에 맞춰진 소프트웨어’</h3>
+      <p class="small">제약 데이터는 <b>GxP(Good Practice)</b>라 불리는 엄격한 규정의 적용을 받습니다. ‘누가, 언제, 무엇을 바꿨는지’ 모든 기록이 추적·감사 가능해야 하고, 시스템 자체가 규제기관(FDA·EMA)의 ‘검증(validation)’을 통과해야 합니다.</p>
+      <ul class="clean small">
+        <li>Veeva 제품은 이 검증·추적·전자서명·감사추적을 <b>기본 내장</b>. 범용 SW는 이를 별도로 구축해야 함.</li>
+        <li>한 번 검증을 통과한 시스템을 교체하려면 <b>전체 재검증</b>이 필요 → 시간·비용·규제 리스크가 막대 → 강력한 전환비용.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">서비스 제공 방식 (도입 흐름)</h3>
+      <ol class="small" style="padding-left:18px;margin:6px 0">
+        <li>고객사가 한 영역(예: CRM)을 먼저 도입 → ‘착지(land)’</li>
+        <li>전문 서비스팀이 규제·업무에 맞게 구성·검증 지원</li>
+        <li>데이터·통합이 쌓이며 전환비용 상승</li>
+        <li>임상·품질·규제 등 <b>인접 제품으로 확장(expand)</b> → 고객당 매출 증가</li>
+      </ol>
+      <p class="xsmall muted" style="margin:8px 0 0">이 ‘랜드 앤 익스팬드(land &amp; expand)’ 전략이 Veeva 성장의 엔진입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ④ 산업 분석 ============ -->
+<section id="산업">
+  <div class="eyebrow">④ 산업 분석</div>
+  <h2 class="title">생명과학 산업 클라우드 — 작지만 깊고, 빠르게 크는 시장</h2>
+  <p class="lead">Veeva가 속한 시장은 ‘제약·바이오·의료기기 회사들이 쓰는 전용 소프트웨어’입니다. 전체 생명과학 SW 시장은 <b>2029년 약 $27.5B</b>로 성장이 전망되며, Veeva 매출(~$3.2B)은 아직 그 일부에 불과합니다 — 즉 침투 여력이 큽니다.</p>
+
+  <div class="grid3">
+    <div class="card"><div class="pill em">시장 규모</div>
+      <p class="small" style="margin-top:10px">제약 CRM 시장 $4.33B(2024)→$9.85B(2034E). 전체 생명과학 SW $27.5B(2029E). Veeva는 두 영역 모두에서 선두.</p></div>
+    <div class="card"><div class="pill am">성장 동력</div>
+      <p class="small" style="margin-top:10px">디지털 전환, 임상시험 복잡화, 규제 강화, 그리고 <b>AI 에이전트</b> 도입 본격화. AI 기반 CRM은 연 18%대 성장 전망.</p></div>
+    <div class="card"><div class="pill te">구조적 특징</div>
+      <p class="small" style="margin-top:10px">규제 장벽이 높아 <b>신규 진입이 어렵고</b>, 한 번 표준이 되면 오래 유지. 그러나 거대 플랫폼(Salesforce)의 진입은 예외적 위협.</p></div>
+  </div>
+
+  <div class="figure">
+    <div class="figttl">생명과학 SW 가치사슬과 주요 플레이어</div>
+    <svg viewBox="0 0 980 250" width="100%" role="img" aria-label="산업 가치사슬">
+      <g font-size="12">
+        <!-- chain blocks -->
+        <rect x="20" y="40" width="150" height="70" rx="10" fill="#fff" stroke="#0E5C49"/><text x="95" y="68" text-anchor="middle" font-weight="700" fill="#0E5C49">데이터</text><text x="95" y="88" text-anchor="middle" font-size="11" fill="#5A6B72">의사·기관·처방 정보</text>
+        <rect x="190" y="40" width="150" height="70" rx="10" fill="#fff" stroke="#14746A"/><text x="265" y="68" text-anchor="middle" font-weight="700" fill="#14746A">R&amp;D·임상 SW</text><text x="265" y="88" text-anchor="middle" font-size="11" fill="#5A6B72">시험 관리·데이터</text>
+        <rect x="360" y="40" width="150" height="70" rx="10" fill="#fff" stroke="#2A8C76"/><text x="435" y="68" text-anchor="middle" font-weight="700" fill="#2A8C76">규제·품질 SW</text><text x="435" y="88" text-anchor="middle" font-size="11" fill="#5A6B72">허가·문서·품질</text>
+        <rect x="530" y="40" width="150" height="70" rx="10" fill="#fff" stroke="#C8862A"/><text x="605" y="68" text-anchor="middle" font-weight="700" fill="#C8862A">상업화 SW</text><text x="605" y="88" text-anchor="middle" font-size="11" fill="#5A6B72">CRM·콘텐츠·분석</text>
+        <rect x="700" y="40" width="150" height="70" rx="10" fill="#fff" stroke="#5A6B72"/><text x="775" y="68" text-anchor="middle" font-weight="700" fill="#5A6B72">고객(제약사)</text><text x="775" y="88" text-anchor="middle" font-size="11" fill="#5A6B72">최종 사용</text>
+      </g>
+      <g stroke="#d9cfb0" stroke-width="2" fill="none"><path d="M170 75 H188"/><path d="M340 75 H358"/><path d="M510 75 H528"/><path d="M680 75 H698"/></g>
+      <!-- Veeva coverage bracket -->
+      <line x1="22" y1="128" x2="678" y2="128" stroke="#0E5C49" stroke-width="2.5"/>
+      <line x1="22" y1="128" x2="22" y2="120" stroke="#0E5C49" stroke-width="2.5"/><line x1="678" y1="128" x2="678" y2="120" stroke="#0E5C49" stroke-width="2.5"/>
+      <text x="350" y="148" text-anchor="middle" font-size="13" font-weight="700" fill="#0E5C49">Veeva = 가치사슬 전 구간을 ‘하나의 플랫폼’으로 커버 (유일)</text>
+      <!-- competitors -->
+      <text x="20" y="182" font-size="12" fill="#5A6B72" class="lbl" letter-spacing="1">주요 경쟁사 (구간별)</text>
+      <g font-size="11.5" fill="#3A453F">
+        <text x="190" y="206">IQVIA — 데이터+CRO+OCE</text>
+        <text x="360" y="206">Dassault/Medidata — 임상</text>
+        <text x="530" y="206">Salesforce(신규)·Oracle — CRM</text>
+        <text x="190" y="228" fill="#5A6B72" font-size="11">＊IQVIA는 ‘데이터’가 강점, Veeva는 ‘플랫폼 통합’이 강점 — 모델이 서로 다름</text>
+      </g>
+    </svg>
+    <div class="figcap">생명과학 SW 가치사슬. Veeva의 차별점은 한두 구간이 아니라 ‘전 구간 통합’.</div>
+  </div>
+
+  <div class="callout te">
+    <p style="margin:0" class="small"><b>산업 내 가장 중요한 최근 사건 — Salesforce 비경쟁 계약 만료(2025년 9월).</b> Veeva의 원조 CRM은 원래 Salesforce 플랫폼 위에 지어졌고, 두 회사는 ‘서로의 영역을 침범하지 않는’ 10년 계약을 맺고 있었습니다. 이 계약이 2025년 9월 만료되면서 <b>Salesforce가 ‘Life Sciences Cloud’로 제약 CRM에 직접 진입</b>했고, 40개 이상 생명과학 고객을 확보했다는 보도가 나왔습니다. IQVIA도 Salesforce와 손을 잡았습니다. 동시에 Veeva는 자사 CRM을 Salesforce 플랫폼에서 <b>자체 Vault 플랫폼으로 이전</b> 중(2030년까지 완료 목표, 현재 125개사+ 이전, 상위 20대 중 10곳 약정). <span class="conf">CRM 부문 점유율 방어 여부 = 향후 CAP의 최대 변수</span></p>
+  </div>
+</section>
+
+<!-- ============ ⑤ SWOT ============ -->
+<section id="swot">
+  <div class="eyebrow">⑤ SWOT 분석</div>
+  <h2 class="title">강점·약점·기회·위협 한눈에</h2>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card" style="border-top:4px solid var(--emerald)">
+      <h3 style="margin-top:0;color:var(--emerald)">강점 (Strengths)</h3>
+      <ul class="clean small">
+        <li>생명과학 SW 사실상 표준 — 상위 20대 제약사 대부분이 고객</li>
+        <li>동종 SaaS 중 <b>최고 수준 마진·현금 전환</b>, 부채 0·순현금 $6.56B</li>
+        <li>규제 검증 기반의 강한 전환비용(락인)</li>
+        <li>창업자 CEO(18년) 주도의 일관된 흑자·자본효율 경영</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--terra)">
+      <h3 style="margin-top:0;color:var(--terra)">약점 (Weaknesses)</h3>
+      <ul class="clean small">
+        <li>매출이 <b>생명과학 한 산업에 100% 집중</b> — 분산 부족</li>
+        <li>제품·서비스 단가가 높아 중소형 고객엔 비싼 편</li>
+        <li>높은 주식보상비용(매출의 ~15%)이 GAAP 이익을 누름</li>
+        <li>CRM이 아직 Salesforce 플랫폼 이전 ‘진행 중’(실행 리스크)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--teal)">
+      <h3 style="margin-top:0;color:var(--teal)">기회 (Opportunities)</h3>
+      <ul class="clean small">
+        <li>아직 낮은 시장 침투율 — $27.5B 시장에서 추가 확장 여력</li>
+        <li><b>Veeva AI 에이전트</b>(2025~)로 신규 매출원·단가 인상</li>
+        <li>임상(Development)·품질(Quality) 등 <b>고성장 신규 영역</b> 점유 확대</li>
+        <li>의료기기·신흥 바이오텍 등 인접 고객군 확장</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amber)">
+      <h3 style="margin-top:0;color:var(--amber)">위협 (Threats)</h3>
+      <ul class="clean small">
+        <li><b>Salesforce 직접 진입</b> + IQVIA 제휴 (CRM 경쟁 격화)</li>
+        <li>제약 산업 자체의 규제·자금·정책 변화(약가 정책 등)</li>
+        <li>AI가 ‘업무 SW’의 진입장벽을 낮출 가능성</li>
+        <li>고밸류 SaaS 전반의 디레이팅(금리·심리)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑥ 경제적 해자 ============ -->
+<section id="해자">
+  <div class="eyebrow">⑥ 경제적 해자 (Moat)</div>
+  <h2 class="title">Veeva만의 ‘넘기 힘든 성벽’은 무엇인가</h2>
+  <p class="lead">경제적 해자(moat)란 <b>경쟁자가 쉽게 따라오지 못하게 막아 주는 구조적 우위</b>입니다. Veeva의 해자는 ‘기술’이 아니라 주로 <b>규제+전환비용+통합</b>에서 나옵니다 — 이것이 일반 소프트웨어보다 더 끈질긴 이유입니다.</p>
+
+  <div class="figure">
+    <div class="figttl">해자의 4개 원천과 강도 평가</div>
+    <svg viewBox="0 0 980 230" width="100%" role="img" aria-label="해자 강도">
+      <g font-size="12.5">
+        <!-- bars -->
+        <text x="20" y="36" font-weight="600" fill="#16201C">전환비용 (규제 재검증)</text>
+        <rect x="320" y="22" width="560" height="20" rx="6" fill="#eee6d2"/><rect x="320" y="22" width="532" height="20" rx="6" fill="#0E5C49"/><text x="892" y="38" font-size="11" fill="#0E5C49" font-weight="700">매우 강함</text>
+
+        <text x="20" y="76" font-weight="600" fill="#16201C">통합·전 구간 플랫폼</text>
+        <rect x="320" y="62" width="560" height="20" rx="6" fill="#eee6d2"/><rect x="320" y="62" width="476" height="20" rx="6" fill="#14746A"/><text x="892" y="78" font-size="11" fill="#14746A" font-weight="700">강함</text>
+
+        <text x="20" y="116" font-weight="600" fill="#16201C">데이터 자산 (의사·기관)</text>
+        <rect x="320" y="102" width="560" height="20" rx="6" fill="#eee6d2"/><rect x="320" y="102" width="364" height="20" rx="6" fill="#2A8C76"/><text x="892" y="118" font-size="11" fill="#2A8C76" font-weight="700">중간~강함</text>
+
+        <text x="20" y="156" font-weight="600" fill="#16201C">브랜드·산업 표준 지위</text>
+        <rect x="320" y="142" width="560" height="20" rx="6" fill="#eee6d2"/><rect x="320" y="142" width="420" height="20" rx="6" fill="#C8862A"/><text x="892" y="158" font-size="11" fill="#C8862A" font-weight="700">강함</text>
+      </g>
+      <line x1="320" y1="180" x2="880" y2="180" stroke="#e2dcc9"/>
+      <text x="320" y="200" font-size="11" fill="#5A6B72">약함</text><text x="850" y="200" font-size="11" fill="#5A6B72">매우 강함</text>
+      <text x="20" y="218" font-size="11.5" fill="#5A6B72">＊네트워크 효과는 ‘다면(고객↔데이터↔파트너)’으로 일부 존재하나, 소비자 플랫폼만큼 강하진 않음.</text>
+    </svg>
+    <div class="figcap">실증적으로 ‘차별화 우위’ 유형(높은 마진)에 해당 — 원가 우위형보다 지속성이 큰 것으로 알려진 유형.</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">차별화 vs 원가 우위 판별</h3>
+      <p class="small">프레임워크 기준: <b>NOPAT 마진이 산업 평균의 2배+ → 차별화 전략</b>. Veeva의 영업이익률(28.7% GAAP / 44.9% 조정)은 일반 소프트웨어·헬스케어 IT 평균을 크게 상회 → 명백한 <b>차별화 우위형</b>. 자본 회전율도 높음(자산경량). 둘 다 평균 이상이라 ‘지속 가능한 해자’ 신호.</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">해자의 지속 가능성 — 솔직한 평가</h3>
+      <p class="small">규제 검증 락인은 <b>‘매우 끈질긴’</b> 종류의 해자입니다(교체 시 재검증 부담). 다만 Salesforce의 진입은 <b>“해자가 거의 안정적이지 않다”</b>는 원칙을 상기시킵니다 — 특히 신규 고객·CRM 영역에서 경쟁이 격화될 수 있습니다. R&amp;D·품질 영역의 해자는 CRM보다 더 깊습니다. <span class="conf">해자 지속성 확신도: 중간 (~60%)</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑦ 피어그룹 비교 ============ -->
+<section id="피어">
+  <div class="eyebrow">⑦ 피어그룹 비교</div>
+  <h2 class="title">경쟁사·동종 SaaS와 나란히 놓고 보기</h2>
+  <p class="lead">핵심 관찰: Veeva는 <b>성장률은 피어 평균을 웃돌고, 마진·현금창출은 최상위</b>인데도 P/E는 피어 평균(약 38배)보다 <b>약 19% 낮게</b> 거래됩니다.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead>
+        <tr><th>기업</th><th>모델</th><th>매출(연)</th><th>매출 성장</th><th>영업이익률</th><th>선행 P/E</th><th>특징</th></tr>
+      </thead>
+      <tbody>
+        <tr class="hi"><td><b>Veeva (VEEV)</b></td><td>생명과학 전용 SaaS</td><td class="mono">$3.2B</td><td class="mono">~16%</td><td class="mono">28.7%/45%*</td><td class="mono">~20–21x</td><td>최고 마진·현금전환, 부채 0</td></tr>
+        <tr><td>IQVIA (IQV)</td><td>데이터+CRO+SW 혼합</td><td class="mono">$16.6B</td><td class="mono">~8–10%</td><td class="mono">순마진 8.3%</td><td class="mono">~12–13x</td><td>데이터 강점, 마진 낮음</td></tr>
+        <tr><td>Salesforce (CRM)</td><td>범용 CRM 플랫폼</td><td class="mono">$41.5B</td><td class="mono">~10–11%</td><td class="mono">~20%→37%E</td><td class="mono">~14x</td><td>거대·저성장, 신규 경쟁자</td></tr>
+        <tr><td>ServiceNow (NOW)</td><td>IT 워크플로 SaaS</td><td class="mono">$13.3B</td><td class="mono">~20%+</td><td class="mono">~15%</td><td class="mono">~21x</td><td>고성장, 프리미엄 밸류</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="xsmall muted">＊Veeva 영업이익률은 GAAP 28.7% / 조정(Non-GAAP) 44.9%. 수치는 최근 회계연도/가이던스 기준이며 출처별 소폭 차이 있음. 성장·마진은 모델이 달라 ‘직접 비교’엔 주의(IQVIA·Salesforce는 사업 구성이 매우 다름).</p>
+
+  <div class="figure">
+    <div class="figttl">성장률 vs 수익성 — Veeva의 위치</div>
+    <svg viewBox="0 0 980 320" width="100%" role="img" aria-label="성장 대 마진 산점도">
+      <!-- axes -->
+      <line x1="80" y1="270" x2="920" y2="270" stroke="#cfc7af" stroke-width="1.5"/>
+      <line x1="80" y1="40" x2="80" y2="270" stroke="#cfc7af" stroke-width="1.5"/>
+      <text x="500" y="305" text-anchor="middle" font-size="12" fill="#5A6B72">매출 성장률 →</text>
+      <text x="30" y="155" text-anchor="middle" font-size="12" fill="#5A6B72" transform="rotate(-90,30,155)">영업이익률(높을수록 위) →</text>
+      <!-- gridlines -->
+      <g stroke="#eee6d2" stroke-width="1">
+        <line x1="80" y1="210" x2="920" y2="210"/><line x1="80" y1="150" x2="920" y2="150"/><line x1="80" y1="90" x2="920" y2="90"/>
+      </g>
+      <g class="lbl" font-size="10.5" fill="#9a9173" text-anchor="middle">
+        <text x="260" y="287">10%</text><text x="500" y="287">15%</text><text x="740" y="287">20%</text>
+      </g>
+      <!-- points: x scaled growth(8-22%), y scaled margin(8-46%) -->
+      <!-- Veeva growth16 margin~37(blend GAAP/NonGAAP shown ~ use 40 to reflect cash econ) -->
+      <circle cx="548" cy="78" r="13" fill="#0E5C49"/><text x="548" y="62" text-anchor="middle" font-size="12" font-weight="700" fill="#0E5C49">Veeva</text>
+      <circle cx="260" cy="246" r="11" fill="#5A6B72"/><text x="260" y="232" text-anchor="middle" font-size="11" fill="#5A6B72">IQVIA</text>
+      <circle cx="284" cy="150" r="11" fill="#C8862A"/><text x="284" y="136" text-anchor="middle" font-size="11" fill="#C8862A">Salesforce</text>
+      <circle cx="740" cy="186" r="11" fill="#14746A"/><text x="740" y="172" text-anchor="middle" font-size="11" fill="#14746A">ServiceNow</text>
+      <!-- ideal corner -->
+      <text x="820" y="64" font-size="11" fill="#0a4034" font-weight="600">↖ 이상적 영역</text>
+      <text x="820" y="80" font-size="10.5" fill="#5A6B72">(고성장+고마진)</text>
+    </svg>
+    <div class="figcap">우상단(고성장·고마진)에 가까울수록 우량. Veeva는 마진 축에서 최상위, 성장도 상위권. 마진은 현금경제 반영해 GAAP·Non-GAAP 사이로 표시.</div>
+  </div>
+
+  <div class="callout">
+    <p style="margin:0" class="small"><b>해석:</b> 피어 비교는 ‘배수(P/E)’가 ROIC·성장·위험·CAP의 혼합물이라 단독으론 위험하지만, 한 가지는 분명합니다 — <b>질(마진·현금·성장)은 최상위인데 가격(배수)은 피어 평균 이하</b>입니다. 이 괴리는 시장이 Veeva의 <b>경쟁 우위 ‘지속 기간(CAP)’을 상대적으로 짧게</b> 보고 있을 가능성을 시사합니다(바로 다음 섹션에서 정량화).</p>
+  </div>
+</section>
+
+<!-- ============ ⑧ 생애주기 ============ -->
+<section id="생애주기">
+  <div class="eyebrow">⑧ 생애주기 단계 판별</div>
+  <h2 class="title">Veeva는 지금 ‘성장기’인가 ‘성숙기’인가</h2>
+  <p class="lead">현금흐름표의 부호(+/−) 패턴으로 기업의 생애주기를 판별합니다. Veeva는 <b>‘성장기 후반 ↔ 성숙기 초입’의 전환 구간</b>에 있습니다 — DCF·CAP 분석에 가장 적합한 단계입니다. <span class="conf">확신도: 높음 (~85%)</span></p>
+
+  <div class="definition">
+    판별 원리: <b>영업 현금흐름(본업으로 번 돈)</b>, <b>투자 현금흐름(설비·인수 등에 쓴 돈)</b>, <b>재무 현금흐름(주주·채권자와 주고받은 돈)</b>의 부호 조합으로 단계를 나눕니다. 성장기는 (영업+, 투자−, 재무+), 성숙기는 (영업+, 투자−, 재무−).
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">FY2026 현금흐름 부호 (조정 후)</h3>
+      <table class="small">
+        <tbody>
+          <tr><td>영업 현금흐름</td><td class="mono">+$1,415M</td><td><span class="pill em">유입 (+)</span></td></tr>
+          <tr><td>투자 현금흐름 (설비)</td><td class="mono">−$29M</td><td><span class="pill am">소폭 유출 (−)</span></td></tr>
+          <tr><td>＊투자 CF 중 유가증권 매매</td><td class="mono">−$1,075M</td><td><span class="pill sl">현금 운용(제외)</span></td></tr>
+          <tr><td>재무 현금흐름 (순)</td><td class="mono">자사주 매입 개시</td><td><span class="pill am">유출 전환 (−)</span></td></tr>
+        </tbody>
+      </table>
+      <p class="xsmall muted" style="margin:8px 0 0">＊원칙에 따라 ‘유가증권 매매’는 투자 CF에서 제외(현금 운용일 뿐 실제 사업 투자가 아님). 실제 설비투자는 매출의 ~1%에 불과(자산경량).</p>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">판정 — 성장기→성숙기 전환</h3>
+      <ul class="clean small">
+        <li>영업 CF 강한 (+), 설비투자 매우 작음(자산경량) → 전형적 우량 소프트웨어</li>
+        <li><b>FY2026 처음으로 자사주 매입($170M) 시작</b>(FY2025=0). 현금($6.56B)이 재투자 속도보다 빠르게 쌓임 → <b>성숙기 신호</b></li>
+        <li>그러나 매출 성장률은 여전히 16% → <b>성장기 특성 유지</b></li>
+        <li>결론: 두 단계가 겹치는 전환 구간. <b>DCF+CAP 프레임워크가 가장 잘 맞는 구간</b></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑨ DCF · 내재 CAP ============ -->
+<section id="dcf">
+  <div class="eyebrow">⑨ DCF 모델 · 시장 내재 CAP (분석의 핵심)</div>
+  <h2 class="title">현재 주가는 ‘몇 년의 경쟁 우위’를 가정하고 있나</h2>
+  <p class="lead">이 분석은 ‘적정가’를 맞히려는 게 아닙니다. <b>현재 주가(~$180)에 도달하려면 Veeva가 자본비용 초과 수익을 몇 년 유지해야 하는지</b>를 거꾸로 계산합니다. 답: <b>약 11~12년</b>.</p>
+
+  <div class="definition">
+    <b>CAP(경쟁 우위 기간)란?</b> 기업이 ‘자본비용(투자자가 요구하는 최소 수익률)’을 초과하는 수익을 내는 기간입니다. 이 기간이 길수록 기업가치가 큽니다. 시장이 매긴 주가를 역산하면 ‘시장이 기대하는 CAP’가 나오고, 그게 합리적인지를 따지는 것이 핵심입니다.
+  </div>
+
+  <h3>주요 가정값 (출처·기준 시점 명시)</h3>
+  <div class="tblwrap" style="margin-bottom:8px">
+    <table class="small">
+      <thead><tr><th>항목</th><th>값</th><th>근거 / 출처</th></tr></thead>
+      <tbody>
+        <tr><td>기준 주가</td><td class="mono">$180</td><td>2026-06 최근 거래 범위 $174–188 중앙값</td></tr>
+        <tr><td>무위험 이자율(Rf)</td><td class="mono">4.5%</td><td>美 10년 국채 4.49% (FRED/연준 H.15, 2026-06-03)</td></tr>
+        <tr><td>베타(조정)</td><td class="mono">~0.97</td><td>5년 원시 베타 0.92–1.08을 1로 회귀 조정</td></tr>
+        <tr><td>주식위험프리미엄(ERP)</td><td class="mono">4.75%</td><td>프레임워크 표준값 (＊다모다란 2026.1 내재 ERP는 4.23%로 더 낮음 — 민감도에서 반영)</td></tr>
+        <tr><td><b>자본비용(WACC)</b></td><td class="mono"><b>9.1%</b></td><td>4.5% + 0.97×4.75%; 부채 사실상 0이라 WACC=자기자본비용</td></tr>
+        <tr><td>장기성장률(g)</td><td class="mono">2.5%</td><td>기대 인플레이션 수준 (10년 BEI ~2.3%, FRED T10YIE)</td></tr>
+        <tr><td>페이드 비율(f)</td><td class="mono">0.20</td><td>IT 섹터 평균(소프트웨어 0.22 vs 헬스케어 0.18의 중간)</td></tr>
+        <tr><td>EBITA 마진</td><td class="mono">29%→32%</td><td>GAAP 영업마진 28.7%에서 점진 확대(SBC 비용 처리)</td></tr>
+        <tr><td>FCF/NOPAT 전환</td><td class="mono">80%</td><td>자산경량 모델 반영(실제 ~90%+보다 보수적)</td></tr>
+        <tr><td>순현금 / 주식수</td><td class="mono">+$6.56B / 165M</td><td>FY2026 재무상태표; 부채 무시 가능</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="figure">
+    <div class="figttl">기본 케이스 DCF (전시 23 형식, $M)</div>
+    <div class="tblwrap">
+      <table class="small">
+        <thead><tr><th>회계연도</th><th>매출</th><th>성장%</th><th>EBITA</th><th>마진%</th><th>NOPAT</th><th>투자</th><th>FCF</th><th>FCF 현재가치</th></tr></thead>
+        <tbody>
+          <tr><td>FY2027</td><td class="mono">3,643</td><td class="mono">14.0</td><td class="mono">1,056</td><td class="mono">29.0</td><td class="mono">835</td><td class="mono">167</td><td class="mono">668</td><td class="mono">639</td></tr>
+          <tr><td>FY2028</td><td class="mono">4,116</td><td class="mono">13.0</td><td class="mono">1,235</td><td class="mono">30.0</td><td class="mono">976</td><td class="mono">195</td><td class="mono">780</td><td class="mono">685</td></tr>
+          <tr><td>FY2029</td><td class="mono">4,610</td><td class="mono">12.0</td><td class="mono">1,429</td><td class="mono">31.0</td><td class="mono">1,129</td><td class="mono">226</td><td class="mono">903</td><td class="mono">726</td></tr>
+          <tr><td>FY2030</td><td class="mono">5,117</td><td class="mono">11.0</td><td class="mono">1,638</td><td class="mono">32.0</td><td class="mono">1,294</td><td class="mono">259</td><td class="mono">1,035</td><td class="mono">763</td></tr>
+          <tr><td>FY2031</td><td class="mono">5,680</td><td class="mono">11.0</td><td class="mono">1,818</td><td class="mono">32.0</td><td class="mono">1,436</td><td class="mono">287</td><td class="mono">1,149</td><td class="mono">776</td></tr>
+          <tr><td>FY2032</td><td class="mono">6,305</td><td class="mono">11.0</td><td class="mono">2,018</td><td class="mono">32.0</td><td class="mono">1,594</td><td class="mono">319</td><td class="mono">1,275</td><td class="mono">790</td></tr>
+          <tr><td>FY2033</td><td class="mono">6,998</td><td class="mono">11.0</td><td class="mono">2,240</td><td class="mono">32.0</td><td class="mono">1,769</td><td class="mono">354</td><td class="mono">1,415</td><td class="mono">804</td></tr>
+          <tr><td>FY2034</td><td class="mono">7,768</td><td class="mono">11.0</td><td class="mono">2,486</td><td class="mono">32.0</td><td class="mono">1,964</td><td class="mono">393</td><td class="mono">1,571</td><td class="mono">818</td></tr>
+          <tr><td>FY2035</td><td class="mono">8,623</td><td class="mono">11.0</td><td class="mono">2,759</td><td class="mono">32.0</td><td class="mono">2,180</td><td class="mono">436</td><td class="mono">1,744</td><td class="mono">832</td></tr>
+          <tr><td>FY2036</td><td class="mono">9,571</td><td class="mono">11.0</td><td class="mono">3,063</td><td class="mono">32.0</td><td class="mono">2,420</td><td class="mono">484</td><td class="mono">1,936</td><td class="mono">846</td></tr>
+          <tr><td>FY2037</td><td class="mono">10,624</td><td class="mono">11.0</td><td class="mono">3,400</td><td class="mono">32.0</td><td class="mono">2,686</td><td class="mono">537</td><td class="mono">2,149</td><td class="mono">861</td></tr>
+          <tr><td>FY2038</td><td class="mono">11,793</td><td class="mono">11.0</td><td class="mono">3,774</td><td class="mono">32.0</td><td class="mono">2,981</td><td class="mono">596</td><td class="mono">2,385</td><td class="mono">876</td></tr>
+          <tr class="hi"><td>FY2039 (13y)</td><td class="mono">13,090</td><td class="mono">11.0</td><td class="mono">4,189</td><td class="mono">32.0</td><td class="mono">3,309</td><td class="mono">662</td><td class="mono">2,647</td><td class="mono">891</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="figcap">연중(mid-year) 할인 적용. ‘투자’는 NOPAT의 약 20%(자산경량). 13년 명시 예측 시 종말가치 포함 주당 가치 = <b>$188</b>(시장 $180과 근접 → 내재 CAP ≈ 11.8년).</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">가치 합산 (13년 명시 예측 기준)</h3>
+      <table class="small">
+        <tbody>
+          <tr><td>명시 기간 FCF의 현재가치 합</td><td class="mono">$10,307M</td></tr>
+          <tr><td>종말가치(페이드 모델)</td><td class="mono">$42,259M</td></tr>
+          <tr><td>종말가치의 현재가치</td><td class="mono">$14,227M</td></tr>
+          <tr><td>＝ 기업가치(EV)</td><td class="mono">$24,534M</td></tr>
+          <tr><td>＋ 순현금</td><td class="mono">$6,560M</td></tr>
+          <tr class="hi"><td>＝ 자기자본가치</td><td class="mono">$31,094M</td></tr>
+          <tr class="hi"><td>÷ 주식수 → 주당</td><td class="mono">$188</td></tr>
+          <tr><td>종말가치가 EV에서 차지하는 비중</td><td class="mono">58%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">가치의 구성 — ‘성장에 얼마를 지불하나’ (PVGO)</h3>
+      <p class="small" style="margin-bottom:12px">현재 시장 EV($23.1B)를 둘로 쪼개면:</p>
+      <svg viewBox="0 0 460 90" width="100%" aria-label="PVGO 분해">
+        <rect x="0" y="20" width="460" height="34" rx="8" fill="#eee6d2"/>
+        <rect x="0" y="20" width="160" height="34" rx="8" fill="#0E5C49"/>
+        <rect x="156" y="20" width="304" height="34" fill="#C8862A"/>
+        <rect x="452" y="20" width="8" height="34" rx="4" fill="#C8862A"/>
+        <text x="12" y="42" fill="#fff" font-size="12" font-weight="700">정체가치 35%</text>
+        <text x="300" y="42" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">성장가치(PVGO) 65%</text>
+        <text x="0" y="76" font-size="11" fill="#5A6B72">＄8.0B (현 이익 자본화)</text>
+        <text x="460" y="76" font-size="11" fill="#5A6B72" text-anchor="end">＄15.1B (미래 가치창출 기대)</text>
+      </svg>
+      <p class="xsmall muted" style="margin:10px 0 0">시장가의 <b>65%가 ‘앞으로의 성장’에 대한 기대</b>. 즉 이 주식은 ‘CAP가 길다는 믿음’에 크게 의존 — 그래서 CAP가 핵심 변수.</p>
+    </div>
+  </div>
+
+  <div class="figure">
+    <div class="figttl">주가별 시장 내재 CAP — 지금 가격은 무엇을 가정하나</div>
+    <svg viewBox="0 0 980 320" width="100%" role="img" aria-label="주가 대비 내재 CAP">
+      <!-- reasonable band 10-15y -->
+      <rect x="90" y="155" width="810" height="38" fill="#e3f0ea"/>
+      <text x="98" y="150" font-size="11" fill="#0a4034" font-weight="600">합리적 범위 10–15년</text>
+      <!-- axes -->
+      <line x1="90" y1="270" x2="900" y2="270" stroke="#cfc7af" stroke-width="1.5"/>
+      <line x1="90" y1="40" x2="90" y2="270" stroke="#cfc7af" stroke-width="1.5"/>
+      <text x="495" y="305" text-anchor="middle" font-size="12" fill="#5A6B72">주가($) →</text>
+      <text x="34" y="155" text-anchor="middle" font-size="12" fill="#5A6B72" transform="rotate(-90,34,155)">내재 CAP(년) →</text>
+      <!-- y ticks -->
+      <g class="lbl" font-size="10.5" fill="#9a9173" text-anchor="end">
+        <text x="84" y="274">0</text><text x="84" y="197">10</text><text x="84" y="159">15</text><text x="84" y="120">20</text><text x="84" y="44">30</text>
+      </g>
+      <!-- curve through points -->
+      <polyline fill="none" stroke="#0E5C49" stroke-width="2.5"
+        points="90,217 223,186 254,180 295,171 536,122 674,96 900,56"/>
+      <!-- markers -->
+      <g font-size="11">
+        <circle cx="90" cy="217" r="5" fill="#5A6B72"/><text x="98" y="234" fill="#5A6B72">$148 · 6.9y (52주 저점)</text>
+        <circle cx="254" cy="180" r="7" fill="#C8862A" stroke="#fff" stroke-width="2"/><text x="264" y="180" fill="#7a4e0e" font-weight="700">현재 ~$180 · ~11.8y</text>
+        <circle cx="536" cy="122" r="5" fill="#5A6B72"/><text x="500" y="113" fill="#5A6B72">$235 · 19.3y</text>
+        <circle cx="674" cy="96" r="5" fill="#5A6B72"/><text x="640" y="88" fill="#5A6B72">$262 · 22.7y (애널 목표 상단)</text>
+        <circle cx="900" cy="56" r="6" fill="#B5532E"/><text x="892" y="44" fill="#B5532E" text-anchor="end" font-weight="700">$306 · 27.9y (2025.10 고점)</text>
+      </g>
+    </svg>
+    <div class="figcap">핵심 통찰: 2025년 10월 고점($306)엔 약 <b>28년</b>의 경쟁 우위가 가격에 반영 → ‘과도한 낙관’. 약 40% 하락한 현재(~$180)는 <b>약 12년</b> → ‘합리적 범위’로 정상화. 애널리스트 목표가($235–262)는 다시 19–23년을 요구.</div>
+  </div>
+
+  <h3>프레임워크 해석표 — Veeva의 위치</h3>
+  <div class="tblwrap">
+    <table class="small">
+      <thead><tr><th>내재 CAP</th><th>해석</th><th>방향성</th><th>해당 주가대</th></tr></thead>
+      <tbody>
+        <tr><td>5년 미만</td><td>매우 비관적</td><td><span class="pill em">매수 후보</span></td><td class="mono">~$148 이하</td></tr>
+        <tr><td>5–10년</td><td>약간 비관적</td><td><span class="pill em">해자 확실 시 매수</span></td><td class="mono">$148–172</td></tr>
+        <tr class="hi"><td><b>10–15년</b></td><td><b>합리적 범위</b></td><td><span class="pill sl">중립 ← 현재 ~$180</span></td><td class="mono">$172–200</td></tr>
+        <tr><td>15–20년</td><td>약간 낙관적</td><td><span class="pill am">해자 근거 강력해야</span></td><td class="mono">$200–240</td></tr>
+        <tr><td>20년 초과</td><td>과도한 낙관</td><td><span class="pill te">회피 고려</span></td><td class="mono">$240↑ (목표가·고점)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="xsmall muted">＊‘방향성’ 열은 프레임워크가 CAP 구간을 기계적으로 분류한 결과를 그대로 표기한 것입니다. 점추정에는 ±1~2년의 모델 관례 불확실성이 있어 ‘약 11~13년’ 범위로 읽는 것이 적절합니다.</p>
+</section>
+
+<!-- ============ ⑩ 민감도 ============ -->
+<section id="민감도">
+  <div class="eyebrow">⑩ 민감도 분석</div>
+  <h2 class="title">어떤 가정이 결론을 가장 크게 흔드는가</h2>
+  <p class="lead">기본 내재 CAP는 ~11.8년. 가정을 하나씩 바꿔 보면 <b>자본비용(WACC)과 장기 성장률</b>이 가장 큰 변수이고, <b>페이드 비율은 거의 영향이 없습니다</b>(종말가치가 ‘현 이익 자본화’에 의해 지배되기 때문).</p>
+
+  <div class="figure">
+    <div class="figttl">토네이도 차트 — 변수별 내재 CAP 범위(년) @ $180</div>
+    <svg viewBox="0 0 980 290" width="100%" role="img" aria-label="민감도 토네이도">
+      <!-- base line -->
+      <line x1="568" y1="40" x2="568" y2="250" stroke="#16201C" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="568" y="32" text-anchor="middle" font-size="11" fill="#16201C" font-weight="600">기본 11.8년</text>
+      <!-- x axis -->
+      <line x1="110" y1="250" x2="900" y2="250" stroke="#cfc7af"/>
+      <g class="lbl" font-size="10.5" fill="#9a9173" text-anchor="middle">
+        <text x="110" y="268">6</text><text x="331" y="268">8.8</text><text x="568" y="268">11.8</text><text x="900" y="268">16</text>
+      </g>
+      <text x="495" y="286" text-anchor="middle" font-size="11" fill="#5A6B72">← CAP 짧음(가격 정당화 쉬움) ｜ CAP 김(정당화 어려움) →</text>
+      <!-- bars -->
+      <g font-size="12">
+        <!-- WACC -->
+        <text x="100" y="68" text-anchor="end" fill="#16201C" font-weight="600">WACC ±1%p</text>
+        <rect x="331" y="56" width="514" height="20" rx="5" fill="#0E5C49" opacity="0.85"/>
+        <text x="331" y="71" font-size="10.5" fill="#fff" dx="4">8.8 (8.1%)</text><text x="845" y="71" font-size="10.5" fill="#fff" text-anchor="end" dx="-4">15.3 (10.1%)</text>
+        <!-- held g -->
+        <text x="100" y="108" text-anchor="end" fill="#16201C" font-weight="600">장기성장 ±2%p</text>
+        <rect x="394" y="96" width="482" height="20" rx="5" fill="#14746A" opacity="0.85"/>
+        <text x="394" y="111" font-size="10.5" fill="#fff" dx="4">9.6 (13%)</text><text x="876" y="111" font-size="10.5" fill="#fff" text-anchor="end" dx="-4">15.7 (9%)</text>
+        <!-- margin -->
+        <text x="100" y="148" text-anchor="end" fill="#16201C" font-weight="600">EBITA 마진</text>
+        <rect x="434" y="136" width="229" height="20" rx="5" fill="#2A8C76" opacity="0.85"/>
+        <text x="434" y="151" font-size="10.5" fill="#fff" dx="4">10.1 (35%)</text><text x="663" y="151" font-size="10.5" fill="#fff" text-anchor="end" dx="-4">13.0 (30%)</text>
+        <!-- conv -->
+        <text x="100" y="188" text-anchor="end" fill="#16201C" font-weight="600">FCF 전환율</text>
+        <rect x="489" y="176" width="166" height="20" rx="5" fill="#C8862A" opacity="0.85"/>
+        <text x="489" y="191" font-size="10.5" fill="#fff" dx="4">10.8 (90%)</text><text x="655" y="191" font-size="10.5" fill="#fff" text-anchor="end" dx="-4">12.9 (70%)</text>
+        <!-- fade -->
+        <text x="100" y="228" text-anchor="end" fill="#16201C" font-weight="600">페이드 비율</text>
+        <rect x="552" y="216" width="24" height="20" rx="5" fill="#5A6B72" opacity="0.85"/>
+        <text x="582" y="231" font-size="10.5" fill="#5A6B72">11.6 ↔ 11.9 (영향 미미)</text>
+      </g>
+    </svg>
+    <div class="figcap">막대가 길수록 그 변수의 영향이 큼. WACC(금리·위험)와 장기 성장률이 결정적. 페이드 비율(해자 소멸 속도)은 의외로 영향이 작음 — 종말가치 대부분이 ‘현재 이익의 자본화’라서.</div>
+  </div>
+  <p class="small muted">＊다모다란 내재 ERP(4.23%)를 쓰면 WACC가 약 8.6%로 낮아져 내재 CAP는 ~10년으로 짧아집니다(가격 정당화가 더 쉬워짐). 즉 ERP 가정을 보수적으로(4.75%) 둔 본 분석이 더 엄격한 편입니다.</p>
+</section>
+
+<!-- ============ ⑪ 시나리오 ============ -->
+<section id="시나리오">
+  <div class="eyebrow">⑪ 시나리오 분석</div>
+  <h2 class="title">강세 · 기본 · 약세 — 세 갈래의 미래</h2>
+  <p class="lead">‘만약 Veeva의 진짜 CAP가 13년(합리적 범위의 중앙)이라면’ 각 시나리오에서 주당 가치가 어떻게 갈리는지, 그리고 현재가($180)가 각 시나리오에서 요구하는 CAP를 함께 봅니다.</p>
+
+  <div class="figure">
+    <div class="figttl">시나리오별 주당 가치 (13년 CAP 가정) vs 현재가 $180</div>
+    <svg viewBox="0 0 980 250" width="100%" role="img" aria-label="시나리오 가치 막대">
+      <!-- price line -->
+      <line x1="572" y1="30" x2="572" y2="210" stroke="#16201C" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <text x="572" y="24" text-anchor="middle" font-size="11.5" font-weight="700" fill="#16201C">현재가 $180</text>
+      <!-- axis -->
+      <line x1="110" y1="210" x2="900" y2="210" stroke="#cfc7af"/>
+      <g class="lbl" font-size="10.5" fill="#9a9173" text-anchor="middle">
+        <text x="110" y="228">$0</text><text x="367" y="228">$100</text><text x="572" y="228">$180</text><text x="880" y="228">$300</text>
+      </g>
+      <g font-size="13">
+        <!-- Bull -->
+        <text x="100" y="62" text-anchor="end" font-weight="700" fill="#0E5C49">강세 (Bull)</text>
+        <rect x="110" y="48" width="693" height="26" rx="6" fill="#0E5C49"/>
+        <text x="795" y="66" text-anchor="end" fill="#fff" font-weight="700" class="mono">$270</text>
+        <text x="815" y="66" font-size="11" fill="#0a4034">내재 CAP@$180 ＝ 6년</text>
+        <!-- Base -->
+        <text x="100" y="116" text-anchor="end" font-weight="700" fill="#C8862A">기본 (Base)</text>
+        <rect x="110" y="102" width="482" height="26" rx="6" fill="#C8862A"/>
+        <text x="584" y="120" text-anchor="end" fill="#fff" font-weight="700" class="mono">$188</text>
+        <text x="604" y="120" font-size="11" fill="#7a4e0e">내재 CAP@$180 ＝ 11.8년</text>
+        <!-- Bear -->
+        <text x="100" y="170" text-anchor="end" font-weight="700" fill="#B5532E">약세 (Bear)</text>
+        <rect x="110" y="156" width="300" height="26" rx="6" fill="#B5532E"/>
+        <text x="402" y="174" text-anchor="end" fill="#fff" font-weight="700" class="mono">$117</text>
+        <text x="422" y="174" font-size="11" fill="#7c331a">$180을 어떤 CAP로도 정당화 못함</text>
+      </g>
+    </svg>
+    <div class="figcap">‘13년 CAP’ 기준 가치 범위: 약 <b>$117 ~ $270</b>(기본 ~$188). 현재가 $180은 기본 시나리오에 근접. 강세가 맞다면 저평가, 약세가 맞다면 고평가.</div>
+  </div>
+
+  <div class="tblwrap">
+    <table class="small">
+      <thead><tr><th>가정</th><th>강세 (Bull)</th><th>기본 (Base)</th><th>약세 (Bear)</th></tr></thead>
+      <tbody>
+        <tr><td>장기 성장률(유지)</td><td class="mono">13%</td><td class="mono">11%</td><td class="mono">6%</td></tr>
+        <tr><td>EBITA 마진(유지)</td><td class="mono">35%</td><td class="mono">32%</td><td class="mono">29.5%</td></tr>
+        <tr><td>페이드 / 자본비용</td><td class="mono">0.15 / 8.5%</td><td class="mono">0.20 / 9.1%</td><td class="mono">0.25 / 9.8%</td></tr>
+        <tr><td>FCF 전환</td><td class="mono">88%</td><td class="mono">80%</td><td class="mono">74%</td></tr>
+        <tr class="hi"><td><b>주당 가치 (13년 CAP)</b></td><td class="mono"><b>$270</b></td><td class="mono"><b>$188</b></td><td class="mono"><b>$117</b></td></tr>
+        <tr><td>$180 정당화에 필요한 CAP</td><td class="mono">6.0년</td><td class="mono">11.8년</td><td class="mono">&gt;30년 (불가)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid3" style="margin-top:14px">
+    <div class="card"><div class="pill em">강세 시나리오</div><p class="xsmall" style="margin-top:8px">Salesforce 방어 성공 + 임상·품질·AI에서 점유 확대, 마진 확대 지속. 해자가 ‘헬스케어급’으로 끈질김(페이드 0.15).</p></div>
+    <div class="card"><div class="pill am">기본 시나리오</div><p class="xsmall" style="margin-top:8px">CRM은 일부 압박받지만 R&amp;D·품질이 상쇄, 두 자릿수 성장 유지. 현재가와 거의 일치.</p></div>
+    <div class="card"><div class="pill te">약세 시나리오</div><p class="xsmall" style="margin-top:8px">Salesforce·IQVIA에 CRM 점유 잠식, 성장 한 자릿수로 둔화, AI가 진입장벽 침식. 이 경우 현재가도 비쌈.</p></div>
+  </div>
+</section>
+
+<!-- ============ ⑫ 종합 ============ -->
+<section id="종합">
+  <div class="eyebrow">⑫ 종합 판단 자료</div>
+  <h2 class="title">정리 — 합리성, 경쟁 가설, 리스크, 체크포인트</h2>
+
+  <h3>내재 CAP의 합리성 (섹터 대비)</h3>
+  <p class="small">소프트웨어·서비스 섹터의 ROIC 지속성(페이드 0.22)과 헬스케어(0.18)의 중간에서, Veeva의 <b>~12년 내재 CAP는 섹터 평균 범위 내</b>입니다. Veeva의 해자(규제 검증 락인)가 평균적 소프트웨어보다 끈질기다고 보면 12년은 ‘무리한 기대’가 아닙니다. 반대로 Salesforce 진입이 CRM 해자를 빠르게 침식한다면 12년도 길 수 있습니다. <b>현재가는 이 두 견해의 중간</b>에 가격을 매기고 있습니다.</p>
+
+  <div class="callout">
+    <p class="small" style="margin:0"><b>경쟁 가설 (Bayesian) — 증거가 부족할 때 두 가설을 함께 유지</b></p>
+    <ul class="clean small" style="margin:10px 0 0">
+      <li><b>가설 A (해자 견고):</b> 규제 락인·전 구간 통합이 Salesforce를 막아내고, R&amp;D·품질·AI가 성장을 잇는다 → 진짜 CAP는 15년+ → 현재가 저평가. <span class="conf">~55%</span></li>
+      <li><b>가설 B (해자 침식):</b> CRM에서 Salesforce·IQVIA에 점유를 내주고 성장이 둔화 → 진짜 CAP는 8~10년 → 현재가 적정~고평가. <span class="conf">~45%</span></li>
+      <li><b>판단을 바꿀 증거:</b> ① 상위 20대 제약사의 Vault CRM 약정 추이(현재 10/20, 목표 14/20) ② Salesforce LS Cloud의 실제 ‘대형’ 수주 ③ R&amp;D·품질 구독 성장률 ④ 분기 매출 성장률이 13%대를 유지하는지.</li>
+    </ul>
+  </div>
+
+  <h3>주요 리스크</h3>
+  <div class="grid2">
+    <div class="card">
+      <ul class="clean small">
+        <li><b>경쟁(최우선):</b> Salesforce 직접 진입 + IQVIA 제휴 → CRM 점유·가격 압박</li>
+        <li><b>실행 리스크:</b> 자체 Vault 플랫폼으로의 CRM 이전(2030 완료)이 지연·이탈 유발 가능</li>
+        <li><b>집중 리스크:</b> 매출 100% 생명과학 — 제약 산업 자금·약가 정책 충격에 노출</li>
+      </ul>
+    </div>
+    <div class="card">
+      <ul class="clean small">
+        <li><b>밸류에이션:</b> 가치의 65%가 성장 기대 → 기대 하향 시 변동성 큼(이미 52주 −40% 경험)</li>
+        <li><b>AI 양날의 검:</b> 신규 매출원이자, 동시에 업무 SW 진입장벽을 낮출 수 있는 위협</li>
+        <li><b>희석:</b> 높은 주식보상(매출 ~15%)이 지속되면 주주가치 희석</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>재검토 체크포인트</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="pill em">매 분기 확인</div>
+      <ul class="clean small" style="margin-top:10px">
+        <li>매출 성장률이 ~13%대를 유지하는가</li>
+        <li>EBITA(GAAP 영업)마진 추세 — 확대/축소</li>
+        <li>주식보상(SBC) 규모 변화(매출 대비 비중)</li>
+        <li>Vault CRM 신규 약정·라이브 고객 수, 경쟁 수주 동향</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="pill am">매도 ‘고려’ 신호 (정보용)</div>
+      <ul class="clean small" style="margin-top:10px">
+        <li>내재 CAP가 진입 시점 대비 50%+ 상승(예: $235+에서 20년 초과)</li>
+        <li>ROIC 2년 연속 하락 또는 마진의 구조적 훼손</li>
+        <li>생애주기 ‘성숙→정리’ 전환 징후</li>
+        <li>CRM 점유 급락 등 투자 논리의 핵심 가정 붕괴</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑬ 한계와 가정 ============ -->
+<section id="한계">
+  <div class="eyebrow">⑬ 한계와 가정 (Limitations &amp; Assumptions)</div>
+  <h2 class="title">이 분석이 틀릴 수 있는 지점</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">결론이 의존하는 핵심 가정</h3>
+      <ul class="clean small">
+        <li>자본비용 9.1% (ERP 4.75% 가정). 금리·위험 인식이 바뀌면 결론이 크게 흔들림 — 가장 큰 변수.</li>
+        <li>장기 성장률 2.5%, 마진 32%로의 확대, FCF 전환 80% — 모두 ‘합리적이나 검증 필요’.</li>
+        <li>순현금 $6.56B를 액면 그대로 가치에 가산(세금·활용 가정 단순화).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">확신도 낮은 지점</h3>
+      <ul class="clean small">
+        <li><b>해자 지속성(중간, ~60%):</b> Salesforce 진입의 실제 타격 규모가 아직 불확실 — 본 분석 최대 약점.</li>
+        <li>섹터 분류 모호성: Veeva는 ‘소프트웨어’와 ‘헬스케어’ 사이 — 페이드 비율 선택에 판단 개입(단, 영향은 작음).</li>
+        <li>내재 CAP 점추정엔 ±1~2년의 모델 관례 불확실성 → ‘약 11~13년’으로 읽어야.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3 style="margin-top:0">결론을 수정해야 할 조건</h3>
+      <ul class="clean small">
+        <li>분기 매출 성장률이 한 자릿수로 떨어지면 → 기본 가정(11%+) 하향, 내재 CAP 재상승.</li>
+        <li>Salesforce LS Cloud가 상위 20대 중 다수를 빼앗으면 → ‘가설 B’로 무게 이동.</li>
+        <li>금리 급변(WACC ±1%p)만으로 내재 CAP가 8.8↔15.3년으로 이동.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">다음 검증 단계</h3>
+      <ul class="clean small">
+        <li>10-K/10-Q에서 실제 ROIC·투자자본·이연매출 추세 정밀 추출.</li>
+        <li>Vault CRM 마이그레이션 진척률, R&amp;D·품질 구독 성장률 분기 추적.</li>
+        <li>다모다란 ERP·국채금리 갱신 시 WACC 재계산(연간 재검토).</li>
+        <li>피어(IQVIA·Salesforce·ServiceNow)의 내재 CAP 동시 산출로 상대 위치 점검.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="xsmall muted" style="margin-top:14px">방법론 주의: 본 분석은 ‘적정가 단정’이 아니라 ‘현재가에 내재된 시장 기대(CAP)를 역산해 합리성을 평가’하는 접근입니다. 정밀도보다 방향성·논리적 일관성을 우선했습니다. 배수(P/E 등)는 ROIC·성장·위험·CAP의 혼합물이므로 단독 해석에 주의가 필요합니다.</p>
+</section>
+
+</div><!-- /wrap -->
+
+<!-- ============ FOOTER / SOURCES ============ -->
+<footer>
+  <div class="wrap">
+    <h3>데이터 출처 · 기준 시점</h3>
+    <p style="color:#9fd4c4;max-width:760px">모든 정량 데이터는 웹 검색으로 확보했으며 기준 시점을 명시합니다. 주가는 변동성이 크고 출처별 차이가 있어 범위로 표기했습니다.</p>
+    <div class="srcgrid" style="margin-top:14px;color:#bfe7da">
+      <span>· 재무제표 — Veeva FY2026 8-K (SEC, 2026-03-04)</span>
+      <span>· FY2027 가이던스 — Veeva IR / 8-K</span>
+      <span>· 주가·베타 — Yahoo/CNBC/TradingView (2026-06-03)</span>
+      <span>· 10년 국채 4.49% — FRED·연준 H.15 (2026-06-03)</span>
+      <span>· 10년 기대 인플레 ~2.3% — FRED T10YIE</span>
+      <span>· 내재 ERP 4.23% — Damodaran 2026 (참고)</span>
+      <span>· 경쟁 구도 — IntuitionLabs, Gartner, 업계 보도</span>
+      <span>· 시장 규모 — 업계 리서치(생명과학 SW)</span>
+    </div>
+    <p style="margin-top:18px;color:#7fbcab;font-size:12px">
+      ⚠ 출처 상충 알림: 일부 집계 사이트에 2025년 중반의 구(舊) 주가($288 등)가 잔존해 있었으며, 본 분석은 2026-06 최근 거래대($174–188)를 채택했습니다.
+      애널리스트 컨센서스 목표가는 $235–262(상승 여력 35–44%, Buy 비중 ~73%)로, 본 분석의 ‘내재 CAP 19–23년’ 구간에 해당합니다.
+    </p>
+    <p style="margin-top:18px;color:#5e978a;font-size:11.5px;border-top:1px solid rgba(159,212,196,.2);padding-top:14px">
+      방법론: 현재 주가에 내재된 시장 기대(CAP)를 역산해 합리성을 평가하는 CAP 프레임워크 기반 분석입니다. 비판적 사고 프로토콜(주장–근거–증거 분리, 논리·사실 이중 검증, 한계 명시, 궤변 점검)과 한·영 다국어 교차 검증을 적용해 작성했습니다.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
