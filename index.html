@@ -333,10 +333,27 @@ async function loadList(){
   $("footStatus").textContent = "불러오는 중…";
   showOnly("loading");
 
-  const api = `https://api.github.com/repos/${target.user}/${target.repo}/contents/${encodeURIComponent(CONFIG.folder)}`;
+  const base = `https://api.github.com/repos/${target.user}/${target.repo}/contents`;
+  const get = (path)=>{
+    const segs = String(path||"").split("/").filter(Boolean).map(encodeURIComponent);
+    return fetch(segs.length ? base + "/" + segs.join("/") : base, {headers:{Accept:"application/vnd.github+json"}});
+  };
   let res;
   try{
-    res = await fetch(api, {headers:{Accept:"application/vnd.github+json"}});
+    res = await get(CONFIG.folder);
+    // 폴더 이름의 대소문자/철자가 달라 404가 나면, 최상위에서 같은 이름의 폴더를 찾아 자동 매칭
+    if(res.status===404){
+      const rootRes = await get("");
+      if(rootRes.ok){
+        let rootData = [];
+        try{ rootData = await rootRes.json(); }catch(e){}
+        if(Array.isArray(rootData)){
+          const want = CONFIG.folder.trim().toLowerCase();
+          const match = rootData.find(x=>x.type==="dir" && x.name.toLowerCase()===want);
+          if(match){ res = await get(match.name); }
+        }
+      }
+    }
   }catch(e){
     return failure("네트워크 오류", "GitHub에 연결하지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.");
   }
