@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEVA, Inc. (NASDAQ: CEVA) — CAP 프레임워크 장기 투자 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,500&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4efe4;--paper-2:#ece5d4;--ink:#191712;--ink-soft:#403a30;--muted:#6f6757;
+    --line:#d6cdb8;--amber:#c06a16;--amber-soft:#e9a24a;--teal:#1f6b63;--teal-soft:#3f9a8f;
+    --rust:#a23b1e;--gold:#b8902a;--card:#fbf8f0;
+    --shadow:0 1px 0 rgba(25,23,18,.04), 0 8px 30px -12px rgba(25,23,18,.18);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"IBM Plex Sans KR",sans-serif;font-weight:400;line-height:1.72;font-size:16.5px;letter-spacing:-0.003em;
+    background-image:radial-gradient(circle at 12% -8%, rgba(192,106,22,.06), transparent 42%),radial-gradient(circle at 88% 4%, rgba(31,107,99,.05), transparent 40%);}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 26px}
+  h1,h2,h3,h4{font-family:"Fraunces",serif;font-weight:600;letter-spacing:-0.01em;line-height:1.12}
+  .mono{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum"}
+  .num{font-family:"Fraunces",serif;font-feature-settings:"tnum"}
+  header.hero{background:linear-gradient(160deg,#16140f 0%,#221d14 55%,#2c241a 100%);color:#f4efe4;padding:64px 0 56px;position:relative;overflow:hidden;border-bottom:3px solid var(--amber);}
+  header.hero:before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 80% 20%, rgba(233,162,74,.16), transparent 45%),linear-gradient(transparent 95%, rgba(255,255,255,.04) 95%);background-size:auto, 100% 28px;pointer-events:none;}
+  .tickerline{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber-soft);opacity:.95}
+  .tickerline .dot{width:7px;height:7px;border-radius:50%;background:var(--amber-soft);display:inline-block}
+  header.hero h1{font-size:clamp(38px,6.4vw,68px);font-weight:800;margin:14px 0 6px;color:#fbf8f0}
+  header.hero h1 span{color:var(--amber-soft)}
+  .subtitle{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:clamp(17px,2.5vw,22px);color:#e6dcc6;max-width:760px;margin:0 0 8px}
+  .oneliner{color:#cfc4ad;max-width:720px;font-size:15.5px}
+  .heroflag{display:inline-flex;gap:8px;align-items:center;margin-top:22px;background:rgba(192,106,22,.16);border:1px solid rgba(233,162,74,.4);color:#f1d9b3;padding:7px 14px;border-radius:30px;font-size:13.5px}
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:34px;border:1px solid rgba(233,162,74,.28);border-radius:12px;overflow:hidden;background:rgba(255,255,255,.03)}
+  .kpi{padding:16px 14px;border-right:1px solid rgba(233,162,74,.2)}
+  .kpi:last-child{border-right:none}
+  .kpi .v{font-family:"Fraunces",serif;font-size:25px;font-weight:700;color:#fbf8f0;line-height:1}
+  .kpi .v.neg{color:var(--amber-soft)}
+  .kpi .l{font-size:11.5px;color:#bdb29a;margin-top:7px;letter-spacing:.02em}
+  section{padding:52px 0;border-bottom:1px solid var(--line)}
+  .seclabel{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .seclabel .n{font-family:"Fraunces",serif;font-style:italic;font-size:34px;font-weight:600;-webkit-text-stroke:1px var(--amber);color:transparent;line-height:1}
+  h2{font-size:clamp(26px,3.6vw,38px);margin:0 0 18px}
+  h3{font-size:21px;margin:30px 0 12px;color:var(--ink)}
+  p{margin:0 0 16px}
+  .lead{font-size:18.5px;color:var(--ink-soft)}
+  strong{font-weight:600;color:var(--ink)}
+  a{color:var(--teal)}
+  .small{font-size:13.5px;color:var(--muted)}
+  .plain{background:linear-gradient(180deg,#f0f6f4,#eaf2ef);border-left:4px solid var(--teal);border-radius:0 10px 10px 0;padding:15px 18px;margin:18px 0;font-size:15px;color:#234b46}
+  .plain b{color:var(--teal)}
+  .plain .tag{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:4px;opacity:.85}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;box-shadow:var(--shadow);margin:20px 0}
+  .verdict{background:linear-gradient(165deg,#fbf8f0,#f5ecdb);border:1px solid var(--amber-soft);border-left:5px solid var(--amber)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  thead th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--ink-soft);font-weight:500}
+  tbody tr:hover{background:rgba(192,106,22,.05)}
+  td.mono,th.mono{font-family:"IBM Plex Mono",monospace}
+  .tblnote{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .pos{color:var(--teal)} .negv{color:var(--rust)}
+  .chiprow{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+  .chip{font-size:12.5px;padding:5px 11px;border-radius:20px;background:var(--paper-2);border:1px solid var(--line);color:var(--ink-soft)}
+  .bar-track{background:var(--paper-2);border-radius:6px;height:11px;overflow:hidden;border:1px solid var(--line)}
+  .bar-fill{height:100%;border-radius:6px}
+  .swot{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .swotbox{border-radius:12px;padding:18px 20px;border:1px solid var(--line)}
+  .swotbox h4{margin:0 0 10px;font-size:18px;display:flex;align-items:center;gap:9px}
+  .swotbox ul{margin:0;padding-left:18px;font-size:14px;line-height:1.6}
+  .swotbox li{margin-bottom:7px}
+  .sw-s{background:#eaf3ef;border-color:#bcdcd2} .sw-s h4{color:var(--teal)}
+  .sw-w{background:#fbeee6;border-color:#eccab8} .sw-w h4{color:var(--rust)}
+  .sw-o{background:#eef3ea;border-color:#cfdcc0} .sw-o h4{color:#5a7d2a}
+  .sw-t{background:#f8ecd6;border-color:#e8cfa3} .sw-t h4{color:var(--amber)}
+  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:18px 0}
+  .flow .step{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);padding:14px;text-align:center}
+  .flow .step:not(:last-child){border-right:none}
+  .flow .step .ic{font-family:"Fraunces",serif;font-size:24px;color:var(--amber);font-weight:700}
+  .flow .step .t{font-size:13px;font-weight:600;margin-top:6px}
+  .flow .step .d{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .flow .arr{display:flex;align-items:center;color:var(--amber);font-size:20px;padding:0 2px}
+  .footnotes{font-size:12.5px;color:var(--muted);line-height:1.7}
+  .footnotes h3{font-size:15px;color:var(--ink-soft)}
+  .src-li{padding:6px 0;border-bottom:1px dotted var(--line)}
+  .tag-date{font-family:"IBM Plex Mono",monospace;color:var(--amber);font-size:11px}
+  .confbar{display:flex;align-items:center;gap:12px;margin:10px 0}
+  .confbar .lbl{flex:1;font-size:14px}
+  .confbar .track{width:160px;height:9px;background:var(--paper-2);border-radius:5px;overflow:hidden;border:1px solid var(--line)}
+  .confbar .fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-soft))}
+  .confbar .pct{width:52px;text-align:right;font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--teal)}
+  .hyp{border-left:3px solid var(--line);padding:6px 0 6px 16px;margin:12px 0}
+  .hyp .h{font-weight:600;font-size:14.5px;font-family:"Fraunces",serif}
+  .hyp.h1{border-color:var(--amber)} .hyp.h2{border-color:var(--teal)} .hyp.h3{border-color:var(--muted)}
+  .toc{position:sticky;top:0;z-index:40;background:rgba(244,239,228,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:9px 0;font-size:12.5px}
+  .toc .wrap{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .toc a{color:var(--muted);text-decoration:none;padding:3px 9px;border-radius:14px;white-space:nowrap}
+  .toc a:hover{background:var(--paper-2);color:var(--ink)}
+  @media(max-width:780px){.kpis{grid-template-columns:repeat(2,1fr)}.kpi:nth-child(2){border-right:none}.grid2,.grid3,.swot{grid-template-columns:1fr}.flow .step{min-width:45%}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="tickerline"><span class="dot"></span> NASDAQ: CEVA &nbsp;·&nbsp; 반도체 IP 라이선싱 &nbsp;·&nbsp; 장기 투자 분석 &nbsp;·&nbsp; 기준일 2026-06-07</div>
+    <h1>CEVA, Inc.<br><span>경쟁우위기간(CAP) 분석</span></h1>
+    <p class="subtitle">"칩을 만들지 않고, 칩의 설계도(IP)를 빌려주고 사용료를 받는" 회사 — 그 회사에 시장이 매긴 기대치를 거꾸로 읽다</p>
+    <p class="oneliner">한 문장 요약: CEVA는 블루투스·와이파이 등 <b style="color:#e9a24a">무선 연결 칩 설계도 시장의 약 68%</b>를 쥔 강소 IP 기업이지만, 지금은 회계상 영업적자 상태이며, 현재 주가는 "엣지 AI로의 대변신 성공"을 이미 가격에 담고 있습니다.</p>
+    <div class="heroflag">⚠ 이 보고서는 매수·매도를 권하지 않습니다. "현재 주가에 어떤 가정이 숨어 있는가"를 분해합니다.</div>
+    <div class="kpis">
+      <div class="kpi"><div class="v">$43.58</div><div class="l">주가 (6/5 종가)*</div></div>
+      <div class="kpi"><div class="v">$1.01B</div><div class="l">기업가치(EV)</div></div>
+      <div class="kpi"><div class="v neg">9.3×</div><div class="l">EV / 매출(2025)</div></div>
+      <div class="kpi"><div class="v neg">−1.7%</div><div class="l">ROIC (투자수익률)</div></div>
+      <div class="kpi"><div class="v neg">−10%</div><div class="l">GAAP 영업이익률</div></div>
+    </div>
+    <p class="small" style="color:#9d927c;margin-top:10px">* 주가 변동성이 매우 큽니다(52주 $17~$51). 출처별로 6/4~6/5 $43.58~$50로 상이 — 본 분석은 6/5 종가 $43.58을 기준값으로, 결과는 $40·$44·$49 구간으로 함께 제시합니다.</p>
+  </div>
+</header>
+<nav class="toc"><div class="wrap">
+  <a href="#conc">핵심결론</a><a href="#about">기업개요</a><a href="#rev">수익구조</a><a href="#tech">제품·기술</a>
+  <a href="#ind">산업분석</a><a href="#life">생애주기</a><a href="#moat">해자·5Forces</a><a href="#swot">SWOT</a>
+  <a href="#peer">피어비교</a><a href="#dcf">DCF·전시23</a><a href="#cap">내재 기대치</a><a href="#sens">민감도·시나리오</a>
+  <a href="#risk">리스크</a><a href="#limit">한계·확신도</a><a href="#src">출처</a>
+</div></nav>
+<!-- 1. 핵심 결론 -->
+<section id="conc"><div class="wrap">
+  <div class="seclabel"><span class="n">01</span> 핵심 결론</div>
+  <h2>시장은 CEVA가 "제2의 Arm"이 되리라 가격에 적어두었다</h2>
+  <div class="card verdict">
+    <p class="lead" style="margin-bottom:14px"><strong>결론 1.</strong> CEVA는 현재 회계기준(GAAP) <strong>영업적자</strong>이며 투자수익률(ROIC)이 <strong>−1.7%</strong>로, 자본비용(약 10.7%)을 크게 밑돕니다. 즉 "초과수익을 내는 기간(CAP)"이라 부를 만한 <strong>양(+)의 초과수익이 아직 존재하지 않습니다.</strong> 따라서 일반적 CAP 역산을 그대로 적용하기 어렵고, "현재가가 요구하는 미래의 성장률·이익률"을 역산하는 방식으로 접근했습니다.</p>
+    <p class="lead" style="margin-bottom:14px"><strong>결론 2.</strong> 현재 주가(~$44, 기업가치 EV ≈ <strong>10억 달러</strong>, 매출의 <strong>9.3배</strong>)를 정당화하려면, 향후 10년간 <strong>연 25~30%대 매출 성장</strong>과 <strong>20~45%대 영업이익률</strong>을 <em>동시에</em> 달성해야 합니다. 이는 사실상 Arm의 성장·수익성 궤적을 복제한다는 가정입니다.</p>
+    <p class="lead" style="margin-bottom:0"><strong>결론 3.</strong> 애널리스트 컨센서스(연 12~14% 성장, 한 자릿수 비-GAAP 이익률)로는 현재가를 전혀 설명하지 못합니다. 후한 <strong>강세 시나리오</strong>(연 20% 성장 + 22% 이익률 + 낮은 할인율)로도 적정가치는 <strong>약 $27</strong>로, 현재가보다 <strong style="color:var(--rust)">약 37% 낮습니다.</strong> 내재 기대치는 프레임워크 기준 "<strong>과도한 낙관</strong>" 구간에 위치합니다.</p>
+  </div>
+  <div class="plain"><span class="tag">비전공자를 위한 풀이</span>
+    <b>EV(기업가치)란?</b> 시가총액에서 회사가 가진 순현금을 뺀 값으로, "이 회사의 <b>사업 자체</b>를 사려면 얼마인가"입니다. CEVA는 현금이 약 $2억(주당 ~$7.2) 있어서, 주가 $44(시총 $12억) 중 사업의 가격은 약 $10억입니다. 그런데 이 사업은 작년 매출 $1.1억에 회계상 적자였습니다. 즉 시장은 <b>적자 사업에 매출의 9배 값</b>을 매긴 셈이며, 이는 "앞으로 폭발적으로 성장하고 큰 흑자를 낼 것"이라는 믿음 없이는 설명되지 않습니다.</div>
+  <h3>한눈에 보는 시나리오 — 모든 합리적 추정이 현재가에 못 미친다</h3>
+  <p class="small">주식기반보상(SBC)을 <strong>비용으로 처리</strong>하고(프레임워크 원칙) CAP 페이드 모델로 산출한 주당 적정가치. 세 시나리오 모두 현재 주가($43.58, 점선) 아래입니다.</p>
+  <svg viewBox="0 0 760 250" style="width:100%;height:auto;margin-top:6px" font-family="IBM Plex Sans KR">
+    <line x1="690" y1="20" x2="690" y2="210" stroke="#191712" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="690" y="14" text-anchor="end" font-size="12" fill="#191712" font-weight="600">현재가 $43.58</text>
+    <g font-size="10" fill="#9b9080" font-family="IBM Plex Mono">
+      <line x1="70" y1="210" x2="730" y2="210" stroke="#d6cdb8"/>
+      <line x1="202" y1="20" x2="202" y2="210" stroke="#ece5d4"/><text x="202" y="228" text-anchor="middle">$10</text>
+      <line x1="334" y1="20" x2="334" y2="210" stroke="#ece5d4"/><text x="334" y="228" text-anchor="middle">$20</text>
+      <line x1="466" y1="20" x2="466" y2="210" stroke="#ece5d4"/><text x="466" y="228" text-anchor="middle">$30</text>
+      <line x1="598" y1="20" x2="598" y2="210" stroke="#ece5d4"/><text x="598" y="228" text-anchor="middle">$40</text>
+      <text x="70" y="228" text-anchor="middle">$0</text>
+    </g>
+    <line x1="165" y1="20" x2="165" y2="210" stroke="#3f9a8f" stroke-width="1.2" stroke-dasharray="2 3"/>
+    <text x="170" y="32" font-size="10.5" fill="#1f6b63">순현금 ≈ $7.2 (사업가치=0일 때)</text>
+    <g font-size="13">
+      <rect x="70" y="40" width="99" height="38" rx="5" fill="#a23b1e" opacity=".82"/><text x="80" y="64" fill="#fff" font-weight="600">약세 $7.50</text>
+      <text x="178" y="64" fill="#6f6757" font-size="12">정상마진 8% · fade 0.25 · WACC 11.7%  (−83%)</text>
+      <rect x="70" y="98" width="148" height="38" rx="5" fill="#c06a16" opacity=".88"/><text x="80" y="122" fill="#fff" font-weight="600">기본 $11.22</text>
+      <text x="227" y="122" fill="#6f6757" font-size="12">정상마진 15% · fade 0.20 · WACC 10.7%  (−74%)</text>
+      <rect x="70" y="156" width="361" height="38" rx="5" fill="#1f6b63" opacity=".9"/><text x="80" y="180" fill="#fff" font-weight="600">강세 $27.39</text>
+      <text x="440" y="180" fill="#6f6757" font-size="12">20%성장 + 마진 22% + WACC 9.7% (−37%)</text>
+    </g>
+  </svg>
+  <p class="small" style="margin-top:4px">해석: 기본 시나리오 $11.2 중 약 $7.2가 <strong>순현금</strong>이고, 사업 자체의 가치는 주당 약 $4(EV $112M)에 불과합니다. 반면 시장은 사업에 주당 약 $36(EV $10억)을 지불하고 있습니다.</p>
+</div></section>
+
+<!-- 2. 기업 개요 -->
+<section id="about"><div class="wrap">
+  <div class="seclabel"><span class="n">02</span> 기업 개요</div>
+  <h2>"칩의 설계도"를 빌려주는 회사</h2>
+  <p class="lead">CEVA(세바)는 미국 메릴랜드주 록빌에 본사를 둔 <strong>반도체·소프트웨어 지식재산(IP) 라이선싱</strong> 기업입니다(2002년 설립, 아일랜드 Parthus와 미국 DSP Group의 결합에서 출발). 직접 반도체를 제조하지 않고, 칩 안에 들어가는 <strong>설계 블록(IP)</strong>을 개발해 반도체 회사·전자제품 제조사(OEM)에 빌려주고, ① 사용 권리에 대한 <strong>라이선스료</strong>와 ② 그 IP가 들어간 칩이 팔릴 때마다 받는 <strong>로열티</strong>로 돈을 법니다.</p>
+  <div class="plain"><span class="tag">쉽게 말하면</span>
+    반도체 산업은 ① 설계도를 만드는 회사(예: CEVA, Arm), ② 그 설계도로 칩을 디자인하는 회사(팹리스), ③ 칩을 실제로 찍어내는 공장(파운드리, 예: TSMC), ④ 칩을 넣어 제품을 만드는 회사(OEM)로 나뉩니다. CEVA는 <b>맨 앞단의 "설계도 도서관"</b>입니다. 책(설계도)을 빌려주고 대여료(라이선스)를 받고, 그 책으로 만든 제품이 팔릴 때마다 인세(로열티)를 받는 출판사에 가깝습니다.</div>
+  <div class="grid3">
+    <div class="card" style="margin:8px 0"><div class="num" style="font-size:30px;color:var(--amber);font-weight:700">2.1B</div><div class="small">2025년 CEVA IP 탑재 출하 디바이스(연간, +6%). 블루투스 11억·와이파이 2.66억·셀룰러IoT 2.41억</div></div>
+    <div class="card" style="margin:8px 0"><div class="num" style="font-size:30px;color:var(--teal);font-weight:700">~68%</div><div class="small">무선 연결성 IP 시장 점유율(2024). 2위 경쟁사의 10배 이상</div></div>
+    <div class="card" style="margin:8px 0"><div class="num" style="font-size:30px;color:var(--ink);font-weight:700">424명</div><div class="small">임직원(2025말). 이 중 343명이 엔지니어 — 연구개발 중심 구조</div></div>
+  </div>
+  <h3>핵심 사업: 세 가지 기능 — "연결(Connect)·감지(Sense)·추론(Infer)"</h3>
+  <div class="flow">
+    <div class="step"><div class="ic">📶</div><div class="t">연결 Connect</div><div class="d">Bluetooth, Wi-Fi 6/7,<br>UWB, 5G, 셀룰러 IoT</div></div>
+    <div class="arr">＋</div>
+    <div class="step"><div class="ic">🎙</div><div class="t">감지 Sense</div><div class="d">오디오/음성, 컴퓨터 비전,<br>4D 레이더용 DSP</div></div>
+    <div class="arr">＋</div>
+    <div class="step"><div class="ic">🧠</div><div class="t">추론 Infer</div><div class="d">NeuPro NPU 제품군<br>(엣지 AI 가속기)</div></div>
+    <div class="arr">＝</div>
+    <div class="step" style="background:#f8ead4;border-color:var(--amber-soft)"><div class="ic" style="color:#7a430b">🤖</div><div class="t" style="color:#7a430b">"피지컬 AI"</div><div class="d">지능형 기기 안에서<br>연결·감지·추론 융합</div></div>
+  </div>
+  <p>이 셋을 한 칩에 통합해 "스마트 엣지" — 클라우드가 아니라 <strong>기기 안에서</strong> 직접 작동하는 AI·통신 기능 — 을 구현하는 것이 CEVA의 지향점입니다. CEO는 아미르 파누시(Amir Panush)입니다.</p>
+</div></section>
+
+<!-- 3. 수익 구조 -->
+<section id="rev"><div class="wrap">
+  <div class="seclabel"><span class="n">03</span> 수익 구조 시각화</div>
+  <h2>두 개의 수도꼭지 — 라이선스(선불)와 로열티(후불)</h2>
+  <div class="grid2">
+    <div>
+      <h3 style="margin-top:6px">2025년 매출 구성 ($109.6M)</h3>
+      <svg viewBox="0 0 240 240" style="width:230px;height:230px;display:block;margin:0 auto">
+        <circle cx="120" cy="120" r="84" fill="none" stroke="#ece5d4" stroke-width="34"/>
+        <circle cx="120" cy="120" r="84" fill="none" stroke="#c06a16" stroke-width="34" stroke-dasharray="306.5 527.8" transform="rotate(-90 120 120)"/>
+        <circle cx="120" cy="120" r="84" fill="none" stroke="#1f6b63" stroke-width="34" stroke-dasharray="221.7 527.8" stroke-dashoffset="-306.5" transform="rotate(-90 120 120)"/>
+        <text x="120" y="113" text-anchor="middle" font-family="Fraunces" font-size="30" font-weight="700" fill="#191712">$110M</text>
+        <text x="120" y="134" text-anchor="middle" font-size="12" fill="#6f6757">2025 총매출</text>
+      </svg>
+      <div style="display:flex;gap:18px;justify-content:center;margin-top:6px;font-size:13.5px">
+        <span><span style="display:inline-block;width:11px;height:11px;background:#c06a16;border-radius:2px;margin-right:5px"></span>라이선스 $63.6M (58%)</span>
+        <span><span style="display:inline-block;width:11px;height:11px;background:#1f6b63;border-radius:2px;margin-right:5px"></span>로열티 $46.0M (42%)</span>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-top:6px">두 수익원의 성격</h3>
+      <table>
+        <thead><tr><th>구분</th><th>라이선스</th><th>로열티</th></tr></thead>
+        <tbody>
+          <tr><td>시점</td><td>계약 시 선불</td><td>칩 출하 후 후불</td></tr>
+          <tr><td>성격</td><td>건별·변동성↑</td><td>반복·누적↑</td></tr>
+          <tr><td>예측성</td><td>낮음</td><td class="pos">높음</td></tr>
+          <tr><td>2025</td><td class="mono">$63.6M</td><td class="mono">$46.0M</td></tr>
+        </tbody>
+      </table>
+      <div class="plain" style="margin-top:8px"><span class="tag">투자 포인트</span>
+        <b>로열티가 진짜 가치의 핵심</b>입니다. 라이선스는 "씨앗"(올해 10건의 NeuPro 계약), 로열티는 "수확"(그 칩이 양산되어 팔릴 때). 2025년 계약들의 <b>평생 로열티 잠재액은 약 $125M</b>, 6개 고객이 2026년 중 양산 단계 도달 전망. 이 "씨앗→수확" 전환이 분기 점검 1순위입니다.</div>
+    </div>
+  </div>
+  <h3>매출은 5년째 정체 — 이것이 분석의 출발점</h3>
+  <svg viewBox="0 0 760 240" style="width:100%;height:auto" font-family="IBM Plex Sans KR">
+    <g font-size="11" fill="#9b9080" font-family="IBM Plex Mono">
+      <line x1="50" y1="190" x2="740" y2="190" stroke="#d6cdb8"/>
+      <line x1="50" y1="130" x2="740" y2="130" stroke="#ece5d4"/><text x="44" y="134" text-anchor="end">$50M</text>
+      <line x1="50" y1="70" x2="740" y2="70" stroke="#ece5d4"/><text x="44" y="74" text-anchor="end">$100M</text>
+      <line x1="50" y1="34" x2="740" y2="34" stroke="#ece5d4"/><text x="44" y="38" text-anchor="end">$150M</text>
+    </g>
+    <g>
+      <rect x="70" y="72" width="62" height="118" fill="#403a30"/>
+      <rect x="165" y="65" width="62" height="125" fill="#403a30"/>
+      <rect x="260" y="89" width="62" height="101" fill="#403a30"/>
+      <rect x="355" y="79" width="62" height="111" fill="#403a30"/>
+      <rect x="450" y="76" width="62" height="114" fill="#c06a16"/>
+      <rect x="545" y="60" width="62" height="130" fill="#e9a24a" opacity=".75" stroke="#c06a16" stroke-dasharray="3 3"/>
+      <rect x="640" y="42" width="62" height="148" fill="#e9a24a" opacity=".55" stroke="#c06a16" stroke-dasharray="3 3"/>
+    </g>
+    <g font-size="13" fill="#191712" text-anchor="middle" font-family="Fraunces" font-weight="600">
+      <text x="101" y="64">113.8</text><text x="196" y="57">120.6</text><text x="291" y="81">97.4</text>
+      <text x="386" y="71">106.9</text><text x="481" y="68">109.6</text><text x="576" y="52">125.1</text><text x="671" y="34">142.4</text>
+    </g>
+    <g font-size="12" fill="#6f6757" text-anchor="middle">
+      <text x="101" y="207">2021</text><text x="196" y="207">2022</text><text x="291" y="207">2023</text>
+      <text x="386" y="207">2024</text><text x="481" y="207">2025</text><text x="576" y="207">2026E</text><text x="671" y="207">2027E</text>
+    </g>
+    <text x="608" y="226" text-anchor="middle" font-size="11" fill="#c06a16" font-style="italic" font-family="Fraunces">← 컨센서스 추정(점선)</text>
+  </svg>
+  <p class="small">2023년 급락은 자회사(Intrinsix) 매각에 따른 사업 중단 효과가 큽니다. 핵심은 <strong>2021~2025년 매출이 $97~121M에서 횡보</strong>했다는 사실 — "성장주 내러티브"와 달리 실제 외형 성장은 아직 나타나지 않았습니다. 컨센서스는 2026~27년 +14%대 재가속을 가정합니다.</p>
+</div></section>
+<!-- 4. 제품·기술 -->
+<section id="tech"><div class="wrap">
+  <div class="seclabel"><span class="n">04</span> 제품·기술력</div>
+  <h2>저전력·소형 기기를 위한 IP, 그리고 NeuPro라는 AI 베팅</h2>
+  <h3>① 연결성(Connectivity) IP — 가장 단단한 본진</h3>
+  <p>Bluetooth, Wi-Fi 6/7, UWB(초광대역), 5G, 셀룰러 IoT 등 무선 통신 표준을 칩에 구현하는 설계 블록입니다. CEVA는 이 영역에서 <strong>약 68% 점유율</strong>을 가지며 매년 수십억 개 칩에 탑재됩니다. 표준 인증·검증에 오랜 시간·노하우가 필요해 진입장벽이 상대적으로 높습니다.</p>
+  <h3>② DSP(디지털 신호 처리) — 24년 축적된 핵심 역량</h3>
+  <div class="plain"><span class="tag">DSP란?</span><b>디지털 신호 처리기(Digital Signal Processor)</b>는 소리·영상·전파 같은 신호를 빠르고 <b>전력 효율적으로</b> 처리하는 전용 칩 두뇌입니다. 음성인식, 무선 이어폰 노이즈 캔슬링, 자동차 레이더 등에 쓰입니다. CEVA의 강점은 "<b>배터리로 작동하는 작은 기기</b>에서 최소 전력으로 최대 성능"을 내는 설계 노하우입니다.</div>
+  <h3>③ NeuPro NPU — 엣지 AI로의 전환 베팅</h3>
+  <p><strong>NPU(신경망 처리장치)</strong>는 AI 추론에 특화된 전용 칩입니다. NeuPro 제품군은 ⓐ <strong>NeuPro-Nano</strong>(초저전력, MCU·IoT용)부터 ⓑ <strong>NeuPro-M</strong>(고성능, 생성형 AI·자동차 ADAS 비전용, 4세대는 64K MAC까지)까지 구성됩니다.</p>
+  <div class="grid2">
+    <div class="card" style="margin-top:8px"><h4 style="margin:0 0 8px;color:var(--amber);font-size:17px">2025년 AI 성과 (변곡점의 신호)</h4>
+      <ul style="margin:0;padding-left:18px;font-size:14.5px;line-height:1.7">
+        <li><strong>10건</strong>의 NeuPro NPU 라이선스 계약</li>
+        <li>AI가 <strong>라이선스 매출의 20% 초과</strong>(전년 ≈0% → 의미 있는 믹스 전환)</li>
+        <li>세계 유수 <strong>PC OEM</strong>과 전략 NPU 계약(차세대 온디바이스 AI 기반 IP)</li>
+        <li>Microchip NeuPro 라이선스, 자동차 V2X·4D 레이더 IP 계약</li>
+      </ul></div>
+    <div class="card" style="margin-top:8px"><h4 style="margin:0 0 8px;color:var(--rust);font-size:17px">기술 베팅의 냉정한 현실</h4>
+      <ul style="margin:0;padding-left:18px;font-size:14.5px;line-height:1.7">
+        <li>NPU IP 시장은 <strong>Arm·Synopsys·Cadence</strong>와 격돌</li>
+        <li>하이퍼스케일러·OEM <strong>사내 설계</strong> 및 <strong>RISC-V 오픈소스</strong> 대체</li>
+        <li>"라이선스"가 곧 "로열티"는 아님 — <strong>양산까지 수년</strong> 소요</li>
+        <li>AI 매출의 절대 규모는 아직 작음(라이선스의 일부)</li>
+      </ul></div>
+  </div>
+  <h3>서비스 제공 방식 (IP가 돈이 되는 흐름)</h3>
+  <div class="flow">
+    <div class="step"><div class="ic">1</div><div class="t">IP 개발</div><div class="d">CEVA가 R&D로<br>설계 블록 완성</div></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="ic">2</div><div class="t">라이선스 계약</div><div class="d">팹리스/OEM 채택<br><b>(선불 수익)</b></div></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="ic">3</div><div class="t">칩 설계·양산</div><div class="d">자사 칩에 통합,<br>TSMC 등서 제조</div></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="ic">4</div><div class="t">기기 판매</div><div class="d">폰·차·IoT에<br>탑재 출하</div></div>
+    <div class="arr">→</div>
+    <div class="step" style="background:#e2efec;border-color:var(--teal-soft)"><div class="ic" style="color:var(--teal)">5</div><div class="t" style="color:var(--teal)">로열티</div><div class="d">출하량 비례<br><b>(반복 수익)</b></div></div>
+  </div>
+</div></section>
+
+<!-- 5. 산업 분석 -->
+<section id="ind"><div class="wrap">
+  <div class="seclabel"><span class="n">05</span> 산업 분석</div>
+  <h2>팹리스 생태계의 최상류, 그리고 "엣지 AI"라는 거대한 파도</h2>
+  <p class="lead">CEVA가 속한 <strong>반도체 IP 라이선싱</strong> 산업은 반도체 제조 비용·복잡성이 커질수록 "다 설계하지 말고 검증된 IP를 빌려 쓰자"는 수요로 성장해 왔습니다. 자산이 가볍고(공장 불필요) 마진이 높지만(매출총이익률 80%대), 동시에 <strong>R&D 부담이 크고 경쟁이 치열</strong>합니다.</p>
+  <h3>산업 가치사슬(Value Chain) — CEVA의 위치</h3>
+  <div class="flow" style="margin-bottom:10px">
+    <div class="step" style="background:#f8ead4;border-color:var(--amber-soft)"><div class="t" style="color:#7a430b">① IP 설계</div><div class="d"><b>CEVA</b>, Arm,<br>Synopsys, Cadence</div></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="t">② 팹리스</div><div class="d">Qualcomm, NXP,<br>Nordic, MediaTek…</div></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="t">③ 파운드리</div><div class="d">TSMC, Samsung,<br>GlobalFoundries</div></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="t">④ OEM/세트</div><div class="d">스마트폰·자동차·<br>IoT·PC 제조사</div></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="t">⑤ 최종 소비자</div><div class="d">디바이스 사용</div></div>
+  </div>
+  <p class="small">CEVA는 가치사슬 <strong>가장 앞단(설계도 공급)</strong>에 있어, 개별 기기 판매가 아닌 "산업 전반의 칩 출하량"에 노출됩니다. 분산된 매출 기반이라는 장점과, 직접 제어 불가능한 다운스트림 사이클에 휘둘리는 약점을 동시에 갖습니다.</p>
+  <div class="grid3" style="margin-top:18px">
+    <div class="card" style="margin:6px 0"><h4 style="margin:0 0 6px;font-size:16px;color:var(--teal)">성장 동력</h4><p class="small" style="margin:0">클라우드 AI → <strong>온디바이스/엣지 AI</strong> 전환("피지컬 AI"). 모든 기기가 통신+감지+추론 내장. AI PC, 웨어러블, 자동차 ADAS, 산업 IoT 확산.</p></div>
+    <div class="card" style="margin:6px 0"><h4 style="margin:0 0 6px;font-size:16px;color:var(--amber)">구조적 트렌드</h4><p class="small" style="margin:0">설계 복잡도·비용 급증 → IP 외주화 가속(IP에 유리). 그러나 <strong>RISC-V 오픈소스</strong>·<strong>대형 고객 내재화</strong>가 가격·점유율 압박.</p></div>
+    <div class="card" style="margin:6px 0"><h4 style="margin:0 0 6px;font-size:16px;color:var(--rust)">사이클 리스크</h4><p class="small" style="margin:0">로열티는 IoT·모바일·소비재 출하 사이클에 민감. <strong>모바일 모뎀 출하 감소</strong>가 회사가 명시한 단기 위험.</p></div>
+  </div>
+</div></section>
+
+<!-- 6. 생애주기 -->
+<section id="life"><div class="wrap">
+  <div class="seclabel"><span class="n">06</span> 생애주기 단계 판별</div>
+  <h2>"성숙기 외형 + 성장 재점화 시도" — 그러나 아직 초과수익은 없다</h2>
+  <p>현금흐름표 부호 패턴(Dickinson 방법)으로 단계를 판별합니다. CEVA는 해마다 성숙/성장 신호를 오가며, 2025년엔 약 $63M 규모의 <strong>유상증자(자금조달 유입)</strong>가 있었습니다.</p>
+  <table>
+    <thead><tr><th>연도</th><th>영업CF</th><th>투자CF</th><th>재무CF</th><th>판별</th></tr></thead>
+    <tbody>
+      <tr><td>2024</td><td class="mono pos">+$3.5M</td><td class="mono negv">−$2.5M</td><td class="mono negv">−$5.6M</td><td>성숙(Mature)</td></tr>
+      <tr><td>2025</td><td class="mono pos">+$1.2M</td><td class="mono">혼합</td><td class="mono pos">+$63M(증자)</td><td>성장(Growth) 신호</td></tr>
+    </tbody>
+  </table>
+  <p class="tblnote">성장기 기업처럼 외부 자금을 조달(증자)해 확장에 투입하는 모습. 그러나 영업현금흐름은 미미하고 핵심 수익성 지표는 여전히 약합니다.</p>
+  <div class="card" style="background:#fbeee6;border-color:#eccab8;margin-top:18px">
+    <h3 style="margin-top:0;color:var(--rust)">결정적 사실 — ROIC가 자본비용을 크게 밑돈다</h3>
+    <div class="grid3">
+      <div><div class="num" style="font-size:30px;color:var(--rust)">−1.7%</div><div class="small">투자자본수익률(ROIC). 투자한 자본으로 벌어들이는 수익률</div></div>
+      <div><div class="num" style="font-size:30px;color:var(--ink)">10.7%</div><div class="small">자본비용(WACC). 투자자가 요구하는 최소 수익률</div></div>
+      <div><div class="num" style="font-size:30px;color:var(--rust)">≈ −12%p</div><div class="small">초과수익 스프레드(ROIC − WACC). 음수 = 가치 파괴 중</div></div>
+    </div>
+    <div class="plain" style="background:#fff;border-color:var(--rust);margin-top:14px"><span class="tag" style="color:var(--rust)">왜 이게 핵심인가</span>
+      CAP(경쟁우위기간) 프레임워크는 본래 "<b>이미 초과수익(ROIC&gt;WACC)을 내는 기업이 그 초과수익을 <u>얼마나 오래</u> 유지하느냐</b>"를 묻습니다. 그런데 CEVA는 지금 초과수익이 <b>음수</b>입니다. 늘릴 "초과수익 기간"이 아직 시작되지 않은 셈입니다. 그래서 질문을 바꿔, "<b>현재가가 정당화되려면 미래에 어떤 성장률·이익률에 도달해야 하는가</b>"를 역산합니다(10~11번 섹션).</div>
+  </div>
+  <p class="small"><strong>분석적 함의:</strong> 프레임워크상 성장·성숙기는 DCF+CAP 대상이지만, "아직 초과수익 미달성" 기업은 <strong>실물옵션·TAM(시장규모) 관점</strong>이 더 적합할 수 있습니다. 시장이 CEVA를 "엣지 AI IP에 대한 콜옵션"으로 가격 매기고 있을 가능성을 11번에서 함께 다룹니다.</p>
+</div></section>
+<!-- 7. 해자 & 5 Forces -->
+<section id="moat"><div class="wrap">
+  <div class="seclabel"><span class="n">07</span> 경쟁우위(해자) · 포터의 5 Forces</div>
+  <h2>연결성에선 강한 해자, AI에선 검증되지 않은 해자</h2>
+  <h3>경제적 해자(Moat) 강도 — 영역별로 극명하게 갈린다</h3>
+  <div class="card">
+    <div style="display:grid;grid-template-columns:200px 1fr 52px;gap:10px 14px;align-items:center;font-size:14px">
+      <div>연결성 IP 표준 지위 (68%)</div><div class="bar-track"><div class="bar-fill" style="width:82%;background:var(--teal)"></div></div><div class="mono pos">강</div>
+      <div>저전력 DSP 기술 축적(24년)</div><div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--teal-soft)"></div></div><div class="mono pos">중강</div>
+      <div>전환비용(설계 통합 종속)</div><div class="bar-track"><div class="bar-fill" style="width:58%;background:var(--gold)"></div></div><div class="mono">중</div>
+      <div>무형자산(특허·검증 IP)</div><div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--gold)"></div></div><div class="mono">중</div>
+      <div>네트워크 효과</div><div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--amber-soft)"></div></div><div class="mono negv">약</div>
+      <div>규모·원가 우위</div><div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--rust)"></div></div><div class="mono negv">매우약</div>
+    </div>
+  </div>
+  <div class="plain"><span class="tag">Arm과의 결정적 차이</span>
+    Arm은 전 세계 개발자·기기가 자사 명령어 집합에 묶이는 강력한 <b>네트워크 효과</b>를 가집니다. CEVA의 해자는 <b>연결성 표준 점유와 전환비용</b>에 가깝고 네트워크 효과는 약합니다. <b>차별화(특화 IP)는 있으나 규모(원가 우위)는 없는</b> 전형적 "좋은 제품, 작은 규모"의 위치입니다. 매출총이익률 ~87%로 높지만(차별화 증거) 그 이익을 R&D·판관비가 다 소진해 <b>영업이익은 적자</b>입니다.</div>
+  <h3>포터의 5 Forces 평가 (수익성을 누르는 힘)</h3>
+  <svg viewBox="0 0 720 240" style="width:100%;height:auto" font-family="IBM Plex Sans KR">
+    <g font-size="13.5">
+      <text x="10" y="32">신규 진입 위협</text>
+      <rect x="230" y="20" width="420" height="20" rx="4" fill="#ece5d4"/><rect x="230" y="20" width="294" height="20" rx="4" fill="#c06a16"/><text x="660" y="35" fill="#7a430b" font-weight="600">높음</text>
+      <text x="10" y="72">기존 경쟁 강도</text>
+      <rect x="230" y="60" width="420" height="20" rx="4" fill="#ece5d4"/><rect x="230" y="60" width="378" height="20" rx="4" fill="#a23b1e"/><text x="660" y="75" fill="#a23b1e" font-weight="600">매우높음</text>
+      <text x="10" y="112">대체재(RISC-V·내재화)</text>
+      <rect x="230" y="100" width="420" height="20" rx="4" fill="#ece5d4"/><rect x="230" y="100" width="294" height="20" rx="4" fill="#c06a16"/><text x="660" y="115" fill="#7a430b" font-weight="600">높음</text>
+      <text x="10" y="152">구매자 교섭력</text>
+      <rect x="230" y="140" width="420" height="20" rx="4" fill="#ece5d4"/><rect x="230" y="140" width="270" height="20" rx="4" fill="#b8902a"/><text x="660" y="155" fill="#8a6b1f" font-weight="600">중~높음</text>
+      <text x="10" y="192">공급자 교섭력</text>
+      <rect x="230" y="180" width="420" height="20" rx="4" fill="#ece5d4"/><rect x="230" y="180" width="110" height="20" rx="4" fill="#1f6b63"/><text x="660" y="195" fill="#1f6b63" font-weight="600">낮음</text>
+    </g>
+    <text x="230" y="226" font-size="11" fill="#9b9080" font-family="IBM Plex Mono">← 막대가 길수록 CEVA 수익성에 불리</text>
+  </svg>
+  <p class="small">종합: <strong>치열한 경쟁(대형 IP사 + 사내 설계 + 오픈소스)</strong>이 가장 큰 압박. 공급자 힘은 약(주요 자원은 엔지니어·EDA 툴). 구매자(대형 반도체·OEM)는 협상력이 있으나 통합 전환비용이 일부 상쇄. <strong>해자는 "실재하지만 경합 중(contested)"</strong>입니다.</p>
+</div></section>
+
+<!-- 8. SWOT -->
+<section id="swot"><div class="wrap">
+  <div class="seclabel"><span class="n">08</span> SWOT 분석</div>
+  <h2>강점·기회는 선명하나, 약점·위협이 밸류에이션을 시험한다</h2>
+  <div class="swot">
+    <div class="swotbox sw-s"><h4>💪 강점 Strengths</h4>
+      <ul><li>무선 연결성 IP <strong>~68% 점유</strong>(2위의 10배+)</li><li>매출총이익률 <strong>~87%</strong>의 자산경량 IP 모델</li><li><strong>무차입 + 순현금 약 $200M</strong>(주당 $7.2) 요새형 재무</li><li>24년 축적 <strong>저전력 DSP</strong> 노하우</li><li>연 <strong>21억 개</strong> 디바이스 출하 기반(로열티 토대)</li></ul></div>
+    <div class="swotbox sw-w"><h4>⚠ 약점 Weaknesses</h4>
+      <ul><li>매출 <strong>5년째 정체</strong>($97~121M 횡보)</li><li>GAAP <strong>영업적자</strong> 지속, <strong>ROIC −1.7%</strong>(가치 파괴)</li><li><strong>서브스케일</strong> — Arm 매출의 약 1/36</li><li>주식기반보상(SBC)이 <strong>매출의 ~18%</strong>(실질 비용·희석)</li><li>"흑자"는 대부분 SBC를 제외한 <strong>비-GAAP 수치</strong></li></ul></div>
+    <div class="swotbox sw-o"><h4>🚀 기회 Opportunities</h4>
+      <ul><li><strong>엣지 AI / 피지컬 AI</strong> 구조적 전환</li><li>NeuPro 채택 가속(2025년 10건, 라이선스의 20%+)</li><li>2025년 계약의 <strong>평생 로열티 ~$125M</strong> 파이프라인</li><li>2026년 <strong>6개 고객 양산 진입</strong>(로열티 램프 임박)</li><li>대형 <strong>PC OEM</strong> 확보 → AI PC 레퍼런스</li></ul></div>
+    <div class="swotbox sw-t"><h4>🌩 위협 Threats</h4>
+      <ul><li><strong>Arm·Synopsys·Cadence</strong> 등 대형 경쟁</li><li>하이퍼스케일러·OEM <strong>사내 설계</strong> 및 <strong>RISC-V</strong></li><li>Bluetooth/Wi-Fi 로열티 <strong>가격 압박</strong></li><li>모바일 핸드셋 <strong>모뎀 출하 감소</strong></li><li>극심한 <strong>주가 변동성</strong>(내러티브 의존)</li></ul></div>
+  </div>
+</div></section>
+
+<!-- 9. 피어 비교 -->
+<section id="peer"><div class="wrap">
+  <div class="seclabel"><span class="n">09</span> 피어그룹 비교</div>
+  <h2>같은 사업모델, 전혀 다른 체급 — CEVA는 작고·느리고·아직 적자</h2>
+  <p>가장 적절한 비교 대상은 동일한 "라이선스+로열티" 모델의 <strong>Arm</strong>이며, EDA+IP 거인 <strong>Synopsys·Cadence</strong>도 참고합니다.</p>
+  <table>
+    <thead><tr><th>지표</th><th>CEVA</th><th>Arm (ARM)</th><th>Synopsys*</th><th>Cadence*</th></tr></thead>
+    <tbody>
+      <tr><td>연 매출</td><td class="mono">$110M</td><td class="mono">$4.0B</td><td class="mono">~$6.5B</td><td class="mono">~$4.6B</td></tr>
+      <tr><td>매출 성장</td><td class="mono negv">~2–3%(5yr 정체)</td><td class="mono pos">~24%</td><td class="mono">~15%</td><td class="mono">~13%</td></tr>
+      <tr><td>GAAP 영업마진</td><td class="mono negv">−10%</td><td class="mono">~13%</td><td class="mono pos">~25%+</td><td class="mono pos">~30%+</td></tr>
+      <tr><td>비-GAAP 영업마진</td><td class="mono">~10%</td><td class="mono pos">~48%</td><td class="mono pos">~38%</td><td class="mono pos">~42%</td></tr>
+      <tr><td>핵심 사업</td><td>DSP·연결성·NPU IP</td><td>CPU IP(네트워크효과)</td><td>EDA + IP</td><td>EDA + IP</td></tr>
+      <tr><td>지위</td><td>연결성 IP 68% 점유</td><td>모바일 CPU 표준 지배</td><td>설계자동화 1위</td><td>설계자동화 2위</td></tr>
+    </tbody>
+  </table>
+  <p class="tblnote">* Synopsys·Cadence 마진은 전사 기준 근사치(IP 사업부는 별도). 매출·성장률은 최근 연간 기준 근사. CEVA·Arm 수치는 공시 기반.</p>
+  <h3>성장 × 비-GAAP 영업마진 위치도 — CEVA는 좌하단 외톨이</h3>
+  <svg viewBox="0 0 720 360" style="width:100%;height:auto" font-family="IBM Plex Sans KR">
+    <!-- axes: x growth 0..28% -> 70..680 ; y margin 0..55% -> 320..40 -->
+    <line x1="70" y1="320" x2="680" y2="320" stroke="#191712" stroke-width="1.3"/>
+    <line x1="70" y1="40" x2="70" y2="320" stroke="#191712" stroke-width="1.3"/>
+    <text x="375" y="350" text-anchor="middle" font-size="12.5" fill="#6f6757">매출 성장률 →</text>
+    <text x="22" y="180" text-anchor="middle" font-size="12.5" fill="#6f6757" transform="rotate(-90 22 180)">비-GAAP 영업마진 →</text>
+    <g font-size="10.5" fill="#9b9080" font-family="IBM Plex Mono">
+      <text x="70" y="335" text-anchor="middle">0%</text>
+      <line x1="288" y1="40" x2="288" y2="320" stroke="#ece5d4"/><text x="288" y="335" text-anchor="middle">10%</text>
+      <line x1="505" y1="40" x2="505" y2="320" stroke="#ece5d4"/><text x="505" y="335" text-anchor="middle">20%</text>
+      <line x1="70" y1="218" x2="680" y2="218" stroke="#ece5d4"/><text x="60" y="222" text-anchor="end">20%</text>
+      <line x1="70" y1="116" x2="680" y2="116" stroke="#ece5d4"/><text x="60" y="120" text-anchor="end">40%</text>
+    </g>
+    <!-- bubbles: cx=70+growth%*21.7 ; cy=320-margin%*5.1 -->
+    <!-- CEVA growth 3% margin 10% -> cx=135 cy=269 -->
+    <circle cx="135" cy="269" r="16" fill="#c06a16" opacity=".88"/><text x="135" y="273" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">CEVA</text>
+    <!-- Cadence growth 13% margin 42% -> cx=352 cy=106 -->
+    <circle cx="352" cy="106" r="22" fill="#6f6757" opacity=".55"/><text x="352" y="110" text-anchor="middle" fill="#fff" font-size="11">CDNS</text>
+    <!-- Synopsys growth 15% margin 38% -> cx=396 cy=126 -->
+    <circle cx="396" cy="126" r="26" fill="#6f6757" opacity=".5"/><text x="396" y="130" text-anchor="middle" fill="#fff" font-size="11">SNPS</text>
+    <!-- ARM growth 24% margin 48% -> cx=591 cy=75 -->
+    <circle cx="591" cy="75" r="24" fill="#1f6b63" opacity=".82"/><text x="591" y="79" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">ARM</text>
+    <text x="135" y="300" text-anchor="middle" font-size="10.5" fill="#7a430b">작고·느리고·저마진</text>
+    <text x="591" y="44" text-anchor="middle" font-size="10.5" fill="#1f6b63">시장이 CEVA에 기대하는 종착점</text>
+    <text x="660" y="300" text-anchor="end" font-size="10" fill="#9b9080" font-family="IBM Plex Mono">원 크기 ≈ 매출 규모</text>
+  </svg>
+  <p class="small">CEVA가 현재 밸류에이션을 정당화하려면, 좌하단(CEVA)에서 우상단(ARM)으로 <strong>장기간에 걸쳐 이동</strong>해야 합니다 — 즉 성장률과 마진을 모두 Arm 수준으로 끌어올려야 합니다. 이것이 현재가에 내재된 핵심 가정입니다.</p>
+</div></section>
+<!-- 10. DCF / Exhibit 23 -->
+<section id="dcf"><div class="wrap">
+  <div class="seclabel"><span class="n">10</span> DCF 모델 · 전시 23 형식</div>
+  <h2>현금흐름 할인 — 그리고 그 안에 담긴 가정</h2>
+  <div class="grid2">
+    <div class="card" style="margin-top:6px">
+      <h4 style="margin:0 0 10px;font-size:17px">자본비용(WACC) 계산</h4>
+      <table style="margin:0"><tbody>
+        <tr><td>무위험 이자율(10Y 美국채)</td><td class="mono">4.50%</td></tr>
+        <tr><td>조정 베타(원시 1.33~1.53 → 1.0 회귀)</td><td class="mono">1.30</td></tr>
+        <tr><td>주식위험프리미엄(ERP)</td><td class="mono">4.75%</td></tr>
+        <tr><td>= 자기자본비용</td><td class="mono">10.7%</td></tr>
+        <tr><td>부채(무차입에 가까움)</td><td class="mono">≈0</td></tr>
+        <tr><td><strong>WACC</strong></td><td class="mono"><strong>≈10.7%</strong></td></tr>
+      </tbody></table>
+      <p class="small" style="margin-top:8px">교차검증: 다모다란 내재 ERP 4.23% 적용 시 WACC ≈ 10.0%. 본 분석은 보수적으로 10.7% 사용(민감도에서 9.7~11.7% 검토).</p>
+    </div>
+    <div class="card" style="margin-top:6px">
+      <h4 style="margin:0 0 10px;font-size:17px">최종가치(페이드 모델) 가정</h4>
+      <table style="margin:0"><tbody>
+        <tr><td>장기 성장률 g (기대 인플레이션)</td><td class="mono">2.5%</td></tr>
+        <tr><td>페이드 비율 f (정보기술 섹터)</td><td class="mono">0.20</td></tr>
+        <tr><td>정상 세율</td><td class="mono">20%</td></tr>
+        <tr><td>SBC 처리</td><td class="mono">비용 인식</td></tr>
+        <tr><td>R&D 처리</td><td class="mono">비용 인식</td></tr>
+        <tr><td>할인 방식</td><td class="mono">연중(mid-year)</td></tr>
+      </tbody></table>
+      <p class="small" style="margin-top:8px">페이드 0.20은 "IT 섹터 평균 지속성". 반도체 산업그룹(0.25)·강한 해자(0.10)는 민감도에서 검토.</p>
+    </div>
+  </div>
+  <div class="plain"><span class="tag">전시 23 테이블이란?</span>이 표는 향후 10년의 매출→이익→투자→잉여현금흐름(FCF)→현재가치를 한 장에 펼친 것입니다. 아래는 <b>"기본(정상 EBITA마진 15% 달성)"</b> 가정의 결과입니다. 핵심은 <b>초기 수년간 FCF가 마이너스</b>(SBC를 비용 처리하면 2026~28년 GAAP 영업적자 지속)이고, 가치의 대부분이 먼 미래의 <b>최종가치</b>에서 나온다는 점입니다.</div>
+  <div style="overflow-x:auto">
+  <table style="min-width:680px">
+    <thead><tr><th>연도</th><th>매출</th><th>성장%</th><th>EBITA</th><th>마진%</th><th>NOPAT</th><th>투자</th><th>FCF</th><th>PV(FCF)</th></tr></thead>
+    <tbody>
+      <tr><td>2026</td><td class="mono">125.1</td><td class="mono">14.1</td><td class="mono negv">−9.5</td><td class="mono negv">−7.6</td><td class="mono negv">−7.6</td><td class="mono">8.4</td><td class="mono negv">−16.0</td><td class="mono negv">−15.2</td></tr>
+      <tr><td>2027</td><td class="mono">142.4</td><td class="mono">13.9</td><td class="mono negv">−6.2</td><td class="mono negv">−4.4</td><td class="mono negv">−5.0</td><td class="mono">9.1</td><td class="mono negv">−14.1</td><td class="mono negv">−12.1</td></tr>
+      <tr><td>2028</td><td class="mono">160.2</td><td class="mono">12.5</td><td class="mono negv">−1.8</td><td class="mono negv">−1.1</td><td class="mono negv">−1.5</td><td class="mono">9.2</td><td class="mono negv">−10.7</td><td class="mono negv">−8.3</td></tr>
+      <tr><td>2029</td><td class="mono">177.9</td><td class="mono">11.1</td><td class="mono">3.7</td><td class="mono">2.1</td><td class="mono">3.0</td><td class="mono">9.2</td><td class="mono negv">−6.2</td><td class="mono negv">−4.4</td></tr>
+      <tr><td>2030</td><td class="mono">195.0</td><td class="mono">9.6</td><td class="mono">10.4</td><td class="mono">5.3</td><td class="mono">8.3</td><td class="mono">9.0</td><td class="mono negv">−0.7</td><td class="mono negv">−0.4</td></tr>
+      <tr><td>2031</td><td class="mono">211.0</td><td class="mono">8.2</td><td class="mono">18.0</td><td class="mono">8.5</td><td class="mono">14.4</td><td class="mono">8.6</td><td class="mono pos">5.8</td><td class="mono pos">3.3</td></tr>
+      <tr><td>2032</td><td class="mono">225.3</td><td class="mono">6.8</td><td class="mono">26.5</td><td class="mono">11.8</td><td class="mono">21.2</td><td class="mono">8.0</td><td class="mono pos">13.2</td><td class="mono pos">6.8</td></tr>
+      <tr><td>2033</td><td class="mono">237.4</td><td class="mono">5.3</td><td class="mono">35.6</td><td class="mono">15.0</td><td class="mono">28.5</td><td class="mono">7.2</td><td class="mono pos">21.3</td><td class="mono pos">9.9</td></tr>
+      <tr><td>2034</td><td class="mono">246.7</td><td class="mono">3.9</td><td class="mono">37.0</td><td class="mono">15.0</td><td class="mono">29.6</td><td class="mono">6.3</td><td class="mono pos">23.3</td><td class="mono pos">9.9</td></tr>
+      <tr><td>2035</td><td class="mono">252.9</td><td class="mono">2.5</td><td class="mono">37.9</td><td class="mono">15.0</td><td class="mono">30.3</td><td class="mono">5.2</td><td class="mono pos">25.2</td><td class="mono pos">9.6</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="grid3" style="margin-top:14px">
+    <div class="card" style="margin:4px 0;text-align:center"><div class="num" style="font-size:24px;color:var(--rust)">−$0.8M</div><div class="small">명시적 10년 FCF의 현재가치 합(초기 적자가 후기 흑자를 상쇄)</div></div>
+    <div class="card" style="margin:4px 0;text-align:center"><div class="num" style="font-size:24px;color:var(--ink)">$113M</div><div class="small">최종가치의 현재가치(가치의 사실상 전부)</div></div>
+    <div class="card" style="margin:4px 0;text-align:center"><div class="num" style="font-size:24px;color:var(--teal)">$11.22</div><div class="small">주당 가치 = (EV $112M + 순현금 $200M) ÷ 27.86M주</div></div>
+  </div>
+  <p class="small">즉 "정상 EBITA마진 15% + 컨센서스 성장 후 페이드" 가정에서도 주당가치는 <strong>$11.22</strong>로 현재가($43.58)의 <strong>1/4 수준</strong>입니다. 현재가를 설명하려면 이 가정들을 훨씬 공격적으로 바꿔야 하며, 그 함의를 다음 섹션에서 역산합니다.</p>
+</div></section>
+
+<!-- 11. 내재 기대치 (CAP 역산) -->
+<section id="cap"><div class="wrap">
+  <div class="seclabel"><span class="n">11</span> 시장 내재 기대치 (역산)</div>
+  <h2>현재가가 요구하는 "성장 × 마진"의 조합</h2>
+  <p class="lead">초과수익이 아직 없으므로 "내재 CAP 연수"는 의미가 약합니다. 대신 더 정직한 질문을 던집니다: <strong>현재 EV($10억)를 정당화하려면, 미래에 어떤 매출 성장률과 영업이익률에 도달해야 하는가?</strong></p>
+  <h3>A. 성장 시나리오별 — 필요한 정상 EBITA마진</h3>
+  <table>
+    <thead><tr><th>가정한 매출 성장</th><th>10년 후 매출</th><th>현재가가 요구하는 정상 EBITA마진</th></tr></thead>
+    <tbody>
+      <tr><td>컨센서스(14%→2.5% 페이드)</td><td class="mono">$253M</td><td class="mono negv">≈ 83% (현실적으로 불가능)</td></tr>
+      <tr><td>연 15% 8년 유지</td><td class="mono">$374M</td><td class="mono negv">≈ 60% (불가능)</td></tr>
+      <tr><td>연 20% 8년 유지</td><td class="mono">$537M</td><td class="mono negv">≈ 44.5% (Arm 비-GAAP 근접)</td></tr>
+      <tr><td>연 25% 8년 유지</td><td class="mono">$762M</td><td class="mono">≈ 33.4% (Arm GAAP 초과)</td></tr>
+      <tr><td>연 30% 10년 유지</td><td class="mono">$1,800M</td><td class="mono">≈ 18.7% (달성가능 마진, 단 성장은 극단)</td></tr>
+    </tbody>
+  </table>
+  <p class="tblnote">읽는 법: 위로 갈수록 "성장은 보수적이나 마진이 비현실적", 아래로 갈수록 "마진은 현실적이나 성장이 극단적". <strong>어느 조합이든 Arm급 변신을 요구</strong>합니다.</p>
+
+  <h3>현재가에 내재된 기대치 곡선</h3>
+  <p class="small">아래 곡선 위의 모든 (성장, 마진) 조합이 현재가($43.58)를 정당화합니다. 곡선 <strong>아래</strong>면 현재가는 고평가입니다. 컨센서스(주황)와 Arm의 실제 프로필(청록)을 함께 표시했습니다.</p>
+  <svg viewBox="0 0 720 380" style="width:100%;height:auto" font-family="IBM Plex Sans KR">
+    <!-- x growth 10..32% -> 80..660 ; y margin 0..90% -> 330..40 -->
+    <line x1="80" y1="330" x2="660" y2="330" stroke="#191712" stroke-width="1.3"/>
+    <line x1="80" y1="40" x2="80" y2="330" stroke="#191712" stroke-width="1.3"/>
+    <text x="375" y="362" text-anchor="middle" font-size="12.5" fill="#6f6757">지속 매출 성장률 →</text>
+    <text x="26" y="185" text-anchor="middle" font-size="12.5" fill="#6f6757" transform="rotate(-90 26 185)">필요 정상 EBITA마진 →</text>
+    <g font-size="10.5" fill="#9b9080" font-family="IBM Plex Mono">
+      <text x="80" y="345" text-anchor="middle">10%</text>
+      <line x1="211" y1="40" x2="211" y2="330" stroke="#f0e9d8"/><text x="211" y="345" text-anchor="middle">15%</text>
+      <line x1="343" y1="40" x2="343" y2="330" stroke="#f0e9d8"/><text x="343" y="345" text-anchor="middle">20%</text>
+      <line x1="475" y1="40" x2="475" y2="330" stroke="#f0e9d8"/><text x="475" y="345" text-anchor="middle">25%</text>
+      <line x1="607" y1="40" x2="607" y2="330" stroke="#f0e9d8"/><text x="607" y="345" text-anchor="middle">30%</text>
+      <line x1="80" y1="265" x2="660" y2="265" stroke="#f0e9d8"/><text x="72" y="269" text-anchor="end">20%</text>
+      <line x1="80" y1="201" x2="660" y2="201" stroke="#f0e9d8"/><text x="72" y="205" text-anchor="end">40%</text>
+      <line x1="80" y1="137" x2="660" y2="137" stroke="#f0e9d8"/><text x="72" y="141" text-anchor="end">60%</text>
+      <line x1="80" y1="73" x2="660" y2="73" stroke="#f0e9d8"/><text x="72" y="77" text-anchor="end">80%</text>
+    </g>
+    <!-- achievable margin band (<30%, i.e. below y for 30% = 330-30*3.22=233) shaded -->
+    <rect x="80" y="233" width="580" height="97" fill="#1f6b63" opacity=".07"/>
+    <text x="650" y="322" text-anchor="end" font-size="10.5" fill="#1f6b63">현실적으로 달성 가능한 마진 영역 (≲30%)</text>
+    <!-- curve points: (13,83)->but x starts 10; use (15,60),(20,44.5),(25,33.4),(30,18.7). cx=80+(g-10)*26.4 ; cy=330-m*3.22 -->
+    <!-- (15,60): cx=212 cy=137 ; (20,44.5): cx=344 cy=187 ; (25,33.4): cx=476 cy=222 ; (30,18.7): cx=608 cy=270 -->
+    <!-- extend left to (13,83): cx=159 cy=63 -->
+    <path d="M 159 63 Q 200 110 212 137 Q 290 175 344 187 Q 420 207 476 222 Q 545 248 608 270" fill="none" stroke="#a23b1e" stroke-width="3"/>
+    <g font-size="11" font-weight="700">
+      <circle cx="212" cy="137" r="5" fill="#a23b1e"/>
+      <circle cx="344" cy="187" r="5" fill="#a23b1e"/>
+      <circle cx="476" cy="222" r="5" fill="#a23b1e"/>
+      <circle cx="608" cy="270" r="5" fill="#a23b1e"/>
+    </g>
+    <g font-size="10.5" fill="#a23b1e">
+      <text x="212" y="128" text-anchor="middle">60%</text>
+      <text x="344" y="178" text-anchor="middle">44.5%</text>
+      <text x="476" y="213" text-anchor="middle">33.4%</text>
+      <text x="608" y="261" text-anchor="middle">18.7%</text>
+    </g>
+    <text x="300" y="56" font-size="11.5" fill="#a23b1e" font-weight="600" font-family="Fraunces">↑ 이 곡선 위 = 현재가 정당화</text>
+    <!-- consensus point: growth ~13%, non-GAAP margin ~10% -> cx=80+3*26.4=159 cy=330-10*3.22=298 -->
+    <circle cx="159" cy="298" r="7" fill="#c06a16"/><text x="159" y="318" text-anchor="middle" font-size="10.5" fill="#7a430b" font-weight="600">컨센서스</text>
+    <text x="170" y="296" font-size="10" fill="#7a430b">(13%, ~10%) — 곡선보다 한참 아래</text>
+    <!-- ARM actual: growth 24% non-GAAP margin 48% -> cx=80+14*26.4=450 cy=330-48*3.22=176 -->
+    <circle cx="450" cy="176" r="7" fill="#1f6b63"/><text x="450" y="166" text-anchor="middle" font-size="10.5" fill="#1f6b63" font-weight="600">Arm 실제</text>
+    <text x="462" y="190" font-size="10" fill="#1f6b63">(24%, 48% 비-GAAP)</text>
+  </svg>
+  <div class="plain"><span class="tag">이 그래프의 메시지</span>
+    컨센서스(주황 점)는 현재가를 정당화하는 곡선보다 <b>훨씬 아래</b>에 있습니다 — 즉 컨센서스가 맞다면 현재가는 비쌉니다. 흥미롭게도 <b>Arm의 실제 프로필(청록 점)조차</b> 곡선에 겨우 닿는 수준입니다. 다시 말해, <b>"CEVA가 향후 10년간 Arm의 성장률과 Arm의 비-GAAP 마진을 모두 달성한다"</b>는 가정에 도달해야 현재가가 정당화됩니다. 이는 불가능하진 않지만, 5년째 매출이 정체된 $1억 규모 회사에 매기기엔 매우 공격적인 기대입니다.</div>
+  <h3>B. 마진 가정별 — 필요한 매출 성장률</h3>
+  <table>
+    <thead><tr><th>가정한 정상 EBITA마진</th><th>현재가가 요구하는 매출 성장률(8년 유지)</th><th>도달 규모</th></tr></thead>
+    <tbody>
+      <tr><td>15%</td><td class="mono negv">≈ 41.7% / 년</td><td class="mono">≈ $2.7B (24배)</td></tr>
+      <tr><td>20%</td><td class="mono negv">≈ 35.0% / 년</td><td class="mono">≈ $1.7B</td></tr>
+      <tr><td>25%</td><td class="mono">≈ 30.5% / 년</td><td class="mono">≈ $1.2B</td></tr>
+      <tr><td>30%</td><td class="mono">≈ 27.0% / 년</td><td class="mono">≈ $1.0B</td></tr>
+    </tbody>
+  </table>
+  <p class="tblnote">참고로 1950~2025년 데이터상 직전 3년 20%+ 성장 기업이 이후 3년에도 20%+를 유지한 비율은 약 31%에 불과합니다. 8~10년간 25~40% 성장 지속은 역사적으로 극소수 기업만 달성했습니다.</p>
+</div></section>
+<!-- 12. 민감도 & 시나리오 -->
+<section id="sens"><div class="wrap">
+  <div class="seclabel"><span class="n">12</span> 민감도 · 시나리오 분석</div>
+  <h2>가정을 흔들어 본다 — 그래도 현재가는 멀다</h2>
+  <h3>민감도: 정상 EBITA마진 × 자본비용(WACC) — 주당가치 ($)</h3>
+  <p class="small">[페이드 0.20, 장기성장 2.5%, 컨센서스 성장경로 가정] 색이 진할수록 가치가 높음. 가장 낙관적 칸(마진 22%·WACC 9.7%)도 <strong>$15.95</strong>로 현재가 $43.58에 한참 못 미칩니다.</p>
+  <div style="overflow-x:auto"><table style="min-width:520px;text-align:center">
+    <thead><tr><th style="text-align:left">정상마진 ＼ WACC</th><th>9.7%</th><th>10.7%</th><th>11.7%</th></tr></thead>
+    <tbody>
+      <tr><td style="text-align:left">10%</td><td class="mono" style="background:#fbeee6">9.39</td><td class="mono" style="background:#fbeee6">8.81</td><td class="mono" style="background:#f8e3da">8.35</td></tr>
+      <tr><td style="text-align:left">13%</td><td class="mono" style="background:#f6ecdb">11.03</td><td class="mono" style="background:#fbeee6">10.24</td><td class="mono" style="background:#fbeee6">9.61</td></tr>
+      <tr><td style="text-align:left">15%</td><td class="mono" style="background:#f1e9d6">12.12</td><td class="mono" style="background:#f6ecdb">11.19</td><td class="mono" style="background:#fbeee6">10.45</td></tr>
+      <tr><td style="text-align:left">18%</td><td class="mono" style="background:#e8efe4">13.76</td><td class="mono" style="background:#f1e9d6">12.62</td><td class="mono" style="background:#f6ecdb">11.71</td></tr>
+      <tr><td style="text-align:left">22%</td><td class="mono" style="background:#dcebe4">15.95</td><td class="mono" style="background:#e8efe4">14.53</td><td class="mono" style="background:#f1e9d6">13.39</td></tr>
+    </tbody>
+  </table></div>
+  <h3>민감도: 페이드 비율 — 거의 영향 없음</h3>
+  <p class="small">페이드 0.10(강한 해자)~0.30(약한 해자) 전 구간에서 주당가치는 <strong>$11.2 내외로 거의 불변</strong>입니다. 이유: 현재 초과수익이 음수에 가까워, "초과수익이 얼마나 오래 가느냐(페이드)"보다 "<strong>애초에 흑자 마진에 도달하느냐</strong>"가 가치를 좌우하기 때문입니다.</p>
+  <div class="chiprow">
+    <span class="chip">fade 0.10 → $11.27</span><span class="chip">0.18 → $11.22</span><span class="chip">0.20 → $11.22</span><span class="chip">0.25 → $11.20</span><span class="chip">0.30 → $11.19</span>
+  </div>
+  <h3>3대 시나리오 종합 (강세 / 기본 / 약세)</h3>
+  <div class="grid3">
+    <div class="card" style="margin:6px 0;border-top:4px solid var(--teal)">
+      <h4 style="margin:0 0 6px;color:var(--teal)">강세 Bull</h4>
+      <div class="num" style="font-size:28px;color:var(--teal)">$27.39</div>
+      <p class="small" style="margin:6px 0 0">연 20% 성장 8년 + 정상마진 22% + WACC 9.7% + fade 0.10. AI 로열티가 본격 램프하고 Arm급 운영레버리지 발생. <strong>현재가 대비 −37%</strong></p>
+    </div>
+    <div class="card" style="margin:6px 0;border-top:4px solid var(--amber)">
+      <h4 style="margin:0 0 6px;color:var(--amber)">기본 Base</h4>
+      <div class="num" style="font-size:28px;color:var(--amber)">$11.22</div>
+      <p class="small" style="margin:6px 0 0">컨센서스 성장 후 페이드 + 정상마진 15% + WACC 10.7% + fade 0.20. 무난한 흑자전환·성장. <strong>현재가 대비 −74%</strong></p>
+    </div>
+    <div class="card" style="margin:6px 0;border-top:4px solid var(--rust)">
+      <h4 style="margin:0 0 6px;color:var(--rust)">약세 Bear</h4>
+      <div class="num" style="font-size:28px;color:var(--rust)">$7.50</div>
+      <p class="small" style="margin:6px 0 0">정상마진 8% + WACC 11.7% + fade 0.25. 마진 정체·경쟁 심화. 가치 ≈ <strong>순현금($7.2)</strong> 수준. <strong>현재가 대비 −83%</strong></p>
+    </div>
+  </div>
+  <div class="plain"><span class="tag">균형 잡힌 시각</span>이 세 숫자가 "정답"은 아닙니다. DCF는 본질적으로 <b>옵션가치(폭발적 상방)를 과소평가</b>하는 경향이 있고, CEVA처럼 초기 변곡점에 있는 기업에선 더욱 그렇습니다. 다만 분명한 것은, <b>현재가는 위 세 시나리오 어디에도 담기지 않는 매우 공격적 기대</b>를 반영한다는 점입니다. 강세 시나리오($27)조차 현재가의 63% 수준입니다.</div>
+</div></section>
+
+<!-- 13. 리스크 & 체크포인트 -->
+<section id="risk"><div class="wrap">
+  <div class="seclabel"><span class="n">13</span> 주요 리스크 · 점검 포인트</div>
+  <h2>무엇을 지켜봐야 가정이 맞는지 알 수 있는가</h2>
+  <div class="grid2">
+    <div>
+      <h3 style="margin-top:6px">핵심 리스크 (확신도)</h3>
+      <ul style="font-size:14.5px;line-height:1.7;padding-left:18px">
+        <li><strong>밸류에이션 리스크</strong>(높음): 현재가가 Arm급 변신을 선반영 — 컨센서스만 실현돼도 큰 하방.</li>
+        <li><strong>실행 리스크</strong>(높음): 5년째 매출 정체. "AI 전환"이 외형 성장으로 이어진 증거가 아직 제한적.</li>
+        <li><strong>경쟁 리스크</strong>(높음): Arm·Synopsys·Cadence·사내 설계·RISC-V와의 NPU 경쟁에서 디자인윈 상실 가능.</li>
+        <li><strong>로열티 전환 리스크</strong>(중): 라이선스→실리콘→로열티 전환이 지연·미달될 수 있음.</li>
+        <li><strong>SBC/희석</strong>(중): 연 $22M+ SBC가 지속되면 실질 주주가치 희석.</li>
+        <li><strong>사이클</strong>(중): 모바일 모뎀 출하 감소 등 다운스트림 둔화.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:6px">분기별 체크포인트</h3>
+      <ul style="font-size:14.5px;line-height:1.7;padding-left:18px">
+        <li>① <strong>로열티 매출 추세</strong> — 특히 AI 로열티가 실제로 발생·성장하는가 (현재는 라이선스 위주)</li>
+        <li>② <strong>신규 NPU/IP 라이선스 건수</strong>와 대형 OEM 디자인윈</li>
+        <li>③ <strong>GAAP 영업마진</strong>의 흑자 전환 시점과 추세(비-GAAP만 보지 말 것)</li>
+        <li>④ <strong>매출 성장률</strong> vs 컨센서스(+14%) — 가속/둔화 여부</li>
+        <li>⑤ <strong>SBC 규모</strong>와 주식 수 변화(희석)</li>
+      </ul>
+      <h3>연간 재검토</h3>
+      <ul style="font-size:14.5px;line-height:1.7;padding-left:18px">
+        <li>내재 기대치(이 보고서의 곡선) 재계산</li>
+        <li>AI 디자인윈 → 실리콘 → 로열티 <strong>전환율</strong> 추적</li>
+        <li>생애주기 재판별(흑자·양의 ROIC 진입 여부)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="background:#f0f6f4;border-color:#bcdcd2">
+    <h4 style="margin:0 0 8px;color:var(--teal)">가정을 바꿀 결정적 증거 (Bayesian 업데이트 트리거)</h4>
+    <p style="margin:0;font-size:14.5px"><strong>강세로 전환:</strong> 로열티 매출의 추세적 급증(특히 AI 로열티 비중 상승) · GAAP 영업마진의 지속적 흑자·상승 · 매출 성장률 20%+ 가속. &nbsp;|&nbsp; <strong>약세 확인:</strong> 매출 정체 지속 · 마진 정체 · 주요 AI 디자인윈 상실 · 로열티 전환 지연.</p>
+  </div>
+</div></section>
+
+<!-- 14. 한계 & 확신도 -->
+<section id="limit"><div class="wrap">
+  <div class="seclabel"><span class="n">14</span> 한계와 가정 · 확신도</div>
+  <h2>이 분석이 틀릴 수 있는 지점</h2>
+  <div class="card">
+    <h4 style="margin:0 0 10px;font-size:17px">한계와 가정 (Limitations &amp; Assumptions)</h4>
+    <ul style="font-size:14.5px;line-height:1.7;padding-left:18px;margin:0">
+      <li><strong>핵심 가정:</strong> ① SBC를 실질 비용으로 처리(프레임워크 원칙) ② R&D를 비용 처리(자본화하지 않음) ③ WACC ~10.7%, 장기성장 2.5% ④ 정상마진·성장 경로는 시나리오로 가정.</li>
+      <li><strong>확신도 낮은 지점:</strong> CEVA의 "정상 상태" 마진·성장률은 본질적으로 추정. AI 로열티의 향후 규모는 데이터가 거의 없어 불확실. 베타·EV도 변동성 큰 주가 탓에 폭이 넓음.</li>
+      <li><strong>결론이 틀릴 조건:</strong> AI 엣지 시장이 예상보다 훨씬 크고 CEVA가 표준적 지위를 차지하면(로열티 폭증), DCF가 과소평가한 옵션가치가 현실화돼 현재가가 정당화될 수 있음.</li>
+      <li><strong>방법론 한계:</strong> 초과수익이 아직 없는 변곡점 기업에 DCF/CAP을 적용하는 것은 본질적 제약이 있음. 실물옵션·TAM 관점이 보완적으로 필요.</li>
+      <li><strong>다음 검증 단계:</strong> 분기 로열티 추세·AI 로열티 비중·GAAP 마진 전환 시점을 추적해 가정을 갱신.</li>
+    </ul>
+  </div>
+  <h3>확신도 (Bayesian)</h3>
+  <div class="confbar"><div class="lbl">현재 마이너스 초과수익(ROIC &lt; WACC) — 재무제표로 확인</div><div class="track"><div class="fill" style="width:95%"></div></div><div class="pct">~95%</div></div>
+  <div class="confbar"><div class="lbl">현재가가 "Arm급 변신" 기대를 내재 — 모델 가정 전반에서 견고</div><div class="track"><div class="fill" style="width:85%"></div></div><div class="pct">~85%</div></div>
+  <div class="confbar"><div class="lbl">절대적 고평가 여부 — 옵션가치·내러티브 지속성 때문에 단정 불가</div><div class="track"><div class="fill" style="width:62%;background:linear-gradient(90deg,#c06a16,#e9a24a)"></div></div><div class="pct">~62%</div></div>
+  <h3>경쟁 가설 (Competing Hypotheses)</h3>
+  <div class="hyp h1"><div class="h">H1 (기본, ~60%): 시장의 과도한 낙관</div><p class="small" style="margin:4px 0 0">현재가는 비현실적 성장·마진을 선반영. 컨센서스만 실현돼도 하방 위험이 큼. AI 램프가 기대에 못 미치면 재평가 가능성.</p></div>
+  <div class="hyp h2"><div class="h">H2 (~30%): 진짜 변곡점, 옵션가치가 프리미엄을 정당화</div><p class="small" style="margin:4px 0 0">엣지 AI가 거대 시장이 되고 CEVA가 연결성 강점을 지렛대로 NPU 표준 지위를 확보하면, DCF가 놓친 옵션가치가 현실화. "제2의 Arm" 시나리오.</p></div>
+  <div class="hyp h3"><div class="h">H3 (~10%): 모멘텀/AI 테마 과열</div><p class="small" style="margin:4px 0 0">주가가 펀더멘털과 무관하게 AI 내러티브·수급으로 움직임(52주 $17~$51의 극단적 변동성이 방증). 단기 방향 예측 곤란.</p></div>
+</div></section>
+
+<!-- 15. 출처 -->
+<section id="src" style="border-bottom:none"><div class="wrap">
+  <div class="seclabel"><span class="n">15</span> 데이터 출처 · 기준 시점</div>
+  <div class="footnotes">
+    <h3>출처별 기준 시점 (충돌 시 사용자 확인 권장)</h3>
+    <div class="src-li"><span class="tag-date">주가</span> Investing.com — 2026-06-05 종가 <strong>$43.58</strong>(전일종가 $49.58). <strong>변동성 매우 큼</strong>: 같은 기간 TradingView $49.76, Robinhood(6/4) $49.15, eToro $39.43, Morningstar(6/1) $44.71 등 상이. 본 분석은 6/5 종가를 기준값으로, $40·$44·$49 구간을 함께 제시. <span style="color:var(--rust)">→ 매매 판단 시 실시간 가격 재확인 필수.</span></div>
+    <div class="src-li"><span class="tag-date">재무제표</span> stockanalysis.com(Fiscal.ai) 및 SEC 10-K/10-Q — FY2025 실적(2026-02-17 발표). 데이터 갱신 2026-05-11. 매출 $109.6M, GAAP 순손실 −$10.6M, ROIC −1.7%, 순현금 ~$200M.</div>
+    <div class="src-li"><span class="tag-date">컨센서스</span> S&P Global / Finnhub(via stockanalysis.com) — 2026-05-12. 2026E 매출 $125.1M(+14%), 2027E $142.4M(+14%), 비-GAAP EPS 2026 $0.54·2027 $0.84, 목표주가 평균 $43.13(레인지 $36~$48), 투자의견 Strong Buy.</div>
+    <div class="src-li"><span class="tag-date">거시</span> 10년 美국채 4.46~4.55%(FRED/연준 H.15, 2026-06-05) · 10년 기대인플레(breakeven) ~2.35%(FRED, 2026-04) · ERP 4.75%(표준 가정) / 다모다란 내재 ERP 4.23%(2026-01).</div>
+    <div class="src-li"><span class="tag-date">사업·경쟁</span> CEVA IR/보도자료(2026-02-17), audioXpress·TechEdgeAI·BeyondSPX 등 업계 보도 — 무선 연결성 IP ~68% 점유, 2025년 NeuPro 10건·AI 라이선스 비중 20%+, 평생 로열티 ~$125M. 경쟁사 Arm·Synopsys·Cadence 공시.</div>
+    <div class="src-li"><span class="tag-date">방법론</span> CAP(경쟁우위기간) 프레임워크 — 프로젝트 지식 기반. 페이드 모델·생애주기(Dickinson)·섹터 페이드 비율 적용. 모든 계산은 본 분석에서 수행한 모델 결과이며, 정밀값이 아닌 방향성·논리적 일관성을 우선함.</div>
+    <p style="margin-top:18px;font-size:12px;color:#9b9080">본 자료는 정보 제공 목적의 분석이며 특정 종목의 매수·매도를 권유하지 않습니다. 수치는 가정에 따른 모델 산출물로 실제와 다를 수 있습니다.</p>
+  </div>
+</div></section>
+
+<footer style="background:#16140f;color:#bdb29a;padding:30px 0;text-align:center;font-size:12.5px">
+  <div class="wrap">CEVA, Inc. (NASDAQ: CEVA) · CAP 프레임워크 장기 투자 분석 · 작성 기준일 2026-06-07<br>
+  <span style="color:#6f6757">핵심 메시지: 현재가는 "엣지 AI를 통한 Arm급 변신 성공"을 선반영. 컨센서스·강세 시나리오 모두 현재가에 미달.</span></div>
+</footer>
+</body>
+</html>
