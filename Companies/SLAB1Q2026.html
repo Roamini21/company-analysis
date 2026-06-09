@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silicon Labs (SLAB) — 기업·산업·가치 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1726; --ink2:#17233B; --ink3:#22324f;
+  --paper:#F6F4EE; --paper2:#FFFFFF; --card:#FBFAF6;
+  --signal:#13A8B8; --signal-d:#0B7C89; --signal-l:#7FD6DF;
+  --silicon:#C07A22; --silicon-l:#E8B266;
+  --alert:#CF3F3F; --alert-bg:#FBEAEA;
+  --green:#2E9466; --green-bg:#E7F3EC;
+  --amber:#C9962A;
+  --muted:#6A7587; --muted-l:#9AA3B2;
+  --line:#E2DCCF; --line-d:#CFC8B8;
+  --ink-line:#2C3A55;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter','Noto Sans KR',system-ui,sans-serif;
+  background:var(--paper); color:var(--ink);
+  line-height:1.72; font-size:16.5px; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+h1,h2,h3,h4{font-family:'Space Grotesk','Noto Sans KR',sans-serif;line-height:1.18;letter-spacing:-.01em}
+.mono{font-family:'IBM Plex Mono',monospace;font-feature-settings:"tnum"}
+strong{font-weight:600}
+em{font-style:normal;background:linear-gradient(transparent 62%, var(--signal-l) 62%);padding:0 1px}
+
+/* ---- HERO ---- */
+.hero{background:var(--ink);color:#EAEFF6;padding:54px 0 40px;position:relative;overflow:hidden;border-bottom:3px solid var(--silicon)}
+.hero::before{content:"";position:absolute;inset:0;
+  background-image:
+   linear-gradient(90deg, rgba(19,168,184,.07) 1px, transparent 1px),
+   linear-gradient(rgba(19,168,184,.07) 1px, transparent 1px);
+  background-size:34px 34px; mask:linear-gradient(180deg,#000,transparent 80%);}
+.hero .wrap{position:relative;z-index:2}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--signal-l)}
+.hero h1{font-size:clamp(30px,5vw,50px);font-weight:700;margin:14px 0 6px;color:#fff}
+.hero .tick{font-family:'IBM Plex Mono',monospace;color:var(--silicon-l);font-weight:500}
+.hero .sub{font-size:18px;color:#B9C4D4;max-width:760px;margin-top:8px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:24px;font-size:13.5px;color:#9FB0C4;font-family:'IBM Plex Mono',monospace}
+.hero-meta b{color:#E7EEF7;font-weight:600}
+.signal-bars{display:inline-flex;align-items:flex-end;gap:3px;height:18px;vertical-align:-3px;margin-left:6px}
+.signal-bars i{width:4px;background:var(--signal);border-radius:1px;opacity:.4}
+.signal-bars i:nth-child(1){height:5px;opacity:.9}.signal-bars i:nth-child(2){height:9px;opacity:.9}
+.signal-bars i:nth-child(3){height:13px;opacity:.7}.signal-bars i:nth-child(4){height:18px;opacity:.35}
+
+/* ---- SECTIONS ---- */
+section{padding:42px 0}
+.sec-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--signal-d);letter-spacing:.12em;font-weight:600}
+h2.title{font-size:clamp(23px,3.4vw,31px);font-weight:700;margin:6px 0 4px;color:var(--ink);display:flex;align-items:baseline;gap:12px}
+.lead{color:#384357;font-size:17px;max-width:820px;margin-top:10px}
+h3{font-size:19.5px;font-weight:600;margin:30px 0 10px;color:var(--ink2)}
+h4{font-size:16px;font-weight:600;margin:18px 0 6px;color:var(--ink3)}
+p{margin:11px 0;color:#2A3447}
+.divider{height:1px;background:var(--line);margin:0}
+.trace{height:2px;border:0;margin:0;background:
+  repeating-linear-gradient(90deg, var(--line-d) 0 18px, transparent 18px 24px);}
+.alt{background:var(--paper2)}
+.dark{background:var(--ink);color:#E7EEF7}
+.dark h2.title,.dark h3,.dark h4{color:#fff}
+.dark .lead{color:#B9C4D4}
+.dark p{color:#C4CEDC}
+.dark .sec-num{color:var(--signal-l)}
+
+/* ---- KEY TAKEAWAY ---- */
+.keybox{background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 100%);color:#fff;border-radius:14px;padding:30px 30px 26px;margin:26px 0;border-left:5px solid var(--signal);box-shadow:0 12px 34px -16px rgba(14,23,38,.5)}
+.keybox .kl{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;color:var(--signal-l);text-transform:uppercase}
+.keybox p{color:#EAF0F7;font-size:18px;margin:10px 0 0;line-height:1.6}
+.keybox .big{font-size:21px;font-weight:600;font-family:'Space Grotesk',sans-serif}
+
+/* ---- ALERT ---- */
+.alertbox{background:var(--alert-bg);border:1px solid #E9C5C5;border-left:5px solid var(--alert);border-radius:12px;padding:22px 24px;margin:22px 0}
+.alertbox h3{color:var(--alert);margin:0 0 6px;font-size:18px;display:flex;align-items:center;gap:9px}
+.alertbox p{color:#5e2b2b;margin:7px 0}
+.notebox{background:#F0F6F7;border:1px solid #CDE6E9;border-left:5px solid var(--signal);border-radius:12px;padding:20px 22px;margin:20px 0}
+.notebox h4{color:var(--signal-d);margin:0 0 6px}
+.notebox p{color:#26424a;margin:6px 0}
+
+/* ---- CARDS / GRID ---- */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+.card.tight{padding:16px}
+.card h4{margin-top:0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 16px;text-align:left}
+.stat .v{font-family:'IBM Plex Mono',monospace;font-size:27px;font-weight:600;color:var(--ink);line-height:1.05}
+.stat .v.sig{color:var(--signal-d)}.stat .v.sil{color:var(--silicon)}.stat .v.red{color:var(--alert)}.stat .v.grn{color:var(--green)}
+.stat .l{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.35}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0;background:var(--paper2);border-radius:10px;overflow:hidden}
+.tbl th,.tbl td{padding:9px 11px;text-align:right;border-bottom:1px solid var(--line)}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl thead th{background:var(--ink);color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:12.5px;border:0}
+.tbl tbody tr:nth-child(even){background:var(--card)}
+.tbl .num{font-family:'IBM Plex Mono',monospace}
+.tbl .hl{background:var(--signal)!important;color:#fff}
+.tbl tfoot td{font-weight:600;background:#EAF4F5;border-top:2px solid var(--signal)}
+.scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+.chip{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;padding:3px 9px;border-radius:20px;border:1px solid var(--line-d);background:#fff;color:var(--ink2);margin:2px}
+.chip.sig{background:#E7F5F6;border-color:var(--signal-l);color:var(--signal-d)}
+.chip.sil{background:#FBEFDC;border-color:var(--silicon-l);color:var(--silicon)}
+
+.conf{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:6px;letter-spacing:.02em;vertical-align:1px}
+.conf.hi{background:var(--green-bg);color:#1d6e47}
+.conf.md{background:#FBF1DA;color:#9a7016}
+.conf.lo{background:var(--alert-bg);color:#a83232}
+
+ul.clean{list-style:none;margin:10px 0}
+ul.clean li{position:relative;padding-left:22px;margin:8px 0;color:#2A3447}
+ul.clean li::before{content:"";position:absolute;left:2px;top:11px;width:7px;height:7px;background:var(--signal);border-radius:1px;transform:rotate(45deg)}
+ul.dash{list-style:none;margin:8px 0}
+ul.dash li{position:relative;padding-left:18px;margin:6px 0}
+ul.dash li::before{content:"—";position:absolute;left:0;color:var(--silicon);font-weight:700}
+
+.footnote{font-size:13px;color:var(--muted);margin-top:8px;font-style:italic}
+.src{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted-l)}
+svg{max-width:100%;height:auto;display:block}
+.cap{font-size:12.5px;color:var(--muted);text-align:center;margin-top:8px;font-style:italic}
+@media(max-width:760px){
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  body{font-size:15.5px}
+  .hero{padding:38px 0 30px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">CAP 프레임워크 기업·산업 분석 · 2026년 6월 9일 기준</div>
+    <h1>Silicon Labs <span class="tick">NASDAQ : SLAB</span>
+      <span class="signal-bars"><i></i><i></i><i></i><i></i></span>
+    </h1>
+    <p class="sub">사물인터넷(IoT) 무선 연결 반도체 전문기업 — 그리고 현재 <strong style="color:#fff">Texas Instruments의 인수가 진행 중</strong>인 회사. 이 보고서는 회사·산업을 처음 접하는 분도 완전히 이해할 수 있도록 쉽게 설명합니다.</p>
+    <div class="hero-meta">
+      <span>주가 <b>~$215</b></span>
+      <span>인수가 <b>$231</b> (전액 현금)</span>
+      <span>시가총액 <b>~$7.0B</b></span>
+      <span>FY2025 매출 <b>$785M</b></span>
+      <span>본사 <b>美 텍사스 오스틴</b></span>
+      <span>설립 <b>1996</b></span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 핵심 결론 ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">00 — EXECUTIVE SUMMARY</div>
+  <h2 class="title">핵심 결론</h2>
+
+  <div class="keybox">
+    <div class="kl">한 문장 요약</div>
+    <p class="big">실리콘랩스(SLAB)는 스마트홈·산업용 IoT 기기에 들어가는 <em style="background:linear-gradient(transparent 60%, rgba(19,168,184,.45) 60%);color:#fff">저전력 무선 통신 칩</em>을 만드는 회사이며, 2026년 2월 <strong>텍사스 인스트루먼트(TI)가 주당 $231 전액 현금으로 인수</strong>하기로 확정되어 — 현재 주가는 회사의 독자 가치가 아니라 <strong>이 인수 가격을 따라 움직이고 있습니다.</strong></p>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card">
+      <h4 style="color:var(--signal-d)">분석가가 내린 2가지 핵심 판단</h4>
+      <ul class="clean" style="font-size:15px">
+        <li><strong>① 이 주식은 더 이상 '장기 투자' 종목이 아니라 '인수 차익거래(M&A arbitrage)' 종목입니다.</strong> 주가($215)와 인수가($231)의 차이 약 7%가, 거래가 무사히 마무리될지에 베팅하는 수익의 전부입니다. <span class="conf hi">신뢰도 높음 ~90%</span></li>
+        <li><strong>② TI가 지불하는 프리미엄(발표 전 대비 +61~69%)은 SLAB 자체 펀더멘털이 아니라 'TI가 거둘 시너지($450M/년)와 전략적 통제권'의 값입니다.</strong> 독립적으로 계산한 적정가치(약세 $46 ~ 강세 $176)는 모두 인수가 $231보다 낮습니다. <span class="conf hi">신뢰도 높음 ~85%</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--silicon)">지금 무엇을 봐야 하나 (체크포인트)</h4>
+      <ul class="dash" style="font-size:15px">
+        <li><strong>거래의 마지막 관문 = 중국 SAMR(반독점) 승인.</strong> 미국 반독점(HSR)·주주총회는 이미 통과. 중국 승인만 남았고, 이것이 가장 큰 변수입니다.</li>
+        <li><strong>예상 종료 시점 = 2027년 상반기</strong> (규제 사유 시 최대 2028년 2월까지 연장 가능).</li>
+        <li><strong>거래 무산 시</strong> 주가는 인수 전 수준(~$137) 또는 그 아래로 떨어질 수 있으나, TI가 <strong>위약금 $499M</strong>를 SLAB에 지급합니다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="footnote">※ 이 보고서는 정보 제공을 목적으로 하며 특정 매매를 권유하지 않습니다. 모든 수치에는 출처와 기준 시점을 표기했고, 불확실한 부분은 베이지안 신뢰도(예: <span class="conf md">신뢰도 중간 ~60%</span>)로 명시했습니다.</p>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 인수 상황 (가장 중요) ============ -->
+<section class="alt">
+<div class="wrap">
+  <div class="sec-num">01 — THE DOMINANT FACT</div>
+  <h2 class="title">⚠️ 가장 먼저 알아야 할 사실 — TI의 인수</h2>
+  <p class="lead">일반적인 기업 분석은 "주가에 시장의 기대가 어떻게 녹아 있는가"를 읽습니다. 그러나 SLAB은 인수가 진행 중이므로, 현재 주가는 <strong>시장의 독자 기대치가 아니라 'TI가 약속한 인수 가격'에 묶여 있습니다.</strong> 이 점을 모르고 분석하면 모든 해석이 어긋납니다.</p>
+
+  <div class="grid g4" style="margin-top:20px">
+    <div class="stat"><div class="v sil">$231.00</div><div class="l">주당 인수가 (전액 현금)</div></div>
+    <div class="stat"><div class="v">$7.5B</div><div class="l">총 기업가치(거래 규모)</div></div>
+    <div class="stat"><div class="v grn">+61~69%</div><div class="l">발표 전 주가 대비 프리미엄</div></div>
+    <div class="stat"><div class="v sig">~$450M</div><div class="l">TI 예상 연간 시너지(3년 내)</div></div>
+  </div>
+
+  <h3>거래 개요 — 쉽게 풀어보면</h3>
+  <p>2026년 2월 4일, 세계적인 아날로그·임베디드 반도체 대기업 <strong>텍사스 인스트루먼트(TI, NASDAQ: TXN)</strong>가 SLAB을 통째로 사겠다고 발표했습니다. SLAB 주주는 보유 주식 1주당 <strong>현금 $231</strong>을 받고, 회사는 TI의 자회사가 됩니다(합병 후 SLAB 주식은 상장폐지). 발표 당일 SLAB 주가는 약 49% 폭등해 인수가 근처로 올라갔습니다.</p>
+  <p>협상 과정도 공개되어 있습니다. TI(서류상 'Party B')는 2025년 11월 9일 주당 <strong>$200</strong>의 비공개 제안으로 시작해 협상 끝에 <strong>$231</strong>까지 올렸습니다. SLAB 자문사 Qatalyst Partners는 $231이 주주에게 "재무적으로 공정하다"는 의견을 냈습니다.
+
+  <h3>거래 진행 상황 — 어디까지 왔나</h3>
+  <p>거래는 발표 후 여러 관문을 통과해야 완료됩니다. 2026년 6월 현재, <strong>주주 승인과 미국 반독점 심사는 이미 끝났고</strong>, 남은 핵심 관문은 <strong>중국을 비롯한 해외 규제 당국의 승인</strong>입니다.</p>
+
+  <div class="card" style="padding:26px 22px;margin-top:8px">
+    <svg viewBox="0 0 960 200" role="img" aria-label="인수 거래 진행 타임라인">
+      <!-- baseline -->
+      <line x1="40" y1="78" x2="920" y2="78" stroke="#CFC8B8" stroke-width="3"/>
+      <!-- completed portion -->
+      <line x1="40" y1="78" x2="470" y2="78" stroke="#2E9466" stroke-width="3"/>
+      <!-- NOW marker -->
+      <line x1="500" y1="40" x2="500" y2="120" stroke="#13A8B8" stroke-width="2" stroke-dasharray="4 4"/>
+      <text x="500" y="32" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#0B7C89" font-weight="600">현재 (2026-06)</text>
+
+      <!-- nodes -->
+      <!-- 1 announce -->
+      <circle cx="120" cy="78" r="11" fill="#2E9466"/><path d="M115 78 l3.5 3.5 l6.5 -7" stroke="#fff" stroke-width="2" fill="none"/>
+      <text x="120" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#0E1726" font-weight="600">2/4</text>
+      <text x="120" y="132" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" fill="#384357">인수 발표</text>
+      <text x="120" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#6A7587">$231 전액현금</text>
+
+      <!-- 2 shareholder vote -->
+      <circle cx="300" cy="78" r="11" fill="#2E9466"/><path d="M295 78 l3.5 3.5 l6.5 -7" stroke="#fff" stroke-width="2" fill="none"/>
+      <text x="300" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#0E1726" font-weight="600">4/30</text>
+      <text x="300" y="132" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" fill="#384357">주주총회 승인</text>
+      <text x="300" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#2E9466" font-weight="600">완료 ✓</text>
+
+      <!-- 3 HSR -->
+      <circle cx="450" cy="78" r="11" fill="#2E9466"/><path d="M445 78 l3.5 3.5 l6.5 -7" stroke="#fff" stroke-width="2" fill="none"/>
+      <text x="450" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#0E1726" font-weight="600">5/22</text>
+      <text x="450" y="132" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" fill="#384357">미국 반독점(HSR)</text>
+      <text x="450" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#2E9466" font-weight="600">통과 ✓</text>
+
+      <!-- 4 China SAMR (pending, KEY) -->
+      <circle cx="650" cy="78" r="13" fill="#fff" stroke="#C9962A" stroke-width="3"/>
+      <circle cx="650" cy="78" r="4" fill="#C9962A"/>
+      <text x="650" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#0E1726" font-weight="600">진행중</text>
+      <text x="650" y="132" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" fill="#9a7016" font-weight="600">중국 SAMR 등 해외 승인</text>
+      <text x="650" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#C9962A" font-weight="600">★ 핵심 관문</text>
+
+      <!-- 5 close -->
+      <circle cx="860" cy="78" r="11" fill="#fff" stroke="#9AA3B2" stroke-width="2.5"/>
+      <text x="860" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#6A7587" font-weight="600">'27 상반기</text>
+      <text x="860" y="132" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" fill="#6A7587">거래 종료(예상)</text>
+      <text x="860" y="148" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#9AA3B2">최대 '28-2 연장</text>
+    </svg>
+  </div>
+  <p class="cap">초록 = 완료 · 주황 = 진행 중(핵심 변수) · 회색 = 예정. 자료: SLAB 위임장(DEFM14A), 회사 공시 (2026-06 기준)</p>
+
+  <div class="alertbox">
+    <h3>🔑 왜 '중국 승인'이 핵심 변수인가</h3>
+    <p>중국 시장감독관리총국(SAMR)은 과거 미국 반도체 대형 인수건(예: 일부 칩 합병)에서 승인을 장기간 지연시키거나 사실상 보류한 전력이 있습니다. 미·중 무역 갈등 국면에서 반도체 M&A 승인이 협상 카드로 쓰일 수 있기 때문입니다. <strong>따라서 이 거래의 성패는 사실상 '중국 규제 통과 여부'에 달려 있다</strong>고 봐도 무방합니다. <span class="conf md">신뢰도 중간 ~65%</span> — 다만 TI는 자금 조달 조건이 없고, 거래가 깨지면 SLAB에 <strong>$499M의 역(逆)위약금</strong>을 물기로 해, 완료 의지가 매우 강함을 시사합니다.</p>
+  </div>
+
+  <h3>만약 거래가 무산되면? — 비대칭적 위험·보상</h3>
+  <p>인수 차익거래의 손익 구조는 비대칭적입니다. 쉽게 말해 <strong>"성공하면 조금 벌고, 실패하면 많이 잃는"</strong> 구조입니다.</p>
+  <div class="grid g2">
+    <div class="card" style="border-left:4px solid var(--green)">
+      <h4 style="color:var(--green)">✓ 거래 성공 시 (상승)</h4>
+      <p style="margin:6px 0">주가 $215 → $231 수령. <strong>차익 약 +$16 (약 +7.4%)</strong>. 종료까지 9~15개월이라 <strong>연 환산 약 6~10%</strong> 수준의 수익.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--alert)">
+      <h4 style="color:var(--alert)">✕ 거래 무산 시 (하락)</h4>
+      <p style="margin:6px 0">주가는 인수 전 수준(~$137) 또는 독립 펀더멘털가(~$100~120)로 급락 가능 — <strong>약 −35~45%</strong>. 단, TI가 위약금 $499M(주당 약 $15)를 지급해 일부 완충.</p>
+    </div>
+  </div>
+  <p>이 비대칭성 때문에, 인수 차익거래는 <strong>"거래가 깨질 확률"</strong>을 어떻게 보느냐가 전부입니다. 현재 주가가 인수가에 약 7% 못 미치는 것은, 시장이 <strong>소폭의 무산 리스크(특히 중국 승인 지연·결렬)를 반영</strong>하고 있다는 뜻입니다. <span class="conf hi">신뢰도 높음 ~85%</span></p>
+
+  <div class="notebox">
+    <h4>그래서 이 보고서의 구성은</h4>
+    <p>아래에서는 ① <strong>SLAB이 어떤 회사이고 어떤 기술·산업에 속하는지</strong>(2~9장)를 비전공자 눈높이로 자세히 설명한 뒤, ② <strong>인수가 없었다면 이 회사의 독자 가치는 얼마였을지</strong>를 CAP(경쟁우위기간) 프레임워크로 역산하고(10~15장), ③ 그 가치와 인수가($231)의 <strong>차이가 무엇을 의미하는지</strong>(시너지·프리미엄·차익거래, 16~17장) 해석합니다. 회사·산업을 이해하는 것은 "거래가 깨졌을 때 이 회사가 홀로 설 수 있는가"를 판단하는 데에도 그대로 쓰입니다.</p>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 02 기업 개요 ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">02 — COMPANY OVERVIEW</div>
+  <h2 class="title">기업 개요 — 실리콘랩스는 어떤 회사인가</h2>
+  <p class="lead">한 문장으로: <strong>스마트홈 기기, 산업용 센서, 스마트 미터 등 '인터넷에 연결되는 작은 기기' 안에 들어가 무선으로 데이터를 주고받게 해주는 저전력 반도체 칩을 설계·판매하는 회사</strong>입니다.</p>
+
+  <h3>핵심 정체성: '순수 IoT 무선 연결' 기업</h3>
+  <p>실리콘랩스는 1996년 미국 텍사스 오스틴에서 설립된 반도체 회사로, 현재 직원은 약 1,900명, CEO는 매트 존슨(Matt Johnson)입니다. SLAB의 가장 중요한 특징은 <strong>"공장이 없는(fabless) 설계 전문 회사"</strong>라는 점과, <strong>"IoT 무선 연결 한 분야에만 집중한다"</strong>는 점입니다.</p>
+
+  <div class="card" style="margin-top:6px">
+    <h4 style="color:var(--silicon)">결정적 전환점 — 2021년의 '선택과 집중'</h4>
+    <p style="margin:8px 0">원래 SLAB은 여러 사업을 했지만, 2021년 <strong>인프라·자동차(Infrastructure & Automotive) 사업부를 스카이웍스(Skyworks)에 $27.5억(2.75 billion)에 매각</strong>했습니다. 이 큰 결단으로 회사는 잡다한 사업을 정리하고 <strong>오직 IoT 무선 연결 칩에만 올인하는 '순수 플레이(pure-play)' 기업</strong>으로 다시 태어났습니다. 지금 우리가 보는 SLAB은 이 2021년 이후의 '집중된 회사'입니다.</p>
+  </div>
+
+  <h3>무엇을 만드는가 — 1분 설명</h3>
+  <p>여러분 집의 스마트 전구, 도어락, 온도조절기, 보안 센서, 또는 아파트 복도의 스마트 가스·수도 계량기를 떠올려 보세요. 이런 기기들은 전선 없이 무선으로 서로, 그리고 인터넷과 통신합니다. 그런데 이 기기들은 대부분 <strong>배터리로 작동하므로 전기를 아주 적게 써야 하고, 동시에 여러 무선 규격(블루투스, 와이파이 등)으로 안정적으로 통신</strong>해야 합니다. SLAB의 칩은 바로 이 일을 한 칩 안에서 처리합니다 — <strong>아주 적은 전력으로, 여러 무선 통신 규격을 동시에 지원하는 '두뇌 + 무선 송수신기' 통합 칩</strong>입니다.</p>
+
+  <div class="grid g3" style="margin-top:8px">
+    <div class="stat"><div class="v sig">2개</div><div class="l">사업 부문<br>(Industrial&Commercial · Home&Life)</div></div>
+    <div class="stat"><div class="v">8+</div><div class="l">지원 무선 규격<br>(BLE·Zigbee·Thread·Matter·Z-Wave 등)</div></div>
+    <div class="stat"><div class="v sil">$10B+</div><div class="l">설계 수주(design-win) 파이프라인<br>(향후 매출로 전환될 잠재 물량)</div></div>
+  </div>
+
+  <div class="notebox">
+    <h4>'팹리스(fabless)'가 왜 중요한가</h4>
+    <p>SLAB은 칩을 직접 생산하는 공장이 없습니다. 칩을 <strong>'설계'만 하고</strong>, 실제 제조는 TSMC 같은 <strong>전문 파운드리(위탁생산 공장)</strong>에 맡깁니다. 장점은 막대한 공장 투자가 필요 없어 <strong>자본이 가볍고(asset-light)</strong>, 두뇌(설계·R&D)에 집중할 수 있다는 것. 단점은 생산 능력을 파운드리에 의존하고, <strong>이익의 상당 부분을 R&D와 인건비(특히 스톡옵션 보상)에 써야 한다</strong>는 점입니다. 이 특성은 뒤의 가치평가(11~13장)에서 매우 중요하게 작용합니다.</p>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 03 수익 구조 ============ -->
+<section class="alt">
+<div class="wrap">
+  <div class="sec-num">03 — REVENUE STRUCTURE</div>
+  <h2 class="title">수익 구조 — 어떻게 돈을 버나</h2>
+  <p class="lead">SLAB의 매출은 <strong>칩을 팔아서</strong> 나옵니다. 크게 두 개의 고객·용도 부문으로 나뉘며, 매출은 IoT 경기 사이클에 따라 크게 출렁여 왔습니다.</p>
+
+  <h3>두 개의 사업 부문 (FY2025 기준)</h3>
+  <div class="grid g2" style="align-items:center">
+    <div>
+      <!-- donut -->
+      <svg viewBox="0 0 240 240" role="img" aria-label="사업부문별 매출 비중">
+        <circle cx="120" cy="120" r="86" fill="none" stroke="#E2DCCF" stroke-width="34"/>
+        <!-- I&C 445 / 785 = 56.7% -> 0.567*360=204deg -->
+        <circle cx="120" cy="120" r="86" fill="none" stroke="#13A8B8" stroke-width="34"
+          stroke-dasharray="306 234" stroke-dashoffset="0" transform="rotate(-90 120 120)"/>
+        <!-- H&L 340 -> 43.3% -->
+        <circle cx="120" cy="120" r="86" fill="none" stroke="#C07A22" stroke-width="34"
+          stroke-dasharray="234 306" stroke-dashoffset="-306" transform="rotate(-90 120 120)"/>
+        <text x="120" y="113" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="26" font-weight="600" fill="#0E1726">$785M</text>
+        <text x="120" y="135" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" fill="#6A7587">FY2025 총매출</text>
+      </svg>
+    </div>
+    <div>
+      <div class="card tight" style="border-left:4px solid var(--signal);margin-bottom:12px">
+        <h4 style="margin:0;color:var(--signal-d)">산업·상업용 (Industrial & Commercial)</h4>
+        <p style="margin:6px 0"><span class="mono" style="font-size:22px;font-weight:600">$445M</span> · 비중 약 57% · 전년 대비 <strong style="color:var(--green)">+31%</strong></p>
+        <p style="margin:4px 0;font-size:14.5px;color:#384357">스마트 미터(전기·가스·수도 계량기), 공장 자동화, 상업용 빌딩, 자산 추적, 의료 기기 등. <strong>경기 변동에 상대적으로 견조하고 단가가 높은</strong> 영역.</p>
+      </div>
+      <div class="card tight" style="border-left:4px solid var(--silicon)">
+        <h4 style="margin:0;color:var(--silicon)">홈·라이프 (Home & Life)</h4>
+        <p style="margin:6px 0"><span class="mono" style="font-size:22px;font-weight:600">$340M</span> · 비중 약 43% · 전년 대비 <strong style="color:var(--green)">+38%</strong></p>
+        <p style="margin:4px 0;font-size:14.5px;color:#384357">스마트홈(전구·도어락·온도조절기·보안), 웨어러블, 가전 등 소비자 IoT. <strong>성장은 빠르지만 소비 경기에 더 민감</strong>한 영역.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>매출 추이 — 'IoT 사이클'을 그대로 탄 롤러코스터</h3>
+  <p>SLAB을 이해하는 데 가장 중요한 그림입니다. 2022년 코로나 특수로 정점을 찍은 뒤, 2023~2024년 고객사들의 <strong>재고 조정(쌓아둔 칩을 소진하느라 신규 주문을 줄임)</strong>으로 매출이 거의 반토막 났다가, FY2025에 강하게 반등했습니다.</p>
+
+  <div class="card" style="padding:24px 20px">
+    <svg viewBox="0 0 720 320" role="img" aria-label="연도별 매출 추이">
+      <!-- axes -->
+      <line x1="70" y1="270" x2="690" y2="270" stroke="#CFC8B8" stroke-width="1.5"/>
+      <line x1="70" y1="40" x2="70" y2="270" stroke="#CFC8B8" stroke-width="1.5"/>
+      <!-- gridlines + labels (max ~1024) -->
+      <g font-family="IBM Plex Mono,monospace" font-size="11" fill="#9AA3B2">
+        <line x1="70" y1="50" x2="690" y2="50" stroke="#EAE5D8" stroke-width="1"/><text x="62" y="54" text-anchor="end">$1000M</text>
+        <line x1="70" y1="160" x2="690" y2="160" stroke="#EAE5D8" stroke-width="1"/><text x="62" y="164" text-anchor="end">$500M</text>
+      </g>
+      <!-- bars: scale y = 270 - (val/1024)*220 -->
+      <!-- FY21 721 -> h=155 -->
+      <rect x="110" y="115" width="70" height="155" rx="3" fill="#9AA3B2"/>
+      <text x="145" y="105" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12.5" font-weight="600" fill="#0E1726">$721M</text>
+      <text x="145" y="288" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#384357">FY21</text>
+      <!-- FY22 1024 peak -> h=220 -->
+      <rect x="230" y="50" width="70" height="220" rx="3" fill="#6A7587"/>
+      <text x="265" y="40" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12.5" font-weight="600" fill="#0E1726">$1,024M</text>
+      <text x="265" y="288" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#384357">FY22 ▲정점</text>
+      <!-- FY23 782 -> h=168 -->
+      <rect x="350" y="102" width="70" height="168" rx="3" fill="#C49A6C"/>
+      <text x="385" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12.5" font-weight="600" fill="#0E1726">$782M</text>
+      <text x="385" y="288" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#384357">FY23</text>
+      <!-- FY24 584 trough -> h=125 -->
+      <rect x="470" y="145" width="70" height="125" rx="3" fill="#CF3F3F"/>
+      <text x="505" y="135" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12.5" font-weight="600" fill="#CF3F3F">$584M</text>
+      <text x="505" y="288" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#CF3F3F">FY24 ▼저점</text>
+      <!-- FY25 785 -> h=169 -->
+      <rect x="590" y="101" width="70" height="169" rx="3" fill="#13A8B8"/>
+      <text x="625" y="91" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12.5" font-weight="600" fill="#0B7C89">$785M</text>
+      <text x="625" y="288" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#0B7C89" font-weight="600">FY25 ↑+34%</text>
+    </svg>
+  </div>
+  <p class="cap">SLAB 회계연도는 1월 초 종료(FY2025 = 2026년 1월 3일 종료). 자료: SLAB 연차보고서·실적발표</p>
+
+  <div class="notebox">
+    <h4>핵심 통찰 — '지금이 사이클의 어디인가'가 가치평가를 좌우</h4>
+    <p>FY2024가 바닥(trough)이고 FY2025부터 회복 국면이라는 점이 중요합니다. <strong>현재 SLAB의 이익은 '정상 수준'이 아니라 '회복 중'</strong>입니다. 따라서 단순히 현재 이익만으로 가치를 매기면 너무 낮게 나오고, 반대로 회복이 끝난 미래의 정상 이익을 가정해야 적정 가치가 보입니다. 이 '정상화(normalization) 가정'이 뒤의 DCF에서 가장 민감한 변수입니다. <span class="conf hi">신뢰도 높음 ~80%</span></p>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 04 제품·기술 ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">04 — PRODUCTS & TECHNOLOGY</div>
+  <h2 class="title">제품·기술력 — 무엇이 경쟁력인가</h2>
+  <p class="lead">SLAB의 무기는 <strong>① 하나의 칩에 여러 무선 규격을 담는 '멀티프로토콜' 능력, ② 초저전력 설계, ③ 개발자를 묶어두는 소프트웨어 생태계</strong> 이 세 가지입니다.</p>
+
+  <h3>주력 제품 — EFR32 '무선 SoC' 제품군</h3>
+  <p>SLAB의 핵심 제품은 <strong>EFR32 시리즈</strong>라 불리는 무선 SoC(System-on-Chip)입니다. SoC란 '하나의 칩 안에 여러 기능을 통합한 시스템'이라는 뜻으로, EFR32에는 <strong>연산을 담당하는 두뇌(MCU, 마이크로컨트롤러)와 무선 송수신기(radio)가 한 몸에 들어 있습니다.</strong> 덕분에 기기 제조사는 부품 수를 줄이고, 더 작고 저렴하고 전력 효율적인 제품을 만들 수 있습니다.</p>
+  <div class="grid g3">
+    <div class="card tight"><h4 style="margin:0">Series 2 <span class="chip sig">현재 주력</span></h4><p style="font-size:14px;margin:6px 0">현재 매출의 핵심. 다양한 무선 규격과 보안 기능을 갖춘 검증된 세대.</p></div>
+    <div class="card tight"><h4 style="margin:0">Series 3 <span class="chip sil">개발 중</span></h4><p style="font-size:14px;margin:6px 0">차세대 제품군. 더 높은 성능·전력효율·엣지 AI 기능을 목표로 개발 진행. 향후 성장 동력.</p></div>
+    <div class="card tight"><h4 style="margin:0">Simplicity Studio <span class="chip">소프트웨어</span></h4><p style="font-size:14px;margin:6px 0">개발 도구·SDK 생태계. 개발자가 SLAB 칩으로 제품을 쉽게 만들도록 돕는 '판을 까는' 무료 플랫폼.</p></div>
+  </div>
+
+  <h3>지원하는 무선 규격들 — 쉽게 정리</h3>
+  <p>무선 IoT에는 용도별로 여러 통신 규격이 있습니다. SLAB의 강점은 <strong>이 대부분을 지원하고, 특히 여러 규격을 동시에 처리(멀티프로토콜)</strong>할 수 있다는 점입니다.</p>
+  <div class="scrollx">
+  <table class="tbl">
+    <thead><tr><th>무선 규격</th><th style="text-align:left">쉬운 설명</th><th style="text-align:left">주 용도</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Bluetooth LE</strong></td><td style="text-align:left">우리가 아는 블루투스의 저전력 버전</td><td style="text-align:left">웨어러블, 도어락, 근거리 연결</td></tr>
+      <tr><td><strong>Zigbee</strong></td><td style="text-align:left">기기들이 서로 '징검다리(mesh)'로 신호를 전달</td><td style="text-align:left">스마트홈 조명·센서 네트워크</td></tr>
+      <tr><td><strong>Thread</strong></td><td style="text-align:left">IP 기반의 저전력 메시 — Matter의 토대</td><td style="text-align:left">차세대 스마트홈 백본</td></tr>
+      <tr><td><strong>Matter</strong> <span class="chip sig">핵심 트렌드</span></td><td style="text-align:left">애플·구글·아마존이 함께 만든 '스마트홈 공통 표준'</td><td style="text-align:left">브랜드 간 호환되는 스마트홈</td></tr>
+      <tr><td><strong>Z-Wave</strong></td><td style="text-align:left">보안·홈 분야에서 오래 쓰인 저전력 규격</td><td style="text-align:left">보안 시스템, 홈 자동화</td></tr>
+      <tr><td><strong>Wi-SUN / sub-GHz</strong></td><td style="text-align:left">멀리, 넓게 도달하는 저주파 무선</td><td style="text-align:left">스마트 미터, 도시 인프라</td></tr>
+      <tr><td><strong>Wi-Fi</strong></td><td style="text-align:left">익숙한 고속 근거리 무선</td><td style="text-align:left">고대역폭 IoT 기기</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notebox">
+    <h4>왜 'Matter'와 '멀티프로토콜'이 중요한가</h4>
+    <p>예전엔 스마트홈 기기가 브랜드별로 규격이 달라 서로 호환되지 않는 불편이 컸습니다. 이를 해결하려 애플·구글·아마존 등이 <strong>Matter</strong>라는 공통 표준을 만들었고, Matter는 Thread·와이파이 위에서 동작합니다. 그 결과 <strong>여러 규격을 한 칩에서 동시에 지원하는 멀티프로토콜 칩의 수요가 커졌고</strong>, 이 분야에 강점이 있는 SLAB에게 유리한 흐름입니다. <span class="conf hi">신뢰도 높음 ~80%</span></p>
+  </div>
+
+  <h3>칩이 만들어져 기기에 들어가기까지 — 팹리스 가치 흐름</h3>
+  <p>SLAB이 공장 없이 어떻게 칩을 공급하는지, 전체 흐름을 그림으로 보겠습니다.</p>
+  <div class="card" style="padding:26px 18px">
+    <svg viewBox="0 0 940 150" role="img" aria-label="팹리스 칩 공급 흐름">
+      <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#C07A22"/></marker></defs>
+      <!-- nodes -->
+      <g font-family="Inter,sans-serif">
+        <!-- 1 SLAB design -->
+        <rect x="20" y="40" width="150" height="68" rx="10" fill="#0E1726"/>
+        <text x="95" y="68" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">① SLAB</text>
+        <text x="95" y="88" text-anchor="middle" font-size="11.5" fill="#7FD6DF">칩 설계·R&D</text>
+        <!-- 2 foundry -->
+        <rect x="215" y="40" width="150" height="68" rx="10" fill="#FBFAF6" stroke="#13A8B8" stroke-width="2"/>
+        <text x="290" y="64" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0E1726">② 파운드리</text>
+        <text x="290" y="82" text-anchor="middle" font-size="11" fill="#0B7C89">TSMC 등 (제조)</text>
+        <text x="290" y="97" text-anchor="middle" font-size="10" fill="#6A7587">웨이퍼 생산</text>
+        <!-- 3 OSAT -->
+        <rect x="410" y="40" width="150" height="68" rx="10" fill="#FBFAF6" stroke="#13A8B8" stroke-width="2"/>
+        <text x="485" y="64" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0E1726">③ OSAT</text>
+        <text x="485" y="82" text-anchor="middle" font-size="11" fill="#0B7C89">조립·패키징·테스트</text>
+        <text x="485" y="97" text-anchor="middle" font-size="10" fill="#6A7587">칩 완성</text>
+        <!-- 4 distributor/OEM -->
+        <rect x="605" y="40" width="150" height="68" rx="10" fill="#FBFAF6" stroke="#C07A22" stroke-width="2"/>
+        <text x="680" y="64" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0E1726">④ 고객사(OEM)</text>
+        <text x="680" y="82" text-anchor="middle" font-size="11" fill="#C07A22">기기 제조사</text>
+        <text x="680" y="97" text-anchor="middle" font-size="10" fill="#6A7587">칩을 제품에 탑재</text>
+        <!-- 5 end -->
+        <rect x="800" y="40" width="125" height="68" rx="10" fill="#C07A22"/>
+        <text x="862" y="68" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">⑤ 최종 기기</text>
+        <text x="862" y="88" text-anchor="middle" font-size="10.5" fill="#FBEFDC">스마트홈·미터</text>
+      </g>
+      <!-- arrows -->
+      <line x1="172" y1="74" x2="211" y2="74" stroke="#C07A22" stroke-width="2.5" marker-end="url(#ar)"/>
+      <line x1="367" y1="74" x2="406" y2="74" stroke="#C07A22" stroke-width="2.5" marker-end="url(#ar)"/>
+      <line x1="562" y1="74" x2="601" y2="74" stroke="#C07A22" stroke-width="2.5" marker-end="url(#ar)"/>
+      <line x1="757" y1="74" x2="796" y2="74" stroke="#C07A22" stroke-width="2.5" marker-end="url(#ar)"/>
+      <text x="95" y="128" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#6A7587">SLAB이 직접 하는 영역</text>
+      <text x="485" y="128" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#6A7587">외부 위탁 (공장 없음)</text>
+    </svg>
+  </div>
+  <p class="cap">SLAB은 ①설계와 ④⑤ 고객 관계·소프트웨어에 집중하고, ②③ 제조는 외부에 위탁합니다(팹리스 모델).</p>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 05 산업 분석 ============ -->
+<section class="alt">
+<div class="wrap">
+  <div class="sec-num">05 — INDUSTRY ANALYSIS</div>
+  <h2 class="title">산업 분석 — IoT 무선 연결 반도체 시장</h2>
+  <p class="lead">SLAB이 속한 시장은 <strong>구조적으로 성장하는 시장</strong>입니다. 연결되는 기기 수가 계속 늘기 때문입니다. 다만 경쟁이 치열하고 경기 사이클을 타는 특성이 있습니다.</p>
+
+  <h3>시장 규모와 성장성</h3>
+  <div class="grid g2" style="align-items:center">
+    <div class="card" style="padding:24px 20px">
+      <svg viewBox="0 0 360 240" role="img" aria-label="IoT 무선 연결 칩 시장 성장 전망">
+        <line x1="50" y1="200" x2="340" y2="200" stroke="#CFC8B8" stroke-width="1.5"/>
+        <line x1="50" y1="30" x2="50" y2="200" stroke="#CFC8B8" stroke-width="1.5"/>
+        <!-- area growth 14.7 -> 36.6, scale h: 200-(v/40*170) -->
+        <polyline points="50,138 195,95 340,45" fill="none" stroke="#13A8B8" stroke-width="3"/>
+        <polygon points="50,138 195,95 340,45 340,200 50,200" fill="#13A8B8" opacity="0.10"/>
+        <circle cx="50" cy="138" r="5" fill="#13A8B8"/><circle cx="340" cy="45" r="5" fill="#13A8B8"/>
+        <text x="50" y="126" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#0B7C89">$14.7B</text>
+        <text x="50" y="218" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#384357">2025</text>
+        <text x="340" y="33" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" font-weight="600" fill="#0B7C89">$36.6B</text>
+        <text x="340" y="218" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#384357">2032</text>
+        <text x="195" y="135" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="15" font-weight="700" fill="#C07A22">CAGR ~14%</text>
+      </svg>
+    </div>
+    <div>
+      <p>IoT 무선 연결 칩 시장은 <strong>2025년 약 $147억에서 2032년 약 $366억</strong>으로, 연평균 약 14% 성장할 것으로 전망됩니다. 성장 동력은 분명합니다:</p>
+      <ul class="clean" style="font-size:14.5px">
+        <li>스마트홈·스마트 빌딩·스마트 미터 보급 확대</li>
+        <li>Matter 표준 확산으로 호환 기기 수요 증가</li>
+        <li>산업 자동화·자산 추적 등 B2B IoT 성장</li>
+      </ul>
+      <p style="font-size:14px;color:var(--muted)">※ 단, 블루투스 단독 칩 시장 같은 성숙 영역은 성장률이 한 자릿수 후반(~10%)으로 더 완만합니다. 시장 추정치는 기관마다 편차가 있습니다. <span class="conf md">신뢰도 중간 ~60%</span></p>
+    </div>
+  </div>
+
+  <h3>산업 가치사슬 — 누가 무엇을 하나</h3>
+  <p>반도체 산업은 분업 구조입니다. SLAB은 이 사슬에서 <strong>'설계(IP)'</strong> 단계에 위치한 팹리스 기업입니다.</p>
+  <div class="card" style="padding:24px 16px">
+    <svg viewBox="0 0 940 130" role="img" aria-label="반도체 산업 가치사슬">
+      <defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#9AA3B2"/></marker></defs>
+      <g font-family="Inter,sans-serif" font-size="12.5">
+        <rect x="15" y="35" width="135" height="58" rx="9" fill="#13A8B8"/>
+        <text x="82" y="60" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">설계 (IP)</text>
+        <text x="82" y="78" text-anchor="middle" font-size="10.5" fill="#E7F5F6">SLAB · Nordic · TI</text>
+
+        <rect x="180" y="35" width="135" height="58" rx="9" fill="#F1EEE6" stroke="#CFC8B8"/>
+        <text x="247" y="60" text-anchor="middle" font-weight="600" fill="#0E1726">제조(파운드리)</text>
+        <text x="247" y="78" text-anchor="middle" font-size="10.5" fill="#6A7587">TSMC 등</text>
+
+        <rect x="345" y="35" width="135" height="58" rx="9" fill="#F1EEE6" stroke="#CFC8B8"/>
+        <text x="412" y="60" text-anchor="middle" font-weight="600" fill="#0E1726">패키징·테스트</text>
+        <text x="412" y="78" text-anchor="middle" font-size="10.5" fill="#6A7587">OSAT 업체</text>
+
+        <rect x="510" y="35" width="135" height="58" rx="9" fill="#F1EEE6" stroke="#CFC8B8"/>
+        <text x="577" y="60" text-anchor="middle" font-weight="600" fill="#0E1726">유통</text>
+        <text x="577" y="78" text-anchor="middle" font-size="10.5" fill="#6A7587">디스트리뷰터</text>
+
+        <rect x="675" y="35" width="135" height="58" rx="9" fill="#F1EEE6" stroke="#CFC8B8"/>
+        <text x="742" y="60" text-anchor="middle" font-weight="600" fill="#0E1726">기기 제조(OEM)</text>
+        <text x="742" y="78" text-anchor="middle" font-size="10.5" fill="#6A7587">가전·산업 업체</text>
+
+        <rect x="840" y="35" width="90" height="58" rx="9" fill="#C07A22"/>
+        <text x="885" y="60" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">소비자</text>
+        <text x="885" y="78" text-anchor="middle" font-size="10" fill="#FBEFDC">최종 사용</text>
+      </g>
+      <line x1="152" y1="64" x2="177" y2="64" stroke="#9AA3B2" stroke-width="2" marker-end="url(#ar2)"/>
+      <line x1="317" y1="64" x2="342" y2="64" stroke="#9AA3B2" stroke-width="2" marker-end="url(#ar2)"/>
+      <line x1="482" y1="64" x2="507" y2="64" stroke="#9AA3B2" stroke-width="2" marker-end="url(#ar2)"/>
+      <line x1="647" y1="64" x2="672" y2="64" stroke="#9AA3B2" stroke-width="2" marker-end="url(#ar2)"/>
+      <line x1="812" y1="64" x2="837" y2="64" stroke="#9AA3B2" stroke-width="2" marker-end="url(#ar2)"/>
+      <text x="82" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#0B7C89" font-weight="600">◀ SLAB의 위치 (고부가·고마진)</text>
+    </svg>
+  </div>
+
+  <h3>산업의 3대 흐름과 미래 방향</h3>
+  <div class="grid g3">
+    <div class="card tight"><h4 style="margin:0;color:var(--signal-d)">① 표준 통합 (Matter)</h4><p style="font-size:14px;margin:6px 0">파편화됐던 스마트홈 규격이 Matter로 수렴 → 멀티프로토콜 칩 수요↑. SLAB에 유리.</p></div>
+    <div class="card tight"><h4 style="margin:0;color:var(--signal-d)">② 칩 통합·엣지 AI</h4><p style="font-size:14px;margin:6px 0">MCU+무선+보안+AI를 한 칩에. 기기에서 직접 데이터를 처리하는 '엣지 지능' 확대.</p></div>
+    <div class="card tight"><h4 style="margin:0;color:var(--signal-d)">③ 저가 경쟁 심화</h4><p style="font-size:14px;margin:6px 0">중국 Espressif 등 저가 업체가 소비자용에서 가격 압박 → 차별화·고부가 영역이 관건.</p></div>
+  </div>
+  <p style="margin-top:14px">미래 방향을 종합하면, 이 산업은 <strong>"연결 기기 수 증가 → 구조적 성장"이라는 순풍과, "저가 경쟁·표준화에 따른 상품화(commoditization)"라는 역풍이 공존</strong>합니다. 승자는 ① 멀티프로토콜·보안·소프트웨어로 차별화하고, ② 산업·인프라 같은 고부가 영역 비중이 높은 기업입니다. SLAB은 이 두 조건에서 비교적 좋은 위치이지만, 절대적 우위는 아닙니다. <span class="conf md">신뢰도 중간 ~65%</span></p>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 06 경쟁 & 피어 ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">06 — COMPETITIVE LANDSCAPE & PEERS</div>
+  <h2 class="title">경쟁 구도 & 피어 비교</h2>
+  <p class="lead">SLAB의 가장 비슷한 경쟁사는 노르웨이의 <strong>노르딕 세미컨덕터(Nordic)</strong>입니다. 두 회사 모두 'IoT 무선 칩 순수 기업'이라는 점에서 거울처럼 비교됩니다. 그 외에는 TI·NXP 같은 대형 종합 반도체사와 중국 저가 업체들이 경쟁합니다.</p>
+
+  <h3>가장 가까운 비교 — SLAB vs Nordic</h3>
+  <div class="scrollx">
+  <table class="tbl">
+    <thead><tr><th>항목 (FY2025)</th><th>Silicon Labs (SLAB)</th><th>Nordic Semiconductor</th><th style="text-align:left">해석</th></tr></thead>
+    <tbody>
+      <tr><td>매출</td><td class="num">$785M (+34%)</td><td class="num">$668M (+31%)</td><td style="text-align:left">규모 비슷, 둘 다 강한 회복</td></tr>
+      <tr><td>매출총이익률</td><td class="num"><strong style="color:var(--green)">58.5%</strong></td><td class="num">51.8%</td><td style="text-align:left">SLAB이 마진 우위</td></tr>
+      <tr><td>영업수익성</td><td class="num">박함(회복 중)</td><td class="num">박함(EBITDA ~10%)</td><td style="text-align:left">둘 다 정상화 이전</td></tr>
+      <tr><td>핵심 무선 강점</td><td>Zigbee·Thread·Matter·멀티프로토콜</td><td>Bluetooth LE(시장 1위)</td><td style="text-align:left">서로 다른 텃밭</td></tr>
+      <tr><td>사업 모델</td><td>팹리스 · 순수 IoT</td><td>팹리스 · 순수 IoT</td><td style="text-align:left">동일 구조</td></tr>
+      <tr><td>시가총액</td><td class="num">~$7.0B <span class="chip sil">인수가 반영</span></td><td class="num">~$4.1B</td><td style="text-align:left">SLAB은 인수 프리미엄 포함</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="footnote">SLAB의 시총은 TI 인수가($231)가 반영된 값이므로, 두 회사의 '독자 가치'를 비교하려면 SLAB의 인수 전 수준(~$137, 시총 ~$4.5B)으로 봐야 공정합니다. 그렇게 보면 두 회사 가치는 비슷한 수준입니다. <span class="conf hi">신뢰도 높음 ~80%</span></p>
+
+  <h3>경쟁자 지형 — 한눈에</h3>
+  <div class="grid g2">
+    <div class="card tight"><h4 style="margin:0">대형 종합 반도체사</h4>
+      <p style="font-size:14px;margin:6px 0"><strong>TI(인수자이자 경쟁자)·NXP·STMicro·Qualcomm·Renesas·Infineon·Microchip</strong> — 규모와 자본력이 압도적. 자동차·산업 등 폭넓은 포트폴리오. IoT 무선은 그들 사업의 일부.</p></div>
+    <div class="card tight"><h4 style="margin:0">전문·저가 도전자</h4>
+      <p style="font-size:14px;margin:6px 0"><strong>Nordic(BLE 1위)·Espressif(중국 저가 Wi-Fi/BLE)·Telink</strong> 등 — 소비자용에서 가격 경쟁을 주도. Espressif는 저가 시장 잠식의 핵심 위협.</p></div>
+  </div>
+  <div class="notebox">
+    <h4>핵심 통찰 — 'TI가 왜 SLAB을 사는가'</h4>
+    <p>흥미롭게도 인수자인 TI는 IoT 무선에서 SLAB의 경쟁자이기도 합니다. TI는 자체 무선 사업이 있지만, <strong>SLAB의 Zigbee·Thread·Matter·Z-Wave 같은 메시·멀티프로토콜 기술과 스마트홈·미터링 고객 기반을 단번에 확보</strong>하려는 것으로 풀이됩니다. TI의 막대한 영업·제조 인프라에 SLAB의 제품을 얹으면 시너지가 크다는 계산(연 $450M)입니다. <span class="conf md">신뢰도 중간 ~70%</span></p>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 07 경제적 해자 ============ -->
+<section class="alt">
+<div class="wrap">
+  <div class="sec-num">07 — ECONOMIC MOAT</div>
+  <h2 class="title">경제적 해자 — 경쟁사를 막는 '성벽'이 있는가</h2>
+  <p class="lead">'경제적 해자(moat)'란 경쟁사가 쉽게 따라오지 못하게 막는 구조적 강점입니다. SLAB은 <strong>넓고 깊은 해자라기보다 '좁은 해자(narrow moat)'</strong>를 가졌다고 평가합니다 — 분명히 존재하지만, 저가 영역에서는 침식되고 있습니다.</p>
+
+  <div class="grid g2" style="margin-top:8px">
+    <div class="card" style="border-top:3px solid var(--green)"><h4 style="margin-top:0">✓ 전환비용 (소프트웨어 생태계)</h4><p style="font-size:14.5px">개발자가 Simplicity Studio·SDK에 익숙해지고 제품을 설계해두면, 다른 칩으로 갈아타는 데 시간·비용이 큽니다. <strong>한 번 설계에 채택되면(design-win) 그 제품 수명 내내 매출이 이어지는</strong> 끈끈함이 있습니다. <span class="conf md">중간 ~70%</span></p></div>
+    <div class="card" style="border-top:3px solid var(--green)"><h4 style="margin-top:0">✓ 기술·IP 폭 (멀티프로토콜)</h4><p style="font-size:14.5px">여러 무선 규격을 한 칩에서 안정적으로 구현하는 것은 오랜 R&D가 필요한 난이도 높은 영역. 특히 Zigbee·Thread·Matter 메시 분야에서 검증된 입지. <span class="conf md">중간 ~65%</span></p></div>
+    <div class="card" style="border-top:3px solid var(--amber)"><h4 style="margin-top:0">△ 규모의 경제 (제한적)</h4><p style="font-size:14.5px">매출 $785M으로 TI·NXP 대비 작아 규모의 해자는 약함. 팹리스라 생산 규모 우위도 파운드리에 의존. <span class="conf md">중간 ~70%</span></p></div>
+    <div class="card" style="border-top:3px solid var(--alert)"><h4 style="margin-top:0">✕ 가격 결정력 (침식 중)</h4><p style="font-size:14.5px">소비자용 저가 영역에서 Espressif 등 중국 업체의 가격 공세로 가격 결정력이 약화. 고부가 산업·인프라 영역에서만 방어 가능. <span class="conf md">중간 ~65%</span></p></div>
+  </div>
+  <p style="margin-top:14px"><strong>종합:</strong> SLAB의 해자는 소프트웨어 락인과 멀티프로토콜 기술에 기반한 <strong>'좁지만 실재하는' 수준</strong>입니다. 이 해자가 '넓은 해자'였다면 독자 가치가 훨씬 높았겠지만, 현실은 경쟁이 치열한 시장의 차별화된 플레이어입니다. 바로 이 점이 뒤에서 보듯 <strong>독자 DCF 가치가 인수가에 못 미치는 근본 이유</strong>입니다. <span class="conf hi">신뢰도 높음 ~75%</span></p>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 08 SWOT ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">08 — SWOT</div>
+  <h2 class="title">SWOT 분석</h2>
+  <p class="lead">강점(S)·약점(W)·기회(O)·위협(T)을 한눈에 정리합니다.</p>
+  <div class="grid g2" style="margin-top:8px">
+    <div class="card" style="background:#E7F3EC;border:1px solid #BFE0CC"><h4 style="margin-top:0;color:#1d6e47">강점 Strengths</h4>
+      <ul class="dash" style="font-size:14px">
+        <li>순수 IoT 무선 집중 — 명확한 정체성</li>
+        <li>멀티프로토콜·메시(Zigbee/Thread/Matter) 리더십</li>
+        <li>높은 매출총이익률(~58%)</li>
+        <li>$10B+ 설계 수주 파이프라인</li>
+        <li>순현금 ~$420M(주당 ~$12.7) — 무차입 우량 재무</li>
+        <li>Simplicity Studio 소프트웨어 생태계</li>
+      </ul>
+    </div>
+    <div class="card" style="background:#FBEAEA;border:1px solid #E9C5C5"><h4 style="margin-top:0;color:#a83232">약점 Weaknesses</h4>
+      <ul class="dash" style="font-size:14px">
+        <li>작은 규모(매출 $785M) — 대형사 대비 열위</li>
+        <li><strong>막대한 주식보상비(SBC, 매출의 ~9%)</strong></li>
+        <li>회계기준(GAAP) 적자 — 정상화 이전 수익성</li>
+        <li>IoT 사이클에 따른 실적 변동성</li>
+        <li>파운드리 의존(생산 능력 외부 통제)</li>
+        <li>일부 대형 고객 의존</li>
+      </ul>
+    </div>
+    <div class="card" style="background:#E7F5F6;border:1px solid #BCE2E7"><h4 style="margin-top:0;color:#0B7C89">기회 Opportunities</h4>
+      <ul class="dash" style="font-size:14px">
+        <li>Matter 확산 → 멀티프로토콜 수요 증가</li>
+        <li>IoT 기기 수의 구조적 성장(연 ~14%)</li>
+        <li>차세대 Series 3 · 엣지 AI 기능</li>
+        <li>스마트 미터링·산업 자동화 고부가 확대</li>
+        <li><strong>TI 인수 시 글로벌 영업·제조망 활용</strong></li>
+      </ul>
+    </div>
+    <div class="card" style="background:#FBF1DA;border:1px solid #E8D49E"><h4 style="margin-top:0;color:#9a7016">위협 Threats</h4>
+      <ul class="dash" style="font-size:14px">
+        <li>중국 저가 업체(Espressif 등)의 가격 공세</li>
+        <li>상품화(commoditization)로 마진 압박</li>
+        <li>경기·반도체 사이클 하강 리스크</li>
+        <li>TI·NXP 등 대형 경쟁사의 자원 우위</li>
+        <li><strong>인수 무산 시 주가 급락(~−35~45%)</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 09 생애주기 ============ -->
+<section class="dark">
+<div class="wrap">
+  <div class="sec-num">09 — LIFECYCLE STAGE</div>
+  <h2 class="title">생애주기 단계 — 가치평가 방법을 정하는 첫 단추</h2>
+  <p class="lead">기업은 도입기→성장기→성숙기→쇠퇴기의 생애주기를 거칩니다. <strong>현금흐름의 부호(+/−) 패턴</strong>으로 단계를 판별하는데, SLAB은 <strong>'성숙기(Mature)'</strong> 특성을 보입니다 — 이는 DCF·CAP 분석이 적합한 단계라는 뜻입니다.</p>
+
+  <h3>현금흐름 패턴으로 본 SLAB (FY2025)</h3>
+  <div class="grid g3">
+    <div class="stat" style="background:#17233B;border-color:#2C3A55"><div class="v grn" style="color:#5fc28d">영업 (+)</div><div class="l" style="color:#9FB0C4">영업활동 현금흐름 +$96M<br>본업에서 현금 창출</div></div>
+    <div class="stat" style="background:#17233B;border-color:#2C3A55"><div class="v" style="color:#E7EEF7">투자 (−)</div><div class="l" style="color:#9FB0C4">설비·개발 투자로 현금 유출<br>성장에 재투자</div></div>
+    <div class="stat" style="background:#17233B;border-color:#2C3A55"><div class="v" style="color:#E7EEF7">재무 (−)</div><div class="l" style="color:#9FB0C4">자사주 매입 등으로 현금 유출<br>주주 환원</div></div>
+  </div>
+
+  <div style="margin-top:24px">
+  <svg viewBox="0 0 900 230" role="img" aria-label="기업 생애주기 단계">
+    <line x1="40" y1="150" x2="860" y2="150" stroke="#2C3A55" stroke-width="2"/>
+    <!-- bell curve -->
+    <path d="M40 150 Q230 30 450 30 Q670 30 860 150" fill="none" stroke="#13A8B8" stroke-width="2.5" opacity="0.5"/>
+    <g font-family="Inter,sans-serif" text-anchor="middle">
+      <text x="140" y="180" font-size="13" fill="#9FB0C4">도입기</text>
+      <text x="140" y="198" font-size="10.5" fill="#6A7587" font-family="IBM Plex Mono,monospace">영− 투− 재+</text>
+      <text x="320" y="180" font-size="13" fill="#9FB0C4">성장기</text>
+      <text x="320" y="198" font-size="10.5" fill="#6A7587" font-family="IBM Plex Mono,monospace">영+ 투− 재+</text>
+      <!-- mature highlighted -->
+      <rect x="470" y="120" width="140" height="62" rx="8" fill="#13A8B8" opacity="0.18" stroke="#13A8B8" stroke-width="2"/>
+      <text x="540" y="150" font-size="15" font-weight="700" fill="#7FD6DF">성숙기 ◀ SLAB</text>
+      <text x="540" y="170" font-size="10.5" fill="#7FD6DF" font-family="IBM Plex Mono,monospace">영+ 투− 재−</text>
+      <text x="730" y="180" font-size="13" fill="#9FB0C4">쇠퇴기</text>
+      <text x="730" y="198" font-size="10.5" fill="#6A7587" font-family="IBM Plex Mono,monospace">영+ 투+ 재±</text>
+    </g>
+    <circle cx="540" cy="55" r="6" fill="#13A8B8"/>
+    <line x1="540" y1="61" x2="540" y2="118" stroke="#13A8B8" stroke-width="1.5" stroke-dasharray="3 3"/>
+  </svg>
+  </div>
+
+  <div class="notebox" style="background:#17233B;border-color:#2C3A55;border-left-color:#13A8B8">
+    <h4 style="color:#7FD6DF">판정과 단서 (Bayesian)</h4>
+    <p style="color:#C4CEDC"><strong>주된 판정: 성숙기(Mature)</strong> — 영업현금 흑자 + 투자·재무 유출 패턴은 전형적 성숙 기업. 프레임워크상 성숙·성장 기업은 DCF+CAP 분석이 적합합니다. <span class="conf hi">신뢰도 높음 ~75%</span></p>
+    <p style="color:#C4CEDC"><strong>경합 단서(주의):</strong> ① SLAB은 사이클 저점(FY24)에서 막 회복한 상태라 '성숙'으로 보기엔 실적 변동성이 큼. ② 2023~24년엔 영업현금이 적자여서 '쇠퇴/조정' 패턴으로 보이기도 했음. ③ 무엇보다 <strong>현재 인수가 진행 중</strong>이라 독립 기업으로서의 생애주기 해석 자체가 제한적. → 따라서 DCF·CAP는 유효하되, '정상화 가정'과 '인수 맥락'을 반드시 함께 봐야 합니다.</p>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 10 경쟁우위 정성분석 ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">10 — COMPETITIVE FORCES</div>
+  <h2 class="title">경쟁우위 정성 분석 — Porter의 5가지 힘</h2>
+  <p class="lead">산업의 매력도와 SLAB의 위치를 5가지 경쟁 압력으로 진단합니다. 종합하면 <strong>"경쟁 강도가 높은 매력도 중간 산업에서, 차별화로 버티는 플레이어"</strong>입니다.</p>
+
+  <div class="card" style="padding:24px 18px">
+    <svg viewBox="0 0 760 300" role="img" aria-label="포터의 5가지 경쟁 요인">
+      <!-- center -->
+      <rect x="300" y="120" width="160" height="60" rx="10" fill="#0E1726"/>
+      <text x="380" y="146" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="14" font-weight="700" fill="#fff">산업 내 경쟁</text>
+      <text x="380" y="166" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#CF6f6f">강도: 높음</text>
+      <!-- top: new entrants -->
+      <rect x="290" y="14" width="180" height="56" rx="9" fill="#FBF1DA" stroke="#E8D49E"/>
+      <text x="380" y="36" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" font-weight="600" fill="#0E1726">신규 진입 위협</text>
+      <text x="380" y="54" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#9a7016">중간~높음</text>
+      <!-- bottom: substitutes -->
+      <rect x="290" y="230" width="180" height="56" rx="9" fill="#E7F3EC" stroke="#BFE0CC"/>
+      <text x="380" y="252" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" font-weight="600" fill="#0E1726">대체재 위협</text>
+      <text x="380" y="270" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1d6e47">낮음~중간</text>
+      <!-- left: suppliers -->
+      <rect x="20" y="120" width="180" height="60" rx="9" fill="#FBF1DA" stroke="#E8D49E"/>
+      <text x="110" y="144" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" font-weight="600" fill="#0E1726">공급자 교섭력</text>
+      <text x="110" y="162" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#9a7016">중간~높음(파운드리)</text>
+      <!-- right: buyers -->
+      <rect x="560" y="120" width="180" height="60" rx="9" fill="#F1EEE6" stroke="#CFC8B8"/>
+      <text x="650" y="144" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" font-weight="600" fill="#0E1726">구매자 교섭력</text>
+      <text x="650" y="162" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#6A7587">중간</text>
+      <!-- arrows -->
+      <line x1="380" y1="70" x2="380" y2="118" stroke="#9AA3B2" stroke-width="2"/>
+      <line x1="380" y1="182" x2="380" y2="228" stroke="#9AA3B2" stroke-width="2"/>
+      <line x1="202" y1="150" x2="298" y2="150" stroke="#9AA3B2" stroke-width="2"/>
+      <line x1="558" y1="150" x2="462" y2="150" stroke="#9AA3B2" stroke-width="2"/>
+    </svg>
+  </div>
+
+  <div class="grid g2" style="margin-top:6px">
+    <div class="card tight"><h4 style="margin:0">기존 경쟁 (높음)</h4><p style="font-size:13.5px;margin:5px 0">Nordic·TI·NXP·Espressif 등 다수가 치열하게 경쟁. 가격·기술 양면 압박.</p></div>
+    <div class="card tight"><h4 style="margin:0">공급자 교섭력 (중상)</h4><p style="font-size:13.5px;margin:5px 0">소수 파운드리(TSMC 등)에 생산 의존 → 공급자 힘이 셈.</p></div>
+    <div class="card tight"><h4 style="margin:0">신규 진입 (중상)</h4><p style="font-size:13.5px;margin:5px 0">저가 중국 업체 진입 활발. 단 멀티프로토콜·생태계는 진입 장벽.</p></div>
+    <div class="card tight"><h4 style="margin:0">구매자 교섭력 (중간)</h4><p style="font-size:13.5px;margin:5px 0">대형 OEM은 힘이 있으나, design-win 락인이 이를 일부 상쇄.</p></div>
+  </div>
+
+  <h3>전략 포지셔닝 — '차별화' 기업</h3>
+  <p>경쟁 전략에는 크게 <strong>원가우위(싸게 만들어 이긴다)</strong>와 <strong>차별화(남다른 가치로 프리미엄을 받는다)</strong>가 있습니다. SLAB은 명확히 <strong>차별화 전략</strong>입니다 — 멀티프로토콜·보안·소프트웨어로 부가가치를 만들어 높은 마진(~58%)을 받습니다. 원가우위는 Espressif 같은 중국 업체의 영역이며, SLAB이 그 게임에 끌려가면 마진이 무너집니다. 따라서 SLAB의 생존은 <strong>"차별화를 유지하고 고부가 영역(산업·인프라) 비중을 키울 수 있는가"</strong>에 달려 있습니다. <span class="conf hi">신뢰도 높음 ~75%</span></p>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 11 DCF & WACC ============ -->
+<section class="alt">
+<div class="wrap">
+  <div class="sec-num">11 — DCF VALUATION & WACC</div>
+  <h2 class="title">현금흐름할인(DCF) 모델 & 자본비용</h2>
+  <p class="lead">DCF는 <strong>"이 회사가 미래에 벌어들일 현금을 모두 현재가치로 환산하면 얼마인가"</strong>를 계산하는 방법입니다. 여기서는 인수를 배제한 <strong>SLAB의 '독자 가치'</strong>를 추정합니다.</p>
+
+  <h3>1단계 — 할인율(WACC) 정하기</h3>
+  <p>미래 현금을 현재가치로 깎을 때 쓰는 비율이 WACC(가중평균자본비용)입니다. SLAB은 사실상 무차입(순현금)이라 WACC는 <strong>자기자본비용</strong>과 거의 같습니다. 자본자산가격모형(CAPM)으로 계산하면:</p>
+  <div class="card" style="text-align:center;padding:22px">
+    <p class="mono" style="font-size:17px;margin:0;color:var(--ink)">자기자본비용 = 무위험수익률 + 베타 × 시장위험프리미엄</p>
+    <p class="mono" style="font-size:20px;margin:10px 0 0;color:var(--signal-d);font-weight:600">= 4.55% + 1.45 × 4.75% = <span style="color:var(--silicon)">11.44%</span></p>
+    <p style="font-size:13px;color:var(--muted);margin-top:10px">무위험: 미 10년 국채 4.55%(2026-06) · 베타 1.45 · 시장위험프리미엄 4.75%(2026-04 기준)</p>
+  </div>
+  <div class="notebox">
+    <h4>WACC를 둘러싼 경합 — 베이지안</h4>
+    <p><strong>본 보고서 기본값 11.44%</strong>를 쓰되, SLAB의 자문사(Qatalyst)는 공정성 평가에서 <strong>14.0~16.5%</strong>의 더 높은 할인율을 사용했습니다(소형주·특수 위험 프리미엄 반영). 둘 다 합리적이며, 어느 쪽이 옳다고 단정하기 어렵습니다. → 따라서 민감도 분석(13장)에서 <strong>10.4%~15.25% 범위</strong>를 모두 보여줍니다. 할인율이 높을수록 적정가치는 낮아집니다. <span class="conf md">신뢰도 중간 ~60%</span></p>
+  </div>
+
+  <h3>2단계 — '두 개의 렌즈' 문제 (SBC를 비용으로 볼 것인가)</h3>
+  <p>SLAB 가치평가의 가장 큰 갈림길은 <strong>주식보상비용(SBC, 매출의 ~9%)</strong>을 어떻게 다루느냐입니다. 이는 임직원에게 주식으로 주는 보상으로, 현금은 안 나가지만 <strong>주주 지분이 희석되는 실질 비용</strong>입니다.</p>
+  <div class="grid g2">
+    <div class="card" style="border-left:4px solid var(--alert)"><h4 style="margin-top:0;color:var(--alert)">렌즈 ① 엄격(SBC=비용)</h4><p style="font-size:14px">SBC를 진짜 비용으로 차감. SLAB은 거의 적자 수준이 되어 <strong>독자 가치 ~$55~95</strong>로 낮게 나옴. 보수적·원칙적 관점.</p></div>
+    <div class="card" style="border-left:4px solid var(--signal)"><h4 style="margin-top:0;color:var(--signal-d)">렌즈 ② Street(SBC 제외)</h4><p style="font-size:14px">시장·증권사 관행처럼 SBC를 제외한 조정이익 기준. <strong>독자 가치 ~$102~114</strong>. 아래 전시 23 표가 이 기준입니다.</p></div>
+  </div>
+
+  <h3>3단계 — 가치 분해표 (보고서 전시 23 형식, 렌즈 ② 기준)</h3>
+  <p>아래 표는 향후 15년간 매출·이익·재투자를 전망하고, 각 해의 잉여현금흐름(FCF)을 현재가치로 환산한 것입니다(중간연도 할인 적용). 매출은 회복 후 정상 성장으로, 영업마진은 단계적으로 ~29%(조정 기준)까지 회복한다고 가정했습니다.</p>
+  <div class="scrollx">
+  <table class="tbl">
+    <thead><tr><th>연도</th><th>매출($M)</th><th>성장%</th><th>영업마진%</th><th>EBITA</th><th>세후영업익</th><th>재투자</th><th>FCF</th><th>현재가치</th></tr></thead>
+    <tbody>
+      <tr><td>2026</td><td class="num">824</td><td class="num">5.0</td><td class="num">10.0</td><td class="num">82</td><td class="num">67</td><td class="num">27</td><td class="num">40</td><td class="num">38</td></tr>
+      <tr><td>2027</td><td class="num">956</td><td class="num">16.0</td><td class="num">18.0</td><td class="num">172</td><td class="num">139</td><td class="num">37</td><td class="num">103</td><td class="num">87</td></tr>
+      <tr><td>2028</td><td class="num">1,099</td><td class="num">15.0</td><td class="num">24.0</td><td class="num">264</td><td class="num">214</td><td class="num">42</td><td class="num">172</td><td class="num">131</td></tr>
+      <tr><td>2029</td><td class="num">1,252</td><td class="num">13.9</td><td class="num">27.0</td><td class="num">338</td><td class="num">274</td><td class="num">47</td><td class="num">227</td><td class="num">155</td></tr>
+      <tr><td>2030</td><td class="num">1,414</td><td class="num">12.9</td><td class="num">29.0</td><td class="num">410</td><td class="num">332</td><td class="num">52</td><td class="num">280</td><td class="num">172</td></tr>
+      <tr><td>2031</td><td class="num">1,581</td><td class="num">11.8</td><td class="num">29.0</td><td class="num">458</td><td class="num">371</td><td class="num">57</td><td class="num">314</td><td class="num">173</td></tr>
+      <tr><td>2032</td><td class="num">1,752</td><td class="num">10.8</td><td class="num">29.0</td><td class="num">508</td><td class="num">412</td><td class="num">63</td><td class="num">349</td><td class="num">172</td></tr>
+      <tr><td>2033–37</td><td class="num">→2,536</td><td class="num">9.8→5.6</td><td class="num">29.0</td><td class="num">…</td><td class="num">…</td><td class="num">…</td><td class="num">…</td><td class="num">739</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td colspan="8">명시적 기간 FCF 현재가치 합계 (15년)</td><td class="num">$2,116M</td></tr>
+      <tr><td colspan="8">+ 잔존가치(터미널) 현재가치 — 페이드 모델</td><td class="num">$1,214M</td></tr>
+      <tr class="hl"><td colspan="8">= 기업가치(EV)</td><td class="num">$3,331M</td></tr>
+      <tr><td colspan="8">+ 순현금</td><td class="num">$420M</td></tr>
+      <tr class="hl"><td colspan="8">= 자기자본가치 → ÷ 3,300만 주</td><td class="num">$3,751M</td></tr>
+    </tfoot>
+  </table>
+  </div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="stat"><div class="v sig">$114</div><div class="l">렌즈 ② 독자 적정가<br>(CAP 15년, WACC 11.44%)</div></div>
+    <div class="stat"><div class="v" style="color:var(--muted)">$137</div><div class="l">인수 전 시장가(미영향)<br>참고: 적정가보다 높음</div></div>
+    <div class="stat"><div class="v sil">$231</div><div class="l">TI 인수가<br>독자가치 추정의 2배 수준</div></div>
+  </div>
+  <p class="footnote">잔존가치는 보고서 전시 23 형식의 '페이드(fade) 모델'을 적용 — 초과수익이 영구히 지속된다고 보지 않고 점진적으로 산업 평균(페이드 비율 0.25)으로 수렴한다고 가정. 장기성장률 2.5%(기대 인플레이션), 세율 19%. <span class="conf md">신뢰도 중간 ~55%</span> (가정 의존도 높음)</p>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 12 시장 내재 CAP ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">12 — MARKET-IMPLIED CAP</div>
+  <h2 class="title">시장 내재 CAP — 주가에 담긴 '경쟁우위 기간'을 역산</h2>
+  <p class="lead">CAP(경쟁우위기간)란 <strong>"이 회사가 자본비용을 초과하는 이익을 몇 년이나 낼 수 있다고 시장이 믿는가"</strong>입니다. 적정가치를 직접 맞히는 대신, <strong>현재 주가가 함의하는 CAP를 거꾸로 계산</strong>해 시장 기대가 합리적인지 따집니다.</p>
+
+  <h3>모든 가치 기준을 한 줄에 — 핵심 그림</h3>
+  <p>SLAB을 둘러싼 여러 가격·가치 추정치를 한 축에 놓으면, <strong>독자 펀더멘털 가치 묶음(~$55~119)이 인수 전 시장가($137)보다도 낮고, 인수가($231)는 그 모두보다 훨씬 높다</strong>는 사실이 한눈에 보입니다.</p>
+
+  <div class="card" style="padding:28px 18px">
+    <svg viewBox="0 0 920 280" role="img" aria-label="SLAB 가치 기준 비교">
+      <!-- axis -->
+      <line x1="70" y1="200" x2="880" y2="200" stroke="#CFC8B8" stroke-width="2"/>
+      <g font-family="IBM Plex Mono,monospace" font-size="11" fill="#9AA3B2" text-anchor="middle">
+        <line x1="70" y1="196" x2="70" y2="204" stroke="#9AA3B2"/><text x="70" y="220">$0</text>
+        <line x1="232" y1="196" x2="232" y2="204" stroke="#9AA3B2"/><text x="232" y="220">$50</text>
+        <line x1="394" y1="196" x2="394" y2="204" stroke="#9AA3B2"/><text x="394" y="220">$100</text>
+        <line x1="556" y1="196" x2="556" y2="204" stroke="#9AA3B2"/><text x="556" y="220">$150</text>
+        <line x1="718" y1="196" x2="718" y2="204" stroke="#9AA3B2"/><text x="718" y="220">$200</text>
+        <line x1="880" y1="196" x2="880" y2="204" stroke="#9AA3B2"/><text x="880" y="220">$250</text>
+      </g>
+
+      <!-- band: strict DCF 55-95 -->
+      <rect x="248" y="170" width="130" height="30" fill="#CF3F3F" opacity="0.18" rx="3"/>
+      <text x="313" y="160" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#a83232" font-weight="600">엄격 DCF</text>
+      <text x="313" y="146" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="#a83232">$55–95</text>
+
+      <!-- band: street DCF 102-114 -->
+      <rect x="400" y="170" width="39" height="30" fill="#13A8B8" opacity="0.3" rx="3"/>
+      <text x="419" y="118" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#0B7C89" font-weight="600">Street DCF</text>
+      <text x="419" y="132" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="#0B7C89">$102–114</text>
+      <line x1="419" y1="138" x2="419" y2="168" stroke="#0B7C89" stroke-width="1" stroke-dasharray="2 2"/>
+
+      <!-- markers -->
+      <!-- SimplyWallSt 119 ->456 -->
+      <line x1="456" y1="170" x2="456" y2="200" stroke="#6A7587" stroke-width="2"/>
+      <circle cx="456" cy="170" r="4" fill="#6A7587"/>
+      <text x="456" y="245" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#6A7587">독립DCF</text>
+      <text x="456" y="259" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#6A7587">$119</text>
+
+      <!-- unaffected 137 ->514 -->
+      <line x1="514" y1="100" x2="514" y2="200" stroke="#0E1726" stroke-width="2.5" stroke-dasharray="5 4"/>
+      <circle cx="514" cy="100" r="5" fill="#0E1726"/>
+      <text x="514" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#0E1726" font-weight="700">인수 전 시장가</text>
+      <text x="514" y="76" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#0E1726" font-weight="600">$137</text>
+
+      <!-- avg target 154 ->569 -->
+      <line x1="569" y1="170" x2="569" y2="200" stroke="#9AA3B2" stroke-width="2"/>
+      <circle cx="569" cy="170" r="4" fill="#9AA3B2"/>
+      <text x="569" y="245" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#9AA3B2">평균목표</text>
+      <text x="569" y="259" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#9AA3B2">$154*</text>
+
+      <!-- current 215 ->767 -->
+      <line x1="767" y1="125" x2="767" y2="200" stroke="#13A8B8" stroke-width="2.5"/>
+      <circle cx="767" cy="125" r="5" fill="#13A8B8"/>
+      <text x="767" y="115" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#0B7C89" font-weight="700">현재가</text>
+      <text x="767" y="101" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#0B7C89" font-weight="600">$215</text>
+
+      <!-- deal 231 ->818 -->
+      <line x1="818" y1="55" x2="818" y2="200" stroke="#C07A22" stroke-width="3"/>
+      <polygon points="818,48 812,58 824,58" fill="#C07A22"/>
+      <text x="818" y="40" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-size="13" fill="#C07A22" font-weight="700">TI 인수가</text>
+      <text x="818" y="24" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#C07A22" font-weight="600">$231</text>
+
+      <!-- bracket: premium -->
+      <path d="M514 215 L514 222 L818 222 L818 215" fill="none" stroke="#C07A22" stroke-width="1.5"/>
+      <text x="666" y="237" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#C07A22" font-weight="600">인수 프리미엄 +$94 (시너지·통제권)</text>
+    </svg>
+  </div>
+  <p class="cap">* 평균 목표가는 인수 발표 후 인수가 쪽으로 상향 조정된 값이라 '독자 가치'로 보긴 어려움. 모든 독자 펀더멘털 추정($55~119)은 인수 전 시장가($137)보다도 낮음.</p>
+
+  <h3>내재 CAP 역산 결과 — 방향성</h3>
+  <p>위 모델로 각 가격에 도달하려면 몇 년의 CAP가 필요한지 거꾸로 풀면:</p>
+  <div class="scrollx">
+  <table class="tbl">
+    <thead><tr><th>가격 기준</th><th>내재 CAP (역산)</th><th style="text-align:left">프레임워크 해석</th></tr></thead>
+    <tbody>
+      <tr><td>인수 전 시장가 $137</td><td class="num">약 20년+</td><td style="text-align:left"><span style="color:#9a7016">낙관적</span> — 시장은 인수 전에도 SLAB을 후하게 평가</td></tr>
+      <tr><td>현재가 $215</td><td class="num">사실상 비현실적</td><td style="text-align:left"><span style="color:var(--alert)">독자 펀더멘털로 설명 불가 → 인수가 효과</span></td></tr>
+      <tr style="background:#FBEFDC"><td><strong>인수가 $231</strong></td><td class="num"><strong>40년+ (독자 기준)</strong></td><td style="text-align:left"><strong style="color:var(--silicon)">독자가치로 불가능 → 시너지+전략 프리미엄</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="alertbox" style="background:#F0F6F7;border-color:#CDE6E9;border-left-color:var(--signal)">
+    <h3 style="color:var(--signal-d)">📐 핵심 발견 — 두 겹의 프리미엄</h3>
+    <p style="color:#26424a"><strong>첫째 겹:</strong> 인수가 없던 시절에도 시장가($137)는 엄격한 DCF(~$55~95)나 독립 DCF($119)보다 높았습니다. 즉 <strong>시장은 SLAB의 IoT 성장 스토리에 이미 후한 값(긴 내재 CAP ~20년)을 매기고 있었습니다.</strong> <span class="conf hi">신뢰도 높음 ~80%</span><br>
+    <strong>둘째 겹:</strong> 그 위에 TI가 <strong>+$94(+61~69%)의 인수 프리미엄</strong>을 얹었습니다. 이 프리미엄은 SLAB 혼자서는 만들 수 없는 가치 — <strong>TI가 거둘 시너지와 경영권 통제의 값</strong>입니다(16장에서 분해). <span class="conf hi">신뢰도 높음 ~85%</span></p>
+  </div>
+
+  <div class="notebox">
+    <h4>⚠️ 이 CAP 숫자를 '정밀값'으로 받아들이면 안 되는 이유</h4>
+    <p>SLAB은 ① 사이클 저점에서 회복 중이라 현재 이익이 정상 수준이 아니고, ② SBC가 매우 커서 '비용으로 볼지'에 따라 가치가 2배 차이 나며, ③ 인수가 진행 중이라 주가-펀더멘털 연결이 끊겼습니다. 이 3가지 왜곡 때문에 <strong>내재 CAP 절대값(20년/40년)은 '정밀 측정'이 아니라 '방향 신호'로만 해석</strong>해야 합니다. 그럼에도 방향은 분명합니다: <strong>독자 가치 < 시장가 < 인수가.</strong> <span class="conf hi">신뢰도 높음 ~85%</span></p>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 13 민감도 ============ -->
+<section class="alt">
+<div class="wrap">
+  <div class="sec-num">13 — SENSITIVITY</div>
+  <h2 class="title">민감도 분석 — 가정이 바뀌면 가치는 얼마나 흔들리나</h2>
+  <p class="lead">DCF는 가정에 민감합니다. 핵심 변수 3가지(할인율·성장률·마진)를 흔들어 보면, <strong>어떤 가정으로도 독자 가치가 인수가 $231에 닿지 않는다</strong>는 점이 재확인됩니다(렌즈 ② 기준).</p>
+
+  <h3>변수별 영향 (렌즈 ②, CAP 15년 기준)</h3>
+  <div class="grid g3">
+    <div class="card">
+      <h4 style="margin-top:0">할인율(WACC) ±1%p</h4>
+      <table class="tbl" style="margin:6px 0;font-size:13px">
+        <tr><td>10.44%</td><td class="num" style="color:var(--green)">$128</td></tr>
+        <tr style="background:#EAF4F5"><td><strong>11.44%</strong></td><td class="num"><strong>$114</strong></td></tr>
+        <tr><td>12.44%</td><td class="num" style="color:var(--alert)">$102</td></tr>
+      </table>
+      <p style="font-size:12.5px;color:var(--muted);margin:4px 0">영향 큼: ±$12~13</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">초기 성장률 ±2%p</h4>
+      <table class="tbl" style="margin:6px 0;font-size:13px">
+        <tr><td>14%</td><td class="num" style="color:var(--alert)">$104</td></tr>
+        <tr style="background:#EAF4F5"><td><strong>16%</strong></td><td class="num"><strong>$114</strong></td></tr>
+        <tr><td>18%</td><td class="num" style="color:var(--green)">$124</td></tr>
+      </table>
+      <p style="font-size:12.5px;color:var(--muted);margin:4px 0">영향 중간: ±$10</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">정상 영업마진 ±3%p</h4>
+      <table class="tbl" style="margin:6px 0;font-size:13px">
+        <tr><td>26%</td><td class="num" style="color:var(--alert)">$104</td></tr>
+        <tr style="background:#EAF4F5"><td><strong>29%</strong></td><td class="num"><strong>$114</strong></td></tr>
+        <tr><td>32%</td><td class="num" style="color:var(--green)">$123</td></tr>
+      </table>
+      <p style="font-size:12.5px;color:var(--muted);margin:4px 0">영향 중간: ±$10</p>
+    </div>
+  </div>
+
+  <h3>할인율 × 페이드 비율 교차표 (렌즈 ②, $/주)</h3>
+  <div class="scrollx">
+  <table class="tbl">
+    <thead><tr><th>WACC ＼ 페이드</th><th>0.20 (느린 침식)</th><th>0.25 (산업평균)</th><th>0.30 (빠른 침식)</th></tr></thead>
+    <tbody>
+      <tr><td>10.44%</td><td class="num">$114</td><td class="num">$113</td><td class="num">$113</td></tr>
+      <tr style="background:#EAF4F5"><td><strong>11.44% (기본)</strong></td><td class="num">$102</td><td class="num"><strong>$102</strong></td><td class="num">$101</td></tr>
+      <tr><td>12.44%</td><td class="num">$92</td><td class="num">$92</td><td class="num">$92</td></tr>
+      <tr><td>13.25%</td><td class="num">$86</td><td class="num">$85</td><td class="num">$85</td></tr>
+      <tr><td>15.25% (Qatalyst)</td><td class="num">$73</td><td class="num">$72</td><td class="num">$72</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="notebox">
+    <h4>민감도가 알려주는 것</h4>
+    <p>① <strong>페이드 비율(초과수익 소멸 속도)의 영향은 미미</strong>합니다(±$1~2). SLAB처럼 '회복 스토리'가 핵심인 기업은 잔존가치보다 <strong>할인율과 성장·마진 가정</strong>이 가치를 좌우하기 때문입니다. ② 가장 낙관적 조합(WACC 10.44%)에서도 ~$128, Qatalyst의 높은 할인율(15.25%)에서는 ~$72에 그칩니다. <strong>어떤 합리적 조합도 $231에 닿지 못합니다.</strong> <span class="conf hi">신뢰도 높음 ~80%</span></p>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 14 시나리오 ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">14 — SCENARIOS</div>
+  <h2 class="title">시나리오 분석 — 약세·기본·강세</h2>
+  <p class="lead">인수가 없었다고 가정할 때, SLAB의 독자 가치는 미래 가정에 따라 크게 달라집니다. 약세 $46, 기본 $102~114, 강세 $176 — <strong>가장 낙관적인 강세 시나리오조차 인수가 $231에 미치지 못합니다.</strong></p>
+
+  <div class="card" style="padding:26px 18px">
+    <svg viewBox="0 0 900 250" role="img" aria-label="시나리오별 독자 가치">
+      <!-- deal reference line -->
+      <line x1="818" y1="20" x2="818" y2="210" stroke="#C07A22" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <text x="818" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="12" fill="#C07A22" font-weight="600">인수가 $231</text>
+      <!-- axis baseline -->
+      <line x1="150" y1="210" x2="880" y2="210" stroke="#CFC8B8" stroke-width="1.5"/>
+      <!-- scale x(val)=150+(val/250)*730 ; bear46->284 base108->465 bull176->664 -->
+      <!-- bear -->
+      <rect x="150" y="40" width="134" height="40" rx="4" fill="#CF3F3F" opacity="0.85"/>
+      <text x="160" y="65" font-family="Inter,sans-serif" font-size="13" fill="#fff" font-weight="600">약세 (상품화·마진압박)</text>
+      <text x="300" y="65" font-family="IBM Plex Mono,monospace" font-size="14" fill="#a83232" font-weight="600">$46</text>
+      <!-- base -->
+      <rect x="150" y="100" width="315" height="40" rx="4" fill="#13A8B8" opacity="0.9"/>
+      <text x="160" y="125" font-family="Inter,sans-serif" font-size="13" fill="#fff" font-weight="600">기본 (정상 회복 ~25–29% 마진)</text>
+      <text x="482" y="125" font-family="IBM Plex Mono,monospace" font-size="14" fill="#0B7C89" font-weight="600">$102–114</text>
+      <!-- bull -->
+      <rect x="150" y="160" width="514" height="40" rx="4" fill="#2E9466" opacity="0.9"/>
+      <text x="160" y="185" font-family="Inter,sans-serif" font-size="13" fill="#fff" font-weight="600">강세 (점유율 확대·20%+ 성장·33% 마진)</text>
+      <text x="681" y="185" font-family="IBM Plex Mono,monospace" font-size="14" fill="#1d6e47" font-weight="600">$176</text>
+      <!-- gap annotation -->
+      <text x="745" y="232" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#C07A22" font-weight="600">강세 ↔ 인수가 격차 = 시너지·통제 프리미엄</text>
+    </svg>
+  </div>
+
+  <div class="grid g3" style="margin-top:8px">
+    <div class="card tight" style="border-top:3px solid var(--alert)"><h4 style="margin:0;color:var(--alert)">약세 $46</h4><p style="font-size:13.5px;margin:6px 0">중국 저가 공세로 상품화, 마진 압박, 점유율 침식. 성장 둔화·할인율 상승.</p></div>
+    <div class="card tight" style="border-top:3px solid var(--signal)"><h4 style="margin:0;color:var(--signal-d)">기본 $102–114</h4><p style="font-size:13.5px;margin:6px 0">IoT 회복 지속, 마진이 정상(조정 기준 25~29%)으로 회복. 시장 컨센서스 근방.</p></div>
+    <div class="card tight" style="border-top:3px solid var(--green)"><h4 style="margin:0;color:var(--green)">강세 $176</h4><p style="font-size:13.5px;margin:6px 0">Matter·산업 IoT 주도로 점유율↑, 20%+ 고성장, 33% 마진 달성. 낙관적이지만 가능.</p></div>
+  </div>
+  <p class="footnote">시나리오는 성장률·마진·할인율·CAP를 동시에 조정한 결과(렌즈 ② 기준). 약세에서도 순현금(~$420M)이 하방을 일부 받쳐줍니다. <span class="conf md">신뢰도 중간 ~60%</span></p>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 15 시너지 & 프리미엄 분해 ============ -->
+<section class="dark">
+<div class="wrap">
+  <div class="sec-num">15 — SYNERGY & PREMIUM BRIDGE</div>
+  <h2 class="title">시너지·프리미엄 분해 — 인수가 $231은 어떻게 구성되나</h2>
+  <p class="lead">핵심 질문: <strong>TI는 왜 독자 가치의 약 2배를 지불할까?</strong> 답은 명쾌합니다 — TI가 지불한 프리미엄(약 $94/주)이, TI가 거둘 시너지($450M/년)를 자본화한 가치와 거의 일치하기 때문입니다.</p>
+
+  <h3>가치의 다리(bridge)</h3>
+  <div class="card" style="background:#17233B;border-color:#2C3A55;padding:26px 18px">
+    <svg viewBox="0 0 880 230" role="img" aria-label="인수가 구성 워터폴">
+      <!-- baseline -->
+      <line x1="60" y1="190" x2="840" y2="190" stroke="#2C3A55" stroke-width="1.5"/>
+      <!-- standalone 137 bar: scale h: val/231*150 -> 137->89 -->
+      <rect x="120" y="101" width="150" height="89" fill="#5A6B86" rx="3"/>
+      <text x="195" y="91" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="14" fill="#E7EEF7" font-weight="600">$137</text>
+      <text x="195" y="210" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#9FB0C4">독자 가치</text>
+      <text x="195" y="225" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#6A7587">(인수 전 시장가)</text>
+      <!-- premium +94 stacked: 94->61, sits on top of 137 (y from 101 up to 40) -->
+      <rect x="350" y="40" width="150" height="61" fill="#C07A22" rx="3"/>
+      <text x="425" y="32" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="14" fill="#E8B266" font-weight="600">+$94</text>
+      <text x="425" y="210" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#E8B266">인수 프리미엄</text>
+      <text x="425" y="225" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#C49A6C">(+61~69%)</text>
+      <!-- connector -->
+      <line x1="270" y1="101" x2="350" y2="101" stroke="#5A6B86" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <!-- deal 231 -> 40 -->
+      <rect x="580" y="40" width="150" height="150" fill="#13A8B8" rx="3"/>
+      <text x="655" y="32" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="14" fill="#7FD6DF" font-weight="600">$231</text>
+      <text x="655" y="210" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#7FD6DF" font-weight="600">TI 인수가</text>
+      <line x1="500" y1="40" x2="580" y2="40" stroke="#C07A22" stroke-width="1.5" stroke-dasharray="3 3"/>
+    </svg>
+  </div>
+
+  <h3>프리미엄 ≈ 시너지의 자본화 가치 (검증)</h3>
+  <p>TI가 약속한 연 시너지 $450M을 세후로 환산(약 $365M)하고, 적정 배수로 자본화하면:</p>
+  <div class="grid g3">
+    <div class="stat" style="background:#17233B;border-color:#2C3A55"><div class="v" style="color:#7FD6DF">$88/주</div><div class="l" style="color:#9FB0C4">시너지 8배 자본화<br>($2,916M)</div></div>
+    <div class="stat" style="background:#17233B;border-color:#2C3A55"><div class="v" style="color:#7FD6DF">$110/주</div><div class="l" style="color:#9FB0C4">시너지 10배 자본화<br>($3,645M)</div></div>
+    <div class="stat" style="background:#17233B;border-color:#2C3A55"><div class="v" style="color:#7FD6DF">$133/주</div><div class="l" style="color:#9FB0C4">시너지 12배 자본화<br>($4,374M)</div></div>
+  </div>
+  <div class="notebox" style="background:#17233B;border-color:#2C3A55;border-left-color:#C07A22">
+    <h4 style="color:#E8B266">📌 결정적 통찰</h4>
+    <p style="color:#C4CEDC">TI가 실제로 지불한 프리미엄은 <strong>주당 약 $94 (총 ~$3,102M)</strong>입니다. 이는 시너지를 <strong>약 8~9배로 자본화한 값($2,916~3,645M)과 거의 정확히 일치</strong>합니다. 즉 <strong>"TI는 자신이 거둘 시너지의 가치 대부분을 SLAB 주주에게 프리미엄으로 넘겨준" 전형적인 전략적 인수 구조</strong>입니다. 이는 ① TI가 이 거래를 강하게 원했고(경쟁 입찰 가능성), ② SLAB의 협상력이 좋았음을 시사합니다. 거꾸로, <strong>SLAB 혼자서는 이 시너지를 만들 수 없으므로, 거래가 깨지면 이 프리미엄($94)은 증발</strong>합니다. <span class="conf hi">신뢰도 높음 ~80%</span></p>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 16 합병 차익거래 ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">16 — MERGER ARBITRAGE LENS</div>
+  <h2 class="title">합병 차익거래 관점 — 지금 이 주식의 진짜 성격</h2>
+  <p class="lead">앞선 분석을 종합하면, <strong>현재 SLAB은 '성장주 장기투자'가 아니라 '인수 완료에 베팅하는 차익거래(merger arb)' 자산</strong>입니다. 손익은 거의 전적으로 '거래가 닫히느냐'에 달려 있습니다.</p>
+
+  <h3>차익거래 손익 구조</h3>
+  <div class="grid g4" style="margin-top:8px">
+    <div class="stat"><div class="v">$215</div><div class="l">현재가</div></div>
+    <div class="stat"><div class="v sil">$231</div><div class="l">인수가(목표)</div></div>
+    <div class="stat"><div class="v grn">+7.4%</div><div class="l">잔여 스프레드(상승 여력)</div></div>
+    <div class="stat"><div class="v sig">~6–10%</div><div class="l">성사 시 연 환산 수익</div></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card" style="border-left:4px solid var(--green)">
+      <h4 style="margin-top:0;color:var(--green)">시나리오 A — 거래 성사 (확률 높음)</h4>
+      <ul class="dash" style="font-size:14px">
+        <li>$215 → $231 현금 수령, 차익 +$16</li>
+        <li>9~15개월 보유 시 연 환산 약 6~10%</li>
+        <li>이미 주주총회·미국 반독점 통과로 불확실성 상당 부분 해소</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left:4px solid var(--alert)">
+      <h4 style="margin-top:0;color:var(--alert)">시나리오 B — 거래 무산 (확률 낮으나 큰 손실)</h4>
+      <ul class="dash" style="font-size:14px">
+        <li>주가 → 인수 전(~$137) 또는 독자가치(~$100~120)로 급락</li>
+        <li>하락폭 약 −35~45%</li>
+        <li>완충: TI가 위약금 $499M(주당 ~$15) 지급</li>
+        <li>주된 트리거: <strong>중국 SAMR 불승인·장기 지연</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="notebox">
+    <h4>핵심 — 비대칭성과 확률</h4>
+    <p>상승 +$16 vs 하락 −$78~95의 <strong>비대칭 구조</strong>입니다. 따라서 이 투자의 기대값은 거의 전적으로 <strong>'거래 성사 확률'</strong>에 의해 결정됩니다. 현재 시장이 매기는 ~7% 스프레드는 <strong>"성사 확률이 높지만 중국 리스크 때문에 100%는 아니다"</strong>라는 집단적 판단을 반영합니다. ① 자금조달 조건 없음, ② TI의 큰 역위약금($499M), ③ 주주·미국 반독점 통과는 성사 쪽 근거이고, ④ 미·중 갈등 속 중국 SAMR의 전력은 리스크 쪽 근거입니다. <span class="conf md">신뢰도 중간 ~65%</span></p>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 17 리스크 & 체크포인트 ============ -->
+<section class="alt">
+<div class="wrap">
+  <div class="sec-num">17 — RISKS & CHECKPOINTS</div>
+  <h2 class="title">주요 리스크 & 분기별 체크포인트</h2>
+  <p class="lead">리스크는 ① 거래 자체의 리스크와 ② (거래가 깨졌을 때) 회사의 펀더멘털 리스크로 나뉩니다.</p>
+
+  <div class="grid g2">
+    <div class="card" style="border-top:3px solid var(--alert)">
+      <h4 style="margin-top:0;color:var(--alert)">① 거래 리스크 (현재 핵심)</h4>
+      <ul class="dash" style="font-size:14px">
+        <li><strong>중국 SAMR 반독점 승인</strong> — 미·중 갈등 속 지연·보류 가능성(최대 리스크)</li>
+        <li>기타 해외 반독점·외국인투자(FDI) 심사</li>
+        <li>종료 기한(2027-2-4) 도래 시 연장 여부 (최대 2028-2-4)</li>
+        <li>예기치 못한 거래 조건 변경·소송</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--amber)">
+      <h4 style="margin-top:0;color:var(--amber)">② 펀더멘털 리스크 (무산 시)</h4>
+      <ul class="dash" style="font-size:14px">
+        <li>IoT/반도체 사이클 재하강 → 매출·마진 악화</li>
+        <li>중국 저가 업체의 상품화·점유율 잠식</li>
+        <li>SBC 부담 지속에 따른 낮은 실질 수익성</li>
+        <li>차세대 Series 3 지연 또는 채택 부진</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>분기별 체크포인트 — 무엇을 추적할까</h3>
+  <div class="scrollx">
+  <table class="tbl">
+    <thead><tr><th style="text-align:left">추적 항목</th><th style="text-align:left">왜 중요한가</th><th style="text-align:left">긍정 신호 / 부정 신호</th></tr></thead>
+    <tbody>
+      <tr><td><strong>해외 규제 승인 진행</strong></td><td style="text-align:left">거래 성사의 최종 관문</td><td style="text-align:left">중국 승인 발표(+) / 심사 지연·재검토(−)</td></tr>
+      <tr><td><strong>종료 기한 관리</strong></td><td style="text-align:left">지연 누적 시 무산 우려↑</td><td style="text-align:left">예정대로 진행(+) / 외부기한 연장 발동(−)</td></tr>
+      <tr><td><strong>차익 스프레드 추이</strong></td><td style="text-align:left">시장의 성사 확률 인식</td><td style="text-align:left">스프레드 축소(+) / 급격 확대(−, 시장 불안)</td></tr>
+      <tr><td><strong>분기 매출(회복 지속)</strong></td><td style="text-align:left">무산 시 독자가치의 근거</td><td style="text-align:left">두 부문 성장 지속(+) / 재고조정 재발(−)</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 18 종합 판단 ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">18 — SYNTHESIS</div>
+  <h2 class="title">종합 판단</h2>
+
+  <div class="keybox">
+    <div class="kl">한 단락 종합</div>
+    <p>실리콘랩스는 <strong>좁지만 실재하는 해자(멀티프로토콜·소프트웨어 락인)를 가진 차별화된 IoT 무선 칩 기업</strong>으로, 구조적으로 성장하는(연 ~14%) 시장에 속해 있습니다. 그러나 경쟁이 치열하고 SBC 부담이 커서 <strong>독자 펀더멘털 가치는 약세 $46 ~ 기본 $102~114 ~ 강세 $176</strong> 범위이며, 인수 전 시장가($137)조차 이 범위 상단에 있었습니다. 현재 진행 중인 <strong>TI의 $231 인수는 SLAB 독자가치의 약 2배</strong>로, 그 차이는 TI가 거둘 <strong>시너지($450M/년)와 경영권 통제의 값</strong>입니다. 따라서 지금 이 주식의 성격은 <strong>'장기 성장 투자'가 아니라 '인수 완료에 베팅하는 차익거래'</strong>이며, 손익은 거의 전적으로 <strong>중국 등 해외 규제 승인 여부</strong>에 달려 있습니다.</p>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card tight"><h4 style="margin:0;color:var(--signal-d)">회사·산업 이해</h4><p style="font-size:13.5px;margin:6px 0">스마트홈·산업 IoT용 저전력 무선 칩의 차별화 리더. 산업은 성장하나 저가 경쟁·사이클 리스크 상존. <span class="conf hi">높음 ~80%</span></p></div>
+    <div class="card tight"><h4 style="margin:0;color:var(--silicon)">가치 판단</h4><p style="font-size:13.5px;margin:6px 0">독자가치 < 시장가 < 인수가. $231은 펀더멘털이 아닌 전략 프리미엄으로 설명됨. <span class="conf hi">높음 ~85%</span></p></div>
+    <div class="card tight"><h4 style="margin:0;color:var(--alert)">투자 성격</h4><p style="font-size:13.5px;margin:6px 0">인수 차익거래 자산. 상승 ~7% / 하락 ~−40%의 비대칭. 중국 승인이 분수령. <span class="conf md">중간 ~65%</span></p></div>
+  </div>
+
+  <p style="margin-top:16px;font-size:15px;color:var(--muted)">※ 본 보고서는 특정 매매를 권유하지 않으며, 개인의 포트폴리오 상황·위험 선호를 알지 못하는 상태에서 작성되었습니다. 위 판단은 정보 제공을 위한 분석가의 견해이며, 독자가 스스로 판단하는 데 참고하는 자료입니다.</p>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 19 한계와 가정 ============ -->
+<section class="alt">
+<div class="wrap">
+  <div class="sec-num">19 — LIMITATIONS & ASSUMPTIONS</div>
+  <h2 class="title">한계와 가정 — 이 분석을 신뢰할 때 유의할 점</h2>
+  <p class="lead">좋은 분석은 자신의 한계를 분명히 밝힙니다. 이 보고서의 결론을 받아들일 때 반드시 함께 고려해야 할 가정과 약점들입니다.</p>
+
+  <div class="grid g2" style="margin-top:8px">
+    <div class="card">
+      <h4 style="margin-top:0">① CAP 프레임워크의 적용 한계</h4>
+      <p style="font-size:14px">CAP·DCF 역산은 본래 <strong>'정상 상태의 안정적 기업'</strong>에 가장 잘 맞습니다. SLAB은 <strong>(a) 사이클 저점에서 회복 중, (b) SBC가 매우 큼, (c) 인수 진행으로 주가-펀더멘털 단절</strong> — 이 3중 왜곡 때문에 내재 CAP 절대값(20년/40년)은 정밀값이 아니라 <strong>방향 신호</strong>로 해석해야 합니다.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">② SBC 처리에 따른 가치 2배 차이</h4>
+      <p style="font-size:14px">주식보상비를 비용으로 보느냐(렌즈 ①, ~$55~95)/제외하느냐(렌즈 ②, ~$102~114)에 따라 독자가치가 약 2배 차이 납니다. 본문은 시장 관행에 맞춰 렌즈 ②를 중심값으로 제시했으나, <strong>원칙적으로는 SBC가 실질 비용</strong>이라는 점을 강조합니다.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">③ 경영진 상세 전망 미확보</h4>
+      <p style="font-size:14px">SLAB이 자문사에 제공한 상세 재무 전망은 위임장(DEFM14A) 내에 있으나 문서가 방대해 본 분석에는 <strong>시장 컨센서스 추정치로 대체</strong>했습니다. 자문사(Qatalyst)의 DCF는 더 높은 할인율(14~16.5%)과 경영진 전망을 사용했을 수 있어, 그들의 결론과 다소 차이가 날 수 있습니다.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">④ 가정 의존성 & 확률의 비정량성</h4>
+      <p style="font-size:14px">베타(1.45)·ERP(4.75%)·할인율·장기성장률·정상마진 등 핵심 가정에 가치가 민감합니다. 또한 <strong>'거래 성사 확률'은 정성적 판단</strong>이며 정밀하게 수치화하기 어렵습니다(특히 중국 규제는 정치적 변수). 신뢰도를 베이지안으로 표기한 이유입니다.</p>
+    </div>
+  </div>
+
+  <div class="notebox">
+    <h4>그럼에도 견고한 결론 (무엇이 가정에 휘둘리지 않는가)</h4>
+    <p>위 한계에도 불구하고 <strong>다음 결론은 가정을 크게 바꿔도 유지</strong>됩니다: ① 어떤 합리적 독자 가치 추정도 인수가 $231보다 낮다, ② 따라서 프리미엄은 시너지·전략 가치다, ③ 현재 주가는 인수 완료 베팅이며 중국 승인이 핵심이다. 흔들리는 것은 '독자가치의 정확한 숫자'와 '내재 CAP의 정밀 연수'이지, <strong>전체 그림의 방향이 아닙니다.</strong> <span class="conf hi">신뢰도 높음 ~85%</span></p>
+  </div>
+</div>
+</section>
+
+<hr class="trace">
+
+<!-- ============ 20 데이터 출처 ============ -->
+<section>
+<div class="wrap">
+  <div class="sec-num">20 — SOURCES & AS-OF DATES</div>
+  <h2 class="title">데이터 출처 & 기준 시점</h2>
+  <p class="lead">모든 수치는 아래 출처와 기준 시점에 근거합니다. 데이터는 시간이 지나면 변하므로, 재검토 시 갱신이 필요합니다.</p>
+
+  <div class="scrollx">
+  <table class="tbl">
+    <thead><tr><th style="text-align:left">분류</th><th style="text-align:left">출처</th><th style="text-align:left">기준 시점</th></tr></thead>
+    <tbody>
+      <tr><td>주가·시가총액</td><td style="text-align:left">시장 시세 (NASDAQ:SLAB)</td><td style="text-align:left">2026-06 초</td></tr>
+      <tr><td>재무제표(FY2025)</td><td style="text-align:left">SLAB 연차보고서·실적발표</td><td style="text-align:left">FY2025 (2026-01-03 종료)</td></tr>
+      <tr><td>인수 거래 상세</td><td style="text-align:left">SEC 위임장 (DEFM14A), 회사 공시</td><td style="text-align:left">2026-02-04 발표 / 2026-06 진행</td></tr>
+      <tr><td>컨센서스 추정치</td><td style="text-align:left">증권사 컨센서스 종합</td><td style="text-align:left">2026 상반기</td></tr>
+      <tr><td>무위험수익률(10년 국채)</td><td style="text-align:left">미 재무부 / FRED</td><td style="text-align:left">2026-06-08 (4.55%)</td></tr>
+      <tr><td>시장위험프리미엄(ERP)</td><td style="text-align:left">다모다란 추정 (NYU Stern)</td><td style="text-align:left">2026-04 (4.75%)</td></tr>
+      <tr><td>장기성장률(기대 인플레)</td><td style="text-align:left">FRED 기대 인플레이션</td><td style="text-align:left">2026 (~2.5%)</td></tr>
+      <tr><td>산업 시장 규모·성장</td><td style="text-align:left">시장조사 기관 종합</td><td style="text-align:left">2025 기준 추정</td></tr>
+      <tr><td>피어(Nordic) 재무</td><td style="text-align:left">Nordic 공시</td><td style="text-align:left">FY2025</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="footnote">출처 간 수치가 상충하는 경우(예: 프리미엄을 발표 전 종가 기준 +61%로 보느냐, 직전 거래일 종가 $136.62 기준 +69%로 보느냐) 본문에 범위로 표기했습니다. DCF 모델 수치는 본 분석이 자체 구축한 가정 기반이며, 정밀 예측이 아닌 방향성 분석 목적입니다.</p>
+
+  <div style="text-align:center;margin-top:34px;padding:24px;border-top:2px solid var(--line)">
+    <div class="signal-bars" style="height:24px;justify-content:center;margin-bottom:8px"><i style="background:var(--signal)"></i><i style="background:var(--signal)"></i><i style="background:var(--signal)"></i><i style="background:var(--silicon)"></i></div>
+    <p style="font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--ink);margin:0">Silicon Labs (SLAB) — CAP 프레임워크 분석</p>
+    <p class="src" style="margin-top:4px">정보 제공 목적 · 매매 권유 아님 · 2026년 6월 9일 기준 · 모든 수치는 출처·기준시점 표기</p>
+  </div>
+</div>
+</section>
+
+</body>
+</html>
