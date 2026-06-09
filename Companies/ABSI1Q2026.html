@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absci (ABSI) 기업·산업 심층 분석 — CAP 프레임워크</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F6F8; --surface:#FFFFFF; --surface2:#FBFCFD;
+    --ink:#13171E; --ink-soft:#4C5666; --ink-faint:#828D9E;
+    --line:#E4E8EE; --line-soft:#EEF1F5;
+    --navy:#0C2237; --navy2:#16395B;
+    --teal:#0B9C9C; --teal-deep:#077575; --teal-wash:#E5F5F4;
+    --amber:#D98A28; --amber-wash:#FBF1E2;
+    --bull:#1F8A66; --bull-wash:#E6F3ED;
+    --bear:#BE4339; --bear-wash:#F8EAE8;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:'Pretendard','Pretendard Variable',-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.72;
+    font-size:16px;-webkit-font-smoothing:antialiased;letter-spacing:-0.01em}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  .num{font-family:var(--mono);font-feature-settings:"tnum";letter-spacing:-0.02em}
+
+  /* ---------- HERO ---------- */
+  .hero{background:linear-gradient(160deg,#0A1D30 0%,#0C2237 45%,#103253 100%);
+    color:#EAF0F6;padding:64px 0 52px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-120px;top:-80px;width:520px;height:520px;
+    background:radial-gradient(circle,rgba(11,156,156,0.28),transparent 62%);pointer-events:none}
+  .hero .wrap{position:relative;z-index:2}
+  .tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  .tag{font-family:var(--mono);font-size:11.5px;letter-spacing:0.08em;text-transform:uppercase;
+    background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.16);
+    color:#BFE9E7;padding:5px 11px;border-radius:5px}
+  .hero h1{font-size:clamp(30px,5.2vw,52px);font-weight:800;line-height:1.08;letter-spacing:-0.03em;color:#fff}
+  .hero h1 .ticker{color:var(--teal);font-family:var(--mono);font-weight:700}
+  .hero-sub{font-size:17px;color:#A9BACB;margin-top:16px;max-width:680px}
+  .hero-meta{display:flex;gap:26px;flex-wrap:wrap;margin-top:30px;font-size:13px;color:#8FA3B6}
+  .hero-meta b{color:#D7E3EE;font-weight:600}
+
+  /* ---------- SECTION ---------- */
+  section{padding:52px 0;border-bottom:1px solid var(--line)}
+  .eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+  .eyebrow .idx{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--teal-deep);
+    background:var(--teal-wash);border-radius:6px;padding:3px 9px}
+  .eyebrow .kind{font-family:var(--mono);font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint)}
+  h2{font-size:clamp(23px,3.4vw,31px);font-weight:800;letter-spacing:-0.025em;line-height:1.18;margin-bottom:14px;color:var(--navy)}
+  h3{font-size:18.5px;font-weight:700;letter-spacing:-0.02em;margin:26px 0 10px;color:var(--navy2)}
+  h4{font-size:15px;font-weight:700;color:var(--ink);margin:18px 0 6px}
+  p{margin-bottom:13px;color:var(--ink-soft)}
+  p strong, li strong{color:var(--ink);font-weight:700}
+  .lead{font-size:17.5px;color:var(--ink);line-height:1.7}
+  a{color:var(--teal-deep)}
+  ul,ol{margin:0 0 14px 2px;padding-left:18px}
+  li{margin-bottom:7px;color:var(--ink-soft)}
+  .small{font-size:13px;color:var(--ink-faint)}
+
+  /* ---------- COMPONENTS ---------- */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 24px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:760px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:16px 17px}
+  .stat .lbl{font-size:11.5px;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+  .stat .val{font-family:var(--mono);font-size:25px;font-weight:700;color:var(--navy);margin-top:5px;line-height:1.1}
+  .stat .sub{font-size:12px;color:var(--ink-faint);margin-top:3px}
+
+  .callout{border-radius:11px;padding:17px 20px;margin:18px 0;border:1px solid;font-size:14.5px}
+  .callout .ttl{font-weight:700;font-size:14px;letter-spacing:0.02em;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .callout p{margin-bottom:6px}
+  .c-teal{background:var(--teal-wash);border-color:#BDE6E3;color:#0a5757}
+  .c-teal .ttl{color:var(--teal-deep)}
+  .c-amber{background:var(--amber-wash);border-color:#F0DCB8;color:#8a5710}
+  .c-amber .ttl{color:var(--amber)}
+  .c-bear{background:var(--bear-wash);border-color:#E8C9C5;color:#8f352d}
+  .c-bear .ttl{color:var(--bear)}
+  .c-bull{background:var(--bull-wash);border-color:#C2E2D2;color:#176a4e}
+  .c-bull .ttl{color:var(--bull)}
+  .callout.c-teal p,.callout.c-amber p,.callout.c-bear p,.callout.c-bull p{color:inherit;opacity:0.96}
+
+  .conf{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;font-weight:600;
+    padding:2px 7px;border-radius:5px;letter-spacing:0.01em;vertical-align:middle}
+  .conf.hi{background:var(--bull-wash);color:#176a4e}
+  .conf.mid{background:var(--amber-wash);color:#8a5710}
+  .conf.lo{background:var(--bear-wash);color:#8f352d}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0}
+  th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-size:11.5px;letter-spacing:0.03em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;background:var(--surface2)}
+  td.n,th.n{text-align:right;font-family:var(--mono);font-feature-settings:"tnum"}
+  tr:hover td{background:var(--surface2)}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px}
+  .tbl-wrap table{margin:0}
+  .tbl-wrap th:first-child,.tbl-wrap td:first-child{padding-left:16px}
+
+  .pill{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
+  .pill.g{background:var(--bull-wash);color:#176a4e}
+  .pill.r{background:var(--bear-wash);color:#8f352d}
+  .pill.a{background:var(--amber-wash);color:#8a5710}
+  .pill.t{background:var(--teal-wash);color:var(--teal-deep)}
+
+  .toc{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  @media(max-width:760px){.toc{grid-template-columns:1fr 1fr}}
+  .toc a{display:flex;gap:9px;align-items:baseline;font-size:13.5px;color:var(--ink-soft);text-decoration:none;
+    padding:8px 11px;border:1px solid var(--line);border-radius:8px;background:var(--surface);transition:.15s}
+  .toc a:hover{border-color:var(--teal);color:var(--navy);background:var(--teal-wash)}
+  .toc a .n{font-family:var(--mono);font-size:12px;color:var(--teal-deep);font-weight:700}
+
+  svg{display:block;max-width:100%;height:auto}
+  .fig{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;margin:18px 0}
+  .fig-cap{font-size:12.5px;color:var(--ink-faint);margin-top:12px;text-align:center;font-family:var(--mono)}
+
+  .foot{background:var(--navy);color:#9FB3C6;padding:34px 0;font-size:13px}
+  .foot .wrap{display:flex;flex-direction:column;gap:8px}
+  .foot b{color:#D7E3EE}
+
+  mark{background:linear-gradient(180deg,transparent 55%,#FBE6BE 55%);padding:0 1px;color:inherit}
+</style>
+</head>
+<body>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="tag-row">
+      <span class="tag">NASDAQ · ABSI</span>
+      <span class="tag">생성형 AI 신약개발</span>
+      <span class="tag">임상단계 · 무매출</span>
+      <span class="tag">CAP 프레임워크 분석</span>
+    </div>
+    <h1>앱사이 <span class="ticker">(ABSI)</span><br>AI가 설계하는 항체, 그리고<br>시장이 매긴 "성공 확률"</h1>
+    <p class="hero-sub">생성형 AI로 항체 신약을 설계하는 임상단계 바이오테크. 회사 가치의 대부분은
+      탈모·자궁내막증을 겨냥한 단 하나의 후보물질 <b style="color:#BFE9E7">ABS-201</b>에 달려 있습니다.
+      이 보고서는 그 가치를 "정답"으로 계산하는 대신, <b style="color:#BFE9E7">현재 주가에 시장이 어떤 기대를 심어 놓았는지</b>를 역으로 풉니다.</p>
+    <div class="hero-meta">
+      <span>기준 시점 <b>2026년 6월 8~9일</b></span>
+      <span>기준 주가 <b>$6.61</b> (변동성 큼)</span>
+      <span>시가총액 <b>약 $10.3억</b></span>
+      <span>생애주기 단계 <b>도입(Introduction)</b></span>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== 핵심 결론 ===================== -->
+<section id="s0">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">00</span><span class="kind">Executive Summary · 핵심 결론</span></div>
+    <h2>한 문단으로 보는 결론</h2>
+    <p class="lead">앱사이는 <strong>생성형 AI로 항체를 설계하는 임상단계 신약 회사</strong>로, 아직 의미 있는 매출이 없고 분기당 약 2,600만 달러의 현금을 태우는 <strong>"도입(Introduction)" 단계</strong> 기업입니다.
+      따라서 초과수익의 지속기간을 재는 전통적 CAP(경쟁우위기간) 계산은 직접 적용되지 않습니다. 대신 같은 철학(시장 기대치 역산)을 바이오테크에 맞게 옮기면, <mark>현재 주가 $6.61에는 핵심 후보물질 ABS-201이 성공할 확률을 약 50%로 보는 시장의 기대</mark>가 담겨 있습니다 — 이는 일반적인 임상 2상 자산의 역사적 성공률(약 14%)을 <strong>3배 이상 웃도는 낙관</strong>입니다. <span class="conf hi">확신도 높음 ~80%</span></p>
+
+    <div class="callout c-teal">
+      <div class="ttl">▸ 이 보고서의 핵심 한 줄</div>
+      <p>"앱사이가 얼마짜리냐"가 아니라, <b>"지금 가격을 정당화하려면 ABS-201이 얼마나 성공해야 하는가"</b>를 묻습니다.
+      답: 피크 매출 22억 달러를 가정할 때 <b>성공확률 약 50%</b>가 이미 가격에 반영되어 있습니다. 2026년 하반기 임상 중간 데이터가 이 50%를 끌어올리거나(→ 추가 상승) 무너뜨리는(→ 순현금 수준으로 하락) <b>결정적 분기점</b>입니다.</p>
+    </div>
+
+    <h3>한눈에 보는 핵심 지표</h3>
+    <div class="grid4" style="margin-top:6px">
+      <div class="stat"><div class="lbl">기준 주가</div><div class="val">$6.61</div><div class="sub">52주 $2.24–$7.39</div></div>
+      <div class="stat"><div class="lbl">시가총액</div><div class="val">$1.03B</div><div class="sub">주식 1.559억 주</div></div>
+      <div class="stat"><div class="lbl">순현금</div><div class="val">$125M</div><div class="sub">주당 $0.80 · 부채 거의 0</div></div>
+      <div class="stat"><div class="lbl">기업가치(EV)</div><div class="val">$0.91B</div><div class="sub">= 시총 − 순현금</div></div>
+      <div class="stat"><div class="lbl">FY25 매출</div><div class="val">$2.8M</div><div class="sub">순손실 −$115M</div></div>
+      <div class="stat"><div class="lbl">분기 현금소진</div><div class="val">~$26M</div><div class="sub">자금 여력 ~2028 상반기</div></div>
+      <div class="stat"><div class="lbl">시장 내재 PoS</div><div class="val" style="color:var(--amber)">~50%</div><div class="sub">vs 2상 평균 ~14%</div></div>
+      <div class="stat"><div class="lbl">WACC</div><div class="val">13.4%</div><div class="sub">베타 2.3(원시)→1.87</div></div>
+    </div>
+
+    <h3>목차 — 분석은 다음 순서로 진행됩니다</h3>
+    <nav class="toc">
+      <a href="#s1"><span class="n">01</span> 기업 개요</a>
+      <a href="#s2"><span class="n">02</span> 돈 버는 구조</a>
+      <a href="#s3"><span class="n">03</span> 기술·플랫폼</a>
+      <a href="#s4"><span class="n">04</span> 파이프라인</a>
+      <a href="#s5"><span class="n">05</span> 산업 분석</a>
+      <a href="#s6"><span class="n">06</span> SWOT</a>
+      <a href="#s7"><span class="n">07</span> 경제적 해자</a>
+      <a href="#s8"><span class="n">08</span> 피어그룹 비교</a>
+      <a href="#s9"><span class="n">09</span> 생애주기 판별</a>
+      <a href="#s10"><span class="n">10</span> 경쟁우위 정성분석</a>
+      <a href="#s11"><span class="n">11</span> 가치평가 (rNPV)</a>
+      <a href="#s12"><span class="n">12</span> 시장 내재 확률 역산</a>
+      <a href="#s13"><span class="n">13</span> 민감도·시나리오</a>
+      <a href="#s14"><span class="n">14</span> 리스크·종합판단</a>
+    </nav>
+  </div>
+</section>
+
+<!-- ===================== 01 기업 개요 ===================== -->
+<section id="s1">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">01</span><span class="kind">Company Overview · 기업 개요</span></div>
+    <h2>앱사이는 어떤 회사인가</h2>
+    <p class="lead">한 문장으로: <strong>앱사이(Absci)는 생성형 AI(만들어내는 인공지능)로 "항체"라는 단백질 의약품을 설계하고, 자체 습식 실험실에서 빠르게 검증해, 신약 후보를 만들어내는 회사</strong>입니다.</p>
+
+    <p>2011년 션 매클레인(Sean McClain)이 창업했고, 2021년 7월 나스닥에 상장했습니다. 본사는 미국 워싱턴주 밴쿠버에 있으며, 뉴욕과 세르비아에 AI 연구소, 스위스에 혁신센터를 둡니다. 직원은 약 157명입니다. 원래는 합성생물학(미생물로 단백질을 만드는 기술) 회사로 출발했지만, <strong>"데이터 기반 생성형 AI 신약 창출 회사"로 전략을 전환</strong>하면서 성격이 크게 바뀌었습니다.</p>
+
+    <h3>꼭 알아야 할 4가지 기본 개념</h3>
+    <div class="grid2">
+      <div class="card">
+        <h4>① 항체(Antibody)·바이오로직스</h4>
+        <p class="small" style="color:var(--ink-soft)">우리 몸의 면역 단백질을 모방한 큰 분자 의약품입니다. 알약(저분자) 대비 표적을 정밀하게 공격하지만, 설계·제조가 어렵습니다. 휴미라·키트루다 같은 블록버스터가 모두 항체입니다.</p>
+      </div>
+      <div class="card">
+        <h4>② 임상단계(Clinical-stage)</h4>
+        <p class="small" style="color:var(--ink-soft)">아직 시판 약이 없고, 후보물질을 사람 대상 임상시험(1상→2상→3상→허가)으로 검증하는 중인 회사입니다. 매출은 거의 없고 연구개발에 돈을 씁니다.</p>
+      </div>
+      <div class="card">
+        <h4>③ 생성형 AI 설계</h4>
+        <p class="small" style="color:var(--ink-soft)">기존 항체를 "찾는" 대신, AI가 원하는 성질(효능·반감기·안정성)을 가진 항체 서열을 <b>처음부터 만들어냅니다</b>. 앱사이는 사전 데이터 없이 설계하는 "제로샷(zero-shot)" 역량을 강조합니다.</p>
+      </div>
+      <div class="card">
+        <h4>④ 표적(Target)</h4>
+        <p class="small" style="color:var(--ink-soft)">약이 달라붙어 작용하는 단백질입니다. 앱사이의 핵심 표적은 <b>프로락틴 수용체(PRLR)</b>로, 이를 막아 탈모·자궁내막증을 치료하려 합니다.</p>
+      </div>
+    </div>
+
+    <div class="callout c-amber">
+      <div class="ttl">▸ 비전공자가 기억할 핵심</div>
+      <p>앱사이는 "AI 기술 회사"인 동시에 "신약 개발 회사"입니다. 투자 가치는 <b>AI 플랫폼 자체의 가치 + 그 플랫폼이 만들어낸 약의 가치</b> 두 갈래로 나뉘며, 현재는 후자(특히 ABS-201) 비중이 압도적으로 큽니다. <span class="conf hi">확신도 높음 ~85%</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 02 돈 버는 구조 ===================== -->
+<section id="s2">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">02</span><span class="kind">Business Model · 수익 구조</span></div>
+    <h2>앱사이는 어떻게 (장차) 돈을 버는가</h2>
+    <p class="lead">현재 매출은 <strong>분기당 약 20만 달러(2026년 1분기)</strong>로 사실상 없습니다. 미래 수익 모델은 <strong>두 개의 엔진</strong>으로 설계되어 있습니다.</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 900 380" role="img" aria-label="앱사이 두 가지 수익 엔진 도식">
+        <defs>
+          <linearGradient id="gTeal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0FB0B0"/><stop offset="1" stop-color="#077575"/></linearGradient>
+          <linearGradient id="gNavy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16395B"/><stop offset="1" stop-color="#0C2237"/></linearGradient>
+        </defs>
+        <!-- center platform -->
+        <rect x="335" y="150" width="230" height="80" rx="14" fill="url(#gNavy)"/>
+        <text x="450" y="183" text-anchor="middle" fill="#fff" font-size="16" font-weight="700" font-family="Pretendard">통합 신약창출 플랫폼</text>
+        <text x="450" y="207" text-anchor="middle" fill="#9FE3E0" font-size="12.5" font-family="JetBrains Mono">Integrated Drug Creation™</text>
+
+        <!-- engine 1 -->
+        <rect x="40" y="40" width="330" height="120" rx="14" fill="url(#gTeal)"/>
+        <text x="62" y="72" fill="#fff" font-size="15.5" font-weight="700" font-family="Pretendard">엔진 1 · 자체 파이프라인</text>
+        <text x="62" y="96" fill="#E7FAF8" font-size="12.5" font-family="Pretendard">직접 보유한 신약을 임상까지 개발</text>
+        <text x="62" y="118" fill="#E7FAF8" font-size="12.5" font-family="Pretendard">→ 허가·판매 시 매출 전부 회사 몫</text>
+        <text x="62" y="140" fill="#CFF4F1" font-size="11.5" font-family="JetBrains Mono">ABS-201 / 101 / 301 / 501 / 202</text>
+
+        <!-- engine 2 -->
+        <rect x="530" y="40" width="330" height="120" rx="14" fill="url(#gTeal)"/>
+        <text x="552" y="72" fill="#fff" font-size="15.5" font-weight="700" font-family="Pretendard">엔진 2 · 플랫폼 파트너십</text>
+        <text x="552" y="96" fill="#E7FAF8" font-size="12.5" font-family="Pretendard">대형 제약사에 AI 설계 항체 제공</text>
+        <text x="552" y="118" fill="#E7FAF8" font-size="12.5" font-family="Pretendard">→ 선급금·마일스톤·로열티 수취</text>
+        <text x="552" y="140" fill="#CFF4F1" font-size="11.5" font-family="JetBrains Mono">AstraZeneca · Almirall · Twist</text>
+
+        <!-- arrows -->
+        <path d="M205 160 L420 175" stroke="#0B9C9C" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+        <path d="M695 160 L480 175" stroke="#0B9C9C" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+        <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#0B9C9C"/></marker></defs>
+
+        <!-- outcomes -->
+        <rect x="120" y="280" width="290" height="68" rx="12" fill="#FBF1E2" stroke="#F0DCB8"/>
+        <text x="265" y="310" text-anchor="middle" fill="#8a5710" font-size="13.5" font-weight="700" font-family="Pretendard">고위험·고수익</text>
+        <text x="265" y="332" text-anchor="middle" fill="#9a6614" font-size="12" font-family="Pretendard">성공 시 큰 매출, 실패 시 회수 불가</text>
+
+        <rect x="490" y="280" width="290" height="68" rx="12" fill="#E5F5F4" stroke="#BDE6E3"/>
+        <text x="635" y="310" text-anchor="middle" fill="#0a5757" font-size="13.5" font-weight="700" font-family="Pretendard">저위험·완만한 수익</text>
+        <text x="635" y="332" text-anchor="middle" fill="#0a6e6e" font-size="12" font-family="Pretendard">개발·상업화 위험은 파트너가 부담</text>
+
+        <path d="M340 230 L300 274" stroke="#C9D2DC" stroke-width="2" fill="none"/>
+        <path d="M560 230 L600 274" stroke="#C9D2DC" stroke-width="2" fill="none"/>
+      </svg>
+      <div class="fig-cap">그림 2-1 · 하나의 AI 플랫폼이 두 갈래 수익 엔진을 돌린다</div>
+    </div>
+
+    <h3>현재 수익의 실제 모습</h3>
+    <p>지금까지 인식된 매출은 거의 전부 <strong>엔진 2(파트너 프로그램 수익)</strong>에서 나온 소액의 연구비·마일스톤입니다. 자체 파이프라인은 아직 임상 중이라 매출이 0입니다. 즉 <strong>현재 손익계산서는 "비용만 있고 매출은 없는" 전형적 임상 바이오테크의 모습</strong>입니다.</p>
+
+    <div class="grid3">
+      <div class="stat"><div class="lbl">2026 1분기 매출</div><div class="val">$0.2M</div><div class="sub">전년 동기 $1.2M에서 급감</div></div>
+      <div class="stat"><div class="lbl">2026 1분기 R&D</div><div class="val">$19.3M</div><div class="sub">ABS-201 임상 진전</div></div>
+      <div class="stat"><div class="lbl">2026 1분기 판관비</div><div class="val">$9.1M</div><div class="sub">인건비 감소</div></div>
+    </div>
+
+    <div class="callout c-bear">
+      <div class="ttl">▸ 주의: 매출 변동성은 의미가 작다</div>
+      <p>분기 매출이 $1.2M→$0.2M로 "84% 감소"했지만, 이는 파트너 마일스톤의 들쭉날쭉한 인식 시점 탓일 뿐 사업 악화 신호로 보기 어렵습니다. <b>이 단계 기업의 가치는 매출이 아니라 임상 파이프라인의 진척과 성공 가능성으로 결정됩니다.</b> <span class="conf hi">확신도 높음 ~85%</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 03 기술·플랫폼 ===================== -->
+<section id="s3">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">03</span><span class="kind">Technology · 기술·플랫폼</span></div>
+    <h2>핵심 기술: AI 설계 ↔ 습식 검증의 "학습 루프"</h2>
+    <p class="lead">앱사이 플랫폼의 본질은 <strong>"AI가 항체를 설계하면 → 실험실에서 실제로 만들어 시험하고 → 그 결과를 다시 AI에 학습시켜 더 똑똑하게 만드는" 순환 고리</strong>입니다. 이 고리가 돌수록 데이터가 쌓여 설계가 정확해진다는 것이 앱사이의 주장입니다.</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 880 360" role="img" aria-label="설계-검증-학습 루프 도식">
+        <defs><marker id="ar2" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0B9C9C"/></marker></defs>
+        <!-- nodes around a circle -->
+        <g font-family="Pretendard">
+          <!-- 1 데이터 -->
+          <rect x="60" y="40" width="200" height="74" rx="13" fill="#0C2237"/>
+          <text x="160" y="70" text-anchor="middle" fill="#fff" font-size="14.5" font-weight="700">① 데이터로 학습</text>
+          <text x="160" y="92" text-anchor="middle" fill="#9FE3E0" font-size="11.5">합성생물학 데이터 엔진</text>
+          <!-- 2 AI 설계 -->
+          <rect x="620" y="40" width="200" height="74" rx="13" fill="#0C2237"/>
+          <text x="720" y="70" text-anchor="middle" fill="#fff" font-size="14.5" font-weight="700">② AI가 설계</text>
+          <text x="720" y="92" text-anchor="middle" fill="#9FE3E0" font-size="11.5">생성형 모델 "Origin"</text>
+          <!-- 3 습식 검증 -->
+          <rect x="620" y="246" width="200" height="74" rx="13" fill="#0B9C9C"/>
+          <text x="720" y="276" text-anchor="middle" fill="#fff" font-size="14.5" font-weight="700">③ 습식 실험 검증</text>
+          <text x="720" y="298" text-anchor="middle" fill="#E7FAF8" font-size="11.5">주당 수십억 세포 스크리닝</text>
+          <!-- 4 후보 -->
+          <rect x="60" y="246" width="200" height="74" rx="13" fill="#0B9C9C"/>
+          <text x="160" y="276" text-anchor="middle" fill="#fff" font-size="14.5" font-weight="700">④ 검증된 후보</text>
+          <text x="160" y="298" text-anchor="middle" fill="#E7FAF8" font-size="11.5">최단 6주 만에 도출</text>
+        </g>
+        <!-- loop arrows -->
+        <path d="M270 77 L612 77" stroke="#0B9C9C" stroke-width="2.6" fill="none" marker-end="url(#ar2)"/>
+        <path d="M720 118 L720 240" stroke="#0B9C9C" stroke-width="2.6" fill="none" marker-end="url(#ar2)"/>
+        <path d="M612 283 L270 283" stroke="#0B9C9C" stroke-width="2.6" fill="none" marker-end="url(#ar2)"/>
+        <path d="M160 240 L160 120" stroke="#0B9C9C" stroke-width="2.6" stroke-dasharray="6 5" fill="none" marker-end="url(#ar2)"/>
+        <!-- center label -->
+        <text x="440" y="175" text-anchor="middle" fill="#16395B" font-size="15" font-weight="800" font-family="Pretendard">데이터가 쌓일수록</text>
+        <text x="440" y="198" text-anchor="middle" fill="#16395B" font-size="15" font-weight="800" font-family="Pretendard">설계가 정교해지는 선순환</text>
+        <text x="138" y="180" fill="#828D9E" font-size="11" font-family="JetBrains Mono" transform="rotate(-90 138 180)">결과 재학습</text>
+      </svg>
+      <div class="fig-cap">그림 3-1 · 설계(Design) → 검증(Test) → 학습(Learn) 순환</div>
+    </div>
+
+    <h3>차별화 포인트와 검증 수준</h3>
+    <ul>
+      <li><strong>"제로샷" 설계 강조</strong> — 사전 실험 데이터가 거의 없는 표적("zero-prior" 에피토프)에도 항체를 설계할 수 있다고 주장. 학회(ICLR·PEGS)에서 생성 AI 플랫폼 "Origin-1" 데이터를 발표. <span class="conf mid">확신도 중간 ~60%(외부 독립검증은 제한적)</span></li>
+      <li><strong>속도</strong> — AI 설계부터 습식 검증 후보까지 최단 6주. 전통적 항체 발굴(수개월~수년) 대비 빠르다는 점을 내세움.</li>
+      <li><strong>컴퓨팅 파트너</strong> — AMD·오라클(OCI)과 협력해 AI 모델 학습·분자 시뮬레이션 인프라를 확장.</li>
+      <li><strong>핵심 한계</strong> — AI 신약개발 업계 전반에서 "AI가 설계한 약이 임상에서 실제로 성공했다"는 결정적 증거는 아직 부족합니다. 플랫폼의 진짜 가치는 <b>ABS-201의 사람 대상 데이터</b>로 비로소 입증됩니다. <span class="conf hi">확신도 높음 ~80%</span></li>
+    </ul>
+
+    <div class="callout c-teal">
+      <div class="ttl">▸ 쉽게 비유하면</div>
+      <p>앱사이의 플랫폼은 "항체 설계용 AI + 그 설계를 실제로 찍어내 시험하는 공장"의 결합입니다. AI 단독(설계만)이나 실험실 단독(검증만)이 아니라 <b>둘을 한 몸으로 빠르게 돌린다</b>는 점이 강점이지만, 그 강점이 "더 좋은 약"으로 이어지는지는 임상 결과가 말해줍니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 04 파이프라인 ===================== -->
+<section id="s4">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">04</span><span class="kind">Pipeline · 파이프라인</span></div>
+    <h2>파이프라인: 가치는 ABS-201에 집중</h2>
+    <p class="lead">앱사이의 신약 후보들은 단계와 중요도가 크게 다릅니다. <strong>회사 가치의 70~85%는 ABS-201 하나</strong>에서 나온다고 보는 것이 합리적입니다. 나머지는 옵션(추가 가능성) 성격입니다. <span class="conf mid">확신도 중간 ~65%</span></p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>후보물질</th><th>표적</th><th>적응증(질환)</th><th>단계</th><th>핵심 일정</th><th>보유</th><th class="n">가치 비중</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ABS-201</strong></td><td>PRLR (프로락틴 수용체)</td><td>안드로겐성 탈모(AGA)</td><td><span class="pill a">임상 1/2a</span></td><td>중간 PoC 데이터 ’26 하반기 / 전체 ’27 초</td><td>100% 자체</td><td class="n">★★★★★</td></tr>
+          <tr><td><strong>ABS-201</strong></td><td>PRLR</td><td>자궁내막증</td><td><span class="pill t">2상 예정</span></td><td>2상 개시 ’26 4분기 / PoC ’27 하반기</td><td>100% 자체</td><td class="n">★★★★</td></tr>
+          <tr><td>ABS-101</td><td>TL1A</td><td>염증성 장질환(IBD)</td><td><span class="pill t">1상 완료</span></td><td>안전성 양호 → <b>파트너십/아웃라이선싱 추진</b></td><td>자체→파트너</td><td class="n">★★</td></tr>
+          <tr><td>ABS-202</td><td>PRLR</td><td>미공개 염증·면역(I&I)</td><td><span class="pill r">전임상</span></td><td>’26 1분기 신규 편입</td><td>100% 자체</td><td class="n">★</td></tr>
+          <tr><td>ABS-301</td><td>미공개</td><td>면역항암</td><td><span class="pill r">전임상</span></td><td>초기</td><td>자체</td><td class="n">★</td></tr>
+          <tr><td>ABS-501</td><td>미공개</td><td>항암</td><td><span class="pill r">전임상</span></td><td>초기</td><td>자체</td><td class="n">★</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>ABS-201 — "탈모의 GLP-1 모멘트"를 노리는 핵심 자산</h3>
+    <div class="grid2">
+      <div class="card">
+        <h4>작동 원리 (쉽게)</h4>
+        <p class="small" style="color:var(--ink-soft)">프로락틴 수용체(PRLR)를 막으면 모낭이 "쉬는 단계"에서 "자라는 단계"로 전환됩니다. AI로 설계한 긴 반감기 항체라 <b>6개월에 2~3회 주사</b>만으로 효과를 노립니다. 영장류 실험에서는 1회 치료 후 <b>최대 4년간 발모 효과 지속</b>이 관찰되었습니다(전임상 데이터). <span class="conf lo">확신도 낮음 ~40%(사람 효능 미입증)</span></p>
+      </div>
+      <div class="card">
+        <h4>왜 시장이 흥분하는가</h4>
+        <p class="small" style="color:var(--ink-soft)">탈모(AGA)는 <b>미국에서만 약 8,000만 명</b>, FDA 승인 신약이 <b>약 30년간 없었던</b> 거대 미충족 시장입니다. 기존 치료(미녹시딜·피나스테리드)는 매일 복용해야 하고 효과가 제한적입니다. 한 증권사는 "GLP-1(비만치료제)이 그랬듯, 편리하고 효과 좋은 주사제가 시장 자체를 키울 수 있다"며 <b>탈모+자궁내막증 합산 피크 매출 22억 달러</b>를 전망했습니다.</p>
+      </div>
+    </div>
+
+    <div class="fig">
+      <svg viewBox="0 0 900 250" role="img" aria-label="ABS-201 임상 타임라인">
+        <g font-family="Pretendard">
+          <text x="20" y="28" font-size="14" font-weight="700" fill="#0C2237">ABS-201 주요 임상 일정 (촉매)</text>
+          <!-- timeline axis -->
+          <line x1="60" y1="170" x2="860" y2="170" stroke="#C9D2DC" stroke-width="2"/>
+          <!-- year ticks -->
+          <g font-family="JetBrains Mono" font-size="11" fill="#828D9E">
+            <text x="80" y="195" text-anchor="middle">’25 말</text>
+            <text x="270" y="195" text-anchor="middle">’26 상</text>
+            <text x="450" y="195" text-anchor="middle">’26 하</text>
+            <text x="640" y="195" text-anchor="middle">’27 초</text>
+            <text x="820" y="195" text-anchor="middle">’27 하</text>
+          </g>
+          <!-- milestones -->
+          <circle cx="80" cy="170" r="7" fill="#16395B"/>
+          <text x="80" y="150" text-anchor="middle" font-size="11.5" fill="#16395B">1/2a 개시</text>
+          <circle cx="270" cy="170" r="7" fill="#16395B"/>
+          <text x="270" y="150" text-anchor="middle" font-size="11.5" fill="#16395B">초기 안전/PK</text>
+          <circle cx="450" cy="170" r="10" fill="#D98A28"/>
+          <text x="450" y="142" text-anchor="middle" font-size="12.5" font-weight="800" fill="#8a5710">★ 중간 PoC</text>
+          <text x="450" y="225" text-anchor="middle" font-size="11" fill="#9a6614" font-family="Pretendard">← 결정적 분기점(탈모)</text>
+          <circle cx="640" cy="170" r="8" fill="#0B9C9C"/>
+          <text x="640" y="150" text-anchor="middle" font-size="11.5" fill="#0a6e6e">전체 PoC(탈모)</text>
+          <circle cx="820" cy="170" r="8" fill="#0B9C9C"/>
+          <text x="820" y="150" text-anchor="middle" font-size="11.5" fill="#0a6e6e">PoC(자궁내막증)</text>
+          <!-- endo Phase2 start marker -->
+          <circle cx="540" cy="170" r="6" fill="#16395B"/>
+          <text x="540" y="218" text-anchor="middle" font-size="10.5" fill="#828D9E" font-family="Pretendard">자궁내막증 2상 개시(’26 4Q)</text>
+        </g>
+      </svg>
+      <div class="fig-cap">그림 4-1 · 노란 별(★) "중간 PoC 데이터"가 2026년 하반기 최대 분기점</div>
+    </div>
+
+    <h3>ABS-101 — 좋은 자산이지만 "늦은 출발"</h3>
+    <p>ABS-101(항TL1A, 염증성 장질환)은 1상에서 경쟁 약물 대비 긴 반감기와 양호한 안전성을 보였습니다. 다만 TL1A는 <strong>이미 매우 혼잡한 표적</strong>입니다 — 머크(tulisokibart, 3상), 테바/사노피(duvakitug), 로슈, 애브비가 앞서 있습니다. 그래서 앱사이는 이 자산을 직접 끝까지 개발하기보다 <strong>대형 제약사에 라이선스/파트너십으로 넘겨 마일스톤·로열티로 가치화</strong>하는 전략을 택했습니다. 즉 "best-in-class 추격자"로서 제한적·옵션적 가치를 가집니다. <span class="conf mid">확신도 중간 ~65%</span></p>
+  </div>
+</section>
+
+<!-- ===================== 05 산업 분석 ===================== -->
+<section id="s5">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">05</span><span class="kind">Industry · 산업 분석</span></div>
+    <h2>산업: AI 신약개발 + 항체 치료제</h2>
+    <p class="lead">앱사이는 두 산업의 교차점에 있습니다 — <strong>① AI 신약개발(플랫폼)</strong>과 <strong>② 항체 치료제(제품 시장)</strong>. 각각의 구조와 현실을 봅니다.</p>
+
+    <h3>① AI 신약개발 산업의 "두 층 구조"</h3>
+    <p>업계 분석가들은 AI 신약개발을 두 층으로 봅니다: <strong>(앞단) 화려한 "AI가 신약 분자를 설계" 영역</strong>과 <strong>(중·후단) 덜 화려하지만 실속 있는 임상·규제·제조 효율화 영역</strong>. 2024~2025년은 AI 신약 기업들의 <strong>주가 조정·기대 냉각기</strong>였고(엑스사이언티아의 임상 실패 등), 시장은 "AI가 설계했다"는 헤드라인보다 <strong>실제 임상 성공 증거</strong>를 요구하기 시작했습니다. <span class="conf hi">확신도 높음 ~75%</span></p>
+
+    <div class="fig">
+      <svg viewBox="0 0 900 230" role="img" aria-label="항체 신약 가치사슬">
+        <g font-family="Pretendard">
+          <text x="20" y="26" font-size="14" font-weight="700" fill="#0C2237">항체 신약 가치사슬에서 앱사이의 위치</text>
+          <!-- chain boxes -->
+          <g>
+            <rect x="30" y="70" width="150" height="60" rx="10" fill="#0B9C9C"/>
+            <text x="105" y="96" text-anchor="middle" fill="#fff" font-size="12.5" font-weight="700">표적·설계</text>
+            <text x="105" y="116" text-anchor="middle" fill="#E7FAF8" font-size="10.5">AI 항체 발굴</text>
+
+            <rect x="205" y="70" width="150" height="60" rx="10" fill="#0B9C9C"/>
+            <text x="280" y="96" text-anchor="middle" fill="#fff" font-size="12.5" font-weight="700">전임상</text>
+            <text x="280" y="116" text-anchor="middle" fill="#E7FAF8" font-size="10.5">세포·동물 검증</text>
+
+            <rect x="380" y="70" width="150" height="60" rx="10" fill="#D98A28"/>
+            <text x="455" y="96" text-anchor="middle" fill="#fff" font-size="12.5" font-weight="700">임상 1·2상</text>
+            <text x="455" y="116" text-anchor="middle" fill="#FBF1E2" font-size="10.5">← 앱사이 현 위치</text>
+
+            <rect x="555" y="70" width="150" height="60" rx="10" fill="#E6EAEF"/>
+            <text x="630" y="96" text-anchor="middle" fill="#69748A" font-size="12.5" font-weight="700">임상 3상</text>
+            <text x="630" y="116" text-anchor="middle" fill="#94A0B2" font-size="10.5">대규모·고비용</text>
+
+            <rect x="730" y="70" width="150" height="60" rx="10" fill="#E6EAEF"/>
+            <text x="805" y="96" text-anchor="middle" fill="#69748A" font-size="12.5" font-weight="700">허가·판매</text>
+            <text x="805" y="116" text-anchor="middle" fill="#94A0B2" font-size="10.5">상업화</text>
+          </g>
+          <!-- arrows -->
+          <g stroke="#C9D2DC" stroke-width="2" fill="none">
+            <path d="M180 100 L203 100"/><path d="M355 100 L378 100"/><path d="M530 100 L553 100"/><path d="M705 100 L728 100"/>
+          </g>
+          <text x="455" y="170" text-anchor="middle" font-size="12" fill="#8a5710" font-family="Pretendard">앱사이의 강점은 가치사슬 <tspan font-weight="700">앞단(설계·속도)</tspan> — 뒷단(대규모 3상·상업화)은 미경험 영역</text>
+          <text x="455" y="195" text-anchor="middle" font-size="11.5" fill="#828D9E" font-family="Pretendard">→ 그래서 일부 자산은 파트너(대형 제약사)에게 뒷단을 맡기는 전략</text>
+        </g>
+      </svg>
+      <div class="fig-cap">그림 5-1 · 가치사슬 앞단에 강점, 뒷단은 파트너 의존</div>
+    </div>
+
+    <h3>② 제품 시장 규모 (ABS-201이 노리는 곳)</h3>
+    <div class="grid2">
+      <div class="card">
+        <h4>안드로겐성 탈모(AGA)</h4>
+        <ul style="margin-bottom:0">
+          <li>현재 약물 시장 <strong>약 27~30억 달러</strong>(대부분 저가 제네릭 미녹시딜·피나스테리드), 연 ~8% 성장해 2030년대 <strong>50~67억 달러</strong> 전망</li>
+          <li>미국 환자 <strong>~8,000만 명</strong>, FDA 신약 부재 <strong>~30년</strong></li>
+          <li>대부분 <strong>자기부담(보험 적용 ~5%)</strong> → 프리미엄 가격 책정 여지</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>자궁내막증</h4>
+        <ul style="margin-bottom:0">
+          <li>전 세계 여성의 <strong>최대 10%</strong>(미국 ~900만 명) 영향</li>
+          <li><strong>질병 변경(disease-modifying) FDA 승인 약 부재</strong> — 현재는 호르몬·수술 위주</li>
+          <li>ABS-201은 비호르몬 기전 → 통증·병변 동시 개선 가능성 주장</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout c-amber">
+      <div class="ttl">▸ 핵심 통찰: "시장 점유"가 아니라 "시장 창출" 논리</div>
+      <p>22억 달러 피크 매출은 기존 30억 달러 시장을 나눠 갖는 게 아니라, <b>편리한 프리미엄 주사제가 자기부담 가능 인구를 새로 끌어들여 시장 자체를 키운다</b>는 가정에 의존합니다. GLP-1(비만)에서 실제로 일어난 일이지만, <b>탈모·자궁내막증에서 재현될지는 임상 효능이 증명되어야</b> 합니다. 즉 큰 상방이지만 가정 의존도가 높습니다. <span class="conf mid">확신도 중간 ~55%</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 06 SWOT ===================== -->
+<section id="s6">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">06</span><span class="kind">SWOT · 강점·약점·기회·위협</span></div>
+    <h2>SWOT 분석</h2>
+    <p class="lead">강점/기회는 "AI 플랫폼 + 거대 미충족 시장"에, 약점/위협은 "무매출·현금소진·미검증 기전"에 집중됩니다.</p>
+
+    <div class="grid2" style="margin-top:8px">
+      <div class="card" style="border-top:3px solid var(--bull)">
+        <h4 style="color:var(--bull)">S · 강점 (Strengths)</h4>
+        <ul style="margin-bottom:0">
+          <li><strong>차별화된 AI 항체 플랫폼</strong> — 설계·검증 통합, 빠른 사이클(최단 6주), "제로샷" 설계 주장</li>
+          <li><strong>대형 파트너 검증</strong> — AstraZeneca(최대 2.47억$), Almirall, Twist, AMD/Oracle</li>
+          <li><strong>깨끗한 재무구조</strong> — 부채 거의 0, 유동비율 6.6배, 현금 ~1.26억$</li>
+          <li><strong>긴 반감기 항체 설계 역량</strong> — 저빈도 투여(편의성) 차별화</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:3px solid var(--bear)">
+        <h4 style="color:var(--bear)">W · 약점 (Weaknesses)</h4>
+        <ul style="margin-bottom:0">
+          <li><strong>사실상 무매출</strong> — 분기 매출 $0.2M, 누적결손 6.5억$</li>
+          <li><strong>지속적 현금소진</strong> — 분기 ~$26M, 자금 여력 ~2028 상반기 → <b>추가 증자 불가피</b></li>
+          <li><strong>단일 자산 집중 위험</strong> — 가치 대부분이 ABS-201 하나에 의존</li>
+          <li><strong>후기 임상·상업화 미경험</strong> — 3상·판매 트랙레코드 없음</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:3px solid var(--teal)">
+        <h4 style="color:var(--teal-deep)">O · 기회 (Opportunities)</h4>
+        <ul style="margin-bottom:0">
+          <li><strong>거대 미충족 시장</strong> — 탈모(8천만 명, 30년만의 신약), 자궁내막증(질병변경 치료 부재)</li>
+          <li><strong>"카테고리 창출" 잠재력</strong> — 프리미엄 주사제로 시장 확장(GLP-1 모델)</li>
+          <li><strong>플랫폼 추가 파트너십</strong> — 2026년 대형 제약사 신규 딜 기대 표명</li>
+          <li><strong>PRLR 프랜차이즈 확장</strong> — ABS-202 등 동일 표적 다질환 전개</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:3px solid var(--amber)">
+        <h4 style="color:var(--amber)">T · 위협 (Threats)</h4>
+        <ul style="margin-bottom:0">
+          <li><strong>임상 실패 위험</strong> — PRLR 탈모 기전은 사람에서 미검증, 2026 하반기 데이터가 좌우</li>
+          <li><strong>경쟁</strong> — Pelage(PP405) 등 탈모 신규 후보, TL1A는 머크 등 선점</li>
+          <li><strong>금리·바이오 투자심리</strong> — 고금리·위험회피 시 무수익 바이오 밸류 압박</li>
+          <li><strong>희석 위험</strong> — 증자 반복 시 주당가치 희석</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 07 경제적 해자 ===================== -->
+<section id="s7">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">07</span><span class="kind">Economic Moat · 경제적 해자</span></div>
+    <h2>경제적 해자: "잠재적"이며 아직 미입증</h2>
+    <p class="lead">해자(moat)란 경쟁자가 쉽게 따라오지 못하게 하는 지속적 우위입니다. 앱사이의 해자는 두 종류가 거론되지만, <strong>현시점에서는 "잠재적 해자"이지 입증된 해자가 아닙니다.</strong> <span class="conf mid">확신도 중간 ~55%</span></p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>① 데이터 복리 해자 (플랫폼)</h4>
+        <p class="small" style="color:var(--ink-soft)">설계·검증 루프가 돌수록 독점 데이터가 쌓여 "후발주자가 복제하기 어려운 자기강화 해자"가 된다는 논리(한 증권사 표현: "진짜 기술적 해자"). <b>검증 상태:</b> 이론적으로 설득력 있으나, 데이터 우위가 "더 좋은 임상 결과"로 이어졌다는 직접 증거는 아직 없음.</p>
+      </div>
+      <div class="card">
+        <h4>② 특허·신약 독점 해자 (제품)</h4>
+        <p class="small" style="color:var(--ink-soft)">ABS-201이 승인되면 신약 물질특허로 ~10여 년 독점이 생깁니다. 신규 기전(first-in-class)이면 선점 우위도 큽니다. <b>검증 상태:</b> 승인 전이라 아직 존재하지 않는 해자. 임상 성공이 전제.</p>
+      </div>
+    </div>
+
+    <h3>차별화 vs 원가우위 — 어느 쪽인가</h3>
+    <p>CAP 프레임워크는 지속 우위를 <strong>차별화 전략</strong>(높은 마진)과 <strong>원가우위 전략</strong>(높은 자본회전)으로 구분합니다. 앱사이는 매출·이익이 없어 마진·회전율로 판별이 <strong>불가능</strong>합니다. 다만 사업 모델상 <strong>"신약 차별화(novel 기전·편의성)"를 지향</strong>하며, 이는 헬스케어 섹터에서 지속 우위의 더 일반적 원천입니다. 단, <strong>차별화가 실제 ROIC 초과수익으로 전환되려면 임상·상업 성공이 선행</strong>되어야 합니다.</p>
+
+    <div class="callout c-amber">
+      <div class="ttl">▸ 정직한 결론</div>
+      <p>현재 앱사이의 해자는 <b>"내러티브(이야기) 단계"</b>입니다. 진짜 해자가 생기려면 (1) ABS-201 임상 성공 → 특허 독점, (2) 플랫폼이 반복적으로 승인 약을 배출 → 데이터 복리, 둘 중 하나 이상이 현실화되어야 합니다. 그 전까지는 "초과수익을 오래 지킬 해자"를 가정하기 어렵습니다. <span class="conf hi">확신도 높음 ~75%</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 08 피어그룹 비교 ===================== -->
+<section id="s8">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">08</span><span class="kind">Peer Comparison · 피어그룹 비교</span></div>
+    <h2>경쟁사 비교: AI 신약개발 동종업계</h2>
+    <p class="lead">앱사이와 가장 가까운 비교군은 AI 기반 신약개발 상장사들입니다. 특히 <strong>항체에 특화된 AbCellera</strong>가 사업 성격상 가장 유사합니다.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>회사 (티커)</th><th>접근법</th><th class="n">시가총액(대략)</th><th class="n">매출 규모</th><th>특징</th></tr></thead>
+        <tbody>
+          <tr><td><strong>앱사이 (ABSI)</strong></td><td>생성형 AI 항체 ("제로샷")</td><td class="n">~$1.0B</td><td class="n">~$3M</td><td>탈모/자궁내막증 자체 자산 집중, AstraZeneca 파트너</td></tr>
+          <tr><td>Recursion (RXRX)</td><td>표현체학+AI, 소분자·생물학 광범위</td><td class="n">~$3B</td><td class="n">수천만$(마일스톤)</td><td>임상 5개+, Roche·Bayer·Merck·Sanofi 협력, 엑스사이언티아 합병</td></tr>
+          <tr><td>Schrödinger (SDGR)</td><td>물리기반 계산화학+AI</td><td class="n">~$1.8–2.2B</td><td class="n">~$180–200M</td><td>소프트웨어 매출 60%로 수익 다변화, 자체 파이프라인 병행</td></tr>
+          <tr><td>AbCellera (ABCL)</td><td>AI+미세유체 항체 발굴</td><td class="n">~$2B</td><td class="n">~$80–120M</td><td><b>항체 특화(가장 유사)</b>, 현금 6억$+, 로열티/플랫폼 모델</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>비교에서 드러나는 앱사이의 위치</h3>
+    <ul>
+      <li><strong>매출은 동종 대비 가장 적음</strong> — Schrödinger($180M+)·AbCellera($80M+)는 이미 의미 있는 플랫폼 매출이 있는 반면, 앱사이는 거의 0. 즉 앱사이는 <b>"플랫폼 매출"보다 "자체 신약(ABS-201)의 임상 성공"에 베팅하는 성격</b>이 더 강합니다.</li>
+      <li><strong>시가총액은 중간~하위권</strong> — Recursion(~$3B)·AbCellera·Schrödinger(~$2B대)보다 작은 ~$1B. 단일 자산 집중 + 무매출을 반영.</li>
+      <li><strong>변동성·베타는 최상위</strong> — 베타 2.3 수준으로 동종 중에서도 높음(임상 이벤트 의존).</li>
+    </ul>
+
+    <div class="callout c-teal">
+      <div class="ttl">▸ 비교의 함의</div>
+      <p>"AI 신약개발"이라는 같은 라벨이라도 <b>수익 구조가 다릅니다.</b> Schrödinger는 소프트웨어, AbCellera는 로열티로 하방을 일부 방어하지만, <b>앱사이는 ABS-201의 이항적(성공/실패) 결과에 더 직접 노출</b>됩니다. 따라서 동종 배수 비교(단순 PSR 등)는 오해를 부르며, 본 보고서처럼 <b>자산별 성공확률 기반(rNPV) 접근</b>이 더 적절합니다. <span class="conf hi">확신도 높음 ~80%</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 09 생애주기 판별 ===================== -->
+<section id="s9">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">09</span><span class="kind">Lifecycle Stage · 생애주기 판별</span></div>
+    <h2>생애주기 단계: 명백한 "도입(Introduction)"</h2>
+    <p class="lead">CAP 분석의 첫 단계는 현금흐름 패턴으로 기업의 생애주기 단계를 판별하는 것입니다. 앱사이는 <strong>영업현금 유출(−) · 재무현금 유입(+)</strong>의 전형적인 도입 단계 신호를 보입니다. <span class="conf hi">확신도 높음 ~90%</span></p>
+
+    <div class="fig">
+      <svg viewBox="0 0 900 260" role="img" aria-label="생애주기 5단계와 앱사이 위치">
+        <g font-family="Pretendard">
+          <text x="20" y="26" font-size="14" font-weight="700" fill="#0C2237">기업 생애주기 5단계 (현금흐름 부호로 판별)</text>
+          <!-- stages -->
+          <g>
+            <rect x="30" y="60" width="158" height="120" rx="12" fill="#D98A28"/>
+            <text x="109" y="86" text-anchor="middle" fill="#fff" font-size="15" font-weight="800">도입</text>
+            <text x="109" y="110" text-anchor="middle" fill="#FBF1E2" font-size="11" font-family="JetBrains Mono">영업 −  투자 −</text>
+            <text x="109" y="126" text-anchor="middle" fill="#FBF1E2" font-size="11" font-family="JetBrains Mono">재무 +</text>
+            <text x="109" y="150" text-anchor="middle" fill="#fff" font-size="11.5">ROIC ≈ −2.9%</text>
+            <text x="109" y="168" text-anchor="middle" fill="#FFE3BD" font-size="11" font-weight="700">← 앱사이</text>
+
+            <rect x="200" y="60" width="158" height="120" rx="12" fill="#E6EAEF"/>
+            <text x="279" y="86" text-anchor="middle" fill="#69748A" font-size="15" font-weight="800">성장</text>
+            <text x="279" y="110" text-anchor="middle" fill="#94A0B2" font-size="11" font-family="JetBrains Mono">영업 +  투자 −</text>
+            <text x="279" y="126" text-anchor="middle" fill="#94A0B2" font-size="11" font-family="JetBrains Mono">재무 +</text>
+            <text x="279" y="150" text-anchor="middle" fill="#69748A" font-size="11.5">ROIC ≈ 10.5%</text>
+
+            <rect x="370" y="60" width="158" height="120" rx="12" fill="#E6EAEF"/>
+            <text x="449" y="86" text-anchor="middle" fill="#69748A" font-size="15" font-weight="800">성숙</text>
+            <text x="449" y="110" text-anchor="middle" fill="#94A0B2" font-size="11" font-family="JetBrains Mono">영업 +  투자 −</text>
+            <text x="449" y="126" text-anchor="middle" fill="#94A0B2" font-size="11" font-family="JetBrains Mono">재무 −</text>
+            <text x="449" y="150" text-anchor="middle" fill="#69748A" font-size="11.5">ROIC ≈ 11.1%</text>
+
+            <rect x="540" y="60" width="158" height="120" rx="12" fill="#E6EAEF"/>
+            <text x="619" y="86" text-anchor="middle" fill="#69748A" font-size="15" font-weight="800">정리</text>
+            <text x="619" y="110" text-anchor="middle" fill="#94A0B2" font-size="11" font-family="JetBrains Mono">혼합</text>
+            <text x="619" y="150" text-anchor="middle" fill="#69748A" font-size="11.5">ROIC ≈ 3.6%</text>
+
+            <rect x="710" y="60" width="158" height="120" rx="12" fill="#E6EAEF"/>
+            <text x="789" y="86" text-anchor="middle" fill="#69748A" font-size="15" font-weight="800">감소</text>
+            <text x="789" y="110" text-anchor="middle" fill="#94A0B2" font-size="11" font-family="JetBrains Mono">영업 −  투자 +</text>
+            <text x="789" y="150" text-anchor="middle" fill="#69748A" font-size="11.5">ROIC ≈ −13%</text>
+          </g>
+          <text x="450" y="215" text-anchor="middle" font-size="12.5" fill="#8a5710" font-family="Pretendard">DCF+CAP 표준분석은 <tspan font-weight="700">성장·성숙</tspan> 단계에 적합 · <tspan font-weight="700">도입</tspan> 단계는 실제옵션·TAM 접근이 권장됨</text>
+          <text x="450" y="238" text-anchor="middle" font-size="11.5" fill="#828D9E" font-family="Pretendard">→ 그래서 본 보고서는 표준 CAP 대신 "위험조정 NPV + 내재 성공확률" 방식을 사용</text>
+        </g>
+      </svg>
+      <div class="fig-cap">그림 9-1 · 앱사이는 가장 초기인 "도입" 단계 — 표준 CAP의 직접 적용이 어려운 이유</div>
+    </div>
+
+    <h3>현금흐름·재무가 보여주는 증거</h3>
+    <div class="grid4">
+      <div class="stat"><div class="lbl">영업현금흐름(1Q26)</div><div class="val" style="color:var(--bear)">−$26M</div><div class="sub">지속 유출(현금 소진)</div></div>
+      <div class="stat"><div class="lbl">재무현금흐름</div><div class="val" style="color:var(--bull)">+</div><div class="sub">증자로 자금 조달</div></div>
+      <div class="stat"><div class="lbl">장기부채</div><div class="val">$0.4M</div><div class="sub">사실상 무차입</div></div>
+      <div class="stat"><div class="lbl">누적결손금</div><div class="val">−$654M</div><div class="sub">창업 이후 누적 손실</div></div>
+    </div>
+
+    <div class="callout c-bear">
+      <div class="ttl">▸ 방법론상 중요한 결론</div>
+      <p>도입 단계 기업은 <b>초과수익(ROIC &gt; 자본비용)이 아직 없으므로</b>, "초과수익을 몇 년 유지하는가(CAP)"를 직접 역산할 대상이 없습니다. 따라서 본 보고서는 같은 철학(시장 기대 역산)을 유지하되, 측정 대상을 <b>"CAP(연수)" → "ABS-201의 성공확률(PoS)"</b>로 바꿉니다. 이것이 도입 단계 바이오테크에 맞는 올바른 적응입니다. <span class="conf hi">확신도 높음 ~85%</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 10 경쟁우위 정성분석 ===================== -->
+<section id="s10">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">10</span><span class="kind">Competitive Analysis · 경쟁우위 정성분석</span></div>
+    <h2>포터의 5가지 힘 (Porter's 5 Forces)</h2>
+    <p class="lead">ABS-201이 승인된다고 가정할 때, 그 사업이 처할 경쟁 환경을 평가합니다. 신약 독점·미충족 수요는 우호적이나, 표적 경쟁과 구매자(지불자) 압력은 주의 요인입니다.</p>
+
+    <div class="tbl-wrap" style="margin-top:8px">
+      <table>
+        <thead><tr><th>힘</th><th class="n">강도</th><th>핵심 내용</th></tr></thead>
+        <tbody>
+          <tr><td><strong>신규 진입 위협</strong></td><td class="n"><span class="pill a">중</span></td><td>항체 신약은 진입장벽(자본·기술·규제)이 높지만, 탈모는 다수 기업이 노리는 핫한 영역(Pelage 등). 신규 기전 선점 시 일시적 보호.</td></tr>
+          <tr><td><strong>기존 경쟁 강도</strong></td><td class="n"><span class="pill a">중</span></td><td>탈모: 저가 제네릭이 1차 치료(가격 경쟁 압력) but 효능/편의 차별화 여지 큼. 자궁내막증: 호르몬제·수술과 경쟁하나 질병변경 신약은 공백.</td></tr>
+          <tr><td><strong>공급자 교섭력</strong></td><td class="n"><span class="pill g">하</span></td><td>CDMO(위탁생산)·원료 공급은 표준화·다변화 가능. 컴퓨팅은 AMD/Oracle 협력으로 확보.</td></tr>
+          <tr><td><strong>구매자(지불자) 교섭력</strong></td><td class="n"><span class="pill r">중–상</span></td><td>탈모는 <b>자기부담 시장</b>이라 보험 협상 부담이 작지만, 가격 민감도(소비자 지갑)가 직접 작용. 자궁내막증은 보험 지불자 협상 필요.</td></tr>
+          <tr><td><strong>대체재 위협</strong></td><td class="n"><span class="pill a">중</span></td><td>탈모: 모발이식·LLLT·기존약·신규 경쟁후보. 자궁내막증: 수술·호르몬요법. 차별적 효능 입증이 관건.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="callout c-bull" style="margin:0">
+        <div class="ttl">우호적 요인</div>
+        <p>① 신약 물질특허에 의한 ~10년 독점(승인 시) ② 30년만의 탈모 신약·질병변경 자궁내막증 신약이라는 <b>강한 미충족 수요</b> ③ 저빈도 투여 편의성 ④ 자기부담 시장의 프리미엄 가격 여지</p>
+      </div>
+      <div class="callout c-amber" style="margin:0">
+        <div class="ttl">주의 요인</div>
+        <p>① <b>임상 효능 미입증</b>(가장 큰 변수) ② 탈모 신규 경쟁자 증가 ③ 소비자 가격 민감도 ④ 후기 임상·DTC(소비자 직접 마케팅) 실행 역량 미검증</p>
+      </div>
+    </div>
+
+    <div class="callout c-teal">
+      <div class="ttl">▸ 종합</div>
+      <p>ABS-201이 <b>임상에서 효능을 입증하기만 하면</b>, 신약 독점 + 거대 미충족 시장 + 편의성으로 <b>강한 차별화 우위</b>를 확보할 구조입니다. 즉 경쟁 환경 자체는 우호적입니다. <b>모든 것이 "임상 성공"이라는 단일 조건에 걸려 있다</b>는 점이 이 사업의 본질입니다. <span class="conf hi">확신도 높음 ~80%</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 11 가치평가 rNPV ===================== -->
+<section id="s11">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">11</span><span class="kind">Valuation · 가치평가 (위험조정 DCF)</span></div>
+    <h2>가치평가: ABS-201의 "성공 시 현금흐름"부터 쌓는다</h2>
+    <p class="lead">도입 단계라 표준 CAP·고든 모델 대신, 바이오 정석인 <strong>위험조정 NPV(rNPV)</strong>를 씁니다. 절차는 ① ABS-201이 <b>성공한다고 가정</b>한 미래 현금흐름의 현재가치(성공 시 NPV)를 구하고 → ② 거기에 <b>성공확률(PoS)</b>을 곱하고 → ③ 나머지 파이프라인·플랫폼·순현금을 더합니다.</p>
+
+    <h3>WACC (할인율) 가정</h3>
+    <div class="grid4">
+      <div class="stat"><div class="lbl">무위험이자율(10y)</div><div class="val">4.55%</div><div class="sub">미 국채, ’26-06-05</div></div>
+      <div class="stat"><div class="lbl">조정 베타</div><div class="val">1.87</div><div class="sub">원시 2.3 → 1로 회귀</div></div>
+      <div class="stat"><div class="lbl">ERP</div><div class="val">4.75%</div><div class="sub">(’26초 내재치 4.23%)</div></div>
+      <div class="stat"><div class="lbl">WACC ≈ 자기자본비용</div><div class="val" style="color:var(--teal-deep)">13.4%</div><div class="sub">부채 ≈ 0</div></div>
+    </div>
+    <p class="small" style="margin-top:10px">※ 바이오 rNPV는 임상 실패 위험을 <b>PoS(확률)로 따로 반영</b>하고, 체계적 시장위험은 베타(13.4%)로 반영합니다. 임상위험은 분산가능(비체계적)하므로 둘을 함께 쓰는 것은 이중계산이 아닙니다. 다만 할인율은 민감도(13장)에서 10~15%로 함께 검토합니다.</p>
+
+    <h3>ABS-201 "성공 시" 현금흐름 모델 (단위 $M, 연중할인)</h3>
+    <p class="small">가정: 탈모 2030 출시·자궁내막증 2031 출시, 합산 피크 매출 22억$(’36), 영업이익률 40%, 세율 19% → NOPAT 마진 ≈ 32%. 출시 전 2상/3상 개발비를 명시적으로 차감.</p>
+    <div class="tbl-wrap">
+      <table style="font-size:11.5px">
+        <thead><tr>
+          <th style="position:sticky;left:0;background:var(--surface2)">($M)</th>
+          <th class="n">’26</th><th class="n">’27</th><th class="n">’28</th><th class="n">’29</th><th class="n">’30</th><th class="n">’31</th><th class="n">’32</th><th class="n">’33</th><th class="n">’34</th><th class="n">’35</th><th class="n">’36</th><th class="n">’38</th><th class="n">’40</th><th class="n">’42</th><th class="n">’44</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="position:sticky;left:0;background:#fff"><b>매출</b></td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">150</td><td class="n">450</td><td class="n">850</td><td class="n">1300</td><td class="n">1700</td><td class="n">2000</td><td class="n">2200</td><td class="n">2200</td><td class="n">2200</td><td class="n">1900</td><td class="n">700</td></tr>
+          <tr><td style="position:sticky;left:0;background:#fff">EBITA</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">60</td><td class="n">180</td><td class="n">340</td><td class="n">520</td><td class="n">680</td><td class="n">800</td><td class="n">880</td><td class="n">880</td><td class="n">880</td><td class="n">760</td><td class="n">280</td></tr>
+          <tr><td style="position:sticky;left:0;background:#fff">NOPAT</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">49</td><td class="n">146</td><td class="n">275</td><td class="n">421</td><td class="n">551</td><td class="n">648</td><td class="n">713</td><td class="n">713</td><td class="n">713</td><td class="n">616</td><td class="n">227</td></tr>
+          <tr><td style="position:sticky;left:0;background:#fff">개발투자</td><td class="n">−50</td><td class="n">−120</td><td class="n">−180</td><td class="n">−150</td><td class="n">−80</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td></tr>
+          <tr style="background:#FBFCFD"><td style="position:sticky;left:0;background:#FBFCFD"><b>FCF</b></td><td class="n">−50</td><td class="n">−120</td><td class="n">−180</td><td class="n">−150</td><td class="n">−31</td><td class="n">146</td><td class="n">275</td><td class="n">421</td><td class="n">551</td><td class="n">648</td><td class="n">713</td><td class="n">713</td><td class="n">713</td><td class="n">616</td><td class="n">227</td></tr>
+          <tr><td style="position:sticky;left:0;background:#fff">FCF 현재가치</td><td class="n">−47</td><td class="n">−99</td><td class="n">−131</td><td class="n">−97</td><td class="n">−18</td><td class="n">73</td><td class="n">122</td><td class="n">164</td><td class="n">189</td><td class="n">196</td><td class="n">190</td><td class="n">148</td><td class="n">115</td><td class="n">77</td><td class="n">22</td></tr>
+          <tr style="background:var(--teal-wash)"><td style="position:sticky;left:0;background:#E5F5F4"><b>누적 PV</b></td><td class="n">−47</td><td class="n">−146</td><td class="n">−278</td><td class="n">−374</td><td class="n">−392</td><td class="n">−319</td><td class="n">−198</td><td class="n">−34</td><td class="n">156</td><td class="n">352</td><td class="n">542</td><td class="n">858</td><td class="n">1104</td><td class="n">1282</td><td class="n">1351</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">표는 가독성을 위해 일부 연도를 생략(’37·’39·’41·’43·’45 포함 시 총 2026–2045). 최종 누적 PV(2045년) = <b>약 +$1,361M</b>.</p>
+
+    <h3>성공 시 NPV → 위험조정 NPV(rNPV) 다리</h3>
+    <div class="grid3">
+      <div class="card">
+        <h4 style="color:var(--teal-deep)">① ABS-201 성공 시 NPV</h4>
+        <div class="num" style="font-size:30px;font-weight:700;color:var(--navy)">$1.36B</div>
+        <p class="small" style="margin-top:6px">상업현금흐름 PV $1.77B − 개발비 PV $0.42B. "ABS-201이 100% 성공한다면" 오늘 가치.</p>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--ink)">② ABS-201 외 가치(SOTP)</h4>
+        <div class="num" style="font-size:30px;font-weight:700;color:var(--navy)">$0.23B</div>
+        <p class="small" style="margin-top:6px">ABS-101(파트너) ~$75M + 플랫폼 파트너십 ~$100M + 초기 파이프라인 ~$50M. (보수적·위험조정)</p>
+      </div>
+      <div class="card">
+        <h4 style="color:var(--ink)">③ 순현금</h4>
+        <div class="num" style="font-size:30px;font-weight:700;color:var(--navy)">$0.125B</div>
+        <p class="small" style="margin-top:6px">현금+유가증권 $125.7M − 부채 $0.4M (’26-03-31 기준).</p>
+      </div>
+    </div>
+
+    <div class="callout c-amber">
+      <div class="ttl">▸ 자산별 합산(SOTP) 가치 공식</div>
+      <p style="font-family:var(--mono);font-size:13.5px;color:#8a5710">주당가치 = [ <b>$1.36B × PoS</b> + $0.23B + $0.125B ] ÷ 1.559억 주</p>
+      <p>핵심 미지수는 단 하나, <b>PoS(ABS-201 성공확률)</b>입니다. 다음 12장에서 "그렇다면 현재 주가는 PoS를 몇 %로 보고 있는가"를 역산합니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 12 시장 내재 확률 역산 ===================== -->
+<section id="s12" style="background:linear-gradient(180deg,#FFFFFF 0%,#F2FAF9 100%)">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">12</span><span class="kind">Market-Implied Expectations · 시장 내재 기대 역산</span></div>
+    <h2>시장은 ABS-201 성공확률을 몇 %로 보고 있나</h2>
+    <p class="lead">전통적 CAP가 "시장이 몇 년의 초과수익을 가격에 넣었나"를 묻듯, 여기서는 <strong>"현재 주가가 ABS-201의 성공확률을 몇 %로 가격에 넣었나"</strong>를 역산합니다. 11장의 공식을 뒤집으면 됩니다.</p>
+
+    <div class="callout c-teal">
+      <div class="ttl">▸ 역산 결과 (기준: 피크 $2.2B, 할인율 13.4%)</div>
+      <p style="font-family:var(--mono);font-size:13px">기업가치 $0.905B − 기타 $0.225B = ABS-201 내재가치 <b>$0.68B</b> ÷ 성공시 NPV $1.36B = <b style="font-size:16px">시장 내재 PoS ≈ 50%</b></p>
+      <p>즉, 현재 주가는 ABS-201이 22억 달러 피크에 도달할 확률을 <b>약 50%</b>로 보고 있습니다 — 일반적인 임상 2상 자산의 역사적 성공률(~14%)의 <b>3.5배</b>. <span class="conf hi">확신도 높음 ~75%</span></p>
+    </div>
+
+    <h3>시그니처 차트 — "기대의 스펙트럼"</h3>
+    <div class="fig">
+      <svg viewBox="0 0 900 320" role="img" aria-label="시장 내재 성공확률 스펙트럼">
+        <defs>
+          <linearGradient id="spec" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#0B9C9C"/><stop offset="0.45" stop-color="#E0B23D"/>
+            <stop offset="0.75" stop-color="#D98A28"/><stop offset="1" stop-color="#BE4339"/>
+          </linearGradient>
+        </defs>
+        <text x="20" y="28" font-size="14" font-weight="700" fill="#0C2237" font-family="Pretendard">현재 주가·애널리스트 목표가에 내재된 ABS-201 성공확률</text>
+
+        <!-- base rate band -->
+        <rect x="110" y="150" width="63" height="40" fill="#0B9C9C" opacity="0.14"/>
+        <text x="141" y="142" text-anchor="middle" font-size="10.5" fill="#0a6e6e" font-family="Pretendard">2상 평균대 ~6–26%</text>
+
+        <!-- gradient bar -->
+        <rect x="70" y="150" width="760" height="40" rx="6" fill="url(#spec)"/>
+        <!-- scale ticks -->
+        <g font-family="JetBrains Mono" font-size="10.5" fill="#69748A">
+          <text x="70" y="210" text-anchor="middle">0%</text>
+          <text x="202" y="210" text-anchor="middle">20%</text>
+          <text x="334" y="210" text-anchor="middle">40%</text>
+          <text x="466" y="210" text-anchor="middle">60%</text>
+          <text x="599" y="210" text-anchor="middle">80%</text>
+          <text x="731" y="210" text-anchor="middle">100%</text>
+        </g>
+        <text x="450" y="232" text-anchor="middle" font-size="11" fill="#828D9E" font-family="Pretendard">← 시장이 보수적(비관) · · · 시장이 낙관(요구 높음) →</text>
+
+        <!-- markers (above) -->
+        <!-- Morningstar 13% x=156 -->
+        <line x1="156" y1="150" x2="156" y2="95" stroke="#16395B" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle cx="156" cy="95" r="4" fill="#16395B"/>
+        <text x="156" y="84" text-anchor="middle" font-size="10.5" fill="#16395B" font-family="Pretendard">Morningstar $3.40</text>
+        <text x="156" y="72" text-anchor="middle" font-size="10" fill="#828D9E" font-family="JetBrains Mono">~13%</text>
+
+        <!-- MS 21% x=209 (below) -->
+        <line x1="209" y1="190" x2="209" y2="250" stroke="#16395B" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle cx="209" cy="250" r="4" fill="#16395B"/>
+        <text x="209" y="266" text-anchor="middle" font-size="10.5" fill="#16395B" font-family="Pretendard">Morgan Stanley $4.10</text>
+        <text x="209" y="279" text-anchor="middle" font-size="10" fill="#828D9E" font-family="JetBrains Mono">~21%</text>
+
+        <!-- 현재가 50% x=400 (emphasized, above) -->
+        <line x1="400" y1="150" x2="400" y2="70" stroke="#D98A28" stroke-width="3"/>
+        <circle cx="400" cy="70" r="8" fill="#D98A28"/>
+        <rect x="330" y="44" width="140" height="22" rx="6" fill="#D98A28"/>
+        <text x="400" y="59" text-anchor="middle" font-size="12" font-weight="800" fill="#fff" font-family="Pretendard">현재가 $6.61 · ~50%</text>
+
+        <!-- 컨센서스 76% x=572 (below) -->
+        <line x1="572" y1="190" x2="572" y2="250" stroke="#1F8A66" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle cx="572" cy="250" r="4" fill="#1F8A66"/>
+        <text x="572" y="266" text-anchor="middle" font-size="10.5" fill="#176a4e" font-family="Pretendard">컨센서스 $8.92</text>
+        <text x="572" y="279" text-anchor="middle" font-size="10" fill="#828D9E" font-family="JetBrains Mono">~76%</text>
+
+        <!-- Leerink 112% x=810 (above) -->
+        <line x1="810" y1="150" x2="810" y2="100" stroke="#BE4339" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle cx="810" cy="100" r="4" fill="#BE4339"/>
+        <text x="810" y="89" text-anchor="end" font-size="10.5" fill="#8f352d" font-family="Pretendard">Leerink $12</text>
+        <text x="810" y="77" text-anchor="end" font-size="10" fill="#828D9E" font-family="JetBrains Mono">~112%(초과낙관)</text>
+      </svg>
+      <div class="fig-cap">그림 12-1 · 같은 회사를 두고 평가가 ~13%(Morningstar)에서 ~112%(Leerink)까지 갈린다 — 그 한가운데 현재가(~50%)가 있다</div>
+    </div>
+
+    <h3>가격대별 내재 성공확률</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>관점 / 가격</th><th class="n">주가</th><th class="n">시가총액</th><th class="n">내재 PoS</th><th>해석</th></tr></thead>
+        <tbody>
+          <tr><td>Morningstar 적정가치</td><td class="n">$3.40</td><td class="n">$0.53B</td><td class="n"><span class="pill t">~13%</span></td><td>역사적 기저율 적용(보수)</td></tr>
+          <tr><td>Morgan Stanley(중립)</td><td class="n">$4.10</td><td class="n">$0.64B</td><td class="n"><span class="pill t">~21%</span></td><td>기저율보다 약간 높음</td></tr>
+          <tr style="background:var(--amber-wash)"><td><strong>현재 주가</strong></td><td class="n"><strong>$6.61</strong></td><td class="n"><strong>$1.03B</strong></td><td class="n"><span class="pill a"><strong>~50%</strong></span></td><td><strong>"성공 반반 이상"으로 가격 책정</strong></td></tr>
+          <tr><td>애널리스트 컨센서스</td><td class="n">$8.92</td><td class="n">$1.39B</td><td class="n"><span class="pill r">~76%</span></td><td>데이터 긍정 시에만 정당화</td></tr>
+          <tr><td>Leerink(최고 목표가)</td><td class="n">$12.00</td><td class="n">$1.87B</td><td class="n"><span class="pill r">~112%</span></td><td>성공 사실상 확정 가정(공격적)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout c-amber">
+      <div class="ttl">▸ Bayesian 해석 — 경쟁 가설</div>
+      <p><b>가설 A (시장 합리적, 확신도 ~45%):</b> 초기 안전성·PK 양호 + 명확한 평가지표 + 소비자 카테고리 확장 잠재력을 감안하면 ~50% PoS가 타당. 이 경우 현재가는 적정.</p>
+      <p><b>가설 B (시장 과열, 확신도 ~45%):</b> 신규 기전이 사람에서 미검증인데 ~50%는 과도. 진짜 PoS는 ~20–25%이며 현재가는 데이터 전 과열($4~4.5가 적정).</p>
+      <p><b>판정 보류 → 결정 증거:</b> <b>2026년 하반기 중간 PoC 데이터</b>가 두 가설을 가릅니다. 긍정이면 A·상방, 부정이면 B·하방. 현시점은 "둘 다 가능"이 정직한 입장입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 13 민감도·시나리오 ===================== -->
+<section id="s13">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">13</span><span class="kind">Sensitivity & Scenarios · 민감도·시나리오</span></div>
+    <h2>민감도 분석 — 가정이 결과를 어떻게 바꾸는가</h2>
+    <p class="lead">rNPV는 소수의 가정(피크 매출·할인율·성공확률)에 민감합니다. "정밀한 한 값"이 아니라 "범위와 방향"을 봐야 합니다.</p>
+
+    <h3>민감도 A · 현재 주가에 내재된 PoS (행=피크매출, 열=할인율)</h3>
+    <p class="small">색이 붉을수록 "시장이 더 낙관적(요구 높음)". 어떤 합리적 가정에서도 내재 PoS는 대체로 기저율(~14%)을 상회.</p>
+    <div class="tbl-wrap">
+      <table style="text-align:center">
+        <thead><tr><th>피크 \ 할인율</th><th class="n">10.0%</th><th class="n">11.5%</th><th class="n">13.4%</th><th class="n">15.0%</th></tr></thead>
+        <tbody style="font-family:var(--mono)">
+          <tr><td><b>$1.5B</b></td><td class="n" style="background:#FBF1E2">54%</td><td class="n" style="background:#F8E4CC">66%</td><td class="n" style="background:#F3D2C9">86%</td><td class="n" style="background:#EFC4BC">107%</td></tr>
+          <tr><td><b>$2.2B</b></td><td class="n" style="background:#EAF5F1">33%</td><td class="n" style="background:#FBF1E2">40%</td><td class="n" style="background:#FBE9C9;font-weight:700">50%</td><td class="n" style="background:#F8E4CC">61%</td></tr>
+          <tr><td><b>$3.0B</b></td><td class="n" style="background:#E6F3ED">23%</td><td class="n" style="background:#EAF5F1">27%</td><td class="n" style="background:#EAF5F1">34%</td><td class="n" style="background:#FBF1E2">40%</td></tr>
+          <tr><td><b>$4.0B</b></td><td class="n" style="background:#E0F1EA">17%</td><td class="n" style="background:#E6F3ED">20%</td><td class="n" style="background:#E6F3ED">24%</td><td class="n" style="background:#EAF5F1">29%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">기준 셀(피크 $2.2B·13.4%) = <b>50%</b>. 피크를 매우 크게(>$3B) 보거나 할인율을 낮게(10%) 잡아야만 내재 PoS가 기저율 근처로 내려옵니다.</p>
+
+    <h3>민감도 B · 가정별 적정 주당가치 (행=PoS, 열=피크매출, 할인율 13.4%)</h3>
+    <p class="small">현재가 <b>$6.61</b> 기준: 초록=상방(현재가 이상), 빨강=하방(현재가 미만).</p>
+    <div class="tbl-wrap">
+      <table style="text-align:center">
+        <thead><tr><th>PoS \ 피크</th><th class="n">$1.5B</th><th class="n">$2.2B</th><th class="n">$3.0B</th><th class="n">$4.0B</th></tr></thead>
+        <tbody style="font-family:var(--mono)">
+          <tr><td><b>10%</b></td><td class="n" style="background:#F8EAE8">$2.76</td><td class="n" style="background:#F8EAE8">$3.12</td><td class="n" style="background:#F8EAE8">$3.54</td><td class="n" style="background:#F6E5E2">$4.05</td></tr>
+          <tr><td><b>15%</b></td><td class="n" style="background:#F8EAE8">$3.01</td><td class="n" style="background:#F6E5E2">$3.56</td><td class="n" style="background:#F6E5E2">$4.18</td><td class="n" style="background:#FBF1E2">$4.96</td></tr>
+          <tr><td><b>25%</b></td><td class="n" style="background:#F6E5E2">$3.52</td><td class="n" style="background:#FBF1E2;font-weight:700">$4.43</td><td class="n" style="background:#FBF1E2">$5.47</td><td class="n" style="background:#FBF7E6">$6.77</td></tr>
+          <tr><td><b>40%</b></td><td class="n" style="background:#FBF1E2">$4.29</td><td class="n" style="background:#FBF7E6">$5.74</td><td class="n" style="background:#EAF5EF">$7.40</td><td class="n" style="background:#E0F1E8">$9.48</td></tr>
+          <tr><td><b>60%</b></td><td class="n" style="background:#FBF7E6">$5.30</td><td class="n" style="background:#E6F3ED;font-weight:700">$7.48</td><td class="n" style="background:#DCEFE6">$9.98</td><td class="n" style="background:#D0EADD">$13.09</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 style="margin-top:40px">시나리오 분석 (강세 / 기본 / 약세)</h2>
+    <p class="lead">세 시나리오 모두 <strong>2026 하반기 중간 PoC 데이터</strong>를 분기점으로 설정합니다.</p>
+    <div class="grid3" style="margin-top:8px">
+      <div class="card" style="border-top:3px solid var(--bull)">
+        <h4 style="color:var(--bull)">🐂 강세 (Bull)</h4>
+        <div class="num" style="font-size:30px;font-weight:700;color:var(--bull)">~$10</div>
+        <p class="small" style="margin-top:6px"><b>가정:</b> 중간 데이터 긍정 → PoS ~60%로 재평가, 피크 매출 상향($3B), 자궁내막증·플랫폼 옵션 가치 부상.</p>
+        <p class="small"><b>촉발:</b> 명확한 발모 효능 + 안전성 지속, 대형 제약사 신규 파트너십.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--amber)">
+        <h4 style="color:var(--amber)">⚖️ 기본 (Base)</h4>
+        <div class="num" style="font-size:30px;font-weight:700;color:var(--amber)">~$4.4</div>
+        <p class="small" style="margin-top:6px"><b>가정:</b> 데이터 혼재/평이 → 기저율 수준 PoS ~25%, 피크 $2.2B 유지.</p>
+        <p class="small"><b>함의:</b> 이 경우 현재가 $6.61은 <b>과열</b>이며, "데이터 전 낙관"이 정상화될 여지.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--bear)">
+        <h4 style="color:var(--bear)">🐻 약세 (Bear)</h4>
+        <div class="num" style="font-size:30px;font-weight:700;color:var(--bear)">~$2.8</div>
+        <p class="small" style="margin-top:6px"><b>가정:</b> 데이터 부정/효능 미흡 → PoS ~10%, 피크 $1.5B로 하향.</p>
+        <p class="small"><b>하방 바닥:</b> 순현금 $0.80/주 + 플랫폼·잔여 파이프라인 가치(~$2 내외)가 지지선 역할.</p>
+      </div>
+    </div>
+
+    <div class="callout c-teal">
+      <div class="ttl">▸ 비대칭 구조 요약</div>
+      <p>현재가 $6.61은 강세($10)와 기본($4.4) 사이에 있으며 <b>기본보다 강세 쪽에 가깝게</b> 형성되어 있습니다. 즉 시장은 이미 "성공 쪽"에 무게를 둔 상태입니다. <b>상방 여력(데이터 긍정 시 +50%)과 하방 위험(데이터 부정 시 −55%)이 모두 큰, 전형적 이항(binary) 바이오 구조</b>입니다. <span class="conf hi">확신도 높음 ~80%</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 14 리스크·종합판단 ===================== -->
+<section id="s14">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">14</span><span class="kind">Risks & Synthesis · 리스크·종합판단</span></div>
+    <h2>주요 리스크 및 모니터링 체크포인트</h2>
+
+    <div class="grid2">
+      <div class="card" style="border-left:3px solid var(--bear)">
+        <h4 style="color:var(--bear)">치명적 리스크 (Deal-breakers)</h4>
+        <ul style="margin-bottom:0">
+          <li><strong>ABS-201 임상 실패</strong> — 가치의 70~85%가 단일 자산. 효능 미입증 시 가치 대부분 증발</li>
+          <li><strong>신규 기전 위험</strong> — 항PRLR 탈모 기전은 사람에서 미검증(영장류 데이터만)</li>
+          <li><strong>현금 고갈·희석</strong> — 자금 여력 ~2028 상반기. 3상 진입엔 대규모 증자 필요 → 주당가치 희석</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:3px solid var(--amber)">
+        <h4 style="color:var(--amber)">구조적 리스크</h4>
+        <ul style="margin-bottom:0">
+          <li><strong>경쟁</strong> — 탈모 신규 후보(Pelage 등), TL1A 선점(머크 등)</li>
+          <li><strong>상업화 미경험</strong> — 후기 임상·DTC 마케팅·판매 트랙레코드 없음</li>
+          <li><strong>거시</strong> — 고금리·바이오 투자심리 악화 시 무수익주 밸류 압박</li>
+          <li><strong>플랫폼 미입증</strong> — "AI 설계 → 더 좋은 약" 인과는 아직 증명 전</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>모니터링 체크포인트</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>시점</th><th>확인 항목</th><th>왜 중요한가</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill a">2026 하반기</span></td><td><strong>ABS-201 탈모 중간 PoC 데이터</strong></td><td><b>최대 분기점.</b> 내재 PoS(50%)의 검증/붕괴</td></tr>
+          <tr><td><span class="pill a">2026 4분기</span></td><td>자궁내막증 2상 개시</td><td>두 번째 적응증 옵션 실현</td></tr>
+          <tr><td><span class="pill t">2026 중</span></td><td>대형 제약사 신규 파트너십 체결 여부</td><td>플랫폼 검증 + 현금 유입(희석 완화)</td></tr>
+          <tr><td><span class="pill t">매 분기</span></td><td>현금 소진율·잔여 런웨이·증자 공시</td><td>희석 시점·규모 가늠</td></tr>
+          <tr><td><span class="pill t">매 분기</span></td><td>ABS-101 아웃라이선싱 진행</td><td>비핵심 자산의 가치 실현</td></tr>
+          <tr><td><span class="pill g">2027 초</span></td><td>탈모 전체 PoC + 자궁내막증 PoC(’27 하)</td><td>3상 이행 여부 결정</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 style="margin-top:38px">종합 판단 자료</h2>
+    <div class="callout c-teal">
+      <div class="ttl">▸ 의사결정 프레임 (추천이 아닌, 판단 도구)</div>
+      <p>핵심 질문은 단 하나로 압축됩니다: <b>"당신은 ABS-201의 진짜 성공확률을 시장이 매긴 ~50%보다 높게 보는가, 낮게 보는가?"</b></p>
+      <ul style="margin:8px 0 0">
+        <li><b>50%보다 높다고 본다면</b> (초기 데이터·기전·시장을 강하게 신뢰) → 현재가는 매력적일 수 있음</li>
+        <li><b>50%가 과하다고 본다면</b> (신규 기전 미검증 중시) → 현재가는 과열, 기본 시나리오 $4~4.5가 합리적 닻</li>
+        <li><b>어느 쪽도 확신 못 한다면</b> → 2026 하반기 데이터가 확률을 크게 갱신할 때까지 "정보 부족" 상태. 포지션 크기·진입 시점에 이 비대칭(상방 +50% / 하방 −55%)을 반영</li>
+      </ul>
+    </div>
+
+    <div class="grid3" style="margin-top:6px">
+      <div class="stat"><div class="lbl">내재 CAP(→PoS)</div><div class="val" style="color:var(--amber)">~50%</div><div class="sub">기저율 ~14% 대비 낙관</div></div>
+      <div class="stat"><div class="lbl">방향성 판정</div><div class="val" style="font-size:18px">낙관 선반영</div><div class="sub">"해자 근거 강력해야" 구간</div></div>
+      <div class="stat"><div class="lbl">결정 촉매</div><div class="val" style="font-size:18px">’26 하반기</div><div class="sub">탈모 중간 PoC</div></div>
+    </div>
+    <p class="small" style="margin-top:12px">CAP 프레임워크의 해석표에 대입하면, 시장 내재 기대(~50% PoS는 통상 자산의 3.5배)는 "<b>낙관이 상당히 선반영된 구간</b>"에 해당합니다. 이 구간에서는 <b>해자·성공의 근거가 매우 강력해야</b> 정당화됩니다 — 그 근거의 핵심이 곧 2026 하반기 임상 데이터입니다.</p>
+  </div>
+</section>
+
+<!-- ===================== 한계와 가정 ===================== -->
+<section id="limits" style="background:var(--surface2)">
+  <div class="wrap">
+    <div class="eyebrow"><span class="idx">✱</span><span class="kind">Limitations & Assumptions · 한계와 가정</span></div>
+    <h2>이 분석의 한계와 가정 (반드시 함께 읽을 것)</h2>
+    <p>본 분석은 매끄럽게 보여도 다음 가정 위에 서 있습니다. 가정이 틀리면 결론도 바뀝니다.</p>
+
+    <h4>이 결론이 의존하는 핵심 가정</h4>
+    <ul>
+      <li><strong>피크 매출 $2.2B</strong> — 특정 증권사 추정치. "시장 창출" 시나리오에 의존하며, 실제는 $1B 미만~$4B 이상까지 분포 가능. 내재 PoS는 이 값에 직접 반비례.</li>
+      <li><strong>성공 시 NPV $1.36B</strong> — 출시 시점(2030), 영업이익률(40%), 할인율(13.4%), 특허기간 가정의 산물. 출시가 지연되거나 마진이 낮으면 NPV가 하락하고 내재 PoS는 상승.</li>
+      <li><strong>ABS-201 외 가치 $0.23B</strong> — ABS-101·플랫폼·초기 파이프라인의 보수적 추정. 이 값이 크면 ABS-201 내재가치(따라서 내재 PoS)는 낮아짐.</li>
+      <li><strong>주가·현금 기준 시점</strong> — 주가 $6.61(’26-06-08, 변동성 큼), 순현금 $125.7M(’26-03-31). 2분기 현금 소진·증자 시 수치 변동.</li>
+    </ul>
+
+    <h4>확신도가 낮은 지점</h4>
+    <ul>
+      <li><strong>"~50% 내재 PoS"는 점추정이 아니라 범위</strong>(가정에 따라 ~24%–86%, 민감도 A). 단일 숫자로 받아들이면 안 됨. <span class="conf lo">확신도 낮음 ~45%(점추정 자체)</span></li>
+      <li><strong>AI 플랫폼의 독립적 우월성</strong> — 회사 주장에 의존, 외부 검증 제한적. <span class="conf mid">확신도 중간 ~55%</span></li>
+      <li><strong>영장류→인간 외삽</strong> — 전임상 발모 데이터가 사람에서 재현될지는 불확실.</li>
+    </ul>
+
+    <h4>이 결론이 틀릴 수 있는 조건</h4>
+    <ul>
+      <li>2026 하반기 데이터가 강하게 긍정/부정으로 나오면 → PoS·가치 전면 재계산 필요(가장 큰 변수).</li>
+      <li>대형 제약사가 ABS-201/플랫폼을 고액에 라이선스 → 검증·현금으로 SOTP 상향.</li>
+      <li>예상치 못한 대규모 증자 → 주식 수 급증으로 주당가치 희석.</li>
+    </ul>
+
+    <h4>다음 검증 단계</h4>
+    <ul>
+      <li>최신 10-Q/10-K로 현금흐름표 3개 항목(영업·투자·재무) 부호 재확인 및 SBC·무형투자 조정.</li>
+      <li>증권사 39쪽 리포트(BTIG 등)의 피크 매출·침투율·가격 가정 원본 확인.</li>
+      <li>탈모 경쟁 후보(Pelage PP405 등) 임상 진척 추적.</li>
+      <li>다모다란 ERP·국채금리 월간 갱신으로 WACC 재산출.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="foot">
+  <div class="wrap">
+    <div style="font-size:15px;color:#D7E3EE;font-weight:700;margin-bottom:4px">데이터 출처 및 기준</div>
+    <p style="margin:0;color:#9FB3C6"><b>회사 공시:</b> Absci 8-K·10-Q·DEF 14A·보도자료(2026 1분기·2025 연간 실적), 투자자 발표자료(JPM 2026 등).</p>
+    <p style="margin:0;color:#9FB3C6"><b>시장 데이터:</b> 주가·시총·베타 — Google Finance/Morningstar/stockanalysis(’26-06-05~08); 국채금리 — FRED·미 재무부 H.15(’26-06-05); ERP — 다모다란(’26초 4.23%, 프레임워크 표준 4.75%).</p>
+    <p style="margin:0;color:#9FB3C6"><b>산업·임상:</b> 탈모/자궁내막증 시장 — Mordor·Grand View·Straits 등; 임상 성공률 — Citeline/BIO/Nature 메타분석; 경쟁사 — RXRX·SDGR·ABCL 공개자료.</p>
+    <p style="margin:0;color:#9FB3C6"><b>분석 방법:</b> CAP(경쟁우위기간) 프레임워크를 도입단계 바이오테크에 맞게 적응 — 위험조정 NPV(rNPV) + 시장 내재 성공확률 역산.</p>
+    <p style="margin:14px 0 0;color:#71849A;font-size:11.5px">본 자료는 정보 제공 목적의 분석이며, 모든 추정치는 명시된 가정에 의존하고 불확실성을 내포합니다. 기준 시점 2026년 6월 8~9일.</p>
+  </div>
+</footer>
+
+</body>
+</html>
