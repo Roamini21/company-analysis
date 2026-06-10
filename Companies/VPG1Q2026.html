@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VPG (Vishay Precision Group) — 시장 내재 CAP 분석 보고서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F8F9; --card:#FFFFFF; --ink:#0E2233; --sub:#4A5C6B;
+    --grid:#D7E0E6; --signal:#0E7C7B; --signal-soft:#E3F1F0;
+    --amber:#C77F0A; --amber-soft:#FBF1DE;
+    --red:#B83A3A;   --red-soft:#F8E8E8;
+    --blue:#2F6DB3;  --blue-soft:#E7EFF8;
+    --mono:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    --sans:'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--sans); background:var(--paper); color:var(--ink); line-height:1.75; font-size:16px; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1060px; margin:0 auto; padding:0 28px 120px;}
+  .ruler{height:14px;
+    background:repeating-linear-gradient(90deg, var(--grid) 0 1px, transparent 1px 10px),
+               repeating-linear-gradient(90deg, var(--sub) 0 1px, transparent 1px 50px);
+    background-position:0 100%, 0 60%; background-size:100% 6px, 100% 14px; background-repeat:repeat-x;
+    border-bottom:1.5px solid var(--ink);}
+  header{padding:64px 0 36px;}
+  .doc-meta{display:flex; flex-wrap:wrap; gap:10px 26px; font-family:var(--mono); font-size:12px; color:var(--sub); letter-spacing:.04em; margin-bottom:26px;}
+  .doc-meta b{color:var(--ink); font-weight:600;}
+  h1{font-size:clamp(30px,4.6vw,46px); font-weight:800; letter-spacing:-0.02em; line-height:1.22; margin-bottom:14px;}
+  h1 .tick{color:var(--signal);}
+  .lede{font-size:18px; color:var(--sub); max-width:820px;}
+  .verdict{margin-top:34px; background:var(--ink); color:#F2F6F8; border-radius:6px; padding:30px 34px; position:relative; overflow:hidden;}
+  .verdict::before{content:""; position:absolute; inset:0; background:repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 1px, transparent 1px 32px); pointer-events:none;}
+  .verdict .tag{font-family:var(--mono); font-size:11px; letter-spacing:.18em; color:#7FC8C5; margin-bottom:12px;}
+  .verdict p{font-size:18.5px; line-height:1.8; position:relative;}
+  .verdict p b{color:#FFD27A;}
+  .verdict p .hl{color:#8FE3DF; font-weight:700;}
+  .gauge{margin:46px 0 8px; background:var(--card); border:1px solid var(--grid); border-radius:6px; padding:30px 30px 22px;}
+  .gauge h3{font-size:14px; font-family:var(--mono); letter-spacing:.12em; color:var(--sub); font-weight:600; margin-bottom:4px;}
+  .gauge .sub{font-size:13px; color:var(--sub); margin-bottom:10px;}
+  section{margin-top:88px;}
+  .sec-head{display:flex; align-items:baseline; gap:16px; border-bottom:2px solid var(--ink); padding-bottom:12px; margin-bottom:30px; flex-wrap:wrap;}
+  .sec-code{font-family:var(--mono); font-size:13px; font-weight:600; color:var(--signal); letter-spacing:.08em; white-space:nowrap;}
+  .sec-head h2{font-size:26px; font-weight:800; letter-spacing:-0.015em;}
+  .sec-head .conf{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--sub); white-space:nowrap;}
+  h3.block{font-size:18px; font-weight:700; margin:38px 0 14px; padding-left:12px; border-left:4px solid var(--signal);}
+  p{margin-bottom:16px;}
+  p.note{font-size:13.5px; color:var(--sub);}
+  .src{font-family:var(--mono); font-size:11.5px; color:var(--sub); margin-top:6px;}
+  strong{font-weight:700;}
+  em{font-style:normal; background:linear-gradient(transparent 62%, var(--signal-soft) 62%); padding:0 1px;}
+  .term{background:var(--blue-soft); border-left:4px solid var(--blue); border-radius:0 6px 6px 0; padding:14px 18px; margin:18px 0; font-size:14.5px;}
+  .term b{color:var(--blue);}
+  .cards{display:grid; gap:16px; margin:22px 0;}
+  .c2{grid-template-columns:repeat(2,1fr);} .c3{grid-template-columns:repeat(3,1fr);} .c4{grid-template-columns:repeat(4,1fr);}
+  .card{background:var(--card); border:1px solid var(--grid); border-radius:6px; padding:20px 22px;}
+  .card .k{font-family:var(--mono); font-size:11px; color:var(--sub); letter-spacing:.1em; margin-bottom:8px;}
+  .card .v{font-size:25px; font-weight:800; font-family:var(--mono); letter-spacing:-0.01em;}
+  .card .v small{font-size:13px; color:var(--sub); font-weight:500;}
+  .card .d{font-size:13px; color:var(--sub); margin-top:6px;}
+  .v.pos{color:var(--signal);} .v.neg{color:var(--red);} .v.warn{color:var(--amber);}
+  table{width:100%; border-collapse:collapse; background:var(--card); font-size:14px; margin:18px 0;}
+  th,td{padding:10px 12px; border:1px solid var(--grid); text-align:left; vertical-align:top;}
+  th{background:#EDF2F5; font-weight:700; font-size:13px;}
+  td.num, th.num{text-align:right; font-family:var(--mono); font-size:13px;}
+  tr.hl-row td{background:var(--signal-soft); font-weight:700;}
+  .tbl-wrap{overflow-x:auto; border:1px solid var(--grid); border-radius:6px; margin:18px 0;}
+  .tbl-wrap table{margin:0; border:none;}
+  .exhibit{font-family:var(--mono); font-size:12.5px;}
+  .exhibit th{font-family:var(--mono); font-size:11.5px; background:var(--ink); color:#E6EEF2; border-color:#2C4356; text-align:right; white-space:nowrap;}
+  .exhibit th:first-child{text-align:left;}
+  .exhibit td{font-size:12px; padding:7px 10px; text-align:right; white-space:nowrap;}
+  .exhibit tr:nth-child(even) td{background:#FAFCFD;}
+  .exhibit tr.key td{background:var(--signal-soft); font-weight:600;}
+  .exhibit td:first-child{font-weight:600; background:#EDF2F5 !important; text-align:left;}
+  .pill{display:inline-block; font-family:var(--mono); font-size:11px; font-weight:600; padding:3px 10px; border-radius:20px; letter-spacing:.06em; vertical-align:middle;}
+  .pill.g{background:var(--signal-soft); color:var(--signal);}
+  .pill.a{background:var(--amber-soft); color:var(--amber);}
+  .pill.r{background:var(--red-soft); color:var(--red);}
+  .pill.b{background:var(--blue-soft); color:var(--blue);}
+  .callout{border:1px solid var(--grid); border-radius:6px; padding:22px 26px; margin:24px 0; background:var(--card);}
+  .callout.warn{border-left:5px solid var(--amber); background:#FFFDF7;}
+  .callout.risk{border-left:5px solid var(--red); background:#FFFAFA;}
+  .callout.ok{border-left:5px solid var(--signal);}
+  .callout.steel{border-left:5px solid var(--blue); background:#FBFDFF;}
+  .callout h4{font-size:15.5px; margin-bottom:10px; font-weight:800;}
+  .callout p:last-child{margin-bottom:0;}
+  figure{margin:26px 0; background:var(--card); border:1px solid var(--grid); border-radius:6px; padding:26px 24px 18px;}
+  figcaption{font-family:var(--mono); font-size:11.5px; color:var(--sub); margin-top:14px; padding-top:12px; border-top:1px dashed var(--grid);}
+  svg{display:block; max-width:100%; height:auto;}
+  svg text{font-family:var(--sans);}
+  svg .mono{font-family:var(--mono);}
+  .flow{display:flex; flex-wrap:wrap; align-items:stretch; margin:20px 0;}
+  .flow .step{flex:1 1 150px; background:var(--card); border:1.5px solid var(--ink); border-radius:6px; padding:14px 14px; position:relative; margin-right:34px; min-width:150px; margin-bottom:14px;}
+  .flow .step:last-child{margin-right:0;}
+  .flow .step::after{content:"→"; position:absolute; right:-27px; top:50%; transform:translateY(-50%); font-size:19px; color:var(--signal); font-weight:700;}
+  .flow .step:last-child::after{content:"";}
+  .flow .step .n{font-family:var(--mono); font-size:10.5px; color:var(--signal); letter-spacing:.1em; font-weight:600;}
+  .flow .step .t{font-weight:700; font-size:14.5px; margin:4px 0 5px;}
+  .flow .step .d{font-size:12.5px; color:var(--sub); line-height:1.55;}
+  .swot{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:22px 0;}
+  .swot .q{border-radius:6px; padding:20px 22px; border:1px solid var(--grid); background:var(--card);}
+  .swot .q h4{font-size:15px; margin-bottom:12px; display:flex; align-items:center; gap:9px;}
+  .swot .q h4 .ic{font-family:var(--mono); font-size:12px; font-weight:700; width:26px; height:26px; border-radius:5px; display:inline-flex; align-items:center; justify-content:center; color:#fff;}
+  .swot .S .ic{background:var(--signal);} .swot .W .ic{background:var(--amber);}
+  .swot .O .ic{background:var(--blue);} .swot .T .ic{background:var(--red);}
+  .swot ul{list-style:none;}
+  .swot li{font-size:13.8px; padding:7px 0 7px 16px; position:relative; border-bottom:1px dashed var(--grid); line-height:1.6;}
+  .swot li:last-child{border-bottom:none;}
+  .swot li::before{content:"▸"; position:absolute; left:0; color:var(--sub); font-size:11px; top:9px;}
+  .bars{margin:14px 0;}
+  .bar-row{display:grid; grid-template-columns:170px 1fr 110px; gap:12px; align-items:center; padding:7px 0;}
+  .bar-row .lbl{font-size:13.5px; font-weight:600;}
+  .bar-row .lbl small{display:block; color:var(--sub); font-weight:400; font-size:11.5px;}
+  .bar-track{height:22px; background:#EDF2F5; border-radius:4px; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:4px; display:flex; align-items:center; padding-left:9px; color:#fff; font-family:var(--mono); font-size:11px; font-weight:600; min-width:fit-content;}
+  .bar-row .val{font-family:var(--mono); font-size:12px; text-align:right; color:var(--sub);}
+  .check{list-style:none; margin:14px 0;}
+  .check li{padding:9px 0 9px 32px; position:relative; border-bottom:1px dashed var(--grid); font-size:14.5px;}
+  .check li::before{content:"☐"; position:absolute; left:4px; color:var(--signal); font-size:17px; top:7px;}
+  .scen{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:22px 0;}
+  .scen .s{border-radius:6px; border:1px solid var(--grid); overflow:hidden; background:var(--card); display:flex; flex-direction:column;}
+  .scen .s .hd{padding:14px 18px; color:#fff; font-weight:800; font-size:15px; display:flex; justify-content:space-between; align-items:center;}
+  .scen .bull .hd{background:var(--signal);} .scen .basec .hd{background:var(--blue);} .scen .bear .hd{background:var(--red);}
+  .scen .s .px{font-family:var(--mono); font-size:13px; font-weight:600;}
+  .scen .s .bd{padding:16px 18px; font-size:13.3px;}
+  .scen .s .bd ul{list-style:none;}
+  .scen .s .bd li{padding:5px 0; border-bottom:1px dashed var(--grid); line-height:1.55;}
+  .scen .s .bd li:last-child{border-bottom:none;}
+  .sources{font-size:13px; color:var(--sub);}
+  .sources li{margin-bottom:7px; padding-left:4px;}
+  .sources b{color:var(--ink); font-family:var(--mono); font-size:12px;}
+  ol.sources{padding-left:22px;}
+  footer{margin-top:90px; padding-top:24px; border-top:2px solid var(--ink); font-family:var(--mono); font-size:11.5px; color:var(--sub); line-height:1.9;}
+  nav.toc{background:var(--card); border:1px solid var(--grid); border-radius:6px; padding:24px 28px; margin-top:40px;}
+  nav.toc h3{font-family:var(--mono); font-size:12px; letter-spacing:.14em; color:var(--sub); margin-bottom:14px;}
+  nav.toc ol{columns:2; gap:36px; padding-left:0; list-style:none;}
+  nav.toc li{margin-bottom:7px; break-inside:avoid;}
+  nav.toc a{color:var(--ink); text-decoration:none; font-size:14px; border-bottom:1px solid transparent;}
+  nav.toc a:hover{border-bottom-color:var(--signal); color:var(--signal);}
+  nav.toc .cd{font-family:var(--mono); font-size:11px; color:var(--signal); margin-right:8px; font-weight:600;}
+  @media (max-width:820px){
+    .c2,.c3,.c4{grid-template-columns:1fr 1fr;}
+    .scen{grid-template-columns:1fr;}
+    .swot{grid-template-columns:1fr;}
+    nav.toc ol{columns:1;}
+    .bar-row{grid-template-columns:110px 1fr 80px;}
+    .sec-head .conf{margin-left:0; width:100%;}
+  }
+  @media (max-width:540px){ .c2,.c3,.c4{grid-template-columns:1fr;} }
+  @media print{ body{background:#fff;} section{break-inside:avoid-page;} }
+</style>
+</head>
+<body>
+<div class="ruler"></div>
+<div class="wrap">
+
+<header>
+  <div class="doc-meta">
+    <span>측정 대상 <b>VPG · Vishay Precision Group, Inc. (NYSE)</b></span>
+    <span>분석 기준일 <b>2026-06-10</b></span>
+    <span>기준 주가 <b>$129.75</b> (06-09)</span>
+    <span>프레임워크 <b>시장 내재 CAP 역산 · 페이드 모델</b></span>
+  </div>
+  <h1>스트레인 게이지가 잰 것은 힘,<br>주가가 잰 것은 <span class="tick">20년치 기대</span>다</h1>
+  <p class="lede">정밀 측정 센서 기업 VPG — 휴머노이드 로봇 테마로 1년 새 주가 약 4~5배. 현재 주가에 시장이 새겨 넣은
+  성장률·마진·경쟁 우위 기간(CAP)을 역산해, 그 기대치가 어떤 가정을 요구하는지 계측합니다.</p>
+
+  <div class="verdict">
+    <div class="tag">CORE READING ─ 핵심 결론</div>
+    <p>현재 주가 $129.75는 <b>회사가 제시한 3개년 목표 모델(유기적 매출 CAGR 8~10%, EBITDA 마진 18.5~20.5%)을 완전히 달성하고
+    영구 유지해도 도달할 수 없는 가격</b>입니다(해당 가정의 모델 수렴 상한 ≈ <span class="hl">$51/주</span>). 주가를 정당화하려면
+    <span class="hl">향후 10년 매출 연평균 +19.5%(2035년 매출 약 $18.3억 = 현재의 6.0배) + EBITA 마진 18%(역사적 최고 13%의 1.4배)
+    + 약 20~21년의 경쟁 우위 기간</span>이 동시에 필요합니다 — 마이크로소프트의 내재 CAP(17~18년)을 웃도는 슈퍼스타급 기대치입니다.
+    물량으로 환산하면 2035년 연 270만~890만 대 분량의 휴머노이드 센서 매출에 해당하며, 골드만삭스의 2035년 휴머노이드
+    시장 전체 전망($380억)에 비춰도 매우 공격적인 가정입니다.</p>
+  </div>
+
+  <div class="gauge">
+    <h3>VALUE CALIBRATION SCALE — 시나리오별 산출 가치 vs 현재 주가</h3>
+    <p class="sub">동일한 페이드-DCF 엔진에 시나리오별 가정만 바꿔 산출한 주당 가치. 눈금자 위 위치가 이 보고서의 결론입니다.</p>
+    <svg viewBox="0 0 1000 235" role="img" aria-label="시나리오별 가치 눈금자">
+      <line x1="40" y1="150" x2="960" y2="150" stroke="#0E2233" stroke-width="2.5"/>
+      <g stroke="#0E2233" stroke-width="1.5">
+        <line x1="40" y1="150" x2="40" y2="136"/><line x1="155" y1="150" x2="155" y2="136"/>
+        <line x1="270" y1="150" x2="270" y2="136"/><line x1="385" y1="150" x2="385" y2="136"/>
+        <line x1="500" y1="150" x2="500" y2="136"/><line x1="615" y1="150" x2="615" y2="136"/>
+        <line x1="730" y1="150" x2="730" y2="136"/><line x1="845" y1="150" x2="845" y2="136"/>
+        <line x1="960" y1="150" x2="960" y2="136"/>
+      </g>
+      <g stroke="#9FB1BE" stroke-width="1">
+        <line x1="97.5" y1="150" x2="97.5" y2="142"/><line x1="212.5" y1="150" x2="212.5" y2="142"/>
+        <line x1="327.5" y1="150" x2="327.5" y2="142"/><line x1="442.5" y1="150" x2="442.5" y2="142"/>
+        <line x1="557.5" y1="150" x2="557.5" y2="142"/><line x1="672.5" y1="150" x2="672.5" y2="142"/>
+        <line x1="787.5" y1="150" x2="787.5" y2="142"/><line x1="902.5" y1="150" x2="902.5" y2="142"/>
+      </g>
+      <g class="mono" font-size="11" fill="#4A5C6B" text-anchor="middle">
+        <text x="40" y="172">$0</text><text x="155" y="172">$20</text><text x="270" y="172">$40</text>
+        <text x="385" y="172">$60</text><text x="500" y="172">$80</text><text x="615" y="172">$100</text>
+        <text x="730" y="172">$120</text><text x="845" y="172">$140</text><text x="960" y="172">$160</text>
+      </g>
+      <rect x="186.6" y="186" width="636.6" height="9" rx="4" fill="#D7E0E6"/>
+      <text class="mono" x="186.6" y="216" font-size="10.5" fill="#4A5C6B">52주 저가 $25.49</text>
+      <text class="mono" x="823.2" y="216" font-size="10.5" fill="#4A5C6B" text-anchor="end">52주 고가 $136.21</text>
+      <g>
+        <line x1="185.9" y1="150" x2="185.9" y2="92" stroke="#B83A3A" stroke-width="2"/>
+        <circle cx="185.9" cy="92" r="4.5" fill="#B83A3A"/>
+        <text x="185.9" y="78" font-size="12.5" font-weight="700" fill="#B83A3A" text-anchor="middle">약세 $25</text>
+        <text class="mono" x="185.9" y="63" font-size="10" fill="#4A5C6B" text-anchor="middle">목표 미달성·中 경쟁</text>
+      </g>
+      <g>
+        <line x1="307.9" y1="150" x2="307.9" y2="56" stroke="#2F6DB3" stroke-width="2"/>
+        <circle cx="307.9" cy="56" r="4.5" fill="#2F6DB3"/>
+        <text x="307.9" y="42" font-size="12.5" font-weight="700" fill="#2F6DB3" text-anchor="middle">기본 $47</text>
+        <text class="mono" x="307.9" y="27" font-size="10" fill="#4A5C6B" text-anchor="middle">경영진 목표 100% 달성 (T=20년)</text>
+      </g>
+      <g>
+        <line x1="335.5" y1="150" x2="335.5" y2="118" stroke="#2F6DB3" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <text class="mono" x="346" y="116" font-size="10" fill="#2F6DB3">수렴 상한 $51 (T→∞)</text>
+      </g>
+      <g>
+        <line x1="786.1" y1="150" x2="786.1" y2="56" stroke="#0E7C7B" stroke-width="2.5"/>
+        <path d="M786.1 50 l-7 11 h14 z" fill="#0E7C7B"/>
+        <text x="786.1" y="40" font-size="13" font-weight="800" fill="#0E7C7B" text-anchor="middle">현재가 = 강세 $130</text>
+        <text class="mono" x="786.1" y="25" font-size="10" fill="#4A5C6B" text-anchor="middle">10년 CAGR 19.5% · 마진 18% · CAP 20년 필요</text>
+      </g>
+      <g>
+        <line x1="584.4" y1="150" x2="584.4" y2="112" stroke="#C77F0A" stroke-width="2"/>
+        <circle cx="584.4" cy="112" r="4" fill="#C77F0A"/>
+        <text x="584.4" y="99" font-size="11.5" font-weight="700" fill="#C77F0A" text-anchor="middle">월街 평균목표 $94.7</text>
+      </g>
+    </svg>
+    <p class="note" style="margin:14px 0 0;">가치는 2026년 중반 기준, WACC 9.7% · 연중(mid-year) 할인. 동일 엔진·동일 할인율에서
+    <b>가정의 차이만으로</b> $25↔$130의 간극이 발생합니다 — 이 종목의 본질은 "어느 가정이 현실적인가"의 판단입니다.</p>
+  </div>
+
+  <nav class="toc">
+    <h3>CONTENTS — 측정 절차서</h3>
+    <ol>
+      <li><a href="#m01"><span class="cd">M-01</span>기업 개요: 무엇을 만들고 어떻게 시작됐나</a></li>
+      <li><a href="#m02"><span class="cd">M-02</span>수익 구조: 돈이 흐르는 길</a></li>
+      <li><a href="#m03"><span class="cd">M-03</span>제품·기술: 스트레인 게이지의 원리</a></li>
+      <li><a href="#m04"><span class="cd">M-04</span>산업 분석: 정밀 계측 + 휴머노이드</a></li>
+      <li><a href="#m05"><span class="cd">M-05</span>SWOT</a></li>
+      <li><a href="#m06"><span class="cd">M-06</span>경제적 해자 진단</a></li>
+      <li><a href="#m07"><span class="cd">M-07</span>피어그룹 비교</a></li>
+      <li><a href="#v01"><span class="cd">V-01</span>생애주기 판별</a></li>
+      <li><a href="#v02"><span class="cd">V-02</span>경쟁 우위 정량 진단 (5 Forces)</a></li>
+      <li><a href="#v03"><span class="cd">V-03</span>DCF 가정 · WACC</a></li>
+      <li><a href="#v04"><span class="cd">V-04</span>시장 내재 기대치 역산 (핵심)</a></li>
+      <li><a href="#v05"><span class="cd">V-05</span>민감도 분석</a></li>
+      <li><a href="#v06"><span class="cd">V-06</span>시나리오: 강세/기본/약세</a></li>
+      <li><a href="#v07"><span class="cd">V-07</span>리스크 & 분기 체크포인트</a></li>
+      <li><a href="#v08"><span class="cd">V-08</span>한계와 가정</a></li>
+      <li><a href="#v09"><span class="cd">V-09</span>데이터 출처</a></li>
+    </ol>
+  </nav>
+</header>
+
+<!-- ============================== M-01 ============================== -->
+<section id="m01">
+  <div class="sec-head"><span class="sec-code">M-01</span><h2>기업 개요 — 무엇을 만들고, 어떻게 시작됐나</h2><span class="conf">사실관계 확신도: 높음 ~95%</span></div>
+
+  <p><strong>한 문장 요약 — VPG는 "기계 세계의 저울·신경말단"을 만드는 회사입니다.</strong>
+  눈에 보이지 않는 미세한 힘(무게·압력·비틀림·변형)을 전기 신호로 바꿔 정확한 숫자로 읽어내는
+  초정밀 센서와 측정 장비를 60년 넘게 만들어 왔습니다.</p>
+
+  <h3 class="block">탄생 배경 — 전설적 발명가의 '정밀 측정' 유산</h3>
+  <p>VPG의 뿌리는 1962년 펠릭스 잰들먼(Felix Zandman) 박사가 세운 전자부품 대기업 <strong>비쉐이 인터테크놀로지(Vishay Intertechnology)</strong>입니다.
+  잰들먼 박사는 금속 박(箔, foil)에 힘이 가해질 때 전기 저항이 변하는 성질을 극한까지 다듬은
+  <em>포일(foil) 기술</em>의 선구자였고, 이 기술은 ① 세계 최고 정밀도의 저항기와 ② 최고 정밀도의 스트레인 게이지(힘 감지 소자)라는
+  두 갈래 제품으로 발전했습니다. 2010년 7월, 비쉐이는 이 '정밀 측정' 사업만 따로 떼어
+  <strong>독립 상장사 VPG로 분사(spin-off)</strong>시켰습니다(법인 설립 2009년 8월 28일). 이후 VPG는 로드셀(전자저울의 심장),
+  철강 공정 계측(KELK), 재료 시험기(Gleeble/DSI), 충돌·미사일 시험용 초소형 데이터 로거(DTS), 레이저 두께 측정(Nokra, 2024년 인수) 등
+  측정 전문 기업들을 인수하며 <em>"센서 소자 → 센서 부품 → 측정 시스템"</em>으로 수직 확장해 왔습니다.</p>
+
+  <div class="cards c4">
+    <div class="card"><div class="k">본사 / CEO</div><div class="v" style="font-size:16px;">美 펜실베이니아<br>체스터브룩</div><div class="d">CEO 지브 쇼샤니 · 직원 약 2,100명 · 美/이스라엘/인도/中 등 생산</div></div>
+    <div class="card"><div class="k">FY2025 매출</div><div class="v">$307.2M</div><div class="d">+0.2% YoY (원화 약 4,200억 원)</div></div>
+    <div class="card"><div class="k">시가총액 (06-09)</div><div class="v warn">$1.73B</div><div class="d">매출의 5.4배 · 1년 전 약 $0.3B</div></div>
+    <div class="card"><div class="k">12개월 주가</div><div class="v pos">+290%↑</div><div class="d">52주 $25.49 ~ $136.21 · 일중 변동성 ~10%</div></div>
+  </div>
+
+  <h3 class="block">3개 사업 부문 — '소자 → 부품 → 시스템'의 3층 구조</h3>
+  <table>
+    <tr><th style="width:19%;">부문</th><th style="width:14%;" class="num">FY25 매출 (비중)</th><th style="width:11%;" class="num">매출총이익률</th><th>무엇을 파는가 (쉬운 설명)</th></tr>
+    <tr>
+      <td><strong>① 센서<br>(Sensors)</strong></td>
+      <td class="num">$115.7M<br>(37.7%)</td><td class="num">~31%</td>
+      <td><b>스트레인 게이지</b>(힘을 감지하는 우표 크기 박막 소자)와 <b>초정밀 저항기</b>(반도체 검사장비·AI 데이터센터 전원부에서
+      전류를 오차 없이 재는 부품). 휴머노이드 로봇 손가락·관절의 힘 감지 소자가 여기 속합니다. Micro-Measurements, VFR, Alpha 등.</td>
+    </tr>
+    <tr>
+      <td><strong>② 계량 솔루션<br>(Weighing Solutions)</strong></td>
+      <td class="num">$111.8M<br>(36.4%)</td><td class="num">~36%</td>
+      <td>스트레인 게이지를 금속 구조물에 결합해 만든 <b>로드셀(load cell)</b>과 계량 모듈/시스템. 산업용 저울, 트럭 적재량 측정(온보드 계량),
+      농기계·건설장비·의료기기의 힘 측정. Tedea-Huntleigh, Revere, Celtron, Sensortronics, BLH Nobel, Stress-tek 등.</td>
+    </tr>
+    <tr>
+      <td><strong>③ 측정 시스템<br>(Measurement Systems)</strong></td>
+      <td class="num">$79.6M<br>(25.9%)</td><td class="num">~51%</td>
+      <td>완성형 고부가 장비. <b>KELK</b>(제철소 압연 공정의 두께·장력·속도 계측), <b>Gleeble/DSI</b>(신소재 개발용 열·기계 시뮬레이터),
+      <b>DTS</b>(미사일 시험·우주선·충돌시험용 초소형 견고 데이터 로거 — NASA 아르테미스 2호·SpaceX 드래건 탑재 실적), Pacific Instruments.</td>
+    </tr>
+  </table>
+  <p class="src">출처: VPG FY2025 4Q 8-K(SEC, 2026-02-11) · Q1 FY2026 실적 콜(2026-05-12). 부문 연매출은 분기 공시 합산값.</p>
+
+  <p>요컨대 VPG는 <em>"힘을 숫자로 바꾸는" 한 가지 물리 기술을 60년간 갈고닦아 소자부터 완성 장비까지 수직으로 쌓은 니치(niche) 전문 기업</em>입니다.
+  철강·항공·국방·산업 현장의 보이지 않는 곳에서 꾸준히 쓰이는 'B2B 계측 인프라' 회사였습니다 —
+  2025년 휴머노이드 로봇 테마가 이 회사를 무대 중앙으로 끌어내기 전까지는.</p>
+</section>
+
+<!-- ============================== M-02 ============================== -->
+<section id="m02">
+  <div class="sec-head"><span class="sec-code">M-02</span><h2>수익 구조 — 돈이 흐르는 길</h2><span class="conf">사실관계 확신도: 높음 ~90%</span></div>
+
+  <p>VPG가 돈을 버는 방식은 단순합니다. <strong>① 정밀 소자/부품/장비를 만들어 → ② 산업 고객(B2B)에 판매하고 →
+  ③ 한 번 설계에 채택(design-in)되면 그 고객 제품이 단종될 때까지 반복 구매가 이어지는</strong> 구조입니다.
+  소비자 직접 매출은 거의 없고, 고객은 반도체 장비사·방산업체·제철소·저울 제조사·트럭 OEM 같은 기업입니다.</p>
+
+  <figure>
+    <svg viewBox="0 0 980 360" role="img" aria-label="VPG 수익 흐름도">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#4A5C6B"/>
+        </marker>
+        <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#0E7C7B"/>
+        </marker>
+      </defs>
+      <rect x="20" y="120" width="170" height="120" rx="8" fill="#0E2233"/>
+      <text x="105" y="155" fill="#fff" font-size="14.5" font-weight="800" text-anchor="middle">핵심 기술</text>
+      <text x="105" y="179" fill="#A9C3CE" font-size="12" text-anchor="middle">포일(foil) 정밀 가공</text>
+      <text x="105" y="199" fill="#A9C3CE" font-size="12" text-anchor="middle">"힘→저항 변화→신호"</text>
+      <text x="105" y="219" fill="#A9C3CE" font-size="12" text-anchor="middle">60년 계측 노하우</text>
+      <g>
+        <rect x="270" y="28" width="220" height="84" rx="8" fill="#E3F1F0" stroke="#0E7C7B" stroke-width="1.5"/>
+        <text x="380" y="56" font-size="13.5" font-weight="800" fill="#0E2233" text-anchor="middle">센서 (소자)</text>
+        <text x="380" y="76" font-size="11.5" fill="#4A5C6B" text-anchor="middle">스트레인 게이지 · 정밀 저항기</text>
+        <text class="mono" x="380" y="97" font-size="11.5" fill="#0E7C7B" text-anchor="middle" font-weight="700">$115.7M · 37.7%</text>
+        <rect x="270" y="138" width="220" height="84" rx="8" fill="#E7EFF8" stroke="#2F6DB3" stroke-width="1.5"/>
+        <text x="380" y="166" font-size="13.5" font-weight="800" fill="#0E2233" text-anchor="middle">계량 솔루션 (부품)</text>
+        <text x="380" y="186" font-size="11.5" fill="#4A5C6B" text-anchor="middle">로드셀 · 계량 모듈/시스템</text>
+        <text class="mono" x="380" y="207" font-size="11.5" fill="#2F6DB3" text-anchor="middle" font-weight="700">$111.8M · 36.4%</text>
+        <rect x="270" y="248" width="220" height="84" rx="8" fill="#FBF1DE" stroke="#C77F0A" stroke-width="1.5"/>
+        <text x="380" y="276" font-size="13.5" font-weight="800" fill="#0E2233" text-anchor="middle">측정 시스템 (완성 장비)</text>
+        <text x="380" y="296" font-size="11.5" fill="#4A5C6B" text-anchor="middle">KELK · Gleeble/DSI · DTS</text>
+        <text class="mono" x="380" y="317" font-size="11.5" fill="#C77F0A" text-anchor="middle" font-weight="700">$79.6M · 25.9%</text>
+      </g>
+      <line x1="190" y1="160" x2="266" y2="70" stroke="#4A5C6B" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="190" y1="180" x2="266" y2="180" stroke="#4A5C6B" stroke-width="1.5" marker-end="url(#arr)"/>
+      <line x1="190" y1="200" x2="266" y2="290" stroke="#4A5C6B" stroke-width="1.5" marker-end="url(#arr)"/>
+      <g font-size="12" fill="#0E2233">
+        <rect x="610" y="20" width="350" height="42" rx="6" fill="#fff" stroke="#D7E0E6"/>
+        <text x="626" y="46" font-weight="700">시험·계측 / 반도체 장비 / AI 데이터센터·광통신</text>
+        <rect x="610" y="70" width="350" height="42" rx="6" fill="#fff" stroke="#D7E0E6"/>
+        <text x="626" y="96" font-weight="700">항공·군사·우주 (AMS) — 미사일 시험·위성</text>
+        <rect x="610" y="120" width="350" height="42" rx="6" fill="#fff" stroke="#D7E0E6"/>
+        <text x="626" y="146" font-weight="700">운송(트럭 적재 계량) / 산업용 계량·저울</text>
+        <rect x="610" y="170" width="350" height="42" rx="6" fill="#fff" stroke="#D7E0E6"/>
+        <text x="626" y="196" font-weight="700">철강(압연 계측) / 일반 산업 · 소재 R&amp;D</text>
+        <rect x="610" y="220" width="350" height="42" rx="6" fill="#fff" stroke="#D7E0E6"/>
+        <text x="626" y="246" font-weight="700">의료기기 / 정밀 농업 / 소비재(자전거 등)</text>
+        <rect x="610" y="272" width="350" height="50" rx="6" fill="#E3F1F0" stroke="#0E7C7B" stroke-width="1.8"/>
+        <text x="626" y="293" font-weight="800" fill="#0E7C7B">휴머노이드 로봇 (신성장) — 손·관절 힘 센서</text>
+        <text class="mono" x="626" y="312" font-size="11" fill="#4A5C6B">2025 매출 ≈ $4M · Q1'26 출하 ~$0.6M (매출의 ~1%)</text>
+      </g>
+      <line x1="490" y1="70" x2="606" y2="41" stroke="#4A5C6B" stroke-width="1.3" marker-end="url(#arr)"/>
+      <line x1="490" y1="70" x2="606" y2="91" stroke="#4A5C6B" stroke-width="1.3" marker-end="url(#arr)"/>
+      <line x1="490" y1="80" x2="606" y2="294" stroke="#0E7C7B" stroke-width="1.8" marker-end="url(#arrG)"/>
+      <line x1="490" y1="180" x2="606" y2="141" stroke="#4A5C6B" stroke-width="1.3" marker-end="url(#arr)"/>
+      <line x1="490" y1="180" x2="606" y2="241" stroke="#4A5C6B" stroke-width="1.3" marker-end="url(#arr)"/>
+      <line x1="490" y1="290" x2="606" y2="191" stroke="#4A5C6B" stroke-width="1.3" marker-end="url(#arr)"/>
+      <line x1="490" y1="280" x2="606" y2="91" stroke="#4A5C6B" stroke-width="1.3" marker-end="url(#arr)"/>
+    </svg>
+    <figcaption>FIG M-02a · 하나의 포일 기술 → 3개 부문 → 10여 개 최종 시장. 휴머노이드는 현재 매출의 약 1%이지만,
+    최근 시가총액 변동의 대부분을 설명하는 항목입니다. (매출: FY2025)</figcaption>
+  </figure>
+
+  <h3 class="block">수익 구조의 4가지 특징</h3>
+  <div class="cards c2">
+    <div class="card"><div class="k">① 설계 채택(design-in) 기반 반복 매출</div>
+      <div class="d" style="font-size:14px; color:var(--ink);">고객이 자기 제품(저울·장비·미사일)에 VPG 센서를 한 번 설계해 넣으면
+      그 제품이 팔리는 동안 계속 구매합니다. 교체 비용(재인증·재설계)이 커서 이탈이 드뭅니다. 단, 신규 채택을 따내는 데도 수년이 걸립니다.</div></div>
+    <div class="card"><div class="k">② 경기 민감 + 짧은 수주 가시성</div>
+      <div class="d" style="font-size:14px; color:var(--ink);">산업 경기에 따라 매출이 출렁입니다(2022년 $362.6M 정점 → 2024년 $306.5M).
+      경영진 스스로 "짧은 가시성"을 인정하며, 선행 지표는 분기 수주와 수주/매출 비율(book-to-bill)입니다. Q1'26 수주 $102.1M, B2B 1.21.</div></div>
+    <div class="card"><div class="k">③ 운전자본·고정비가 무거운 제조업</div>
+      <div class="d" style="font-size:14px; color:var(--ink);">재고($82.8M)+매출채권($56.3M)이 매출의 약 45%로, 매출이 늘 때마다 현금이 먼저 묶입니다
+      (Q1'26 조정 FCF −$3.7M). 다수 공장의 고정비 탓에 가동률이 마진을 좌우합니다.</div></div>
+    <div class="card"><div class="k">④ 측정 시스템 = 마진 쿠션</div>
+      <div class="d" style="font-size:14px; color:var(--ink);">완성 장비는 매출총이익률 ~51%로 가장 높고, 센서 소자는 ~31%로 가장 낮습니다.
+      마진 개선 스토리는 "센서 물량 확대(가동률) + $20M 구조적 비용 절감 + 고마진 시스템 성장"의 조합에 달려 있습니다.</div></div>
+  </div>
+
+  <h3 class="block">최근 5년 실적 추이 — 정점, 침체, 그리고 반등 시도</h3>
+  <div class="bars">
+    <div class="bar-row"><div class="lbl">2021 <small>회복기</small></div><div class="bar-track"><div class="bar-fill" style="width:73%; background:#2F6DB3;">$317.9M</div></div><div class="val">영업이익률 8.6%</div></div>
+    <div class="bar-row"><div class="lbl">2022 <small>정점</small></div><div class="bar-track"><div class="bar-fill" style="width:83%; background:#0E7C7B;">$362.6M</div></div><div class="val">12.1%</div></div>
+    <div class="bar-row"><div class="lbl">2023</div><div class="bar-track"><div class="bar-fill" style="width:81%; background:#2F6DB3;">$355.0M</div></div><div class="val">~12.2%</div></div>
+    <div class="bar-row"><div class="lbl">2024 <small>침체</small></div><div class="bar-track"><div class="bar-fill" style="width:70%; background:#C77F0A;">$306.5M</div></div><div class="val">5.5%</div></div>
+    <div class="bar-row"><div class="lbl">2025</div><div class="bar-track"><div class="bar-fill" style="width:70%; background:#C77F0A;">$307.2M</div></div><div class="val">4.5% (조정 3.7%)</div></div>
+    <div class="bar-row"><div class="lbl">2026E <small>컨센서스</small></div><div class="bar-track"><div class="bar-fill" style="width:80%; background:#0E7C7B;">$349.8M</div></div><div class="val">+13.9% 전망</div></div>
+  </div>
+  <p class="src">출처: SEC 10-K/8-K(각 연도), Yahoo Finance, Simply Wall St(Q1'26 후 컨센서스, 애널리스트 3인).
+  2025년 영업이익률 4.5%에는 일회성 자산매각이익 $5.5M 포함(조정 3.7%).</p>
+
+  <div class="callout warn">
+    <h4>비판적 체크 — 이 회사의 '현재' 수익성은 낮습니다</h4>
+    <p>FY2025 조정 EBITDA 마진 9.2%, 조정 EPS $0.49. 1년 새 4~5배가 된 주가는 <strong>현재의 이익이 아니라 미래의 변신</strong>
+    (AI 인프라 부품 수요 + 휴머노이드 + $20M 비용 절감)을 사는 가격입니다. 현재 이익 기준 P/E ≈ 265배($129.75 ÷ 조정 EPS $0.49).</p>
+  </div>
+</section>
+
+<!-- ============================== M-03 ============================== -->
+<section id="m03">
+  <div class="sec-head"><span class="sec-code">M-03</span><h2>제품·기술 — 스트레인 게이지는 어떻게 힘을 '읽는가'</h2><span class="conf">기술 설명 확신도: 높음 ~90%</span></div>
+
+  <div class="term"><b>스트레인 게이지(strain gauge)란?</b> 우표보다 작은 필름 위에 머리카락보다 얇은 금속 박(포일)을 지그재그 회로로 새긴 소자입니다.
+  이것을 측정 대상(금속 막대, 로봇 손가락 뼈대 등)에 붙이면, 대상이 힘을 받아 <b>10만분의 1</b> 수준으로 미세하게 늘어나거나 줄어들 때
+  금속 박도 함께 변형되고, 그만큼 <b>전기 저항이 변합니다</b>. 이 저항 변화를 회로(휘트스톤 브리지)로 증폭해 읽으면
+  "지금 얼마의 힘이 걸려 있는지"가 숫자가 됩니다. 1938년 발명 이래 힘·무게 측정의 사실상 표준 기술입니다.</div>
+
+  <figure>
+    <svg viewBox="0 0 980 270" role="img" aria-label="스트레인 게이지 동작 원리 3단계">
+      <!-- 1 -->
+      <g transform="translate(25,40)">
+        <rect x="0" y="0" width="280" height="190" rx="10" fill="#fff" stroke="#0E2233" stroke-width="1.5"/>
+        <text x="140" y="-12" font-size="13.5" font-weight="800" text-anchor="middle" fill="#0E2233">① 포일 격자 소자</text>
+        <g stroke="#0E7C7B" stroke-width="7" fill="none" stroke-linecap="round">
+          <path d="M70 35 V150 M92 150 V35 M114 35 V150 M136 150 V35 M158 35 V150 M180 150 V35 M202 35 V150"/>
+          <path d="M70 35 H92 M114 35 H136 M158 35 H180"/>
+          <path d="M92 150 H114 M136 150 H158 M180 150 H202"/>
+        </g>
+        <line x1="70" y1="150" x2="42" y2="172" stroke="#0E7C7B" stroke-width="7" stroke-linecap="round"/>
+        <line x1="202" y1="35" x2="230" y2="16" stroke="#0E7C7B" stroke-width="7" stroke-linecap="round"/>
+        <text x="140" y="180" font-size="11" fill="#4A5C6B" text-anchor="middle">필름 위 금속 박 · 두께 수 ㎛</text>
+      </g>
+      <text x="328" y="145" font-size="26" fill="#4A5C6B">→</text>
+      <!-- 2 -->
+      <g transform="translate(360,40)">
+        <rect x="0" y="0" width="280" height="190" rx="10" fill="#fff" stroke="#0E2233" stroke-width="1.5"/>
+        <text x="140" y="-12" font-size="13.5" font-weight="800" text-anchor="middle" fill="#0E2233">② 힘 → 미세 변형 → 저항 변화</text>
+        <rect x="45" y="78" width="190" height="36" rx="6" fill="#D7E0E6" stroke="#4A5C6B"/>
+        <rect x="100" y="85" width="80" height="22" rx="4" fill="#0E7C7B" opacity="0.85"/>
+        <path d="M14 96 H40" stroke="#B83A3A" stroke-width="3.5" marker-end="url(#arr)"/>
+        <path d="M266 96 H240" stroke="#B83A3A" stroke-width="3.5" marker-end="url(#arr)"/>
+        <text x="140" y="58" font-size="11.5" fill="#B83A3A" text-anchor="middle" font-weight="700">F(힘) — 인장/압축</text>
+        <text x="140" y="142" font-size="11.5" fill="#4A5C6B" text-anchor="middle">박이 늘어나면 가늘고 길어져 저항↑</text>
+        <text class="mono" x="140" y="166" font-size="12" fill="#0E2233" text-anchor="middle" font-weight="700">ΔR/R = GF × ε  (변형률 ε ~ 10⁻⁵)</text>
+      </g>
+      <text x="663" y="145" font-size="26" fill="#4A5C6B">→</text>
+      <!-- 3 -->
+      <g transform="translate(695,40)">
+        <rect x="0" y="0" width="262" height="190" rx="10" fill="#fff" stroke="#0E2233" stroke-width="1.5"/>
+        <text x="131" y="-12" font-size="13.5" font-weight="800" text-anchor="middle" fill="#0E2233">③ 브리지 회로 → 숫자</text>
+        <g stroke="#0E2233" stroke-width="2" fill="none">
+          <path d="M131 28 L66 92 L131 156 L196 92 Z"/>
+        </g>
+        <circle cx="131" cy="28" r="5" fill="#0E2233"/><circle cx="131" cy="156" r="5" fill="#0E2233"/>
+        <circle cx="66" cy="92" r="5" fill="#0E7C7B"/><circle cx="196" cy="92" r="5" fill="#0E7C7B"/>
+        <text x="131" y="100" font-size="10.5" fill="#4A5C6B" text-anchor="middle">휘트스톤 브리지</text>
+        <text class="mono" x="131" y="180" font-size="12" fill="#0E7C7B" text-anchor="middle" font-weight="700">출력: 25.3 kg / 4.2 N·m</text>
+      </g>
+    </svg>
+    <figcaption>FIG M-03a · 스트레인 게이지 작동 원리. GF(게이지 팩터)는 변형 대비 저항 변화의 민감도. VPG의 차별점은 이 평범해 보이는
+    원리를 <b>극한 정밀도·온도 안정성·장기 무드리프트</b>로 구현하는 소재·공정 노하우에 있습니다.</figcaption>
+  </figure>
+
+  <h3 class="block">왜 휴머노이드 로봇에 이 기술이 필요한가</h3>
+  <p>로봇이 계란을 깨지 않고 집고, 무거운 상자를 안정적으로 들려면 <strong>"지금 손끝과 관절에 얼마의 힘이 걸리는지"를 실시간으로 느껴야</strong> 합니다.
+  카메라(시각)만으로는 접촉력의 크기를 알 수 없습니다. 스트레인 게이지 기반 힘/토크 센서는 이 '촉각·근감각'을 담당하며,
+  손가락·손목·발목·관절마다 들어갑니다. VPG 경영진에 따르면 로봇 1대당 힘 감지 부품 콘텐츠는 <em>소량 생산 시 약 $400~500,
+  대량 생산 시 $150~250 수준</em>으로 예상됩니다(Q1'26 콜). 즉 휴머노이드가 수백만 대 시대로 가면 의미 있는 시장이 되지만,
+  <strong>대당 단가는 절반 이하로 떨어지는</strong> 구조입니다.</p>
+
+  <h3 class="block">정밀 저항기 — 'AI 인프라' 수혜의 실체</h3>
+  <p>두 번째 핵심 제품인 <strong>포일 정밀 저항기</strong>는 회로에서 전류·전압을 기준값으로 재는 부품입니다. 반도체를 만들고 검사하는
+  장비(전공정·후공정), AI 데이터센터의 전력 변환부, 광통신 장비에는 온도가 변해도 값이 흔들리지 않는 초정밀 저항이 필수입니다.
+  Q1'26 센서 부문 수주가 15분기 만의 최고치($45.2M, B2B 1.36)를 기록한 직접적 동인이 바로 이 <em>반도체 장비·데이터센터·광통신향
+  정밀 저항기</em>였습니다 — 휴머노이드보다 현재 실적에는 이쪽 기여가 훨씬 큽니다.</p>
+
+  <h3 class="block">생산·판매 흐름</h3>
+  <div class="flow">
+    <div class="step"><div class="n">STEP 1</div><div class="t">합금 박 제조</div><div class="d">니켈-크롬 등 특수 합금을 수 ㎛ 박으로 압연·열처리 (핵심 노하우)</div></div>
+    <div class="step"><div class="n">STEP 2</div><div class="t">패턴 가공</div><div class="d">포토리소그래피로 격자 패턴 식각 — 반도체와 유사한 미세 공정</div></div>
+    <div class="step"><div class="n">STEP 3</div><div class="t">소자 완성·교정</div><div class="d">필름 접합, 온도 보상, 개별 교정(calibration)·등급 분류</div></div>
+    <div class="step"><div class="n">STEP 4</div><div class="t">부품화/시스템화</div><div class="d">금속 구조물에 접합해 로드셀·토크센서로, 또는 장비에 통합</div></div>
+    <div class="step"><div class="n">STEP 5</div><div class="t">설계 채택 → 반복 판매</div><div class="d">OEM 인증(항공 AS 규격 등) 후 장기 공급 — 전환비용 발생 지점</div></div>
+  </div>
+  <p class="note">생산 거점: 미국·이스라엘·인도·중국 등. 회사에 따르면 중국 공장은 주로 현지 고객용이어서 관세 노출을 일부 완충합니다(2025 Q1 발표 자료).</p>
+</section>
+
+<!-- ============================== M-04 ============================== -->
+<section id="m04">
+  <div class="sec-head"><span class="sec-code">M-04</span><h2>산업 분석 — 작은 본업, 거대한 옵션</h2><span class="conf">시장 규모 추정 확신도: 중간 ~60% (출처 간 편차 큼)</span></div>
+
+  <h3 class="block">① 본업: 정밀 힘 계측 시장 — 작고, 느리고, 과점적</h3>
+  <p>스트레인 게이지(소자) 시장은 정의에 따라 <strong>연 약 $2억~8억</strong> 규모로 추정되며(조사기관별 편차가 큼 — 소자만 vs 센서 포함 차이),
+  성장률은 <strong>연 3~8%</strong> 수준입니다. 산업자동화·구조 건전성 모니터링·항공우주 시험이 수요를 끌고, 금속 포일 방식이 전체의 약 88%를
+  차지합니다. 경쟁 구도는 수십 년째 과점입니다:</p>
+  <div class="bars">
+    <div class="bar-row"><div class="lbl">Vishay/VPG <small>美 — 정밀도 최상급</small></div><div class="bar-track"><div class="bar-fill" style="width:81%; background:#0E7C7B;">8.1%</div></div><div class="val">글로벌 1위</div></div>
+    <div class="bar-row"><div class="lbl">HBM(HBK) <small>獨 — Spectris→KKR</small></div><div class="bar-track"><div class="bar-fill" style="width:72%; background:#2F6DB3;">7.25%</div></div><div class="val">2위</div></div>
+    <div class="bar-row"><div class="lbl">Zemic <small>中 — 저가 물량</small></div><div class="bar-track"><div class="bar-fill" style="width:52%; background:#C77F0A;">5.24%</div></div><div class="val">3위</div></div>
+    <div class="bar-row"><div class="lbl">기타 <small>Kyowa(日)·TML(日)·Honeywell·Kistler 등</small></div><div class="bar-track"><div class="bar-fill" style="width:100%; background:#9FB1BE;">~79%</div></div><div class="val">파편화</div></div>
+  </div>
+  <p class="src">점유율: Maximize Market Research, 스트레인 게이지 센서 기준 2023. 시장규모 편차: Insight Partners $8.1억(2025, 광의) vs
+  Knowledge Sourcing $3.1억 vs GGI $2.4억(협의) — 출처 간 3배 이상 차이가 있어 절대 규모 해석에 주의.</p>
+
+  <h3 class="block">② 산업 가치사슬 — VPG는 어디에 서 있나</h3>
+  <figure>
+    <svg viewBox="0 0 980 250" role="img" aria-label="가치사슬">
+      <g font-size="12.5">
+        <rect x="15" y="60" width="150" height="120" rx="8" fill="#fff" stroke="#D7E0E6" stroke-width="1.5"/>
+        <text x="90" y="90" text-anchor="middle" font-weight="800">원자재</text>
+        <text x="90" y="114" text-anchor="middle" fill="#4A5C6B" font-size="11.5">특수 합금·필름</text>
+        <text x="90" y="133" text-anchor="middle" fill="#4A5C6B" font-size="11.5">전자 재료</text>
+        <rect x="205" y="30" width="250" height="180" rx="8" fill="#E3F1F0" stroke="#0E7C7B" stroke-width="2.5"/>
+        <text x="330" y="58" text-anchor="middle" font-weight="800" fill="#0E7C7B">소자·부품·시스템  ← VPG</text>
+        <text x="330" y="84" text-anchor="middle" font-size="11.5" fill="#0E2233">스트레인 게이지 · 정밀 저항기</text>
+        <text x="330" y="104" text-anchor="middle" font-size="11.5" fill="#0E2233">로드셀 · 힘/토크 센서</text>
+        <text x="330" y="124" text-anchor="middle" font-size="11.5" fill="#0E2233">계측 장비 (KELK·Gleeble·DTS)</text>
+        <text x="330" y="156" text-anchor="middle" font-size="11" fill="#4A5C6B">경쟁: HBK·Kistler·Zemic·Kyowa·</text>
+        <text x="330" y="173" text-anchor="middle" font-size="11" fill="#4A5C6B">ATI(Novanta)·Interface·中 신흥</text>
+        <rect x="495" y="60" width="220" height="120" rx="8" fill="#fff" stroke="#D7E0E6" stroke-width="1.5"/>
+        <text x="605" y="90" text-anchor="middle" font-weight="800">장비·기기 OEM</text>
+        <text x="605" y="114" text-anchor="middle" fill="#4A5C6B" font-size="11.5">반도체 장비사 · 저울 제조사</text>
+        <text x="605" y="133" text-anchor="middle" fill="#4A5C6B" font-size="11.5">방산업체 · 로봇 제조사</text>
+        <text x="605" y="152" text-anchor="middle" fill="#4A5C6B" font-size="11.5">(휴머노이드: 테슬라 등 추정)</text>
+        <rect x="755" y="60" width="210" height="120" rx="8" fill="#fff" stroke="#D7E0E6" stroke-width="1.5"/>
+        <text x="860" y="90" text-anchor="middle" font-weight="800">최종 사용자</text>
+        <text x="860" y="114" text-anchor="middle" fill="#4A5C6B" font-size="11.5">데이터센터 · 제철소 · 군</text>
+        <text x="860" y="133" text-anchor="middle" fill="#4A5C6B" font-size="11.5">물류·제조 현장 · 연구소</text>
+        <line x1="165" y1="120" x2="201" y2="120" stroke="#4A5C6B" stroke-width="2" marker-end="url(#arr)"/>
+        <line x1="455" y1="120" x2="491" y2="120" stroke="#4A5C6B" stroke-width="2" marker-end="url(#arr)"/>
+        <line x1="715" y1="120" x2="751" y2="120" stroke="#4A5C6B" stroke-width="2" marker-end="url(#arr)"/>
+      </g>
+      <text class="mono" x="330" y="236" font-size="11" fill="#0E7C7B" text-anchor="middle" font-weight="700">VPG = '곡괭이와 삽(picks &amp; shovels)' 위치 — 어떤 로봇이 이기든 센서는 필요</text>
+    </svg>
+    <figcaption>FIG M-04a · 가치사슬. VPG는 소자~시스템을 수직 통합한 중간재 공급자. 단, 같은 위치를 노리는 경쟁자도 많습니다.</figcaption>
+  </figure>
+
+  <h3 class="block">③ 신성장 축 1 — 휴머노이드 로봇: 전망은 거대, 현재는 미미</h3>
+  <table>
+    <tr><th>구분</th><th>내용</th><th class="num">수치</th></tr>
+    <tr><td>골드만삭스 전망</td><td>2035년 글로벌 휴머노이드 시장 (기존 $60억에서 6배 상향)</td><td class="num">$380억</td></tr>
+    <tr><td>모건스탠리 전망</td><td>2050년 시장(공급망·서비스 포함) / 누적 보급 — 본격 채택은 2030년대 중후반</td><td class="num">$5조 / 10억 대</td></tr>
+    <tr><td>단기 현실 (Omdia)</td><td>2027년까지 누적 출하 전망</td><td class="num">1만 대+</td></tr>
+    <tr><td>가격 동학</td><td>중국 부품사가 서구 대비 약 1/3 가격 — 부품 단가 하락 압력 상수</td><td class="num">−66%</td></tr>
+    <tr class="hl-row"><td>VPG의 현재 위치</td><td>휴머노이드 매출 2025년 ≈ $4M(베이스라인), Q1'26 출하 ~$0.6M, Q2 2배+ 예상.
+      양산 전 단계 고객 2곳 + 프로토타입 고객 1곳 + 초기 논의 1곳(국방·가정·산업용 스타트업).
+      시트론 리서치(2025.4)는 주 고객을 테슬라 옵티머스로 추정 — <b>회사는 고객명을 확인한 적 없음</b></td><td class="num">매출의 ~1%</td></tr>
+  </table>
+  <p class="src">출처: Goldman Sachs(2035 $38B), Morgan Stanley Research(2050 $5T·휴머노이드 보고서), Omdia, VPG Q1'26 콜, Citron Research(2025-04).</p>
+
+  <h3 class="block">④ 신성장 축 2 — AI 인프라: 지금 실적을 견인하는 쪽</h3>
+  <p>AI 반도체 증설 사이클은 <em>반도체 전·후공정 장비 → 정밀 저항기 수요</em>로, 데이터센터 증설은 <em>전력부·광모듈 → 정밀 저항기 수요</em>로
+  연결됩니다. Q1'26 수주 급증(+26% QoQ)의 주된 동력이 이것이며, 방산(미사일 시험용 DTS 사상 최대 매출, 극초음속·전투기 엔진 시험 수주)도
+  구조적 순풍입니다. 반면 전통 시장인 <strong>철강 계측은 글로벌 수요 둔화</strong>(인도·북미 일부 제외)로 약세입니다 — 산업의 무게중심이
+  '구경제 계측'에서 'AI·방산 계측'으로 이동 중입니다.</p>
+
+  <div class="callout ok">
+    <h4>산업 방향성 요약</h4>
+    <p>본업(힘 계측)은 <b>저성장·과점·경기순환</b> 산업입니다. 여기에 ① AI 인프라용 정밀 저항기(현재 진행형 수혜),
+    ② 방산·우주 시험(구조적 성장), ③ 휴머노이드 촉각 센서(거대하지만 시점·승자 불확실)라는 세 갈래 신수요가 얹혔습니다.
+    투자 판단의 핵심은 "③이 언제, 얼마나, <b>누구에게</b> 돈이 되는가"입니다. 산업 트렌드 방향 확신도: 높음 ~80% /
+    시점·규모 확신도: 낮음 ~30%.</p>
+  </div>
+</section>
+
+<!-- ============================== M-05 ============================== -->
+<section id="m05">
+  <div class="sec-head"><span class="sec-code">M-05</span><h2>SWOT 분석</h2><span class="conf">정성 판단 — 근거는 각 항목에 병기</span></div>
+  <div class="swot">
+    <div class="q S"><h4><span class="ic">S</span>강점 (Strengths)</h4>
+      <ul>
+        <li><b>정밀도 기술 리더십</b> — 포일 기술 60년 축적, 스트레인 게이지 글로벌 점유 1위(8.1%, 2023)</li>
+        <li><b>미션 크리티컬 레퍼런스</b> — NASA 아르테미스·SpaceX·미사일 시험 등 최고 난도 인증 실적</li>
+        <li><b>순현금 재무구조</b> — 현금 $82.5M vs 부채 $20.6M (순현금 $62M, Q1'26), M&amp;A 여력</li>
+        <li><b>수직 통합</b> — 합금 박부터 시스템까지 내재화, 소자 외판+자가소비 동시 가능</li>
+        <li><b>수주 모멘텀</b> — Q1'26 수주 $102.1M(B2B 1.21), 2022.7 이후 최초 $100M 돌파</li>
+      </ul>
+    </div>
+    <div class="q W"><h4><span class="ic">W</span>약점 (Weaknesses)</h4>
+      <ul>
+        <li><b>낮은 현재 수익성</b> — FY25 조정 EBITDA 9.2%, ROIC ~4%로 자본비용(9.7%) 미달</li>
+        <li><b>무거운 운전자본</b> — 재고+채권 ≈ 매출 45%, 성장 시 현금 선소요(Q1'26 FCF −$3.7M)</li>
+        <li><b>소형주 한계</b> — 애널리스트 3인 커버리지, 일중 ±10% 변동, 유동성 얕음</li>
+        <li><b>목표 미달 이력</b> — 과거에도 목표모델 제시 후 경기침체로 미달(2023~25), 신뢰 검증 필요</li>
+        <li><b>경영 변화기</b> — CFO 38년 재직 후 2026년 말 은퇴 예정, 신설 COO/CBPO 체제 검증 전</li>
+      </ul>
+    </div>
+    <div class="q O"><h4><span class="ic">O</span>기회 (Opportunities)</h4>
+      <ul>
+        <li><b>휴머노이드 촉각 센서</b> — 2035년 시장 $380억 전망(GS), '곡괭이와 삽' 포지션</li>
+        <li><b>AI 인프라 사이클</b> — 반도체 장비·데이터센터·광통신향 정밀 저항기 수요 급증(현재 진행형)</li>
+        <li><b>방산·우주 증액</b> — 미사일·극초음속 시험 수요, DTS 사상 최대 매출</li>
+        <li><b>$20M 비용 절감</b> — 공장 통합·자동화·구매 효율화로 구조적 마진 레버 (3년)</li>
+        <li><b>업계 재편 수혜 가능성</b> — KKR의 Spectris(HBK 모회사) 인수(£47억)로 경쟁사 PE 체제 전환</li>
+      </ul>
+    </div>
+    <div class="q T"><h4><span class="ic">T</span>위협 (Threats)</h4>
+      <ul>
+        <li><b>휴머노이드 시점 리스크</b> — 양산 일정·규모 불확실(경영진도 "정확한 시점 불명" 인정)</li>
+        <li><b>단가 압박</b> — 대량생산 시 로봇당 콘텐츠 $400~500→$150~250 하락 전망(경영진), 中 부품 1/3 가격</li>
+        <li><b>대체 기술</b> — MEMS·압전·정전용량식 촉각센서, 로봇사의 센서 내재화 가능성</li>
+        <li><b>고객 집중</b> — 휴머노이드 매출이 사실상 1~2개 미공개 고객 의존, 설계 탈락 시 테마 소멸</li>
+        <li><b>지정학</b> — 이스라엘 생산기지(분쟁 지역) 노출, 관세·수출규제(자진신고 진행 건 포함)</li>
+        <li><b>경기 순환</b> — 본업 산업 수요는 여전히 경기에 민감 (2023→24 매출 −13.7% 경험)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== M-06 ============================== -->
+<section id="m06">
+  <div class="sec-head"><span class="sec-code">M-06</span><h2>경제적 해자(Moat) 진단 — "기술은 깊고, 돈은 얕다"</h2><span class="conf">판단 확신도: 중간 ~65%</span></div>
+
+  <p>해자란 경쟁자가 이익을 빼앗지 못하게 막는 구조적 장벽입니다. VPG에는 해자의 <strong>원천</strong>이 분명히 존재하지만,
+  그것이 <strong>초과이익(높은 ROIC)으로 환전된 기록</strong>은 약합니다 — 이 간극이 본 분석의 출발점입니다.</p>
+
+  <table>
+    <tr><th style="width:18%;">해자 후보</th><th style="width:10%;">평가</th><th>근거</th></tr>
+    <tr><td><b>무형자산 (기술·인증)</b></td><td><span class="pill g">있음·좁음</span></td>
+      <td>포일 합금·열처리 공정은 도면만으로 복제 불가한 암묵지. 항공(AS 규격)·국방·우주 인증은 수년의 검증 필요.
+      단, 일반 산업용·계량용 등급에서는 中 Zemic 등과 가격 경쟁에 노출.</td></tr>
+    <tr><td><b>전환 비용</b></td><td><span class="pill g">있음</span></td>
+      <td>OEM이 센서를 바꾸려면 재설계+재인증 비용 발생 → 기존 설계 채택(design-in)은 잘 안 뺏김.
+      같은 이유로 VPG가 남의 자리를 뺏기도 어려움 — 양날의 칼.</td></tr>
+    <tr><td><b>규모의 경제</b></td><td><span class="pill a">약함</span></td>
+      <td>니치 시장이라 절대 규모가 작고, 다공장 고정비 부담으로 오히려 가동률 민감. $20M 절감 계획이 이를 보완하려는 시도.</td></tr>
+    <tr><td><b>네트워크 효과</b></td><td><span class="pill r">없음</span></td><td>부품·장비 사업 특성상 해당 없음.</td></tr>
+    <tr><td><b>브랜드/신뢰</b></td><td><span class="pill g">니치 내 강함</span></td>
+      <td>"실패하면 안 되는 측정"(미사일 시험, 유인 우주선)에서 Micro-Measurements·DTS 브랜드는 사실상 기본값.
+      가격 프리미엄의 원천이나, 시장 자체가 작음.</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <h4>해자의 결정적 약점 — 숫자가 증명하지 못한다</h4>
+    <p>지속 해자 기업은 보통 ① NOPAT 마진이 산업 평균의 2배+ (차별화) 또는 ② 투자자본 회전율 1.5배+ (원가 우위)를 보입니다.
+    VPG는 <strong>FY25 EBITA 마진 ~5%(조정), 투자자본 회전율 ~1.05회, ROIC ~4%</strong>로 둘 다 충족하지 못하며, 사이클 정점이던
+    2022년에도 ROIC는 ~11~12%로 자본비용을 간신히 웃도는 수준이었습니다. 즉 <em>현재의 VPG는 "기술 해자는 있으나 경제적 해자는
+    입증 전"</em>인 상태이고, 주가는 이 입증이 미래에 일어난다는 데 베팅하고 있습니다. (산출: V-02 참조)</p>
+  </div>
+
+  <div class="callout steel">
+    <h4>강세론 스틸맨(Steel-man) — 반대편 논리를 가장 강하게 복원하면</h4>
+    <p>"낮은 ROIC는 해자 부재의 증거가 아니라 <b>수요 침체기(2024~25)의 가동률 문제</b>다. 휴머노이드 양산이 시작되면
+    ① 인증·정밀도 장벽 때문에 초기 공급망에 들어간 소수 업체가 시장을 과점하고, ② VPG는 이미 선두 개발사 2곳의 양산 전 단계에
+    들어가 있으며(검증된 사실), ③ 소자 자체 생산 능력 덕에 단가 하락에도 마진 방어가 가능하다. AI 인프라 저항기 수요(검증된 사실)가
+    그동안 실적 공백을 메워 주고, $20M 비용 절감은 가동률과 무관한 구조적 레버다. 1만 대 시대의 매출이 아니라 100만 대 시대의
+    <b>옵션 가치</b>를 사는 것이며, 옵션은 원래 현재 이익으로 정당화되지 않는다." — 이 논리는 내적으로 일관됩니다.
+    문제는 가격입니다: V-04에서 이 옵션이 <b>이미 얼마에 팔리고 있는지</b>를 계측합니다.</p>
+  </div>
+</section>
+
+<!-- ============================== M-07 ============================== -->
+<section id="m07">
+  <div class="sec-head"><span class="sec-code">M-07</span><h2>피어그룹 비교 — 시장이 VPG에만 매긴 프리미엄</h2><span class="conf">수치는 각 사 공시·검증 출처 기준</span></div>
+
+  <div class="tbl-wrap"><table>
+    <tr><th>기업</th><th>핵심 사업 / 휴머노이드 관련성</th><th class="num">최근 연매출</th><th class="num">EBITDA 마진</th><th class="num">가치 지표</th></tr>
+    <tr class="hl-row"><td><b>VPG</b> (NYSE)</td><td>스트레인 게이지·정밀 저항기·로드셀 / 휴머노이드 손·관절 센서 (매출 ~1%)</td>
+      <td class="num">$307M (FY25)</td><td class="num">9.2% (조정)</td><td class="num"><b>EV/매출 5.4x</b><br>EV/'28E EBITDA ~20x</td></tr>
+    <tr><td><b>Novanta</b> (NOVT)</td><td>정밀 포토닉스·모션 — 자회사 ATI는 로봇용 힘/토크 센서 글로벌 강자 (직접 경쟁)</td>
+      <td class="num">$981M (FY25)</td><td class="num">22.5% (조정)</td><td class="num">EBITDA $221M, 마진 VPG의 2.4배</td></tr>
+    <tr><td><b>HBK</b> (Spectris 산하, 비상장)</td><td>스트레인 게이지·계측 — VPG의 최직접 경쟁사 / 2025.12 KKR이 Spectris 인수</td>
+      <td class="num">£502M (HBK 부문, '24)</td><td class="num">비공개</td><td class="num">그룹 인수 EV £47억<br>≈ <b>EV/매출 ~3.6x</b></td></tr>
+    <tr><td><b>Allient</b> (ALNT)</td><td>정밀 모션 부품·시스템 — 로봇 구동계 관련 테마주</td>
+      <td class="num">~$556M (연환산)</td><td class="num">12.4% (Q1'26)</td><td class="num">JPM 목표 $80 (5월 상향)</td></tr>
+    <tr><td><b>Zemic</b> (中, 선전 상장)</td><td>로드셀·게이지 저가 대량 — VPG 점유율을 위협하는 가격 경쟁자</td>
+      <td class="num">점유 5.2% ('23)</td><td class="num">—</td><td class="num">서구 대비 ~1/3 가격대</td></tr>
+  </table></div>
+  <p class="src">출처: 각 사 8-K/실적발표(Novanta 2026-02-23, Allient Q1'26), Spectris-KKR 거래 공시(Financier Worldwide·BusinessCloud, 2025-12),
+  Maximize Market Research(점유율). HBK 부문 마진은 비공개라 표기 제외.</p>
+
+  <h3 class="block">비교에서 드러나는 세 가지</h3>
+  <p><strong>(1) 수익성 격차:</strong> 같은 '정밀 계측' 우산 아래에서 Novanta는 EBITDA 마진 22.5%를 이미 달성 중이고, VPG는 9.2%입니다.
+  VPG의 3년 목표(18.5~20.5%)는 사실상 "Novanta처럼 되겠다"는 선언이며, 가능성은 있으나 <em>아직 한 번도 도달해 본 적 없는 수준</em>입니다
+  (역사적 최고는 2022년 EBITDA ~13~14%).</p>
+  <p><strong>(2) 가치평가 격차:</strong> 사모펀드 KKR은 2025년 말, VPG보다 크고 검증된 경쟁사 HBK의 모회사 Spectris 전체를
+  <em>EV/매출 약 3.6배</em>에 인수했습니다. 시장은 지금 VPG에 <em>EV/매출 5.4배</em> — 더 작고 마진 낮은 회사에 더 높은 배수 —
+  를 지불하고 있습니다. 그 차이가 곧 '휴머노이드 옵션'의 가격표입니다.</p>
+  <p><strong>(3) 경쟁 실재성:</strong> 휴머노이드 힘 센서는 VPG의 독무대가 아닙니다. ATI(Novanta), Kistler, 그리고 가격 1/3의 중국 진영이
+  같은 자리를 노립니다. '곡괭이와 삽' 논리는 곡괭이 파는 가게가 하나일 때 가장 강력합니다.</p>
+</section>
+
+<!-- ============================== V-01 ============================== -->
+<section id="v01">
+  <div class="sec-head"><span class="sec-code">V-01</span><h2>생애주기 판별 — 현금흐름 서명(signature) 읽기</h2><span class="conf">판별 확신도: 높음 ~85%</span></div>
+
+  <div class="term"><b>왜 이걸 먼저 보나?</b> 기업이 생애주기의 어느 단계(도입/성장/성숙/정리/감소)에 있는지에 따라 알맞은 가치평가 도구가
+  다릅니다. 영업·투자·재무 현금흐름의 부호 조합이 '서명'처럼 단계를 알려 줍니다. 시장 내재 CAP 분석은 <b>성장·성숙 단계</b>에 적합합니다.</div>
+
+  <table>
+    <tr><th>회계연도</th><th class="num">영업 CF</th><th class="num">투자 CF</th><th class="num">재무 CF</th><th>부호 패턴</th><th>판정</th></tr>
+    <tr><td>FY2024</td><td class="num">+$19.8M</td><td class="num">−$12.9M</td><td class="num">−$9.4M</td><td class="num">(+, −, −)</td><td><span class="pill b">성숙</span></td></tr>
+    <tr class="hl-row"><td>FY2025</td><td class="num">+$14.4M</td><td class="num">+$2.9M → 조정 −$8.0M*</td><td class="num">−$11.4M</td><td class="num">(+, −, −)</td><td><span class="pill b">성숙</span></td></tr>
+    <tr><td>Q1 FY2026</td><td class="num" colspan="3">조정 FCF −$3.7M (운전자본 선투자), capex 확대 가이던스 $14~16M</td><td class="num">투자 재가속</td><td><span class="pill g">성장 재진입 시도</span></td></tr>
+  </table>
+  <p class="src">*FY25 투자 CF +$2.9M은 켄트 공장 매각대금 $10.9M(일회성) 때문. 프레임워크 조정 원칙(유가증권·일회성 제외)에 따라
+  핵심 투자 CF는 capex −$8.0M 기준 음(−)으로 분류. SBC($1.8M)는 규모가 작아 재분류 영향 미미. 출처: FY25 8-K 현금흐름표.</p>
+
+  <p><strong>판정: 성숙(Mature) 단계 — 단, 성장 단계로의 재진입을 시도 중.</strong> 2년 연속 (+,−,−) 패턴은 전형적 성숙 기업의 서명이며,
+  프레임워크 통계상 성숙 기업 평균 ROIC는 11.1%입니다(VPG는 ~4%로 하위권). 2026년 들어 운전자본·설비 투자가 다시 늘고 매출이
+  두 자릿수로 반등하는 점은 Apple(1997→2001)처럼 단계를 역행해 성장으로 복귀하려는 신호일 수 있습니다.
+  어느 쪽이든 <em>성장·성숙 구간이므로 시장 내재 CAP 분석의 적용 대상이 맞습니다.</em></p>
+</section>
+
+<!-- ============================== V-02 ============================== -->
+<section id="v02">
+  <div class="sec-head"><span class="sec-code">V-02</span><h2>경쟁 우위 정량 진단 — 5 Forces와 두 개의 잣대</h2><span class="conf">정량 산출 확신도: 높음 ~85% / 해석: 중간</span></div>
+
+  <h3 class="block">포터의 5 Forces 약식 평가</h3>
+  <table>
+    <tr><th style="width:22%;">힘</th><th style="width:13%;">강도</th><th>판단 근거</th></tr>
+    <tr><td>신규 진입 위협</td><td><span class="pill g">낮음~중간</span></td><td>최고 정밀 등급은 공정 암묵지+인증 장벽으로 진입 어려움. 다만 일반 등급은 中 신규 진입 활발.</td></tr>
+    <tr><td>기존 경쟁 강도</td><td><span class="pill a">중간~높음</span></td><td>HBK·Kistler·Kyowa와 정면 경쟁 + Zemic 등 저가 압박. 휴머노이드 신시장에선 "매우 경쟁적"(CEO 발언).</td></tr>
+    <tr><td>공급자 교섭력</td><td><span class="pill g">낮음</span></td><td>합금·필름 등 원자재는 범용성 높고 수직 통합으로 내재화.</td></tr>
+    <tr><td>구매자 교섭력</td><td><span class="pill a">중간→높음</span></td><td>전통 시장은 분산 고객(낮음). 휴머노이드는 거대 OEM 소수 — 단가 인하 요구 강함(대당 $400→$150~250 전망).</td></tr>
+    <tr><td>대체재 위협</td><td><span class="pill a">중간</span></td><td>MEMS·압전·정전용량 촉각센서가 일부 용도 대체 가능. 초정밀·고신뢰 영역에선 포일 방식 우위 유지.</td></tr>
+  </table>
+
+  <h3 class="block">차별화인가, 원가 우위인가 — 둘 다 '아직' 아니다</h3>
+  <div class="cards c3">
+    <div class="card"><div class="k">NOPAT 마진 (FY25, 조정)</div><div class="v neg">~3.8%</div><div class="d">EBITA $15.9M(마진 5.2%) × (1−26%) ÷ 매출.
+      차별화 기준(산업 평균 2배+)에 크게 미달</div></div>
+    <div class="card"><div class="k">투자자본 회전율</div><div class="v warn">~1.05회</div><div class="d">매출 $307M ÷ 투자자본 ~$293M.
+      원가 우위 기준(1.5배+) 미달</div></div>
+    <div class="card"><div class="k">ROIC − WACC</div><div class="v neg">≈ −5.9%p</div><div class="d">ROIC ~3.8% vs WACC 9.7% —
+      현재는 투자할수록 가치가 줄어드는 구간</div></div>
+  </div>
+  <p class="src">투자자본 = 자본총계 $336.2M + 차입금 $20.6M + 운용리스부채 $23.9M − 현금 $87.4M ≈ $293M (2025-12-31).
+  EBITA = 조정 EBITDA $28.2M − 감가상각 $12.0M ≈ $16.2M, 보수적으로 영업이익 경로($15.1M)와 평균해 마진 5.2% 적용.</p>
+
+  <p>사이클 정점(2022년)에도 ROIC는 <strong>약 11~12%</strong>(EBITA ~$47M × 0.74 ÷ IC ~$300M)로, WACC를 1~2%p 웃도는 정도였습니다.
+  결론: <em>VPG는 역사적으로 '평균 회귀의 중력'을 이겨 본 적이 없는 기업</em>이며, 프레임워크 기준으로 페이드 비율은 섹터 평균
+  (IT 0.20) 이상을 적용하는 것이 정직합니다. 현재 주가는 이 역사와의 단절 — 즉 <strong>신규 사업이 만들어 낼 '새 해자'</strong>를 전제합니다.</p>
+</section>
+
+<!-- ============================== V-03 ============================== -->
+<section id="v03">
+  <div class="sec-head"><span class="sec-code">V-03</span><h2>DCF 가정 · 자본비용(WACC)</h2><span class="conf">입력값 출처: 전부 검증 (기준일 명시)</span></div>
+
+  <div class="term"><b>이 분석의 방향:</b> "적정 가치"를 선언하지 않습니다. 대신 검증된 입력값으로 DCF 엔진을 만들고,
+  <b>현재 주가가 성립하려면 어떤 가정(성장률·마진·기간)이 필요한지 역산</b>합니다. 정밀함보다 방향성과 논리 일관성을 우선합니다.</div>
+
+  <h3 class="block">자본비용 (CAPM)</h3>
+  <table>
+    <tr><th>입력</th><th class="num">값</th><th>출처 · 기준 시점</th></tr>
+    <tr><td>무위험 이자율 (美 10년 국채)</td><td class="num">4.54%</td><td>FRED DGS10 / MacroMicro, 2026-06-09</td></tr>
+    <tr><td>베타 (5년 원시 1.13 → 1로 회귀 조정)</td><td class="num">1.10</td><td>Investing.com Pro 5Y 베타, Blume 조정(⅔×1.13+⅓×1)</td></tr>
+    <tr><td>주식위험프리미엄 (ERP)</td><td class="num">4.75%</td><td>프로젝트 표준값. <b>주의:</b> 다모다란 내재 ERP 최신치는 4.23%(2026-01) —
+      4.23% 적용 시 WACC ≈ 9.2%로 약 0.5%p 하락. 출처 상충을 민감도(V-05)로 흡수</td></tr>
+    <tr><td>자기자본비용</td><td class="num">9.76%</td><td>= 4.54% + 1.10 × 4.75%</td></tr>
+    <tr><td>세후 부채비용 / 부채 비중</td><td class="num">5.5% / 1.2%</td><td>이자비용 $1.9M ÷ 평균차입 $26M ≈ 7.4%, 세율 26% / 시총 대비 차입 $20.6M</td></tr>
+    <tr class="hl-row"><td><b>WACC</b></td><td class="num"><b>9.7%</b></td><td>0.988×9.76% + 0.012×5.5%</td></tr>
+  </table>
+
+  <h3 class="block">공통 영업 가정</h3>
+  <table>
+    <tr><th>항목</th><th class="num">값</th><th>근거</th></tr>
+    <tr><td>장기(터미널) 성장률 g</td><td class="num">2.5%</td><td>프로젝트 표준(예상 인플레이션). 참고: FRED 10년 BEI 2.33%(2026-04) — ±1%p 민감도 제시</td></tr>
+    <tr><td>현금 세율</td><td class="num">26%</td><td>회사 2026년 운영 세율 가이던스(Q1'26 콜). 과거 GAAP 실효세율(39~44%)은 FX·할인불가 항목으로 왜곡</td></tr>
+    <tr><td>설비투자 / 감가상각</td><td class="num">4.5~5.0% / 3.6~3.8% (매출 대비)</td><td>회사 가이던스 capex 4~5%(’26: $14~16M) / FY25 감가상각 $12.0M</td></tr>
+    <tr><td>증분 운전자본</td><td class="num">매출 증가분의 28~30%</td><td>운전자본/매출 ~35%(FY25 대차대조표), Q1'26 실제 현금 선소요와 정합</td></tr>
+    <tr><td>페이드 비율 f</td><td class="num">0.20 (기본) / 0.17 (강세) / 0.25 (약세)</td><td>IT 섹터 평균 0.20, 기술 하드웨어·장비 산업그룹 0.17 (프레임워크 부록 A)</td></tr>
+    <tr><td>주식 수 / 순현금 브리지</td><td class="num">13.30M주 / +$62.0M − 연금 $6.2M</td><td>FY25 10-K 주식 수 + Q1'26 현금 $82.5M·부채 $20.6M. SBC는 비용으로 처리(마진 경로에 −1%p 내재)</td></tr>
+    <tr><td>할인 방식</td><td class="num">연중(mid-year)</td><td>(1+k)^−(t−0.5), 가치 기준 시점 2026년 중반</td></tr>
+  </table>
+  <p class="note">2025년 출발점: 매출 $307.2M, EBITA 마진 5.2%(조정 EBITDA 9.2% − 감가 3.9%), NOPAT $11.8M.
+  목표 EV = 시총 $1,726M − 순현금 $62M + 연금 $6.2M ≈ <b>$1,670M</b>. 현재 배수: EV/매출 5.4x, EV/'26E 매출 4.8x.</p>
+</section>
+
+<!-- ============================== V-04 ============================== -->
+<section id="v04">
+  <div class="sec-head"><span class="sec-code">V-04</span><h2>시장 내재 기대치 역산 — 이 보고서의 심장</h2><span class="conf">산식 확신도: 높음 / 해석 확신도: 중상 ~75%</span></div>
+
+  <h3 class="block">STEP 1 — 일반 절차의 실패가 곧 발견이다</h3>
+  <p>표준 절차는 "컨센서스 가치 동인을 넣고, 오늘 주가가 풀릴 때까지 명시 예측 기간(T)을 늘리는 것"입니다.
+  컨센서스(2026 매출 $349.8M)와 <strong>경영진 3개년 목표 모델을 100% 달성·이후 영구 유지</strong>(매출 성장 13.9%→10%→9% 후 점진 둔화,
+  EBITA 마진 15% 도달·유지, f=0.20)라는 — 이미 회사 역사상 최고치를 넘는 — 관대한 가정을 넣고 T를 늘려 보면:</p>
+
+  <table>
+    <tr><th class="num">예측 기간 T</th><th class="num">5년</th><th class="num">10년</th><th class="num">15년</th><th class="num">20년</th><th class="num">30년</th><th class="num">T→∞ (수렴)</th></tr>
+    <tr><td class="num"><b>주당 가치</b></td><td class="num">$39.2</td><td class="num">$42.7</td><td class="num">$44.9</td><td class="num">$46.6</td><td class="num">$48.8</td><td class="num"><b>$51.4</b></td></tr>
+    <tr><td class="num">현재가 대비</td><td class="num">30%</td><td class="num">33%</td><td class="num">35%</td><td class="num">36%</td><td class="num">38%</td><td class="num"><b>40%</b></td></tr>
+  </table>
+
+  <div class="callout risk">
+    <h4>발견 ① — 내재 CAP "산출 불가": 가격이 모델의 수렴 상한을 2.5배 초과</h4>
+    <p>장기 성장률(4%대)이 할인율(9.7%)보다 낮으면 T를 늘려도 가치는 수렴합니다. 그 수렴 상한이 <b>$51</b>이므로,
+    <strong>현재 주가 $129.75는 컨센서스+경영진 목표라는 가정 체계 안에서는 무한한 CAP를 줘도 도달 불가능</strong>합니다.
+    프레임워크의 해석 척도("20년 초과 = 과도한 낙관, 회피 고려")로 보면 가장 극단의 영역입니다.
+    역으로 말해, 시장은 <em>경영진의 공식 목표보다 훨씬 큰 무언가</em>를 가격에 넣고 있습니다 — 그 정체를 STEP 2에서 역산합니다.</p>
+  </div>
+
+  <h3 class="block">STEP 2 — 그렇다면 시장은 '무엇을' 가격에 넣었나 (역산)</h3>
+  <p>이번엔 질문을 뒤집습니다: <em>"EBITA 마진이 18%(목표 상단+α, Novanta 수준)까지 가고 f=0.17(기술 하드웨어 산업그룹)을 적용할 때,
+  주가 $129.75가 성립하려면 매출이 얼마나 성장해야 하는가?"</em> 20년 명시 기간(10년 고성장 + 5년 6% + 5년 4%) 기준 해는:</p>
+
+  <div class="cards c3">
+    <div class="card"><div class="k">내재 10년 매출 CAGR</div><div class="v warn">+19.5%</div><div class="d">2026~2035년 매년. 참고: 직전 5년 실적 CAGR ≈ −0.4%</div></div>
+    <div class="card"><div class="k">내재 2035년 매출</div><div class="v warn">$18.3억</div><div class="d">현재($3.07억)의 6.0배. 2045년엔 $29.8억 함의</div></div>
+    <div class="card"><div class="k">내재 CAP (동일 동인 하)</div><div class="v warn">20~21년</div><div class="d">T=20에서 $129.75 정확 일치, T=21에서 초과 — MS의 17~18년을 상회</div></div>
+  </div>
+
+  <h3 class="block">시장 정합 시나리오 DCF 테이블 (전시 23 형식)</h3>
+  <p class="note">아래 표가 곧 "현재 주가가 말하는 미래"입니다. 단위 $M, 주당 $ · WACC 9.7%, g 2.5%, f 0.17, 세율 26%, 연중 할인.
+  ROIIC = 당해 NOPAT 증가분 ÷ 전년 투자. 2027~2030년의 비정상적 ROIIC(60~80%)는 비용절감발(發) 마진 확장이 투자 없이 이익을
+  늘리기 때문이며, 마진 안착 후(2031~) 45%→29%→23%로 정상화, 터미널 ROIIC는 17.3%(공교롭게도 모부신의 MSFT 사례 17%와 유사)로 수렴합니다.</p>
+
+  <div class="tbl-wrap"><table class="exhibit">
+    <tr><th>($M)</th><th>2025</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2032</th><th>2035</th><th>2040</th><th>2045</th></tr>
+    <tr><td>매출</td><td>307</td><td>367</td><td>439</td><td>525</td><td>627</td><td>750</td><td>1,072</td><td>1,831</td><td>2,450</td><td>2,981</td></tr>
+    <tr><td>매출 성장률 %</td><td>0.2</td><td>19.5</td><td>19.5</td><td>19.5</td><td>19.5</td><td>19.5</td><td>19.5</td><td>19.5</td><td>6.0</td><td>4.0</td></tr>
+    <tr><td>EBITA</td><td>16</td><td>26</td><td>43</td><td>66</td><td>96</td><td>135</td><td>193</td><td>330</td><td>441</td><td>537</td></tr>
+    <tr><td>EBITA 마진 %</td><td>5.2</td><td>7.0</td><td>9.8</td><td>12.5</td><td>15.2</td><td>18.0</td><td>18.0</td><td>18.0</td><td>18.0</td><td>18.0</td></tr>
+    <tr><td>현금 세율 %</td><td>26</td><td>26</td><td>26</td><td>26</td><td>26</td><td>26</td><td>26</td><td>26</td><td>26</td><td>26</td></tr>
+    <tr class="key"><td>NOPAT</td><td>12</td><td>19</td><td>32</td><td>48</td><td>71</td><td>100</td><td>143</td><td>244</td><td>326</td><td>397</td></tr>
+    <tr><td>미래 투자</td><td>—</td><td>21</td><td>25</td><td>30</td><td>36</td><td>43</td><td>62</td><td>106</td><td>68</td><td>68</td></tr>
+    <tr class="key"><td>잉여현금흐름 FCF</td><td>—</td><td>−2</td><td>6</td><td>18</td><td>35</td><td>57</td><td>81</td><td>138</td><td>258</td><td>329</td></tr>
+    <tr><td>FCF의 현재가치</td><td>—</td><td>−2</td><td>6</td><td>15</td><td>25</td><td>37</td><td>44</td><td>57</td><td>67</td><td>54</td></tr>
+    <tr><td>증분 ROIIC %</td><td>—</td><td>—</td><td>60</td><td>67</td><td>73</td><td>80</td><td>45</td><td>45</td><td>29</td><td>23</td></tr>
+  </table></div>
+
+  <table>
+    <tr><th>가치 집계 (2026년 중반 기준)</th><th class="num">$M</th><th class="num">구성비</th></tr>
+    <tr><td>명시 기간 FCF 현재가치 합 (2026–2045)</td><td class="num">987</td><td class="num">59%</td></tr>
+    <tr><td>최종 가치(페이드 모델, 2045 NOPAT $397×1.025 기준 TV $4,351)의 현재가치</td><td class="num">683</td><td class="num">41%</td></tr>
+    <tr class="hl-row"><td><b>기업가치 EV</b></td><td class="num"><b>1,670</b></td><td class="num">100%</td></tr>
+    <tr><td>+ 순현금 $62M − 연금 $6.2M</td><td class="num">+56</td><td class="num"></td></tr>
+    <tr class="hl-row"><td><b>자본가치 ÷ 13.30M주 = 주당 가치</b></td><td class="num"><b>$129.75 = 현재가</b></td><td class="num"></td></tr>
+  </table>
+
+  <h3 class="block">STEP 3 — 현실성 교차 검증: 그 매출은 어디서 오는가</h3>
+  <p>본업이 연 5%로 성장한다고 후하게 가정해도 2035년 코어 매출은 ~$5.0억. 내재 매출 $18.3억과의 간극 <strong>$13.3억은
+  휴머노이드(+AI 인프라 초과분)가 메워야</strong> 합니다. 경영진이 제시한 대량생산 시 로봇당 콘텐츠($150~250)로 환산하면:</p>
+
+  <figure>
+    <svg viewBox="0 0 960 290" role="img" aria-label="필요 로봇 대수 vs 시장 전망">
+      <text x="20" y="24" font-size="13.5" font-weight="800" fill="#0E2233">2035년, 내재 매출 갭 $13.3억을 채우는 데 필요한 '연간 로봇 공급 대수'</text>
+      <g font-size="12">
+        <text x="20" y="66" fill="#0E2233" font-weight="600">콘텐츠 $500/대</text>
+        <rect x="190" y="50" width="186" height="24" rx="4" fill="#0E7C7B"/>
+        <text class="mono" x="384" y="67" fill="#0E2233" font-weight="700">270만 대/년</text>
+        <text x="20" y="106" fill="#0E2233" font-weight="600">콘텐츠 $400/대</text>
+        <rect x="190" y="90" width="231" height="24" rx="4" fill="#2F6DB3"/>
+        <text class="mono" x="429" y="107" fill="#0E2233" font-weight="700">330만 대/년</text>
+        <text x="20" y="146" fill="#0E2233" font-weight="600">콘텐츠 $250/대</text>
+        <rect x="190" y="130" width="371" height="24" rx="4" fill="#C77F0A"/>
+        <text class="mono" x="569" y="147" fill="#0E2233" font-weight="700">530만 대/년</text>
+        <text x="20" y="186" fill="#0E2233" font-weight="600">콘텐츠 $150/대</text>
+        <rect x="190" y="170" width="623" height="24" rx="4" fill="#B83A3A"/>
+        <text class="mono" x="821" y="187" fill="#fff" font-weight="700" text-anchor="end">890만 대/년</text>
+      </g>
+      <line x1="190" y1="40" x2="190" y2="206" stroke="#0E2233" stroke-width="1.5"/>
+      <g>
+        <line x1="290" y1="40" x2="290" y2="226" stroke="#B83A3A" stroke-width="2" stroke-dasharray="6 4"/>
+        <text x="296" y="222" font-size="11.5" fill="#B83A3A" font-weight="700">참고: 골드만삭스 2035 시장 '전체' $380억</text>
+        <text x="296" y="240" font-size="11" fill="#4A5C6B">≒ 대당 $3만 가정 시 약 130만 대 규모 — 좌측 점선</text>
+      </g>
+      <text x="20" y="272" font-size="11.5" fill="#4A5C6B">즉, 시장 가격은 ①글로벌 휴머노이드 보급이 강세 전망을 수 배 상회하거나 ②VPG가 대당 콘텐츠를 $1,000+ 모듈로 키우면서</text>
+      <text x="20" y="288" font-size="11.5" fill="#4A5C6B">③지배적 점유율을 中 경쟁 속에서도 지킨다는 세 조건의 동시 성립을 요구합니다.</text>
+    </svg>
+    <figcaption>FIG V-04a · 가로축 = 필요 공급 대수(190px 기준점에서 100만 대당 약 70px). 모건스탠리조차 "본격 채택은 2030년대 중후반"으로 봅니다 —
+    내재 기대는 그 일정보다 한 사이클 빠릅니다.</figcaption>
+  </figure>
+
+  <div class="callout risk">
+    <h4>발견 ② — 종합: 내재 기대치의 좌표</h4>
+    <p>현재 주가는 <strong>(a) 직전 5년간 매출이 사실상 제자리였던 회사가 향후 10년간 연 19.5% 성장하고,
+    (b) 한 번도 가 보지 못한 마진(EBITA 18%)에 도달·유지하며, (c) 그 우위가 약 20~21년간 페이드를 이겨내는</strong> 미래를 반영합니다.
+    프레임워크 통계로 보면: 직전 3년 20%+ 성장 기업조차 이후 3년 20%+를 유지할 확률이 31%인데, VPG는 그 출발선(과거 고성장)에도
+    서 있지 않습니다. 슈퍼스타 기업 Microsoft의 내재 CAP가 17~18년임을 감안하면, <em>시장은 매출 $3억의 니치 센서 회사에
+    슈퍼스타 이상의 지위를 선(先)부여</em>한 상태입니다. 기대치 평가: <b>매우 높음(과도한 낙관 영역)</b> — 확신도 높음 ~85%
+    (산식 기반). 단, 이는 "주가가 반드시 하락한다"는 예측이 아니라 "현 가격에 내장된 가정의 좌표"입니다 —
+    휴머노이드 양산이 실제로 조기 폭발하면 이 가정은 사후적으로 정당화될 수 있습니다.</p>
+  </div>
+</section>
+
+<!-- ============================== V-05 ============================== -->
+<section id="v05">
+  <div class="sec-head"><span class="sec-code">V-05</span><h2>민감도 분석 — 어느 손잡이가 결론을 흔드는가</h2><span class="conf">전 항목 모델 산출치</span></div>
+
+  <h3 class="block">A. 기본 시나리오(경영진 목표 달성) 공정가치의 민감도 — T=20년</h3>
+  <table>
+    <tr><th>변수</th><th class="num">하향</th><th class="num">기준</th><th class="num">상향</th><th>해석</th></tr>
+    <tr><td>자본비용 k ±1%p</td><td class="num">10.7% → <b>$41</b></td><td class="num">9.7% → $47</td><td class="num">8.7% → <b>$54</b></td>
+      <td>±$6~7. 다모다란 ERP 4.23% 채택(k≈9.2%) 시에도 ~$50 — 결론 불변</td></tr>
+    <tr><td>명시기간 성장률 ±2%p</td><td class="num">−2%p → <b>$39</b></td><td class="num">기준 → $47</td><td class="num">+2%p → <b>$56</b></td>
+      <td>가장 큰 레버이지만 +2%p를 줘도 현재가의 43%</td></tr>
+    <tr><td>장기 성장률 g ±1%p</td><td class="num">1.5% → $46.2</td><td class="num">2.5% → $46.6</td><td class="num">3.5% → $47.0</td>
+      <td>영향 미미 — 터미널 시점 NOPAT이 작아 g 논쟁은 이 종목에서 부차적</td></tr>
+    <tr><td>페이드 f (0.10↔0.30)</td><td class="num">0.30 → $46</td><td class="num">0.20 → $47</td><td class="num">0.10 → $47</td>
+      <td>거의 무감. <b>흥미로운 발견:</b> 가치 대부분이 명시 기간+정체가치에서 나와, '해자 지속성' 가정조차 기본 시나리오에선 $1~2 차이</td></tr>
+  </table>
+
+  <h3 class="block">B. 시장 정합(역산) 조건의 민감도 — "주가가 요구하는 10년 CAGR"</h3>
+  <table>
+    <tr><th>고정 조건</th><th class="num">필요 10년 매출 CAGR</th><th class="num">함의 2035 매출</th></tr>
+    <tr><td>k 8.7% (할인율에 유리)</td><td class="num">17.0%</td><td class="num">~$14.8억</td></tr>
+    <tr class="hl-row"><td>k 9.7% · EBITA 18% · f 0.17 (기준)</td><td class="num"><b>19.5%</b></td><td class="num"><b>$18.3억</b></td></tr>
+    <tr><td>k 10.7%</td><td class="num">22.0%</td><td class="num">~$22.5억</td></tr>
+    <tr><td>EBITA 마진 15%로 보수화</td><td class="num">22.9%</td><td class="num">~$24.2억</td></tr>
+    <tr><td>EBITA 마진 21%로 낙관화 (Novanta 근접)</td><td class="num">16.9%</td><td class="num">~$14.6억</td></tr>
+    <tr><td>페이드 f 0.10 ~ 0.30 전 구간</td><td class="num">19.4% ~ 19.6%</td><td class="num">사실상 동일</td></tr>
+    <tr><td>주가 $100 기준 (월街 평균목표 $94.7 부근)</td><td class="num">15.8%</td><td class="num">~$13.3억</td></tr>
+    <tr><td>주가 $136.21 (52주 고가)</td><td class="num">20.2%</td><td class="num">~$19.4억</td></tr>
+  </table>
+  <p class="note"><b>읽는 법:</b> 어떤 합리적 손잡이를 돌려도 요구 성장률은 <em>연 16~23%를 10년간</em>이라는 좁은 회랑 안에 있습니다.
+  즉 이 주가의 성패는 할인율·페이드·터미널 성장률 논쟁이 아니라, 오로지 <strong>"휴머노이드+AI 매출이 실제로 10년간 폭발하는가"</strong>
+  단 하나의 질문에 걸려 있습니다. 민감도 분석이 변수를 '제거'해 준 셈입니다.</p>
+</section>
+
+<!-- ============================== V-06 ============================== -->
+<section id="v06">
+  <div class="sec-head"><span class="sec-code">V-06</span><h2>시나리오 — 강세 / 기본 / 약세</h2><span class="conf">발생 확률은 주관적 사전치 — 분기마다 갱신 대상</span></div>
+
+  <div class="scen">
+    <div class="s bull">
+      <div class="hd"><span>강세 = 시장 정합</span><span class="px">≈ $130 (현재가)</span></div>
+      <div class="bd"><ul>
+        <li><b>가정</b> · 10년 매출 CAGR 19.5%, EBITA 18%, f 0.17, CAP ~20년</li>
+        <li><b>필요 현실</b> · 휴머노이드 양산 조기 폭발(2035년 VPG 공급분 연 수백만 대 상당) + VPG 설계 지위 사수 + AI 인프라 호황 지속</li>
+        <li><b>조기 신호</b> · 분기 휴머노이드 매출이 '배수' 단위로 점프, 신규 고객 양산 계약 공시</li>
+        <li><b>주관적 확률</b> · ~15% — 가능하나 다중 조건의 동시 성립 필요</li>
+      </ul></div>
+    </div>
+    <div class="s basec">
+      <div class="hd"><span>기본 = 목표 달성</span><span class="px">$43 ~ $51</span></div>
+      <div class="bd"><ul>
+        <li><b>가정</b> · 컨센서스('26 +13.9%) + 3개년 목표 100% 달성(성장 8~10%, EBITA 15%), 이후 성숙 성장 4~8%, f 0.20</li>
+        <li><b>의미</b> · 회사가 약속을 전부 지켜도 모델 가치는 현재가의 33~40%. 목표 달성 자체도 역사상 미답 영역</li>
+        <li><b>조기 신호</b> · 분기 EBITDA 마진이 가이드 경로(연 +3~4%p)대로 상승하는지</li>
+        <li><b>주관적 확률</b> · ~50%</li>
+      </ul></div>
+    </div>
+    <div class="s bear">
+      <div class="hd"><span>약세 = 평균 회귀</span><span class="px">≈ $25</span></div>
+      <div class="bd"><ul>
+        <li><b>가정</b> · 성장 10%→6%→5% 후 3%, EBITA 10%에서 정체(中 가격 경쟁·목표 미달), f 0.25</li>
+        <li><b>의미</b> · 52주 저가($25.49)와 사실상 일치 — 1년 전 시장이 매겼던 가격이 곧 이 시나리오였음</li>
+        <li><b>조기 신호</b> · 휴머노이드 수주 정체, 마진 개선 지연, B2B 1.0 하회 복귀</li>
+        <li><b>주관적 확률</b> · ~35%</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <p class="note">확률 가중 기대치(참고용): 0.15×$130 + 0.50×$47 + 0.35×$25 ≈ <b>$52</b>. 이 값 자체보다 중요한 것은
+  <em>비대칭성의 방향</em>입니다: 현재가에서 기본 시나리오 실현 시 −64%, 약세 시 −81%, 강세 시 0%(이미 반영) —
+  강세 시나리오가 '맞아도' 추가 상승분은 가정의 초과 달성에서만 나옵니다. 새 증거(분기 휴머노이드 매출, 마진 경로)가 나올 때마다
+  위 확률은 갱신되어야 합니다.</p>
+</section>
+
+<!-- ============================== V-07 ============================== -->
+<section id="v07">
+  <div class="sec-head"><span class="sec-code">V-07</span><h2>주요 리스크 & 분기별 체크포인트</h2><span class="conf">모니터링 프로토콜</span></div>
+
+  <h3 class="block">리스크 우선순위 (영향 × 가능성)</h3>
+  <table>
+    <tr><th style="width:26%;">리스크</th><th style="width:12%;">등급</th><th>구체적 트리거 / 비고</th></tr>
+    <tr><td>① 기대-현실 갭 (밸류에이션)</td><td><span class="pill r">최상</span></td>
+      <td>주가가 월街 최고 목표가($109)마저 19% 상회. 휴머노이드 일정이 한 분기만 밀려도 멀티플 수축 폭이 큼. 일중 ±10% 변동이 상시화.</td></tr>
+    <tr><td>② 휴머노이드 설계 지위 상실</td><td><span class="pill r">상</span></td>
+      <td>고객 미공개 → 검증 불가. 로봇사의 센서 내재화, ATI·中 업체로의 이원화 발주가 트리거. 테슬라 공급 추정은 시트론의 '추정'일 뿐.</td></tr>
+    <tr><td>③ 단가 디플레이션</td><td><span class="pill a">상</span></td>
+      <td>경영진 스스로 대당 $400~500→$150~250 하락을 전제. 물량이 단가 하락을 못 이기면 매출 기대 미달.</td></tr>
+    <tr><td>④ 목표 마진 미달</td><td><span class="pill a">중상</span></td>
+      <td>EBITA 18% 가정은 역사적 최고(13%)를 크게 상회. $20M 절감의 실집행률, 신조직 비용(+$5M/년) 흡수 여부 확인 필요.</td></tr>
+    <tr><td>⑤ 지정학 (이스라엘 생산·관세)</td><td><span class="pill a">중</span></td>
+      <td>이스라엘 공장 노출(10-K 위험요인 명시), 수출규제 자진신고 건 결과, 관세 정책 변동.</td></tr>
+    <tr><td>⑥ 경영진 전환기</td><td><span class="pill b">중</span></td>
+      <td>CFO 2026년 말 은퇴(38년 재직) — 후임 탐색 중. 신설 COO/CBPO 체제의 실행력은 2026년이 첫 시험대.</td></tr>
+    <tr><td>⑦ 운전자본·현금 소진</td><td><span class="pill b">중하</span></td>
+      <td>고성장 시 FCF 음전 구간 장기화 가능(모델상 2026년 FCF −$2M). 순현금 $62M이 완충재이나 대규모 capex 증액 시 점검.</td></tr>
+  </table>
+
+  <h3 class="block">분기 체크리스트 — 다음 실적(2026-08-04 예정)부터</h3>
+  <ul class="check">
+    <li><b>휴머노이드 매출 실측치</b> — Q2 가이드 "$1.2M+(Q1의 2배 이상)" 달성 여부. 연간 $5M+ 경로 유지 확인 (이 한 줄이 강세 시나리오의 맥박)</li>
+    <li><b>수주/매출 비율</b> — B2B 1.0 이상 유지 여부, 센서 부문 수주의 AI 인프라 vs 휴머노이드 구성</li>
+    <li><b>마진 경로</b> — 조정 EBITDA 마진이 'FY26 ~11% → FY27 ~15% → FY28 19%대' 직선 경로에 올라탔는지 (Q1'26은 7.0%로 출발선)</li>
+    <li><b>비용 절감 집행</b> — 3년 $20M 중 당해 실현액 공시 추적 ('25년엔 $4.5M 실현)</li>
+    <li><b>신사업 수주 $45M 목표</b> — 분기 누적 진도(Q1: $10M)</li>
+    <li><b>ROIIC 실측</b> — ΔNOPAT ÷ 전년 투자 계산해 모델 가정(마진 확장기 45%+)과 대조</li>
+    <li><b>경쟁 신호</b> — 휴머노이드 OEM의 센서 공급사 발표, ATI/Novanta·中 업체 수주 뉴스</li>
+    <li><b>연 1회 재계산</b> — 내재 CAGR·CAP 갱신, 금리(rf)·ERP·페이드 비율 업데이트, 생애주기 재판별</li>
+  </ul>
+
+  <div class="callout warn">
+    <h4>매도·재검토 고려 트리거 (프레임워크 표준)</h4>
+    <p>① 내재 기대치가 현 수준에서 추가로 50%+ 상승(예: 내재 CAGR 25%+ 요구 영역 진입), ② 휴머노이드 매출이 2개 분기 연속
+    가이드 미달, ③ 조정 EBITDA 마진이 2개 분기 연속 전년 동기 대비 하락, ④ 핵심 가정(설계 지위) 붕괴 공시.
+    반대로 <b>기대치가 합리권으로 내려오는 경우</b>(예: 주가 조정으로 내재 CAGR이 10% 안팎까지 하락)는 해자 근거와 함께 재평가할 만한 구간입니다.</p>
+  </div>
+</section>
+
+<!-- ============================== V-08 ============================== -->
+<section id="v08">
+  <div class="sec-head"><span class="sec-code">V-08</span><h2>한계와 가정 (Limitations &amp; Assumptions)</h2><span class="conf">지적 겸손 섹션 — 필수</span></div>
+
+  <h3 class="block">이 결론이 의존하는 핵심 가정</h3>
+  <p><b>가정 1 — 페이드 DCF 프레임의 적합성:</b> 본 분석은 "초과수익은 평균 회귀한다"는 실증(섹터 페이드 0.10~0.30)을 전제로 합니다.
+  만약 휴머노이드 센서가 승자독식형 플랫폼 시장이 된다면(역사상 0.7%의 기업이 부의 75%를 창출), 평균 회귀 프레임 자체가
+  과소평가 도구일 수 있습니다. <b>가정 2 — 경영진 수치의 신뢰성:</b> 마진 목표·로봇당 콘텐츠($150~500)·휴머노이드 베이스라인($4M)은
+  모두 회사 발표값으로, 독립 검증이 불가능합니다. <b>가정 3 — 자본구조·주식수 불변:</b> 대형 M&amp;A나 증자가 있으면 주당 산식이 달라집니다.</p>
+
+  <h3 class="block">확신도가 낮은 지점</h3>
+  <p>① <b>휴머노이드 고객의 정체와 지위</b> — 회사가 공개하지 않아 시트론의 '테슬라 추정'을 검증할 수 없음 (확신도: 낮음 ~40%).
+  ② <b>2027년 이후 컨센서스</b> — Q1'26 이후 갱신된 연도별 추정은 2026년($349.8M)만 확보, 2027+는 모델 자체 경로 (중간 ~55%).
+  ③ <b>스트레인 게이지 시장 절대 규모</b> — 출처 간 3배 편차 (낮음). ④ <b>주가 기준점</b> — 일중 ±10% 변동으로 $129.75는
+  6/9 장중 호가 기준이며, $120~133 어느 값이든 결론(내재 CAGR 18.5~20%)은 유지됨 (결론 강건성: 높음).</p>
+
+  <h3 class="block">이 결론이 틀릴 수 있는 조건</h3>
+  <p>다음 증거가 나타나면 "기대 과도" 판단을 <em>철회 또는 약화</em>해야 합니다: (a) 휴머노이드 OEM의 <b>수십만 대 단위 양산 계약 + VPG 공급
+  명시</b>가 공시되는 경우(내재 CAGR의 실현 가능성 급등), (b) 대당 콘텐츠가 모듈화로 $1,000+ 수준임이 확인되는 경우(필요 대수가 1/4~1/7로 축소),
+  (c) AI 인프라 저항기 매출만으로 분기 매출이 $110M+ 레벨로 점프하는 경우(휴머노이드 없이도 성장 경로 일부 충족),
+  (d) WACC 체계가 구조적으로 7%대로 내려가는 거시 환경(필요 CAGR ~15%로 완화).</p>
+
+  <h3 class="block">다음 검증 단계</h3>
+  <p>① 2026-08-04 Q2 실적에서 휴머노이드 매출·마진 경로 실측 → 시나리오 확률 갱신, ② VPG 10-K(FY2025) 원문에서 고객 집중도·
+  이스라엘 자산 비중 정밀 확인, ③ Novanta ATI의 휴머노이드 수주 동향 분기 추적(경쟁 강도 프록시), ④ 2027 컨센서스 갱신치 확보 시
+  기본 시나리오 재캘리브레이션.</p>
+
+  <p class="note">방법론 메모: SBC는 비용으로 처리(마진 경로에 약 −1%p 내재). FY25 실효세율(39%) 대신 회사 가이드 운영세율 26% 사용 —
+  세율을 32%로 높이면 모든 시나리오 가치가 약 8% 하락하나 결론 불변. 2026년을 1차연도로 한 연중 할인은 분석 시점(연중)보다
+  약 5개월 보수적이며 주당 $2~3 내 영향. 본 보고서는 정보 제공 목적이며 특정 매매 행동을 권고하지 않습니다.</p>
+</section>
+
+<!-- ============================== V-09 ============================== -->
+<section id="v09">
+  <div class="sec-head"><span class="sec-code">V-09</span><h2>데이터 출처 (전 항목 기준 시점 명시)</h2><span class="conf">검증일 2026-06-10</span></div>
+  <ol class="sources">
+    <li><b>[재무]</b> VPG FY2025 4Q·연간 실적 8-K (SEC EDGAR, 2026-02-11) — 손익·대차대조표·현금흐름표·조정 EBITDA 전문</li>
+    <li><b>[실적]</b> VPG Q1 FY2026 실적 발표·콜 전문 (2026-05-12, Benzinga/Sahm 트랜스크립트) — 신규 3개년 목표 모델, 휴머노이드 베이스라인 $4M·대당 콘텐츠, 세율·capex 가이던스, 현금 $82.5M/부채 $20.6M</li>
+    <li><b>[과거실적]</b> VPG 10-K/10-Q/8-K (FY2021~2024, SEC) · Yahoo Finance 손익 시계열 — 2021 $317.9M / 2022 $362.6M / 2023 $355.0M / 2024 $306.5M</li>
+    <li><b>[주가]</b> Robinhood·Google Finance·MacroTrends (2026-06-08/09) — $129.75, 52주 $25.49~136.21, 사상최고 종가 $132.93(06-02) / 5/12 실적일 +28.5%</li>
+    <li><b>[컨센서스]</b> Simply Wall St·stockanalysis.com (2026-05 중순, 애널리스트 3인) — '26 매출 $349.8M·EPS $0.79, 목표가 평균 $94.67 (최고 $109 B.Riley 5/13 상향, 최저 $77)</li>
+    <li><b>[금리]</b> 美 10년 국채 4.54% — FRED DGS10·MacroMicro (2026-06-09)</li>
+    <li><b>[ERP]</b> 다모다란 내재 ERP 4.23% (2026-01, NYU Stern/SSRN 2026년판) — 프로젝트 표준 4.75%와 상충, 민감도로 처리</li>
+    <li><b>[인플레]</b> FRED 10년 기대인플레이션(T10YIE) 2.33~2.34% (2026-03/04)</li>
+    <li><b>[베타]</b> Investing.com Pro — VPG 5년 베타 1.13</li>
+    <li><b>[산업]</b> 스트레인 게이지 시장: Insight Partners(2026-04)·Maximize MR(점유율 2023)·Knowledge Sourcing·GGI — 규모 $2~8억, 출처 간 편차 명시</li>
+    <li><b>[휴머노이드]</b> Goldman Sachs 2035 $38B / Morgan Stanley 2050 $5T·채택 시점 / Omdia 2027 1만 대+ / 중국 부품가 1/3 (MS)</li>
+    <li><b>[경쟁]</b> Novanta FY2025 8-K(2026-02-23) · Allient Q1'26 · Spectris-KKR 인수 완료(2025-12, EV £47억) — Financier Worldwide·BusinessCloud·Wikipedia</li>
+    <li><b>[테마 기원]</b> Citron Research 롱 리포트 (2025-04) — 테슬라 옵티머스 공급 '추정'의 출처</li>
+    <li><b>[지배구조]</b> CFO 은퇴 8-K (2026-05-19) · 2026 주총 결과</li>
+    <li><b>[방법론]</b> 모건스탠리 카운터포인트 글로벌 CAP 보고서 (2026-04, 프로젝트 지식) — 페이드 모델 공식·섹터 페이드·생애주기·전시 23 형식</li>
+    <li><b>[교차언어 검증]</b> 한국어 소스(로봇신문·국내 유튜브 'VPG 손·관절 센서' 2026-02 등) 대조 — 영문 1차 출처와 사실관계 불일치 없음 확인</li>
+  </ol>
+</section>
+
+<footer>
+  <div>VPG 시장 내재 CAP 분석 · 기준일 2026-06-10 · 기준가 $129.75 (NYSE 06-09) · WACC 9.7% · 페이드 모델(모건스탠리 카운터포인트 글로벌 방법론)</div>
+  <div>본 문서는 시장에 내재된 기대치를 역산한 정보 제공 자료로, 매수·매도 권고가 아니며 어떠한 투자 결과도 보장하지 않습니다.
+  모든 수치의 출처와 기준 시점은 V-09에 명시. 다음 정기 갱신: 2026-08-04 Q2 실적 발표 후.</div>
+</footer>
+
+</div>
+</body>
+</html>
