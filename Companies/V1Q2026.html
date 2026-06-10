@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visa (V) — 시장 내재 CAP 분석 보고서 | 2026.06.11</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAF9F5; --card:#FFFFFF; --ink:#16213D; --sub:#5A6378;
+  --navy:#1B2E5E; --navy-deep:#12204A; --gold:#D9952F; --gold-soft:#F7EBD2;
+  --teal:#177E6E; --teal-soft:#E2F0ED; --red:#B5452F; --red-soft:#F6E4DF;
+  --line:#E5E1D6; --grid:#EFECE3;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-size:16px}
+.serif{font-family:'Noto Serif KR',serif}
+.mono{font-family:'IBM Plex Mono',monospace}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+section{padding:72px 0;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;color:var(--gold);font-weight:600;text-transform:uppercase;margin-bottom:14px}
+h2{font-family:'Noto Serif KR',serif;font-size:32px;font-weight:900;line-height:1.35;margin-bottom:10px}
+h3{font-family:'Noto Serif KR',serif;font-size:21px;font-weight:700;margin:42px 0 16px;padding-left:14px;border-left:4px solid var(--gold)}
+h4{font-size:16px;font-weight:700;margin:24px 0 10px;color:var(--navy)}
+p{margin-bottom:14px}
+.lede{font-size:17.5px;color:#39435E;max-width:860px}
+strong{color:var(--navy);font-weight:700}
+.num{font-family:'IBM Plex Mono',monospace;font-weight:600}
+.pos{color:var(--teal)} .neg{color:var(--red)} .gold-t{color:var(--gold)}
+.note{font-size:13px;color:var(--sub);line-height:1.65;margin-top:10px}
+.term{border-bottom:2px dotted var(--gold);cursor:help;position:relative}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px 28px;margin:18px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:840px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.wrap{padding:0 16px}h2{font-size:26px}section{padding:52px 0}}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:14px 0}
+th{background:var(--navy);color:#F4F1E8;font-weight:500;padding:10px 12px;text-align:right;font-size:13px;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--grid)}
+tr:nth-child(even) td{background:#FCFBF8}
+.tbl-scroll{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:10px}
+.tbl-scroll table{margin:0;min-width:780px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.kpi .v{font-family:'IBM Plex Mono',monospace;font-size:26px;font-weight:600;color:var(--navy);line-height:1.2}
+.kpi .l{font-size:12.5px;color:var(--sub);margin-top:5px}
+.kpi .d{font-size:12px;margin-top:2px;font-weight:600}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;margin-right:6px}
+.tag.gold{background:var(--gold-soft);color:#8A5E14}
+.tag.teal{background:var(--teal-soft);color:var(--teal)}
+.tag.red{background:var(--red-soft);color:var(--red)}
+.tag.navy{background:#E3E8F4;color:var(--navy)}
+.glossary{background:var(--gold-soft);border:none;border-radius:10px;padding:16px 20px;font-size:14px;margin:14px 0;color:#5C451A}
+.glossary b{color:#8A5E14}
+.bar-row{display:flex;align-items:center;gap:12px;margin:9px 0}
+.bar-row .bl{width:170px;font-size:13.5px;flex-shrink:0}
+.bar-row .bt{flex:1;background:var(--grid);border-radius:5px;height:26px;position:relative;overflow:hidden}
+.bar-row .bf{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+.bar-row .bv{width:120px;font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:right;flex-shrink:0}
+svg text{font-family:'Noto Sans KR',sans-serif}
+svg .sv-mono{font-family:'IBM Plex Mono',monospace}
+footer{padding:50px 0 70px;font-size:13px;color:var(--sub)}
+.toc{position:sticky;top:0;background:rgba(250,249,245,.96);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);z-index:50;padding:10px 0}
+.toc .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.toc a{font-size:12.5px;color:var(--sub);text-decoration:none;padding:5px 11px;border-radius:18px;white-space:nowrap;font-weight:500}
+.toc a:hover{background:var(--gold-soft);color:#8A5E14}
+.conf{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;background:#EEF1F8;color:var(--navy);padding:2px 8px;border-radius:4px;font-weight:600;margin-left:6px;vertical-align:middle}
+.flow-step{display:flex;gap:14px;margin:14px 0;align-items:flex-start}
+.flow-step .fs-n{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;background:var(--navy);color:#F4D58B;border-radius:8px;min-width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.flow-step p{margin:0;font-size:14.5px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header style="background:linear-gradient(160deg,var(--navy-deep) 0%,var(--navy) 55%,#27407E 100%);color:#F4F1E8;padding:64px 0 56px">
+  <div class="wrap">
+    <div class="mono" style="font-size:12px;letter-spacing:.2em;color:var(--gold);margin-bottom:18px">CAP FRAMEWORK · EQUITY RESEARCH · 2026-06-11</div>
+    <h1 class="serif" style="font-size:42px;font-weight:900;line-height:1.3;max-width:880px">Visa Inc. <span style="color:var(--gold)">(NYSE: V)</span><br>주가에 새겨진 시장의 기대를 읽다</h1>
+    <p style="max-width:840px;margin-top:20px;font-size:17px;color:#C9CEE0;line-height:1.8">현재 주가 <span class="mono" style="color:#fff">$322</span>는 비자가 앞으로 <b style="color:var(--gold)">약 12년</b> 동안 자본비용(8.5%)을 초과하는 수익을 계속 벌 것이라는 기대를 담고 있습니다. 프레임워크 기준 <b style="color:#fff">"합리적 범위(10~15년)"의 한가운데</b>로, 시장은 비자의 역사적 해자 평가(16~18년 수준)보다 다소 보수적으로 — 스테이블코인과 규제 리스크를 일부 가격에 반영한 상태입니다.</p>
+
+    <!-- 시그니처: 내재 CAP 다이얼 -->
+    <div style="margin-top:42px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:26px 28px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px">
+        <div class="mono" style="font-size:12px;letter-spacing:.15em;color:#9FA8C4">MARKET-IMPLIED CAP — 시장 내재 경쟁우위기간</div>
+        <div class="mono" style="font-size:13px;color:#9FA8C4">기준: $322 · WACC 8.5% · FY28+ 성장 9%</div>
+      </div>
+      <svg viewBox="0 0 1000 150" style="width:100%;height:auto;margin-top:14px" role="img" aria-label="내재 CAP 12년 다이얼">
+        <defs>
+          <linearGradient id="capband" x1="0" x2="1">
+            <stop offset="0%" stop-color="#177E6E"/><stop offset="30%" stop-color="#5E9E6B"/>
+            <stop offset="50%" stop-color="#D9952F"/><stop offset="75%" stop-color="#C2703A"/><stop offset="100%" stop-color="#B5452F"/>
+          </linearGradient>
+        </defs>
+        <rect x="40" y="58" width="920" height="16" rx="8" fill="url(#capband)" opacity=".85"/>
+        <g class="sv-mono" font-size="12" fill="#9FA8C4">
+          <line x1="40" y1="78" x2="40" y2="86" stroke="#9FA8C4"/><text x="40" y="102" text-anchor="middle">0년</text>
+          <line x1="224" y1="78" x2="224" y2="86" stroke="#9FA8C4"/><text x="224" y="102" text-anchor="middle">5년</text>
+          <line x1="408" y1="78" x2="408" y2="86" stroke="#9FA8C4"/><text x="408" y="102" text-anchor="middle">10년</text>
+          <line x1="592" y1="78" x2="592" y2="86" stroke="#9FA8C4"/><text x="592" y="102" text-anchor="middle">15년</text>
+          <line x1="776" y1="78" x2="776" y2="86" stroke="#9FA8C4"/><text x="776" y="102" text-anchor="middle">20년</text>
+          <line x1="960" y1="78" x2="960" y2="86" stroke="#9FA8C4"/><text x="960" y="102" text-anchor="middle">25년</text>
+        </g>
+        <g font-size="11.5" fill="#C9CEE0" opacity=".9">
+          <text x="132" y="44" text-anchor="middle">비관적 → 매수 후보</text>
+          <text x="500" y="44" text-anchor="middle">합리적 범위</text>
+          <text x="868" y="44" text-anchor="middle">과도한 낙관 → 회피</text>
+        </g>
+        <!-- V 마커 12년 = 40+12*36.8=481.6 -->
+        <g>
+          <line x1="482" y1="20" x2="482" y2="94" stroke="#F4D58B" stroke-width="2.5"/>
+          <circle cx="482" cy="66" r="9" fill="#F4D58B" stroke="#12204A" stroke-width="3"/>
+          <text x="482" y="14" text-anchor="middle" class="sv-mono" font-size="15" font-weight="600" fill="#F4D58B">V · 12.0년</text>
+        </g>
+        <!-- MSFT 참고 마커 17.5년 = 40+17.5*36.8=684 -->
+        <g opacity=".75">
+          <line x1="684" y1="34" x2="684" y2="90" stroke="#8FA0CC" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="684" y="128" text-anchor="middle" class="sv-mono" font-size="11" fill="#8FA0CC">참고: MSFT 17~18년 ('26.3)</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="grid4" style="margin-top:26px">
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 18px"><div class="mono" style="font-size:24px;font-weight:600;color:#fff">$322</div><div style="font-size:12px;color:#9FA8C4;margin-top:4px">주가 (2026.6.10 종가권, $320~325)</div></div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 18px"><div class="mono" style="font-size:24px;font-weight:600;color:#fff">$605B</div><div style="font-size:12px;color:#9FA8C4;margin-top:4px">시가총액 (완전희석 18.8억주)</div></div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 18px"><div class="mono" style="font-size:24px;font-weight:600;color:#fff">22.3×</div><div style="font-size:12px;color:#9FA8C4;margin-top:4px">선행 P/E (5년 중앙값 25.9× 대비 할인)</div></div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 18px"><div class="mono" style="font-size:24px;font-weight:600;color:#F4D58B">−13%</div><div style="font-size:12px;color:#9FA8C4;margin-top:4px">최근 12개월 주가 (52주: $294~376)</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+<a href="#s1">① 기업 개요</a><a href="#s2">② 수익 구조</a><a href="#s3">③ 제품·기술</a><a href="#s4">④ 산업 분석</a><a href="#s5">⑤ 생애주기</a><a href="#s6">⑥ 해자·5 Forces</a><a href="#s7">⑦ SWOT</a><a href="#s8">⑧ 피어 비교</a><a href="#s9">⑨ DCF 모델</a><a href="#s10">⑩ 내재 CAP</a><a href="#s11">⑪ 민감도</a><a href="#s12">⑫ 시나리오</a><a href="#s13">⑬ 리스크</a><a href="#s14">⑭ 한계와 가정</a>
+</div></nav>
+
+<!-- ============ 1. 기업 개요 ============ -->
+<section id="s1"><div class="wrap">
+<div class="eyebrow">Section 01 — Company Overview</div>
+<h2>비자는 무엇을 하는 회사인가</h2>
+<p class="lede">처음 듣는 분을 위해 가장 흔한 오해부터 바로잡겠습니다. <strong>비자는 카드를 발급하지 않고, 돈을 빌려주지도 않으며, 연회비나 이자를 받지도 않습니다.</strong> 여러분 지갑 속 "비자카드"는 사실 신한·국민은행이나 JP모건 같은 <em>은행</em>이 발급한 카드이고, 비자는 그 카드가 전 세계 어디서든 결제되도록 해주는 <strong>네트워크(통신망)</strong>를 운영할 뿐입니다.</p>
+
+<div class="card" style="background:linear-gradient(135deg,#1B2E5E,#27407E);color:#F4F1E8;border:none">
+  <div class="mono" style="font-size:11px;letter-spacing:.18em;color:var(--gold);margin-bottom:10px">ONE-LINE SUMMARY</div>
+  <p class="serif" style="font-size:21px;font-weight:700;line-height:1.6;margin:0">"비자는 전 세계 200여 개국의 소비자·가맹점·은행을 연결하는 <span style="color:#F4D58B">'결제 고속도로'</span>를 깔아 놓고, 그 위를 지나가는 거래 1건·1달러마다 아주 적은 <span style="color:#F4D58B">통행료</span>를 받는 회사다."</p>
+</div>
+
+<h3>탄생과 성장의 역사</h3>
+<p>비자의 출발점은 <strong>1958년 뱅크오브아메리카(BofA)가 캘리포니아 프레즈노에서 6만 장의 카드를 무작위 우편 발송한 'BankAmericard'</strong>입니다. 당시 카드는 백화점·주유소마다 따로 만들어야 했는데, "어디서나 쓰이는 범용 신용카드"라는 발상 자체가 혁명이었습니다. 1966년부터 다른 은행에 라이선스를 주기 시작했고, 1970년 BofA가 직접 통제를 포기하면서 <strong>발급 은행들의 협동조합</strong> 형태로 전환됩니다. 1976년 어느 언어로 읽어도 발음이 같은 'Visa'로 개명했고, 2008년 3월 — 당시 미국 역사상 최대 규모인 약 $179억의 IPO로 — 주주가 있는 영리기업이 되었습니다. 2016년에는 분리되어 있던 <strong>Visa Europe을 약 €213억에 인수</strong>해 단일 글로벌 회사가 완성됩니다.</p>
+
+<div style="margin:26px 0">
+<svg viewBox="0 0 1000 130" style="width:100%;height:auto" role="img" aria-label="비자 연혁 타임라인">
+  <line x1="30" y1="60" x2="970" y2="60" stroke="#D9952F" stroke-width="2.5"/>
+  <g class="sv-mono" font-size="13" font-weight="600" fill="#1B2E5E">
+    <circle cx="60" cy="60" r="7" fill="#1B2E5E"/><text x="60" y="38" text-anchor="middle">1958</text>
+    <circle cx="245" cy="60" r="7" fill="#1B2E5E"/><text x="245" y="38" text-anchor="middle">1976</text>
+    <circle cx="430" cy="60" r="7" fill="#1B2E5E"/><text x="430" y="38" text-anchor="middle">2008</text>
+    <circle cx="615" cy="60" r="7" fill="#1B2E5E"/><text x="615" y="38" text-anchor="middle">2016</text>
+    <circle cx="800" cy="60" r="9" fill="#D9952F"/><text x="800" y="38" text-anchor="middle" fill="#D9952F">2025</text>
+  </g>
+  <g font-size="12" fill="#5A6378">
+    <text x="60" y="86" text-anchor="middle">BankAmericard 탄생</text>
+    <text x="245" y="86" text-anchor="middle">'Visa'로 개명</text>
+    <text x="430" y="86" text-anchor="middle">사상 최대 IPO</text>
+    <text x="615" y="86" text-anchor="middle">Visa Europe 인수</text>
+    <text x="800" y="86" text-anchor="middle">거래 2,575억건 처리</text>
+    <text x="800" y="104" text-anchor="middle">결제액 $14.2조</text>
+  </g>
+</svg>
+</div>
+
+<h3>오늘의 비자 — 숫자로 보기 (FY2025, 2025년 9월 말 결산)</h3>
+<div class="grid4">
+  <div class="kpi"><div class="v">$40.0B</div><div class="l">순수익 (한화 약 55조원)</div><div class="d pos">▲ +11% YoY</div></div>
+  <div class="kpi"><div class="v">2,575억건</div><div class="l">연간 처리 거래 수</div><div class="d pos">▲ +10% · 초당 ~8,200건</div></div>
+  <div class="kpi"><div class="v">$14.2T</div><div class="l">연간 총 거래대금 (약 2경원)</div><div class="d">전 세계 200+ 개국·지역</div></div>
+  <div class="kpi"><div class="v">34,100명</div><div class="l">직원 수</div><div class="d">1인당 순수익 약 $117만</div></div>
+</div>
+<p class="note">한 가지 감을 잡아보면: 직원 3만 4천 명이 매출 55조원과 (조정 기준) 영업이익 37조원을 만듭니다. 공장도, 재고도, 대출 부실 위험도 없는 — 순수한 '인프라+소프트웨어' 사업이기 때문입니다.</p>
+</div></section>
+
+<!-- ============ 2. 수익 구조 ============ -->
+<section id="s2"><div class="wrap">
+<div class="eyebrow">Section 02 — How Visa Makes Money</div>
+<h2>비자는 어떻게 돈을 버는가</h2>
+<p class="lede">카드 결제 한 건이 일어날 때 무대 뒤에서는 <strong>4명의 등장인물</strong>이 움직입니다. 이 구조(4당사자 모델)를 이해하면 비자의 수익도, 최근 논란이 되는 '수수료 소송'도 전부 이해됩니다.</p>
+
+<h3>결제 1건의 해부 — $100 결제 시 돈의 흐름</h3>
+<div class="card" style="padding:30px 24px">
+<svg viewBox="0 0 1000 460" style="width:100%;height:auto" role="img" aria-label="4당사자 결제 흐름도">
+  <defs>
+    <marker id="arrG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#D9952F"/></marker>
+    <marker id="arrN" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7A86A8"/></marker>
+  </defs>
+  <!-- 중앙 비자 -->
+  <rect x="400" y="180" width="200" height="100" rx="14" fill="#1B2E5E"/>
+  <text x="500" y="222" text-anchor="middle" fill="#F4D58B" font-size="22" font-weight="700" class="sv-mono">VISA</text>
+  <text x="500" y="248" text-anchor="middle" fill="#C9CEE0" font-size="12.5">네트워크 (VisaNet)</text>
+  <text x="500" y="266" text-anchor="middle" fill="#F4D58B" font-size="12" class="sv-mono">수취 ≈ $0.10~0.15</text>
+  <!-- 소비자 -->
+  <rect x="40" y="40" width="180" height="76" rx="12" fill="#FFFFFF" stroke="#E5E1D6" stroke-width="1.5"/>
+  <text x="130" y="72" text-anchor="middle" font-size="15" font-weight="700" fill="#16213D">① 소비자</text>
+  <text x="130" y="94" text-anchor="middle" font-size="12" fill="#5A6378">$100 결제</text>
+  <!-- 가맹점 -->
+  <rect x="40" y="344" width="180" height="76" rx="12" fill="#FFFFFF" stroke="#E5E1D6" stroke-width="1.5"/>
+  <text x="130" y="376" text-anchor="middle" font-size="15" font-weight="700" fill="#16213D">④ 가맹점</text>
+  <text x="130" y="398" text-anchor="middle" font-size="12" fill="#177E6E" class="sv-mono">$97.5~98 수령</text>
+  <!-- 발급은행 -->
+  <rect x="780" y="40" width="180" height="76" rx="12" fill="#FFFFFF" stroke="#E5E1D6" stroke-width="1.5"/>
+  <text x="870" y="66" text-anchor="middle" font-size="15" font-weight="700" fill="#16213D">② 발급은행</text>
+  <text x="870" y="86" text-anchor="middle" font-size="11.5" fill="#5A6378">소비자에게 카드 발급</text>
+  <text x="870" y="103" text-anchor="middle" font-size="12" fill="#D9952F" class="sv-mono">인터체인지 ≈ $2 수취</text>
+  <!-- 매입사 -->
+  <rect x="780" y="344" width="180" height="76" rx="12" fill="#FFFFFF" stroke="#E5E1D6" stroke-width="1.5"/>
+  <text x="870" y="370" text-anchor="middle" font-size="15" font-weight="700" fill="#16213D">③ 매입사/PG</text>
+  <text x="870" y="390" text-anchor="middle" font-size="11.5" fill="#5A6378">가맹점의 결제 대행</text>
+  <text x="870" y="407" text-anchor="middle" font-size="12" fill="#5A6378" class="sv-mono">≈ $0.3~0.5 수취</text>
+  <!-- 화살표: 소비자→가맹점 (구매) -->
+  <path d="M130 116 L130 344" stroke="#7A86A8" stroke-width="2" marker-end="url(#arrN)" stroke-dasharray="5 4"/>
+  <text x="142" y="235" font-size="12" fill="#5A6378">상품·서비스 구매</text>
+  <!-- 승인 요청 경로 -->
+  <path d="M220 382 C 330 382 330 300 400 268" stroke="#7A86A8" stroke-width="2" marker-end="url(#arrN)" fill="none"/>
+  <text x="262" y="346" font-size="11.5" fill="#5A6378">승인 요청 (0.3초)</text>
+  <path d="M600 212 C 690 200 700 130 780 100" stroke="#7A86A8" stroke-width="2" marker-end="url(#arrN)" fill="none"/>
+  <text x="652" y="150" font-size="11.5" fill="#5A6378">"잔액 있나요?"</text>
+  <!-- 돈 흐름 (골드) -->
+  <path d="M780 116 C 690 150 660 170 602 196" stroke="#D9952F" stroke-width="3" marker-end="url(#arrG)" fill="none"/>
+  <path d="M400 250 C 320 290 300 330 222 366" stroke="#D9952F" stroke-width="3" marker-end="url(#arrG)" fill="none"/>
+  <text x="640" y="186" font-size="12" fill="#B07415" font-weight="700">$98 송금 ($2는 은행 몫)</text>
+  <text x="268" y="306" font-size="12" fill="#B07415" font-weight="700">청산·정산</text>
+  <!-- 소비자→발급은행 -->
+  <path d="M220 78 L780 78" stroke="#7A86A8" stroke-width="2" marker-end="url(#arrN)" stroke-dasharray="5 4"/>
+  <text x="500" y="68" text-anchor="middle" font-size="12" fill="#5A6378">월말 카드대금 $100 납부 (+이자·연회비는 은행 수익)</text>
+</svg>
+<div class="glossary"><b>용어 풀이</b> · <b>인터체인지(interchange)</b>: 가맹점→발급은행으로 흘러가는 수수료. 미국 평균 약 2~2.5%이며, 흔히 말하는 "카드 수수료"의 대부분이 이것입니다. 비자가 <em>요율을 정하지만 돈은 은행이 가져갑니다.</em> 비자 본인의 몫은 결제액의 <b>약 0.10~0.15%</b>에 불과합니다 — 박리다매의 극단입니다.</div>
+</div>
+
+<h3>매출의 4개 기둥 (FY2025)</h3>
+<p>비자의 손익계산서는 4개 매출 항목에서 '고객 인센티브'를 빼는 구조입니다. 인센티브란 <strong>은행·대형가맹점이 비자 브랜드를 쓰도록 돌려주는 리베이트</strong>로, 일종의 마케팅 비용이자 고객 묶어두기 장치입니다.</p>
+<div class="card">
+  <div class="bar-row"><div class="bl"><b>데이터 처리</b><br><span style="font-size:11.5px;color:var(--sub)">거래 건당 처리비</span></div><div class="bt"><div class="bf" style="width:100%;background:#1B2E5E">$20.0B</div></div><div class="bv pos">+13% · 36%</div></div>
+  <div class="bar-row"><div class="bl"><b>서비스</b><br><span style="font-size:11.5px;color:var(--sub)">결제액 기반 수수료</span></div><div class="bt"><div class="bf" style="width:88%;background:#2C4A8C">$17.5B</div></div><div class="bv pos">+9% · 31%</div></div>
+  <div class="bar-row"><div class="bl"><b>국제 거래</b><br><span style="font-size:11.5px;color:var(--sub)">국경 간 결제·환전</span></div><div class="bt"><div class="bf" style="width:71%;background:#D9952F">$14.2B</div></div><div class="bv pos">+12% · 25%</div></div>
+  <div class="bar-row"><div class="bl"><b>기타</b><br><span style="font-size:11.5px;color:var(--sub)">컨설팅·부가서비스 등</span></div><div class="bt"><div class="bf" style="width:20%;background:#177E6E">$4.1B</div></div><div class="bv pos">+27% · 7%</div></div>
+  <div class="bar-row" style="border-top:1px dashed var(--line);padding-top:10px;margin-top:10px"><div class="bl"><b style="color:var(--red)">(−) 고객 인센티브</b><br><span style="font-size:11.5px;color:var(--sub)">은행·가맹점 리베이트</span></div><div class="bt"><div class="bf" style="width:79%;background:#B5452F">−$15.8B</div></div><div class="bv neg">+14% · 총수익의 28%</div></div>
+  <div class="bar-row" style="border-top:2px solid var(--navy);padding-top:10px;margin-top:6px"><div class="bl"><b>= 순수익</b></div><div class="bt"><div class="bf" style="width:100%;background:linear-gradient(90deg,#1B2E5E,#D9952F)">$40.0B</div></div><div class="bv"><b>+11%</b></div></div>
+</div>
+<p class="note">⚠ 주목할 지표: 인센티브가 총수익에서 차지하는 비율은 FY2024 27.7% → FY2025 28.2%로 서서히 오르고 있습니다. 은행·대형가맹점의 협상력이 세질수록 이 비율이 올라가므로, 해자 침식 여부를 보는 조기 경보등입니다.</p>
+
+<h3>국제 거래 수익 — 가장 달콤한 조각</h3>
+<p>전체의 25%를 차지하는 국제 거래 수익은 <strong>한국 카드로 파리에서 결제하거나, 해외 직구를 할 때</strong> 발생합니다. 환전 스프레드가 붙어 건당 수익성이 국내 거래의 수 배에 달하며, FY2025 국경 간 거래량은 <span class="num pos">+13%</span>로 전체 결제액 성장(+8%)을 크게 앞질렀습니다. 비자의 이익 모멘텀은 상당 부분 "세계 여행·국제 전자상거래의 회복"에 연동됩니다.</p>
+</div></section>
+
+<!-- ============ 3. 제품·기술 ============ -->
+<section id="s3"><div class="wrap">
+<div class="eyebrow">Section 03 — Products &amp; Technology</div>
+<h2>핵심 제품과 기술 — VisaNet은 무엇을 하는가</h2>
+<p class="lede">비자의 유일하고 가장 중요한 자산은 <strong>VisaNet</strong>이라는 전산망입니다. 여러분이 카드를 단말기에 대는 순간부터 "승인" 글자가 뜨기까지 <strong>약 0.3~1초</strong> 사이에, 지구 반대편 데이터센터에서 다음 일들이 일어납니다.</p>
+
+<h3>거래 1건의 처리 흐름 (인증 → 청산 → 정산)</h3>
+<div class="card">
+  <div class="flow-step"><div class="fs-n">1</div><p><b>인증(Authorization)</b> — 카드 탭 → 가맹점 단말기 → 매입사를 거쳐 VisaNet에 도착. VisaNet은 ①이 카드가 진짜인지(토큰 확인) ②사기 패턴은 아닌지(AI가 500개+ 변수를 실시간 채점) 검사한 뒤, 발급은행에 "이 사람 잔액·한도 있나요?"라고 묻습니다. 은행의 "OK"가 같은 경로로 되돌아오면 결제 완료. <span class="num">여기까지 1초 미만.</span></p></div>
+  <div class="flow-step"><div class="fs-n">2</div><p><b>청산(Clearing)</b> — 그날 밤, 전 세계에서 쌓인 수억 건의 거래를 "누가 누구에게 얼마를 줘야 하는지" 은행별로 상계·집계합니다. 통화가 다르면 환율도 여기서 적용됩니다(국제 거래 수익의 원천).</p></div>
+  <div class="flow-step"><div class="fs-n">3</div><p><b>정산(Settlement)</b> — 집계된 차액만큼 실제 돈이 발급은행 → 매입사 → 가맹점 계좌로 이동합니다. 비자는 이 과정에서 돈을 보유하지 않고 <em>이동을 지휘</em>만 합니다 — 그래서 대출 부실 위험이 없습니다.</p></div>
+</div>
+
+<div class="grid3" style="margin-top:22px">
+  <div class="kpi"><div class="v">65,000건+</div><div class="l">초당 처리 가능 용량 (실사용 평균 ~8,200건의 8배 여유)</div></div>
+  <div class="kpi"><div class="v">~125억개</div><div class="l">발급된 네트워크 토큰 — 실카드번호를 일회용 번호로 치환해 해킹 무력화</div></div>
+  <div class="kpi"><div class="v">99.99%+</div><div class="l">가동률 목표 — 멈추면 전 세계 상거래가 멈추는 국가기간망급 인프라</div></div>
+</div>
+
+<h3>세 개의 성장 엔진</h3>
+<p>비자 경영진은 사업을 세 층으로 설명합니다. 아래로 갈수록 새 영역이고 성장이 빠릅니다.</p>
+<div class="grid3">
+  <div class="card" style="margin:0;border-top:4px solid var(--navy)">
+    <span class="tag navy">엔진 1 · 본업</span>
+    <h4 style="margin-top:10px">소비자 결제</h4>
+    <p style="font-size:14px;margin:0">지갑 속 신용·체크·선불카드. 카드 약 <b>48억 장</b> × 가맹점 <b>1.5억 곳+</b>의 양면 네트워크. 결제액은 연 <span class="num pos">+8%</span>씩 성장 — 현금이 디지털로 바뀌는 장기 흐름의 수혜.</p>
+  </div>
+  <div class="card" style="margin:0;border-top:4px solid var(--gold)">
+    <span class="tag gold">엔진 2 · 신규 플로우</span>
+    <h4 style="margin-top:10px">커머셜·송금 솔루션</h4>
+    <p style="font-size:14px;margin:0"><b>Visa Direct</b>: 카드 레일을 거꾸로 써서 돈을 '보내는' 서비스(송금, 급여, 보험금, 긱워커 정산 — 연 100억 건+). 기업 간(B2B) 결제 시장은 <b>$145조</b> 규모로, 카드 침투율이 아직 한 자릿수.</p>
+  </div>
+  <div class="card" style="margin:0;border-top:4px solid var(--teal)">
+    <span class="tag teal">엔진 3 · 최고 성장</span>
+    <h4 style="margin-top:10px">부가가치 서비스 (VAS)</h4>
+    <p style="font-size:14px;margin:0">사기 탐지, 발급 대행, 데이터 컨설팅 등 '곁들이' 소프트웨어. FY2025 매출 약 <b>$10.8B</b>로 전체의 27%, 성장률 <span class="num pos">+24%</span> (최근 분기 <span class="num pos">+32%</span>). 거래량과 무관한 수익원 = 해자의 다변화.</p>
+  </div>
+</div>
+
+<h3>"Visa as a Service" — 파괴자 기술을 흡수하는 전략</h3>
+<p>스테이블코인·AI가 위협으로 거론되지만, 비자의 대응은 일관됩니다: <strong>새 기술이 등장하면 그것을 네트워크의 '레일' 하나로 흡수한다.</strong> 지금까지 크립토 연계 결제 <span class="num">$95B</span>를 처리했고 스테이블코인 정산 <span class="num">$225M+</span>을 실험 중이며, 2026년에는 AI 에이전트가 사람 대신 결제하는 '에이전틱 커머스' 기능과 스테이블코인 정산을 자사 스택에 정식 탑재했습니다. 최근 인수도 같은 맥락입니다 — Pismo(은행 발급처리, 2024), Featurespace(사기탐지 AI, 2025), Prisma/Newpay(아르헨티나 결제 인프라, 2026.2).</p>
+</div></section>
+
+<!-- ============ 4. 산업 분석 ============ -->
+<section id="s4"><div class="wrap">
+<div class="eyebrow">Section 04 — Industry Analysis</div>
+<h2>결제 산업 — 구조, 규모, 그리고 지각변동</h2>
+<p class="lede">결제 산업은 "돈이 움직일 때마다 아주 얇게 떼어가는" 사업의 집합입니다. 보이지 않지만, 미국 가맹점이 1년에 내는 카드 수수료만 <strong>$187B(2024년)</strong> — 웬만한 국가 예산급입니다. 이 거대한 파이를 둘러싸고 네트워크·은행·핀테크·규제당국·이제는 암호화폐 진영까지 줄다리기 중입니다.</p>
+
+<h3>산업 가치사슬 — 누가 무엇을 떼어가나</h3>
+<div class="card" style="padding:28px 22px">
+<svg viewBox="0 0 1000 300" style="width:100%;height:auto" role="img" aria-label="결제 산업 가치사슬">
+  <defs><marker id="vc-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7A86A8"/></marker></defs>
+  <g font-size="14" font-weight="700" fill="#16213D" text-anchor="middle">
+    <rect x="20" y="80" width="150" height="86" rx="12" fill="#fff" stroke="#E5E1D6" stroke-width="1.5"/><text x="95" y="116">소비자</text><text x="95" y="138" font-size="11.5" font-weight="400" fill="#5A6378">카드 사용</text>
+    <rect x="220" y="80" width="150" height="86" rx="12" fill="#fff" stroke="#E5E1D6" stroke-width="1.5"/><text x="295" y="110">발급은행</text><text x="295" y="130" font-size="11.5" font-weight="400" fill="#5A6378">JP모건·씨티 등</text><text x="295" y="150" font-size="12" font-weight="600" fill="#D9952F" class="sv-mono">~2.0% 수취</text>
+    <rect x="420" y="64" width="160" height="118" rx="14" fill="#1B2E5E"/><text x="500" y="106" fill="#F4D58B">네트워크</text><text x="500" y="128" font-size="12" font-weight="500" fill="#C9CEE0">Visa · Mastercard</text><text x="500" y="152" font-size="12.5" font-weight="600" fill="#F4D58B" class="sv-mono">~0.10~0.15%</text>
+    <rect x="630" y="80" width="150" height="86" rx="12" fill="#fff" stroke="#E5E1D6" stroke-width="1.5"/><text x="705" y="110">매입사·PG</text><text x="705" y="130" font-size="11.5" font-weight="400" fill="#5A6378">Fiserv·Stripe·Adyen</text><text x="705" y="150" font-size="12" font-weight="600" fill="#5A6378" class="sv-mono">~0.3~0.5%</text>
+    <rect x="830" y="80" width="150" height="86" rx="12" fill="#fff" stroke="#E5E1D6" stroke-width="1.5"/><text x="905" y="116">가맹점</text><text x="905" y="138" font-size="11.5" font-weight="400" fill="#B5452F">수수료 2~2.5% 부담</text>
+  </g>
+  <g stroke="#7A86A8" stroke-width="2">
+    <line x1="170" y1="123" x2="218" y2="123" marker-end="url(#vc-arr)"/>
+    <line x1="370" y1="123" x2="418" y2="123" marker-end="url(#vc-arr)"/>
+    <line x1="580" y1="123" x2="628" y2="123" marker-end="url(#vc-arr)"/>
+    <line x1="780" y1="123" x2="828" y2="123" marker-end="url(#vc-arr)"/>
+  </g>
+  <g font-size="12" fill="#5A6378" text-anchor="middle">
+    <text x="500" y="226">↑ 주변 생태계: 단말기 제조(Ingenico), 디지털지갑(Apple Pay — 비자 레일 위에서 작동), BNPL, 핀테크(토스·Square)</text>
+    <text x="500" y="252" fill="#B5452F">↓ 우회 시도 세력: 실시간 계좌이체(미 FedNow, 브라질 Pix, 인도 UPI) · 스테이블코인 · 가맹점 자체 결제</text>
+    <text x="500" y="288" font-size="12.5" fill="#16213D" font-weight="600">핵심: 네트워크는 수수료 파이에서 가장 얇은 조각을 갖지만, 모든 거래가 반드시 통과하는 '병목'을 쥔다</text>
+  </g>
+</svg>
+</div>
+
+<h3>시장 규모와 점유율</h3>
+<div class="grid2">
+  <div class="card" style="margin:0">
+    <h4 style="margin-top:0">미국 카드 결제액 점유율 (2024, 4대 네트워크 합계 $10.77T)</h4>
+    <div class="bar-row"><div class="bl" style="width:110px"><b>Visa</b></div><div class="bt"><div class="bf" style="width:100%;background:#1B2E5E">61.1%</div></div><div class="bv">$6.58T</div></div>
+    <div class="bar-row"><div class="bl" style="width:110px">Mastercard</div><div class="bt"><div class="bf" style="width:42%;background:#C2703A">25.8%</div></div><div class="bv">$2.78T</div></div>
+    <div class="bar-row"><div class="bl" style="width:110px">Amex</div><div class="bt"><div class="bf" style="width:18%;background:#177E6E">11.1%</div></div><div class="bv">$1.20T</div></div>
+    <div class="bar-row"><div class="bl" style="width:110px">Discover</div><div class="bt"><div class="bf" style="width:4%;background:#7A86A8">2.0%</div></div><div class="bv">$0.21T</div></div>
+    <p class="note">2025년 V+MA 양사 합산 결제액 $9.99T 중 비자 비중 70.4% — 미국에서 비자는 마스터카드의 약 2.4배. 출처: Nilson Report</p>
+  </div>
+  <div class="card" style="margin:0">
+    <h4 style="margin-top:0">글로벌 구도 (2025 상반기, 거래 건수 기준)</h4>
+    <div class="bar-row"><div class="bl" style="width:110px"><b>Visa</b></div><div class="bt"><div class="bf" style="width:100%;background:#1B2E5E">38.5%</div></div><div class="bv">1위</div></div>
+    <div class="bar-row"><div class="bl" style="width:110px">UnionPay</div><div class="bt"><div class="bf" style="width:80%;background:#B5452F">~31%</div></div><div class="bv">中 내수</div></div>
+    <div class="bar-row"><div class="bl" style="width:110px">Mastercard</div><div class="bt"><div class="bf" style="width:62%;background:#C2703A">~24%</div></div><div class="bv">2위(서방)</div></div>
+    <div class="bar-row"><div class="bl" style="width:110px">기타</div><div class="bt"><div class="bf" style="width:17%;background:#7A86A8">~6%</div></div><div class="bv">JCB·Amex 등</div></div>
+    <p class="note">유니온페이는 발급 장수로는 세계 최다이나 중국 내수 비중이 절대적. 중국 밖 '국경을 넘는 돈'의 세계에서는 사실상 비자·마스터카드 복점. 출처: Nilson Report 2025 중간 집계</p>
+  </div>
+</div>
+
+<h3>산업을 흔드는 다섯 가지 흐름</h3>
+<table>
+<tr><th style="text-align:left">트렌드</th><th style="text-align:left">내용</th><th>비자에 미치는 방향</th></tr>
+<tr><td><b>① 현금의 소멸</b></td><td style="text-align:left">전 세계 소비의 디지털 전환 — 신흥국 카드 침투율 상승, B2B $145T 미개척</td><td class="pos">순풍 (구조적, 10년+)</td></tr>
+<tr><td><b>② 스테이블코인</b></td><td style="text-align:left">GENIUS Act(2025)로 합법화. 달러 결제의 3%('26)→10%('31) 전망도. 월마트·아마존 자체 코인 검토 보도</td><td class="neg">위협 — 단, 비자가 정산 레일로 흡수 시도 중</td></tr>
+<tr><td><b>③ 실시간 계좌이체</b></td><td style="text-align:left">브라질 Pix·인도 UPI는 이미 카드 잠식 입증. 미국 FedNow는 아직 초기</td><td class="neg">지역별 잠식 (신흥국 더 큼)</td></tr>
+<tr><td><b>④ AI 에이전트 커머스</b></td><td style="text-align:left">AI가 사람 대신 검색·구매·결제. 신뢰·토큰 인프라 필요</td><td class="pos">기회 우위 (토큰·신뢰 자산 보유)</td></tr>
+<tr><td><b>⑤ 규제·소송 압력</b></td><td style="text-align:left">DOJ 반독점, 인터체인지 합의, 신용카드경쟁법(CCCA) 재추진</td><td class="neg">수익률 상한 압력 (만성적)</td></tr>
+</table>
+<p>요약하면, 산업의 <strong>총량은 계속 자라는데(명목 GDP + 디지털 전환), 파이를 나누는 규칙이 50년 만에 재협상되는 중</strong>입니다. 비자 주가가 1년간 13% 빠지며 역사적 밸류에이션 하단으로 내려온 이유가 바로 이 '규칙 재협상' 불확실성입니다.</p>
+</div></section>
+
+<!-- ============ 5. 생애주기 ============ -->
+<section id="s5"><div class="wrap">
+<div class="eyebrow">Section 05 — Corporate Life Cycle</div>
+<h2>생애주기 판별 — 현금흐름 부호가 말해주는 것</h2>
+<p class="lede">프레임워크 1단계: 현금흐름표 세 줄의 부호(+/−)만으로 기업의 나이를 진단합니다. 영업에서 돈을 벌고(+), 미래에 투자하며(−), 남는 돈을 주주에게 돌려주면(−) — 교과서적 <strong>성숙기</strong>입니다.</p>
+<div class="tbl-scroll"><table>
+<tr><th style="text-align:left">구분</th><th>FY2023</th><th>FY2024</th><th>FY2025</th><th>FY26 상반기</th><th style="text-align:left">판정</th></tr>
+<tr><td><b>영업활동 현금흐름</b></td><td class="num pos">+$20.8B</td><td class="num pos">+$19.9B</td><td class="num pos">+$23.1B</td><td class="num pos">+$9.8B</td><td style="text-align:left" class="pos">유입 (+)</td></tr>
+<tr><td><b>투자활동 (조정)*</b></td><td class="num neg">−$2.0B</td><td class="num neg">−$2.3B</td><td class="num neg">−$2.5B</td><td class="num neg">−$1.5B</td><td style="text-align:left" class="neg">유출 (−)</td></tr>
+<tr><td><b>재무활동 현금흐름</b></td><td class="num neg">−$17.7B</td><td class="num neg">−$17.1B</td><td class="num neg">−$24.0B</td><td class="num neg">−$15.4B</td><td style="text-align:left" class="neg">유출 (−)</td></tr>
+</table></div>
+<p class="note">* 프레임워크 조정: 유가증권 매매(현금 운용)를 투자활동에서 제거하고 설비투자+인수만 반영. 재무활동 유출의 대부분은 자사주 매입(FY25 $18.2B)과 배당($4.7B).</p>
+<div class="card" style="background:var(--teal-soft);border-color:#BFDED8">
+  <p style="margin:0"><b>판정: (+, −, −) = 성숙(Mature) 단계.</b> 단, 보통의 성숙기업과 결정적으로 다른 점 — 매출이 여전히 <span class="num pos">+11~17%</span>로 자라고, 그 성장에 드는 투자가 NOPAT의 10%도 안 됩니다. 즉 <strong>"성숙기의 현금흐름 패턴 + 성장기의 매출 곡선"</strong>이라는 희귀 조합으로, 본 CAP·DCF 프레임워크가 가장 잘 작동하는 유형입니다. (Dickinson 분류상 성숙 단계 평균 ROIC는 11.1%인데, 비자는 50%를 넘습니다 — 뒤의 해자 분석에서 다룹니다.)</p>
+</div>
+</div></section>
+
+<!-- ============ 6. 해자 분석 ============ -->
+<section id="s6"><div class="wrap">
+<div class="eyebrow">Section 06 — Competitive Advantage</div>
+<h2>경제적 해자 — 왜 67%의 영업이익률이 50년째 무너지지 않는가</h2>
+<p class="lede">조정 영업이익률 67.7%, ROIC 50%+. 자본주의 이론대로라면 이런 초과이익에는 경쟁자가 벌떼처럼 달려들어야 합니다. 달려들지 못하게 막는 구조물이 '해자'입니다.</p>
+
+<h3>포터의 5 Forces — 위협 강도 진단</h3>
+<div class="card">
+  <div class="bar-row"><div class="bl" style="width:200px"><b>신규 진입 위협</b></div><div class="bt"><div class="bf" style="width:25%;background:#177E6E">낮음</div></div><div class="bv" style="width:230px;font-family:'Noto Sans KR';font-size:12px;text-align:left;color:var(--sub)">네트워크 신축은 사실상 불가능</div></div>
+  <div class="bar-row"><div class="bl" style="width:200px"><b>공급자 교섭력</b></div><div class="bt"><div class="bf" style="width:22%;background:#177E6E">낮음</div></div><div class="bv" style="width:230px;font-family:'Noto Sans KR';font-size:12px;text-align:left;color:var(--sub)">데이터센터·통신 — 범용 자원</div></div>
+  <div class="bar-row"><div class="bl" style="width:200px"><b>기존 경쟁 강도</b></div><div class="bt"><div class="bf" style="width:50%;background:#D9952F">중간</div></div><div class="bv" style="width:230px;font-family:'Noto Sans KR';font-size:12px;text-align:left;color:var(--sub)">MA와 복점 — 가격보다 인센티브 경쟁</div></div>
+  <div class="bar-row"><div class="bl" style="width:200px"><b>구매자 교섭력</b><br><span style="font-size:11px;color:var(--sub)">은행·대형가맹점·정부</span></div><div class="bt"><div class="bf" style="width:62%;background:#C2703A">중간↑</div></div><div class="bv" style="width:230px;font-family:'Noto Sans KR';font-size:12px;text-align:left;color:var(--sub)">인센티브 비율 상승·소송·입법 압박</div></div>
+  <div class="bar-row"><div class="bl" style="width:200px"><b>대체재 위협</b><br><span style="font-size:11px;color:var(--sub)">스테이블코인·계좌이체</span></div><div class="bt"><div class="bf" style="width:68%;background:#B5452F">중간↑ ← 관전 포인트</div></div><div class="bv" style="width:230px;font-family:'Noto Sans KR';font-size:12px;text-align:left;color:var(--sub)">유일하게 '구조'를 바꿀 수 있는 힘</div></div>
+</div>
+
+<h3>차별화인가, 원가 우위인가 — 정량 판별</h3>
+<p>프레임워크의 판별식: NOPAT 마진이 산업 평균의 2배 이상이면 <em>차별화</em>, 투자자본 회전율이 1.5배 이상이면 <em>원가 우위</em>.</p>
+<div class="grid2">
+  <div class="card" style="margin:0">
+    <h4 style="margin-top:0">NOPAT 마진</h4>
+    <div class="mono" style="font-size:34px;font-weight:600;color:var(--navy)">55.9%</div>
+    <p style="font-size:13.5px;margin-top:8px">미국 전산업 중앙값 NOPAT 마진(약 8~10%)의 <b>5~7배</b>, 자체 산업(결제·핀테크) 평균과 비교해도 압도적. → <span class="tag navy">차별화 충족</span></p>
+  </div>
+  <div class="card" style="margin:0">
+    <h4 style="margin-top:0">투자자본 회전율 / ROIC</h4>
+    <div class="mono" style="font-size:34px;font-weight:600;color:var(--navy)">ROIC 50%+</div>
+    <p style="font-size:13.5px;margin-top:8px">성장에 필요한 신규 투자가 NOPAT의 10% 미만 — 증분 투자수익률(ROIIC)은 <b>100%를 상회</b>. → <span class="tag teal">자본 효율 충족</span></p>
+  </div>
+</div>
+<p>결론: 비자는 차별화·원가 어느 한쪽이 아니라 <strong>"네트워크 효과가 만든 자연독점적 차별화 + 한계비용 제로의 규모 경제"</strong>가 결합된, 프레임워크 실증 데이터에서 "10년간 상위 20% ROIC를 유지한 기업"의 전형적 프로필입니다.</p>
+
+<h3>해자의 다섯 겹</h3>
+<div class="grid2">
+  <div class="card" style="margin:0"><span class="tag navy">1 · 양면 네트워크 효과</span><p style="font-size:14px;margin:10px 0 0">카드 48억 장 ↔ 가맹점 1.5억 곳. 소비자는 "어디서나 되니까" 쓰고, 가맹점은 "다들 갖고 있으니까" 받습니다. 어느 쪽이 먼저 떠날 이유도, 후발주자가 양쪽을 동시에 모을 방법도 없습니다. <b>가장 깊은 해자.</b></p></div>
+  <div class="card" style="margin:0"><span class="tag navy">2 · 규모의 경제</span><p style="font-size:14px;margin:10px 0 0">네트워크 구축비는 고정, 거래 1건 추가 비용은 0에 수렴. 거래가 늘수록 마진이 좋아지는 구조라 후발주자는 가격으로 이길 수 없습니다.</p></div>
+  <div class="card" style="margin:0"><span class="tag navy">3 · 브랜드 = 신뢰</span><p style="font-size:14px;margin:10px 0 0">결제에서 브랜드는 멋이 아니라 "내 돈이 사라지지 않는다"는 보증. 200개국에서 50년간 쌓은 신뢰는 광고비로 살 수 없습니다.</p></div>
+  <div class="card" style="margin:0"><span class="tag navy">4 · 전환비용 + 인센티브 잠금</span><p style="font-size:14px;margin:10px 0 0">은행과 5~10년 장기 발급계약, 연 <b>$15.8B</b>의 인센티브로 이탈 유인을 선제 차단. 가맹점·은행 시스템도 비자 규격에 깊이 통합되어 있습니다.</p></div>
+  <div class="card" style="margin:0;grid-column:1/-1"><span class="tag navy">5 · 규제의 역설</span><p style="font-size:14px;margin:10px 0 0">결제망은 각국 금융당국 인허가·보안 기준의 대상 — 규제 준수 비용 자체가 진입장벽입니다. 다만 동전의 뒷면으로, 규제는 비자의 <em>수익률 상한</em>을 누르는 힘이기도 합니다(섹션 13 리스크).</p></div>
+</div>
+<div class="glossary"><b>해자 지속성 평가</b> · 프레임워크의 페이드 비율 척도(0.1=강한 해자, 0.2=섹터 평균)로 보면, 비자의 정성 프로필은 0.1에 가깝습니다. 다만 본 분석의 기본값은 보수적으로 <b>섹터 평균 0.20</b>을 적용하고, 0.10은 강세 시나리오에서 검증합니다. 뒤의 민감도 분석에서 보듯 — 비자처럼 증분 수익률이 극단적으로 높은 기업에서는 페이드 가정의 영향이 의외로 작습니다(±0.5년 수준).</div>
+</div></section>
+
+<!-- ============ 7. SWOT ============ -->
+<section id="s7"><div class="wrap">
+<div class="eyebrow">Section 07 — SWOT</div>
+<h2>SWOT — 한 장 요약</h2>
+<div class="grid2">
+  <div class="card" style="margin:0;border-top:4px solid var(--teal)">
+    <h4 style="margin-top:0;color:var(--teal)">S · 강점</h4>
+    <ul style="font-size:14px;padding-left:18px;line-height:1.9">
+      <li>세계 최대 결제 네트워크 — 미국 점유율 61%, 글로벌 거래건수 38.5%</li>
+      <li>조정 영업이익률 67.7%, FCF 전환율 95%+ — 지구상 최고 수준 수익성</li>
+      <li>무차입에 가까운 재무 (순부채 $10B vs 연 FCF $21B)</li>
+      <li>VAS·신규 플로우로 수익원 다변화 진행 (+24~32% 성장)</li>
+    </ul>
+  </div>
+  <div class="card" style="margin:0;border-top:4px solid var(--red)">
+    <h4 style="margin-top:0;color:var(--red)">W · 약점</h4>
+    <ul style="font-size:14px;padding-left:18px;line-height:1.9">
+      <li>수익의 원천이 '수수료 요율' — 정치·여론의 만성적 표적</li>
+      <li>인센티브 비율 상승(총수익의 28.2%) = 협상력 누수의 징후</li>
+      <li>중국·러시아 등 폐쇄 시장 접근 불가, 미국 의존도 높음</li>
+      <li>소비 경기·해외여행 사이클에 민감 (국제 수익 25%)</li>
+    </ul>
+  </div>
+  <div class="card" style="margin:0;border-top:4px solid var(--navy)">
+    <h4 style="margin-top:0;color:var(--navy)">O · 기회</h4>
+    <ul style="font-size:14px;padding-left:18px;line-height:1.9">
+      <li>B2B·송금 등 신규 플로우 — 카드 미개척 $200T급 자금 이동</li>
+      <li>스테이블코인·AI 커머스의 '정산·신뢰 레이어'로 변신 시 새 통행료</li>
+      <li>신흥국 현금→디지털 전환 (장기 볼륨 순풍)</li>
+      <li>VAS — 거래량과 무관한 소프트웨어 매출의 구조적 확대</li>
+    </ul>
+  </div>
+  <div class="card" style="margin:0;border-top:4px solid var(--gold)">
+    <h4 style="margin-top:0;color:#A06A14">T · 위협</h4>
+    <ul style="font-size:14px;padding-left:18px;line-height:1.9">
+      <li>스테이블코인 직결제 — 월마트·아마존 자체 코인 검토 보도</li>
+      <li>DOJ 반독점 소송 (디빗 60%+ 점유) — 구조적 시정명령 가능성</li>
+      <li>인터체인지 합의·CCCA 입법 — 가맹점 라우팅 자유 확대</li>
+      <li>Pix·UPI형 국가 주도 계좌이체망의 글로벌 확산</li>
+    </ul>
+  </div>
+</div>
+</div></section>
+
+<!-- ============ 8. 피어 비교 ============ -->
+<section id="s8"><div class="wrap">
+<div class="eyebrow">Section 08 — Peer Comparison</div>
+<h2>피어 그룹 비교 — 복점의 두 얼굴과 그 주변</h2>
+<p class="lede">비자의 가장 정확한 거울은 마스터카드입니다. 둘은 사업모델이 사실상 동일하고, 아멕스는 "은행+네트워크 겸업"이라 구조가 다르며, 페이팔은 네트워크 위에서 뛰는 응용 계층입니다.</p>
+<div class="tbl-scroll"><table>
+<tr><th style="text-align:left">지표 (최근 회계연도)</th><th>Visa<br>(FY25, '25.9 결산)</th><th>Mastercard<br>(CY2025)</th><th>Amex<br>(CY2025)</th><th style="text-align:left">해설</th></tr>
+<tr><td>매출</td><td class="num"><b>$40.0B</b></td><td class="num">$32.8B</td><td class="num">$72.2B</td><td style="text-align:left;font-size:12.5px">아멕스는 이자수익 포함이라 외형이 큼</td></tr>
+<tr><td>매출 성장률</td><td class="num">+11%</td><td class="num pos"><b>+16%</b></td><td class="num">+10%</td><td style="text-align:left;font-size:12.5px">MA가 유럽·VAS에서 더 빠른 성장</td></tr>
+<tr><td>영업이익률 (조정)</td><td class="num pos"><b>67.7%</b></td><td class="num">59.8%</td><td class="num">~20%</td><td style="text-align:left;font-size:12.5px">비자의 규모 우위 = 마진 8%p 격차</td></tr>
+<tr><td>순이익 (조정)</td><td class="num"><b>$22.5B</b></td><td class="num">$15.4B</td><td class="num">~$10.8B</td><td style="text-align:left;font-size:12.5px">아멕스는 대손비용 부담</td></tr>
+<tr><td>시가총액 ('26.5~6)</td><td class="num"><b>~$605B</b></td><td class="num">~$450B</td><td class="num">~$200B</td><td style="text-align:left;font-size:12.5px"></td></tr>
+<tr><td>P/E (TTM / 선행)</td><td class="num">28× / <b>22.3×</b></td><td class="num">29× / 26×</td><td class="num">~19× / 17×</td><td style="text-align:left;font-size:12.5px">두 네트워크 모두 12개월간 −14% 디레이팅</td></tr>
+<tr><td>미국 결제액 점유율</td><td class="num"><b>61%</b></td><td class="num">26%</td><td class="num">11%</td><td style="text-align:left;font-size:12.5px">Nilson, 2024 4사 기준</td></tr>
+<tr><td>사업모델</td><td>순수 네트워크</td><td>순수 네트워크</td><td>발급+네트워크</td><td style="text-align:left;font-size:12.5px">PayPal·토스 등은 이 레일 위의 응용층</td></tr>
+</table></div>
+<div class="card" style="background:#FCFBF6">
+<p style="margin:0;font-size:14.5px"><b>읽는 법</b> · 시장은 마스터카드에 더 높은 배수(선행 26× vs 22.3×)를 주고 있습니다 — 성장률이 더 높고(+16% vs +11%), DOJ 디빗 소송의 직접 피고가 아니기 때문입니다. 뒤집어 말하면, <b>비자의 상대적 할인은 '규모·마진 우위'와 '규제 표적 리스크'가 상쇄된 가격</b>입니다. 또 하나의 신호: 2026년 버크셔 해서웨이가 보유하던 비자·마스터카드 지분 전량을 매도했다는 보도가 있었습니다 — 해석은 갈리지만, 장기 투자자 일부가 산업 구조 변화를 주시한다는 방증으로 읽을 수 있습니다.</p>
+</div>
+</div></section>
+
+<!-- ============ 9. DCF 모델 ============ -->
+<section id="s9"><div class="wrap">
+<div class="eyebrow">Section 09 — DCF Model</div>
+<h2>DCF 모델 — '적정 주가'가 아니라 '기대치 해부'를 위한 도구</h2>
+<p class="lede">여기서부터가 본 분석의 심장입니다. 우리는 "비자의 적정 가치는 얼마인가"를 맞히려 하지 않습니다. 대신 합리적 가정을 고정해 놓고, <strong>"현재 주가 $322가 성립하려면 초과수익이 몇 년이나 지속돼야 하는가"</strong>를 거꾸로 풉니다.</p>
+
+<h3>자본비용(WACC) 빌드업 — 돈의 기회비용 8.5%</h3>
+<div class="glossary"><b>WACC란?</b> 투자자가 비자에 돈을 묻어두는 대가로 요구하는 최소 수익률. 이보다 높게 벌면 가치 창출, 낮으면 가치 파괴. 미래 현금을 현재 가치로 환산하는 '할인율'로 쓰입니다.</div>
+<div class="tbl-scroll"><table>
+<tr><th style="text-align:left">구성요소</th><th>값</th><th style="text-align:left">근거 (기준 시점)</th></tr>
+<tr><td>무위험 이자율 (10년 미 국채)</td><td class="num">4.52%</td><td style="text-align:left">FRED·TradingEconomics, 2026-06-10. 미-이란 분쟁발 유가 충격으로 인플레 4.2%, 연내 금리 인상 가능성 반영된 수준</td></tr>
+<tr><td>베타 (시장 민감도)</td><td class="num">0.87</td><td style="text-align:left">원시 베타 0.78~0.81 (출처 간 소폭 상이) → 1로 회귀 조정: ⅔×0.80+⅓×1.0</td></tr>
+<tr><td>주식위험프리미엄 (ERP)</td><td class="num">4.75%</td><td style="text-align:left">프레임워크 표준값. 다모다란 내재 ERP는 '26.1월 4.23%였으나 3월 전쟁·유가 쇼크로 상승 — 4.75%는 그 범위 내 (4.23% 적용 시 영향은 §11에서 검증)</td></tr>
+<tr><td><b>자기자본비용</b></td><td class="num"><b>8.64%</b></td><td style="text-align:left">4.52% + 0.87 × 4.75%</td></tr>
+<tr><td>세후 타인자본비용</td><td class="num">3.55%</td><td style="text-align:left">'26.2월 신규 발행금리 3.8~4.7% 중간값 4.3% × (1−세율 17.5%)</td></tr>
+<tr><td>자본구조 (E/V : D/V)</td><td class="num">96.2 : 3.8</td><td style="text-align:left">시가총액 $605B vs 총차입금 $24.0B ('26.3.31)</td></tr>
+<tr><td style="background:var(--gold-soft)"><b>WACC</b></td><td class="num" style="background:var(--gold-soft)"><b>≈ 8.5%</b></td><td style="text-align:left;background:var(--gold-soft)">0.962×8.64% + 0.038×3.55% = 8.45%</td></tr>
+</table></div>
+
+<h3>핵심 가정 한 장 정리</h3>
+<div class="grid4">
+  <div class="kpi"><div class="v">+13.4 / +10.3%</div><div class="l">FY26·27 매출 성장 — 애널리스트 컨센서스 ($45.4B / $50.0B, '26.6월 기준)</div></div>
+  <div class="kpi"><div class="v">+9.0%</div><div class="l">FY28 이후 명시 기간 성장 — 결제액 +8% + VAS·가격 믹스 (역사적 9~11%의 하단)</div></div>
+  <div class="kpi"><div class="v">67.5%</div><div class="l">EBITA 마진 — FY25 실적 67.7%를 소폭 보수화해 유지</div></div>
+  <div class="kpi"><div class="v">NOPAT의 8%</div><div class="l">미래 투자 — 설비투자 순액+M&A+인센티브 선급 포함 (FCF 전환율 92%)</div></div>
+</div>
+<div class="grid3" style="margin-top:14px">
+  <div class="kpi"><div class="v">17.5%</div><div class="l">유효세율 (FY25 GAAP 17.1%·비GAAP 17.7%의 중간)</div></div>
+  <div class="kpi"><div class="v">2.5%</div><div class="l">장기 성장률 = 기대 인플레이션 (10년 BEI 2.33%, FRED '26.4)</div></div>
+  <div class="kpi"><div class="v">0.20</div><div class="l">페이드 비율 — IT 섹터 평균 (비자의 구 GICS 분류 기준, §14 참조)</div></div>
+</div>
+
+<h3>연도별 DCF 테이블 — 전시 23 형식 (내재 CAP 12년 기준, $B)</h3>
+<div class="tbl-scroll"><table style="min-width:1080px;font-size:13px">
+<tr><th style="text-align:left">회계연도</th><th>'25실적</th><th>'26E</th><th>'27E</th><th>'28E</th><th>'29E</th><th>'30E</th><th>'31E</th><th>'32E</th><th>'33E</th><th>'34E</th><th>'35E</th><th>'36E</th><th>'37E</th></tr>
+<tr><td>매출</td><td class="num">40.0</td><td class="num">45.4</td><td class="num">50.0</td><td class="num">54.5</td><td class="num">59.4</td><td class="num">64.8</td><td class="num">70.6</td><td class="num">77.0</td><td class="num">83.9</td><td class="num">91.5</td><td class="num">99.7</td><td class="num">108.7</td><td class="num">118.4</td></tr>
+<tr><td>매출 성장률 %</td><td class="num">11.3</td><td class="num">13.4</td><td class="num">10.3</td><td class="num">9.0</td><td class="num">9.0</td><td class="num">9.0</td><td class="num">9.0</td><td class="num">9.0</td><td class="num">9.0</td><td class="num">9.0</td><td class="num">9.0</td><td class="num">9.0</td><td class="num">9.0</td></tr>
+<tr><td>EBITA</td><td class="num">27.1</td><td class="num">30.6</td><td class="num">33.8</td><td class="num">36.8</td><td class="num">40.1</td><td class="num">43.7</td><td class="num">47.7</td><td class="num">52.0</td><td class="num">56.6</td><td class="num">61.7</td><td class="num">67.3</td><td class="num">73.3</td><td class="num">79.9</td></tr>
+<tr><td>EBITA 마진 %</td><td class="num">67.7</td><td class="num">67.5</td><td class="num">67.5</td><td class="num">67.5</td><td class="num">67.5</td><td class="num">67.5</td><td class="num">67.5</td><td class="num">67.5</td><td class="num">67.5</td><td class="num">67.5</td><td class="num">67.5</td><td class="num">67.5</td><td class="num">67.5</td></tr>
+<tr><td>세율 %</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td><td class="num">17.5</td></tr>
+<tr><td><b>NOPAT</b></td><td class="num"><b>22.4</b></td><td class="num"><b>25.3</b></td><td class="num"><b>27.9</b></td><td class="num"><b>30.4</b></td><td class="num"><b>33.1</b></td><td class="num"><b>36.1</b></td><td class="num"><b>39.3</b></td><td class="num"><b>42.9</b></td><td class="num"><b>46.7</b></td><td class="num"><b>50.9</b></td><td class="num"><b>55.5</b></td><td class="num"><b>60.5</b></td><td class="num"><b>66.0</b></td></tr>
+<tr><td>미래 투자</td><td class="num">—</td><td class="num">2.0</td><td class="num">2.2</td><td class="num">2.4</td><td class="num">2.6</td><td class="num">2.9</td><td class="num">3.1</td><td class="num">3.4</td><td class="num">3.7</td><td class="num">4.1</td><td class="num">4.4</td><td class="num">4.8</td><td class="num">5.3</td></tr>
+<tr><td><b>잉여현금흐름 (FCF)</b></td><td class="num">—</td><td class="num"><b>23.2</b></td><td class="num"><b>25.6</b></td><td class="num"><b>27.9</b></td><td class="num"><b>30.5</b></td><td class="num"><b>33.2</b></td><td class="num"><b>36.2</b></td><td class="num"><b>39.4</b></td><td class="num"><b>43.0</b></td><td class="num"><b>46.9</b></td><td class="num"><b>51.1</b></td><td class="num"><b>55.7</b></td><td class="num"><b>60.7</b></td></tr>
+<tr><td>FCF의 현재가치*</td><td class="num">—</td><td class="num">6.4</td><td class="num">24.0</td><td class="num">24.1</td><td class="num">24.2</td><td class="num">24.3</td><td class="num">24.5</td><td class="num">24.6</td><td class="num">24.7</td><td class="num">24.8</td><td class="num">24.9</td><td class="num">25.0</td><td class="num">25.1</td></tr>
+<tr><td>ROIIC %</td><td class="num">—</td><td class="num">163</td><td class="num">129</td><td class="num">113</td><td class="num">113</td><td class="num">113</td><td class="num">112</td><td class="num">112</td><td class="num">113</td><td class="num">112</td><td class="num">113</td><td class="num">112</td><td class="num">113</td></tr>
+</table></div>
+<p class="note">* 연중(mid-year) 할인, 가치평가 시점 2026-06-11 기준. FY2026은 회계연도의 71%가 이미 지났으므로 잔여분(약 28%, 7~9월)만 반영 — '26E 열의 PV가 작은 이유입니다. ROIIC = 당해 NOPAT 증가분 ÷ 전년 투자. 100%를 넘는 것은 오류가 아니라, 거래 1건 추가에 드는 비용이 거의 0인 네트워크 사업의 실제 경제학입니다 (FY25 실측치도 약 115%).</p>
+
+<h3>가치의 조립 — $322는 이렇게 만들어진다</h3>
+<div class="card" style="padding:28px 24px">
+<svg viewBox="0 0 1000 250" style="width:100%;height:auto" role="img" aria-label="가치 구성 워터폴">
+  <g font-size="13" text-anchor="middle">
+    <rect x="60" y="118" width="170" height="92" rx="8" fill="#2C4A8C"/>
+    <text x="145" y="158" fill="#fff" font-weight="700" class="sv-mono" font-size="17">$277B</text>
+    <text x="145" y="180" fill="#C9CEE0" font-size="12">12년 FCF의 현재가치 (45%)</text>
+    <rect x="250" y="36" width="170" height="174" rx="8" fill="#1B2E5E"/>
+    <text x="335" y="110" fill="#F4D58B" font-weight="700" class="sv-mono" font-size="17">$338B</text>
+    <text x="335" y="132" fill="#C9CEE0" font-size="12">최종가치의 현재가치 (55%)</text>
+    <text x="335" y="152" fill="#9FA8C4" font-size="11">페이드 모델 (f=0.20, g=2.5%)</text>
+    <text x="460" y="128" font-size="22" fill="#5A6378">=</text>
+    <rect x="500" y="36" width="170" height="174" rx="8" fill="#D9952F"/>
+    <text x="585" y="110" fill="#fff" font-weight="700" class="sv-mono" font-size="17">$615B</text>
+    <text x="585" y="132" fill="#FFF6E3" font-size="12">기업가치 (EV)</text>
+    <text x="710" y="128" font-size="20" fill="#5A6378">−</text>
+    <rect x="740" y="170" width="100" height="40" rx="8" fill="#B5452F"/>
+    <text x="790" y="195" fill="#fff" class="sv-mono" font-size="13">순부채 $10B</text>
+    <text x="862" y="128" font-size="20" fill="#5A6378">=</text>
+    <rect x="880" y="36" width="100" height="174" rx="8" fill="#177E6E"/>
+    <text x="930" y="105" fill="#fff" font-weight="700" class="sv-mono" font-size="16">$605B</text>
+    <text x="930" y="128" fill="#E2F0ED" font-size="11.5">자본가치</text>
+    <text x="930" y="156" fill="#fff" class="sv-mono" font-size="14" font-weight="600">÷18.8억주</text>
+    <text x="930" y="182" fill="#F4D58B" class="sv-mono" font-size="16" font-weight="700">= $322</text>
+  </g>
+</svg>
+<p class="note" style="margin-top:4px">참고: 성장이 전혀 없다고 가정한 '정체 상태 가치'(NOPAT÷WACC)는 $263B = 주당 약 <b>$135</b>. 즉 현재 주가의 <b>58%는 미래 성장 기회(PVGO)의 값</b>입니다 — 성장 가정의 검증이 이 분석의 전부인 이유.</p>
+</div>
+</div></section>
+
+<!-- ============ 10. 내재 CAP ============ -->
+<section id="s10"><div class="wrap">
+<div class="eyebrow">Section 10 — Market-Implied CAP</div>
+<h2>시장 내재 CAP — 주가 $322에 새겨진 숫자, 12년</h2>
+<p class="lede">위 모델의 예측 기간을 1년씩 늘려가며 주당 가치를 계산하면, <strong>정확히 12년에서 현재 주가와 만납니다.</strong> 시장은 지금 "비자가 12년간 자본비용을 초과하는 수익을 유지한다"에 베팅하고 있다는 뜻입니다. <span class="conf">산출 신뢰도 높음 ~85% (가정 고정 시)</span></p>
+
+<div class="card" style="padding:28px 24px">
+<svg viewBox="0 0 1000 420" style="width:100%;height:auto" role="img" aria-label="예측기간별 주당가치 곡선">
+  <!-- 구간 밴드 -->
+  <rect x="70" y="40" width="81" height="320" fill="#177E6E" opacity=".08"/>
+  <rect x="151" y="40" width="202" height="320" fill="#5E9E6B" opacity=".10"/>
+  <rect x="353" y="40" width="202" height="320" fill="#D9952F" opacity=".13"/>
+  <rect x="555" y="40" width="203" height="320" fill="#C2703A" opacity=".10"/>
+  <rect x="758" y="40" width="202" height="320" fill="#B5452F" opacity=".08"/>
+  <g font-size="11" fill="#7A86A8" text-anchor="middle">
+    <text x="252" y="58">비관적 구간 (5~10년)</text>
+    <text x="454" y="58" fill="#A06A14" font-weight="700">합리적 (10~15년)</text>
+    <text x="656" y="58">낙관적 (15~20년)</text>
+    <text x="859" y="58">과도 (20년+)</text>
+  </g>
+  <!-- 그리드 + Y라벨 -->
+  <g stroke="#EFECE3" stroke-width="1">
+    <line x1="70" y1="341.7" x2="960" y2="341.7"/><line x1="70" y1="296" x2="960" y2="296"/>
+    <line x1="70" y1="250.3" x2="960" y2="250.3"/><line x1="70" y1="204.6" x2="960" y2="204.6"/>
+    <line x1="70" y1="158.9" x2="960" y2="158.9"/><line x1="70" y1="113.1" x2="960" y2="113.1"/><line x1="70" y1="67.4" x2="960" y2="67.4"/>
+  </g>
+  <g class="sv-mono" font-size="11.5" fill="#7A86A8" text-anchor="end">
+    <text x="62" y="345">$200</text><text x="62" y="300">$250</text><text x="62" y="254">$300</text>
+    <text x="62" y="208">$350</text><text x="62" y="163">$400</text><text x="62" y="117">$450</text><text x="62" y="71">$500</text>
+  </g>
+  <!-- 현재가 라인 -->
+  <line x1="70" y1="230.2" x2="960" y2="230.2" stroke="#B5452F" stroke-width="1.8" stroke-dasharray="7 5"/>
+  <text x="956" y="224" text-anchor="end" class="sv-mono" font-size="12.5" fill="#B5452F" font-weight="600">현재 주가 $322</text>
+  <!-- 곡선 -->
+  <polyline points="70,345 110,333 151,320 191,307 232,294 272,281 313,269 353,256 394,243 434,230 474,217 515,204 555,191 596,178 637,164 677,152 717,138 758,124 798,110 839,97 880,84 920,70 960,56" fill="none" stroke="#1B2E5E" stroke-width="3.5" stroke-linejoin="round"/>
+  <!-- 교차점 -->
+  <circle cx="434" cy="230.2" r="9" fill="#D9952F" stroke="#1B2E5E" stroke-width="3"/>
+  <line x1="434" y1="230" x2="434" y2="360" stroke="#D9952F" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="434" y="385" text-anchor="middle" class="sv-mono" font-size="14" font-weight="700" fill="#A06A14">12년</text>
+  <!-- X축 -->
+  <g class="sv-mono" font-size="11.5" fill="#7A86A8" text-anchor="middle">
+    <text x="151" y="382">5년</text><text x="353" y="382">10년</text><text x="555" y="382">15년</text><text x="758" y="382">20년</text><text x="960" y="382">25년</text>
+  </g>
+  <text x="515" y="412" text-anchor="middle" font-size="12.5" fill="#5A6378">명시적 예측 기간 (= 초과수익 지속 연수, CAP)</text>
+  <!-- 주요 좌표 라벨 -->
+  <g class="sv-mono" font-size="11" fill="#1B2E5E">
+    <text x="151" y="338">$224</text><text x="353" y="274">$294</text><text x="555" y="176">$365</text><text x="758" y="110">$438</text>
+  </g>
+</svg>
+</div>
+
+<h3>이 12년을 어떻게 읽을 것인가 — 종합 판단 자료</h3>
+<div class="tbl-scroll"><table>
+<tr><th style="text-align:left">내재 CAP 구간</th><th style="text-align:left">프레임워크 해석</th><th style="text-align:left">비자의 위치</th></tr>
+<tr><td>5년 미만</td><td style="text-align:left">시장이 매우 비관적 → 매수 후보</td><td style="text-align:left"></td></tr>
+<tr><td>5~10년</td><td style="text-align:left">약간 비관적 → 해자 확실하면 매수</td><td style="text-align:left"></td></tr>
+<tr><td style="background:var(--gold-soft)"><b>10~15년</b></td><td style="text-align:left;background:var(--gold-soft)"><b>합리적 범위 → 중립</b></td><td style="text-align:left;background:var(--gold-soft)"><b>◀ 12.0년 — 정중앙</b></td></tr>
+<tr><td>15~20년</td><td style="text-align:left">약간 낙관적 → 해자 근거가 강력해야</td><td style="text-align:left">과거 P/E 26×+ 시절의 비자가 여기 (~16년)</td></tr>
+<tr><td>20년 초과</td><td style="text-align:left">과도한 낙관 → 회피 고려</td><td style="text-align:left"></td></tr>
+</table></div>
+
+<div class="grid2">
+<div class="card" style="margin:0">
+<h4 style="margin-top:0">맥락 ① — 디레이팅의 정체는 'CAP 4년 축소'</h4>
+<p style="font-size:14px;margin:0">같은 모델에 5년 중앙값 P/E(25.9×) 수준의 주가(약 $365~380)를 넣으면 내재 CAP는 <b>15~16년</b>이 나옵니다. 즉 지난 1년간의 −13% 주가 하락은 이익 추정 하향이 아니라(오히려 추정은 상향됐습니다), <b>시장이 비자의 초과수익 지속 기간을 16년→12년으로 깎은 것</b>입니다. 깎인 4년의 이름이 바로 '스테이블코인·반독점'입니다.</p>
+</div>
+<div class="card" style="margin:0">
+<h4 style="margin-top:0">맥락 ② — 비교 대상과의 거리</h4>
+<p style="font-size:14px;margin:0">2026년 3월 발표된 동일 방법론의 마이크로소프트 분석은 내재 CAP <b>17~18년</b>이었습니다. 프레임워크 실증상 상장기업 70%가 초기 주가를 정당화하지 못하고, 평균 ROIC는 0.20의 속도로 평균 회귀합니다. 그 기준에서 12년은 <b>'슈퍼스타 기업에게는 무겁지 않은, 보통 기업에게는 불가능한' 요구 수준</b>입니다. 판단의 본질은 결국 하나 — 비자가 여전히 슈퍼스타군(생존+상위 ROIC 유지)에 속하는가. <span class="conf">중간 ~70%</span></p>
+</div>
+</div>
+</div></section>
+
+<!-- ============ 11. 민감도 ============ -->
+<section id="s11"><div class="wrap">
+<div class="eyebrow">Section 11 — Sensitivity</div>
+<h2>민감도 분석 — 어느 가정이 결론을 흔드는가</h2>
+<p class="lede">결론(12년)이 가정의 인질인지 확인합니다. 막대가 길수록 그 가정이 위험합니다.</p>
+
+<div class="card" style="padding:28px 24px">
+<h4 style="margin-top:0">토네이도 차트 — 12년 예측 고정 시 주당가치 변동 폭 (기준 $322)</h4>
+<svg viewBox="0 0 1000 250" style="width:100%;height:auto" role="img" aria-label="민감도 토네이도 차트">
+  <line x1="479.7" y1="30" x2="479.7" y2="215" stroke="#16213D" stroke-width="2"/>
+  <text x="479.7" y="20" text-anchor="middle" class="sv-mono" font-size="12.5" font-weight="600" fill="#16213D">$322</text>
+  <g font-size="13" fill="#16213D">
+    <rect x="188.6" y="42" width="291.1" height="30" fill="#B5452F" opacity=".75" rx="4"/>
+    <rect x="479.7" y="42" width="372.3" height="30" fill="#177E6E" opacity=".75" rx="4"/>
+    <text x="180" y="62" text-anchor="end">자본비용 ±1.0%p</text>
+    <text x="196" y="62" fill="#fff" class="sv-mono" font-size="11.5">$279 (k 9.5%)</text>
+    <text x="845" y="62" text-anchor="end" fill="#fff" class="sv-mono" font-size="11.5">$377 (k 7.5%)</text>
+    <rect x="188.6" y="87" width="291.1" height="30" fill="#B5452F" opacity=".62" rx="4"/>
+    <rect x="479.7" y="87" width="338.5" height="30" fill="#177E6E" opacity=".62" rx="4"/>
+    <text x="180" y="107" text-anchor="end">FY28+ 성장률 ±2%p</text>
+    <text x="196" y="107" fill="#fff" class="sv-mono" font-size="11.5">$279 (7%)</text>
+    <text x="812" y="107" text-anchor="end" fill="#fff" class="sv-mono" font-size="11.5">$372 (11%)</text>
+    <rect x="364.6" y="132" width="115.1" height="30" fill="#B5452F" opacity=".5" rx="4"/>
+    <rect x="479.7" y="132" width="115.1" height="30" fill="#177E6E" opacity=".5" rx="4"/>
+    <text x="356" y="152" text-anchor="end">EBITA 마진 −3.5/+3.5%p</text>
+    <text x="372" y="152" fill="#fff" class="sv-mono" font-size="11.5">$305</text>
+    <text x="588" y="152" text-anchor="end" fill="#fff" class="sv-mono" font-size="11.5">$339</text>
+    <rect x="452.6" y="177" width="27.1" height="30" fill="#B5452F" opacity=".4" rx="4"/>
+    <rect x="479.7" y="177" width="67.7" height="30" fill="#177E6E" opacity=".4" rx="4"/>
+    <text x="444" y="197" text-anchor="end">페이드 비율 0.30 ↔ 0.10</text>
+    <text x="556" y="197" class="sv-mono" font-size="11.5" fill="#16213D">$318~332</text>
+  </g>
+  <text x="500" y="240" text-anchor="middle" font-size="12" fill="#5A6378">결론을 흔드는 두 변수는 자본비용과 장기 성장률 — 페이드 가정은 의외로 둔감 (터미널 ROIIC가 워낙 높아 g/r 항이 미미)</text>
+</svg>
+</div>
+
+<h3>자본비용 × 성장률 매트릭스 — 내재 CAP (년)</h3>
+<div class="tbl-scroll"><table>
+<tr><th style="text-align:left">↓ WACC ＼ 성장률 →</th><th>7% (보수)</th><th>9% (기본)</th><th>11% (낙관)</th></tr>
+<tr><td>7.5% (ERP↓·금리↓)</td><td class="num">11.7</td><td class="num">8.9</td><td class="num">7.3</td></tr>
+<tr><td><b>8.5% (기본)</b></td><td class="num">17.0</td><td class="num" style="background:var(--gold-soft)"><b>12.0</b></td><td class="num">9.6</td></tr>
+<tr><td>9.5% (금리 충격)</td><td class="num">24.7</td><td class="num">15.8</td><td class="num">12.0</td></tr>
+</table></div>
+<p>읽는 법: 매트릭스 9칸 중 7칸이 5~17년 — 즉 <strong>웬만한 가정 조합에서 내재 CAP는 '비관~합리' 영역에 머뭅니다.</strong> 예외는 좌하단(저성장+고금리 동시 실현)으로, 이 경우 현 주가는 도달 불가능한 기대(25년)를 담은 고평가가 됩니다. 한편 ERP를 다모다란 연초값 4.23%로 낮추면(WACC≈8.0%) 내재 CAP는 <span class="num">10.4년</span> — 결론의 방향은 같습니다. 미래 투자율 가정(5%↔12%)의 영향도 ±0.5년에 그칩니다.</p>
+</div></section>
+
+<!-- ============ 12. 시나리오 ============ -->
+<section id="s12"><div class="wrap">
+<div class="eyebrow">Section 12 — Scenarios</div>
+<h2>3가지 시나리오 — 세계가 갈라지는 길목</h2>
+<div class="grid3">
+  <div class="card" style="margin:0;border-top:5px solid var(--teal)">
+    <span class="tag teal">강세 — "흡수 성공"</span>
+    <p style="font-size:13.5px;margin:12px 0">스테이블코인·AI 커머스를 정산 레이어로 수익화. VAS가 마진을 끌어올리고(69.5%), 성장 11%, 해자 재평가(f 0.10), 위험 진정(k 8.0%).</p>
+    <div class="mono" style="font-size:30px;font-weight:600;color:var(--teal)">$436</div>
+    <div style="font-size:12.5px;color:var(--sub)">12년 가치 (+35%) · 이 세계의 내재 CAP는 7.2년 → 현 주가는 '비관적 가격'</div>
+  </div>
+  <div class="card" style="margin:0;border-top:5px solid var(--gold);background:#FFFDF7">
+    <span class="tag gold">기본 — "현 궤도 유지"</span>
+    <p style="font-size:13.5px;margin:12px 0">결제액 +8%대 지속, 컨센서스 경로(13.4→10.3→9%), 마진 67.5%, f 0.20, k 8.5%. 파괴도 재평가도 없는 세계.</p>
+    <div class="mono" style="font-size:30px;font-weight:600;color:#A06A14">$322</div>
+    <div style="font-size:12.5px;color:var(--sub)">현 주가와 일치 · 내재 CAP 12.0년 — 시장은 정확히 이 시나리오를 가격에 반영 중</div>
+  </div>
+  <div class="card" style="margin:0;border-top:5px solid var(--red)">
+    <span class="tag red">약세 — "레일 잠식"</span>
+    <p style="font-size:13.5px;margin:12px 0">대형 리테일러 스테이블코인 결제 확산 + DOJ 패소로 디빗 개방. 성장 6%, 인센티브↑로 마진 64.5%, f 0.30, k 9.0%.</p>
+    <div class="mono" style="font-size:30px;font-weight:600;color:var(--red)">$223</div>
+    <div style="font-size:12.5px;color:var(--sub)">12년 가치 (−31%) · 이 세계에서 $322가 성립하려면 CAP 35년 필요 = 사실상 불가능</div>
+  </div>
+</div>
+<p style="margin-top:18px">기본 가정에서 상방(+35%)과 하방(−31%)이 거의 대칭입니다. 즉 현 주가는 <strong>강세도 약세도 아닌, 두 세계의 확률가중 평균에 가까운 위치</strong> — 투자 판단은 "어느 시나리오의 확률을 시장보다 다르게 보는가"의 문제로 귀결됩니다.</p>
+</div></section>
+
+<!-- ============ 13. 리스크 & 체크포인트 ============ -->
+<section id="s13"><div class="wrap">
+<div class="eyebrow">Section 13 — Risks &amp; Checkpoints</div>
+<h2>주요 리스크와 분기별 체크포인트</h2>
+<h3>리스크 — 발생 시 약세 시나리오로 이동시키는 힘</h3>
+<div class="tbl-scroll"><table>
+<tr><th style="text-align:left">리스크</th><th style="text-align:left">현재 상태 ('26.6 기준)</th><th>심각도 × 시계</th></tr>
+<tr><td><b>① 스테이블코인 직결제</b></td><td style="text-align:left">GENIUS Act 시행 규제 정비 중(AML 규칙 의견수렴 '26.6 마감). 월마트·아마존 자체 코인 검토 보도. USD 결제 내 비중 3%('26)→10%('31) 전망 존재 — 단 현재 활동의 대부분은 소매결제가 아닌 크립토 자본시장</td><td class="neg">높음 × 3~7년</td></tr>
+<tr><td><b>② DOJ 반독점 (디빗)</b></td><td style="text-align:left">기각 신청 기각('25.6) → 디스커버리 진행, 사실심리 '26.10.16 마감, 전문가 심리 '27.4 — 재판은 '27년 이후. 미 디빗 60%+ 점유·연 $7B 수수료가 쟁점. 구조적 시정명령 시 디빗 수익 일부 영구 손실</td><td class="neg">중간↑ × 1~3년</td></tr>
+<tr><td><b>③ 인터체인지 합의(MDL)</b></td><td style="text-align:left">'25.11 합의안(요율 10bp 인하 5년 + 표준카드 1.25% 캡 8년 + 리워드카드 거부권). 가맹점 단체 반발, '26년 법원 심사 중. 인터체인지는 은행 몫이라 비자 매출 직격은 제한적이나, 가맹점 협상력 강화는 장기 압력</td><td>중간 × 1년</td></tr>
+<tr><td><b>④ 인센티브 비율 상승</b></td><td style="text-align:left">총수익 대비 27.7%(FY24) → 28.2%(FY25) — 은행·대형가맹점 재계약 협상력의 바로미터</td><td>중간 × 상시</td></tr>
+<tr><td><b>⑤ 거시·지정학</b></td><td style="text-align:left">미-이란 분쟁('26.2.28~)發 유가·인플레(CPI 4.2%)·금리(10Y 4.5%) — 소비 둔화 시 결제액, 분쟁 확산 시 국제거래 수익(25%) 타격</td><td>중간 × 즉시</td></tr>
+</table></div>
+
+<h3>분기별 체크리스트 — 다음 실적 발표: 2026년 7월 28일 (FY26 3분기)</h3>
+<div class="grid2">
+<div class="card" style="margin:0">
+<ul style="font-size:14px;padding-left:18px;line-height:2">
+<li>☐ 결제액 성장(불변통화) <b>8% 이상</b> 유지 — 5% 미만 2분기 연속이면 기본 가정 붕괴</li>
+<li>☐ 인센티브/총수익 비율 — <b>29% 돌파 여부</b> (협상력 누수 가속 신호)</li>
+<li>☐ VAS 성장률 <b>20%+</b> 유지 (Q2 +32%였음)</li>
+<li>☐ 비GAAP 영업마진 <b>67% 선</b> 방어</li>
+</ul>
+</div>
+<div class="card" style="margin:0">
+<ul style="font-size:14px;padding-left:18px;line-height:2">
+<li>☐ MDL 합의 법원 승인/기각 결정</li>
+<li>☐ DOJ 사실심리 마감('26.10.16) 전후 합의 타진 보도</li>
+<li>☐ 대형 리테일러 스테이블코인 <b>실제 출시</b> 여부 (검토≠출시)</li>
+<li>☐ 자사주 — 신규 $20B 프로그램 집행 속도 (분기 $7~9B대 유지?)</li>
+</ul>
+</div>
+</div>
+</div></section>
+
+<!-- ============ 14. 한계와 가정 ============ -->
+<section id="s14"><div class="wrap">
+<div class="eyebrow">Section 14 — Limitations &amp; Assumptions</div>
+<h2>한계와 가정 — 이 분석이 틀릴 수 있는 곳</h2>
+<div class="grid2">
+<div class="card" style="margin:0">
+<h4 style="margin-top:0">이 결론이 의존하는 핵심 가정</h4>
+<ul style="font-size:14px;padding-left:18px;line-height:1.9">
+<li><b>FY28+ 매출 +9%/년</b> — 결제액 +8% 지속 + VAS 믹스. 역사(9~11%)의 하단이나, $50B 매출 기업이 10년 더 유지하는 것은 통계적으로 상위 분위 과제 <span class="conf">중간 ~65%</span></li>
+<li><b>마진 67.5% 유지</b> — 인센티브 상승을 VAS·운영레버리지가 상쇄한다는 가정 <span class="conf">중간↑ ~70%</span></li>
+<li><b>스테이블코인 중립 가정</b> — 볼륨 잠식 없이 비자가 정산 레이어로 일부 수익화. 기본 시나리오는 위협을 '0'으로 둔 게 아니라 디레이팅된 현 주가에 이미 반영됐다고 해석</li>
+<li><b>ERP 4.75% / 페이드 0.20</b> — 표준 가정값. 비자는 '23년 GICS 개편으로 현재 금융 섹터 소속이나 프레임워크에 금융 페이드값이 없어 <b>구 분류(IT) 0.20</b>을 적용 — §11에서 보듯 영향 ±0.5년</li>
+</ul>
+</div>
+<div class="card" style="margin:0">
+<h4 style="margin-top:0">확신이 낮은 지점 · 상충 데이터</h4>
+<ul style="font-size:14px;padding-left:18px;line-height:1.9">
+<li><b>베타</b>: 0.78(stockanalysis) vs 0.81(TradingView) — 조정 후 0.86~0.87로 수렴, 영향 미미</li>
+<li><b>ERP</b>: 4.23%(다모다란 '26.1) vs 4.75%(표준) — 내재 CAP 10.4 vs 12.0년. 전쟁 이후 내재 ERP 상승 중이라 4.75% 채택, 단 방향성은 동일</li>
+<li><b>주가 기준</b>: 6/8~6/10 사이 $320~325 변동 — $322 사용, ±$3는 CAP ±0.2년 수준</li>
+<li><b>FY26 PV 처리</b>: 회계연도 71% 경과분을 제외하는 근사(잔여 28%) 사용 — 정밀 일할 계산과의 오차는 주당 $1~2 미만</li>
+</ul>
+<h4>결론을 수정해야 하는 조건</h4>
+<ul style="font-size:14px;padding-left:18px;line-height:1.9">
+<li>결제액 성장 5% 미만 2분기 연속</li>
+<li>대형 리테일러 스테이블코인 결제의 실측 점유율 &gt;5%</li>
+<li>DOJ 소송에서 구조적 시정(라우팅 강제 개방) 판결</li>
+<li>10년 금리 5%+ 정착 (WACC 재산정 필요)</li>
+</ul>
+</div>
+</div>
+
+<h3>데이터 출처 및 기준 시점</h3>
+<table style="font-size:13px">
+<tr><th style="text-align:left">데이터</th><th style="text-align:left">출처</th><th style="text-align:left">기준 시점</th></tr>
+<tr><td style="text-align:left">재무제표·사업 지표</td><td style="text-align:left">Visa 8-K/10-Q/10-K (SEC EDGAR 원문)</td><td style="text-align:left">FY2025 연간('25.10.28 발표) · FY26 2분기('26.4.28 발표)</td></tr>
+<tr><td style="text-align:left">주가·시총·베타</td><td style="text-align:left">Visa IR, Investing.com, TradingView, stockanalysis.com</td><td style="text-align:left">2026.6.6~6.10</td></tr>
+<tr><td style="text-align:left">컨센서스 추정 (FY26~27)</td><td style="text-align:left">Zacks (Yahoo Finance 게재)</td><td style="text-align:left">2026.6월 초</td></tr>
+<tr><td style="text-align:left">10년 국채 4.52% · 10년 BEI 2.33%</td><td style="text-align:left">TradingEconomics · FRED(T10YIE)</td><td style="text-align:left">2026.6.10 · 2026.4.8</td></tr>
+<tr><td style="text-align:left">ERP 4.23%(연초 내재)</td><td style="text-align:left">다모다란(NYU Stern) 2026년판</td><td style="text-align:left">2026.1.1</td></tr>
+<tr><td style="text-align:left">점유율·수수료 규모</td><td style="text-align:left">Nilson Report</td><td style="text-align:left">2024 연간 · 2025 중간/연간</td></tr>
+<tr><td style="text-align:left">소송·규제 (DOJ, MDL, GENIUS Act)</td><td style="text-align:left">Payments Dive, ABA, Federal Register, 법원 일정 보도</td><td style="text-align:left">2025.11~2026.4</td></tr>
+<tr><td style="text-align:left">경쟁사 실적</td><td style="text-align:left">Mastercard·Amex 8-K/10-Q (SEC)</td><td style="text-align:left">CY2025 연간</td></tr>
+</table>
+</div></section>
+
+<footer><div class="wrap">
+<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;align-items:baseline">
+<div><b class="serif" style="color:var(--navy);font-size:15px">Visa Inc. (V) — 시장 내재 CAP 분석</b><br>작성 2026.6.11 · CAP 프레임워크 기반 · 연 단위 재검토 권장 (차기: FY26 연간 실적 발표 후)</div>
+<div class="mono" style="font-size:12px">implied CAP <b style="color:var(--gold)">12.0y</b> · WACC 8.5% · base $322</div>
+</div>
+</div></footer>
+
+</body>
+</html>
