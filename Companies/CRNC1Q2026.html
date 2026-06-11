@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cerence (CRNC) — 시장 내재 CAP 분석 보고서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --paper:#F2F5F4; --panel:#FFFFFF; --ink:#101D1A; --mut:#5A6663;
+  --teal:#0B7A63; --teal-soft:#E2F0EC; --teal-deep:#075243;
+  --amber:#B2741C; --amber-soft:#F6ECDB;
+  --blue:#2D5E8E; --blue-soft:#E4ECF4;
+  --red:#A8402F; --red-soft:#F4E3DF;
+  --line:#D8E0DD;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  background:var(--paper);color:var(--ink);line-height:1.72;font-size:16px;
+  -webkit-font-smoothing:antialiased;word-break:keep-all;}
+.wrap{max-width:1020px;margin:0 auto;padding:0 22px}
+a{color:var(--teal);text-decoration:none}
+
+/* ───── 헤더 / 히어로 ───── */
+.masthead{border-bottom:1px solid var(--line);padding:18px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.brand{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--mut)}
+.brand b{color:var(--teal)}
+.hero{padding:58px 0 30px}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--teal);text-transform:uppercase;margin-bottom:14px}
+h1{font-size:clamp(30px,5.4vw,52px);font-weight:800;letter-spacing:-.035em;line-height:1.16}
+h1 .tick{color:var(--teal)}
+.hero-sub{margin-top:18px;max-width:760px;font-size:17.5px;color:#2c3a36}
+.hero-sub b{background:linear-gradient(transparent 62%,var(--teal-soft) 62%);font-weight:700}
+.wave-card{margin-top:34px;background:var(--ink);border-radius:14px;padding:22px 18px 14px;overflow:hidden}
+.wave-card .wc-label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:#9fb8b1;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.wave-card svg{width:100%;height:auto;display:block;margin-top:6px}
+.wave-legend{display:flex;gap:18px;margin-top:8px;font-family:var(--mono);font-size:11px;color:#9fb8b1;flex-wrap:wrap}
+.dotk{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wave-card svg g.bars{animation:rise .9s ease both}
+
+/* ───── 공통 섹션 ───── */
+section{padding:54px 0 10px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;border-top:2px solid var(--ink);padding-top:18px}
+.sec-no{font-family:var(--mono);font-size:12px;color:var(--teal);letter-spacing:.1em;white-space:nowrap}
+h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;letter-spacing:-.02em}
+.sec-lede{color:#33423d;max-width:820px;margin:10px 0 22px;font-size:16.5px}
+h3{font-size:18.5px;font-weight:750;margin:30px 0 10px;letter-spacing:-.01em}
+p{margin:0 0 14px;max-width:860px}
+.note{font-size:13px;color:var(--mut);margin-top:8px}
+.term{border-bottom:2px dotted var(--teal);font-weight:600}
+
+/* 카드/그리드 */
+.cards{display:grid;gap:14px;margin:18px 0}
+.c3{grid-template-columns:repeat(3,1fr)}
+.c2{grid-template-columns:repeat(2,1fr)}
+.c4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:820px){.c3,.c4{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.c3,.c2,.c4{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.card .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase}
+.card .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:6px 0 4px}
+.card .d{font-size:13.5px;color:var(--mut);line-height:1.55}
+.v.teal{color:var(--teal)} .v.amber{color:var(--amber)} .v.red{color:var(--red)} .v.blue{color:var(--blue)}
+
+/* 결론 배너 */
+.verdict{background:var(--ink);color:#EAF2EF;border-radius:14px;padding:26px 24px;margin:20px 0}
+.verdict .k{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:#7BC4B2}
+.verdict p{color:#D7E5E0;font-size:16.5px;max-width:none;margin-top:10px}
+.verdict b{color:#fff}
+.verdict .big{font-size:clamp(19px,2.8vw,24px);font-weight:800;color:#fff;line-height:1.45;margin-top:8px}
+
+/* 표 */
+.tablewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;margin:16px 0}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.5px}
+th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--mut);font-weight:600;background:#F7FAF9;text-transform:uppercase}
+td:first-child,th:first-child{text-align:left;position:sticky;left:0;background:var(--panel)}
+th:first-child{background:#F7FAF9}
+tr:last-child td{border-bottom:none}
+td.num{font-family:var(--mono);font-size:12.5px}
+.pos{color:var(--teal);font-weight:600}.neg{color:var(--red);font-weight:600}.warn{color:var(--amber);font-weight:600}
+.hl{background:var(--teal-soft)}
+.hlA{background:var(--amber-soft)}
+caption{caption-side:bottom;text-align:left;font-size:12px;color:var(--mut);padding:10px 12px}
+
+/* 다이어그램 공통 */
+.diagram{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin:16px 0;overflow-x:auto}
+.diagram h4{font-size:14px;font-family:var(--mono);letter-spacing:.12em;color:var(--mut);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+.flow{display:flex;align-items:stretch;gap:0;min-width:640px}
+.fbox{flex:1;border:1.5px solid var(--ink);border-radius:10px;padding:12px 12px;background:#fff;text-align:center}
+.fbox .t{font-weight:750;font-size:14.5px}
+.fbox .s{font-size:12.5px;color:var(--mut);margin-top:4px;line-height:1.5}
+.farr{display:flex;align-items:center;padding:0 7px;color:var(--teal);font-weight:800;font-size:18px}
+.fbox.teal{background:var(--teal-soft);border-color:var(--teal)}
+.fbox.amber{background:var(--amber-soft);border-color:var(--amber)}
+.fbox.blue{background:var(--blue-soft);border-color:var(--blue)}
+.badge{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;padding:2px 8px;border-radius:99px;border:1px solid currentColor;margin-bottom:6px}
+.bg-t{color:var(--teal)} .bg-a{color:var(--amber)} .bg-b{color:var(--blue)} .bg-r{color:var(--red)}
+
+/* 신뢰도 라벨 */
+.conf{font-family:var(--mono);font-size:10.5px;color:var(--mut);border:1px dashed var(--line);border-radius:6px;padding:1px 6px;white-space:nowrap}
+
+/* SWOT */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+@media(max-width:640px){.swot{grid-template-columns:1fr}}
+.swot .q{border-radius:12px;padding:18px;border:1px solid var(--line);background:var(--panel)}
+.swot .q h4{font-size:15px;font-weight:800;margin-bottom:10px;display:flex;gap:8px;align-items:center}
+.swot ul{margin-left:18px;font-size:14px;color:#2c3a36}
+.swot li{margin-bottom:7px}
+.q.s{border-top:4px solid var(--teal)} .q.w{border-top:4px solid var(--red)}
+.q.o{border-top:4px solid var(--blue)} .q.t{border-top:4px solid var(--amber)}
+
+/* 5 forces */
+.forces{display:grid;grid-template-columns:1fr 1.15fr 1fr;grid-template-rows:auto auto auto;gap:12px;min-width:660px}
+.force{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff}
+.force .fn{font-weight:750;font-size:14px}
+.force .lv{font-family:var(--mono);font-size:11px;margin:5px 0;font-weight:700}
+.force .fd{font-size:12.8px;color:var(--mut);line-height:1.55}
+.force.center{background:var(--ink);color:#EAF2EF;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.force.center .fn{color:#fff;font-size:16px}
+.force.center .fd{color:#A9C2BB}
+.meter{height:7px;border-radius:99px;background:#EAEFED;margin:7px 0 3px;overflow:hidden}
+.meter i{display:block;height:100%;border-radius:99px}
+
+/* 게이지 KPI */
+.gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0}
+@media(max-width:680px){.gauges{grid-template-columns:1fr}}
+.gauge{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+.gauge svg{width:130px;height:80px}
+.gauge .gv{font-size:24px;font-weight:800;margin-top:-6px}
+.gauge .gl{font-size:13px;color:var(--mut)}
+
+/* 타임라인 */
+.tl{border-left:2px solid var(--line);margin:18px 0 18px 8px;padding-left:22px}
+.tl .ev{position:relative;margin-bottom:18px;max-width:780px}
+.tl .ev::before{content:"";position:absolute;left:-28.5px;top:7px;width:11px;height:11px;border-radius:50%;background:var(--teal);border:2.5px solid var(--paper)}
+.tl .ev.bad::before{background:var(--red)}
+.tl .ev.warn::before{background:var(--amber)}
+.tl .yy{font-family:var(--mono);font-size:12px;color:var(--teal);font-weight:700;letter-spacing:.06em}
+.tl .ev.bad .yy{color:var(--red)} .tl .ev.warn .yy{color:var(--amber)}
+.tl .tt{font-weight:700;font-size:15px}
+.tl .dd{font-size:13.8px;color:#41504b}
+
+/* 박스 */
+.callout{border-left:4px solid var(--teal);background:var(--teal-soft);border-radius:0 10px 10px 0;padding:16px 18px;margin:18px 0;font-size:15px}
+.callout.amber{border-color:var(--amber);background:var(--amber-soft)}
+.callout.red{border-color:var(--red);background:var(--red-soft)}
+.callout b{font-weight:750}
+.callout .ct{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;color:var(--teal-deep)}
+.callout.amber .ct{color:var(--amber)} .callout.red .ct{color:var(--red)}
+
+/* 차트(svg) 카드 */
+.chart{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin:16px 0;overflow-x:auto}
+.chart h4{font-size:14px;font-family:var(--mono);letter-spacing:.12em;color:var(--mut);text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.chart svg{display:block}
+.bar-note{font-size:12px;color:var(--mut);margin-top:6px}
+
+/* 체크리스트 */
+.check{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin:14px 0}
+.check ul{list-style:none}
+.check li{padding:7px 0 7px 30px;position:relative;font-size:14.5px;border-bottom:1px dashed var(--line)}
+.check li:last-child{border-bottom:none}
+.check li::before{content:"☐";position:absolute;left:4px;color:var(--teal);font-size:16px}
+
+footer{margin-top:60px;border-top:2px solid var(--ink);padding:26px 0 60px;font-size:13px;color:var(--mut)}
+.src-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;margin-top:12px}
+@media(max-width:640px){.src-grid{grid-template-columns:1fr}}
+.tiny{font-size:12px;color:var(--mut)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<div class="masthead">
+  <div class="brand">CAP FRAMEWORK · 장기투자 분석 시리즈 — <b>경쟁우위기간 역산</b></div>
+  <div class="brand">기준일 2026-06-11 (KST)</div>
+</div>
+
+<!-- ════════ 히어로 ════════ -->
+<div class="hero">
+  <div class="kicker">NASDAQ : CRNC · 정보기술 / 응용 소프트웨어 · 차량용 대화형 AI</div>
+  <h1>세렌스 <span class="tick">Cerence Inc.</span><br>— 전 세계 신차 2대 중 1대에 목소리를 심는 회사</h1>
+  <p class="hero-sub">세렌스는 자동차 안에서 사람과 차가 <b>말로 대화하게 만드는 소프트웨어</b>를 자동차 제조사(OEM)에 파는 회사입니다.
+  음성인식 명가 뉘앙스(Nuance)에서 2019년 분사했고, 지금까지 누적 <b>5억 2,500만 대 이상</b>의 차량에 기술이 탑재됐으며,
+  최근 12개월 기준 <b>전 세계 신차 생산의 약 50%</b>가 세렌스 기술을 싣고 출고됩니다. 그런데 시가총액은 약 4.3억 달러 —
+  이 보고서는 "이 가격에 시장이 어떤 미래를 심어 놓았는가"를 역산합니다.</p>
+
+  <div class="wave-card">
+    <div class="wc-label"><span>SIGNATURE · 회사의 "목소리" — 분기 매출 파형 (단위: 백만 달러, 회계연도 9월 결산)</span><span>1Q FY24 → 2Q FY26</span></div>
+    <svg viewBox="0 0 920 230" role="img" aria-label="분기 매출을 음성 파형 형태로 표현한 차트">
+      <line x1="20" y1="115" x2="900" y2="115" stroke="#3A4F49" stroke-width="1"/>
+      <g class="bars">
+        <!-- 1Q24: 138.3 (핵심 51.7 + 레거시 일회성 86.6) -->
+        <rect x="40" y="86" width="44" height="58" rx="4" fill="#2FA98C"/>
+        <rect x="40" y="38" width="44" height="48" rx="4" fill="#D9A24A"/>
+        <rect x="40" y="144" width="44" height="48" rx="4" fill="#D9A24A" opacity=".75"/>
+        <rect x="40" y="115" width="44" height="29" rx="0" fill="#2FA98C"/>
+        <text x="62" y="30" fill="#D9A24A" font-size="12" text-anchor="middle" font-family="var(--mono)">138</text>
+        <!-- 2Q24: 67.8 -->
+        <rect x="128" y="77" width="44" height="76" rx="4" fill="#2FA98C"/>
+        <text x="150" y="69" fill="#9fb8b1" font-size="12" text-anchor="middle">68</text>
+        <!-- 3Q24: 70.5 -->
+        <rect x="216" y="76" width="44" height="78" rx="4" fill="#2FA98C"/>
+        <text x="238" y="68" fill="#9fb8b1" font-size="12" text-anchor="middle">71</text>
+        <!-- 4Q24: 54.8 -->
+        <rect x="304" y="84" width="44" height="62" rx="4" fill="#2FA98C"/>
+        <text x="326" y="76" fill="#9fb8b1" font-size="12" text-anchor="middle">55</text>
+        <!-- 1Q25: 50.9 -->
+        <rect x="392" y="87" width="44" height="56" rx="4" fill="#2FA98C"/>
+        <text x="414" y="79" fill="#9fb8b1" font-size="12" text-anchor="middle">51</text>
+        <!-- 2Q25: 78.0 (고정 라이선스 21.5 포함) -->
+        <rect x="480" y="72" width="44" height="86" rx="4" fill="#2FA98C"/>
+        <text x="502" y="64" fill="#9fb8b1" font-size="12" text-anchor="middle">78</text>
+        <!-- 3Q25: 62.2 -->
+        <rect x="568" y="80" width="44" height="70" rx="4" fill="#2FA98C"/>
+        <text x="590" y="72" fill="#9fb8b1" font-size="12" text-anchor="middle">62</text>
+        <!-- 4Q25: 60.6 -->
+        <rect x="656" y="81" width="44" height="68" rx="4" fill="#2FA98C"/>
+        <text x="678" y="73" fill="#9fb8b1" font-size="12" text-anchor="middle">61</text>
+        <!-- 1Q26: 115.1 (핵심 65.6 + 삼성 IP 49.5) -->
+        <rect x="744" y="78" width="44" height="74" rx="4" fill="#2FA98C"/>
+        <rect x="744" y="51" width="44" height="27" rx="4" fill="#D9A24A"/>
+        <rect x="744" y="152" width="44" height="27" rx="4" fill="#D9A24A" opacity=".75"/>
+        <text x="766" y="43" fill="#D9A24A" font-size="12" text-anchor="middle">115</text>
+        <!-- 2Q26: 64.2 -->
+        <rect x="832" y="79" width="44" height="72" rx="4" fill="#2FA98C"/>
+        <text x="854" y="71" fill="#9fb8b1" font-size="12" text-anchor="middle">64</text>
+      </g>
+      <g font-size="11.5" fill="#7d948e" font-family="ui-monospace,monospace" text-anchor="middle">
+        <text x="62" y="222">1Q24</text><text x="150" y="222">2Q24</text><text x="238" y="222">3Q24</text>
+        <text x="326" y="222">4Q24</text><text x="414" y="222">1Q25</text><text x="502" y="222">2Q25</text>
+        <text x="590" y="222">3Q25</text><text x="678" y="222">4Q25</text><text x="766" y="222">1Q26</text>
+        <text x="854" y="222">2Q26</text>
+      </g>
+    </svg>
+    <div class="wave-legend">
+      <span><i class="dotk" style="background:#2FA98C"></i>핵심(반복적) 매출 신호</span>
+      <span><i class="dotk" style="background:#D9A24A"></i>일회성 스파이크 — 1Q24: 레거시 계약 조기인식 $86.6M · 1Q26: 삼성 특허료 $49.5M</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ 0. 핵심 결론 ════════ -->
+<section id="s0">
+  <div class="sec-head"><span class="sec-no">00 / 핵심 결론</span><h2>현재 주가에 심어진 시장의 기대치</h2></div>
+
+  <div class="verdict">
+    <div class="k">MARKET-IMPLIED EXPECTATIONS · 역산 결과 요약</div>
+    <p class="big">현재 주가 약 $9.6은, "핵심 매출이 연 9%씩 자라고 · EBITA 마진이 0%대에서 22%까지 올라가며 · 할인율 11%대"라는
+    <b>강세 조합이 성립할 때 내재 CAP 약 10년</b>에 해당하는 가격입니다.</p>
+    <p>반면 이 분석의 <b>중립 가정(핵심 성장 6.5% · 마진 18% 도달 · 프레임워크 표준 WACC 12.2%)</b>으로는
+    예측 기간을 30년까지 늘려도 주당 가치가 <b>$6대에서 수렴</b>해 현재 주가에 도달하지 못합니다.
+    즉 시장은 xUI 플랫폼 전환과 마진 확장의 '성공'을 이미 상당 부분 가격에 반영해 둔 상태이며,
+    투자 판단의 본질은 "그 성공 확률을 시장보다 높게 보느냐"로 압축됩니다. 매수·매도 추천이 아닌, 가격 해석을 위한 자료입니다.</p>
+  </div>
+
+  <div class="cards c4">
+    <div class="card"><div class="k">기준 주가 (06/09 종가)</div><div class="v">$9.61</div><div class="d">최근 1주 $8.5~$12.3 사이 급등락. 출처 간 시점 차이로 수치 상이 — 본문 §11에서 가격대별 CAP 병기</div></div>
+    <div class="card"><div class="k">시장 내재 CAP</div><div class="v teal">≈ 10년</div><div class="d">단, "강세 조합" 전제. 중립 가정+표준 WACC로는 어떤 기간으로도 도달 불가(&gt;30년)</div></div>
+    <div class="card"><div class="k">현재 핵심 ROIC − WACC</div><div class="v red">−11.5%p</div><div class="d">핵심 ROIC ≈ 0.6% vs WACC 12.2%. 지금은 자본비용 미달 — 가격은 '미래 전환'에 베팅 중</div></div>
+    <div class="card"><div class="k">생애주기 단계</div><div class="v blue">성숙</div><div class="d">영업CF(+)·투자CF(−)·재무CF(−) 패턴 2년 연속 → CAP 역산 분석 적용 가능</div></div>
+  </div>
+
+  <div class="callout">
+    <div class="ct">이 보고서를 읽는 법</div>
+    §1~§7은 "이 회사가 무엇인지"를 처음 접하는 분도 이해할 수 있게 풀어 쓴 부분이고,
+    §8~§13이 DCF·내재 CAP 역산의 본론입니다. 전문 용어는 처음 등장할 때마다 <span class="term">점선 밑줄</span>로 표시하고 쉬운 말로 풀었습니다.
+  </div>
+</section>
+
+<!-- ════════ 1. 기업 개요 ════════ -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-no">01 / 기업 개요</span><h2>세렌스는 무엇을 하는 회사인가</h2></div>
+  <p class="sec-lede"><b>한 문장 요약:</b> 세렌스는 "자동차 제조사가 자기 브랜드 이름을 단 음성비서(예: BMW의 '헤이 BMW', 벤츠의 '헤이 메르세데스')를
+  만들 수 있게 해주는 부품 소프트웨어"를 팔고, 그 소프트웨어가 탑재된 <b>차 1대가 출고될 때마다 로열티(사용료)를 받는</b> 회사입니다.</p>
+
+  <h3>탄생 배경 — 음성인식 명가의 '자동차 사업부'가 독립하다</h3>
+  <p>세렌스의 뿌리는 <b>뉘앙스 커뮤니케이션즈(Nuance)</b>입니다. 뉘앙스는 수십 년간 음성인식 기술을 쌓아 올린 회사로,
+  애플 시리(Siri)의 초기 음성인식 엔진을 공급한 것으로도 유명합니다. 뉘앙스 안에는 의료(병원 받아쓰기)와 자동차라는 두 개의 큰 사업이 있었는데,
+  2019년 10월 자동차 사업부만 떼어내 별도 상장시킨 것이 세렌스입니다. 분사 시점에 이미 <b>약 60개 자동차 제조사와의 계약, 2억 8천만 대 이상의 탑재 실적,
+  직원 약 1,300명(이 중 R&amp;D 약 700명)</b>을 통째로 물려받았습니다. 즉 스타트업이 아니라, 20년 넘게 자동차 음성 시장을 지배해 온 사업이 간판만 바꾼 것입니다.
+  (모회사였던 뉘앙스는 2022년 마이크로소프트에 약 197억 달러에 인수되어 사라졌습니다.)</p>
+
+  <h3>회사 연혁 — 천국과 지옥을 오간 7년</h3>
+  <div class="tl">
+    <div class="ev"><div class="yy">2019.10</div><div class="tt">뉘앙스에서 분사, 나스닥 상장 (첫 거래일 종가 $15.35)</div><div class="dd">기술 탑재 2.8억 대, 60개 OEM 계약을 안고 출발.</div></div>
+    <div class="ev"><div class="yy">2021.02</div><div class="tt">사상 최고가 $133 (시총 50억 달러대)</div><div class="dd">전기차·커넥티드카 테마 버블의 정점. 이후 금리 상승과 함께 장기 하락.</div></div>
+    <div class="ev bad"><div class="yy">2022~2024</div><div class="tt">실적 부진과 대규모 영업권 손상 — 누적 순손실 약 $9.5억</div><div class="dd">차량 반도체 부족 → 생산 차질 → 로열티 감소. FY24에만 영업권 손상 $6.1억 인식(과거 인수가치의 장부 삭감, 현금 유출은 아님). 주가는 2024년 한때 $2~3대까지 추락.</div></div>
+    <div class="ev warn"><div class="yy">2024.10~12</div><div class="tt">경영진 전면 교체 — CEO 브라이언 크르자니크(전 인텔 CEO) 취임</div><div class="dd">구조조정으로 비용 구조 대폭 축소, "수익성 있는 성장"으로 전략 전환.</div></div>
+    <div class="ev warn"><div class="yy">2025.01</div><div class="tt">엔비디아 협력 '확대' 발표에 하루 +144% 폭등 후 급락</div><div class="dd">공매도 비중 ~17% 상황에서 숏스퀴즈성 폭등(종가 $19.33). 이후 2025년 내내 $2.3~$27.5 사이를 오가는 극단적 변동성 — 본 분석의 높은 베타(2.98)의 원인.</div></div>
+    <div class="ev"><div class="yy">2025.04~</div><div class="tt">차세대 플랫폼 'Cerence xUI' 공개 (엔비디아 GTC·상하이모터쇼)</div><div class="dd">거대언어모델(LLM) 기반 차량 비서 플랫폼. 폭스바겐그룹·JLR·BYD·아우디·닛산 등 5개 양산 프로그램 확보, 2026년 첫 탑재 차량 양산 개시.</div></div>
+    <div class="ev"><div class="yy">2025.11~2026.05</div><div class="tt">IP(특허) 수익화 개시 — 삼성에서 $49.5M 수취, 아마존 제소</div><div class="dd">삼성과 특허 크로스라이선스 체결(1Q FY26 매출 인식). 2026년 5월 아마존(알렉사)을 연방법원·ITC에 특허침해로 제소. 소니·TCL·마이크로소프트(뉘앙스) 상대 소송도 진행 중으로 알려짐.</div></div>
+    <div class="ev"><div class="yy">2026.06 현재</div><div class="tt">주가 $9.6 안팎, 시총 약 $4.3억 — FY26 가이던스 상향 중</div><div class="dd">2개 분기 연속 가이던스 상회, 연간 FCF 가이던스 $66~76M. 그러나 6월 첫 주에만 ±14% 일중 변동을 반복하는 투기적 수급.</div></div>
+  </div>
+
+  <div class="callout amber">
+    <div class="ct">비전공자를 위한 핵심 맥락</div>
+    이 회사의 7년 주가 역사는 사업의 역사보다 훨씬 격렬했습니다. 사업 자체(차 1대당 사용료를 받는 모델)는 비교적 안정적인데,
+    <b>주가는 'AI 테마 + 작은 시가총액 + 높은 공매도'가 만나 도박장처럼 움직여 왔습니다.</b>
+    이 괴리가 본 분석의 할인율(WACC) 산정을 어렵게 만드는 핵심 변수입니다(§9에서 상술).
+  </div>
+</section>
+
+<!-- ════════ 2. 수익 구조 ════════ -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-no">02 / 수익 구조</span><h2>이 회사는 어떻게 돈을 버는가</h2></div>
+  <p class="sec-lede">매출은 세 가지 파이프로 들어옵니다. 비유하자면 ① 차가 팔릴 때마다 받는 <b>인세(라이선스)</b>,
+  ② 차가 굴러다니는 동안 받는 <b>구독료(커넥티드)</b>, ③ 비서를 만들어 주는 <b>공임(용역)</b>입니다. 여기에 최근 ④ <b>특허 사용료</b>라는 네 번째 파이프가 열렸습니다.</p>
+
+  <div class="diagram">
+    <h4>돈의 흐름 한눈에 보기</h4>
+    <div class="flow">
+      <div class="fbox blue"><span class="badge bg-b">고객</span><div class="t">자동차 제조사 (OEM)</div><div class="s">BMW · 폭스바겐그룹 · 도요타 · 르노 · BYD · JLR · 닛산 등 글로벌 OEM 다수</div></div>
+      <div class="farr">→</div>
+      <div class="fbox teal"><span class="badge bg-t">세렌스</span><div class="t">음성 AI 소프트웨어 + 클라우드</div><div class="s">차에 심는 엣지 SW + 클라우드 연결 서비스 + 맞춤 개발</div></div>
+      <div class="farr">→</div>
+      <div class="fbox"><span class="badge bg-t">대가</span><div class="t">① 대당 로열티<br>② 연결 구독료<br>③ 개발 용역비<br>④ 특허 사용료</div><div class="s">차 1대 출고 시 인식 / 1~5년 구독 / 프로젝트별 / 비자동차 기업 대상</div></div>
+    </div>
+  </div>
+
+  <h3>FY2025 매출 구성 — $251.8M의 해부</h3>
+  <div class="chart">
+    <h4>매출원별 비중 (FY2025 실적, 백만 달러)</h4>
+    <svg viewBox="0 0 880 150" role="img" aria-label="FY25 매출 구성 누적 막대">
+      <rect x="20" y="30" width="395" height="52" fill="#0B7A63" rx="6"/>
+      <rect x="312" y="30" width="103" height="52" fill="#075243" rx="0"/>
+      <rect x="419" y="30" width="180" height="52" fill="#2D5E8E" rx="6"/>
+      <rect x="603" y="30" width="195" height="52" fill="#B2741C" rx="6"/>
+      <text x="35" y="60" fill="#fff" font-size="14" font-weight="700">라이선스 $140.6M (55.8%)</text>
+      <text x="428" y="54" fill="#fff" font-size="13" font-weight="700">커넥티드</text>
+      <text x="428" y="72" fill="#fff" font-size="12">$53.3M (21.2%)</text>
+      <text x="615" y="54" fill="#fff" font-size="13" font-weight="700">전문서비스(용역)</text>
+      <text x="615" y="72" fill="#fff" font-size="12">$57.8M (23.0%)</text>
+      <text x="20" y="110" fill="#5A6663" font-size="12.5">라이선스 내부: <tspan font-weight="700" fill="#0B7A63">변동(대당 로열티) $118.4M</tspan> + <tspan font-weight="700" fill="#075243">고정(선불 계약) $22.2M</tspan> — 짙은 부분이 고정</text>
+      <text x="20" y="132" fill="#5A6663" font-size="12.5">참고: FY26E에는 여기에 삼성 특허료 $49.5M이 라이선스 항목으로 추가됨 (일회성)</text>
+    </svg>
+  </div>
+
+  <div class="cards c4">
+    <div class="card"><div class="k">① 변동 라이선스</div><div class="v teal">대당 로열티</div><div class="d">세렌스 SW를 실은 차가 1대 출고될 때마다 매출 인식. 매출의 척추. 차 1대당 평균 단가는 수 달러 수준(블렌디드)으로 추정 — xUI는 이 단가를 끌어올리는 카드</div></div>
+    <div class="card"><div class="k">② 커넥티드 서비스</div><div class="v blue">구독료</div><div class="d">클라우드 연결 기능(실시간 정보·내비 검색 등). 1~5년 구독으로 선수금을 받고 기간에 나눠 인식 → 이연매출 $198.6M이 미래 매출의 저수지</div></div>
+    <div class="card"><div class="k">③ 전문 서비스</div><div class="v">개발 공임</div><div class="d">OEM별 맞춤 비서 구축 용역. 마진이 거의 없는(원가율 ~90%) 저수익 사업으로, 회사는 비중 축소 중</div></div>
+    <div class="card"><div class="k">④ IP 라이선싱</div><div class="v amber">특허료</div><div class="d">음성 분야 특허 포트폴리오를 비자동차 기업(삼성 $49.5M 등)에 과금. 아마존 제소 진행 — 금액·시점 모두 불확실한 '옵션' 성격</div></div>
+  </div>
+
+  <h3>핵심 영업지표(KPI) — 회사의 진짜 체온계</h3>
+  <div class="gauges">
+    <div class="gauge">
+      <svg viewBox="0 0 130 80"><path d="M15 70 A50 50 0 0 1 115 70" fill="none" stroke="#EAEFED" stroke-width="13" stroke-linecap="round"/>
+      <path d="M15 70 A50 50 0 0 1 65 20" fill="none" stroke="#0B7A63" stroke-width="13" stroke-linecap="round"/></svg>
+      <div class="gv">50%</div><div class="gl">전 세계 신차 생산 중 세렌스 기술 탑재 비율 (TTM, 2Q FY26)</div>
+    </div>
+    <div class="gauge">
+      <svg viewBox="0 0 130 80"><path d="M15 70 A50 50 0 0 1 115 70" fill="none" stroke="#EAEFED" stroke-width="13" stroke-linecap="round"/>
+      <path d="M15 70 A50 50 0 0 1 100 33" fill="none" stroke="#2D5E8E" stroke-width="13" stroke-linecap="round"/></svg>
+      <div class="gv">+12%</div><div class="gl">커넥티드 탑재 차량 출하 증가율 (TTM, 같은 기간 전 세계 생산은 +2%)</div>
+    </div>
+    <div class="gauge">
+      <svg viewBox="0 0 130 80"><path d="M15 70 A50 50 0 0 1 115 70" fill="none" stroke="#EAEFED" stroke-width="13" stroke-linecap="round"/>
+      <path d="M15 70 A50 50 0 0 1 88 27" fill="none" stroke="#B2741C" stroke-width="13" stroke-linecap="round"/></svg>
+      <div class="gv">+7%</div><div class="gl">조정 총 청구액(빌링) 증가율 — 일회성 제외한 핵심 수요의 실질 성장 속도</div>
+    </div>
+  </div>
+
+  <h3>분기별 매출 상세 — 일회성을 걷어내고 봐야 하는 이유</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>백만 달러</th><th>1Q24</th><th>2Q24</th><th>3Q24</th><th>4Q24</th><th>1Q25</th><th>2Q25</th><th>3Q25</th><th>4Q25</th><th>1Q26</th><th>2Q26</th></tr></thead>
+      <tbody>
+        <tr><td>변동 라이선스</td><td class="num">20.8</td><td class="num">25.1</td><td class="num">23.1</td><td class="num">25.3</td><td class="num">22.7</td><td class="num">29.9</td><td class="num">34.2</td><td class="num">31.6</td><td class="num">—*</td><td class="num">—*</td></tr>
+        <tr><td>고정 라이선스(선불)</td><td class="num">—</td><td class="num">10.4</td><td class="num">20.0</td><td class="num">—</td><td class="num">—</td><td class="num">21.5</td><td class="num">—</td><td class="num">0.7</td><td class="num warn">49.5†</td><td class="num">5.8</td></tr>
+        <tr><td>커넥티드 서비스</td><td class="num">10.2</td><td class="num">13.6</td><td class="num">10.9</td><td class="num">12.1</td><td class="num">13.7</td><td class="num">12.6</td><td class="num">12.8</td><td class="num">14.2</td><td class="num">14.5</td><td class="num">15.3</td></tr>
+        <tr class="hlA"><td>레거시 일회성</td><td class="num warn">86.6</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr><td>전문 서비스</td><td class="num">20.7</td><td class="num">18.7</td><td class="num">16.5</td><td class="num">17.4</td><td class="num">14.5</td><td class="num">13.9</td><td class="num">15.2</td><td class="num">14.2</td><td class="num">—*</td><td class="num">11.3</td></tr>
+        <tr style="font-weight:700"><td>총매출</td><td class="num">138.3</td><td class="num">67.8</td><td class="num">70.5</td><td class="num">54.8</td><td class="num">50.9</td><td class="num">78.0</td><td class="num">62.2</td><td class="num">60.6</td><td class="num">115.1</td><td class="num">64.2</td></tr>
+      </tbody>
+      <caption>* 1Q26·2Q26 라이선스 합계는 각각 $87.9M(삼성 포함)·$37.6M으로 공시되었으나 변동/고정 세부 분리는 분기 IR 자료 기준. † 삼성 특허료는 라이선스 항목으로 인식. 출처: 회사 실적자료(8-K) 분기별 매출 분해.</caption>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="ct">왜 이 분해가 중요한가</div>
+    FY24 매출 $331.5M에는 레거시 계약 조기인식 <b>$86.6M</b>, FY26E 매출 $312.5M(가이던스 중간값)에는 삼성 특허료 <b>$49.5M</b>이 들어 있습니다.
+    이를 걷어낸 <b>핵심 매출은 FY24 ≈ $245M → FY25 $251.8M → FY26E ≈ $263M</b>으로, 화려한 헤드라인과 달리 실제 성장 속도는
+    연 3~8% 수준입니다. 경영진 스스로도 "FY26 핵심 기술 사업(용역 제외) 성장률 8%"로 가이드했습니다. DCF는 이 핵심 라인 위에 세웁니다.
+  </div>
+</section>
+
+<!-- ════════ 3. 제품·기술 ════════ -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-no">03 / 제품 · 기술력</span><h2>차 안의 음성비서는 어떻게 작동하는가</h2></div>
+  <p class="sec-lede">"헤이 메르세데스, 가장 가까운 충전소 들렀다가 회사로 가자"라고 말하면 차가 알아듣고 실행합니다.
+  이 한 문장이 처리되는 과정을 따라가면 세렌스의 기술과 경쟁력이 모두 보입니다.</p>
+
+  <div class="diagram">
+    <h4>음성 명령 처리 흐름 — 하이브리드(엣지+클라우드) 구조</h4>
+    <div class="flow">
+      <div class="fbox"><span class="badge bg-b">입력</span><div class="t">① 마이크 + 소음 제거</div><div class="s">주행 소음·동승자 음성 속에서 화자의 목소리만 분리(음향 신호처리). 세렌스의 전통적 강점 영역</div></div>
+      <div class="farr">→</div>
+      <div class="fbox teal"><span class="badge bg-t">차량 내부</span><div class="t">② 엣지 AI (차에 내장)</div><div class="s">인터넷 없이도 작동하는 소형 언어모델 <b>CaLLM Edge</b>. "에어컨 켜줘" 같은 차량 제어는 0.x초 만에 처리. 터널·산간에서도 동작</div></div>
+      <div class="farr">⇄</div>
+      <div class="fbox blue"><span class="badge bg-b">클라우드</span><div class="t">③ 클라우드 AI</div><div class="s">대형 언어모델 <b>CaLLM</b>(엔비디아 인프라 활용)이 맛집 검색·복합 질문 등 풍부한 답변 담당. 외부 LLM(예: ChatGPT)도 연결 가능</div></div>
+      <div class="farr">→</div>
+      <div class="fbox"><span class="badge bg-t">출력</span><div class="t">④ 음성 합성 + 실행</div><div class="s">브랜드별 목소리(TTS)로 답하고, 내비·공조·창문 등 차량 기능을 실제로 실행. 70여 개 언어 지원</div></div>
+    </div>
+  </div>
+
+  <h3>왜 "하이브리드"가 기술적 차별점인가 — 쉬운 비유</h3>
+  <p>스마트폰의 시리·구글 어시스턴트는 대부분 <b>클라우드(인터넷 너머의 서버)</b>에서 생각합니다. 그런데 자동차는 ① 터널·지하주차장에서 인터넷이 끊기고,
+  ② 운전 중에는 0.5초의 지연도 위험하며, ③ 제조사는 운전자 데이터를 구글·아마존에 넘기기 싫어합니다.
+  세렌스는 "차 안에 작은 두뇌(엣지), 클라우드에 큰 두뇌"를 두고 둘을 한 줄의 프로그래밍 인터페이스로 묶었습니다.
+  빠르고 사적인 일은 차 안에서, 똑똑함이 필요한 일은 클라우드에서 — 이것이 순수 클라우드 방식의 알렉사·구글 어시스턴트 대비 구조적 강점이고,
+  OEM이 자기 브랜드 비서를 갖고 싶어할 때 세렌스를 찾는 이유입니다.</p>
+
+  <h3>차세대 승부수: Cerence xUI — 단가를 끌어올리는 플랫폼</h3>
+  <p>2025년 공개된 <span class="term">xUI</span>는 음성 '명령 인식기'를 넘어, LLM 기반으로 여러 단계 대화·추론·차량 데이터 활용까지 하는
+  <b>에이전트형 차량 비서 플랫폼</b>입니다. 투자 관점의 핵심은 두 가지입니다.
+  ① <b>대당 단가(PPU) 상승</b> — 기능이 비서 → 에이전트로 격상되며 기존보다 높은 가격대에 계약되는 것으로 회사가 밝히고 있고,
+  ② <b>전환비용 상승</b> — 엔비디아·미디어텍 칩에 최적화된 깊은 통합은 한 번 들어가면 빼기 어렵습니다.
+  현재 폭스바겐그룹·JLR·BYD·아우디·닛산 등 <b>5개 양산 프로그램</b>이 진행 중이며, 첫 xUI 탑재 차량이 2026년 양산을 시작했습니다.
+  본 분석의 강세 시나리오(마진 22% 도달)는 사실상 "xUI 단가 상승이 실현되는 세계"를 수치화한 것입니다.</p>
+
+  <div class="callout amber">
+    <div class="ct">기술 리스크의 본질 — 정직하게 짚기</div>
+    음성인식·자연어이해라는 세렌스의 <b>역사적 기술 해자는 LLM의 등장으로 상당 부분 평준화</b>되었습니다(오픈소스 모델도 음성을 잘 알아듣는 시대).
+    남은 차별점은 "자동차라는 환경에 맞게 만드는 능력" — 소음 처리, 임베디드 최적화, 70개 언어, 차량 제어 연동, 기능안전 인증, 20년치 OEM 신뢰 — 입니다.
+    이는 진짜 자산이지만, 알고리즘 자체의 독점은 아니라는 점이 약세 시나리오의 출발점입니다.
+  </div>
+</section>
+
+<!-- ════════ 4. 산업 분석 ════════ -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-no">04 / 산업 분석</span><h2>차량용 음성 AI — 산업의 구조와 방향</h2></div>
+  <p class="sec-lede">자동차 산업은 "하드웨어(차체·엔진)에서 소프트웨어(SDV: 소프트웨어 정의 차량)로" 가치가 이동하는 30년에 한 번 규모의 전환기에 있습니다.
+  음성은 운전 중 손과 눈을 못 쓰는 환경에서 <b>유일하게 안전한 입력 수단</b>이라 이 전환의 핵심 인터페이스로 꼽힙니다.</p>
+
+  <h3>시장 규모 — 출처 간 편차가 크다는 사실부터</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>리서치 출처</th><th>현재 규모</th><th>전망</th><th>CAGR</th></tr></thead>
+      <tbody>
+        <tr><td>Research&amp;Markets (인카 음성비서)</td><td class="num">$3.2B (2025)</td><td class="num">$6.0B (2030)</td><td class="num pos">13.2%</td></tr>
+        <tr><td>동일 계열 (차량 음성인식 시스템)</td><td class="num">$3.6B (2026)</td><td class="num">$6.3B (2030)</td><td class="num pos">14.6%</td></tr>
+        <tr><td>Future Market Insights (AI 인카 비서)</td><td class="num">$1.0B (2025)</td><td class="num">$5.1B (2035)</td><td class="num pos">17.5%</td></tr>
+        <tr><td>기타 (Verified MR 등)</td><td class="num">$21.8B (2023)?</td><td class="num">—</td><td class="num">14%+</td></tr>
+      </tbody>
+      <caption>주의: 시장 정의(소프트웨어만 vs 하드웨어 포함)에 따라 추정치가 최대 7배 이상 갈립니다. 본 분석은 "연 $3B 안팎, 연 13~15% 성장"의 군집을 채택하되, 절대 규모보다 방향(두 자릿수 성장)에만 의존합니다. 신뢰도: 방향성 높음(~85%) / 절대치 낮음(~40%).</caption>
+    </table>
+  </div>
+  <p>단순 검산: 전 세계 신차 생산은 연 약 <b>9천만 대</b>(최근 TTM +2%). 세렌스는 그중 절반에 타면서 핵심 매출이 약 $2.6억 — 즉 <b>차 1대당 받는 돈이 아직 평균 한 자릿수 달러</b>에 불과합니다.
+  산업이 성장한다는 말의 실체는 "탑재율 상승"이 아니라(이미 50%) <b>"대당 단가 상승(저가 명령인식 → 고가 LLM 에이전트)"</b>입니다. 이것이 이 회사 성장 논리의 전부라 해도 과언이 아닙니다.</p>
+
+  <h3>산업 가치사슬 — 세렌스의 자리</h3>
+  <div class="diagram">
+    <h4>차량용 음성 AI 생태계 (위로 갈수록 소비자에 가까움)</h4>
+    <div class="flow" style="flex-direction:column;gap:10px;min-width:560px">
+      <div class="fbox blue" style="text-align:left"><span class="badge bg-b">최상류 · 완성차</span><div class="t">OEM (폭스바겐 · 도요타 · BMW · BYD · 현대 등)</div><div class="s">브랜드 경험을 소유. 비서를 ① 직접 개발 ② 세렌스류에서 구매 ③ 구글/아마존 빌트인 채택 중 선택</div></div>
+      <div class="fbox teal" style="text-align:left"><span class="badge bg-t">중류 · 세렌스의 자리</span><div class="t">음성/대화 AI 전문 공급자 — Cerence(점유 1위) · SoundHound · 중국계(iFlytek 등)</div><div class="s">Tier-1 부품사(하만·콘티넨탈 등)와 협업해 인포테인먼트에 통합. "OEM 브랜드를 지켜주는 중립 공급자" 포지션</div></div>
+      <div class="fbox" style="text-align:left"><span class="badge bg-a">동일 층의 침입자</span><div class="t">빅테크 — 구글(제미나이/안드로이드 오토모티브) · 아마존(알렉사) · 애플(카플레이)</div><div class="s">공짜에 가깝게 주는 대신 데이터·생태계를 가져감. 일부 OEM(볼보·폴스타·GM 등)은 구글 빌트인 채택 — 세렌스의 최대 위협이자, OEM의 '데이터 주권' 욕구가 세렌스의 방패</div></div>
+      <div class="fbox amber" style="text-align:left"><span class="badge bg-a">하류 · 인프라</span><div class="t">반도체/클라우드 — 엔비디아 · 미디어텍 · 퀄컴 · SiMa.ai / 하이퍼스케일러</div><div class="s">세렌스는 이들의 '고객이자 파트너'. 엔비디아 협업으로 CaLLM을 최적화 — 단, 기반 모델 의존이라는 약점도 됨</div></div>
+    </div>
+  </div>
+
+  <h3>산업의 흐름 — 4가지 구조적 트렌드</h3>
+  <div class="cards c2">
+    <div class="card"><div class="k">트렌드 1 · LLM의 차량 침투</div><div class="d"><b>명령 인식("창문 열어") → 대화형 에이전트("이번 주말 캠핑 코스 짜줘")</b>로 진화 중. 기능당 가치가 커지며 소프트웨어 단가가 오르는 국면 — 세렌스 xUI·SoundHound·빅테크 모두 이 파이를 노림.</div></div>
+    <div class="card"><div class="k">트렌드 2 · 스마트폰 프로젝션의 잠식</div><div class="d">많은 운전자가 차 비서 대신 <b>카플레이/안드로이드 오토</b>로 폰의 비서를 씁니다. OEM 입장에선 자기 비서가 무력화되는 문제 — 이 때문에 OEM이 '쓸 만한 자체 비서'에 돈을 쓰게 되는 역설적 수요도 발생.</div></div>
+    <div class="card"><div class="k">트렌드 3 · 중국의 자급화</div><div class="d">세계 최대 생산국 중국에서는 iFlytek·바이두 등 로컬이 강세. 세렌스는 BYD xUI 채택·Neusoft 협력 등으로 대응하나, <b>중국 물량의 지속성은 핵심 변수</b>(지정학 리스크 포함).</div></div>
+    <div class="card"><div class="k">트렌드 4 · 자동차 생산의 저성장</div><div class="d">모수(母數)인 글로벌 생산은 연 +0~2%의 성숙 시장. 즉 이 산업의 성장은 <b>'대수 × 단가'에서 전적으로 단가 쪽</b>에서 나와야 함 — 단가 협상력이 약하면 성장도 없음.</div></div>
+  </div>
+</section>
+
+<!-- ════════ 5. 생애주기 ════════ -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-no">05 / 생애주기 판별</span><h2>현금흐름표가 말해주는 기업의 나이</h2></div>
+  <p class="sec-lede">프레임워크 1단계: <span class="term">현금흐름표 3종 세트의 부호</span>(영업/투자/재무가 각각 +인지 −인지)로
+  기업이 도입·성장·성숙·정리·감소 중 어디에 있는지 판별합니다. CAP 역산은 성장·성숙 단계에서만 유효합니다.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>백만 달러</th><th>FY2022</th><th>FY2023</th><th>FY2024</th><th>FY2025</th><th>TTM (26.3월)</th></tr></thead>
+      <tbody>
+        <tr><td>영업활동 현금흐름</td><td class="num neg">−2.1</td><td class="num pos">+7.5</td><td class="num pos">+17.2</td><td class="num pos">+61.2</td><td class="num pos">+88.5</td></tr>
+        <tr><td>투자활동 현금흐름</td><td class="num neg">−10.6</td><td class="num pos">+5.8</td><td class="num pos">+4.4</td><td class="num neg">−10.6</td><td class="num neg">−9.8</td></tr>
+        <tr><td>재무활동 현금흐름</td><td class="num neg">−19.6</td><td class="num neg">−5.3</td><td class="num">+0.2</td><td class="num neg">−87.0</td><td class="num neg">−86.9</td></tr>
+        <tr class="hl"><td>패턴 판정</td><td>혼합(부진)</td><td>정리형 혼합</td><td>정리형 혼합</td><td class="pos">성숙 (+,−,−)</td><td class="pos">성숙 (+,−,−)</td></tr>
+      </tbody>
+      <caption>조정 메모: 프레임워크에 따라 주식기반보상(SBC, TTM $25.8M)을 영업→재무로 옮겨도 영업CF는 +$62.7M으로 여전히 양(+) — 판정 불변. FY25 재무CF의 큰 유출은 2025년 만기 전환사채 $87.1M 상환.</caption>
+    </table>
+  </div>
+
+  <p><b>판정: 성숙 단계.</b> 본업에서 현금을 벌고(+), 설비에 조금 쓰고(−), 남는 돈으로 빚을 갚는(−) 전형적 성숙 기업의 패턴이 2년 연속입니다.
+  2022~24년의 '정리(Shake-out)형' 혼란기를 빠져나왔다는 의미이기도 합니다. 따라서 <b>본 프레임워크(DCF + 내재 CAP 역산)를 적용하기에 적합한 단계</b>입니다.
+  단, 생애주기는 역행할 수 있습니다 — 핵심 매출이 다시 역성장하면 정리 단계 회귀를 의심해야 합니다(분기 체크포인트 §13).</p>
+</section>
+
+<!-- ════════ 6. 경쟁우위 정성분석 ════════ -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-no">06 / 경쟁 우위</span><h2>해자(Moat)는 얼마나 깊은가 — 5 Forces와 정량 판별</h2></div>
+
+  <div class="diagram">
+    <h4>포터의 5 Forces — 세렌스의 위치 (막대가 길수록 세렌스에 불리)</h4>
+    <div class="forces">
+      <div class="force" style="grid-column:2;grid-row:1">
+        <div class="fn">신규 진입 위협</div><div class="lv" style="color:var(--amber)">중간</div>
+        <div class="meter"><i style="width:55%;background:var(--amber)"></i></div>
+        <div class="fd">LLM이 음성·언어 기술의 진입장벽을 낮춤. 그러나 차량 인증·임베디드 최적화·70개 언어·3~5년 설계 사이클은 여전히 높은 벽 — 스타트업이 OEM 양산에 들어가긴 어려움</div>
+      </div>
+      <div class="force" style="grid-column:1;grid-row:2">
+        <div class="fn">공급자 교섭력</div><div class="lv" style="color:var(--amber)">중간</div>
+        <div class="meter"><i style="width:45%;background:var(--amber)"></i></div>
+        <div class="fd">기반 LLM·GPU(엔비디아)·클라우드에 의존. 파트너 관계는 양호하나, 기반 모델 가격·접근 조건 변화에 취약</div>
+      </div>
+      <div class="force center" style="grid-column:2;grid-row:2">
+        <div class="fn">CERENCE</div>
+        <div class="fd">자동차 특화 + 하이브리드 구조 + 설치기반 5.25억 대 + 특허 포트폴리오</div>
+      </div>
+      <div class="force" style="grid-column:3;grid-row:2">
+        <div class="fn">구매자 교섭력</div><div class="lv" style="color:var(--red)">높음</div>
+        <div class="meter"><i style="width:82%;background:var(--red)"></i></div>
+        <div class="fd">고객이 소수의 거대 OEM. 자동차 산업 특유의 단가 인하(Cost-down) 압박이 상시 작동 — 회사 위험요인 공시에도 '가격 압박' 명시</div>
+      </div>
+      <div class="force" style="grid-column:1;grid-row:3">
+        <div class="fn">기존 경쟁 강도</div><div class="lv" style="color:var(--red)">높음</div>
+        <div class="meter"><i style="width:80%;background:var(--red)"></i></div>
+        <div class="fd">구글·아마존이 사실상 보조금 가격으로 침투, SoundHound가 공격적 영업, 중국 로컬 강세. 점유 1위지만 평화로운 1위가 아님</div>
+      </div>
+      <div class="force" style="grid-column:3;grid-row:3">
+        <div class="fn">대체재 위협</div><div class="lv" style="color:var(--red)">높음</div>
+        <div class="meter"><i style="width:75%;background:var(--red)"></i></div>
+        <div class="fd">카플레이/안드로이드 오토(폰 미러링)가 차량 비서 자체를 우회. "비서를 안 쓰는 운전자"가 가장 큰 대체재</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>차별화 vs 원가우위 — 프레임워크 정량 판별</h3>
+  <div class="cards c2">
+    <div class="card">
+      <div class="k">NOPAT 마진 (차별화 지표)</div>
+      <div class="v red">핵심 ≈ 0% 대</div>
+      <div class="d">매출총이익률 75~80%는 명백한 <b>차별화형 비용 구조</b>이나, R&amp;D·판관비를 빼고 SBC를 비용 처리하면 핵심 EBITA는 손익분기 수준.
+      "차별화의 구조는 있으나 <b>수익으로 입증되지 못한 상태"</b> — 산업 평균의 2배+ 기준에 미달</div>
+    </div>
+    <div class="card">
+      <div class="k">투하자본 회전율 (원가우위 지표)</div>
+      <div class="v">≈ 1.1회</div>
+      <div class="d">핵심 매출 $263M ÷ 투하자본 $238M. 평균 수준으로 원가우위 신호도 아님.
+      프레임워크 기준으로는 <b>"정량적으로 입증된 지속 해자 없음"</b>이 현재의 솔직한 판정</div>
+    </div>
+  </div>
+
+  <div class="chart">
+    <h4>ROIC vs WACC — 초과수익 스프레드 (현재)</h4>
+    <svg viewBox="0 0 860 130">
+      <line x1="120" y1="100" x2="840" y2="100" stroke="#D8E0DD"/>
+      <text x="20" y="40" font-size="13" fill="#101D1A" font-weight="700">핵심 ROIC</text>
+      <rect x="120" y="28" width="13" height="16" fill="#A8402F" rx="3"/>
+      <text x="142" y="41" font-size="13" fill="#A8402F" font-weight="700">0.6%</text>
+      <text x="20" y="75" font-size="13" fill="#101D1A" font-weight="700">WACC</text>
+      <rect x="120" y="63" width="265" height="16" fill="#101D1A" rx="3"/>
+      <text x="394" y="76" font-size="13" fill="#101D1A" font-weight="700">12.2%</text>
+      <text x="120" y="122" font-size="12.5" fill="#5A6663">스프레드 −11.5%p: 현재 세렌스의 신규 투자는 자본비용을 못 법니다. 참고로 보고 기준(삼성 포함) ROIC도 7.8%로 WACC 미달.</text>
+    </svg>
+  </div>
+
+  <h3>그래서 해자는 무엇으로 구성되어 있는가</h3>
+  <p>① <b>전환비용</b> — 비서는 차의 수십 개 기능과 얽혀 있어 양산 중 교체가 사실상 불가능하고, 차세대 모델에서도 같은 공급자를 잇는 관성이 강함(가장 단단한 해자).
+  ② <b>설치기반과 데이터</b> — 5.25억 대 누적 탑재, 50% 침투율은 영업·언어 데이터·OEM 신뢰의 복리 자산.
+  ③ <b>중립성</b> — "당신(OEM)의 브랜드로, 당신의 데이터를 지키며" 라는 포지션은 구글·아마존이 구조적으로 흉내 낼 수 없음.
+  ④ <b>특허</b> — 삼성 합의($49.5M)로 현금화 능력이 실증된 무형자산.
+  종합하면 <b>"좁지만 실재하는 해자, 그러나 아직 초과수익으로 번역되지 못한 해자"</b>입니다. 해자의 지속가능성 평가는 §11의 페이드 비율(0.22, 소프트웨어·서비스 산업군 평균)에 반영했습니다.</p>
+</section>
+
+<!-- ════════ 7. SWOT ════════ -->
+<section id="s7">
+  <div class="sec-head"><span class="sec-no">07 / SWOT</span><h2>강점 · 약점 · 기회 · 위협</h2></div>
+  <div class="swot">
+    <div class="q s"><h4>S · 강점</h4><ul>
+      <li>전 세계 신차의 <b>50% 침투율</b>, 누적 5.25억 대 — 압도적 설치기반</li>
+      <li>엣지+클라우드 <b>하이브리드 아키텍처</b> — 빅테크 클라우드 비서가 못 하는 오프라인·저지연·프라이버시</li>
+      <li>구조조정 완료로 <b>FCF 흑자 전환</b> (FY26E $66~76M 가이던스), 순부채 $79M으로 축소 중</li>
+      <li>음성 분야 특허 포트폴리오 — 삼성에서 $49.5M 수취로 현금화 입증</li>
+      <li>높은 매출총이익률(79~80% 가이던스) — 차별화형 비용 구조</li>
+    </ul></div>
+    <div class="q w"><h4>W · 약점</h4><ul>
+      <li>SBC를 비용 처리한 <b>핵심 영업이익이 손익분기 수준</b> — ROIC 0%대 &lt; WACC</li>
+      <li>핵심 매출 성장이 연 3~8%로 완만 — 모수(차 생산)가 정체 시장</li>
+      <li>소수 OEM에 매출 집중, 로열티 보고 시점·생산량에 따라 분기 변동성 큼</li>
+      <li>유형자산 장부가의 절반이 영업권($297M) — 과거 두 차례 대규모 손상 전력</li>
+      <li>전환사채 $180M 잔존(2028년 만기, 전환가 $40.72로 사실상 일반 부채)</li>
+    </ul></div>
+    <div class="q o"><h4>O · 기회</h4><ul>
+      <li><b>xUI 대당 단가 상승</b> — 5개 양산 프로그램(VW그룹·JLR·BYD·아우디·닛산), 2026년 첫 차량 양산</li>
+      <li><b>IP 수익화 파이프라인</b> — 아마존 ITC·연방소송, 소니·TCL·MS 등 잠재 합의금/로열티(옵션 가치)</li>
+      <li>커넥티드 구독 확대 — 탑재 차량 +12% &gt;&gt; 생산 +2%, 이연매출 $199M 저수지</li>
+      <li>인접 시장 — 산업용 음성(Vivoka 협력), 딜러·차량관리 에이전트, 이륜·트럭·항공</li>
+      <li>섹터 재평가 — SoundHound EV/매출 ~15배 vs 세렌스 ~2배의 갭 축소 가능성</li>
+    </ul></div>
+    <div class="q t"><h4>T · 위협</h4><ul>
+      <li><b>빅테크의 잠식</b> — 구글 제미나이 빌트인·알렉사가 보조금 가격으로 OEM 직접 공략</li>
+      <li>스마트폰 프로젝션(카플레이/안드로이드 오토)이 차량 비서 사용 자체를 우회</li>
+      <li>LLM 범용화로 핵심 기술의 차별성 희석 — 가격 결정력 약화 압력</li>
+      <li>중국 시장의 로컬 대체(iFlytek 등)·지정학 리스크, 관세 등 거시 충격 시 차 생산 급감</li>
+      <li>높은 공매도·테마성 수급으로 주가가 펀더멘털과 무관하게 ±50% 변동</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- ════════ 8. 피어그룹 ════════ -->
+<section id="s8">
+  <div class="sec-head"><span class="sec-no">08 / 피어그룹 비교</span><h2>경쟁사와 나란히 놓고 보기</h2></div>
+  <p class="sec-lede">직접 상장 경쟁사는 SoundHound AI(SOUN) 하나뿐이고, 나머지 경쟁자는 빅테크의 한 사업부(비공시) 또는 중국 기업입니다.
+  세렌스와 SoundHound의 대비는 이 섹터의 밸류에이션 모순을 그대로 보여줍니다.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>항목 (최신 공시 기준)</th><th>Cerence (CRNC)</th><th>SoundHound (SOUN)</th><th>빅테크 사업부 (참고)</th></tr></thead>
+      <tbody>
+        <tr><td>연매출</td><td class="num pos">$302M (TTM) / 핵심 $263M (FY26E)</td><td class="num">$169M (CY25, +99%)</td><td class="num">비공시 (알렉사·제미나이 차량부문)</td></tr>
+        <tr><td>매출총이익률</td><td class="num pos">79~80% (FY26 가이던스)</td><td class="num neg">42% (GAAP, CY25)</td><td class="num">—</td></tr>
+        <tr><td>조정 EBITDA</td><td class="num pos">+$60~70M (FY26E)</td><td class="num neg">−$58M (CY25), 1Q26 −$27M</td><td class="num">—</td></tr>
+        <tr><td>잉여현금흐름</td><td class="num pos">+$66~76M (FY26E, 삼성 포함)</td><td class="num neg">대규모 소진 중</td><td class="num">—</td></tr>
+        <tr><td>자동차 침투/고객</td><td class="num">신차의 50% · OEM 다수</td><td class="num">스텔란티스·루시드 등 EV 중심</td><td class="num">볼보·폴스타·GM(구글) / BMW(알렉사)</td></tr>
+        <tr class="hl"><td>시가총액 (26.6월)</td><td class="num">≈ $0.43B</td><td class="num warn">≈ $2.9B</td><td class="num">—</td></tr>
+        <tr class="hl"><td>EV / 매출 배수</td><td class="num pos">≈ 2.0배 (핵심 매출 기준)</td><td class="num warn">≈ 15배</td><td class="num">—</td></tr>
+        <tr><td>공매도 비중</td><td class="num">높음 (25년 초 ~17% 보도)</td><td class="num warn">~39% (26.6월 보도)</td><td class="num">—</td></tr>
+        <tr><td>특이사항</td><td class="num">아마존 특허 제소 · xUI 양산 개시</td><td class="num">LivePerson 인수 진행 · 27년 매출 $350~400M 목표</td><td class="num">생태계 묶음 전략</td></tr>
+      </tbody>
+      <caption>출처: 양사 8-K/실적발표, 시세 제공사(2026년 6월 둘째 주). SOUN은 12월 결산, CRNC는 9월 결산이라 기간이 완전히 일치하지 않음.</caption>
+    </table>
+  </div>
+
+  <div class="chart">
+    <h4>같은 시장, 정반대의 가격표 — EV/매출 배수</h4>
+    <svg viewBox="0 0 860 150">
+      <text x="20" y="38" font-size="13.5" font-weight="700" fill="#101D1A">CRNC</text>
+      <rect x="100" y="24" width="92" height="20" rx="4" fill="#0B7A63"/>
+      <text x="200" y="39" font-size="13" fill="#0B7A63" font-weight="700">≈ 2.0배 — 매출 1달러를 2달러로 평가</text>
+      <text x="20" y="86" font-size="13.5" font-weight="700" fill="#101D1A">SOUN</text>
+      <rect x="100" y="72" width="690" height="20" rx="4" fill="#B2741C"/>
+      <text x="104" y="87" font-size="13" fill="#fff" font-weight="700">≈ 15배 — 적자에도 8.5배 더 비싼 값</text>
+      <text x="20" y="130" font-size="12.5" fill="#5A6663">해석은 둘 다 가능: "세렌스가 싸다" 또는 "사운드하운드가 비싸다". 본 보고서는 어느 쪽도 단정하지 않고, §11에서 세렌스 가격에 내재된 기대만 역산합니다.</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ════════ 9. DCF 가정 ════════ -->
+<section id="s9">
+  <div class="sec-head"><span class="sec-no">09 / DCF 가정</span><h2>모델의 재료 — WACC, 성장, 마진, 그리고 정직한 조정</h2></div>
+
+  <h3>자본비용(WACC) — 이 종목 분석의 최대 난제</h3>
+  <p><span class="term">WACC</span>(가중평균자본비용)는 "투자자가 이 회사에 요구하는 최소 수익률"입니다.
+  문제는 세렌스의 <b>베타(시장 대비 변동성 배수)가 2.98</b>이라는 점입니다 — 2025년의 하루 +144% 폭등, $2.3→$27.5 왕복 같은
+  '밈 주식' 수급이 통계에 그대로 들어가 있습니다. 프레임워크 표준(베타를 1 방향으로 회귀 조정)을 적용해도 2.33입니다.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>구성 요소</th><th>값</th><th>근거 / 출처 (기준 시점)</th></tr></thead>
+      <tbody>
+        <tr><td>무위험이자율 (10년 미 국채)</td><td class="num">4.55%</td><td>2026-06-10 종가 4.548% (CNBC/FRED). 참고: 美 CPI 4.2%로 재가속, 12월 금리 인상 가격 반영 중</td></tr>
+        <tr><td>베타 (원시 → 조정)</td><td class="num">2.98 → 2.33</td><td>Yahoo 5년 월간. 조정 = 0.67×원시 + 0.33×1</td></tr>
+        <tr><td>주식위험프리미엄 (ERP)</td><td class="num">4.75%</td><td>프로젝트 표준값. <span class="warn">상충 알림:</span> 다모다란 최신 내재 ERP는 4.23%(2026.1.1) — 적용 시 WACC 11.3%로 하락. 민감도에 병기</td></tr>
+        <tr><td>자기자본비용</td><td class="num">15.6%</td><td>= 4.55% + 2.33 × 4.75%</td></tr>
+        <tr><td>부채비용 (세전)</td><td class="num">5.5%</td><td>1.50% 전환사채(2028 만기, 전환가 $40.72)를 액면의 92%에 자사 매입한 거래의 내재 수익률 근사</td></tr>
+        <tr><td>자본 구조 (E/V : D/V)</td><td class="num">70 : 30</td><td>시총 $434M(@$9.61) : 부채 $195M(사채 액면 $180M + 리스 $15M)</td></tr>
+        <tr class="hl"><td><b>WACC (기준)</b></td><td class="num"><b>12.2%</b></td><td>= 0.70×15.6% + 0.30×5.5%×(1−25%)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout amber">
+    <div class="ct">할인율에 대한 두 가지 시각 — 결론을 가르는 갈림길</div>
+    <b>시각 A (기계적 적용):</b> 변동성이 큰 건 사실이니 12.2%를 요구하는 게 맞다. →
+    이 경우 §11에서 보듯 <b>현재 주가는 어떤 가정으로도 정당화가 빠듯</b>합니다.<br>
+    <b>시각 B (베타 회의론):</b> 2.98이라는 베타는 체계적 위험이 아니라 숏스퀴즈라는 '소음'의 산물이며,
+    소형 응용 SW의 통상 베타(1.5~2.0)를 쓰면 WACC는 9.4~11.1%다. →
+    이 경우 중립 가정으로도 유한한 내재 CAP이 나옵니다. 본 보고서는 <b>A를 기준으로 제시하되 B를 사다리로 병기</b>합니다.
+  </div>
+
+  <h3>영업 가정 — 일회성·SBC를 걷어낸 '경제적 실체' 위에서</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>가정 항목</th><th>약세</th><th>중립(기준)</th><th>강세</th><th>근거</th></tr></thead>
+      <tbody>
+        <tr><td>FY27 출발 매출</td><td class="num">$263M</td><td class="num">$278M</td><td class="num">$285M</td><td>핵심 FY26E $263M(삼성 제외). 중립=경영진 가이드 '핵심기술 +8%' + 용역 정체</td></tr>
+        <tr><td>이후 연 매출성장률</td><td class="num">2.5%</td><td class="num">6.5%</td><td class="num">9.0%</td><td>빌링 +7%·커넥티드카 +12%·시장 CAGR 13~15% vs 차 생산 +2%의 사이</td></tr>
+        <tr><td>EBITA 마진 경로 (SBC 비용 처리)</td><td class="num">1%→상한 8%</td><td class="num">3%→연+2.0%p→상한 18%</td><td class="num">4%→상한 22%</td><td>매출총이익 78~80%, 영업비용 증가율 ~3.5% 가정의 영업 레버리지 산식</td></tr>
+        <tr><td>세율</td><td class="num" colspan="3">25% (정상화)</td><td>GAAP 세율은 NOL·삼성 효과로 왜곡 — 미국+해외 혼합 법정 수준 적용</td></tr>
+        <tr><td>미래 투자</td><td class="num" colspan="3">max($8M, NOPAT의 20%)</td><td>자산경량 모델: capex $3~14M 수준 + 운전자본. R&amp;D는 비용에 이미 반영</td></tr>
+        <tr><td>장기성장률 g</td><td class="num" colspan="3">2.5%</td><td>10년 기대인플레이션(BEI) 2.39%(26.5월, FRED) ≈ 프로젝트 표준 2.5%</td></tr>
+        <tr><td>페이드 비율 f</td><td class="num">0.30</td><td class="num">0.22</td><td class="num">0.20</td><td>소프트웨어·서비스 산업군 평균 0.22 (1970~2024 실증)</td></tr>
+        <tr><td>최종연도 ROIIC</td><td class="num">12%</td><td class="num">15%</td><td class="num">18%</td><td>페이드 모델 입력. WACC와의 스프레드가 얇아 최종가치 민감도는 낮음(§12)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="ct">모델 신뢰성 검증 — 숫자가 맞물리는지 확인</div>
+    회사의 FY26 보고 FCF 가이던스는 $71M(중간값)입니다. 여기서 일회성 삼성 $49.5M과, 현금이 안 나가지만 주주 몫을 희석하는
+    <b>주식보상(SBC) ≈ $24M을 실제 비용으로 차감</b>하면 핵심 경제적 FCF는 <b>약 −$2.5M</b>.
+    본 모델의 FY27 FCF −$1.8M(중립)과 정합합니다. 즉 "화면에 보이는 FCF $71M"과 "모델의 0원 부근 FCF"의 차이는 오류가 아니라
+    <b>일회성 + SBC 처리 방식의 차이</b>이며, 시장은 SBC를 실제 비용으로 가격에 반영한다는 실증에 따라 후자를 채택했습니다.
+  </div>
+</section>
+
+<!-- ════════ 10. DCF 테이블 ════════ -->
+<section id="s10">
+  <div class="sec-head"><span class="sec-no">10 / DCF 모델</span><h2>전시 23 형식 — 연도별 가치의 해부</h2></div>
+  <p class="sec-lede">아래 표가 본 분석의 심장입니다. <b>중립 가정 + 표준 WACC 12.2%, 예측 기간 15년</b>으로 돌린 결과,
+  주당 가치는 <b>$5.66</b> — 현재 주가($9.61)에 한참 못 미칩니다. 이 '갭' 자체가 발견입니다.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>FY (9월 결산)</th><th>26E*</th><th>27</th><th>28</th><th>29</th><th>30</th><th>31</th><th>32</th><th>33</th><th>34</th><th>35</th><th>36</th><th>37</th><th>38</th><th>39</th><th>40</th><th>41</th></tr></thead>
+      <tbody>
+        <tr><td>매출</td><td class="num">312.5*</td><td class="num">278</td><td class="num">296</td><td class="num">315</td><td class="num">335</td><td class="num">357</td><td class="num">380</td><td class="num">405</td><td class="num">432</td><td class="num">460</td><td class="num">489</td><td class="num">521</td><td class="num">555</td><td class="num">591</td><td class="num">630</td><td class="num">671</td></tr>
+        <tr><td>매출 성장률 %</td><td class="num">+24*</td><td class="num">−11*</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td></tr>
+        <tr><td>EBITA 마진 %</td><td class="num">6.9*</td><td class="num">3.0</td><td class="num">5.0</td><td class="num">7.0</td><td class="num">9.0</td><td class="num">11.0</td><td class="num">13.0</td><td class="num">15.0</td><td class="num">17.0</td><td class="num">18.0</td><td class="num">18.0</td><td class="num">18.0</td><td class="num">18.0</td><td class="num">18.0</td><td class="num">18.0</td><td class="num">18.0</td></tr>
+        <tr><td>세율 %</td><td class="num">—</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td></tr>
+        <tr><td>NOPAT</td><td class="num">—</td><td class="num">6.2</td><td class="num">11.1</td><td class="num">16.5</td><td class="num">22.6</td><td class="num">29.5</td><td class="num">37.1</td><td class="num">45.6</td><td class="num">55.0</td><td class="num">62.0</td><td class="num">66.1</td><td class="num">70.4</td><td class="num">74.9</td><td class="num">79.8</td><td class="num">85.0</td><td class="num">90.5</td></tr>
+        <tr><td>미래 투자</td><td class="num">—</td><td class="num">8.0</td><td class="num">8.0</td><td class="num">8.0</td><td class="num">8.0</td><td class="num">8.0</td><td class="num">8.0</td><td class="num">9.1</td><td class="num">11.0</td><td class="num">12.4</td><td class="num">13.2</td><td class="num">14.1</td><td class="num">15.0</td><td class="num">16.0</td><td class="num">17.0</td><td class="num">18.1</td></tr>
+        <tr><td>잉여현금흐름 FCF</td><td class="num">21.0†</td><td class="num neg">−1.8</td><td class="num">3.1</td><td class="num">8.5</td><td class="num">14.6</td><td class="num">21.5</td><td class="num">29.1</td><td class="num">36.5</td><td class="num">44.0</td><td class="num">49.6</td><td class="num">52.9</td><td class="num">56.3</td><td class="num">60.0</td><td class="num">63.9</td><td class="num">68.0</td><td class="num">72.4</td></tr>
+        <tr><td>FCF 현재가치</td><td class="num">20.5</td><td class="num neg">−1.6</td><td class="num">2.5</td><td class="num">6.2</td><td class="num">9.5</td><td class="num">12.4</td><td class="num">14.9</td><td class="num">16.7</td><td class="num">18.0</td><td class="num">18.1</td><td class="num">17.1</td><td class="num">16.3</td><td class="num">15.5</td><td class="num">14.7</td><td class="num">13.9</td><td class="num">13.2</td></tr>
+        <tr><td>ROIIC %</td><td class="num">—</td><td class="num">—</td><td class="num">61</td><td class="num">68</td><td class="num">76</td><td class="num">85</td><td class="num">95</td><td class="num">106</td><td class="num">103</td><td class="num">64</td><td class="num">32</td><td class="num">33</td><td class="num">32</td><td class="num">32</td><td class="num">32</td><td class="num">32</td></tr>
+      </tbody>
+      <caption>* FY26E는 가이던스 중간값으로 삼성 $49.5M 포함(참고용 표시) — 예측의 출발점은 핵심 $263M. FY27의 −11%는 일회성 소멸에 따른 착시.
+      † FY26 잔여 하반기 FCF(가이던스 $71M − 상반기 실적 $49.3M). ROIIC가 비정상적으로 높게 인쇄되는 이유: 성장의 진짜 투자인 R&amp;D가 회계상 비용(EBITA 차감)으로 이미 반영되기 때문 — 최종가치의 페이드 모델이 이를 정상화함. 연중(mid-year) 할인 적용.</caption>
+    </table>
+  </div>
+
+  <div class="cards c4">
+    <div class="card"><div class="k">FCF 현재가치 합 (15년)</div><div class="v">$208M</div><div class="d">잔여 FY26분 $20.5M 포함</div></div>
+    <div class="card"><div class="k">최종가치 (페이드 모델)</div><div class="v">$771M → PV $141M</div><div class="d">FY41 NOPAT×(1+g)에 f=0.22 적용. EV의 40%</div></div>
+    <div class="card"><div class="k">기업가치 → 자본가치</div><div class="v">$349M → $269M</div><div class="d">순부채 $79.3M 차감 (26.3월 기준)</div></div>
+    <div class="card"><div class="k">주당 가치 (중립·15년)</div><div class="v red">$5.66</div><div class="d">희석주식수 47.6M주. 현재가 대비 −41%</div></div>
+  </div>
+
+  <h3>참고: 시장 가격을 '재현'하는 강세 조합의 테이블</h3>
+  <p>그렇다면 어떤 숫자여야 $9.6이 나올까요? <b>성장 9% · 마진 22% 도달 · WACC 11.2%, 예측 10년</b>이 거의 정확히 현재가를 재현합니다(주당 $9.68).
+  이 조합이 요구하는 미래: <b>FY2036 매출 $619M(현재 핵심의 2.4배), NOPAT $102M</b>. 시장이 사실상 이 그림을 사고 있다는 뜻입니다.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>강세(시장재현) FY</th><th>27</th><th>28</th><th>29</th><th>30</th><th>31</th><th>32</th><th>33</th><th>34</th><th>35</th><th>36</th></tr></thead>
+      <tbody>
+        <tr><td>매출</td><td class="num">285</td><td class="num">311</td><td class="num">339</td><td class="num">369</td><td class="num">402</td><td class="num">439</td><td class="num">478</td><td class="num">521</td><td class="num">568</td><td class="num">619</td></tr>
+        <tr><td>EBITA 마진 %</td><td class="num">4.0</td><td class="num">6.2</td><td class="num">8.5</td><td class="num">10.7</td><td class="num">13.0</td><td class="num">15.2</td><td class="num">17.5</td><td class="num">19.7</td><td class="num">22.0</td><td class="num">22.0</td></tr>
+        <tr><td>NOPAT</td><td class="num">8.6</td><td class="num">14.6</td><td class="num">21.6</td><td class="num">29.8</td><td class="num">39.2</td><td class="num">50.2</td><td class="num">62.7</td><td class="num">77.2</td><td class="num">93.7</td><td class="num">102.1</td></tr>
+        <tr><td>FCF</td><td class="num">0.6</td><td class="num">6.6</td><td class="num">13.6</td><td class="num">21.8</td><td class="num">31.2</td><td class="num">40.1</td><td class="num">50.2</td><td class="num">61.7</td><td class="num">75.0</td><td class="num">81.7</td></tr>
+      </tbody>
+      <caption>최종가치 $959M, 기업가치 $540M, 자본가치 $461M → 주당 $9.68 ≈ 현재가. 이 표는 '예측'이 아니라 시장 기대의 번역입니다.</caption>
+    </table>
+  </div>
+</section>
+
+<!-- ════════ 11. 내재 CAP ════════ -->
+<section id="s11">
+  <div class="sec-head"><span class="sec-no">11 / 시장 내재 CAP</span><h2>역산 결과 — 가격에 심어진 시간</h2></div>
+  <p class="sec-lede"><span class="term">내재 CAP</span>은 "현재 주가가 정당화되려면 회사가 자본비용 이상을 몇 년이나 벌어야 하는가"를
+  예측 기간을 늘려가며 찾은 값입니다. 세렌스의 경우 <b>가정 조합에 따라 답이 '약 10년'과 '도달 불가' 사이를 오갑니다</b> — 그 자체가 핵심 정보입니다.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>내재 CAP @ 주가 $9.61</th><th>WACC 9.5%<br>(β≈1.5)</th><th>WACC 10.5%</th><th>WACC 11.3%<br>(ERP 4.23%)</th><th>WACC 12.2%<br>(기준)</th><th>WACC 13.2%</th></tr></thead>
+      <tbody>
+        <tr><td>약세 (성장 2.5% · 마진 8%)</td><td class="num neg">불가</td><td class="num neg">불가</td><td class="num neg">불가</td><td class="num neg">불가</td><td class="num neg">불가</td></tr>
+        <tr><td>중립 (성장 6.5% · 마진 18%)</td><td class="num">16.9년</td><td class="num warn">29.2년</td><td class="num neg">&gt;30년</td><td class="num neg hl">&gt;30년</td><td class="num neg">&gt;30년</td></tr>
+        <tr><td>경영진 정렬 (성장 8% · 마진 20%)</td><td class="num pos">9.1년</td><td class="num">12.8년</td><td class="num">17.3년</td><td class="num warn">25.6년</td><td class="num neg">&gt;30년</td></tr>
+        <tr><td>강세 (성장 9% · 마진 22%)</td><td class="num pos">7.5년</td><td class="num pos">8.5년</td><td class="num pos hl">10.2년</td><td class="num">13.7년</td><td class="num warn">19.4년</td></tr>
+      </tbody>
+      <caption>'불가'는 예측 기간을 30년까지 늘려도 주당 가치가 $9.61에 도달하지 못함을 의미. 음영 = 본 보고서의 두 가지 대표 해석.</caption>
+    </table>
+  </div>
+
+  <h3>같은 모델로 본 '주가 사다리' — 어디서부터가 합리적 가격대였나</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>중립 가정의 내재 CAP</th><th>$5.85<br>(52주 저점)</th><th>$8.50</th><th>$9.61<br>(현재)</th><th>$11.04</th><th>$12.33</th></tr></thead>
+      <tbody>
+        <tr><td>WACC 9.5%</td><td class="num pos">6.9년</td><td class="num">12.3년</td><td class="num">16.9년</td><td class="num warn">23.8년</td><td class="num neg">&gt;30년</td></tr>
+        <tr><td>WACC 11.3%</td><td class="num pos">10.5년</td><td class="num neg">&gt;30년</td><td class="num neg">&gt;30년</td><td class="num neg">&gt;30년</td><td class="num neg">&gt;30년</td></tr>
+        <tr><td>WACC 12.2% (기준)</td><td class="num">17.0년</td><td class="num neg">&gt;30년</td><td class="num neg">&gt;30년</td><td class="num neg">&gt;30년</td><td class="num neg">&gt;30년</td></tr>
+        <tr class="hl"><td>중립 가정의 장기 수렴 가치</td><td colspan="5" style="text-align:left;padding-left:14px">WACC 12.2% → <b>$6.1~6.8</b> · 11.3% → $7.3~8.2 · 9.5% → $10.3~12.1 (N=20~30년)</td></tr>
+      </tbody>
+      <caption>흥미로운 정합성: 52주 저점 $5.85는 "중립 시나리오의 합리적 가격대"와 거의 일치합니다. 즉 작년 저점에서 시장은 중립을, 현재가에서는 강세 일부를 가격에 넣고 있습니다.</caption>
+    </table>
+  </div>
+
+  <div class="verdict">
+    <div class="k">해석 — 프레임워크의 합리성 구간에 비추어</div>
+    <p>① <b>강세 조합이 맞다면</b> 내재 CAP ≈ 10년: 프레임워크 기준 '합리적 범위(10~15년)'의 하단으로, 강한 해자 근거가 확인된다면 수용 가능한 기대치입니다.<br>
+    ② <b>중립이 현실이라면</b> 현재가는 정당화 자체가 불가능한 영역: 시장 기대가 과도하다는 신호이며, 중립 가정의 수렴 가치는 $6~8 사이입니다.<br>
+    ③ 결국 이 주식의 질문은 "몇 년이냐"가 아니라 <b>"성장 9%·마진 22%로의 변신이 일어날 확률을 몇 %로 보느냐"</b>입니다.
+    그 확률을 시장 암묵치보다 높게 볼 근거(xUI 단가의 실증, IP 합의 추가 등)가 쌓이는지가 관전 포인트입니다.</p>
+  </div>
+</section>
+
+<!-- ════════ 12. 민감도·시나리오 ════════ -->
+<section id="s12">
+  <div class="sec-head"><span class="sec-no">12 / 민감도 · 시나리오</span><h2>무엇이 답을 가장 크게 흔드는가</h2></div>
+
+  <h3>민감도 — 강세(시장재현) 조합 기준, 내재 CAP @ $9.61의 변화</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>변수 (기준: 성장 9% · 마진 22% · WACC 11.2% · f 0.20 → CAP 9.9년)</th><th>변화</th><th>내재 CAP</th><th>영향력</th></tr></thead>
+      <tbody>
+        <tr><td>자본비용 −1%p (10.2%)</td><td class="num">완화</td><td class="num pos">8.2년</td><td class="num">−1.7년</td></tr>
+        <tr><td>자본비용 +1%p (12.2%)</td><td class="num">긴축</td><td class="num warn">13.7년</td><td class="num">+3.8년</td></tr>
+        <tr><td>매출성장 +2%p (11%)</td><td class="num">상향</td><td class="num pos">8.3년</td><td class="num">−1.6년</td></tr>
+        <tr><td>매출성장 −2%p (7%)</td><td class="num">하향</td><td class="num warn">15.9년</td><td class="num">+6.0년</td></tr>
+        <tr class="hl"><td><b>마진 상한 22% → 18%</b></td><td class="num">하향</td><td class="num warn"><b>14.2년</b></td><td class="num"><b>+4.3년</b></td></tr>
+        <tr><td>마진 상한 22% → 26%</td><td class="num">상향</td><td class="num pos">9.3년</td><td class="num">−0.6년</td></tr>
+        <tr><td>페이드 0.20 → 0.10 (해자 강화)</td><td class="num">낙관</td><td class="num">9.6년</td><td class="num">−0.3년</td></tr>
+        <tr><td>페이드 0.20 → 0.30 (해자 약화)</td><td class="num">비관</td><td class="num">10.0년</td><td class="num">+0.1년</td></tr>
+      </tbody>
+      <caption>읽는 법: 이 종목의 가치는 <b>마진 경로와 성장률(분자)이 지배</b>하고, 페이드 비율의 영향은 미미합니다 — 최종연도 ROIIC(15~18%)와 WACC의 스프레드가 얇아 '초과수익의 소멸 속도'가 가치에서 차지하는 몫 자체가 작기 때문입니다. 즉 해자 논쟁보다 <b>실적 전환 논쟁이 본질</b>인 종목.</caption>
+    </table>
+  </div>
+
+  <h3>3가지 시나리오 — 각 세계에서의 가치</h3>
+  <div class="cards c3">
+    <div class="card" style="border-top:4px solid var(--teal)">
+      <div class="k">강세 Bull</div><div class="v teal">$9.7 ~ 13+</div>
+      <div class="d"><b>전제:</b> xUI 단가 상승 실증, 성장 9%+, 마진 22%, 아마존 등 IP 합의 추가, 수급 정상화로 할인율 11%대.<br>
+      <b>현재가의 의미:</b> 내재 CAP 10년 — 이 세계에서는 적정~저평가. CAP 13~16년까지는 $11~12.3도 설명 가능.</div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--mut)">
+      <div class="k">중립 Base</div><div class="v">$6 ~ 8</div>
+      <div class="d"><b>전제:</b> 핵심 성장 6.5%, 마진은 18%까지 점진 확장, IP는 삼성 1회로 종료, WACC 11.3~12.2%.<br>
+      <b>현재가의 의미:</b> 약 20~40% 고평가 상태. 장기 수렴 가치 $6.1~8.2.</div>
+    </div>
+    <div class="card" style="border-top:4px solid var(--red)">
+      <div class="k">약세 Bear</div><div class="v red">$0 ~ 2</div>
+      <div class="d"><b>전제:</b> 빅테크 빌트인 확산·중국 이탈로 성장 2.5%, 마진 8%에서 정체 — 기업가치가 순부채 수준에 수렴.<br>
+      <b>현재가의 의미:</b> 2024~25년 $2.3~2.8 폭락은 바로 이 시나리오의 가격화였음. 마진 전환 실패 시 회귀 가능 영역.</div>
+    </div>
+  </div>
+
+  <h3>기대치 프런티어 — "$9.61이 성립하려면" 필요한 마진</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>CAP 15년 허용 시 필요한 EBITA 마진 상한</th><th>성장 4.5%</th><th>성장 6.5%</th><th>성장 8.5%</th></tr></thead>
+      <tbody>
+        <tr><td>WACC 10.5%</td><td class="num neg">40%로도 불가</td><td class="num warn">23.6%</td><td class="num pos">17.8%</td></tr>
+        <tr><td>WACC 11.3%</td><td class="num neg">40%로도 불가</td><td class="num warn">28.7%</td><td class="num">20.9%</td></tr>
+        <tr><td>WACC 12.2%</td><td class="num neg">40%로도 불가</td><td class="num neg">40%로도 불가</td><td class="num warn">25.4%</td></tr>
+      </tbody>
+      <caption>CAP 10년 내 도달은 대부분의 조합에서 마진 40%로도 불가능 → 현재가는 '빠른 정당화'가 아닌 '길고 성공적인 전환'을 요구합니다. 성장이 한 단계(8.5%+) 올라와야 마진 요구치가 현실권(18~21%)으로 내려옵니다.</caption>
+    </table>
+  </div>
+</section>
+
+<!-- ════════ 13. 리스크·체크포인트 ════════ -->
+<section id="s13">
+  <div class="sec-head"><span class="sec-no">13 / 리스크 · 체크포인트</span><h2>무엇을 지켜봐야 하는가</h2></div>
+
+  <div class="cards c2">
+    <div class="card"><div class="k">리스크 1 · 빅테크 대체</div><div class="d">구글 빌트인·알렉사 채택 OEM이 늘어 침투율 50%가 꺾이면 약세 시나리오 점화. <b>관찰 지표: 분기 KPI '생산 대비 침투율'</b>(52%→50%로 이미 소폭 하락 — 추세 여부 확인 필요).</div></div>
+    <div class="card"><div class="k">리스크 2 · 단가 인상 실패</div><div class="d">xUI가 '같은 값의 더 좋은 비서'로 끝나면 성장 동력 소멸. <b>관찰 지표: 조정 빌링 성장률(현 +7%)과 경영진의 PPU 언급.</b></div></div>
+    <div class="card"><div class="k">리스크 3 · IP 소송 역풍</div><div class="d">아마존 소송은 패소·장기화 시 소송비만 남기는 양날의 검. 회사 공시도 '소송 결과의 불리한 전개'를 위험요인으로 명시. <b>관찰 지표: ITC 절차 일정·법률비용 추이.</b></div></div>
+    <div class="card"><div class="k">리스크 4 · 거시·중국·수급</div><div class="d">관세·경기로 차 생산 급감 시 로열티 직격(2022~24 재연). 인플레 4.2% 재가속·금리 인상 전망은 할인율 상방 요인. 공매도發 ±50% 변동은 상수로 간주할 것.</div></div>
+  </div>
+
+  <h3>분기별 체크리스트 (다음 실적: FY26 3분기, 2026-08-05 예정)</h3>
+  <div class="check"><ul>
+    <li>핵심(일회성 제외) 매출 성장률이 가이던스 '핵심기술 +8%' 경로를 지키는가 — 3Q 가이던스 $68~72M(고정 라이선스 ~$10M 포함) 달성 여부</li>
+    <li>침투율(생산 대비) 50%선 방어 여부 / 커넥티드카 출하 +12% 추세 유지 여부</li>
+    <li>xUI 양산 차종의 실제 출고와 대당 단가 관련 코멘트 — 강세 시나리오의 1차 실증</li>
+    <li>SBC 규모(연 ~$24M)와 희석 추이, 전환사채 추가 매입(현 잔액 $180M) 여부</li>
+    <li>아마존 ITC·연방소송 및 소니·TCL·MS 건의 진행 — 신규 IP 합의 발생 시 모델 상향 트리거</li>
+    <li>EBITA 마진(일회성·구조조정 제외)이 연 +2%p 경로에 올라탔는가 — 본 분석 최대 민감 변수</li>
+    <li>연 1회: 내재 CAP 재계산, 베타·ERP·페이드 비율 업데이트, 생애주기 재판별</li>
+  </ul></div>
+</section>
+
+<!-- ════════ 14. 한계와 가정 ════════ -->
+<section id="s14">
+  <div class="sec-head"><span class="sec-no">14 / 한계와 가정</span><h2>이 분석이 틀릴 수 있는 지점</h2></div>
+  <div class="callout red">
+    <div class="ct">Limitations &amp; Assumptions — 비판적 사고 점검</div>
+    <b>의존하는 핵심 가정:</b> ① 마진 경로(연 +2%p 확장)는 외삽이며 검증된 적 없음 — 가치의 최대 동인. ② 베타 2.98(→조정 2.33)이 '진짜' 위험을 반영한다는 가정 — 밈 수급 오염 가능성 큼.
+    ③ 삼성 $49.5M을 일회성으로, 아마존 등은 '옵션'으로 처리 — 반복적 IP 수익이 확인되면 중립 시나리오 자체가 상향됨.<br>
+    <b>확신도가 낮은 입력:</b> 기준 주가(출처 간 $8.5~12.3 상충, 신뢰도 중간~70%), 시장 규모(출처 간 최대 7배 편차, 절대치 신뢰도 낮음~40%),
+    대당 단가·중국 매출 비중(회사 비공시로 추정).<br>
+    <b>결론이 수정되어야 할 조건:</b> xUI 대당 단가가 기존 대비 2배 수준으로 공식 확인되거나 2건째 IP 합의가 나오면 → 강세가 새 중립이 됨.
+    반대로 침투율이 2개 분기 연속 하락하거나 핵심 매출이 역성장하면 → 약세 확률 상향, 생애주기 재판별.<br>
+    <b>다음 검증 단계:</b> 8/5 실적에서 핵심 성장·마진 확인, ITC 일정 추적, FY26 10-K에서 고객 집중도·중국 비중·전환사채 주석 정밀 확인.
+  </div>
+  <p class="tiny">본 자료는 정보 제공 목적이며 특정 종목의 매수·매도 권유가 아닙니다. 개인의 포트폴리오 맥락 없이 배분 조언을 제공하지 않습니다.</p>
+</section>
+
+<!-- ════════ 출처 ════════ -->
+<footer>
+  <div class="wrap" style="padding:0">
+    <b style="color:var(--ink)">데이터 출처 및 기준 시점</b>
+    <div class="src-grid">
+      <span>· 주가/시총/베타: Yahoo Finance·stockanalysis.com (2026-06-05~09 종가, 출처 간 상이 명시)</span>
+      <span>· 재무제표: 회사 8-K/10-Q — FY25 연간·FY26 1~2분기 실적발표 및 IR 덱 (2025-11-19, 2026-02-04, 2026-05-07)</span>
+      <span>· FY26 가이던스·KPI: 2026-05-07 Q2 FY26 보도자료 (매출 $305~320M, 조정 EBITDA $60~70M, FCF $66~76M)</span>
+      <span>· 전환사채: 2023-06-22 발행 공시(1.50%, 2028, 전환가 $40.72) · 2025-12 $30M 액면 92% 매입 공시</span>
+      <span>· 무위험이자율: 美 10년물 4.548% (CNBC/재무부, 2026-06-10)</span>
+      <span>· ERP: 프로젝트 표준 4.75% / 다모다란 내재 4.23% (2026-01-01) — 상충 병기</span>
+      <span>· 기대 인플레이션: 10년 BEI 2.39% (FRED T10YIE, 2026년 5월)</span>
+      <span>· 페이드 비율: 소프트웨어·서비스 산업군 0.22 (프레임워크 실증표 1970~2024)</span>
+      <span>· 피어: SoundHound 8-K (CY25 연간·1Q26) · 시세 제공사 (2026-06-09~11)</span>
+      <span>· 산업 규모: Research&amp;Markets·FMI 등 복수 (정의 차이로 편차 큼 — §4 명시)</span>
+    </div>
+    <p style="margin-top:18px">모든 계산(WACC·DCF·내재 CAP·민감도)은 상기 공시 수치만을 입력으로 재현 가능하도록 수행했습니다. 분석 기준일 2026-06-11.</p>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
