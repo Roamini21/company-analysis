@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoundHound AI (SOUN) — 시장 내재 CAP 분석 · 2026.06.11</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1020; --panel:#131A2E; --panel2:#1A2340; --line:#2A3554;
+  --text:#E9ECF5; --muted:#9AA5C3; --voice:#FF7A45; --wave:#5EE6D0;
+  --amber:#FFC94D; --red:#FF5D73; --good:#5EE6D0;
+  --mono:'IBM Plex Mono',monospace; --disp:'Space Grotesk','Pretendard Variable',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--ink);color:var(--text);font-family:'Pretendard Variable',Pretendard,sans-serif;line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+a{color:var(--wave);text-decoration:none}
+h1,h2,h3{font-family:var(--disp);letter-spacing:-.01em}
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--voice);text-transform:uppercase;margin-bottom:10px}
+.kicker .num{color:var(--muted)}
+h2{font-size:clamp(24px,3.4vw,32px);font-weight:700;margin-bottom:8px}
+.lede{color:var(--muted);max-width:760px;margin-bottom:28px}
+p{margin-bottom:14px}
+strong{color:#fff}
+.hl-v{color:var(--voice);font-weight:700}.hl-w{color:var(--wave);font-weight:700}.hl-a{color:var(--amber);font-weight:700}.hl-r{color:var(--red);font-weight:700}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:840px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.note{font-size:13px;color:var(--muted)}
+.src{font-size:12px;color:#6E7AA0;margin-top:10px}
+.tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:3px 9px;border:1px solid var(--line);border-radius:99px;color:var(--muted);margin:2px 4px 2px 0}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;font-weight:500;text-align:right;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel2)}
+td{padding:9px 12px;border-bottom:1px solid #1E2745;text-align:right;font-family:var(--mono);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--panel)}
+th:first-child{background:var(--panel2)}
+tr:last-child td{border-bottom:none}
+td.l,th.l{text-align:left}
+.neg{color:var(--red)}.pos{color:var(--wave)}
+.divider-wave{height:28px;margin:0 auto;display:block;opacity:.5}
+/* hero */
+header{padding:56px 0 40px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;margin-bottom:14px}
+.ticker{font-family:var(--disp);font-weight:700;font-size:clamp(40px,7vw,64px);color:#fff;line-height:1}
+.ticker em{font-style:normal;color:var(--voice)}
+.sub{font-size:15px;color:var(--muted)}
+.onesentence{font-size:clamp(17px,2.4vw,21px);line-height:1.65;max-width:860px;margin:18px 0 8px;color:#fff}
+.conclusion{border:1px solid var(--voice);background:linear-gradient(135deg,rgba(255,122,69,.10),rgba(255,122,69,.02));border-radius:14px;padding:22px;margin-top:24px}
+.conclusion h3{color:var(--voice);font-size:14px;font-family:var(--mono);letter-spacing:.18em;margin-bottom:10px}
+.snap{margin-top:22px}
+.snap .card{padding:16px}
+.snap .k{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.snap .v{font-family:var(--disp);font-size:24px;font-weight:700;margin-top:4px}
+.snap .d{font-size:12px;color:var(--muted)}
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(11,16,32,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 20px;max-width:1080px;margin:0 auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips a{flex:0 0 auto;font-family:var(--mono);font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:5px 12px}
+.chips a:hover{color:var(--voice);border-color:var(--voice)}
+/* misc viz */
+.bar-row{display:grid;grid-template-columns:130px 1fr 76px;gap:10px;align-items:center;margin:7px 0;font-size:13.5px}
+.bar-row .lab{color:var(--muted);font-family:var(--mono);font-size:12px}
+.bar-track{background:#10172B;border-radius:6px;height:18px;overflow:hidden;border:1px solid var(--line)}
+.bar-fill{height:100%;border-radius:6px}
+.bar-val{font-family:var(--mono);font-size:12.5px;text-align:right}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.flow .step{flex:1 1 140px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+.flow .step .t{font-weight:700;font-size:14px}
+.flow .step .d{font-size:12px;color:var(--muted);margin-top:4px}
+.flow .arr{align-self:center;color:var(--voice);font-family:var(--mono)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted);margin-top:8px}
+.legend .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.callout{border-left:3px solid var(--wave);background:var(--panel);border-radius:0 12px 12px 0;padding:16px 18px;margin:18px 0}
+.callout.warn{border-left-color:var(--amber)}
+.callout.risk{border-left-color:var(--red)}
+.tl{list-style:none;position:relative;padding-left:26px}
+.tl:before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl li{position:relative;margin-bottom:14px}
+.tl li:before{content:'';position:absolute;left:-23px;top:8px;width:10px;height:10px;border-radius:50%;background:var(--voice);border:2px solid var(--ink)}
+.tl .yr{font-family:var(--mono);color:var(--voice);font-size:13px;margin-right:8px}
+footer{padding:40px 0 70px;color:var(--muted);font-size:13px}
+.gauge-wrap{display:flex;flex-wrap:wrap;gap:24px;align-items:center}
+.big-num{font-family:var(--disp);font-size:clamp(36px,5vw,52px);font-weight:700;line-height:1.1}
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:680px){.swot{grid-template-columns:1fr}}
+.swot .card h3{font-size:16px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.swot ul{padding-left:18px;font-size:14px}
+.swot li{margin-bottom:8px}
+.swot .S{border-top:3px solid var(--wave)}.swot .W{border-top:3px solid var(--red)}.swot .O{border-top:3px solid var(--voice)}.swot .T{border-top:3px solid var(--amber)}
+.formula{font-family:var(--mono);font-size:13px;background:#0D1428;border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;color:var(--wave);margin:12px 0}
+.checklist{list-style:none}
+.checklist li{padding-left:26px;position:relative;margin-bottom:9px;font-size:14.5px}
+.checklist li:before{content:'▢';position:absolute;left:0;color:var(--voice)}
+h3.sect{font-size:18px;margin:30px 0 12px;color:#fff}
+.mini{font-size:12.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div class="hero-meta">
+    <div class="ticker">Sound<em>Hound</em> AI</div>
+    <div class="sub" style="font-family:var(--mono)">NASDAQ : SOUN · 분석 기준일 2026-06-11 (전일 종가 $7.02)</div>
+  </div>
+  <svg viewBox="0 0 1000 70" width="100%" height="56" aria-hidden="true" style="margin:6px 0 2px">
+    <g stroke="#FF7A45" stroke-width="3" stroke-linecap="round">
+      <line x1="10" y1="35" x2="10" y2="35"/><line x1="30" y1="25" x2="30" y2="45"/><line x1="50" y1="18" x2="50" y2="52"/><line x1="70" y1="28" x2="70" y2="42"/><line x1="90" y1="10" x2="90" y2="60"/><line x1="110" y1="22" x2="110" y2="48"/><line x1="130" y1="30" x2="130" y2="40"/><line x1="150" y1="15" x2="150" y2="55"/><line x1="170" y1="26" x2="170" y2="44"/><line x1="190" y1="8" x2="190" y2="62"/><line x1="210" y1="24" x2="210" y2="46"/><line x1="230" y1="32" x2="230" y2="38"/><line x1="250" y1="18" x2="250" y2="52"/><line x1="270" y1="27" x2="270" y2="43"/><line x1="290" y1="12" x2="290" y2="58"/>
+    </g>
+    <g stroke="#5EE6D0" stroke-width="3" stroke-linecap="round" opacity=".9">
+      <line x1="320" y1="30" x2="320" y2="40"/><line x1="340" y1="22" x2="340" y2="48"/><line x1="360" y1="28" x2="360" y2="42"/><line x1="380" y1="16" x2="380" y2="54"/><line x1="400" y1="25" x2="400" y2="45"/><line x1="420" y1="33" x2="420" y2="37"/><line x1="440" y1="20" x2="440" y2="50"/><line x1="460" y1="29" x2="460" y2="41"/><line x1="480" y1="13" x2="480" y2="57"/><line x1="500" y1="26" x2="500" y2="44"/>
+    </g>
+    <text x="540" y="42" fill="#9AA5C3" font-family="IBM Plex Mono" font-size="13">음성이 곧 인터페이스가 되는 산업 — 그 기대치를 주가에서 역산합니다</text>
+  </svg>
+  <p class="onesentence"><strong>한 문장 요약</strong> — 자동차·매장·콜센터가 사람 대신 <span class="hl-v">“말로 듣고, 이해하고, 실행”</span>하게 만드는 음성·에이전트 AI 플랫폼을, 구글·아마존 같은 빅테크에 데이터를 넘기고 싶지 않은 기업들에게 <span class="hl-w">자기 브랜드(화이트라벨)로 제공</span>하고 사용량만큼 돈을 받는 회사.</p>
+
+  <div class="conclusion">
+    <h3>핵심 결론 — 시장 내재 CAP</h3>
+    <p style="margin-bottom:8px">현재 주가 <strong>$7.02</strong>에는 <span class="hl-v">「약 15년의 경쟁 우위 기간 × 성숙기 EBITA 마진 28% × 2040년 매출 약 $4.0B(2025년의 24배) × 약 11%의 관대한 할인율」</span>이 <strong>동시에</strong> 성립한다는 기대가 내재되어 있습니다.</p>
+    <p style="margin-bottom:0">프레임워크 표준 자본비용 <strong>15.5%</strong>(실측 베타 2.96 → 조정 2.31 기반)를 적용하면 예측 기간을 <strong>40년까지 늘려도 주당 $2.37</strong>에 그쳐 현재가에 도달할 수 없습니다. 즉 본 방법론의 합리성 구간표 기준으로 <span class="hl-a">“내재 CAP 20년 초과 — 과도한 낙관” 영역의 최극단</span>에 해당하며, 주가가 정당화되려면 할인율과 영업 가정 모두에서 시장이 매우 우호적인 전제를 채택하고 있어야 합니다.</p>
+  </div>
+
+  <div class="snap grid g3">
+    <div class="card"><div class="k">주가 / 시가총액</div><div class="v">$7.02 / $2.99B</div><div class="d">주식수 4.263억주 · 52주 $5.83–22.17</div></div>
+    <div class="card"><div class="k">2025 매출 (성장률)</div><div class="v">$168.9M <span style="color:var(--wave);font-size:15px">+99%</span></div><div class="d">2026 가이던스 $225–260M</div></div>
+    <div class="card"><div class="k">조정 EBITDA (2025)</div><div class="v" style="color:var(--red)">−$58.4M</div><div class="d">주식보상비(SBC) 별도 $83.3M</div></div>
+    <div class="card"><div class="k">현금 / 부채</div><div class="v">$215.6M / 무차입</div><div class="d">2026.3.31 기준 · 누적결손 $982M</div></div>
+    <div class="card"><div class="k">생애주기 단계</div><div class="v" style="color:var(--amber)">도입(Introduction)</div><div class="d">영업− · 투자− · 재무+ 패턴</div></div>
+    <div class="card"><div class="k">내재 CAP (표준 k=15.5%)</div><div class="v" style="color:var(--amber)">도달 불가 (&gt;40년)</div><div class="d">k≈11%+강세 가정 시 ≈14.7년</div></div>
+  </div>
+  <div class="src">시세·주식수: Investing.com/Robinhood 2026-06-10 종가, 10-Q(2026-03-31). 재무: 회사 8-K 실적발표(2026-02-26, 2026-05-07).</div>
+</div>
+</header>
+
+<nav><div class="chips">
+<a href="#s1">01 기업 개요</a><a href="#s2">02 수익 구조</a><a href="#s3">03 제품·기술</a><a href="#s4">04 산업 분석</a><a href="#s5">05 경쟁·피어</a><a href="#s6">06 해자·5 Forces</a><a href="#s7">07 SWOT</a><a href="#s8">08 생애주기</a><a href="#s9">09 DCF·내재 CAP</a><a href="#s10">10 민감도·시나리오</a><a href="#s11">11 리스크·체크포인트</a><a href="#s12">12 한계와 가정·출처</a>
+</div></nav>
+
+<!-- ============ 01 기업 개요 ============ -->
+<section id="s1"><div class="wrap">
+<div class="kicker"><span class="num">01</span> COMPANY OVERVIEW</div>
+<h2>기업 개요 — 음악 검색 앱에서 ‘기업용 음성 에이전트 플랫폼’으로</h2>
+<p class="lede">SoundHound AI는 캘리포니아 산타클라라에 본사를 둔 음성·에이전트 AI 전문기업입니다(직원 954명, 2025년 말). 20년간 음성 기술 한 우물을 판 회사가, 생성형 AI 붐을 만나 ‘기업용 AI 상담원·주문원’ 시장으로 사업을 확장한 사례입니다.</p>
+
+<div class="grid g2">
+<div class="card">
+<h3 class="sect" style="margin-top:0">어떤 회사인가 — 쉬운 설명</h3>
+<p>스마트폰의 시리(Siri)나 알렉사(Alexa)처럼 <strong>“말을 알아듣고 대답하는 AI”</strong>를 만드는 회사입니다. 차이점은, 소비자에게 직접 파는 게 아니라 <strong>다른 기업에 기술을 빌려준다</strong>는 점입니다.</p>
+<p>예를 들어 ① 현대차·스텔란티스 같은 자동차 회사가 자기 차에 넣을 <strong>음성 비서</strong>, ② 패스트푸드 체인의 <strong>드라이브스루·전화 주문을 받는 AI 점원</strong>, ③ 은행·보험사 콜센터에서 고객 문의를 처리하는 <strong>AI 상담원</strong>이 SoundHound 기술로 돌아갑니다. 기업 입장에서 구글·아마존 기술을 쓰면 고객 데이터와 브랜드 경험을 빅테크에 넘기게 되는데, SoundHound는 <strong>“당신 브랜드 이름으로, 당신 데이터는 당신 것”</strong>이라는 독립 노선을 판매 포인트로 삼습니다.</p>
+<p class="note">2026년 5월에는 <strong>OASYS</strong>라는 신제품을 출시했습니다. ‘AI가 AI 직원을 직접 만들고, 스스로 평가·개선까지 하는 관리 시스템’으로, 단순 음성인식 회사에서 <strong>에이전틱 AI(스스로 일을 실행하는 AI) 플랫폼</strong> 회사로의 전환 선언에 해당합니다.</p>
+</div>
+<div class="card">
+<h3 class="sect" style="margin-top:0">설립 배경</h3>
+<p>2005년 스탠퍼드 출신 <strong>케이반 모하저(Keyvan Mohajer)</strong>가 마지드 에마미, 제임스 홈과 함께 ‘Melodis’라는 이름으로 창업했습니다. 첫 제품은 흥얼거린 멜로디로 노래를 찾아주는 <strong>음악 인식 앱</strong>(2010년 SoundHound로 개명)이었고, 이 과정에서 쌓은 음성 처리 기술을 2015년 <strong>Houndify</strong>라는 개발자 플랫폼으로 외부에 개방하면서 B2B 회사로 변신했습니다. 2017년 엔비디아·삼성 등으로부터 $75M을 유치했고, 2022년 4월 SPAC 합병으로 나스닥에 상장했습니다.</p>
+<p>상장 후에는 <strong>공격적 인수합병</strong>으로 몸집을 키웠습니다. 2023~2026년 사이 5건의 인수(아래 연혁)를 통해 ‘자동차 음성’ 한 축이던 사업을 레스토랑·금융·헬스케어·통신 등 전방위로 확장했고, 그 결과 2023년 한 고객이 매출의 62%를 차지하던 위험한 구조가 <strong>2025년에는 10%를 넘는 고객이 없는 분산 구조</strong>로 바뀌었습니다.</p>
+<p class="note">참고: 2025년 2월 엔비디아가 보유 지분을 전량 매각했다고 공시했으며, 2026년 1분기 발표 기준 CFO는 공동창업자 제임스 홈(전임 니테시 샤란)입니다.</p>
+</div>
+</div>
+
+<h3 class="sect">연혁 타임라인</h3>
+<div class="card">
+<ul class="tl">
+<li><span class="yr">2005</span>Melodis 창업 (스탠퍼드, 케이반 모하저 외 2인)</li>
+<li><span class="yr">2010</span>SoundHound로 사명 변경 — 음악 인식 앱으로 수억 다운로드 확보</li>
+<li><span class="yr">2015</span>Houndify 개발자 플랫폼 공개 — B2B 음성 AI로 전환</li>
+<li><span class="yr">2017</span>엔비디아·삼성·KPCB 등에서 $75M 투자 유치</li>
+<li><span class="yr">2022.04</span>SPAC 합병으로 나스닥 상장 (티커 SOUN)</li>
+<li><span class="yr">2023.12</span><strong>SYNQ3</strong> 인수($25M) — 레스토랑 음성 AI 최대 사업자로</li>
+<li><span class="yr">2024.06</span><strong>Allset</strong> 인수 — 식당 주문 마켓플레이스(보이스 커머스 기반)</li>
+<li><span class="yr">2024.08</span><strong>Amelia</strong> 인수($80M+) — 금융·보험·헬스케어 엔터프라이즈 AI 에이전트</li>
+<li><span class="yr">2025.09</span><strong>Interactions</strong> 인수($60M+언아웃 $25M) — 콜센터 가상상담원 20년 업력</li>
+<li><span class="yr">2026.04</span><strong>LivePerson</strong> 인수 발표 — 주식 약 $43M + 할인부채 정리, 기업가치 $250M, 2026 하반기 클로징 예정</li>
+<li><span class="yr">2026.05</span><strong>OASYS</strong> 출시 — 자기학습형 에이전트 오케스트레이션 플랫폼</li>
+</ul>
+<div class="src">출처: Wikipedia(2026-04 갱신), Tracxn, TechCrunch(2024-08), CX Today(2025-10), 회사 보도자료·SEC 8-K(2026-04-21, 2026-05-07)</div>
+</div>
+</div></section>
+
+<!-- ============ 02 수익 구조 ============ -->
+<section id="s2"><div class="wrap">
+<div class="kicker"><span class="num">02</span> REVENUE MODEL</div>
+<h2>수익 구조 — 회사가 돈을 버는 3개의 기둥</h2>
+<p class="lede">SoundHound는 매출을 ‘로열티(제품) → 구독(서비스) → 수익화(거래)’의 3단 기둥으로 설명합니다. 기술을 한 번 팔고 끝나는 게 아니라, <strong>사용될수록 돈이 쌓이는 구조</strong>를 지향합니다.</p>
+
+<div class="flow" style="margin-bottom:18px">
+<div class="step" style="border-top:3px solid var(--voice)"><div class="t">① 로열티 — 제품에 탑재</div><div class="d">차·TV·IoT 기기에 음성 비서를 심으면, 판매 대수·사용량·기간에 비례해 로열티 수취. <strong>2025년 매출의 약 21%</strong></div></div>
+<div class="arr">→</div>
+<div class="step" style="border-top:3px solid var(--wave)"><div class="t">② 구독 — 서비스 운영</div><div class="d">식당 전화·드라이브스루 AI 점원, 콜센터 AI 상담원 등 월정액/사용량 과금. <strong>2025년 $133.5M, 매출의 79% (+137%)</strong></div></div>
+<div class="arr">→</div>
+<div class="step" style="border-top:3px solid var(--amber)"><div class="t">③ 수익화 — 거래 수수료</div><div class="d">차 안에서 음성으로 커피 주문·주차 결제 시 거래액의 일부 수취(보이스 커머스). <strong>아직 초기 단계</strong>, 장기 옵션 가치</div></div>
+</div>
+
+<div class="grid g2">
+<div class="card">
+<h3 class="sect" style="margin-top:0">매출 추이와 가이던스 ($M)</h3>
+<svg viewBox="0 0 460 230" width="100%" aria-label="매출 추이 차트">
+<g font-family="IBM Plex Mono" font-size="11" fill="#9AA5C3">
+<line x1="50" y1="190" x2="440" y2="190" stroke="#2A3554"/>
+<rect x="60"  y="169" width="48" height="21"  fill="#39456B"/><text x="84" y="163" text-anchor="middle" fill="#E9ECF5">46</text><text x="84" y="206" text-anchor="middle">2023</text>
+<rect x="140" y="151" width="48" height="39"  fill="#39456B"/><text x="164" y="145" text-anchor="middle" fill="#E9ECF5">85</text><text x="164" y="206" text-anchor="middle">2024</text>
+<rect x="220" y="112" width="48" height="78"  fill="#FF7A45"/><text x="244" y="106" text-anchor="middle" fill="#E9ECF5">169</text><text x="244" y="206" text-anchor="middle">2025</text>
+<rect x="300" y="78"  width="48" height="112" fill="#5EE6D0" opacity=".55"/><rect x="300" y="78" width="48" height="17" fill="none" stroke="#5EE6D0" stroke-dasharray="3 3"/><text x="324" y="72" text-anchor="middle" fill="#E9ECF5">225–260</text><text x="324" y="206" text-anchor="middle">2026E</text>
+<rect x="380" y="17"  width="48" height="173" fill="#5EE6D0" opacity=".35"/><rect x="380" y="17" width="48" height="24" fill="none" stroke="#5EE6D0" stroke-dasharray="3 3"/><text x="404" y="11" text-anchor="middle" fill="#E9ECF5">350–400</text><text x="404" y="206" text-anchor="middle">2027E*</text>
+<text x="50" y="225" fill="#6E7AA0">* 2027E는 LivePerson 합산 기준 회사 제시 최소 범위 · 2026E는 회사 가이던스</text>
+</g></svg>
+<p class="note" style="margin-top:8px">성장률: 2024 +85% → 2025 +99% → 2026E +33~54%(가이던스) → 2027E는 인수 효과 포함. <strong>유기적 성장과 인수 성장이 섞여 있어</strong> 겉보기 성장률 해석에 주의가 필요합니다. 2026년 1분기 기준, 인수 효과를 뺀 자동차·IoT 핵심 부문 유기 성장은 +88%였습니다.</p>
+</div>
+<div class="card">
+<h3 class="sect" style="margin-top:0">2025년 매출 믹스 & 수익성 사다리</h3>
+<div class="bar-row"><div class="lab">구독(서비스)</div><div class="bar-track"><div class="bar-fill" style="width:79%;background:var(--wave)"></div></div><div class="bar-val">79%</div></div>
+<div class="bar-row"><div class="lab">로열티·기타</div><div class="bar-track"><div class="bar-fill" style="width:21%;background:var(--voice)"></div></div><div class="bar-val">21%</div></div>
+<div style="height:10px"></div>
+<div class="bar-row"><div class="lab">非GAAP 총마진</div><div class="bar-track"><div class="bar-fill" style="width:58%;background:#7E8AB0"></div></div><div class="bar-val">58.0%</div></div>
+<div class="bar-row"><div class="lab">GAAP 총마진</div><div class="bar-track"><div class="bar-fill" style="width:42.4%;background:#7E8AB0"></div></div><div class="bar-val">42.4%</div></div>
+<div class="bar-row"><div class="lab">조정EBITDA율</div><div class="bar-track"><div class="bar-fill" style="width:34.6%;background:var(--red);margin-left:auto"></div></div><div class="bar-val neg">−34.6%</div></div>
+<p class="note" style="margin-top:10px">읽는 법: 물건(서비스)을 팔아 남기는 <strong>총마진은 58%</strong>(일회성 비용 제외 기준)로 소프트웨어다운 수준이지만, 연구개발·영업·관리비가 그보다 훨씬 커서 <strong>영업 적자</strong>입니다. 특히 직원에게 주식으로 주는 보상(SBC)이 2025년 <strong>$83.3M(매출의 49%)</strong>로, 현금은 안 나가지만 주주 지분을 희석시키는 실질 비용입니다. 본 분석은 SBC를 비용으로 처리합니다.</p>
+</div>
+</div>
+
+<div class="callout warn" style="margin-top:18px">
+<strong>수익 인식 품질 체크</strong> — 2025년 말 <strong>미청구채권(unbilled receivables)이 $68.1M(연 매출의 40%)</strong>입니다. 장기 계약에서 ‘일은 했지만 아직 청구하지 않은 매출’이 많다는 뜻으로, 성장의 일부가 현금 회수 이전 단계에 있음을 시사합니다. 한편 수주잔고 지표(누적 구독·수주잔고)는 <strong>2024년 말 $1.2B(전년比 +75%, 평균 지속기간 약 6년)</strong>가 마지막 공식 공시이며 이후 정기 공시가 중단되었습니다. 출처: 10-K 분석(Panabee 2026-03), 2024 Q4 실적 콜.
+</div>
+</div></section>
+<!-- ============ 03 제품·기술 ============ -->
+<section id="s3"><div class="wrap">
+<div class="kicker"><span class="num">03</span> PRODUCT & TECHNOLOGY</div>
+<h2>제품·기술 — “말을 알아듣는 AI”는 어떻게 작동하는가</h2>
+<p class="lede">음성 AI는 보통 5단계 릴레이로 작동합니다. SoundHound의 기술적 주장은 이 릴레이의 앞 두 구간을 하나로 합쳐 <strong>더 빠르고 정확하게</strong> 만들었다는 것입니다.</p>
+
+<h3 class="sect">음성 AI 작동 흐름도 (드라이브스루 주문 예시)</h3>
+<div class="flow">
+<div class="step"><div class="t">🎤 음성 입력</div><div class="d">“라지 콜라 빼고 1번 세트 두 개요”</div></div>
+<div class="arr">→</div>
+<div class="step" style="border:1px solid var(--voice)"><div class="t">① 음성인식 ASR</div><div class="d">소리 → 글자<br>(시끄러운 주차장 소음 속에서)</div></div>
+<div class="arr">＋</div>
+<div class="step" style="border:1px solid var(--voice)"><div class="t">② 의미이해 NLU</div><div class="d">글자 → 의도<br>“세트1 ×2, 음료 제외” 구조화</div></div>
+<div class="arr">→</div>
+<div class="step"><div class="t">③ 추론·실행</div><div class="d">메뉴 DB·재고·가격 조회, 결제 시스템(POS) 연동</div></div>
+<div class="arr">→</div>
+<div class="step"><div class="t">④ 응답 생성 + ⑤ 음성 합성</div><div class="d">“라지 콜라 제외, 1번 세트 2개 맞으시죠?” 자연스러운 목소리로</div></div>
+</div>
+<div class="callout" style="margin-top:16px">
+<strong>핵심 차별 기술: Speech-to-Meaning® / Deep Meaning Understanding®</strong> — 일반적인 시스템은 ①(소리→글자)을 끝낸 뒤 ②(글자→의미)를 시작합니다. SoundHound는 두 단계를 <strong>동시에 한 번에</strong> 처리하도록 설계해, 응답 지연(latency)을 줄이고 “라지 콜라 빼고”처럼 복잡하게 꼬인 문장의 인식 정확도를 높였다고 주장합니다. 이 위에 자체 음성 파운데이션 모델 <strong>Polaris</strong>, 외부 LLM 결합형 <strong>Chat AI</strong>, 그리고 2026년 5월 출시한 <strong>OASYS</strong>(AI가 AI 에이전트를 생성·평가·개선하는 자기학습 오케스트레이션)가 얹혀 있습니다. 등록 특허 359건(출원 포함 400건+)이 이 스택을 보호합니다. <span class="mini">※ 속도·정확도 우위는 회사 측 주장으로, 독립 벤치마크로 전부 검증되지는 않았습니다.</span>
+</div>
+
+<h3 class="sect">제품 포트폴리오 — 어디서 무엇으로 돈을 버나</h3>
+<div class="grid g3">
+<div class="card"><h3 style="font-size:15px;color:var(--voice)">🚗 자동차·디바이스 (로열티)</h3><p class="note" style="margin-top:8px">차량용 음성 비서·Chat AI: 스텔란티스(유럽·아시아·중남미), 일본·한국·중국·베트남 OEM, 이탈리아 스포츠카 브랜드 등. 신규: 월마트 TV 브랜드 ONN, 스마트TV 음성 주문. <strong>보이스 커머스</strong>(차에서 주문·결제)가 ③수익화 기둥의 시작점.</p></div>
+<div class="card"><h3 style="font-size:15px;color:var(--wave)">🍔 레스토랑·리테일 (구독)</h3><p class="note" style="margin-top:8px">Dynamic Drive-Thru(드라이브스루 AI), Smart Ordering(전화 주문), Smart Answering(매장 전화 응대), Voice Insights(주문 데이터 분석). 고객: 케이시스(2,600개 매장 확대), 파이브가이즈, 파파존스·치폴레·애플비스 계열 관계(SYNQ3 경유), IHOP·저지마이크스 가맹점 등.</p></div>
+<div class="card"><h3 style="font-size:15px;color:var(--amber)">🏦 엔터프라이즈 에이전트 (구독)</h3><p class="note" style="margin-top:8px">Amelia 7 플랫폼: 은행(BNP파리바 등)·보험(포춘100 보험사 갱신)·헬스케어(Allina Health)·통신·에너지 콜센터의 AI 상담원. Autonomics: IT 운영 자동화. 포춘 100 중 25개사가 고객(LivePerson 합산 시). 연간 수십억 건 상호작용 처리.</p></div>
+</div>
+<div class="src">출처: 회사 8-K 실적발표 사업 하이라이트(2026-02-26, 2026-05-07), 10-K(2026-03)</div>
+
+<h3 class="sect">LivePerson 인수 — 마지막 퍼즐 ‘디지털 채널’</h3>
+<div class="card">
+<p>SoundHound는 <strong>음성</strong>에 강하지만, 고객 응대의 절반은 <strong>채팅·메시지(디지털)</strong>에서 일어납니다. 2026년 4월 발표한 LivePerson 인수는 이 빈칸을 메우는 거래입니다. LivePerson은 월 10억 건의 고객 메시지를 처리하는 기업 메시징의 원조 격 회사지만, 매출이 2년 연속 20%대 급감(2024 $312.5M → 2025 $243.7M)하고 무거운 부채에 짓눌린 <strong>턴어라운드 매물</strong>이었습니다.</p>
+<div class="grid g3" style="margin:12px 0">
+<div class="card" style="background:var(--panel2)"><div class="k mini">인수 구조</div><div style="font-family:var(--mono);font-size:15px;margin-top:4px">주식 약 $43M<br>+ 할인 부채 정리(현금·주식 혼합)</div></div>
+<div class="card" style="background:var(--panel2)"><div class="k mini">실질 기업가치(EV)</div><div style="font-family:var(--mono);font-size:15px;margin-top:4px">약 $250M<br><span class="mini">클로징 시 LPSN 현금 $74M 수취 반영</span></div></div>
+<div class="card" style="background:var(--panel2)"><div class="k mini">합산 효과(회사 제시)</div><div style="font-family:var(--mono);font-size:15px;margin-top:4px">2027 매출 최소 $350–400M<br><span class="mini">기존 고객만으로 $500M 기회 · 무차입 유지</span></div></div>
+</div>
+<p class="note">해석: EV $250M은 LivePerson 매출(2025년 $243.7M)의 약 1배로, 부실 자산을 헐값에 산 셈입니다. 다만 회사가 ‘$100M+ 성장 가능 기여’만 언급한 것은 <strong>LivePerson 매출의 절반 가까이는 이탈(churn)을 각오</strong>한다는 의미이기도 합니다(LPSN 기업 고객 유지율 78%). 거래는 LPSN 주주 승인·채권 구조조정 완료를 조건으로 <strong>2026년 하반기 클로징 예정</strong>이며, 본 보고서의 DCF는 이 거래를 2026년 투자 $250M + 2027년부터 합산 매출로 반영합니다. 출처: SoundHound·LivePerson 보도자료 및 425/8-K(2026-04-21), LPSN 10-K(2026-03).</p>
+</div>
+</div></section>
+
+<!-- ============ 04 산업 분석 ============ -->
+<section id="s4"><div class="wrap">
+<div class="kicker"><span class="num">04</span> INDUSTRY</div>
+<h2>산업 분석 — 대화형·음성 AI: 빠르게 크지만, 더 빠르게 붐비는 시장</h2>
+<p class="lede">‘기계와 말로 일을 처리하는’ 시장은 연 20~35% 성장이 전망되는 고성장 산업입니다. 동시에, 거대 언어모델(LLM)의 등장으로 <strong>기술 진입장벽이 낮아지고 경쟁자가 폭증</strong>하는 산업이기도 합니다. 성장성과 경쟁 강도가 함께 치솟는 것이 이 산업의 본질입니다.</p>
+
+<div class="grid g3">
+<div class="card"><div class="k mini">대화형 AI 시장</div><div class="big-num" style="font-size:30px">$11.6B → $41.4B</div><div class="d mini">2024 → 2030, CAGR 23.7% (Grand View Research)</div></div>
+<div class="card"><div class="k mini">음성 AI 에이전트</div><div class="big-num" style="font-size:30px">$2.4B → $47.5B</div><div class="d mini">2024 → 2034, CAGR ~34.8% (Market.us)</div></div>
+<div class="card"><div class="k mini">AI 에이전트 전체</div><div class="big-num" style="font-size:30px">$7.6B → $182.9B</div><div class="d mini">2025 → 2033 (Grand View Research)</div></div>
+</div>
+<p class="note" style="margin-top:10px">수요 측 신호: Gartner는 <strong>2026년 한 해 콜센터 인건비 절감액 $80B</strong>를 대화형 AI 효과로 추정하며, Forrester는 2028년까지 북미·서유럽 전화 고객서비스 기업의 70%가 음성 AI를 1차 접점으로 둘 것으로 전망합니다. BFSI(은행·금융·보험)가 최대 수요 업종입니다.</p>
+
+<h3 class="sect">산업 가치사슬 — SoundHound는 어디에 서 있나</h3>
+<div class="flow">
+<div class="step"><div class="t">인프라</div><div class="d">GPU·클라우드<br>NVIDIA, AWS, Azure</div></div>
+<div class="arr">→</div>
+<div class="step"><div class="t">파운데이션 모델</div><div class="d">음성인식·LLM·음성합성<br>OpenAI, Google, ElevenLabs, Deepgram</div></div>
+<div class="arr">→</div>
+<div class="step" style="border:2px solid var(--voice);background:rgba(255,122,69,.08)"><div class="t">플랫폼·오케스트레이션 ★</div><div class="d"><strong>SoundHound (Polaris·OASYS·Houndify)</strong><br>에이전트 생성·관리·시스템 연동</div></div>
+<div class="arr">→</div>
+<div class="step" style="border:2px solid var(--voice);background:rgba(255,122,69,.08)"><div class="t">버티컬 솔루션 ★</div><div class="d"><strong>SoundHound·Cerence·Five9·Parloa</strong><br>차량·드라이브스루·콜센터 특화</div></div>
+<div class="arr">→</div>
+<div class="step"><div class="t">최종 고객</div><div class="d">완성차 OEM, 외식 체인,<br>은행·보험·통신·헬스케어</div></div>
+</div>
+<p class="note" style="margin-top:10px">SoundHound는 모델부터 솔루션까지 <strong>풀스택을 자체 보유한 드문 독립 사업자</strong>입니다(★ 구간). 풀스택은 품질·비용 통제에 유리하지만, 상류(파운데이션 모델)의 기술 발전 속도가 워낙 빨라 <strong>“자체 모델이 계속 경쟁력이 있을까”</strong>가 상시적 검증 대상이 됩니다.</p>
+
+<h3 class="sect">산업의 흐름과 미래 방향 — 5가지 구조 변화</h3>
+<div class="grid g2">
+<div class="card"><strong>① 챗봇 → 에이전트로</strong><p class="note" style="margin-top:6px">‘질문에 답하는 AI’에서 ‘주문·예약·환불을 직접 실행하는 AI’로 무게중심 이동. 실행에는 결제·POS·CRM 연동이 필요해, 통합 역량을 가진 업체에 유리한 국면입니다. SoundHound의 OASYS·보이스 커머스가 이 흐름에 베팅한 제품입니다.</p></div>
+<div class="card"><strong>② LLM 상품화(commoditization)</strong><p class="note" style="margin-top:6px">OpenAI Realtime API, Google Gemini 등으로 ‘말귀 알아듣는 능력’ 자체는 빠르게 범용재가 되는 중. 가치가 모델에서 <strong>도메인 데이터·시스템 통합·운영 신뢰성</strong>으로 이동하며, 독립 음성 AI 기업의 기술 프리미엄을 침식하는 가장 큰 역풍입니다.</p></div>
+<div class="card"><strong>③ 옴니채널 통합</strong><p class="note" style="margin-top:6px">고객은 전화로 시작해 채팅으로 이어가길 원합니다. 음성과 디지털 메시징을 한 플랫폼에서 — LivePerson 인수의 산업적 논리이며, IDC는 2028년경 음성 에이전트와 챗봇의 구분이 사라질 것으로 봅니다.</p></div>
+<div class="card"><strong>④ 엣지·온디바이스 + ⑤ 규제</strong><p class="note" style="margin-top:6px">차량처럼 인터넷이 끊기는 환경을 위한 온디바이스 처리(경쟁사 Cerence의 CaLLM Edge 등)가 부상. 한편 EU AI Act 등 규제는 비용 요인인 동시에, 컴플라이언스를 갖춘 엔터프라이즈 사업자에게는 진입장벽으로 작용하는 양면성이 있습니다.</p></div>
+</div>
+<div class="callout warn" style="margin-top:16px"><strong>거시 환경 (2026년 6월)</strong> — 미국 5월 CPI +4.2%(3년래 최고), 10년물 국채 4.53%, 연준의 연내 인상 기대가 시장에 반영된 고금리 국면입니다. 이익이 먼 미래에 있는 성장주는 할인율 상승에 가장 취약한 자산군으로, SOUN의 주가가 6개월간 약 40% 하락(연초 대비 −18% 내외)한 배경이기도 합니다. 출처: CNBC·TradingEconomics(2026-06-10).</div>
+</div></section>
+<!-- ============ 05 경쟁·피어 ============ -->
+<section id="s5"><div class="wrap">
+<div class="kicker"><span class="num">05</span> COMPETITION & PEERS</div>
+<h2>경쟁 구도와 피어 비교 — 4개 전선에서 동시에 싸우는 회사</h2>
+<p class="lede">SoundHound의 경쟁자는 한 부류가 아닙니다. ① 자동차 음성의 터줏대감, ② 공짜로 끼워파는 빅테크, ③ 콜센터 소프트웨어 강자들, ④ LLM 네이티브 신흥주자 — 네 전선이 동시에 열려 있습니다.</p>
+
+<div class="tbl-wrap">
+<table aria-label="피어 비교">
+<thead><tr><th class="l">구분</th><th class="l">SoundHound (SOUN)</th><th class="l">Cerence (CRNC)</th><th class="l">LivePerson (피인수 예정)</th><th class="l">빅테크 (참고)</th></tr></thead>
+<tbody>
+<tr><td class="l">포지션</td><td class="l">독립 풀스택 · 멀티버티컬<br>(차·식당·콜센터)</td><td class="l">자동차 음성 전문<br>(舊 Nuance 분사)</td><td class="l">기업 메시징 원조<br>(디지털 채널)</td><td class="l">Google·Amazon·Apple·MS<br>플랫폼 번들</td></tr>
+<tr><td class="l">최근 연매출</td><td>$168.9M (2025, <span class="pos">+99%</span>)</td><td>$244–249M (FY25, <span class="neg">−26%</span>)</td><td>$243.7M (2025, <span class="neg">−22%</span>)</td><td class="l">비공개(사업부)</td></tr>
+<tr><td class="l">수익성</td><td><span class="neg">조정EBITDA −$58M</span></td><td><span class="pos">흑자 전환</span> · FY26E EPS $0.71</td><td><span class="neg">영업손실 −$78.7M</span></td><td class="l">사실상 무제한 보조 가능</td></tr>
+<tr><td class="l">강점</td><td class="l">성장 속도, 업종 분산,<br>무차입 + 현금 $216M</td><td class="l">글로벌 신차의 <strong>52%</strong>에 탑재,<br>OEM 신뢰·온디바이스(CaLLM)</td><td class="l">포춘급 고객 수백 곳,<br>월 10억 메시지 데이터</td><td class="l">모델 성능·자본·유통</td></tr>
+<tr><td class="l">약점</td><td class="l">구조적 적자, SBC 과다,<br>인수 의존 성장</td><td class="l">자동차 사이클 종속,<br>매출 역성장 전환기</td><td class="l">고객 이탈(유지율 78%),<br>부채 구조조정 중</td><td class="l">고객 데이터 점유 →<br>기업들의 종속 기피</td></tr>
+<tr><td class="l">시장 평가</td><td>시총 $3.0B<br>EV/매출(26E) ≈ 11×</td><td class="l">소형 흑자주로 재평가 중</td><td>EV $250M에 매각<br>(매출의 ~1×)</td><td class="l">—</td></tr>
+</tbody>
+</table>
+</div>
+<div class="src">출처: 각사 8-K·10-K, Zacks 비교 리포트(2025-10, 2026-04). Cerence FY26 EPS는 컨센서스이며 1분기 삼성 특허 일시 수익 $49.5M 포함 주의. 신흥주자(OpenAI Realtime·ElevenLabs·Deepgram·PolyAI·Parloa)와 콜센터 강자(NICE·Genesys·Five9·Verint)는 비상장·사업부 구조로 정량 비교에서 제외.</div>
+
+<div class="grid g2" style="margin-top:16px">
+<div class="card">
+<h3 class="sect" style="margin-top:0">vs Cerence — 자동차 전선</h3>
+<p class="note">Cerence는 ‘깊고 좁게’, SoundHound는 ‘넓고 빠르게’입니다. Cerence는 신차의 절반에 이미 탑재돼 있고 흑자지만, 라이선스 모델 전환으로 매출이 줄고 OEM 개발 사이클(수년)에 묶여 있습니다. SoundHound는 그 틈에서 스텔란티스·일본·한국 OEM 등을 따내며 점유율을 잠식 중입니다(2026 Q1 자동차·IoT 유기 성장 +88%). 자동차 음성은 ‘교체가 어려운 만큼, 한번 들어가면 오래가는’ 시장입니다.</p>
+</div>
+<div class="card">
+<h3 class="sect" style="margin-top:0">vs 빅테크·LLM 네이티브 — 생존 조건</h3>
+<p class="note">구글·아마존은 음성 비서를 사실상 무료로 뿌립니다. SoundHound의 방어 논리는 <strong>“기업은 자기 고객 데이터와 브랜드를 빅테크에 넘기기 싫어한다”</strong>는 중립성입니다. 이 논리는 자동차 OEM에서 실제로 작동해 왔습니다. 반면 OpenAI Realtime API·ElevenLabs 같은 신흥주자는 ‘말귀 능력’ 자체를 시간당 몇 센트에 팝니다. 외부 평가는 양호한 편 — Gartner 매직쿼드런트 ‘비저너리’, ISG 2026 바이어스 가이드 신흥부문 ‘종합 리더’ — 이나, 기술 우위의 반감기가 짧아진 시대라는 점이 핵심 리스크입니다.</p>
+</div>
+</div>
+</div></section>
+
+<!-- ============ 06 해자·5 Forces ============ -->
+<section id="s6"><div class="wrap">
+<div class="kicker"><span class="num">06</span> MOAT & FIVE FORCES</div>
+<h2>경제적 해자 분석 — 해자 ‘후보’는 많지만, 숫자로는 아직 미입증</h2>
+<p class="lede">프레임워크의 정량 판별(NOPAT 마진·투하자본 회전율이 산업 평균 대비 우월한가)을 적용하면, SoundHound는 <strong>아직 어느 쪽도 입증하지 못한 상태</strong>입니다. 아래는 ‘해자가 될 수 있는 재료’와 ‘그 재료를 의심해야 할 이유’를 나란히 둔 것입니다.</p>
+
+<h3 class="sect">포터의 5 Forces — 산업 매력도 진단</h3>
+<div class="grid g3">
+<div class="card"><div class="k mini">신규 진입 위협</div><div class="bar-track" style="margin:8px 0"><div class="bar-fill" style="width:85%;background:var(--red)"></div></div><div class="note"><strong>높음</strong> — LLM API로 기본기 진입장벽 급락. 다만 ‘엔터프라이즈급 신뢰성·통합’은 여전히 어려움</div></div>
+<div class="card"><div class="k mini">기존 경쟁 강도</div><div class="bar-track" style="margin:8px 0"><div class="bar-fill" style="width:85%;background:var(--red)"></div></div><div class="note"><strong>높음</strong> — 빅테크·전문기업·스타트업 4파전. 가격보다 성능·통합 경쟁이나, 자본력 격차 큼</div></div>
+<div class="card"><div class="k mini">대체재 위협</div><div class="bar-track" style="margin:8px 0"><div class="bar-fill" style="width:55%;background:var(--amber)"></div></div><div class="note"><strong>중간</strong> — 인간 상담원(비싸짐), 텍스트 챗봇, 앱/키오스크. 음성의 편의성이 대체재 대비 강점</div></div>
+<div class="card"><div class="k mini">공급자 교섭력</div><div class="bar-track" style="margin:8px 0"><div class="bar-fill" style="width:50%;background:var(--amber)"></div></div><div class="note"><strong>중간</strong> — GPU·클라우드·외부 LLM 의존. 자체 모델(Polaris) 보유로 일부 완화</div></div>
+<div class="card"><div class="k mini">구매자 교섭력</div><div class="bar-track" style="margin:8px 0"><div class="bar-fill" style="width:65%;background:var(--amber)"></div></div><div class="note"><strong>중간~높음</strong> — 완성차·대형 체인은 협상력 큼. 단, 도입 후 전환비용이 교섭력을 상쇄</div></div>
+<div class="card"><div class="k mini">종합</div><div class="note" style="margin-top:8px"><strong>“성장은 산업이 주고, 이익은 산업이 안 주는” 구조.</strong> 수요는 폭발적이나 초과수익을 지키기 어려운 힘의 배치 — 페이드(평균회귀) 압력이 큰 산업입니다.</div></div>
+</div>
+
+<h3 class="sect">차별화 vs 원가 우위 — 프레임워크 정량 판별</h3>
+<div class="grid g2">
+<div class="card">
+<div class="tbl-wrap" style="border:none"><table style="min-width:0">
+<thead><tr><th class="l">판별 지표</th><th>SOUN 실측</th><th>판정 기준</th></tr></thead>
+<tbody>
+<tr><td class="l">NOPAT 마진</td><td class="neg">음수 (−94%*)</td><td>산업 평균의 2배+ → 차별화</td></tr>
+<tr><td class="l">투하자본 회전율</td><td>≈ 0.69×</td><td>산업 평균의 1.5배+ → 원가우위</td></tr>
+<tr><td class="l">ROIC</td><td class="neg">약 −34%</td><td>WACC 초과 여부</td></tr>
+</tbody></table></div>
+<p class="note" style="margin-top:8px">* SBC를 비용 처리하고 인수 무형자산 상각을 제외한 2025년 추정 EBITA 마진. 회전율 = 매출 $169M ÷ 투하자본(장부 자기자본 $461M − 현금 $216M ≈ $245M). 판정: <strong>두 경로 모두 미충족 → 정량적으로는 ‘지속 가능 해자 없음’ 상태.</strong> 전략 방향은 명백히 ‘차별화’를 지향하나, 차별화가 가격결정력과 이익으로 전환됐다는 증거가 아직 재무제표에 없습니다.</p>
+</div>
+<div class="card">
+<h3 style="font-size:15px;margin-bottom:10px">해자 후보 4가지와 반론</h3>
+<p class="note"><strong class="hl-w">① 기술·특허</strong> — 통합 음성 처리 스택, 특허 359건. <em>반론: LLM 발전이 기술 격차의 반감기를 단축.</em></p>
+<p class="note"><strong class="hl-w">② 전환비용</strong> — 차량 OEM 설계 사이클 수년, 콜센터는 기간 시스템과 깊게 통합(Amelia·Interactions 고객 다수 10년+). <em>가장 단단한 해자 후보.</em></p>
+<p class="note"><strong class="hl-w">③ 데이터 플라이휠</strong> — 연 수십억 쿼리 + (인수 시) 월 10억 메시지로 모델 개선. <em>반론: 빅테크의 데이터 규모가 압도적.</em></p>
+<p class="note"><strong class="hl-w">④ 중립성 포지션</strong> — “빅테크 비종속” 화이트라벨. <em>구조적 포지셔닝 우위이나, 그 자체로 이익률을 보장하진 않음.</em></p>
+<p class="note" style="margin-top:8px"><strong>지속 가능성 평가:</strong> 소프트웨어·서비스 산업의 역사적 페이드 비율은 0.20~0.22(평균 수준의 초과수익 지속성). SoundHound가 이보다 <strong>강한 지속성(낮은 페이드)을 주장할 실증 근거는 현재로선 부족</strong> → 본 분석은 IT 섹터 표준 0.20을 적용합니다.</p>
+</div>
+</div>
+</div></section>
+
+<!-- ============ 07 SWOT ============ -->
+<section id="s7"><div class="wrap">
+<div class="kicker"><span class="num">07</span> SWOT</div>
+<h2>SWOT — 강점·약점·기회·위협 한눈에</h2>
+<div class="swot">
+<div class="card S"><h3>💪 강점 Strengths</h3><ul>
+<li>매출 +99%(2025), 자동차·IoT 유기 성장 +88%(26Q1) — <strong>수요 견인력 입증</strong></li>
+<li>모델→플랫폼→버티컬 <strong>풀스택 자체 보유</strong>한 드문 독립 사업자 + 특허 359건</li>
+<li><strong>무차입 + 현금 $216M</strong>, 고객 집중도 해소(62%→10% 미만)</li>
+<li>자동차·외식·금융·헬스케어 멀티버티컬 — 단일 산업 침체에 비종속</li>
+<li>수주잔고 $1.2B(2024말 공시, 약 6년 지속) — 수요 가시성</li>
+</ul></div>
+<div class="card W"><h3>🩹 약점 Weaknesses</h3><ul>
+<li><strong>구조적 적자</strong>: 조정EBITDA −$58M(2025), SBC 포함 실질 영업손실 폭은 그 3배 수준</li>
+<li><strong>SBC = 매출의 49%</strong> — 주식수 연 +7~20% 희석(3년 평균 +28%)</li>
+<li>GAAP 총마진 하락(48.9%→42.4%→26Q1 31.1%) — 저마진 인수 매출 혼입</li>
+<li>미청구채권 = 매출의 40%, 수주잔고 공시 중단 — <strong>수익 가시성 지표 약화</strong></li>
+<li>5건 연쇄 인수로 유기 성장 판별 곤란 + 통합 부담, CFO 교체(2026)</li>
+</ul></div>
+<div class="card O"><h3>🚀 기회 Opportunities</h3><ul>
+<li>산업 CAGR 24~35% — 음성 에이전트 시장 2034년 $47.5B 전망</li>
+<li><strong>LivePerson 크로스셀</strong>: 기존 고객만으로 $500M 매출 기회(회사 제시)</li>
+<li>보이스 커머스(차량 내 주문·결제) — 거래 수수료라는 새 수익원</li>
+<li>콜센터 IVR 교체 사이클: 2030년까지 전통 IVR 사실상 소멸 전망(Opus)</li>
+<li>빅테크 기피 수요(데이터 주권) — 중립 사업자 프리미엄</li>
+</ul></div>
+<div class="card T"><h3>⚡ 위협 Threats</h3><ul>
+<li><strong>LLM 상품화</strong> — OpenAI·구글이 음성 능력을 범용 API로 헐값 공급</li>
+<li>빅테크의 번들 전략(Gemini·Alexa+·Copilot)과 무제한 보조 여력</li>
+<li>LivePerson 통합 실패 위험 — 유지율 78%인 이탈 자산 인수</li>
+<li>고금리(10Y 4.53%, 인상 기대)·<strong>공매도 잔량 33~38%</strong> — 수급·할인율 역풍</li>
+<li>현금 소진 시 추가 희석 조달 필요(2025년 재무활동 +$208M가 증명)</li>
+</ul></div>
+</div>
+</div></section>
+<!-- ============ 08 생애주기 ============ -->
+<section id="s8"><div class="wrap">
+<div class="kicker"><span class="num">08</span> LIFE CYCLE</div>
+<h2>생애주기 판별 — 현금흐름이 말하는 단계: ‘도입(Introduction)’</h2>
+<p class="lede">기업의 단계는 말이 아니라 현금흐름표의 부호가 알려줍니다. 본업에서 현금이 나가고(영업−), 투자에도 쓰고(투자−), 그 구멍을 외부 자금(재무+)으로 메우면 ‘도입’ 단계입니다.</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th class="l">연간 현금흐름 ($M)</th><th>2024</th><th>2025</th><th>2026 Q1</th><th class="l">패턴 판독</th></tr></thead>
+<tbody>
+<tr><td class="l">영업활동</td><td class="neg">−108.9</td><td class="neg">−98.2</td><td class="neg">−26.3</td><td class="l">유출 (−)</td></tr>
+<tr><td class="l">투자활동</td><td class="neg">−12.4</td><td class="neg">−59.5*</td><td class="neg">−3.1</td><td class="l">유출 (−)</td></tr>
+<tr><td class="l">재무활동</td><td class="pos">+210.9</td><td class="pos">+208.1</td><td>−3.2</td><td class="l">유입 (+) — 증자 의존</td></tr>
+</tbody></table></div>
+<p class="note" style="margin-top:10px">* 2025년 투자활동에는 Interactions 인수 $60M 포함. 프레임워크 조정(SBC $83M을 영업→재무로 이동)을 적용하면 영업 유출은 −$181M, 재무 유입은 +$291M으로 패턴이 더욱 선명해집니다. 26년 1분기 재무활동이 소폭 (−)인 것은 해당 분기에 증자를 쉬었기 때문으로, 연간 패턴을 바꾸지 못합니다.</p>
+<div class="callout warn"><strong>방법론상 중대 단서 ⚠️</strong> — DCF·내재 CAP 분석은 본래 <strong>성장·성숙 단계</strong> 기업에 적합하며, 도입 단계 기업에는 실물옵션·TAM 분석이 권장됩니다. 도입 단계의 통계적 현실: 해당 단계 기업의 평균 ROIC는 −2.9%이고, 1976~2019년 상장기업의 <strong>70%가 상장 시점 주가를 정당화하지 못했으며</strong>, 전체 부의 75% 이상을 0.7%의 기업이 만들었습니다. 따라서 이하의 역산 결과는 ‘적정가’가 아니라 <strong>“시장이 어떤 미래를 가격에 써 놓았는지”를 읽는 조건부 해석</strong>으로 받아들여야 하며, 통상의 성숙기업 분석보다 가정 민감도가 훨씬 큽니다.</div>
+</div></section>
+
+<!-- ============ 09 DCF·CAP ============ -->
+<section id="s9"><div class="wrap">
+<div class="kicker"><span class="num">09</span> DCF & MARKET-IMPLIED CAP</div>
+<h2>DCF 모델과 시장 내재 CAP 역산</h2>
+<p class="lede">목표는 적정가 계산이 아닙니다. 현재 주가 $7.02가 성립하려면 <strong>「얼마나 오래(CAP) × 얼마나 좋은(성장·마진) × 얼마짜리 돈으로(할인율)」</strong>이 어떤 조합이어야 하는지를 거꾸로 푸는 것입니다.</p>
+
+<h3 class="sect">자본비용(WACC) 산출 — CAPM</h3>
+<div class="grid g2">
+<div class="card">
+<div class="formula">자기자본비용 = 무위험이자율 + β(조정) × 주식위험프리미엄<br>= 4.53% + 2.31 × 4.75% = <strong>15.5%</strong><br>무차입 → WACC = 자기자본비용 = <strong>15.5%</strong></div>
+<p class="note">무위험이자율: 미 10년물 4.53%(2026-06-10, FRED·TradingEconomics). 베타: 원시 60개월 베타 2.96(stockanalysis.com·eToro 2.95~2.97 일치)을 1로 회귀 조정 → ⅔×2.96+⅓ = <strong>2.31</strong>. ERP 4.75%는 프로젝트 표준값.</p>
+</div>
+<div class="card">
+<p class="note" style="margin-bottom:8px"><strong>⚠️ 출처 상충 알림 (ERP)</strong> — 프로젝트 표준은 4.75%이나, 다모다란 교수의 최신 내재 ERP는 <strong>4.23%(2026년 1월 기준)</strong>로 차이가 있습니다. 4.23% 적용 시 k=14.3%로 낮아지지만, 아래에서 보듯 <strong>결론(현재가 도달 불가)은 바뀌지 않습니다</strong>(T=15 기준 가치 $1.14→$1.46). 3월 중동발 유가 쇼크 이후 ERP가 일시 상승했다는 다모다란의 일일 추정 언급이 있어, 4.75%는 현 시점에서 과도하게 보수적이지 않은 선택으로 판단합니다.</p>
+<p class="note"><strong>⚠️ 베타 논쟁</strong> — 실측 베타 2.96에는 공매도 33~38%·개인 수급 등 ‘거래 동학’이 섞여 있다는 반론이 가능합니다. 사업 위험만 반영한 소프트웨어 섹터 베타(약 1.2~1.4)를 쓰면 k≈10~11%가 되며, <strong>이것이 사실상 시장이 적용 중인 할인율</strong>임이 아래 역산에서 드러납니다. 두 관점을 모두 제시합니다.</p>
+</div>
+</div>
+
+<h3 class="sect">표 A. 프레임워크 표준 케이스 — k=15.5%, 컨센서스 연장 가정 (전시 23 형식, $M)</h3>
+<p class="note" style="margin-bottom:8px">매출: 2026 가이던스 중간값 $242.5M → 2027 합산 가이던스 중간값 $375M → 이후 고성장 기업의 역사적 베이스레이트를 따라 12%로 페이드. EBITA 마진(SBC 비용 처리·인수무형 상각 제외): −55%에서 8년에 걸쳐 +22%(성숙 소프트웨어 상단)로 개선 가정. 세금: NOL $450M 소진까지 사실상 0% → 이후 21%. 미래 투자: 증분 매출의 28% + 2026년 LivePerson EV $250M.</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th class="l">연도</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th>2034</th><th>2035</th><th>2036</th><th>2037</th><th>2038</th><th>2039</th><th>2040</th></tr></thead>
+<tbody>
+<tr><td class="l">매출</td><td>243</td><td>375</td><td>469</td><td>572</td><td>680</td><td>796</td><td>916</td><td>1,044</td><td>1,179</td><td>1,321</td><td>1,479</td><td>1,657</td><td>1,856</td><td>2,079</td><td>2,328</td></tr>
+<tr><td class="l">매출 성장 %</td><td>43.6</td><td>54.6</td><td>25.0</td><td>22.0</td><td>19.0</td><td>17.0</td><td>15.0</td><td>14.0</td><td>13.0</td><td>12.0</td><td>12.0</td><td>12.0</td><td>12.0</td><td>12.0</td><td>12.0</td></tr>
+<tr><td class="l">EBITA</td><td class="neg">−133</td><td class="neg">−94</td><td class="neg">−47</td><td>0</td><td>54</td><td>111</td><td>165</td><td>219</td><td>259</td><td>291</td><td>325</td><td>365</td><td>408</td><td>457</td><td>512</td></tr>
+<tr><td class="l">EBITA 마진 %</td><td class="neg">−55.0</td><td class="neg">−25.0</td><td class="neg">−10.0</td><td>0.0</td><td>8.0</td><td>14.0</td><td>18.0</td><td>21.0</td><td>22.0</td><td>22.0</td><td>22.0</td><td>22.0</td><td>22.0</td><td>22.0</td><td>22.0</td></tr>
+<tr><td class="l">현금세율 %</td><td>0</td><td>0</td><td>0</td><td>0</td><td>4.2</td><td>4.2</td><td>4.2</td><td>4.2</td><td>20.2</td><td>21.0</td><td>21.0</td><td>21.0</td><td>21.0</td><td>21.0</td><td>21.0</td></tr>
+<tr><td class="l">NOPAT</td><td class="neg">−133</td><td class="neg">−94</td><td class="neg">−47</td><td>0</td><td>52</td><td>107</td><td>158</td><td>210</td><td>207</td><td>230</td><td>257</td><td>288</td><td>323</td><td>361</td><td>405</td></tr>
+<tr><td class="l">미래 투자</td><td>271</td><td>37</td><td>26</td><td>29</td><td>30</td><td>32</td><td>33</td><td>36</td><td>38</td><td>40</td><td>44</td><td>50</td><td>56</td><td>62</td><td>70</td></tr>
+<tr><td class="l">잉여현금흐름</td><td class="neg">−404</td><td class="neg">−131</td><td class="neg">−73</td><td class="neg">−29</td><td>22</td><td>74</td><td>124</td><td>174</td><td>169</td><td>190</td><td>213</td><td>238</td><td>267</td><td>299</td><td>335</td></tr>
+<tr><td class="l">FCF의 현재가치</td><td class="neg">−376</td><td class="neg">−105</td><td class="neg">−51</td><td class="neg">−17</td><td>11</td><td>34</td><td>49</td><td>59</td><td>50</td><td>48</td><td>47</td><td>45</td><td>44</td><td>43</td><td>41</td></tr>
+<tr><td class="l">누적 현재가치</td><td class="neg">−376</td><td class="neg">−481</td><td class="neg">−532</td><td class="neg">−549</td><td class="neg">−538</td><td class="neg">−504</td><td class="neg">−455</td><td class="neg">−396</td><td class="neg">−346</td><td class="neg">−298</td><td class="neg">−251</td><td class="neg">−206</td><td class="neg">−162</td><td class="neg">−119</td><td class="neg">−78</td></tr>
+<tr><td class="l">ROIIC %</td><td>—</td><td>14.7</td><td>n/m</td><td>n/m</td><td>180.6</td><td>179.6</td><td>157.8</td><td>155.8</td><td>−8.0*</td><td>59.2</td><td>69.5</td><td>69.5</td><td>69.5</td><td>69.5</td><td>69.5</td></tr>
+<tr><td class="l">할인 시점(연중)</td><td>0.5</td><td>1.5</td><td>2.5</td><td>3.5</td><td>4.5</td><td>5.5</td><td>6.5</td><td>7.5</td><td>8.5</td><td>9.5</td><td>10.5</td><td>11.5</td><td>12.5</td><td>13.5</td><td>14.5</td></tr>
+</tbody></table></div>
+<div class="grid g4" style="margin-top:12px">
+<div class="card" style="padding:14px"><div class="k mini">최종가치(2040, 페이드모델)</div><div style="font-family:var(--mono);font-size:19px;margin-top:4px">$2,802M → PV $347M</div></div>
+<div class="card" style="padding:14px"><div class="k mini">기업가치 = ΣPV(FCF)+PV(TV)</div><div style="font-family:var(--mono);font-size:19px;margin-top:4px">−78 + 347 = $269M</div></div>
+<div class="card" style="padding:14px"><div class="k mini">자본가치 (+현금 216 −부채 0)</div><div style="font-family:var(--mono);font-size:19px;margin-top:4px">$485M</div></div>
+<div class="card" style="padding:14px;border:1px solid var(--red)"><div class="k mini">주당 가치 ÷ 4.263억주</div><div style="font-family:var(--mono);font-size:22px;margin-top:4px;color:var(--red)">$1.14 <span class="mini" style="color:var(--muted)">vs 주가 $7.02</span></div></div>
+</div>
+<p class="note" style="margin-top:8px">* 2034년 ROIIC 음수는 NOL 소진으로 세율이 4%→20%로 점프하며 NOPAT가 일시 정체한 계산상 인공물입니다(영업 악화 아님). n/m: 적자 구간이라 의미 없음. 최종가치는 페이드 모델 — Value = [N(1−g/r)/(k−g) − N/k]·[(1−f)(k−g)/(1+k−(1−f)(1+g))] + N/k, g=2.5%(기대 인플레), f=0.20(IT 섹터), r=최종연도 ROIIC 동적 산출 — 로 계산, FCF·최종가치 모두 연중(mid-year) 할인.</p>
+<div class="callout risk"><strong>표 A의 메시지</strong> — 표준 자본비용에서는 15년을 줘도 주당 $1.14, <strong>예측 기간을 40년까지 늘려도 $2.37</strong>에 그칩니다. 초반 4년의 현금 유출(누적 PV −$549M: 영업 적자 + LivePerson $250M)이 15.5%라는 비싼 돈으로 할인된 미래 이익으로는 영영 메워지지 않는 구조입니다. <strong>즉, 시장은 이 할인율 또는 이 영업 가정 중 최소 하나를 받아들이지 않고 있습니다.</strong></div>
+
+<h3 class="sect">표 B. 시장 정합 케이스 — “주가가 옳다면 시장은 이렇게 보고 있다” (k=11.0%, 강세 영업 가정)</h3>
+<p class="note" style="margin-bottom:8px">할인율을 사업베타 수준(β≈1.36 상당)으로 낮추고, 마진 개선을 더 빠르게(성숙 EBITA 28%), 장기 성장을 15%로 높인 조합. 이 조합에서 예측 기간을 늘려가면 <strong>약 14.7년째에 현재가와 만납니다</strong> — 아래는 T=15년(2040년)에서의 전체 테이블입니다(주당 $7.16 ≈ $7.02).</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th class="l">연도</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th>2034</th><th>2035</th><th>2036</th><th>2037</th><th>2038</th><th>2039</th><th>2040</th></tr></thead>
+<tbody>
+<tr><td class="l">매출</td><td>247</td><td>409</td><td>540</td><td>692</td><td>865</td><td>1,055</td><td>1,266</td><td>1,494</td><td>1,747</td><td>2,010</td><td>2,311</td><td>2,658</td><td>3,056</td><td>3,515</td><td>4,042</td></tr>
+<tr><td class="l">매출 성장 %</td><td>46.0</td><td>66.0</td><td>32.0</td><td>28.0</td><td>25.0</td><td>22.0</td><td>20.0</td><td>18.0</td><td>17.0</td><td>15.0</td><td>15.0</td><td>15.0</td><td>15.0</td><td>15.0</td><td>15.0</td></tr>
+<tr><td class="l">EBITA</td><td class="neg">−118</td><td class="neg">−61</td><td class="neg">−11</td><td>55</td><td>130</td><td>211</td><td>304</td><td>388</td><td>489</td><td>563</td><td>647</td><td>744</td><td>856</td><td>984</td><td>1,132</td></tr>
+<tr><td class="l">EBITA 마진 %</td><td class="neg">−48.0</td><td class="neg">−15.0</td><td class="neg">−2.0</td><td>8.0</td><td>15.0</td><td>20.0</td><td>24.0</td><td>26.0</td><td>28.0</td><td>28.0</td><td>28.0</td><td>28.0</td><td>28.0</td><td>28.0</td><td>28.0</td></tr>
+<tr><td class="l">현금세율 %</td><td>0</td><td>0</td><td>0</td><td>4.2</td><td>4.2</td><td>4.2</td><td>11.8</td><td>21.0</td><td>21.0</td><td>21.0</td><td>21.0</td><td>21.0</td><td>21.0</td><td>21.0</td><td>21.0</td></tr>
+<tr><td class="l">NOPAT</td><td class="neg">−118</td><td class="neg">−61</td><td class="neg">−11</td><td>53</td><td>124</td><td>202</td><td>268</td><td>307</td><td>387</td><td>445</td><td>511</td><td>588</td><td>676</td><td>777</td><td>894</td></tr>
+<tr><td class="l">미래 투자</td><td>272</td><td>46</td><td>37</td><td>42</td><td>48</td><td>53</td><td>59</td><td>64</td><td>71</td><td>73</td><td>84</td><td>97</td><td>112</td><td>128</td><td>148</td></tr>
+<tr><td class="l">잉여현금흐름</td><td class="neg">−390</td><td class="neg">−107</td><td class="neg">−47</td><td>11</td><td>76</td><td>149</td><td>209</td><td>243</td><td>315</td><td>371</td><td>427</td><td>491</td><td>564</td><td>649</td><td>746</td></tr>
+<tr><td class="l">FCF의 현재가치</td><td class="neg">−370</td><td class="neg">−91</td><td class="neg">−37</td><td>7</td><td>47</td><td>84</td><td>106</td><td>111</td><td>130</td><td>138</td><td>143</td><td>148</td><td>153</td><td>159</td><td>164</td></tr>
+<tr><td class="l">누적 현재가치</td><td class="neg">−370</td><td class="neg">−462</td><td class="neg">−498</td><td class="neg">−491</td><td class="neg">−444</td><td class="neg">−360</td><td class="neg">−254</td><td class="neg">−143</td><td class="neg">−13</td><td>125</td><td>268</td><td>416</td><td>569</td><td>728</td><td>892</td></tr>
+<tr><td class="l">ROIIC %</td><td>—</td><td>21.0</td><td>n/m</td><td>n/m</td><td>168</td><td>161</td><td>124</td><td>65.7</td><td>125</td><td>81.6</td><td>90.8</td><td>90.8</td><td>90.9</td><td>90.9</td><td>90.8</td></tr>
+<tr><td class="l">할인 시점(연중)</td><td>0.5</td><td>1.5</td><td>2.5</td><td>3.5</td><td>4.5</td><td>5.5</td><td>6.5</td><td>7.5</td><td>8.5</td><td>9.5</td><td>10.5</td><td>11.5</td><td>12.5</td><td>13.5</td><td>14.5</td></tr>
+</tbody></table></div>
+<div class="grid g4" style="margin-top:12px">
+<div class="card" style="padding:14px"><div class="k mini">최종가치(2040, 페이드모델)</div><div style="font-family:var(--mono);font-size:19px;margin-top:4px">$8,836M → PV $1,946M</div></div>
+<div class="card" style="padding:14px"><div class="k mini">기업가치</div><div style="font-family:var(--mono);font-size:19px;margin-top:4px">892 + 1,946 = $2,837M</div></div>
+<div class="card" style="padding:14px"><div class="k mini">자본가치 (+현금 216)</div><div style="font-family:var(--mono);font-size:19px;margin-top:4px">$3,053M</div></div>
+<div class="card" style="padding:14px;border:1px solid var(--wave)"><div class="k mini">주당 가치</div><div style="font-family:var(--mono);font-size:22px;margin-top:4px;color:var(--wave)">$7.16 <span class="mini" style="color:var(--muted)">≈ 주가 $7.02</span></div></div>
+</div>
+
+<h3 class="sect">시장 내재 CAP — 결론과 해석</h3>
+<div class="gauge-wrap card" style="margin-bottom:14px">
+<svg viewBox="0 0 220 130" width="210" aria-label="내재 CAP 게이지">
+<path d="M20 115 A90 90 0 0 1 200 115" fill="none" stroke="#2A3554" stroke-width="16"/>
+<path d="M20 115 A90 90 0 0 1 110 25" fill="none" stroke="#5EE6D0" stroke-width="16" opacity=".35"/>
+<path d="M110 25 A90 90 0 0 1 173 52" fill="none" stroke="#FFC94D" stroke-width="16" opacity=".55"/>
+<path d="M173 52 A90 90 0 0 1 200 115" fill="none" stroke="#FF5D73" stroke-width="16"/>
+<line x1="110" y1="115" x2="186" y2="73" stroke="#FF7A45" stroke-width="4" stroke-linecap="round"/>
+<circle cx="110" cy="115" r="6" fill="#FF7A45"/>
+<text x="22" y="128" font-size="10" fill="#9AA5C3" font-family="IBM Plex Mono">0년</text>
+<text x="100" y="18" font-size="10" fill="#9AA5C3" font-family="IBM Plex Mono">10년</text>
+<text x="188" y="128" font-size="10" fill="#9AA5C3" font-family="IBM Plex Mono">20년+</text>
+</svg>
+<div style="flex:1;min-width:260px">
+<div class="big-num" style="color:var(--amber)">내재 CAP ≈ 15년 <span style="font-size:18px;color:var(--muted)">(시장 정합 해석)</span> · 표준 가정 시 <span style="color:var(--red)">측정 불가(&gt;40년)</span></div>
+<p class="note" style="margin-top:10px">현재 주가는 다음 네 가지를 <strong>동시에</strong> 전제할 때에만 산수가 맞습니다: ① 할인율 약 11%(실측 베타가 아닌 사업베타 채택), ② 2040년 매출 약 <strong>$4.0B</strong> — 2025년의 24배, 15년 CAGR 23.6%, ③ 성숙기 EBITA 마진 <strong>28%</strong>(SBC 비용 처리 기준; 현재 −94%에서), ④ 그 초과수익이 <strong>약 15년</strong> 지속. 참고로 같은 산업의 한 메가캡에 대해 본 방법론이 측정한 내재 CAP가 17~18년이었습니다 — 시장은 사실상 ‘수익을 내 본 적 없는 이 회사’에 <strong>검증된 슈퍼스타급 지속 기간</strong>을 매기고 있는 셈입니다.</p>
+</div>
+</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th class="l">합리성 구간 (프레임워크)</th><th class="l">해석</th><th class="l">SOUN 위치</th></tr></thead>
+<tbody>
+<tr><td class="l">5년 미만</td><td class="l">시장이 매우 비관적 → 매수 후보</td><td class="l">—</td></tr>
+<tr><td class="l">5~10년</td><td class="l">약간 비관적</td><td class="l">—</td></tr>
+<tr><td class="l">10~15년</td><td class="l">합리적 범위</td><td class="l">—</td></tr>
+<tr><td class="l">15~20년</td><td class="l">약간 낙관적 — 강한 해자 근거 필요</td><td class="l">관대한 할인율(≈11%) 채택 시에만 이 구간</td></tr>
+<tr><td class="l" style="color:var(--amber)">20년 초과</td><td class="l" style="color:var(--amber)">과도한 낙관 → 회피 고려</td><td class="l" style="color:var(--amber)"><strong>◀ CAPM 표준 할인율 적용 시 (도달 불가 포함)</strong></td></tr>
+</tbody></table></div>
+<p class="note" style="margin-top:10px">교차 검증 — 기본 영업 가정을 유지한 채 할인율만 낮춰도: k=9.5% → 24.8년, k=10.5% → 30.8년, k=11.5% → 39.6년, k≥12.5% → 40년 내 도달 불가. 즉 <strong>할인율 인하만으로는 부족하고, 강세 영업 가정까지 얹어야</strong> 비로소 15~19년 구간으로 내려옵니다. 베이스레이트 대조: 직전 3년 20%+ 성장 기업 중 다음 3년에도 20%+를 지킨 비율은 31%, 약 22%는 역성장했습니다.</p>
+</div></section>
+<!-- ============ 10 민감도·시나리오 ============ -->
+<section id="s10"><div class="wrap">
+<div class="kicker"><span class="num">10</span> SENSITIVITY & SCENARIOS</div>
+<h2>민감도·시나리오 — 어떤 가정이 가치를 움직이는가</h2>
+<p class="lede">결론부터: 이 종목의 가치는 <strong>① 할인율 ② 성숙기 마진</strong>이 거의 전부를 결정합니다. 페이드 비율은 의외로 거의 영향이 없습니다.</p>
+
+<div class="grid g2">
+<div class="card">
+<h3 class="sect" style="margin-top:0">① 자본비용 민감도 — 주당가치 (기본 영업가정 · T=15)</h3>
+<div class="tbl-wrap" style="border:none"><table style="min-width:0">
+<thead><tr><th class="l">할인율 k</th><th>상응 베타</th><th>주당 가치</th></tr></thead>
+<tbody>
+<tr><td class="l">10.8%</td><td>1.33</td><td>$2.97</td></tr>
+<tr><td class="l">11.6%</td><td>1.48</td><td>$2.55</td></tr>
+<tr><td class="l">14.3% <span class="mini">(ERP 4.23%)</span></td><td>2.31</td><td>$1.46</td></tr>
+<tr><td class="l">14.5% <span class="mini">(−1%p)</span></td><td>—</td><td>$1.40</td></tr>
+<tr><td class="l"><strong>15.5% (기준)</strong></td><td>2.31</td><td><strong>$1.14</strong></td></tr>
+<tr><td class="l">16.5% <span class="mini">(+1%p)</span></td><td>—</td><td>$0.92</td></tr>
+</tbody></table></div>
+<p class="note" style="margin-top:8px">±1%p에 가치가 ±20~25% 출렁이며, 베타를 ‘사업베타(1.3대)’로 바꾸는 순간 가치가 2.6배가 됩니다. <strong>이 종목 논쟁의 본질은 사실상 “베타 2.96을 믿느냐”의 논쟁</strong>입니다. 그래도 어떤 행에서도 $7.02에 닿지 않는다는 점이 핵심입니다.</p>
+</div>
+<div class="card">
+<h3 class="sect" style="margin-top:0">② 성장률·페이드 민감도 — 주당가치 (T=15)</h3>
+<div class="tbl-wrap" style="border:none"><table style="min-width:0">
+<thead><tr><th class="l">변수 조정</th><th>기본 케이스<br>(k=15.5%)</th><th>시장정합 케이스<br>(k=11.0%)</th></tr></thead>
+<tbody>
+<tr><td class="l">성장 −2%p (’28~)</td><td>$0.87</td><td>$5.90</td></tr>
+<tr><td class="l"><strong>성장 기준</strong></td><td><strong>$1.14</strong></td><td><strong>$7.16</strong></td></tr>
+<tr><td class="l">성장 +2%p (’28~)</td><td>$1.46</td><td>$8.67</td></tr>
+<tr><td class="l">페이드 0.10 (강한 해자)</td><td>$1.16</td><td>$7.35</td></tr>
+<tr><td class="l"><strong>페이드 0.20 (기준)</strong></td><td><strong>$1.14</strong></td><td><strong>$7.16</strong></td></tr>
+<tr><td class="l">페이드 0.30 (약한 해자)</td><td>$1.13</td><td>$7.07</td></tr>
+</tbody></table></div>
+<p class="note" style="margin-top:8px">성장 ±2%p는 시장정합 케이스에서 ±$1.3~1.5의 큰 영향. 반면 <strong>페이드 비율은 ±0.10을 움직여도 가치 변화가 1~3%에 불과</strong>합니다 — 명시 예측 기간이 15년으로 길고 할인율이 높아, 그 너머 초과수익의 현재가치가 작기 때문입니다. 해자의 ‘영원함’보다 <strong>향후 15년의 실행</strong>이 전부인 종목입니다.</p>
+</div>
+</div>
+
+<h3 class="sect">③ 핵심 그리드 — 내재 CAP(년): 할인율 × 성숙기 EBITA 마진 (강세 성장 경로 기준)</h3>
+<div class="tbl-wrap"><table>
+<thead><tr><th class="l">k ↓ · 성숙마진 →</th><th>20%</th><th>24%</th><th>28%</th><th>32%</th></tr></thead>
+<tbody>
+<tr><td class="l">10.0%</td><td style="color:var(--amber)">16.7년</td><td style="color:var(--amber)">14.3년</td><td style="color:var(--wave)">12.6년</td><td style="color:var(--wave)">11.2년</td></tr>
+<tr><td class="l">11.0%</td><td style="color:var(--amber)">19.7년</td><td style="color:var(--amber)">16.8년</td><td style="color:var(--amber)"><strong>14.7년 ◀ 시장정합</strong></td><td style="color:var(--amber)">13.1년</td></tr>
+<tr><td class="l">12.0%</td><td style="color:var(--red)">23.3년</td><td style="color:var(--amber)">19.8년</td><td style="color:var(--amber)">17.3년</td><td style="color:var(--amber)">15.4년</td></tr>
+<tr><td class="l">13.0%</td><td style="color:var(--red)">28.0년</td><td style="color:var(--red)">23.5년</td><td style="color:var(--red)">20.4년</td><td style="color:var(--amber)">18.0년</td></tr>
+<tr><td class="l">15.5% (CAPM)</td><td style="color:var(--red)">&gt;40년</td><td style="color:var(--red)">&gt;40년</td><td style="color:var(--red)">33.3년</td><td style="color:var(--red)">28.4년</td></tr>
+</tbody></table></div>
+<p class="note" style="margin-top:8px">읽는 법: 셀의 숫자는 ‘현재가 $7.02가 정당화되기 위해 필요한 초과수익 지속 연수’. <span style="color:var(--wave)">청록(≤13년)</span>은 합리 구간, <span style="color:var(--amber)">호박(13~20년)</span>은 강한 해자 입증 필요, <span style="color:var(--red)">적색(20년+)</span>은 과도한 낙관 구간. CAPM 행 전체가 적색이며, 시장이 서 있을 법한 자리는 호박색 한가운데입니다.</p>
+
+<h3 class="sect">④ 시나리오 — 강세 / 기본 / 약세 (T=15년 고정)</h3>
+<svg viewBox="0 0 760 240" width="100%" aria-label="시나리오 가치 비교">
+<g font-family="IBM Plex Mono" font-size="12" fill="#9AA5C3">
+<line x1="140" y1="20" x2="140" y2="210" stroke="#2A3554"/>
+<line x1="491" y1="20" x2="491" y2="210" stroke="#FF7A45" stroke-dasharray="4 4"/>
+<text x="491" y="14" text-anchor="middle" fill="#FF7A45">현재가 $7.02</text>
+<text x="130" y="50" text-anchor="end" fill="#E9ECF5">강세</text>
+<rect x="140" y="36" width="358" height="16" rx="4" fill="#5EE6D0"/><text x="505" y="49" fill="#5EE6D0">$7.16 (k=11%)</text>
+<rect x="140" y="56" width="168" height="16" rx="4" fill="#5EE6D0" opacity=".45"/><text x="314" y="69">$3.36 (k=15.5%)</text>
+<text x="130" y="115" text-anchor="end" fill="#E9ECF5">기본</text>
+<rect x="140" y="101" width="143" height="16" rx="4" fill="#FFC94D"/><text x="290" y="114" fill="#FFC94D">$2.87 (k=11%)</text>
+<rect x="140" y="121" width="57" height="16" rx="4" fill="#FFC94D" opacity=".45"/><text x="203" y="134">$1.14 (k=15.5%)</text>
+<text x="130" y="180" text-anchor="end" fill="#E9ECF5">약세</text>
+<rect x="140" y="166" width="4" height="16" rx="2" fill="#FF5D73"/><text x="150" y="179" fill="#FF5D73">≈ $0 (현금 소진 → 희석 악순환 경로)</text>
+<text x="140" y="232" fill="#6E7AA0">가로축: 주당 가치($) · 막대 2개 = 할인율 11% / 15.5% 병기 · 약세는 두 할인율 모두 0 이하</text>
+</g></svg>
+<div class="grid g3" style="margin-top:10px">
+<div class="card" style="border-top:3px solid var(--wave)"><strong>강세 (시장이 옳다)</strong><p class="note" style="margin-top:6px">2027 합산 매출 가이던스 상단+($409M), LPSN 크로스셀 작동, 성숙 EBITA 28%, 장기 성장 15%. 2029년 NOPAT 흑자 전환, 2040년 매출 $4.0B. <strong>이 경우에도 표준 할인율로는 $3.36</strong> — 강세론은 반드시 ‘낮은 할인율’을 함께 믿어야 완성됩니다.</p></div>
+<div class="card" style="border-top:3px solid var(--amber)"><strong>기본 (컨센서스 연장)</strong><p class="note" style="margin-top:6px">가이던스 중간값 경로, 성숙 EBITA 22%, 장기 성장 12%. 주당 $1.14~2.87. <strong>현 주가는 기본 시나리오 대비 2.4~6.2배 프리미엄</strong> — 기대치가 ‘기본’을 크게 앞서 있습니다.</p></div>
+<div class="card" style="border-top:3px solid var(--red)"><strong>약세 (통합 실패)</strong><p class="note" style="margin-top:6px">LPSN 이탈 가속, 마진 개선 지연(15년차에도 15%), 성장 한 자릿수 안착. 누적 적자가 현금+미래이익 PV를 잠식해 <strong>지분가치 0 수렴 경로</strong>. 적자 기업 특유의 ‘하방이 두꺼운’ 분포를 보여줍니다.</p></div>
+</div>
+</div></section>
+
+<!-- ============ 11 리스크·체크포인트 ============ -->
+<section id="s11"><div class="wrap">
+<div class="kicker"><span class="num">11</span> RISKS & CHECKPOINTS</div>
+<h2>주요 리스크와 분기별 체크포인트</h2>
+<div class="grid g2">
+<div class="card">
+<h3 class="sect" style="margin-top:0">우선순위 리스크 7</h3>
+<p class="note"><strong class="hl-r">1. 마진 전환 실패</strong> — 최대 가치 동인. 조정EBITDA 흑자 목표(당초 2025년 말)를 이미 한 차례 지연. 26Q1 총마진 악화(일회성이라지만)도 경고등.</p>
+<p class="note"><strong class="hl-r">2. LivePerson 통합</strong> — 유지율 78%의 이탈 자산 인수. 클로징 자체가 주주승인·채권 구조조정 완료 조건부.</p>
+<p class="note"><strong class="hl-r">3. 희석</strong> — SBC 연 $80M+, 부채 정산 주식 지급분, ATM 증자. 주식수 3년 평균 +28%/년. 기업가치가 늘어도 ‘주당’ 가치가 침식될 수 있음.</p>
+<p class="note"><strong class="hl-r">4. LLM 상품화</strong> — 기술 프리미엄의 반감기 단축. 자체 모델 유지 비용 대비 효익 의문.</p>
+<p class="note"><strong class="hl-r">5. 수익 품질</strong> — 미청구채권 40%, 수주잔고 공시 중단, GAAP 손익이 언아웃 평가손익(26Q1 +$39M)으로 왜곡 — 헤드라인 숫자 신뢰도 주의.</p>
+<p class="note"><strong class="hl-r">6. 거시·수급</strong> — 인상 사이클의 고베타주 + 공매도 33~38%: 급락과 숏스퀴즈 양방향 변동성.</p>
+<p class="note"><strong class="hl-r">7. 거버넌스</strong> — 2026년 CFO 교체(샤란→공동창업자 홈), 창업자 집중 구조(Class B 의결권).</p>
+</div>
+<div class="card">
+<h3 class="sect" style="margin-top:0">분기 체크리스트 (차기 실적: 2026-08-06)</h3>
+<ul class="checklist">
+<li>2026 매출 가이던스 $225–260M 대비 진행률·상향 여부</li>
+<li>非GAAP 총마진 60%대 회복 (26Q1 49.7%로 하락)</li>
+<li>조정EBITDA 적자 축소 기울기 (26Q1 −$26.7M) — 분기 흑자 시점 가이드</li>
+<li>SBC/매출 비율 하락 추세 진입 여부 (2025년 49%)</li>
+<li>자동차·IoT 유기 성장률 (+88% 수준 유지?) — 인수 제외 성장 공시 확인</li>
+<li>LivePerson: 주주투표·노트 구조조정·규제 승인 진행, 클로징 후 합산 가이던스</li>
+<li>미청구채권/매출 비율, 영업현금흐름 적자 폭</li>
+<li>현금 잔고($216M)와 추가 조달(ATM) 공시</li>
+</ul>
+<p class="note" style="margin-top:10px"><strong>재검토 트리거</strong> — ① 마진 개선이 2개 분기 연속 정체, ② LPSN 딜 무산 또는 조건 악화, ③ 유기 성장 30% 하회: 셋 중 하나면 기본 시나리오 하향. 반대로 ‘SBC 포함 영업흑자’ 분기가 나오면 마진 경로 가정을 상향 재검토.</p>
+</div>
+</div>
+<div class="callout" style="margin-top:16px"><strong>가격–기대 정렬 참고선</strong> — 본 프레임워크에서 ‘기대가 합리 구간(내재 CAP 10~15년, 표준 할인율)’과 만나는 주가대는 기본 영업가정 기준 대략 <strong>$1.1~2.9</strong>(할인율 15.5%~10.8% 스펙트럼)입니다. 이는 목표가가 아니라, <em>현재 시장 기대와 컨센서스-연장 기대 사이의 거리</em>를 보여주는 좌표입니다. 참고: 애널리스트 평균 목표가는 $14(8명, $8~20, 2026-05-08 기준) — 셀사이드는 시장정합 케이스보다도 더 낙관적인 전제를 쓰고 있다는 뜻입니다.</div>
+</div></section>
+
+<!-- ============ 12 한계·출처 ============ -->
+<section id="s12"><div class="wrap">
+<div class="kicker"><span class="num">12</span> LIMITATIONS & SOURCES</div>
+<h2>한계와 가정 · 데이터 출처</h2>
+<div class="grid g2">
+<div class="card">
+<h3 class="sect" style="margin-top:0">이 결론이 의존하는 핵심 가정</h3>
+<p class="note">① <strong>마진 경로</strong>: 흑자 이력이 없는 회사가 8년 내 EBITA 22~28%(SBC 비용 처리 기준)에 도달한다는 가정 — 가장 약한 고리. ② <strong>LivePerson 단순화</strong>: 거래를 ‘2026년 일시 투자 $250M + 2027년부터 합산 매출’로 처리. 주식 대가는 공정가 현금 등가로 간주(미래 증자·SBC도 공정가 발행 가정) → 발행주식수 4.263억주 고정. 실제 희석이 불리한 가격에 일어나면 주당 가치는 더 낮아짐. ③ <strong>NOL $450M</strong>: 누적결손 $982M에서 비현금 항목을 뺀 추정치(±오차 큼) — 세금 시점에만 영향, 결론 불변. ④ <strong>투자율</strong>: 증분 매출의 28%. ⑤ <strong>최종가치</strong>: 페이드 모델(g=2.5%, f=0.20)로, 동일 입력의 참조 사례 대비 수 % 보수적으로 산출되는 구현임.</p>
+<h3 class="sect">확신도 (베이지안 표기)</h3>
+<p class="note">시장 데이터·재무 실적치: <strong>높음 ~95%</strong> · 2026~27 매출 경로(가이던스 앵커): <strong>중간 ~70%</strong> · 마진 개선 경로: <strong>낮음 ~40%</strong> · <strong>“표준 할인율에선 도달 불가, 시장정합 시 약 15년”이라는 구조적 결론: 높음 ~85%</strong> — 민감도 전 구간(ERP 4.23~4.75%, 성장 ±2%p, 페이드 0.1~0.3)에서 유지되기 때문.</p>
+<h3 class="sect">이 결론이 틀릴 조건 → 다음 검증</h3>
+<p class="note">▸ ‘SBC 포함’ 분기 영업흑자 조기 달성, 보이스 커머스 수수료 매출 본격화, LPSN 크로스셀 조기 입증 → 마진·성장 가정 상향. ▸ 금리·ERP 급락 → 할인율 재산정. <strong>다음 검증 단계</strong>: 8/6 실적의 유기성장·마진 분해, LPSN 클로징 공시(주식 발행 수 확정), 차기 10-Q의 NOL 주석 대조.</p>
+</div>
+<div class="card">
+<h3 class="sect" style="margin-top:0">데이터 출처 및 기준 시점</h3>
+<div class="tbl-wrap" style="border:none"><table style="min-width:0;font-size:12.5px">
+<thead><tr><th class="l">항목</th><th class="l">값</th><th class="l">출처 · 기준일</th></tr></thead>
+<tbody>
+<tr><td class="l">주가·시총</td><td class="l">$7.02 · $2.99B</td><td class="l">Robinhood/Investing 2026-06-10 종가</td></tr>
+<tr><td class="l">주식수</td><td class="l">426.28M</td><td class="l">10-Q, 2026-03-31</td></tr>
+<tr><td class="l">FY25·26Q1 재무</td><td class="l">본문 수치</td><td class="l">SEC 8-K 2026-02-26 · 2026-05-07</td></tr>
+<tr><td class="l">LPSN 거래 조건</td><td class="l">EV $250M 등</td><td class="l">양사 보도자료·425, 2026-04-21</td></tr>
+<tr><td class="l">LPSN 재무</td><td class="l">매출 $243.7M</td><td class="l">LPSN 10-K, 2026-03</td></tr>
+<tr><td class="l">10Y 국채</td><td class="l">4.53%</td><td class="l">FRED·TradingEconomics 2026-06-10</td></tr>
+<tr><td class="l">ERP</td><td class="l">4.75% (대안 4.23%)</td><td class="l">프로젝트 표준 · 다모다란 2026-01</td></tr>
+<tr><td class="l">기대 인플레</td><td class="l">2.5% (실측 2.33~2.34%)</td><td class="l">FRED T10YIE 2026-03~04월</td></tr>
+<tr><td class="l">베타</td><td class="l">원시 2.96</td><td class="l">stockanalysis·eToro, 2026-06</td></tr>
+<tr><td class="l">공매도</td><td class="l">33~38%</td><td class="l">stockanalysis · FPJ 2026-06-08</td></tr>
+<tr><td class="l">산업 TAM</td><td class="l">본문 수치</td><td class="l">Grand View·Market.us·Gartner 2024~26</td></tr>
+<tr><td class="l">목표주가 컨센서스</td><td class="l">평균 $14 ($8–20)</td><td class="l">S&amp;P Global/TipRanks 2026-05-08</td></tr>
+<tr><td class="l">페이드·베이스레이트</td><td class="l">f=0.20 등</td><td class="l">프로젝트 CAP 프레임워크(2026-04)</td></tr>
+</tbody></table></div>
+<p class="note" style="margin-top:8px">상충 출처 알림: ① ERP 4.75%(프로젝트 표준) vs 4.23%(다모다란 1월) — 양쪽 모두 계산·표기. ② 베타 2.95~2.97(다수) vs 4.00(TradingView, 산정 기간 상이 추정) — 다수 일치값 채택. ③ 장기 g 2.5%(표준) vs 시장 기대인플레 2.33% — 표준값 채택(차이 영향 미미).</p>
+</div>
+</div>
+</div></section>
+
+<footer><div class="wrap">
+<svg viewBox="0 0 1000 30" width="100%" height="22" aria-hidden="true" style="opacity:.45;margin-bottom:14px"><g stroke="#5EE6D0" stroke-width="2" stroke-linecap="round"><line x1="10" y1="15" x2="10" y2="15"/><line x1="25" y1="10" x2="25" y2="20"/><line x1="40" y1="6" x2="40" y2="24"/><line x1="55" y1="12" x2="55" y2="18"/><line x1="70" y1="4" x2="70" y2="26"/><line x1="85" y1="9" x2="85" y2="21"/><line x1="100" y1="13" x2="100" y2="17"/></g></svg>
+<p><strong>SoundHound AI (SOUN) — 시장 내재 CAP 분석</strong> · 작성 2026-06-11 · 방법론: 프로젝트 CAP 프레임워크(생애주기 판별 → 경쟁우위 정성분석 → DCF(전시 23 형식) → 내재 CAP 역산 → 민감도·시나리오) · 금액 단위: 별도 표기 없으면 백만 달러($M) · 모든 미래 수치는 가정에 기반한 추정이며, 정밀함보다 방향성과 논리적 일관성을 우선했습니다.</p>
+</div></footer>
+</body>
+</html>
