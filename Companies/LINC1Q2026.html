@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lincoln Educational Services (LINC) — 기업 분석 & 시장 내재 기대치 역산</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F4EF;
+  --paper-2:#FFFFFF;
+  --paper-3:#EFEBE1;
+  --ink:#1B1B18;
+  --ink-soft:#4C4B45;
+  --ink-faint:#6E6C63;
+  --petrol:#15242C;
+  --petrol-2:#1F343E;
+  --petrol-line:#2E4853;
+  --steel:#33617F;
+  --steel-soft:#DBE6ED;
+  --amber:#D9842A;
+  --amber-deep:#A8631A;
+  --amber-soft:#F7E7CE;
+  --brick:#A93A45;
+  --brick-soft:#F3DADD;
+  --forest:#3F7350;
+  --forest-soft:#DCE9DE;
+  --line:#D9D4C8;
+  --line-strong:#BDB6A6;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --disp:'Space Grotesk',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-size:16.5px;line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+h1,h2,h3,h4{font-family:var(--disp);line-height:1.18;letter-spacing:-0.01em;color:var(--ink)}
+p{margin:0 0 1.05em}
+a{color:var(--steel)}
+.mono{font-family:var(--mono)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ---------- top nav ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(21,36,44,0.97);
+  border-bottom:1px solid var(--petrol-line);backdrop-filter:blur(6px)}
+.topbar .wrap{display:flex;align-items:center;gap:14px;
+  flex-wrap:wrap;padding-top:9px;padding-bottom:9px;min-height:46px}
+.brand{font-family:var(--disp);font-weight:700;color:#F6F4EF;font-size:15px;
+  letter-spacing:0.02em;white-space:nowrap}
+.brand b{color:var(--amber)}
+.navlinks{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+.navlinks a{font-family:var(--mono);font-size:11.5px;color:#C7D2D8;
+  text-decoration:none;white-space:nowrap;padding:3px 7px;border-radius:5px;
+  border:1px solid transparent}
+.navlinks a:hover{color:#fff;background:var(--petrol-2);border-color:var(--petrol-line)}
+@media(max-width:720px){
+  .topbar{position:static}
+  html{scroll-padding-top:14px}
+}
+
+/* ---------- hero ---------- */
+.hero{background:var(--petrol);color:#EFEAE0;padding:46px 0 40px;
+  border-bottom:3px solid var(--amber)}
+.hero .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+.hero h1{color:#FBF8F1;font-size:clamp(28px,5vw,46px);margin:0 0 6px;font-weight:700}
+.hero .ticker{font-family:var(--mono);color:#9FB4BC;font-size:15px;margin-bottom:22px}
+.hero .ticker b{color:#EFEAE0}
+.thesis{font-family:var(--disp);font-weight:500;font-size:clamp(17px,2.4vw,21px);
+  line-height:1.5;color:#F1ECE2;max-width:760px;margin:0 0 6px;
+  border-left:3px solid var(--amber);padding-left:18px}
+.thesis em{color:var(--amber);font-style:normal;font-weight:600}
+
+/* quick stats strip */
+.qstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px;background:var(--petrol-line);border:1px solid var(--petrol-line);
+  border-radius:10px;overflow:hidden;margin-top:30px}
+.qstat{background:var(--petrol-2);color:#EFEAE0;padding:13px 15px}
+.qstat .k{font-family:var(--mono);font-size:10.5px;letter-spacing:0.08em;
+  text-transform:uppercase;color:#8FA6AE;margin-bottom:5px}
+.qstat .v{font-family:var(--mono);font-weight:600;font-size:19px;color:#FBF8F1}
+.qstat .s{font-family:var(--mono);font-size:11px;margin-top:2px}
+.up{color:#7FC59B}.down{color:#E59AA2}
+
+/* ---------- gauge ---------- */
+.gaugewrap{background:var(--paper-2);border:1px solid var(--line);
+  border-radius:14px;padding:26px 24px 20px;margin:34px 0 8px;
+  box-shadow:0 1px 0 var(--line)}
+.gaugewrap h3{margin:0 0 4px;font-size:18px}
+.gaugewrap .sub{color:var(--ink-soft);font-size:14px;margin:0 0 18px}
+
+/* ---------- sections ---------- */
+section{padding:48px 0;border-bottom:1px solid var(--line)}
+section.dark{background:var(--petrol);color:#E8E3D8;border-bottom:none}
+section.dark h2,section.dark h3{color:#FBF8F1}
+section.dark p{color:#D6D0C4}
+.sec-no{font-family:var(--mono);font-size:12px;color:var(--amber);
+  letter-spacing:0.14em;font-weight:500}
+section.dark .sec-no{color:var(--amber)}
+h2{font-size:clamp(23px,3.4vw,32px);margin:6px 0 8px;font-weight:700}
+.lead{font-size:17.5px;color:var(--ink-soft);max-width:760px;margin-bottom:8px}
+section.dark .lead{color:#CFC9BC}
+h3.subh{font-size:20px;margin:34px 0 10px;font-weight:600}
+h4.minih{font-size:15px;font-family:var(--disp);font-weight:600;margin:20px 0 8px;
+  letter-spacing:0.01em}
+
+/* ---------- generic cards / callouts (self-contained colors) ---------- */
+.card{background:var(--paper-2);color:var(--ink);border:1px solid var(--line);
+  border-radius:12px;padding:20px 22px;margin:14px 0}
+.card h4{color:var(--ink);margin-top:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+
+.callout{border-radius:12px;padding:18px 20px;margin:18px 0;border:1px solid}
+.callout .ct{font-family:var(--disp);font-weight:600;font-size:14px;
+  letter-spacing:0.05em;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.callout p:last-child{margin-bottom:0}
+.c-amber{background:var(--amber-soft);color:#5E3A0E;border-color:#E6C893}
+.c-amber .ct{color:var(--amber-deep)}
+.c-brick{background:var(--brick-soft);color:#5C1E25;border-color:#E2AEB4}
+.c-brick .ct{color:var(--brick)}
+.c-forest{background:var(--forest-soft);color:#1E3A28;border-color:#A9C9B3}
+.c-forest .ct{color:var(--forest)}
+.c-steel{background:var(--steel-soft);color:#173140;border-color:#A9C2D1}
+.c-steel .ct{color:#234B62}
+/* light card explicitly for placement inside dark sections */
+.card-light{background:#FBF8F1;color:var(--ink);border:1px solid #cdbf9f;
+  border-radius:12px;padding:18px 20px;margin:14px 0}
+.card-light h4,.card-light h3{color:var(--ink)}
+.card-light p{color:var(--ink-soft)}
+
+/* term highlight (beginner glossary) */
+.term{border-bottom:1.5px dotted var(--amber-deep);cursor:help;font-weight:500}
+.gloss{background:var(--paper-3);color:var(--ink);border:1px dashed var(--line-strong);
+  border-radius:10px;padding:12px 16px;margin:12px 0;font-size:14.5px}
+.gloss b{color:var(--amber-deep)}
+section.dark .gloss{background:var(--petrol-2);color:#E2DCD0;border-color:var(--petrol-line)}
+section.dark .gloss b{color:var(--amber)}
+
+/* ---------- tables ---------- */
+.tablebox{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:14px;background:var(--paper-2)}
+th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--line);
+  color:var(--ink);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{background:var(--petrol);color:#F1ECE2;font-family:var(--disp);
+  font-weight:600;font-size:12.5px;letter-spacing:0.03em;border-bottom:none}
+tbody tr:nth-child(even){background:var(--paper-3)}
+td.figure,th.figure{font-family:var(--mono);font-variant-numeric:tabular-nums}
+tr.hl td{background:var(--amber-soft);color:#5E3A0E;font-weight:600}
+.tcap{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);
+  padding:8px 12px;text-align:left}
+
+/* badges */
+.badge{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;
+  padding:2px 9px;border-radius:20px;letter-spacing:0.04em;border:1px solid}
+.b-conf{background:var(--steel-soft);color:#173140;border-color:#A9C2D1}
+.b-up{background:var(--forest-soft);color:#1E3A28;border-color:#A9C9B3}
+.b-down{background:var(--brick-soft);color:#5C1E25;border-color:#E2AEB4}
+.b-warn{background:var(--amber-soft);color:#5E3A0E;border-color:#E6C893}
+
+/* swot */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+@media(max-width:720px){.swot{grid-template-columns:1fr}}
+.swot .q{border-radius:12px;padding:18px 20px;border:1px solid}
+.swot h4{margin:0 0 10px;font-size:15px;display:flex;gap:8px;align-items:center}
+.swot ul{margin:0;padding-left:18px}.swot li{margin-bottom:6px;font-size:14px}
+.sw-s{background:var(--forest-soft);color:#1E3A28;border-color:#A9C9B3}
+.sw-s h4{color:var(--forest)}.sw-s li{color:#1E3A28}
+.sw-w{background:var(--brick-soft);color:#5C1E25;border-color:#E2AEB4}
+.sw-w h4{color:var(--brick)}.sw-w li{color:#5C1E25}
+.sw-o{background:var(--steel-soft);color:#173140;border-color:#A9C2D1}
+.sw-o h4{color:#234B62}.sw-o li{color:#173140}
+.sw-t{background:var(--amber-soft);color:#5E3A0E;border-color:#E6C893}
+.sw-t h4{color:var(--amber-deep)}.sw-t li{color:#5E3A0E}
+
+/* moat meter */
+.moat{display:flex;flex-direction:column;gap:12px;margin:18px 0}
+.moat-row{background:var(--paper-2);border:1px solid var(--line);border-radius:10px;
+  padding:13px 16px;color:var(--ink)}
+.moat-row .top{display:flex;justify-content:space-between;align-items:baseline;
+  gap:10px;margin-bottom:7px}
+.moat-row .nm{font-family:var(--disp);font-weight:600;font-size:14.5px}
+.moat-row .sc{font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.bar{height:8px;border-radius:6px;background:var(--paper-3);overflow:hidden;
+  border:1px solid var(--line)}
+.bar > span{display:block;height:100%;background:var(--amber)}
+.moat-row p{font-size:13.5px;color:var(--ink-soft);margin:8px 0 0}
+
+/* process flow */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:18px 0}
+.flow .step{background:var(--paper-2);border:1px solid var(--line);
+  border-radius:10px;padding:14px 16px;flex:1;min-width:150px;color:var(--ink)}
+.flow .arr{display:flex;align-items:center;justify-content:center;
+  color:var(--amber-deep);font-family:var(--mono);font-size:20px;padding:0 8px}
+.flow .step .n{font-family:var(--mono);font-size:11px;color:var(--amber-deep);
+  font-weight:600;letter-spacing:0.05em}
+.flow .step .t{font-family:var(--disp);font-weight:600;font-size:14px;margin:3px 0 5px}
+.flow .step p{font-size:13px;color:var(--ink-soft);margin:0}
+@media(max-width:720px){.flow .arr{transform:rotate(90deg);padding:4px 0}
+  .flow{flex-direction:column}}
+
+ul.clean{list-style:none;padding:0;margin:14px 0}
+ul.clean li{padding-left:26px;position:relative;margin-bottom:10px}
+ul.clean li::before{content:"▸";position:absolute;left:6px;color:var(--amber-deep);
+  font-family:var(--mono)}
+section.dark ul.clean li{color:#D6D0C4}
+section.dark ul.clean li::before{color:var(--amber)}
+
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:14.5px;margin:8px 0}
+.kv dt{font-family:var(--mono);color:var(--ink-faint);font-size:12.5px}
+.kv dd{margin:0;color:var(--ink)}
+
+.footer{background:var(--petrol);color:#B9C3C8;padding:34px 0 40px;font-size:13px}
+.footer h4{color:#EFEAE0;font-size:13px;font-family:var(--mono);
+  letter-spacing:0.08em;margin:0 0 10px}
+.footer a{color:#9FB4BC}
+.srcgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px}
+.footer .small{font-size:11.5px;color:#8093 99;color:#8FA0A6;line-height:1.6}
+
+/* inline figure label */
+.figlbl{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);
+  letter-spacing:0.05em;text-transform:uppercase;margin:0 0 10px}
+section.dark .figlbl{color:#8FA6AE}
+.big{font-family:var(--mono);font-weight:600;font-size:clamp(30px,6vw,46px);
+  line-height:1;letter-spacing:-0.02em}
+.big.down{color:var(--brick)} .big.up{color:var(--forest)}
+section.dark .big.down{color:#E59AA2} section.dark .big.up{color:#7FC59B}
+
+svg{max-width:100%;height:auto;display:block}
+
+/* ---- CONTRAST GUARD: light boxes inside dark sections must keep dark text ---- */
+section.dark .card-light h2,
+section.dark .card-light h3,
+section.dark .card-light h4{color:var(--ink)}
+section.dark .card-light p{color:var(--ink-soft)}
+section.dark .card-light li{color:var(--ink)}
+section.dark .card-light ul.clean li::before{color:var(--amber-deep)}
+section.dark .card-light .figlbl{color:var(--ink-faint)}
+section.dark .card-light .tcap{color:var(--ink-faint)}
+section.dark .card-light dt{color:var(--ink-faint)}
+section.dark .card-light dd{color:var(--ink)}
+section.dark .card-light th,
+section.dark .card-light td{color:var(--ink)}
+section.dark .card-light thead th{color:#F1ECE2}
+section.dark .card-light tr.hl td{color:#5E3A0E}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<div class="topbar"><div class="wrap">
+  <span class="brand">LINC <b>·</b> CAP 분석</span>
+  <nav class="navlinks">
+    <a href="#verdict">핵심결론</a>
+    <a href="#overview">기업개요</a>
+    <a href="#revenue">수익구조</a>
+    <a href="#product">제품·기술</a>
+    <a href="#industry">산업분석</a>
+    <a href="#lifecycle">생애주기</a>
+    <a href="#moat">해자</a>
+    <a href="#swot">SWOT</a>
+    <a href="#peer">피어비교</a>
+    <a href="#dcf">DCF</a>
+    <a href="#reverse">내재CAP</a>
+    <a href="#sens">민감도</a>
+    <a href="#scenario">시나리오</a>
+    <a href="#risk">리스크</a>
+    <a href="#synth">종합판단</a>
+    <a href="#limits">한계·가정</a>
+  </nav>
+</div></div>
+
+<!-- ============ HERO ============ -->
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">기업 이해 · 시장 내재 기대치 역산 보고서</div>
+  <h1>Lincoln Educational Services</h1>
+  <div class="ticker"><b>NASDAQ: LINC</b> &nbsp;·&nbsp; 미국 직업·기술 교육(트레이드 스쿨) &nbsp;·&nbsp; 기준일 2026년 6월 11일 종가</div>
+
+  <p class="thesis">
+    링컨에듀케이셔널은 용접·자동차정비·전기 같은 <em>손으로 하는 숙련기술</em>을 가르치는 80년 역사의 미국 직업학교입니다.
+    사업 자체는 인력난이라는 강력한 순풍을 타고 빠르게 성장 중입니다. 다만 현재 주가($47.61)는,
+    경영진의 야심 찬 2030년 목표를 <em>그대로 달성하고도</em> 정당화되기 어려운 수준의 기대를 이미 품고 있습니다.
+  </p>
+
+  <div class="qstats">
+    <div class="qstat"><div class="k">현재가</div><div class="v">$47.61</div><div class="s" style="color:#9FB4BC">6/11 종가</div></div>
+    <div class="qstat"><div class="k">시가총액</div><div class="v">$1.51B</div><div class="s up">+107.6% / 1Y</div></div>
+    <div class="qstat"><div class="k">PER (TTM)</div><div class="v">66.2x</div><div class="s" style="color:#9FB4BC">선행 56.3x</div></div>
+    <div class="qstat"><div class="k">매출 (TTM)</div><div class="v">$545M</div><div class="s up">+19.9%</div></div>
+    <div class="qstat"><div class="k">52주 범위</div><div class="v" style="font-size:15px">$17.29–53.50</div><div class="s" style="color:#9FB4BC">변동성 큼</div></div>
+    <div class="qstat"><div class="k">DCF 기본값</div><div class="v">$23.78</div><div class="s down">현재가 대비 −50%</div></div>
+  </div>
+
+  <!-- valuation gauge -->
+  <div class="gaugewrap">
+    <h3>밸류에이션 게이지 — 가치의 '눈금'은 어디를 가리키나</h3>
+    <p class="sub">아래 자(ruler)는 분석으로 도출한 주당 가치 추정치들을 한 줄에 놓은 것입니다. 현재 주가는 가장 낙관적인 강세 시나리오보다도 오른쪽에 있습니다.</p>
+    <svg viewBox="0 0 1000 210" role="img" aria-label="밸류에이션 게이지">
+      <!-- baseline -->
+      <line x1="60" y1="120" x2="940" y2="120" stroke="#BDB6A6" stroke-width="2"/>
+      <!-- ticks every $10 (0..60 mapped 60..940) ; scale x = 60 + (val/60)*880 -->
+      <g font-family="IBM Plex Mono" font-size="12" fill="#6E6C63">
+        <line x1="60"  y1="114" x2="60"  y2="126" stroke="#9C958A" stroke-width="1.5"/><text x="60"  y="146" text-anchor="middle">$0</text>
+        <line x1="207" y1="114" x2="207" y2="126" stroke="#9C958A" stroke-width="1.5"/><text x="207" y="146" text-anchor="middle">$10</text>
+        <line x1="353" y1="114" x2="353" y2="126" stroke="#9C958A" stroke-width="1.5"/><text x="353" y="146" text-anchor="middle">$20</text>
+        <line x1="500" y1="114" x2="500" y2="126" stroke="#9C958A" stroke-width="1.5"/><text x="500" y="146" text-anchor="middle">$30</text>
+        <line x1="647" y1="114" x2="647" y2="126" stroke="#9C958A" stroke-width="1.5"/><text x="647" y="146" text-anchor="middle">$40</text>
+        <line x1="793" y1="114" x2="793" y2="126" stroke="#9C958A" stroke-width="1.5"/><text x="793" y="146" text-anchor="middle">$50</text>
+        <line x1="940" y1="114" x2="940" y2="126" stroke="#9C958A" stroke-width="1.5"/><text x="940" y="146" text-anchor="middle">$60</text>
+      </g>
+      <!-- value-range band: bear(8.85)->bull(40.50): x 190 -> 654 -->
+      <rect x="190" y="111" width="464" height="18" fill="#33617F" opacity="0.20" rx="3"/>
+      <text x="422" y="170" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#6E6C63">분석상 가치 범위 (약세 ~ 강세)</text>
+
+      <!-- markers -->
+      <!-- bear 8.85 -> x=190 -->
+      <g><line x1="190" y1="78" x2="190" y2="120" stroke="#A93A45" stroke-width="2.5"/>
+        <circle cx="190" cy="78" r="5" fill="#A93A45"/>
+        <text x="190" y="68" text-anchor="middle" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#A93A45">약세 $8.85</text></g>
+      <!-- base 23.78 -> x=409 -->
+      <g><line x1="409" y1="58" x2="409" y2="120" stroke="#15242C" stroke-width="2.5"/>
+        <circle cx="409" cy="58" r="6" fill="#15242C"/>
+        <text x="409" y="48" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="14" fill="#15242C">기본 $23.78</text></g>
+      <!-- bull 40.50 -> x=654 -->
+      <g><line x1="654" y1="78" x2="654" y2="120" stroke="#3F7350" stroke-width="2.5"/>
+        <circle cx="654" cy="78" r="5" fill="#3F7350"/>
+        <text x="654" y="68" text-anchor="middle" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#3F7350">강세 $40.50</text></g>
+      <!-- price 47.61 -> x=758 -->
+      <g><line x1="758" y1="92" x2="758" y2="120" stroke="#D9842A" stroke-width="3.5"/>
+        <polygon points="758,86 750,74 766,74" fill="#D9842A"/>
+        <text x="758" y="66" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#A8631A">현재가 $47.61</text></g>
+      <!-- analyst target 57.40 -> x=902 -->
+      <g><line x1="902" y1="92" x2="902" y2="120" stroke="#B0A99B" stroke-width="2" stroke-dasharray="3 3"/>
+        <circle cx="902" cy="92" r="4" fill="#9C958A"/>
+        <text x="902" y="82" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#6E6C63">월가목표 $57.40</text></g>
+    </svg>
+  </div>
+  <p style="font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);margin-top:6px">
+    출처: 주가·시총·컨센서스 stockanalysis.com(2026-06-11) · 가치 추정치는 본 보고서 DCF 모델. 확신도 표기는 각 절 참조.
+  </p>
+</div></header>
+
+<main>
+
+<!-- ============ 0. 핵심결론 ============ -->
+<section id="verdict">
+<div class="wrap">
+  <span class="sec-no">결론 / VERDICT</span>
+  <h2>한 문장 결론, 그리고 숫자 세 개</h2>
+  <p class="lead">먼저 결론부터: <b>좋은 사업, 그러나 비싼 주가.</b> 링컨에듀케이셔널의 사업은 숙련기술 인력난이라는 구조적 순풍 위에 있고 실제로 빠르게 성장하고 있지만, 현재 시장 가격은 합리적인 가정으로는 닿기 어려운 수준의 미래를 이미 반영하고 있습니다.</p>
+
+  <div class="grid3">
+    <div class="card">
+      <div class="figlbl">① 기본 시나리오 가치</div>
+      <div class="big down">−50%</div>
+      <p style="margin:10px 0 0;font-size:14px;color:var(--ink-soft)">경영진의 2030년 목표(매출 $850M)를 <b>그대로 달성</b>하고 이익률 11.5%를 장기 유지한다고 가정해도, DCF 기본값은 <b class="num">$23.78</b> — 현재가의 절반입니다.</p>
+    </div>
+    <div class="card">
+      <div class="figlbl">② 시장이 요구하는 이익률</div>
+      <div class="big" style="color:var(--amber-deep)">~23.5%</div>
+      <p style="margin:10px 0 0;font-size:14px;color:var(--ink-soft)">현재가를 정당화하려면 장기 영업이익률이 <b>약 23.5%</b>여야 합니다. 회사의 2030년 목표가 함의하는 ~12.6%, 가장 닮은 경쟁사 UTI의 10%를 크게 웃돕니다.</p>
+    </div>
+    <div class="card">
+      <div class="figlbl">③ 시장이 요구하는 할인율</div>
+      <div class="big" style="color:var(--amber-deep)">~5.6%</div>
+      <p style="margin:10px 0 0;font-size:14px;color:var(--ink-soft)">또는 자본비용(요구수익률)이 <b class="num">~5.58%</b>까지 낮아져야 합니다. 이는 소형 영리교육주에 비현실적으로 낮은 위험 가정(내재 베타 ~0.23)입니다.</p>
+    </div>
+  </div>
+
+  <div class="callout c-amber">
+    <div class="ct">⚠ 핵심 메시지</div>
+    <p>이 분석은 "적정 주가"를 맞히려는 것이 아니라, <b>현재 주가가 이미 어떤 기대를 품고 있는지</b>를 거꾸로 읽어내는 방식입니다. 결론적으로 현재가는 "경영진 목표 달성"을 넘어 "그 목표를 훌쩍 능가하는 장기 초과수익"을 가정해야 성립합니다. 사업의 질과 주가의 매력은 별개라는 점이 핵심입니다. <span class="badge b-conf">종합 확신도 중상 ~70%</span></p>
+  </div>
+
+  <div class="gloss"><b>이 보고서를 읽는 법.</b> 처음 보는 분도 이해할 수 있도록 ①회사가 무엇을 하고 어떻게 돈을 버는지(2~5절) → ②경쟁력과 위치(6~9절) → ③그 사업에 지금 가격이 합리적인지(10~14절) 순서로 구성했습니다. 점선 밑줄이 있는 <span class="term" title="마우스를 올리면 쉬운 설명이 나옵니다">용어</span>는 마우스를 올리면 풀이가 나오고, 본문에서도 괄호로 쉽게 설명합니다.</div>
+</div>
+</section>
+
+<!-- ============ 1. 기업개요 ============ -->
+<section id="overview">
+<div class="wrap">
+  <span class="sec-no">01 / 기업 개요</span>
+  <h2>링컨에듀케이셔널은 무엇을 하는 회사인가</h2>
+  <p class="lead">한 문장 요약: <b>고등학교 졸업생과 직장인에게 용접·자동차정비·전기·간호 같은 '바로 취업되는 손기술'을 캠퍼스에서 직접 가르치고, 수업료(대부분 연방 학자금)로 돈을 버는 80년 역사의 미국 직업학교 운영회사.</b></p>
+
+  <div class="grid2">
+    <div>
+      <h4 class="minih">설립과 정체성</h4>
+      <p>링컨에듀케이셔널서비스(Lincoln Educational Services)는 <b>1946년</b> 설립돼 80년 가까운 역사를 가진 미국의 <span class="term" title="대학 학위가 아니라 특정 직업에 필요한 실무 기술을 단기간에 가르치는 직업·기술 학교. '트레이드 스쿨'이라고도 부른다">직업·기술 교육기관</span>(트레이드 스쿨)입니다. 본사는 미국 뉴저지주 파시패니에 있고, 직원은 약 2,590명입니다.</p>
+      <p>4년제 대학이 '학문'을 가르친다면, 링컨은 <b>"졸업하면 곧바로 현장에 투입되는 손기술"</b>을 가르칩니다. 자동차 정비공, 용접공, 전기·냉난방(HVAC) 기술자, 간호조무사, 요리사 같은 직업이 대표적입니다.</p>
+    </div>
+    <div>
+      <h4 class="minih">규모와 브랜드</h4>
+      <dl class="kv">
+        <dt>캠퍼스</dt><dd>미국 12개 주에 약 22개 (물리적 실습 캠퍼스)</dd>
+        <dt>학교 브랜드</dt><dd>Lincoln Technical Institute, Lincoln College of Technology, Nashville Auto Diesel College</dd>
+        <dt>사업 부문</dt><dd>① Campus Operations(운영 중 캠퍼스 — 핵심)<br>② Transitional(폐쇄·정리 중 캠퍼스)</dd>
+        <dt>CEO</dt><dd>Scott M. Shaw (사장 겸 CEO)</dd>
+        <dt>상장</dt><dd>NASDAQ, 2005년 6월 상장</dd>
+        <dt>배당</dt><dd>없음 (이익을 성장에 재투자)</dd>
+      </dl>
+    </div>
+  </div>
+
+  <h4 class="minih">무엇을 가르치나 — 6개 분야</h4>
+  <div class="grid3">
+    <div class="card" style="margin:8px 0"><h4 style="margin:0 0 6px">🔧 자동차·디젤</h4><p style="margin:0;font-size:13.5px;color:var(--ink-soft)">자동차·디젤 엔진 정비. 회사의 뿌리이자 간판 분야(Nashville Auto Diesel College).</p></div>
+    <div class="card" style="margin:8px 0"><h4 style="margin:0 0 6px">⚡ 숙련기술(트레이드)</h4><p style="margin:0;font-size:13.5px;color:var(--ink-soft)">전기, 냉난방공조(HVAC), 용접, CNC(컴퓨터 제어 가공), 전기·전자 시스템.</p></div>
+    <div class="card" style="margin:8px 0"><h4 style="margin:0 0 6px">🏥 헬스케어</h4><p style="margin:0;font-size:13.5px;color:var(--ink-soft)">간호조무, 치과보조, 의료행정 등 보건 분야 자격·디플로마.</p></div>
+    <div class="card" style="margin:8px 0"><h4 style="margin:0 0 6px">💻 IT</h4><p style="margin:0;font-size:13.5px;color:var(--ink-soft)">정보기술 관련 자격 프로그램.</p></div>
+    <div class="card" style="margin:8px 0"><h4 style="margin:0 0 6px">🍳 요리</h4><p style="margin:0;font-size:13.5px;color:var(--ink-soft)">조리·외식 분야 직업교육.</p></div>
+    <div class="card" style="margin:8px 0"><h4 style="margin:0 0 6px">💇 미용</h4><p style="margin:0;font-size:13.5px;color:var(--ink-soft)">미용·뷰티 분야 직업교육.</p></div>
+  </div>
+
+  <div class="callout c-steel">
+    <div class="ct">💡 쉽게 비유하면</div>
+    <p>대학이 "이론과 학위를 파는 곳"이라면, 링컨은 <b>"6개월~2년 안에 손에 잡히는 기술과 취업을 파는 곳"</b>입니다. 학생들은 실제 자동차·용접기·환자 모형이 있는 실습 캠퍼스에서 배우고, 졸업 후 정비소·건설사·병원 등에 취업합니다. 이 '<b>물리적 실습</b>'이 나중에 살펴볼 경쟁 해자의 핵심입니다 — 용접은 온라인 강의만으로 배울 수 없기 때문입니다.</p>
+  </div>
+</div>
+</section>
+
+<!-- ============ 2. 수익구조 ============ -->
+<section id="revenue">
+<div class="wrap">
+  <span class="sec-no">02 / 수익 구조</span>
+  <h2>이 회사는 어떻게 돈을 버는가</h2>
+  <p class="lead">핵심: <b>학생이 내는 수업료가 매출의 거의 전부</b>입니다. 그런데 그 수업료의 약 85%는 학생 개인 돈이 아니라 <b>미국 연방정부의 학자금 지원(Title IV)</b>에서 나옵니다. 이 구조가 성장 동력이자 동시에 가장 큰 규제 리스크입니다.</p>
+
+  <div class="figlbl">돈의 흐름 — 한눈에 보기</div>
+  <div class="card" style="padding:24px">
+    <svg viewBox="0 0 980 300" role="img" aria-label="수익 흐름 다이어그램">
+      <defs>
+        <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#A8631A"/>
+        </marker>
+      </defs>
+      <!-- left: funding sources -->
+      <rect x="20" y="40" width="210" height="64" rx="10" fill="#DBE6ED" stroke="#A9C2D1"/>
+      <text x="125" y="66" text-anchor="middle" font-family="Space Grotesk" font-weight="600" font-size="14" fill="#173140">미 연방 학자금</text>
+      <text x="125" y="86" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#234B62">Title IV · 약 85%</text>
+
+      <rect x="20" y="124" width="210" height="58" rx="10" fill="#EFEBE1" stroke="#BDB6A6"/>
+      <text x="125" y="148" text-anchor="middle" font-family="Space Grotesk" font-weight="600" font-size="14" fill="#1B1B18">학생 자비·기타</text>
+      <text x="125" y="167" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#4C4B45">약 15%</text>
+
+      <rect x="20" y="202" width="210" height="58" rx="10" fill="#F7E7CE" stroke="#E6C893"/>
+      <text x="125" y="226" text-anchor="middle" font-family="Space Grotesk" font-weight="600" font-size="13.5" fill="#5E3A0E">고용주 후원·보조금</text>
+      <text x="125" y="245" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#A8631A">파트너십 (소액·성장중)</text>
+
+      <!-- center: company -->
+      <rect x="385" y="100" width="210" height="100" rx="12" fill="#15242C" stroke="#2E4853"/>
+      <text x="490" y="138" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#FBF8F1">LINC</text>
+      <text x="490" y="160" text-anchor="middle" font-family="Inter" font-size="12.5" fill="#C7D2D8">캠퍼스에서 수업 제공</text>
+      <text x="490" y="180" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#D9842A">매출 인식 → 수업료</text>
+
+      <!-- arrows source->company -->
+      <path d="M230,72 C320,72 320,130 383,130" fill="none" stroke="#A8631A" stroke-width="2" marker-end="url(#ah)"/>
+      <path d="M230,153 L383,150" fill="none" stroke="#A8631A" stroke-width="2" marker-end="url(#ah)"/>
+      <path d="M230,231 C320,231 320,172 383,172" fill="none" stroke="#A8631A" stroke-width="2" marker-end="url(#ah)"/>
+
+      <!-- right: cost buckets out -->
+      <rect x="750" y="34" width="210" height="52" rx="10" fill="#FBF8F1" stroke="#BDB6A6"/>
+      <text x="855" y="56" text-anchor="middle" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#1B1B18">강사·캠퍼스 운영</text>
+      <text x="855" y="74" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#4C4B45">교육원가</text>
+
+      <rect x="750" y="98" width="210" height="52" rx="10" fill="#FBF8F1" stroke="#BDB6A6"/>
+      <text x="855" y="120" text-anchor="middle" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#1B1B18">마케팅·모집·관리</text>
+      <text x="855" y="138" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#4C4B45">판관비(SG&A)</text>
+
+      <rect x="750" y="162" width="210" height="52" rx="10" fill="#F7E7CE" stroke="#E6C893"/>
+      <text x="855" y="184" text-anchor="middle" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#5E3A0E">신규 캠퍼스 투자</text>
+      <text x="855" y="202" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#A8631A">설비투자(Capex)</text>
+
+      <rect x="750" y="226" width="210" height="52" rx="10" fill="#DCE9DE" stroke="#A9C9B3"/>
+      <text x="855" y="248" text-anchor="middle" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#1E3A28">남는 이익</text>
+      <text x="855" y="266" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#3F7350">순이익·현금흐름</text>
+
+      <path d="M595,130 C660,130 680,60 748,60" fill="none" stroke="#A8631A" stroke-width="2" marker-end="url(#ah)"/>
+      <path d="M595,145 C660,145 680,124 748,124" fill="none" stroke="#A8631A" stroke-width="2" marker-end="url(#ah)"/>
+      <path d="M595,160 C660,160 680,188 748,188" fill="none" stroke="#A8631A" stroke-width="2" marker-end="url(#ah)"/>
+      <path d="M595,175 C660,175 680,252 748,252" fill="none" stroke="#3F7350" stroke-width="2" marker-end="url(#ah)"/>
+    </svg>
+  </div>
+
+  <div class="gloss"><b>Title IV가 뭔가요?</b> 미국 연방정부가 대학·직업학교 학생에게 주는 학자금(장학금 Pell Grant + 학자금 대출)을 통칭합니다. 학생이 이 돈으로 수업료를 내면, 결국 링컨 매출의 대부분이 <b>연방 예산에서 흘러나오는 셈</b>입니다. 그래서 정부의 교육·학자금 정책 변화가 회사 실적에 직접 영향을 줍니다.</div>
+
+  <h4 class="minih">매출 성장 추이 — 가속이 붙고 있다</h4>
+  <p>최근 5년간 매출은 꾸준히, 그리고 <b>점점 빠르게</b> 늘었습니다. 2025년 매출은 5.18억 달러로 전년 대비 +17.8% 성장했고, 회사는 2026년 약 6억 달러, 2030년 8.5억 달러를 목표로 제시했습니다.</p>
+  <div class="card" style="padding:24px">
+    <svg viewBox="0 0 920 340" role="img" aria-label="매출 추이 막대그래프">
+      <!-- axes -->
+      <line x1="70" y1="280" x2="890" y2="280" stroke="#BDB6A6" stroke-width="1.5"/>
+      <g font-family="IBM Plex Mono" font-size="11" fill="#6E6C63">
+        <text x="60" y="284" text-anchor="end">0</text>
+        <line x1="66" y1="218" x2="70" y2="218" stroke="#BDB6A6"/><text x="60" y="222" text-anchor="end">200</text>
+        <line x1="66" y1="156" x2="70" y2="156" stroke="#BDB6A6"/><text x="60" y="160" text-anchor="end">400</text>
+        <line x1="66" y1="94"  x2="70" y2="94"  stroke="#BDB6A6"/><text x="60" y="98"  text-anchor="end">600</text>
+        <line x1="66" y1="56"  x2="70" y2="56"  stroke="#BDB6A6"/><text x="60" y="60"  text-anchor="end">850</text>
+      </g>
+      <!-- bars: scale y = 280 - rev*0.31 -->
+      <!-- 335.3,348.3,378.1,440.1,518.2 actual; 595 (2026E), 850 (2030E) -->
+      <g font-family="IBM Plex Mono" font-size="12" font-weight="600">
+        <rect x="95"  y="176" width="78" height="104" rx="3" fill="#33617F"/><text x="134" y="168" text-anchor="middle" fill="#173140">335</text><text x="134" y="298" text-anchor="middle" fill="#6E6C63" font-weight="400">2021</text>
+        <rect x="200" y="172" width="78" height="108" rx="3" fill="#33617F"/><text x="239" y="164" text-anchor="middle" fill="#173140">348</text><text x="239" y="298" text-anchor="middle" fill="#6E6C63" font-weight="400">2022</text>
+        <rect x="305" y="163" width="78" height="117" rx="3" fill="#33617F"/><text x="344" y="155" text-anchor="middle" fill="#173140">378</text><text x="344" y="298" text-anchor="middle" fill="#6E6C63" font-weight="400">2023</text>
+        <rect x="410" y="144" width="78" height="136" rx="3" fill="#33617F"/><text x="449" y="136" text-anchor="middle" fill="#173140">440</text><text x="449" y="298" text-anchor="middle" fill="#6E6C63" font-weight="400">2024</text>
+        <rect x="515" y="119" width="78" height="161" rx="3" fill="#15242C"/><text x="554" y="111" text-anchor="middle" fill="#15242C">518</text><text x="554" y="298" text-anchor="middle" fill="#1B1B18" font-weight="600">2025</text>
+        <rect x="620" y="96"  width="78" height="184" rx="3" fill="#D9842A" opacity="0.55"/><text x="659" y="88" text-anchor="middle" fill="#A8631A">595</text><text x="659" y="298" text-anchor="middle" fill="#A8631A" font-weight="400">2026E</text>
+        <rect x="725" y="56"  width="78" height="224" rx="3" fill="#D9842A" opacity="0.3" stroke="#D9842A" stroke-dasharray="4 3"/><text x="764" y="48" text-anchor="middle" fill="#A8631A">850</text><text x="764" y="298" text-anchor="middle" fill="#A8631A" font-weight="400">2030목표</text>
+      </g>
+      <text x="480" y="326" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#6E6C63">단위: 백만 달러 · 진한 막대=실적, 주황=가이던스/목표</text>
+    </svg>
+  </div>
+
+  <div class="callout c-amber">
+    <div class="ct">⚠ 수익 구조의 양면성</div>
+    <p>매출의 약 <b>85%가 연방 학자금(Title IV)</b>에 의존한다는 것은, 정부 지원이 든든할 때는 성장 엔진이지만 규제가 강화되면 곧바로 타격받는 <b>'규제 의존형'</b> 사업 구조라는 뜻입니다. 뒤의 산업·리스크 절에서 자세히 다룹니다.</p>
+  </div>
+</div>
+</section>
+
+<!-- ============ 3. 제품·기술 ============ -->
+<section id="product">
+<div class="wrap">
+  <span class="sec-no">03 / 제품·서비스 & 기술력</span>
+  <h2>'제품'은 교육과정, '기술력'은 운영 방식이다</h2>
+  <p class="lead">교육회사의 경쟁력은 첨단 기술이 아니라 <b>"같은 캠퍼스·강사로 얼마나 많은 학생을 잘 가르쳐 졸업·취업시키느냐"</b>는 운영 효율에서 나옵니다. 링컨의 최근 핵심 무기는 'Lincoln 10.0'이라는 하이브리드 수업 모델입니다.</p>
+
+  <h4 class="minih">학생 한 명이 거치는 과정 (서비스 제공 흐름)</h4>
+  <div class="flow">
+    <div class="step"><div class="n">STEP 1</div><div class="t">모집·등록</div><p>마케팅으로 지원자를 모으고 등록. 이때 판관비(마케팅비)가 든다.</p></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="n">STEP 2</div><div class="t">학자금 연결</div><p>대부분 Title IV 연방 학자금으로 수업료 충당.</p></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="n">STEP 3</div><div class="t">캠퍼스 실습 교육</div><p>실제 장비로 손기술 훈련. 일부 이론은 온라인(비동기).</p></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="n">STEP 4</div><div class="t">졸업·자격 취득</div><p>6개월~2년 후 디플로마·자격증.</p></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="n">STEP 5</div><div class="t">취업 연계</div><p>고용주 파트너십으로 정비소·건설사·병원 등 취업.</p></div>
+  </div>
+
+  <h4 class="minih">'Lincoln 10.0' — 마진 확대의 핵심 지렛대</h4>
+  <div class="grid2">
+    <div>
+      <p><b>Lincoln 10.0</b>은 2025년 말 도입을 완료한 하이브리드 교육 모델입니다. 이론 수업의 약 <b>30%를 비동기 온라인</b>(학생이 원하는 시간에 듣는 녹화 강의)으로 돌리고, 나머지 <b>70%는 캠퍼스에서 손으로 하는 실습</b>으로 진행합니다.</p>
+      <p>왜 중요할까요? 강사 한 명이 여러 반(코호트)을 동시에 담당할 수 있고, 캠퍼스 장비와 공간을 더 빽빽하게 돌릴 수 있게 됩니다. 즉 <b>같은 비용으로 더 많은 학생</b>을 가르쳐 <span class="term" title="매출이 늘 때 비용은 그만큼 늘지 않아 이익이 더 빠르게 증가하는 효과">운영 레버리지</span>(매출이 늘수록 이익률이 빠르게 좋아지는 효과)를 만드는 장치입니다.</p>
+    </div>
+    <div class="card-light">
+      <h4 style="margin-top:0">왜 '완전 온라인'은 안 되나</h4>
+      <p>용접 불꽃, 엔진 분해, 환자 케어, 머리 손질 — 이런 기술은 <b>몸으로 익혀야</b> 합니다. 화면만 봐서는 배울 수 없죠. 그래서 링컨은 물리적 캠퍼스와 실습 장비가 반드시 필요합니다.</p>
+      <p style="margin-bottom:0">이 점은 <b>약점이자 강점</b>입니다. 캠퍼스를 지어야 하니 돈(설비투자)이 많이 들지만, 동시에 순수 온라인 교육업체가 이 시장을 쉽게 넘보지 못하게 막는 <b>진입장벽</b>이 됩니다.</p>
+    </div>
+  </div>
+
+  <div class="callout c-forest">
+    <div class="ct">✓ 기술력의 실체</div>
+    <p>링컨의 '기술'은 반도체나 AI 같은 첨단 기술이 아니라, <b>① 80년간 다듬은 직업교육 커리큘럼, ② 고용주가 원하는 기술을 반영하는 산학 연계, ③ Lincoln 10.0 같은 운영 효율화</b>입니다. 투자 관점에서 중요한 것은 이 운영 효율이 실제로 <b>이익률 상승</b>으로 이어지느냐인데, 이것이 바로 현재 주가가 베팅하고 있는 핵심 가정입니다.</p>
+  </div>
+</div>
+</section>
+
+<!-- ============ 4. 산업분석 ============ -->
+<section id="industry" class="dark">
+<div class="wrap">
+  <span class="sec-no">04 / 산업 분석</span>
+  <h2>직업교육 산업 — 구조, 순풍, 그리고 규제의 그늘</h2>
+  <p class="lead">링컨이 속한 산업은 <b>'영리 목적 직업·기술 교육(For-profit vocational education)'</b>입니다. 지금 이 산업은 미국의 심각한 숙련공 부족이라는 강력한 순풍을 받고 있지만, 동시에 연방 규제라는 머리 위 먹구름과 함께 살아갑니다.</p>
+
+  <h4 class="minih" style="color:#FBF8F1">산업 가치사슬 — 돈과 사람이 흐르는 길</h4>
+  <div class="card-light">
+    <svg viewBox="0 0 940 200" role="img" aria-label="산업 가치사슬">
+      <defs><marker id="ah2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#33617F"/></marker></defs>
+      <g font-family="Space Grotesk" font-weight="600" font-size="13.5">
+        <rect x="10"  y="70" width="150" height="60" rx="10" fill="#DBE6ED" stroke="#A9C2D1"/><text x="85" y="96" text-anchor="middle" fill="#173140">연방정부</text><text x="85" y="115" text-anchor="middle" font-family="Inter" font-size="11" fill="#234B62">학자금·규제</text>
+        <rect x="205" y="70" width="150" height="60" rx="10" fill="#F7E7CE" stroke="#E6C893"/><text x="280" y="96" text-anchor="middle" fill="#5E3A0E">학생</text><text x="280" y="115" text-anchor="middle" font-family="Inter" font-size="11" fill="#A8631A">고졸·직장인</text>
+        <rect x="400" y="70" width="150" height="60" rx="10" fill="#15242C" stroke="#2E4853"/><text x="475" y="96" text-anchor="middle" fill="#FBF8F1">직업학교</text><text x="475" y="115" text-anchor="middle" font-family="Inter" font-size="11" fill="#D9842A">LINC·UTI 등</text>
+        <rect x="595" y="70" width="150" height="60" rx="10" fill="#DCE9DE" stroke="#A9C9B3"/><text x="670" y="96" text-anchor="middle" fill="#1E3A28">졸업생</text><text x="670" y="115" text-anchor="middle" font-family="Inter" font-size="11" fill="#3F7350">숙련 인력</text>
+        <rect x="790" y="70" width="140" height="60" rx="10" fill="#EFEBE1" stroke="#BDB6A6"/><text x="860" y="96" text-anchor="middle" fill="#1B1B18">고용주</text><text x="860" y="115" text-anchor="middle" font-family="Inter" font-size="11" fill="#4C4B45">정비소·건설·병원</text>
+      </g>
+      <path d="M160,100 L203,100" stroke="#33617F" stroke-width="2" marker-end="url(#ah2)"/>
+      <path d="M355,100 L398,100" stroke="#33617F" stroke-width="2" marker-end="url(#ah2)"/>
+      <path d="M550,100 L593,100" stroke="#33617F" stroke-width="2" marker-end="url(#ah2)"/>
+      <path d="M745,100 L788,100" stroke="#33617F" stroke-width="2" marker-end="url(#ah2)"/>
+      <!-- feedback: employer funds students/partnerships -->
+      <path d="M860,68 C860,20 280,20 280,68" fill="none" stroke="#A8631A" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ah2)"/>
+      <text x="570" y="32" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5" fill="#A8631A">고용주 파트너십·후원(점선)</text>
+    </svg>
+  </div>
+  <p style="font-size:13.5px;color:#B9C3C8;margin-top:8px">연방정부의 학자금이 학생을 거쳐 학교로 흐르고, 학교는 숙련 인력을 길러 고용주에게 공급합니다. 고용주는 다시 학교와 파트너십·후원으로 연결됩니다. 링컨은 이 사슬의 한가운데에 있습니다.</p>
+
+  <h4 class="minih" style="color:#FBF8F1">산업을 밀어 올리는 순풍 (성장 동력)</h4>
+  <div class="grid2">
+    <div class="card-light">
+      <h4 style="margin-top:0;color:#1E3A28">🔆 구조적 인력난</h4>
+      <ul class="clean" style="margin:0">
+        <li><b>건설업</b>: 2026년 약 34.9만 명 인력 부족 전망</li>
+        <li><b>제조업</b>: 2033년까지 약 380만 개 일자리 충원 필요, 현재 공석률 약 40% (McKinsey)</li>
+        <li>베이비부머 숙련공 은퇴 + 4년제 대학 기피 흐름이 맞물려 <b>"손기술 인력"</b> 수요가 구조적으로 증가</li>
+      </ul>
+    </div>
+    <div class="card-light">
+      <h4 style="margin-top:0;color:#234B62">🏛 우호적 정책 환경</h4>
+      <ul class="clean" style="margin:0">
+        <li>미 노동부 견습(apprenticeship) 투자 확대 (2026년 1월 약 1.45억 달러)</li>
+        <li>트럼프 행정부의 'American Skill Grants', <span class="term" title="단기 직업훈련 과정에도 연방 장학금(Pell)을 쓸 수 있게 확대하는 정책">Workforce Pell</span>(단기 직업과정 장학금) 확대 논의</li>
+        <li>$1.2조 인프라법(IIJA)에 따른 건설·기술 인력 수요</li>
+        <li>트레이드 스쿨 시장 연 약 6% 성장 추정</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4 class="minih" style="color:#FBF8F1">머리 위의 먹구름 — 규제 (산업 최대 리스크)</h4>
+  <div class="callout c-brick" style="background:#3a1d21;border-color:#7a3a42;color:#F3DADD">
+    <div class="ct" style="color:#E59AA2">⚠ 영리교육의 숙명적 규제</div>
+    <p style="color:#EAD3D6">영리 목적 교육기관은 "정부 돈으로 학생을 모아 부실 교육을 판다"는 비판의 표적이 되어 왔고, 그래서 강도 높은 규제를 받습니다. 핵심 두 가지:</p>
+    <p style="color:#EAD3D6;margin-bottom:0"><b>① 90/10 규정</b> — 매출의 90%를 초과해 연방 학자금에 의존하면 안 됩니다. 링컨은 기관별로 82.9~88.0% 수준이라 상한(90%)까지 여유가 크지 않습니다. <br><b>② Gainful Employment(GE, 취업성과 규정)</b> — 졸업생의 빚 대비 소득이 기준에 못 미치면 해당 과정의 학자금 자격이 박탈됩니다. <b>2026년 7월 1일부터 첫 자격박탈이 가능</b>해집니다.</p>
+  </div>
+
+  <div class="gloss"><b>역설적 기회.</b> GE 규정은 양날의 칼입니다. 링컨의 주력인 트레이드·헬스케어 과정은 <b>취업률과 임금 성과가 비교적 좋아</b> 상대적으로 안전한 편입니다. 오히려 성과가 나쁜 저품질 경쟁 학교들이 퇴출되면 링컨이 <b>반사이익</b>을 볼 수 있습니다. 다만 규정 해석·집행의 불확실성은 여전히 큰 변수입니다. <span class="badge b-conf">확신도 중 ~55%</span></div>
+</div>
+</section>
+
+<!-- ============ 5. 생애주기 ============ -->
+<section id="lifecycle">
+<div class="wrap">
+  <span class="sec-no">05 / 기업 생애주기 단계</span>
+  <h2>지금 링컨은 인생의 어느 단계에 있나</h2>
+  <p class="lead">기업도 사람처럼 도입 → 성장 → 성숙 → 정리 → 쇠퇴의 단계를 거칩니다. 현금흐름의 '부호 패턴'으로 단계를 판별하는데, 링컨은 <b>'성숙기 형태를 띤 성장기'</b>라는 흥미로운 모습입니다.</p>
+
+  <div class="gloss"><b>현금흐름 3종 세트로 단계 읽기.</b> ①<b>영업활동 현금흐름</b>(본업으로 번 현금) ②<b>투자활동 현금흐름</b>(설비·캠퍼스에 쓴 현금) ③<b>재무활동 현금흐름</b>(빌리거나 갚은 현금). 이 셋의 +/− 조합으로 회사가 어느 단계인지 추정합니다.</div>
+
+  <div class="grid3">
+    <div class="card"><div class="figlbl">① 영업활동 CF</div><div class="num" style="font-size:26px;font-weight:600;color:var(--forest)">+$59M</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">2025년 +102% 급증. 2026년 1분기엔 <b>10년 만의 분기 영업흑자</b>. 본업이 현금을 잘 번다 → 성장·성숙기 신호.</p></div>
+    <div class="card"><div class="figlbl">② 투자활동 CF</div><div class="num" style="font-size:26px;font-weight:600;color:var(--brick)">−$86M</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">신규 캠퍼스에 대규모 투자 중(설비투자 $86.6M). 미래 성장을 위해 현금을 쏟아붓는 중.</p></div>
+    <div class="card"><div class="figlbl">③ 재무활동 CF</div><div class="num" style="font-size:26px;font-weight:600;color:var(--brick)">−$4M</div><p style="margin:8px 0 0;font-size:13.5px;color:var(--ink-soft)">빚이 거의 없고(실질 금융부채 ~$5M) 배당도 없음. 재무적으로 깔끔한 편.</p></div>
+  </div>
+
+  <div class="callout c-steel">
+    <div class="ct">🔍 판정: 성숙기 외형, 성장기 본질</div>
+    <p>부호 패턴은 (영업 +, 투자 −, 재무 −)로 교과서적 <b>'성숙기'</b>에 해당합니다. 하지만 매출이 +17.8%로 가속하고 영업현금흐름이 두 배로 뛰는 모습은 <b>'성장기'</b>의 특징입니다. 종합하면 <b>"성장 재투자를 공격적으로 하는 초·중기 성장 기업"</b>으로 보는 것이 맞습니다. 이런 기업은 현재 잉여현금흐름이 (투자 때문에) 마이너스여도, 장기 가치평가(DCF)와 경쟁우위기간(CAP) 분석이 유효하게 적용됩니다. <span class="badge b-conf">확신도 높음 ~80%</span></p>
+  </div>
+  <p style="font-size:13.5px;color:var(--ink-faint)">참고: 현재 잉여현금흐름(FCF)은 −$27M으로 음수인데, 이는 사업이 부실해서가 아니라 <b>미래 성장을 위해 캠퍼스를 짓느라</b> 일시적으로 투자가 영업현금을 초과하기 때문입니다. 캠퍼스 투자가 안정화되면 FCF는 흑자 전환할 것으로 모델은 추정합니다.</p>
+</div>
+</section>
+
+<!-- ============ 6. 해자 ============ -->
+<section id="moat">
+<div class="wrap">
+  <span class="sec-no">06 / 경제적 해자 (Moat)</span>
+  <h2>경쟁사가 쉽게 넘지 못하는 '성벽'이 있는가</h2>
+  <p class="lead"><span class="term" title="중세 성을 둘러싼 해자(물웅덩이)처럼, 경쟁자의 침입을 막아 장기 수익을 지켜주는 구조적 경쟁우위">경제적 해자</span>(경쟁자를 막아주는 구조적 강점)는 장기 투자에서 가장 중요한 개념입니다. 링컨의 해자는 '넓고 깊다'기보다 <b>'좁지만 의미 있는' 수준</b>으로 평가됩니다.</p>
+
+  <div class="moat">
+    <div class="moat-row"><div class="top"><span class="nm">① 80년 브랜드 & 인증</span><span class="sc">강도: 중상</span></div><div class="bar"><span style="width:70%"></span></div><p>1946년부터 쌓은 브랜드 신뢰와, 까다로운 <span class="term" title="교육기관이 연방 학자금을 받을 자격을 인증받는 절차. 통과 못 하면 사업이 사실상 불가능">교육 인증(accreditation)</span>(학자금 자격의 전제). 링컨은 최근 무조건부 재인증을 받아 안정적. 신규 진입자가 인증을 받으려면 수년이 걸려 진입장벽으로 작동.</p></div>
+    <div class="moat-row"><div class="top"><span class="nm">② 고용주 파트너십 네트워크</span><span class="sc">강도: 중상</span></div><div class="bar"><span style="width:68%"></span></div><p>Tesla, Johnson Controls, Peterbilt, Hussmann, Marriott, 현대 제네시스 등과 산학 협력. "졸업하면 이 회사에 취업"이라는 연결고리는 학생 모집과 차별화의 핵심이며, 경쟁사가 단기간에 복제하기 어렵습니다.</p></div>
+    <div class="moat-row"><div class="top"><span class="nm">③ 물리적 캠퍼스 + 실습 (복제 난이도)</span><span class="sc">강도: 중</span></div><div class="bar"><span style="width:60%"></span></div><p>용접·정비 같은 손기술은 온라인으로 대체 불가. 실습 캠퍼스를 갖추려면 큰 자본과 시간이 필요해, 순수 온라인 교육업체의 침입을 막습니다. 단, 이는 동시에 자본집약적이라는 약점이기도 합니다.</p></div>
+    <div class="moat-row"><div class="top"><span class="nm">④ 규제 장벽 (양날의 칼)</span><span class="sc">강도: 중하</span></div><div class="bar"><span style="width:45%"></span></div><p>까다로운 규제는 신규 진입을 막는 장벽인 동시에, 링컨 자신도 묶는 족쇄입니다. 해자라기보다 '모두에게 적용되는 게임의 룰'에 가깝습니다.</p></div>
+  </div>
+
+  <h4 class="minih">포터의 5가지 경쟁요인 — 간단 평가</h4>
+  <div class="tablebox">
+    <table>
+      <thead><tr><th>경쟁 요인</th><th>강도</th><th>해석</th></tr></thead>
+      <tbody>
+        <tr><td>신규 진입 위협</td><td class="figure">낮음~중</td><td style="text-align:left">인증·자본·시간 장벽이 보호. 단 자본만 있으면 대형 경쟁사 확장은 가능</td></tr>
+        <tr><td>대체재 위협</td><td class="figure">중</td><td style="text-align:left">커뮤니티 칼리지(공립·저렴), 기업 자체 교육, 온라인 부트캠프가 대안</td></tr>
+        <tr><td>구매자(학생) 교섭력</td><td class="figure">중</td><td style="text-align:left">학자금 의존이라 가격 민감. 취업 성과가 나쁘면 외면</td></tr>
+        <tr><td>공급자(강사) 교섭력</td><td class="figure">중상</td><td style="text-align:left">숙련 강사 확보 경쟁이 치열 → 인건비 상승 압력</td></tr>
+        <tr><td>기존 경쟁 강도</td><td class="figure">중상</td><td style="text-align:left">UTI 등과 직접 경쟁. 인력난 수혜로 시장 자체가 커지는 점은 완화 요인</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout c-amber">
+    <div class="ct">⚖ 차별화 vs 원가우위 — 어느 쪽인가</div>
+    <p>링컨은 저가 공세(원가우위)가 아니라 <b>'취업으로 연결되는 차별화된 직업교육'</b>으로 승부합니다. 다만 영업이익률이 2025년 약 <b>5.85%</b>로 아직 낮고(투자 국면), 자본도 많이 드는 사업이라 <b>해자의 '경제적 결실'(높은 투하자본수익률)은 아직 충분히 증명되지 않았습니다.</b> 현재 투하자본수익률(ROIC)은 자본비용(약 9.25%)을 밑도는 것으로 추정돼, 해자가 <b>가치를 창출하는 단계로 올라설 수 있는지</b>가 핵심 관전 포인트입니다. <span class="badge b-conf">확신도 중 ~60%</span></p>
+  </div>
+</div>
+</section>
+
+<!-- ============ 7. SWOT ============ -->
+<section id="swot" class="dark">
+<div class="wrap">
+  <span class="sec-no">07 / SWOT 분석</span>
+  <h2>강점·약점·기회·위협 한눈에</h2>
+  <div class="swot">
+    <div class="q sw-s"><h4>💪 강점 (Strengths)</h4><ul>
+      <li>80년 브랜드 + 안정적 교육 인증</li>
+      <li>인력난 분야(트레이드·헬스케어)에 집중</li>
+      <li>대형 고용주와의 산학 파트너십</li>
+      <li>실질 무차입 + 무배당 → 재무 유연성</li>
+      <li>매출·영업현금흐름 두 자릿수 가속 성장</li>
+    </ul></div>
+    <div class="q sw-w"><h4>⚠ 약점 (Weaknesses)</h4><ul>
+      <li>매출 85%가 연방 학자금에 의존</li>
+      <li>낮은 영업이익률(~5.85%)과 변동성</li>
+      <li>자본집약적(매출의 ~16%를 설비투자)</li>
+      <li>현재 잉여현금흐름 음수(−$27M)</li>
+      <li>물리적 확장이라 성장 속도에 물리적 한계</li>
+    </ul></div>
+    <div class="q sw-o"><h4>🚀 기회 (Opportunities)</h4><ul>
+      <li>구조적 숙련공 부족 → 장기 수요 증가</li>
+      <li>친(親) 직업교육 정책(Workforce Pell 등)</li>
+      <li>Lincoln 10.0로 운영 레버리지·마진 확대</li>
+      <li>신규 캠퍼스(롱아일랜드·텍사스 등) 확장</li>
+      <li>저품질 경쟁사 규제 퇴출 시 반사이익</li>
+    </ul></div>
+    <div class="q sw-t"><h4>🌩 위협 (Threats)</h4><ul>
+      <li>Gainful Employment 규제(2026.7 발효)</li>
+      <li>90/10 규정 여유 부족</li>
+      <li>경기침체 시 학자금·등록 위축 가능</li>
+      <li>강사 인건비 상승 압력</li>
+      <li><b>높은 밸류에이션 자체가 가장 큰 단기 위험</b></li>
+    </ul></div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 8. 피어비교 ============ -->
+<section id="peer">
+<div class="wrap">
+  <span class="sec-no">08 / 피어그룹 비교</span>
+  <h2>경쟁사와 나란히 놓고 보면</h2>
+  <p class="lead">가장 닮은 경쟁사는 <b>UTI(Universal Technical Institute)</b>입니다. 자동차·트레이드 교육에 헬스케어(Concorde)까지 겹칩니다. 비교의 핵심 결론은 단순합니다: <b>UTI가 더 크고, 두 배로 수익성이 좋은데, 주가는 절반 수준</b>입니다.</p>
+
+  <div class="tablebox">
+    <table>
+      <thead><tr><th>지표</th><th class="figure">LINC (링컨)</th><th class="figure">UTI (경쟁사)</th><th style="text-align:left">시사점</th></tr></thead>
+      <tbody>
+        <tr><td>시가총액</td><td class="figure">~$1.5B</td><td class="figure">~$2.1B</td><td style="text-align:left">UTI가 더 큼</td></tr>
+        <tr><td>매출(TTM)</td><td class="figure">~$545M</td><td class="figure">~$850M</td><td style="text-align:left">UTI 매출 1.5배</td></tr>
+        <tr><td>순이익</td><td class="figure">~$22M</td><td class="figure">~$63M</td><td style="text-align:left">UTI 이익 약 3배</td></tr>
+        <tr class="hl"><td>영업이익률</td><td class="figure">~5.85%</td><td class="figure">~10.0%</td><td style="text-align:left"><b>UTI 수익성 약 2배</b></td></tr>
+        <tr class="hl"><td>PER (주가수익비율)</td><td class="figure">~66x</td><td class="figure">~33x</td><td style="text-align:left"><b>LINC가 2배 비쌈</b></td></tr>
+        <tr><td>주당순이익(EPS)</td><td class="figure">~$0.72</td><td class="figure">~$1.13</td><td style="text-align:left">UTI가 높음</td></tr>
+      </tbody>
+    </table>
+    <div class="tcap">출처: stockanalysis.com 등 (2026년 6월 기준, TTM). PER은 후행 기준 근사치.</div>
+  </div>
+
+  <div class="gloss"><b>PER이 뭔가요?</b> 주가수익비율(Price/Earnings)은 "회사가 버는 순이익 1달러에 시장이 몇 달러를 지불하는가"입니다. PER 66배는 이익 $1에 $66를 낸다는 뜻으로, 그만큼 <b>미래 고성장을 기대</b>한다는 신호입니다. 같은 업종 UTI가 33배인데 링컨이 66배라는 것은, 시장이 링컨에 UTI의 두 배에 달하는 기대를 걸고 있다는 의미입니다.</div>
+
+  <h4 class="minih">기타 동종 기업 (참고)</h4>
+  <p>고품질·고마진 사례로는 <b>그랜드캐니언(LOPE)</b>, 그 외 <b>APEI, PRDO, STRA, ATGE, LAUR</b> 등이 있습니다. 다만 사업 모델(온라인 중심 vs 캠퍼스 실습 중심)이 달라 LINC와 직접 비교는 UTI가 가장 적절합니다.</p>
+
+  <div class="callout c-brick">
+    <div class="ct">📊 피어 비교의 결론</div>
+    <p>동일 업종에서 <b>수익성이 절반인 회사가 두 배의 멀티플(PER)로 거래</b>되는 상황은, 시장이 링컨의 <b>미래 마진 개선 속도와 성장 지속성</b>에 매우 공격적인 베팅을 하고 있음을 보여줍니다. 이는 뒤의 DCF/역산 결과와 정확히 일치하는 신호입니다. <span class="badge b-conf">확신도 높음 ~75%</span></p>
+  </div>
+</div>
+</section>
+
+<!-- ============ 9. DCF ============ -->
+<section id="dcf" class="dark">
+<div class="wrap">
+  <span class="sec-no">09 / DCF 밸류에이션</span>
+  <h2>미래 현금흐름으로 따져본 가치</h2>
+  <p class="lead"><span class="term" title="기업이 미래에 벌어들일 현금을 현재 가치로 할인해 합산하는 가치평가 방법">DCF</span>(미래 현금을 현재 가치로 환산해 더하는 방법)로 회사 가치를 계산했습니다. <b>경영진의 2030년 목표(매출 $850M)를 그대로 반영</b>하는, 결코 비관적이지 않은 기본 시나리오입니다.</p>
+
+  <div class="gloss"><b>핵심 아이디어 (쉽게).</b> 내일 받을 1만 원은 오늘 1만 원보다 가치가 낮습니다(기다림·위험 때문). 그래서 회사가 앞으로 매년 벌 현금을 '<span class="term" title="미래의 돈을 현재 가치로 깎아 환산하는 비율. 보통 자본비용(WACC)을 사용">할인율</span>(자본비용)'로 깎아 현재 가치로 바꾼 뒤 모두 더하면, 그 회사의 이론적 가치가 나옵니다.</div>
+
+  <h4 class="minih" style="color:#FBF8F1">10년 현금흐름 추정 (전시 형식)</h4>
+  <div class="card-light">
+    <div class="tablebox" style="margin:0;border:none">
+      <table>
+        <thead><tr>
+          <th>연도</th><th class="figure">매출</th><th class="figure">성장률</th><th class="figure">영업이익률</th>
+          <th class="figure">세후영업이익<br>(NOPAT)</th><th class="figure">설비투자</th><th class="figure">잉여현금<br>(FCF)</th><th class="figure">현가계수</th><th class="figure">현재가치</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>2026E</td><td class="figure">595</td><td class="figure">14.8%</td><td class="figure">7.0%</td><td class="figure">31.7</td><td class="figure">73</td><td class="figure" style="color:#A93A45">−17.3</td><td class="figure">0.957</td><td class="figure" style="color:#A93A45">−16.6</td></tr>
+          <tr><td>2027E</td><td class="figure">650</td><td class="figure">9.3%</td><td class="figure">8.0%</td><td class="figure">39.5</td><td class="figure">70</td><td class="figure" style="color:#A93A45">−2.5</td><td class="figure">0.876</td><td class="figure" style="color:#A93A45">−2.2</td></tr>
+          <tr><td>2028E</td><td class="figure">711</td><td class="figure">9.3%</td><td class="figure">9.0%</td><td class="figure">48.6</td><td class="figure">65</td><td class="figure">15.6</td><td class="figure">0.802</td><td class="figure">12.5</td></tr>
+          <tr><td>2029E</td><td class="figure">777</td><td class="figure">9.3%</td><td class="figure">10.0%</td><td class="figure">59.1</td><td class="figure">62</td><td class="figure">33.1</td><td class="figure">0.734</td><td class="figure">24.3</td></tr>
+          <tr class="hl"><td>2030E</td><td class="figure">850</td><td class="figure">9.3%</td><td class="figure">11.0%</td><td class="figure">71.0</td><td class="figure">60</td><td class="figure">50.0</td><td class="figure">0.672</td><td class="figure">33.6</td></tr>
+          <tr><td>2031E</td><td class="figure">918</td><td class="figure">8.0%</td><td class="figure">11.3%</td><td class="figure">78.8</td><td class="figure">55</td><td class="figure">64.8</td><td class="figure">0.615</td><td class="figure">39.8</td></tr>
+          <tr><td>2032E</td><td class="figure">982</td><td class="figure">7.0%</td><td class="figure">11.5%</td><td class="figure">85.8</td><td class="figure">52</td><td class="figure">76.8</td><td class="figure">0.563</td><td class="figure">43.2</td></tr>
+          <tr><td>2033E</td><td class="figure">1,041</td><td class="figure">6.0%</td><td class="figure">11.5%</td><td class="figure">91.0</td><td class="figure">50</td><td class="figure">85.0</td><td class="figure">0.515</td><td class="figure">43.8</td></tr>
+          <tr><td>2034E</td><td class="figure">1,093</td><td class="figure">5.0%</td><td class="figure">11.5%</td><td class="figure">95.5</td><td class="figure">48</td><td class="figure">92.5</td><td class="figure">0.471</td><td class="figure">43.6</td></tr>
+          <tr><td>2035E</td><td class="figure">1,137</td><td class="figure">4.0%</td><td class="figure">11.5%</td><td class="figure">99.3</td><td class="figure">47</td><td class="figure">98.3</td><td class="figure">0.432</td><td class="figure">42.4</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin:10px 0 0">단위: 백만 달러 · 연중(mid-year) 할인 적용 · NOPAT=세후순영업이익 · FCF=세후영업이익+감가상각−설비투자</p>
+  </div>
+
+  <div class="grid3" style="margin-top:18px">
+    <div class="card-light"><div class="figlbl">명시적 10년 현가 합</div><div class="num" style="font-size:24px;font-weight:600;color:var(--ink)">$265M</div><p style="margin:6px 0 0;font-size:13px;color:var(--ink-soft)">위 표 현재가치 합계</p></div>
+    <div class="card-light"><div class="figlbl">잔여(터미널) 가치 현가</div><div class="num" style="font-size:24px;font-weight:600;color:var(--ink)">$490M</div><p style="margin:6px 0 0;font-size:13px;color:var(--ink-soft)">전체 가치의 65% — <span class="term" title="명시적 예측 이후 먼 미래의 현금흐름을 하나로 묶어 추정한 가치">페이드 모델</span> 기반</p></div>
+    <div class="card-light"><div class="figlbl">기업가치(EV) → 주당</div><div class="num" style="font-size:24px;font-weight:600;color:var(--brick)">$23.78</div><p style="margin:6px 0 0;font-size:13px;color:var(--ink-soft)">EV $754M ÷ 3,172만 주</p></div>
+  </div>
+
+  <h4 class="minih" style="color:#FBF8F1">자본비용(WACC)과 핵심 가정</h4>
+  <div class="grid2">
+    <div class="card-light">
+      <dl class="kv">
+        <dt>무위험수익률</dt><dd>4.50% (미 10년 국채, 2026.6)</dd>
+        <dt>베타(β)</dt><dd>1.00 (출처별 0.80~1.41, 보수적 중간값)</dd>
+        <dt>주식위험프리미엄</dt><dd>4.75% (프로젝트 표준, 다모다란 내재값 4.23%보다 보수적)</dd>
+        <dt style="color:var(--amber-deep)">→ 자본비용(WACC)</dt><dd style="font-weight:600">9.25% = 4.5% + 1.0 × 4.75%</dd>
+        <dt>장기성장률(g)</dt><dd>2.5% (예상 인플레이션, 10년 기대 2.33%)</dd>
+        <dt><span class="term" title="기업의 초과수익이 시간이 지나며 경쟁에 의해 줄어드는 속도. 높을수록 빨리 평범해진다">페이드 비율</span></dt><dd>0.13 (소비자서비스 섹터 평균)</dd>
+        <dt>세율</dt><dd>24%</dd>
+      </dl>
+    </div>
+    <div class="card-light">
+      <h4 style="margin-top:0">왜 빚이 거의 없는데 WACC가 자기자본비용과 같나</h4>
+      <p>링컨의 대차대조표상 부채는 대부분 <b>리스(임대) 부채</b>이고 실제 빌린 돈(금융부채)은 ~$5M에 불과합니다. 그래서 자본비용은 사실상 <b>주주 요구수익률(자기자본비용)</b>과 같게 잡았습니다.</p>
+      <p style="margin-bottom:0">베타 1.0은 "시장 전체와 같은 변동성"을 가정한 것으로, 소형주임을 감안하면 오히려 <b>보수적(낮은)</b> 위험 가정입니다. 즉 이 DCF는 회사에 우호적으로 기울어진 편입니다.</p>
+    </div>
+  </div>
+
+  <div class="callout c-amber" style="background:#3a2c14;border-color:#7a5e2a;color:#F7E7CE">
+    <div class="ct" style="color:#E6B860">결과 요약</div>
+    <p style="color:#EEDFC4;margin-bottom:0">경영진 목표를 그대로 믿고, 이익률 11.5%를 장기 유지하며, 소형주치고 낮은 위험(베타 1.0)을 가정해도 — <b style="color:#FBF8F1">기본 가치는 주당 $23.78, 현재가 $47.61의 약 절반</b>입니다. 전체 가치의 65%가 먼 미래(터미널)에서 나온다는 점은, 이 가치조차 상당 부분 '먼 훗날의 약속'에 기대고 있음을 뜻합니다. <span class="badge b-warn">방향성 확신도 높음 ~80%</span></p>
+  </div>
+</div>
+</section>
+
+<!-- ============ 10. 내재 CAP 역산 ============ -->
+<section id="reverse">
+<div class="wrap">
+  <span class="sec-no">10 / 시장 내재 기대치 역산</span>
+  <h2>현재 주가를 거꾸로 풀면 — 시장은 무엇을 믿고 있나</h2>
+  <p class="lead">이 절이 이 보고서의 심장입니다. "적정가는 얼마"가 아니라, <b>"$47.61이라는 가격이 성립하려면 어떤 미래를 가정해야 하는가"</b>를 거꾸로 계산했습니다. 세 가지 방식 모두 같은 결론을 가리킵니다: <b>가정이 비현실적으로 낙관적이어야 한다.</b></p>
+
+  <div class="gloss"><b><span class="term" title="기업이 자본비용을 초과하는 수익(초과이익)을 벌 수 있는 기간. 길수록 경쟁우위가 오래 지속된다는 뜻">경쟁우위기간(CAP)</span>이란?</b> 회사가 "남들보다 더 잘 버는 상태(초과수익)"를 얼마나 오래 유지하느냐는 기간입니다. 경쟁이 치열한 세상에서 초과수익은 보통 시간이 지나면 평범해집니다(페이드). 그 우위가 오래갈수록 회사 가치는 커집니다. 시장 주가에는 이 '기간에 대한 베팅'이 숨어 있습니다.</div>
+
+  <div class="grid3">
+    <div class="card">
+      <div class="figlbl">역산 ① 내재 경쟁우위기간(CAP)</div>
+      <div class="big down" style="font-size:30px">80년+</div>
+      <p style="margin:10px 0 0;font-size:14px;color:var(--ink-soft)">기본 이익률·자본비용을 그대로 두고 <b>초과수익 지속 기간만 늘려서</b> $47.61에 도달하려 하면 — <b>80년을 넘겨도 닿지 못합니다</b>(80년 시점 $28.90). 즉 기간 연장만으로는 현재가를 설명할 수 없습니다.</p>
+    </div>
+    <div class="card">
+      <div class="figlbl">역산 ② 내재 영업이익률</div>
+      <div class="big" style="color:var(--amber-deep);font-size:30px">~23.5%</div>
+      <p style="margin:10px 0 0;font-size:14px;color:var(--ink-soft)">대신 장기 영업이익률을 풀면 <b>약 23.5%</b>가 필요합니다. 회사 2030년 목표 함의(~12.6%), UTI 실제(10%), 본 DCF 기본(11.5%)을 모두 <b>두 배가량 능가</b>해야 하는 수치입니다.</p>
+    </div>
+    <div class="card">
+      <div class="figlbl">역산 ③ 내재 자본비용(WACC)</div>
+      <div class="big" style="color:var(--amber-deep);font-size:30px">~5.58%</div>
+      <p style="margin:10px 0 0;font-size:14px;color:var(--ink-soft)">또는 자본비용이 <b>약 5.58%</b>까지 낮아져야 합니다(내재 베타 ~0.23). 소형 영리교육주에 이런 낮은 위험을 부여하는 것은 비현실적입니다.</p>
+    </div>
+  </div>
+
+  <h4 class="minih">예측 기간을 늘려도 현재가에 닿지 못한다</h4>
+  <div class="card" style="padding:24px">
+    <svg viewBox="0 0 920 300" role="img" aria-label="예측기간 연장에 따른 가치 vs 현재가">
+      <line x1="70" y1="250" x2="890" y2="250" stroke="#BDB6A6" stroke-width="1.5"/>
+      <line x1="70" y1="60"  x2="70"  y2="250" stroke="#BDB6A6" stroke-width="1.5"/>
+      <!-- price line 47.61 -->
+      <line x1="70" y1="95" x2="890" y2="95" stroke="#D9842A" stroke-width="2" stroke-dasharray="6 4"/>
+      <text x="884" y="88" text-anchor="end" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#A8631A">현재가 $47.61</text>
+      <!-- value curve: points (5,18.82)(7,21.64)(10,23.78)(15,25.50)(20,26.44)(30,27.62)(40,28.25)(80,28.90)
+           x map: yr 5..80 -> 110..860 ; y map: $0..50 -> 250..60 (scale 3.8/$) -->
+      <!-- y = 250 - val*3.8 ; x = 110 + (yr-5)/75*750 -->
+      <polyline fill="none" stroke="#33617F" stroke-width="3"
+        points="110,178 130,168 160,160 210,153 260,150 360,145 410,143 860,140"/>
+      <g fill="#33617F" font-family="IBM Plex Mono" font-size="11">
+        <circle cx="110" cy="178" r="4"/><text x="110" y="270" text-anchor="middle" fill="#6E6C63">5년</text>
+        <circle cx="160" cy="160" r="4"/><text x="160" y="270" text-anchor="middle" fill="#6E6C63">10년</text>
+        <circle cx="260" cy="150" r="4"/><text x="260" y="270" text-anchor="middle" fill="#6E6C63">20년</text>
+        <circle cx="410" cy="143" r="4"/><text x="410" y="270" text-anchor="middle" fill="#6E6C63">40년</text>
+        <circle cx="860" cy="140" r="4"/><text x="858" y="270" text-anchor="end" fill="#6E6C63">80년</text>
+      </g>
+      <text x="300" y="128" font-family="Space Grotesk" font-weight="600" font-size="13" fill="#234B62">DCF 가치 (기간 연장)</text>
+      <text x="470" y="200" text-anchor="middle" font-family="Inter" font-size="12.5" fill="#A93A45">두 선은 만나지 않는다 → 기간만으로 현재가 설명 불가</text>
+      <text x="40" y="64" font-family="IBM Plex Mono" font-size="10" fill="#6E6C63">$/주</text>
+    </svg>
+  </div>
+
+  <div class="callout c-brick">
+    <div class="ct">🎯 역산의 종합 해석</div>
+    <p>세 가지 역산이 한목소리를 냅니다. 현재 주가는 <b>"경영진 목표를 달성한다"</b> 수준이 아니라, <b>"그 목표를 크게 능가하는 초과수익을, 비현실적으로 오랫동안, 비현실적으로 낮은 위험으로 누린다"</b>는 복합적 낙관을 동시에 요구합니다. 프레임워크의 해석 기준(내재 CAP 5년 미만=저평가 후보, 10~15년=합리적, 20년 초과=과도한 낙관)에 비춰보면, 링컨의 내재 CAP는 <b>사실상 측정 불가 영역(20년 훨씬 초과)</b>으로 '과도한 낙관' 구간에 위치합니다. <span class="badge b-conf">방향성 확신도 높음 ~78%</span></p>
+  </div>
+</div>
+</section>
+
+<!-- ============ 11. 민감도 ============ -->
+<section id="sens">
+<div class="wrap">
+  <span class="sec-no">11 / 민감도 분석</span>
+  <h2>가정을 흔들면 가치는 얼마나 변하나</h2>
+  <p class="lead">결론: <b>가치를 좌우하는 것은 '이익률'과 '자본비용' 단 두 가지</b>입니다. 성장률이나 페이드 비율을 크게 바꿔도 가치는 거의 움직이지 않습니다. 그리고 그 두 변수를 합리적 범위에서 아무리 조합해도 <b>현재가 $47.61에는 닿지 않습니다.</b></p>
+
+  <h4 class="minih">민감도 표 ① — 자본비용 × 장기 영업이익률 (주당 가치, $)</h4>
+  <div class="tablebox">
+    <table>
+      <thead><tr><th>WACC ＼ 이익률</th><th class="figure">9.0%</th><th class="figure">10.0%</th><th class="figure">11.5%<br>(기본)</th><th class="figure">13.0%</th><th class="figure">15.0%</th></tr></thead>
+      <tbody>
+        <tr><td>8.25%</td><td class="figure">21.87</td><td class="figure">24.36</td><td class="figure">28.01</td><td class="figure">31.52</td><td class="figure">36.21</td></tr>
+        <tr class="hl"><td>9.25% (기본)</td><td class="figure">18.59</td><td class="figure">20.70</td><td class="figure">23.81</td><td class="figure">26.78</td><td class="figure">30.74</td></tr>
+        <tr><td>10.25%</td><td class="figure">16.01</td><td class="figure">17.84</td><td class="figure">20.51</td><td class="figure">23.06</td><td class="figure">26.45</td></tr>
+        <tr><td>11.25%<br>(소형주 위험반영)</td><td class="figure">13.94</td><td class="figure">15.54</td><td class="figure">17.87</td><td class="figure">20.07</td><td class="figure">23.01</td></tr>
+      </tbody>
+    </table>
+    <div class="tcap">표 전체 범위 $13.94 ~ $36.21. 가장 낙관적 모서리(WACC 8.25% × 이익률 15%)인 $36.21조차 현재가 $47.61에 미달.</div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h4 class="minih">민감도 표 ② — 장기성장률 × 페이드 비율</h4>
+      <div class="tablebox">
+        <table>
+          <thead><tr><th>g ＼ 페이드</th><th class="figure">0.10</th><th class="figure">0.13</th><th class="figure">0.18</th></tr></thead>
+          <tbody>
+            <tr><td>2.0%</td><td class="figure">23.68</td><td class="figure">23.61</td><td class="figure">23.52</td></tr>
+            <tr class="hl"><td>2.5%</td><td class="figure">23.89</td><td class="figure">23.78</td><td class="figure">23.67</td></tr>
+            <tr><td>3.0%</td><td class="figure">24.10</td><td class="figure">23.96</td><td class="figure">23.82</td></tr>
+          </tbody>
+        </table>
+        <div class="tcap">범위 $23.52~$24.10 — 거의 변화 없음.</div>
+      </div>
+      <p style="font-size:13.5px;color:var(--ink-soft)">성장률·페이드는 가치에 사실상 영향이 없습니다. "장기 성장 가정이 틀려서 저평가"라는 반론은 성립하기 어렵다는 뜻입니다.</p>
+    </div>
+    <div>
+      <h4 class="minih">변수별 영향력 (토네이도)</h4>
+      <div class="card" style="margin-top:0">
+        <ul class="clean" style="margin:0;font-size:13.5px">
+          <li><b>자본비용 ±1%p</b> → 가치 약 −14%~+18% <span class="badge b-warn" style="margin-left:4px">큰 영향</span></li>
+          <li><b>이익률 9%↔13%</b> → 약 −22%~+13% <span class="badge b-warn" style="margin-left:4px">큰 영향</span></li>
+          <li><b>소형주 위험(WACC 11.25%)</b> → −25%</li>
+          <li>성장률 ±0.5%p → ±1% 미만</li>
+          <li>페이드 0.10↔0.18 → 1% 미만</li>
+          <li>터미널 ROIIC 10%↔20% → ±2%</li>
+        </ul>
+      </div>
+      <p style="font-size:13.5px;color:var(--ink-soft);margin-top:10px">즉 투자 판단의 승부처는 <b>"이익률이 실제로 얼마나 오를까"</b>와 <b>"이 회사의 위험을 얼마로 볼까"</b> 두 가지로 압축됩니다.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 12. 시나리오 ============ -->
+<section id="scenario" class="dark">
+<div class="wrap">
+  <span class="sec-no">12 / 시나리오 분석</span>
+  <h2>약세 · 기본 · 강세 — 세 갈래 미래</h2>
+  <p class="lead">서로 다른 가정 묶음으로 세 가지 미래를 그렸습니다. 주목할 점: <b>가장 낙관적인 강세 시나리오($40.50)조차 현재가 $47.61보다 낮습니다.</b></p>
+
+  <div class="card-light">
+    <div class="tablebox" style="margin:0;border:none">
+      <table>
+        <thead><tr><th>시나리오</th><th class="figure">자본비용</th><th class="figure">장기이익률</th><th class="figure">성장률</th><th class="figure">페이드</th><th class="figure">주당가치</th><th class="figure">현재가 대비</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge b-down">약세</span></td><td class="figure">11.25%</td><td class="figure">8.0%</td><td class="figure">2.0%</td><td class="figure">0.18</td><td class="figure" style="color:#A93A45;font-weight:600">$8.85</td><td class="figure" style="color:#A93A45">−81%</td></tr>
+          <tr class="hl"><td><b>기본</b></td><td class="figure">9.25%</td><td class="figure">11.5%</td><td class="figure">2.5%</td><td class="figure">0.13</td><td class="figure" style="font-weight:600">$23.78</td><td class="figure">−50%</td></tr>
+          <tr><td><span class="badge b-up">강세</span></td><td class="figure">8.25%</td><td class="figure">14.0%</td><td class="figure">3.0%</td><td class="figure">0.10</td><td class="figure" style="color:#3F7350;font-weight:600">$40.50</td><td class="figure" style="color:#3F7350">−15%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid3" style="margin-top:18px">
+    <div class="card-light"><h4 style="margin-top:0;color:#A93A45">약세 — 레버리지 실패</h4><p style="font-size:13.5px">신규 캠퍼스가 기대만큼 이익을 못 내고 이익률이 8%에서 정체, 규제·경기 충격으로 위험 프리미엄 상승. 운영 레버리지 스토리가 무너지는 경우.</p></div>
+    <div class="card-light"><h4 style="margin-top:0;color:#1B1B18">기본 — 목표 달성</h4><p style="font-size:13.5px">경영진의 2030년 목표를 달성하고 이익률 11.5%를 안착시키는, 무난하지만 결코 비관적이지 않은 경로.</p></div>
+    <div class="card-light"><h4 style="margin-top:0;color:#3F7350">강세 — 목표 초과 + 재평가</h4><p style="font-size:13.5px">Lincoln 10.0가 완전히 작동해 이익률 14%까지 도달, 해자가 견고해 천천히 페이드(0.10), 실행 위험이 줄며 자본비용도 하락(8.25%).</p></div>
+  </div>
+
+  <div class="callout c-amber" style="background:#3a2c14;border-color:#7a5e2a;color:#F7E7CE">
+    <div class="ct" style="color:#E6B860">확률 가중 기댓값 (가정에 따라)</div>
+    <p style="color:#EEDFC4;margin-bottom:0">세 시나리오에 확률을 부여해 가중평균하면: <b style="color:#FBF8F1">신중(35/45/20) → $21.90, 균형(25/45/30) → $25.06, 낙관(20/40/40) → $27.48</b>. 어떤 확률 배분에서도 현재가 $47.61를 크게 밑돕니다. 강세에 40%를 줘도 기댓값은 현재가의 약 58% 수준입니다. <span class="badge b-warn">시나리오 확신도 중상 ~70%</span></p>
+  </div>
+  <p style="font-size:13px;color:#9FB4BC">확률 배분은 예시이며, 투자자의 판단에 따라 달라질 수 있습니다. 핵심은 <b>특정 확률값이 아니라, 가능한 결과 분포 전체가 현재가보다 아래에 몰려 있다는 형태</b>입니다.</p>
+</div>
+</section>
+
+<!-- ============ 13. 리스크 ============ -->
+<section id="risk">
+<div class="wrap">
+  <span class="sec-no">13 / 리스크 & 체크포인트</span>
+  <h2>무엇이 이 그림을 바꿀 수 있나</h2>
+  <p class="lead">베이지안 관점에서, 아래 새 증거들이 나오면 위 결론을 수정해야 합니다. 분기별로 점검할 핵심 지표를 함께 정리했습니다.</p>
+
+  <div class="grid2">
+    <div>
+      <h4 class="minih">하방 리스크 (가치 하락 요인)</h4>
+      <ul class="clean">
+        <li><b>마진 확대 실패</b>: 운영 레버리지가 기대만큼 안 나오면 가장 큰 타격. (현재 추정 ROIC가 자본비용을 밑돌아, 성장이 오히려 가치를 갉아먹는 구간일 수 있음)</li>
+        <li><b>규제(GE·90/10)</b>: 2026.7 발효되는 취업성과 규정의 실제 집행 강도.</li>
+        <li><b>경기 침체</b>: 등록·학자금 위축, 기부·후원 감소.</li>
+        <li><b>소형주 변동성</b>: 시총 $1.5B 소형주 특유의 급등락. 자본비용에 위험 프리미엄을 더하면(11%대) 가치는 더 하락.</li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="minih">상방 리스크 (강세 논리)</h4>
+      <ul class="clean">
+        <li><b>마진 서프라이즈</b>: Lincoln 10.0가 예상보다 빨리 이익률을 끌어올리는 경우.</li>
+        <li><b>규제 반사이익</b>: 저품질 경쟁사 퇴출로 점유율·가격 결정력 상승.</li>
+        <li><b>정책 순풍</b>: Workforce Pell 등 단기 직업과정 지원 확대.</li>
+        <li><b>재평가</b>: 흑자 안착·실행 위험 감소로 시장이 더 낮은 자본비용을 부여.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h4 class="minih">분기별 체크포인트 (이 지표들을 추적하세요)</h4>
+  <div class="tablebox">
+    <table>
+      <thead><tr><th>점검 항목</th><th>무엇을 보나</th><th>왜 중요한가</th></tr></thead>
+      <tbody>
+        <tr><td>조정 EBITDA 마진</td><td style="text-align:left">분기별 마진이 우상향하는가</td><td style="text-align:left">전체 밸류에이션의 핵심 가정</td></tr>
+        <tr><td>신규 등록(student starts)</td><td style="text-align:left">+10~14% 가이던스 충족 여부</td><td style="text-align:left">성장 지속성의 선행지표</td></tr>
+        <tr><td>신규 캠퍼스 수익화</td><td style="text-align:left">개별 캠퍼스의 손익 전환 속도</td><td style="text-align:left">투자(Capex)가 가치를 만드는지 검증</td></tr>
+        <tr><td>잉여현금흐름(FCF)</td><td style="text-align:left">언제 흑자 전환하는가</td><td style="text-align:left">투자 국면 종료·자생력 신호</td></tr>
+        <tr><td>규제 뉴스(GE·90/10)</td><td style="text-align:left">자격박탈·집행 사례</td><td style="text-align:left">매출 기반(Title IV) 직접 영향</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</section>
+
+<!-- ============ 14. 종합판단 ============ -->
+<section id="synth" class="dark">
+<div class="wrap">
+  <span class="sec-no">14 / 종합 판단</span>
+  <h2>모든 것을 합치면</h2>
+  <p class="lead">사업과 주가를 분리해서 봐야 합니다. <b>사업의 질은 개선되고 있으나, 현재 가격은 그 개선을 이미 한참 앞질러 반영</b>하고 있습니다.</p>
+
+  <div class="grid2">
+    <div class="card-light">
+      <h4 style="margin-top:0;color:#1E3A28">✓ 사업 측면 — 긍정적</h4>
+      <p style="margin-bottom:0">구조적 인력난, 친(親) 직업교육 정책, 가속하는 매출, 10년 만의 분기 영업흑자, 깔끔한 재무. 링컨의 펀더멘털 추세는 분명히 좋아지고 있습니다. 회사가 자기 목표를 달성한다면 훌륭한 성장 스토리입니다.</p>
+    </div>
+    <div class="card-light">
+      <h4 style="margin-top:0;color:#A93A45">⚠ 가격 측면 — 과도한 낙관</h4>
+      <p style="margin-bottom:0">DCF 기본값($23.78)은 현재가의 절반, 강세 시나리오($40.50)조차 현재가 아래, 내재 이익률(23.5%)·내재 CAP(80년+)·내재 자본비용(5.58%)이 모두 비현실적 낙관 영역. 직접 경쟁사 UTI 대비 2배의 멀티플.</p>
+    </div>
+  </div>
+
+  <div class="callout c-amber" style="background:#3a2c14;border-color:#7a5e2a;color:#F7E7CE">
+    <div class="ct" style="color:#E6B860">⚑ 핵심 판단</div>
+    <p style="color:#EEDFC4">현재 주가에서 신규 매수를 고려하는 투자자라면, 본인이 <b>"경영진 2030년 목표를 넘어 이익률을 20%대 초중반까지 끌어올리고, 그 초과수익을 매우 오랫동안 유지한다"</b>는 시나리오에 베팅하고 있음을 인식해야 합니다. 시장 가격은 '성공'이 아니라 '대성공의 장기 지속'을 이미 가격에 담았습니다.</p>
+    <p style="color:#EEDFC4;margin-bottom:0">반대로, 사업을 좋게 보더라도 <b>가격이 기대를 정당화하는지</b>는 별개의 질문입니다. 좋은 회사와 좋은 주식은 다를 수 있으며, 이 경우 둘 사이의 간극이 상당히 커 보입니다. <span class="badge b-conf">종합 방향성 확신도 중상 ~72%</span></p>
+  </div>
+
+  <div class="gloss"><b>경쟁 가설(반론)도 함께.</b> 이 분석이 틀릴 수 있는 가장 그럴듯한 경로는 ① Lincoln 10.0가 만드는 운영 레버리지가 <b>모델 가정보다 훨씬 강력</b>해 이익률이 빠르게 15%+로 점프하는 경우, ② 숙련공 부족이 <b>가격 결정력</b>(수업료 인상)으로 이어져 마진과 성장을 동시에 끌어올리는 경우입니다. 이 두 가지가 현실화하면 강세 시나리오 이상도 가능합니다. 다만 그것이 <b>기본 기대가 되려면</b> 아직 증명되지 않은 도약이 필요하다는 것이 본 분석의 요지입니다.</div>
+</div>
+</section>
+
+<!-- ============ 15. 한계와 가정 ============ -->
+<section id="limits">
+<div class="wrap">
+  <span class="sec-no">15 / 한계와 가정</span>
+  <h2>이 분석이 기대고 있는 전제들</h2>
+  <p class="lead">모든 결론은 아래 가정 위에 서 있습니다. 가정이 바뀌면 결론도 바뀝니다. 투명하게 밝혀 둡니다.</p>
+
+  <div class="grid2">
+    <div>
+      <h4 class="minih">방법론적 한계</h4>
+      <ul class="clean">
+        <li><b>역산은 '맞히기'가 아니다</b>: 적정가를 단언하지 않고, 현재가에 내재된 기대를 해석하는 도구입니다. 시장이 '틀렸다'는 증명이 아니라 '무엇을 가정하는지'를 보여줍니다.</li>
+        <li><b>10년 예측의 불확실성</b>: 5~10년 뒤 매출·이익률은 본질적으로 추정이며, 실제와 달라질 수 있습니다.</li>
+        <li><b>터미널 가치 의존</b>: 가치의 65%가 먼 미래(페이드 모델)에서 나와, 장기 가정에 민감합니다.</li>
+        <li><b>단일 모델</b>: DCF 한 가지 렌즈입니다. 상대가치·자산가치 등 다른 관점은 다른 그림을 줄 수 있습니다.</li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="minih">핵심 가정 (바뀌면 결론도 변함)</h4>
+      <ul class="clean">
+        <li><b>자본비용 9.25%</b>: 베타 1.0 가정. 소형주 위험을 더해 11%대로 보면 가치는 더 낮아지고, 8%대로 보면 높아집니다.</li>
+        <li><b>장기 이익률 11.5%</b>: 경영진 목표에 부합. 이것이 8%면 약세, 14%면 강세입니다.</li>
+        <li><b>경영진 2030 목표 채택</b>: 매출 $850M를 기본 경로로 신뢰했습니다(공격적 가정).</li>
+        <li><b>리스 부채를 영업비용으로 처리</b>, 실질 무차입 가정.</li>
+        <li><b>세율 24%, 장기성장 2.5%</b> 등 표준 거시 가정.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout c-steel">
+    <div class="ct">📐 데이터의 시점과 불확실성</div>
+    <p>주가·재무·컨센서스는 <b>2026년 6월 11일 종가 기준</b>(stockanalysis.com)입니다. 베타는 출처별로 0.80~1.41로 편차가 커 중간값(1.0)을 썼습니다. 섹터 분류도 출처에 따라 'Consumer Staples'(stockanalysis)와 'Consumer Discretionary'(일부)로 갈려, 페이드 비율은 소비자서비스 평균(0.13)을 적용하고 민감도로 검증했습니다. 일부 검색 소스에서 $37~40의 오래된(2025~2026.3) 시세가 섞여 나왔으나, 명시적 타임스탬프가 있는 종가를 채택했습니다. 모든 수치는 방향성·논리적 일관성을 우선하며, 소수점 단위 정밀도를 주장하지 않습니다.</p>
+  </div>
+</div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer"><div class="wrap">
+  <div class="srcgrid">
+    <div>
+      <h4>데이터 출처</h4>
+      <p class="small">
+        주가·시총·멀티플·컨센서스: stockanalysis.com (2026-06-11)<br>
+        재무제표: stockanalysis.com, SEC 8-K(Q1 2026·Investor Day)<br>
+        가이던스·2030 목표: 회사 공시(GlobeNewswire), Investor Day<br>
+        거시(국채·인플레이션): FRED · 시장 데이터<br>
+        주식위험프리미엄: 다모다란 내재 ERP 참조(보수적 표준 4.75% 적용)<br>
+        산업·규제: McKinsey, 미 노동부, 업계 자료
+      </p>
+    </div>
+    <div>
+      <h4>방법론</h4>
+      <p class="small">
+        경쟁우위기간(CAP) 프레임워크 기반 — '적정가 산출'이 아닌 <b>현재 주가에 내재된 시장 기대치 역산</b> 접근.<br>
+        M&M 가치식 + 페이드 모델, 연중(mid-year) 할인, CAPM 기반 WACC.<br>
+        예측기간 동적 조정(5~80년)으로 내재 CAP 도출.<br>
+        비전공자 이해를 최우선으로 작성.
+      </p>
+    </div>
+    <div>
+      <h4>읽는 분께</h4>
+      <p class="small">
+        본 자료는 특정 종목의 매수·매도를 권유하지 않으며, 기업과 산업의 이해 및 시장 내재 기대치의 해석을 목적으로 합니다.<br>
+        모든 추정에는 불확실성이 따르며, 새로운 증거가 나오면 결론은 갱신되어야 합니다.<br>
+        확신도(예: 높음~80%)는 베이지안 관점의 주관적 신뢰 수준입니다.
+      </p>
+    </div>
+  </div>
+  <p class="small" style="margin-top:26px;border-top:1px solid #2E4853;padding-top:16px">
+    Lincoln Educational Services Corporation (NASDAQ: LINC) · CAP 분석 보고서 · 기준일 2026년 6월 11일 · 단위 표기 없는 금액은 USD 백만 달러
+  </p>
+</div></footer>
+
+</body>
+</html>
