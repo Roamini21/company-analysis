@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ford Motor (F) — 경쟁우위기간(CAP) 기반 기업·산업 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4F1EA; --paper2:#EBE7DC;
+  --ink:#15252E; --ink2:#3E4D55; --ink3:#6B7882;
+  --card:#FFFFFF; --card-bd:#E0DACE;
+  --dark:#102530; --dark2:#163140; --dark-tx:#ECE8DE; --dark-sub:#9FB2BD; --dark-bd:#26414F;
+  --blue:#2E7DA8; --blue-d:#205B7C;
+  --amber:#C07A26; --amber-d:#9A5F16;
+  --pos:#2C7D62; --neg:#B23A34;
+  --grid:#D8D2C4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'IBM Plex Sans KR',sans-serif;
+  background:var(--paper); color:var(--ink);
+  line-height:1.72; font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:'IBM Plex Mono',monospace;font-feature-settings:"tnum"}
+h1,h2,h3,.disp{font-family:'Space Grotesk',sans-serif;letter-spacing:-.01em}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+section{padding:60px 0;border-top:1px solid var(--grid);scroll-margin-top:104px}
+section:first-of-type{border-top:none}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--dark);color:var(--dark-tx);padding:0;border:none}
+.hero-inner{max-width:1080px;margin:0 auto;padding:56px 22px 48px}
+.hero .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--blue);font-weight:500}
+.hero h1{font-size:clamp(30px,5.4vw,52px);font-weight:700;line-height:1.04;margin:16px 0 8px;color:#fff}
+.hero h1 .oval{color:var(--amber)}
+.hero .sub{font-size:16px;color:var(--dark-sub);max-width:680px;margin-top:10px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:30px;
+  font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--dark-sub)}
+.hero-meta b{color:var(--dark-tx);font-weight:600}
+.tickerbox{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.tk{background:var(--dark2);border:1px solid var(--dark-bd);border-radius:11px;
+  padding:14px 18px;min-width:128px;color:var(--dark-tx)}
+.tk .l{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--dark-sub)}
+.tk .v{font-family:'Space Grotesk',sans-serif;font-size:25px;font-weight:600;color:#fff;margin-top:3px}
+.tk .v.pos{color:#5BB394} .tk .v.neg{color:#E07F79} .tk .v.am{color:#E1A24E}
+.tk .d{font-size:11.5px;color:var(--dark-sub);margin-top:1px}
+
+/* ---------- NAV ---------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(16,37,48,.97);
+  backdrop-filter:blur(6px);border-bottom:1px solid var(--dark-bd)}
+.nav-inner{max-width:1080px;margin:0 auto;padding:9px 14px;
+  display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-height:46px}
+.nav a{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--dark-sub);
+  text-decoration:none;padding:6px 9px;border-radius:7px;white-space:nowrap;
+  transition:.16s;line-height:1.3}
+.nav a:hover{background:var(--dark2);color:#fff}
+.nav a .n{color:var(--blue);font-weight:600;margin-right:5px}
+
+/* ---------- TYPOGRAPHY ---------- */
+.sec-tag{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--amber-d);font-weight:600;display:flex;align-items:center;gap:10px}
+.sec-tag::before{content:"";width:26px;height:2px;background:var(--amber);display:inline-block}
+h2{font-size:clamp(23px,3.6vw,34px);font-weight:700;margin:14px 0 6px;color:var(--ink);line-height:1.12}
+.lead{font-size:16.5px;color:var(--ink2);max-width:760px;margin-bottom:8px}
+h3{font-size:19px;font-weight:600;margin:30px 0 12px;color:var(--ink)}
+p{margin-bottom:14px;color:var(--ink2)}
+p.tight{margin-bottom:8px}
+strong{color:var(--ink);font-weight:600}
+.kw{color:var(--blue-d);font-weight:600}
+
+/* ---------- CARDS / BOXES (자체 완결 색상) ---------- */
+.card{background:var(--card);color:var(--ink2);border:1px solid var(--card-bd);
+  border-radius:13px;padding:22px 24px;margin:16px 0}
+.card h3{margin-top:0;color:var(--ink)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:760px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+
+/* callout (밝은 배경+어두운 글자, 자체완결) */
+.callout{background:#F3EBDC;color:#3a2f1d;border:1px solid #E4D4B3;
+  border-left:4px solid var(--amber);border-radius:10px;padding:18px 20px;margin:18px 0}
+.callout.blue{background:#E5EFF5;color:#1c3a4a;border-color:#C3DAE7;border-left-color:var(--blue)}
+.callout.pos{background:#E2EFE9;color:#194c3a;border-color:#BFDDD0;border-left-color:var(--pos)}
+.callout.neg{background:#F6E3E1;color:#7d2722;border-color:#E8C5C1;border-left-color:var(--neg)}
+.callout .ct{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;
+  margin-bottom:6px;display:block;color:inherit}
+.callout p{color:inherit;margin-bottom:8px}
+.callout p:last-child{margin-bottom:0}
+
+/* 핵심 결론 박스 (다크) */
+.verdict{background:var(--dark);color:var(--dark-tx);border:1px solid var(--dark-bd);
+  border-radius:16px;padding:28px 30px;margin:8px 0}
+.verdict .ct{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--amber);font-weight:600;margin-bottom:12px;display:block}
+.verdict p{color:var(--dark-tx);font-size:17px;margin-bottom:14px}
+.verdict p strong{color:#fff}
+.verdict .hl{color:#E1A24E;font-weight:600}
+.conf{display:inline-flex;align-items:center;gap:7px;background:var(--dark2);
+  border:1px solid var(--dark-bd);border-radius:20px;padding:5px 13px;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dark-sub);margin:3px 6px 3px 0}
+.conf b{color:#5BB394;font-weight:600}
+.conf.mid b{color:#E1A24E} .conf.low b{color:#E07F79}
+
+/* stat chips */
+.chip{background:var(--card);border:1px solid var(--card-bd);border-radius:11px;
+  padding:15px 16px;color:var(--ink2)}
+.chip .l{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--ink3)}
+.chip .v{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:600;color:var(--ink);margin:4px 0 2px}
+.chip .v.pos{color:var(--pos)} .chip .v.neg{color:var(--neg)} .chip .v.blue{color:var(--blue-d)}
+.chip .d{font-size:12px;color:var(--ink3);line-height:1.4}
+
+/* badges (자체완결 페어) */
+.b{display:inline-block;padding:2px 9px;border-radius:6px;font-size:12px;font-weight:600;
+  font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.b-pos{background:#DDEEE6;color:#1c5a45;border:1px solid #BAD9CB}
+.b-neg{background:#F4DEDB;color:#8a2b25;border:1px solid #E6BDB8}
+.b-am{background:#F3E6CE;color:#825010;border:1px solid #E5CFA3}
+.b-bl{background:#DCEAF2;color:#1c5176;border:1px solid #BAD3E4}
+.b-gy{background:#E6E1D6;color:#4a4639;border:1px solid #D2CCBC}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:16px 0;border:1px solid var(--card-bd);border-radius:12px}
+table{width:100%;border-collapse:collapse;background:var(--card);font-size:13.5px;min-width:560px}
+th,td{padding:10px 13px;text-align:right;border-bottom:1px solid #EDE8DC;color:var(--ink2)}
+th:first-child,td:first-child{text-align:left}
+thead th{background:#EEE9DD;color:var(--ink);font-family:'IBM Plex Mono',monospace;
+  font-size:11px;letter-spacing:.04em;text-transform:uppercase;font-weight:600;
+  position:sticky;left:auto}
+tbody tr:last-child td{border-bottom:none}
+tr.hl-row td{background:#F3EBDC;color:#3a2f1d;font-weight:600}
+td.num{font-family:'IBM Plex Mono',monospace}
+td.pos,.t-pos{color:var(--pos);font-weight:600} td.neg,.t-neg{color:var(--neg);font-weight:600}
+caption{caption-side:bottom;font-size:11.5px;color:var(--ink3);padding:9px 4px;text-align:left}
+
+/* footnote / source */
+.src{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink3);
+  margin-top:8px;line-height:1.6}
+.src b{color:var(--ink2)}
+
+/* SVG chart container */
+.chartbox{background:var(--card);border:1px solid var(--card-bd);border-radius:13px;
+  padding:22px;margin:16px 0}
+.chartbox h3{margin-top:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:13px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:13px;height:13px;border-radius:3px;display:inline-block}
+
+/* bar chart (CSS) */
+.barrow{display:grid;grid-template-columns:120px 1fr 70px;gap:12px;align-items:center;
+  margin:9px 0;font-size:13px}
+.barrow .lab{color:var(--ink2);font-weight:500;text-align:right;font-size:12.5px}
+.bartrack{background:var(--paper2);border-radius:6px;height:26px;position:relative;overflow:hidden}
+.barfill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:9px;
+  color:#fff;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:600}
+.barrow .val{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--ink);text-align:left}
+
+/* flow / process */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:18px 0}
+.flow .node{background:var(--card);border:1px solid var(--card-bd);border-radius:10px;
+  padding:13px 15px;flex:1;min-width:120px;color:var(--ink2);position:relative}
+.flow .node .t{font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--ink);font-size:13.5px}
+.flow .node .d{font-size:11.5px;color:var(--ink3);margin-top:3px}
+.flow .arrow{display:flex;align-items:center;color:var(--amber);font-size:20px;padding:0 7px;font-weight:700}
+@media(max-width:760px){.flow{flex-direction:column}.flow .arrow{transform:rotate(90deg);padding:5px 0;justify-content:center}}
+
+/* SWOT */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+@media(max-width:760px){.swot{grid-template-columns:1fr}}
+.swot .q{border-radius:12px;padding:18px 20px}
+.swot .q h4{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;margin-bottom:10px;
+  display:flex;align-items:center;gap:8px}
+.swot .q ul{list-style:none;font-size:13.5px;line-height:1.55}
+.swot .q li{padding:5px 0 5px 18px;position:relative}
+.swot .q li::before{content:"▸";position:absolute;left:0;font-size:12px}
+.sw-s{background:#E3EFEA;color:#194c3a;border:1px solid #BFDDD0}
+.sw-s li::before{color:var(--pos)}
+.sw-w{background:#F5E4E1;color:#7d2722;border:1px solid #E8C5C1}
+.sw-w li::before{color:var(--neg)}
+.sw-o{background:#E4EFF5;color:#1c3a4a;border:1px solid #C3DAE7}
+.sw-o li::before{color:var(--blue)}
+.sw-t{background:#F3E8D2;color:#6a4410;border:1px solid #E5CFA3}
+.sw-t li::before{color:var(--amber-d)}
+.swot .q h4 .ic{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:2px 7px;border-radius:5px}
+.sw-s h4 .ic{background:#cfe6db;color:#155;}
+.sw-w h4 .ic{background:#ecccc8;color:#722}
+.sw-o h4 .ic{background:#cee0ec;color:#235}
+.sw-t h4 .ic{background:#ecdcbd;color:#640}
+
+/* moat meter */
+.meter{display:grid;grid-template-columns:160px 1fr 56px;gap:12px;align-items:center;margin:8px 0;font-size:13px}
+.meter .lab{color:var(--ink2);font-size:12.5px;text-align:right}
+.meter .track{background:var(--paper2);border-radius:20px;height:13px;overflow:hidden}
+.meter .fill{height:100%;border-radius:20px}
+.meter .sc{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;color:var(--ink);text-align:left}
+
+/* lifecycle */
+.lifecycle{display:flex;gap:6px;margin:18px 0}
+.lifecycle .stg{flex:1;text-align:center;padding:14px 6px;border-radius:9px;
+  background:var(--card);border:1px solid var(--card-bd);color:var(--ink3);font-size:12px}
+.lifecycle .stg.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+.lifecycle .stg.active .nm{color:#fff}.lifecycle .stg.active .sub{color:var(--amber)}
+.lifecycle .stg .nm{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;color:var(--ink2)}
+.lifecycle .stg.active .nm{color:#fff}
+.lifecycle .stg .sub{font-family:'IBM Plex Mono',monospace;font-size:10px;margin-top:3px}
+
+.footer{background:var(--dark);color:var(--dark-sub);padding:34px 0;border:none;font-size:12.5px}
+.footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
+.footer b{color:var(--dark-tx)}
+.footer .mono{font-size:11px}
+
+.pillrow{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.pill{background:var(--paper2);border:1px solid var(--card-bd);border-radius:18px;
+  padding:5px 13px;font-size:12.5px;color:var(--ink2)}
+.pill b{color:var(--ink)}
+ul.clean{list-style:none;margin:10px 0}
+ul.clean li{padding:6px 0 6px 22px;position:relative;color:var(--ink2);font-size:14.5px}
+ul.clean li::before{content:"—";position:absolute;left:0;color:var(--amber)}
+ul.clean li b{color:var(--ink)}
+.divlabel{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink3);margin:24px 0 4px}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">경쟁우위기간(CAP) 기반 기업·산업 분석 · 2026년 6월 16일</div>
+    <h1>Ford Motor Company <span class="oval">(F)</span></h1>
+    <p class="sub">한 문장 요약 — 1903년 설립된 미국의 완성차 제조사로, 픽업트럭·SUV·상용밴을 중심으로 연 약 440만 대를 팔고 자동차 금융(Ford Credit)까지 운영하며 연 매출 약 1,873억 달러를 올리는 회사입니다.</p>
+
+    <div class="tickerbox">
+      <div class="tk"><div class="l">현재가</div><div class="v">$15.0</div><div class="d">NYSE · 시총 ~$59B</div></div>
+      <div class="tk"><div class="l">2025 매출</div><div class="v am">$187B</div><div class="d">5년 연속 성장</div></div>
+      <div class="tk"><div class="l">2025 조정EBIT</div><div class="v">$6.8B</div><div class="d">마진 3.6%</div></div>
+      <div class="tk"><div class="l">2025 순손익</div><div class="v neg">−$8.2B</div><div class="d">특별항목 영향</div></div>
+      <div class="tk"><div class="l">시장 내재 CAP</div><div class="v am">≈ 0년</div><div class="d">전형 5~20년 대비</div></div>
+    </div>
+
+    <div class="hero-meta">
+      <span>분석 기준일 <b>2026-06-16</b></span>
+      <span>방법론 <b>시장 내재 CAP 역산 · 페이드 모델 DCF</b></span>
+      <span>대상 독자 <b>장기 투자 · 비전공자</b></span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ NAV ============ -->
+<nav class="nav"><div class="nav-inner">
+  <a href="#conclusion"><span class="n">01</span>핵심 결론</a>
+  <a href="#overview"><span class="n">02</span>기업 개요</a>
+  <a href="#revenue"><span class="n">03</span>수익 구조</a>
+  <a href="#products"><span class="n">04</span>제품·기술</a>
+  <a href="#industry"><span class="n">05</span>산업 분석</a>
+  <a href="#moat"><span class="n">06</span>경제적 해자</a>
+  <a href="#swot"><span class="n">07</span>SWOT</a>
+  <a href="#peers"><span class="n">08</span>피어 비교</a>
+  <a href="#lifecycle"><span class="n">09</span>생애주기</a>
+  <a href="#porter"><span class="n">10</span>경쟁우위 분석</a>
+  <a href="#dcf"><span class="n">11</span>DCF 모델</a>
+  <a href="#cap"><span class="n">12</span>내재 CAP</a>
+  <a href="#fordenergy"><span class="n">13</span>ESS·주가 급등</a>
+  <a href="#sensitivity"><span class="n">14</span>민감도·시나리오</a>
+  <a href="#risks"><span class="n">15</span>리스크·점검</a>
+  <a href="#judgment"><span class="n">16</span>종합 판단</a>
+  <a href="#limits"><span class="n">17</span>한계와 가정</a>
+</div></nav>
+
+<!-- ============ 01 핵심 결론 ============ -->
+<section id="conclusion"><div class="wrap">
+  <div class="sec-tag">01 · 핵심 결론</div>
+  <h2>시장은 포드를 "회복 없는 저점 이익" 수준에 가격 매기고 있다</h2>
+
+  <div class="verdict">
+    <span class="ct">// 한 줄 요약</span>
+    <p>현재 주가 <strong>$15</strong>는 포드의 <strong>2025년 저점 이익(조정 EBIT $6.8B)을 성장도 초과수익도 없이 영구히 반복하는 것으로 가정한 가치($15.7/주)</strong>와 거의 같습니다. 즉 시장이 매긴 <span class="hl">'경쟁우위기간(CAP)'은 사실상 0년</span>으로, 시장은 애널리스트 컨센서스가 예상하는 2026~2027년의 이익 회복($9~11B EBIT)조차 거의 반영하지 않고 있습니다.</p>
+    <p>이는 두 가지로 읽힙니다. ① <strong>합리적 비관</strong> — 자동차는 해자가 약하고 경기를 타는 산업이라, 시장의 냉정한 평가가 맞을 수 있습니다. ② <strong>가치 기회</strong> — 만약 회복(마진 6~8%)이 실제로 자리 잡으면 모델상 가치는 <span class="hl">$25 내외</span>로, 현재가 대비 큰 괴리가 있습니다. 결론의 무게추는 <strong>"이익 회복이 지속 가능한가"</strong> 하나에 거의 전부 실려 있습니다.</p>
+    <div style="margin-top:6px">
+      <span class="conf">시장이 회복을 거의 반영 안 함 <b>높음 ~85%</b></span>
+      <span class="conf mid">회복이 실제 지속될지 <b>불확실 ~50%</b></span>
+      <span class="conf mid">자동차 해자가 약하다 <b>높음 ~80%</b></span>
+    </div>
+  </div>
+
+  <div class="grid4" style="margin-top:18px">
+    <div class="chip"><div class="l">시장 내재 NOPAT</div><div class="v blue">$5.2B</div><div class="d">무성장 가정 시. 2025 실제($5.4B)와 거의 동일</div></div>
+    <div class="chip"><div class="l">컨센서스 2027 EBIT</div><div class="v">$10.8B</div><div class="d">시장가에 거의 미반영</div></div>
+    <div class="chip"><div class="l">기본 시나리오 가치</div><div class="v pos">$25</div><div class="d">회복 지속 가정</div></div>
+    <div class="chip"><div class="l">약세 시나리오 가치</div><div class="v neg">$15.5</div><div class="d">현재가가 위치한 지점</div></div>
+  </div>
+
+  <div class="callout blue">
+    <span class="ct">이 분석이 답하려는 질문</span>
+    <p>"포드의 적정 주가는 얼마인가?"가 아니라 <strong>"현재 주가에는 시장이 어떤 기대를 심어 두었는가?"</strong>입니다. 주가를 거꾸로 풀어 시장이 가정한 '초과수익 지속 기간(CAP)'을 읽고, 그 기대가 너무 낮은지·높은지·적당한지를 사업과 산업의 실제 모습과 대조합니다. 정밀한 숫자보다 <strong>방향과 논리</strong>가 목적입니다.</p>
+  </div>
+
+  <div class="callout am">
+    <span class="ct">최근 동향 — 잊지 말아야 할 새 변수 (자세히는 13번 섹션)</span>
+    <p>2026년 5월, 주가는 신규 에너지저장(ESS) 사업 <strong>Ford Energy</strong>가 'AI 데이터센터 수혜주'로 재평가되며 한 달 만에 약 47% 급등해 ~$18(3년 최고치)을 찍었다가, 6월 들어 ~$15로 되돌림했습니다. 따라서 현재가 $15는 <strong>자동차 본업의 저점가치(내재 CAP≈0)에 다시 수렴</strong>한 상태이며, 그 위에 <strong>아직 매출은 없지만 상방 잠재력을 지닌 ESS 옵션</strong>이 새로운 층으로 얹혀 변동성을 키우고 있습니다.</p>
+  </div>
+</div></section>
+
+<!-- ============ 02 기업 개요 ============ -->
+<section id="overview"><div class="wrap">
+  <div class="sec-tag">02 · 기업 개요</div>
+  <h2>120년 된 미국 자동차 회사, 그러나 4개의 다른 사업을 굴린다</h2>
+  <p class="lead">포드는 단순히 "차를 만드는 회사"가 아니라, 성격이 전혀 다른 4개 사업부의 묶음입니다. 어떤 부문은 돈을 잘 벌고, 어떤 부문은 막대한 적자를 냅니다. 이 구조를 이해하는 것이 포드를 이해하는 출발점입니다.</p>
+
+  <h3>설립과 정체성</h3>
+  <p>헨리 포드(Henry Ford)가 <strong>1903년</strong> 설립했습니다. 1908년 'Model T'와 움직이는 조립라인(컨베이어 벨트 방식의 대량생산)을 도입해 자동차를 소수의 사치품에서 대중의 이동수단으로 바꾼, 현대 제조업의 상징적 기업입니다. 본사는 미국 미시간주 디어본이며 직원은 약 <strong>16만 9천 명</strong>(이 중 5만 6천여 명이 전미자동차노조 UAW 소속)입니다.</p>
+  <p>오늘날 포드의 정체성은 <strong>'트럭 회사'</strong>에 가깝습니다. 미국에서 픽업트럭 <strong>F-시리즈</strong>는 수십 년간 베스트셀러 자리를 지켜 왔고, 미국 신차 판매의 80% 이상이 라이트트럭(픽업·SUV)이라는 시장 구조에서 포드의 강점이 집중되는 곳입니다. 미국 시장점유율은 약 <strong>13%</strong>, 영국 약 10%, 중국은 1%대로 미미합니다. 2025년 매출의 약 65%가 미국에서 나왔습니다.</p>
+
+  <h3>4개 사업부 — 한눈에</h3>
+  <div class="grid2">
+    <div class="card" style="border-left:4px solid var(--blue)">
+      <h3 style="font-size:16px">Ford Blue <span class="b b-bl">내연·하이브리드</span></h3>
+      <p class="tight">전통적인 가솔린·하이브리드 차량 부문. F-150, Bronco, Maverick(하이브리드 픽업), Explorer, Mustang, 그리고 럭셔리 브랜드 Lincoln. <strong>2025년 매출 $101B, EBIT +$3.0B</strong>. 포드의 '본업'이자 현금의 토대.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--amber)">
+      <h3 style="font-size:16px">Ford Pro <span class="b b-am">상용·플릿</span></h3>
+      <p class="tight">기업·정부·렌터카 등 <strong>상업 고객</strong> 대상. Transit 밴, Super Duty 대형 픽업, 그리고 차량관리 소프트웨어 구독(텔레매틱스). <strong>2025년 매출 $66B, EBIT +$6.8B(두 자릿수 마진)</strong>. 포드에서 가장 수익성 높고 해자가 강한 부문.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--neg)">
+      <h3 style="font-size:16px">Ford Model e <span class="b b-neg">전기차(EV)</span></h3>
+      <p class="tight">순수 전기차 부문. Mustang Mach-E, F-150 Lightning. <strong>2025년 EBIT 손실 −$4.8B</strong>로 회사 전체 이익을 갉아먹는 부문. 2025년 말 차세대 EV 자산에 대규모 상각을 단행하고 전략을 대폭 축소했습니다.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--pos)">
+      <h3 style="font-size:16px">Ford Credit <span class="b b-pos">자동차 금융</span></h3>
+      <p class="tight">고객의 차량 할부·리스, 딜러 재고 금융을 담당하는 캡티브 금융 자회사. <strong>2025년 세전이익(EBT) +$2.6B(+55%)</strong>. 차량 판매를 촉진하는 동시에 안정적 이익을 보태는 '숨은 엔진'.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="ct">왜 이 구조가 중요한가</span>
+    <p>2025년 포드의 <strong>회계상 순손실 −$8.2B</strong>는 충격적으로 보이지만, 이는 EV 전략 재편에 따른 <strong>약 $19.5B 규모의 일회성 특별항목(EV 자산 손상·프로그램 취소 상각)</strong> 때문입니다. 영업의 실제 체력을 보여주는 <strong>조정 EBIT는 +$6.8B 흑자</strong>였습니다. 본 분석은 회사의 지속 가능한 수익력을 보기 위해 <strong>회계상 순손실이 아니라 조정 EBIT(영업 성과)</strong>를 기준으로 삼습니다 — 이것이 시장과 애널리스트가 보는 방식이기도 합니다.</p>
+  </div>
+</div></section>
+
+<!-- ============ 03 수익 구조 ============ -->
+<section id="revenue"><div class="wrap">
+  <div class="sec-tag">03 · 수익 구조</div>
+  <h2>매출은 트럭에서, 이익은 상용(Ford Pro)에서</h2>
+  <p class="lead">포드가 어떻게 돈을 버는지를 두 장의 그림으로 봅니다. 첫째는 <strong>매출이 어디서 나오는가</strong>, 둘째는 <strong>이익이 어디서 나오는가</strong>입니다. 둘은 전혀 다른 그림을 보여줍니다.</p>
+
+  <div class="grid2">
+    <!-- 매출 도넛 -->
+    <div class="chartbox">
+      <h3 style="font-size:16px">매출 구성 (2025, 약 $188B)</h3>
+      <svg viewBox="0 0 200 200" width="100%" style="max-width:260px;display:block;margin:6px auto">
+        <g transform="rotate(-90 100 100)" fill="none" stroke-width="30">
+          <circle cx="100" cy="100" r="80" stroke="#2E7DA8" stroke-dasharray="271.4 231.2" stroke-dashoffset="0"/>
+          <circle cx="100" cy="100" r="80" stroke="#C07A26" stroke-dasharray="175.9 326.7" stroke-dashoffset="-271.4"/>
+          <circle cx="100" cy="100" r="80" stroke="#2C7D62" stroke-dasharray="35.2 467.4" stroke-dashoffset="-447.3"/>
+          <circle cx="100" cy="100" r="80" stroke="#B23A34" stroke-dasharray="20.1 482.5" stroke-dashoffset="-482.5"/>
+        </g>
+        <text x="100" y="95" text-anchor="middle" font-family="Space Grotesk" font-size="15" font-weight="700" fill="#15252E">매출</text>
+        <text x="100" y="113" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#6B7882">$188B</text>
+      </svg>
+      <div class="legend">
+        <span><i style="background:#2E7DA8"></i>Ford Blue · $101B (54%)</span>
+        <span><i style="background:#C07A26"></i>Ford Pro · $66B (35%)</span>
+        <span><i style="background:#2C7D62"></i>Ford Credit · $13B (7%)</span>
+        <span><i style="background:#B23A34"></i>Model e · ~$8B (4%)</span>
+      </div>
+    </div>
+
+    <!-- EBIT 워터폴 -->
+    <div class="chartbox">
+      <h3 style="font-size:16px">부문별 이익 기여 (2025, EBIT $B)</h3>
+      <svg viewBox="0 0 360 240" width="100%" style="display:block;margin-top:6px">
+        <!-- 0 baseline at y=170 ; scale: 1B = 12px -->
+        <line x1="20" y1="170" x2="345" y2="170" stroke="#D8D2C4" stroke-width="1"/>
+        <!-- Ford Pro +6.8 : 0->6.8 -->
+        <rect x="28" y="88.4" width="44" height="81.6" fill="#C07A26" rx="3"/>
+        <text x="50" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="#2C7D62">+6.8</text>
+        <text x="50" y="186" text-anchor="middle" font-size="9.5" fill="#6B7882">Pro</text>
+        <!-- Ford Blue +3.0 : cumulative 6.8->9.8 (top higher) -->
+        <rect x="92" y="52.4" width="44" height="36" fill="#2E7DA8" rx="3"/>
+        <text x="114" y="46" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="#2C7D62">+3.0</text>
+        <text x="114" y="186" text-anchor="middle" font-size="9.5" fill="#6B7882">Blue</text>
+        <!-- Ford Credit +2.6 : 9.8->12.4 -->
+        <rect x="156" y="21.2" width="44" height="31.2" fill="#2C7D62" rx="3"/>
+        <text x="178" y="15" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="#2C7D62">+2.6</text>
+        <text x="178" y="186" text-anchor="middle" font-size="9.5" fill="#6B7882">Credit</text>
+        <!-- Model e -4.8 : 12.4->7.6 (down) -->
+        <rect x="220" y="21.2" width="44" height="57.6" fill="#B23A34" rx="3"/>
+        <text x="242" y="15" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="#B23A34">−4.8</text>
+        <text x="242" y="186" text-anchor="middle" font-size="9.5" fill="#6B7882">Model e</text>
+        <!-- Corp -0.8 : 7.6->6.8 -->
+        <rect x="284" y="78.8" width="44" height="9.6" fill="#6B7882" rx="3"/>
+        <text x="306" y="73" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#6B7882">−0.8</text>
+        <text x="306" y="186" text-anchor="middle" font-size="9" fill="#6B7882">기타</text>
+        <!-- net line -->
+        <line x1="20" y1="88.4" x2="345" y2="88.4" stroke="#15252E" stroke-width="1.3" stroke-dasharray="4 3"/>
+        <text x="343" y="102" text-anchor="end" font-family="IBM Plex Mono" font-size="10.5" font-weight="600" fill="#15252E">순 조정 EBIT = $6.8B</text>
+      </svg>
+      <p class="src" style="margin-top:4px">Ford Pro 한 부문(+$6.8B)이 회사 전체 순이익과 맞먹습니다. Model e의 −$4.8B 손실이 Blue·Credit의 흑자를 상당 부분 상쇄합니다.</p>
+    </div>
+  </div>
+
+  <div class="callout neg">
+    <span class="ct">핵심 통찰 — '매출의 4%'가 '이익의 마이너스 70%'</span>
+    <p>Model e(EV)는 매출의 4%에 불과하지만 <strong>−$4.8B의 손실</strong>로 회사 이익을 크게 끌어내립니다. 반대로 Ford Pro는 매출의 35%로 <strong>+$6.8B</strong>를 벌어 회사를 떠받칩니다. 포드의 수익성 회복 스토리는 사실상 <strong>"Model e의 손실을 얼마나 줄이고, Ford Pro·Ford Blue의 마진을 얼마나 지키느냐"</strong>의 문제입니다.</p>
+  </div>
+
+  <h3>돈이 흐르는 경로</h3>
+  <div class="flow">
+    <div class="node"><div class="t">① 차량 제조·판매</div><div class="d">Blue·Pro·Model e가 차량/밴을 생산해 딜러·플릿에 도매</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">② 금융 부가</div><div class="d">Ford Credit이 구매 고객에 할부·리스 제공 → 이자수익</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">③ 소프트웨어·서비스</div><div class="d">Ford Pro 구독(텔레매틱스), 부품·정비 → 반복 매출</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">④ 잉여현금</div><div class="d">배당(연 4~5% 수익률)·재투자(공장·EV)로 환원</div></div>
+  </div>
+  <div class="src"><b>출처:</b> Ford 2025 4Q/연간 실적(8-K, 2026-02-10), 사업부별 발표. 매출은 부문 합계 기준(연결 조정 후 약 $187.3B).</div>
+</div></section>
+
+<!-- ============ 04 제품·기술 ============ -->
+<section id="products"><div class="wrap">
+  <div class="sec-tag">04 · 제품·서비스 및 기술력</div>
+  <h2>트럭의 강자, 소프트웨어의 도전자, EV의 후퇴자</h2>
+  <p class="lead">포드의 제품군은 세 갈래입니다 — 돈을 버는 <strong>트럭·SUV</strong>, 미래를 거는 <strong>상용 소프트웨어·서비스</strong>, 그리고 전략을 대폭 수정한 <strong>전기차</strong>. 각각을 쉬운 말로 풀어봅니다.</p>
+
+  <div class="grid3">
+    <div class="card">
+      <h3 style="font-size:15.5px">핵심 트럭·SUV (현금원)</h3>
+      <ul class="clean" style="font-size:13.5px">
+        <li><b>F-시리즈</b> 미국 1위 픽업, 수십 년 연속. 포드 이익의 척추</li>
+        <li><b>Maverick</b> 소형 하이브리드 픽업 — 미국 베스트셀러 하이브리드 픽업</li>
+        <li><b>Bronco</b> 오프로드 SUV, 기록적 판매</li>
+        <li><b>Explorer</b> 미국 3열 SUV 1위</li>
+        <li><b>Lincoln</b> 럭셔리 브랜드(글로벌 확장 과제)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15.5px">상용·소프트웨어 (성장 엔진)</h3>
+      <ul class="clean" style="font-size:13.5px">
+        <li><b>Transit</b> 밴 — 미국 기록적 물량</li>
+        <li><b>Super Duty</b> 대형 픽업 — 2004년 이후 최고 판매</li>
+        <li><b>유료 구독 81.8만 건</b> — 차량관리·텔레매틱스 SW</li>
+        <li>소프트웨어·서비스 매출 <b>$15B</b>, 2030년까지 연 8% 성장 목표</li>
+        <li><b>BlueCruise</b> 핸즈프리 운전 보조(ADAS)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15.5px">전기·신사업 (전환 중)</h3>
+      <ul class="clean" style="font-size:13.5px">
+        <li><b>Mustang Mach-E, F-150 Lightning</b> 1세대 EV</li>
+        <li><b>UEV(보편형 EV 플랫폼)</b> — 저가 $30K 전기 픽업, 2027년 4분기 루이빌 생산</li>
+        <li><b>Ford Energy</b> 배터리 저장장치(BESS), 2027년 4분기부터 20+GWh, $1.5B 투자</li>
+        <li>2030년까지 판매의 <b>50%를 하이브리드·EREV·EV</b>로(2025년 17%에서)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>자동차는 어떻게 만들어지나 — 생산 흐름</h3>
+  <div class="flow">
+    <div class="node"><div class="t">설계·엔지니어링</div><div class="d">디자인·플랫폼 개발·R&D (연 ~$8B)</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">차체·스탬핑</div><div class="d">강판·알루미늄 프레스로 차체 패널 성형</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">도장</div><div class="d">방청·페인트 공정</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">조립</div><div class="d">파워트레인·내장·전장 장착(조립라인)</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">출하·유통</div><div class="d">딜러·플릿 도매 → 고객 인도</div></div>
+  </div>
+
+  <div class="callout neg">
+    <span class="ct">2025년이 보여준 공급망 취약성</span>
+    <p>알루미늄 공급사 <strong>노벨리스(Novelis)의 공장 화재</strong>가 2025년 하반기 포드에 약 <strong>$2B</strong>의 타격을 줬습니다. F-150, Super Duty 등 고마진 차량의 알루미늄 차체 생산이 차질을 빚어 차량 9만~10만 대를 못 만들었습니다. 차체 강판의 '스탬핑' 단계가 단일 공급사에 묶여 있을 때 무슨 일이 벌어지는지를 보여준 사건입니다. 반도체·배터리·알루미늄 같은 핵심 부품 의존이 자동차 산업의 구조적 약점입니다.</p>
+  </div>
+
+  <div class="callout blue">
+    <span class="ct">EV 전략의 대전환 — 비전공자를 위한 정리</span>
+    <p>포드는 원래 전기차에 공격적으로 투자했지만, 미국 EV 수요가 기대만큼 크지 않자(특히 정부 보조금 폐지 후) <strong>2025년 말 약 $19.5B의 EV 자산을 상각</strong>하고 전략을 수정했습니다. 핵심은 ① 비싼 대형 전기 SUV 프로그램 취소, ② <strong>저렴한 EV 전용 플랫폼(UEV)</strong>으로 선회해 $30K대 전기 픽업을 만들고, ③ 당장은 <strong>하이브리드</strong>(엔진+전기) 비중을 키우는 것입니다. "전기차 전부"에서 "팔리는 것 위주(하이브리드+저가 EV)"로 노선을 바꾼 셈입니다.</p>
+  </div>
+</div></section>
+
+<!-- ============ 05 산업 분석 ============ -->
+<section id="industry"><div class="wrap">
+  <div class="sec-tag">05 · 산업 분석</div>
+  <h2>거대하지만 거의 자라지 않는, 그리고 격변 중인 산업</h2>
+  <p class="lead">포드가 속한 글로벌 완성차 제조업은 <strong>약 $2.6조 규모</strong>의 거대 산업이지만 성장은 연 1.5~1.9%에 그치는 <strong>성숙·경기순환 산업</strong>입니다. 동시에 전기차 전환과 중국 업체의 부상으로 구조가 흔들리고 있습니다.</p>
+
+  <div class="grid4">
+    <div class="chip"><div class="l">글로벌 제조업 규모</div><div class="v">$2.6조</div><div class="d">연 성장 ~1.5%</div></div>
+    <div class="chip"><div class="l">세계 신차 판매</div><div class="v">91.7M대</div><div class="d">2026E ~91.8M(보합)</div></div>
+    <div class="chip"><div class="l">미국 신차 판매</div><div class="v neg">16.4M대</div><div class="d">2026E 15.8M(↓3%)</div></div>
+    <div class="chip"><div class="l">세계 EV 판매</div><div class="v blue">21.6M대</div><div class="d">+21%, 중국 50%+</div></div>
+  </div>
+
+  <h3>산업 가치사슬(밸류체인) — 누가 어디에 있나</h3>
+  <div class="flow">
+    <div class="node"><div class="t">원자재</div><div class="d">철강·알루미늄·구리·리튬·반도체</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">부품 공급사</div><div class="d">Tier 1·2 (엔진·배터리·전장·시트)</div></div>
+    <div class="arrow">→</div>
+    <div class="node" style="border:2px solid var(--amber)"><div class="t" style="color:var(--amber-d)">완성차(OEM)</div><div class="d"><b>포드 위치</b> · 설계·조립·브랜드</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">유통·딜러</div><div class="d">딜러망·플릿·렌터카</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">금융·사후</div><div class="d">할부금융·정비·부품·중고차</div></div>
+  </div>
+  <p class="tight">포드는 가치사슬의 <strong>중앙(완성차 조립·브랜드)</strong>에 위치하며, Ford Credit으로 <strong>금융</strong> 단계까지, Ford Pro 소프트웨어로 <strong>사후 서비스</strong> 단계까지 영역을 넓히고 있습니다. 부품·원자재(노벨리스 사례)와 유통(딜러) 양쪽에 의존하는 구조입니다.</p>
+
+  <h3>산업을 움직이는 힘 — 트렌드와 방향</h3>
+  <div class="grid2">
+    <div class="card pos-card" style="border-left:4px solid var(--pos)">
+      <h3 style="font-size:15px">순풍</h3>
+      <ul class="clean" style="font-size:13.5px">
+        <li><b>하이브리드 부활</b> — 휘발유값 상승 + EV 보조금 폐지로 하이브리드(HEV) 수요 증가. 포드의 Maverick·F-150 하이브리드가 수혜</li>
+        <li><b>소프트웨어·서비스 수익화</b> — 차량을 한 번 팔고 끝이 아니라 구독·데이터로 반복 매출</li>
+        <li><b>상용 플릿 전동화·디지털화</b> — Ford Pro의 영역</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left:4px solid var(--neg)">
+      <h3 style="font-size:15px">역풍</h3>
+      <ul class="clean" style="font-size:13.5px">
+        <li><b>중국 업체(BYD 등)의 부상</b> — 저가·고품질 EV로 글로벌 점유율 확대, 구조적 위협</li>
+        <li><b>관세</b> — 2025년 포드에 ~$2B 비용. 정책 변동성 큼</li>
+        <li><b>미국 EV 수요 둔화</b> — 보조금 폐지 후 2025년 4분기 BEV 판매가 현대 들어 처음 감소(−1.7%)</li>
+        <li><b>구조적 과잉생산·자본집약·경기순환</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <span class="ct">EV 전환의 현주소 (비전공자용)</span>
+    <p>전기차는 <strong>세계적으로는</strong> 여전히 성장(2025년 +21%, 판매의 약 25%)하지만 <strong>지역 격차</strong>가 큽니다. 중국이 절반 이상을 차지하고, 유럽이 약 1/3, 미국은 8% 안팎으로 뒤처져 있습니다. 미국은 2025년 정부가 EV 세액공제를 폐지하면서 수요가 식었고(3분기 막판 수요 당겨쓰기 → 4분기 급감), 그 결과 포드·GM 같은 미국 업체들이 EV 투자를 늦추고 하이브리드로 무게중심을 옮기고 있습니다. 장기적으로 EV는 2040년 세계 판매의 80%를 넘을 것으로 전망되지만, <strong>전환 속도는 시장·정책에 따라 들쑥날쑥</strong>합니다.</p>
+  </div>
+
+  <div class="src"><b>출처:</b> S&P Global Mobility(2026-01, 2026-05), IBISWorld(2026-02), Rho Motion/EV-Volumes(2025-12·2026-06).</div>
+</div></section>
+
+<!-- ============ 06 경제적 해자 ============ -->
+<section id="moat"><div class="wrap">
+  <div class="sec-tag">06 · 경제적 해자(Moat)</div>
+  <h2>전반적으로 좁은 해자, 단 한 곳(Ford Pro)은 견고하다</h2>
+  <p class="lead">'경제적 해자'란 경쟁자가 쉽게 따라오지 못하게 막아 <strong>초과수익(자본비용을 넘는 이익)을 오래 지키는 힘</strong>입니다. 자동차 산업은 일반적으로 해자가 약한 것으로 평가됩니다. 포드도 부문마다 해자의 두께가 다릅니다.</p>
+
+  <h3>포드의 해자 — 부문별 강도</h3>
+  <div class="card">
+    <div class="meter"><div class="lab">Ford Pro 상용 프랜차이즈</div><div class="track"><div class="fill" style="width:72%;background:#2C7D62"></div></div><div class="sc">강함</div></div>
+    <div class="meter"><div class="lab">F-시리즈 트럭 브랜드</div><div class="track"><div class="fill" style="width:60%;background:#2E7DA8"></div></div><div class="sc">중상</div></div>
+    <div class="meter"><div class="lab">제조·유통 규모</div><div class="track"><div class="fill" style="width:48%;background:#2E7DA8"></div></div><div class="sc">중간</div></div>
+    <div class="meter"><div class="lab">Ford Credit 캡티브 금융</div><div class="track"><div class="fill" style="width:42%;background:#C07A26"></div></div><div class="sc">중간</div></div>
+    <div class="meter"><div class="lab">승용차·SUV 차별화</div><div class="track"><div class="fill" style="width:25%;background:#C07A26"></div></div><div class="sc">약함</div></div>
+    <div class="meter"><div class="lab">전기차(Model e) 경쟁력</div><div class="track"><div class="fill" style="width:14%;background:#B23A34"></div></div><div class="sc">매우약</div></div>
+    <p class="src" style="margin-top:10px">정성 평가(상대 강도). 막대가 길수록 경쟁우위가 두껍다는 의미.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="callout pos">
+      <span class="ct">해자가 있는 곳</span>
+      <p><b>① Ford Pro(상용):</b> 기업·정부 플릿은 한번 특정 브랜드의 차량·소프트웨어 생태계에 들어오면 바꾸기 번거롭습니다(<b>전환비용</b>). Transit·Super Duty의 시장 지위와 81.8만 건의 소프트웨어 구독이 <b>반복 매출</b>과 끈끈한 관계를 만듭니다.</p>
+      <p><b>② F-시리즈 브랜드:</b> 수십 년간 쌓인 트럭 충성도와 광범위한 딜러·정비망은 단기간에 복제하기 어렵습니다.</p>
+    </div>
+    <div class="callout neg">
+      <span class="ct">해자가 약한 곳</span>
+      <p><b>① 승용차·SUV:</b> 선택지가 넘치고 차별화가 어려워 가격 경쟁에 노출됩니다. 소비자 전환비용이 거의 없습니다.</p>
+      <p><b>② 전기차:</b> 테슬라·BYD·중국 업체 대비 뚜렷한 우위가 없고, 오히려 −$4.8B 적자를 냅니다.</p>
+      <p><b>③ 원자재·경기:</b> 알루미늄·반도체 가격과 경기 변동에 이익이 크게 흔들립니다.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="ct">종합 — 좁은 해자(Narrow-to-None)</span>
+    <p>포드의 해자는 <strong>Ford Pro를 중심으로 한 '좁은 해자'</strong>로 평가됩니다. 회사 전체로 보면 자동차 산업 특유의 약한 해자(치열한 경쟁, 자본집약, 경기순환)를 벗어나지 못합니다. 뒤에서 보겠지만 이 '약한 해자'는 시장이 포드에 매우 짧은 CAP(≈0년)를 부여하는 근본 이유이기도 합니다.</p>
+  </div>
+</div></section>
+
+<!-- ============ 07 SWOT ============ -->
+<section id="swot"><div class="wrap">
+  <div class="sec-tag">07 · SWOT 분석</div>
+  <h2>강점·약점·기회·위협</h2>
+  <div class="swot">
+    <div class="q sw-s">
+      <h4><span class="ic">S</span> 강점 (Strengths)</h4>
+      <ul>
+        <li>F-시리즈 등 미국 트럭 프랜차이즈 — 압도적 브랜드·점유율</li>
+        <li>Ford Pro 상용 사업 + 소프트웨어 구독(고마진·반복매출)</li>
+        <li>연 440만 대 규모의 제조·유통 스케일</li>
+        <li>Ford Credit 캡티브 금융(안정적 이익 보조)</li>
+        <li>강한 유동성($50B) — 다운사이클 버틸 체력</li>
+      </ul>
+    </div>
+    <div class="q sw-w">
+      <h4><span class="ic">W</span> 약점 (Weaknesses)</h4>
+      <ul>
+        <li>낮은 이익률(조정 EBIT 3.6%) — GM(7.2%)에 구조적 열위</li>
+        <li>EV(Model e) 대규모 적자 −$4.8B</li>
+        <li>높은 품질·보증(워런티) 비용 이력</li>
+        <li>중국 시장 점유율 미미(1%대)</li>
+        <li>자본집약·경기순환에 따른 이익 변동성</li>
+      </ul>
+    </div>
+    <div class="q sw-o">
+      <h4><span class="ic">O</span> 기회 (Opportunities)</h4>
+      <ul>
+        <li>Ford Pro 소프트웨어·서비스 $15B → 연 8% 성장</li>
+        <li>하이브리드 수요 확대(보조금 폐지 환경에서 유리)</li>
+        <li>원가·보증비 절감(2025년 $1.5B 절감)으로 마진 회복</li>
+        <li>저가 EV 플랫폼(UEV)·Ford Energy(BESS) 신규 매출원</li>
+        <li>2029년 조정 EBIT 마진 8% 목표 달성 시 가치 재평가</li>
+      </ul>
+    </div>
+    <div class="q sw-t">
+      <h4><span class="ic">T</span> 위협 (Threats)</h4>
+      <ul>
+        <li>중국 업체(BYD 등) — 저가·고품질로 글로벌 잠식</li>
+        <li>관세·무역정책 변동성($2B 비용)</li>
+        <li>EV 수요 불확실성·정책 급변</li>
+        <li>경기 침체·금리에 따른 신차 수요 위축</li>
+        <li>UAW 노조 비용, 리콜·품질 이슈(2025년 54.8만 대 리콜)</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 08 피어 비교 ============ -->
+<section id="peers"><div class="wrap">
+  <div class="sec-tag">08 · 피어그룹 비교</div>
+  <h2>가장 싸지만, 가장 수익성 낮은 완성차</h2>
+  <p class="lead">포드를 경쟁사와 나란히 놓으면 위치가 분명해집니다. <strong>GM이 더 잘 굴리는 회사</strong>(높은 마진·ROIC)이고, <strong>테슬라는 자동차가 아니라 기술·AI 기업</strong>으로 평가받으며, 포드는 <strong>가장 저평가됐지만 수익성도 가장 낮은</strong> 전통 완성차입니다.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>항목 (2025)</th><th>Ford</th><th>GM</th><th>Tesla</th><th>Toyota</th></tr></thead>
+      <tbody>
+        <tr><td>매출</td><td class="num">$187B</td><td class="num">$185B</td><td class="num">$95B</td><td class="num">~$275B</td></tr>
+        <tr><td>조정 EBIT 마진</td><td class="num neg">3.6%</td><td class="num pos">7.2%</td><td class="num">~5%</td><td class="num pos">~10%</td></tr>
+        <tr><td>조정 ROIC</td><td class="num">8.8%</td><td class="num pos">16.7%</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr><td>시가총액</td><td class="num">$59B</td><td class="num">$68B</td><td class="num am">~$1.3조</td><td class="num">~$250B</td></tr>
+        <tr><td>P/E (주가수익비율)</td><td class="num">적자¹</td><td class="num">29.7</td><td class="num">초고배수</td><td class="num">&lt;10</td></tr>
+        <tr><td>도매 판매대수</td><td class="num">4.4M</td><td class="num">3.8M</td><td class="num">~1.8M</td><td class="num">~10M</td></tr>
+        <tr><td>차량당 매출</td><td class="num">낮음</td><td class="num pos">$44,215</td><td class="num">높음</td><td class="num">중간</td></tr>
+      </tbody>
+      <caption>¹ 2025년 특별항목(EV 상각 $19.5B)으로 회계상 적자 → P/E 산출 불가. 조정 기준으로는 흑자(EPS $1.09). 수치는 근사값.</caption>
+    </table>
+  </div>
+
+  <div class="grid3">
+    <div class="callout pos" style="margin:8px 0">
+      <span class="ct">GM — 더 잘 굴리는 라이벌</span>
+      <p>더 적은 차(3.8M)를 팔지만 <strong>차량당 매출 $44,215</strong>로 가격결정력이 강하고, 조정 EBIT 마진 7.2%·ROIC 16.7%로 포드를 앞섭니다. 적극적 자사주 매입으로 주가도 강세였습니다.</p>
+    </div>
+    <div class="callout am" style="margin:8px 0">
+      <span class="ct">Tesla — '자동차 회사'가 아니다</span>
+      <p>매출은 포드의 절반인데 시총은 <strong>~$1.3조</strong>(다음 20개 완성차 합계 초과). 시장이 AI·자율주행·로봇·에너지 기업으로 평가하기 때문입니다. 전통 완성차의 잣대로 비교 불가.</p>
+    </div>
+    <div class="callout blue" style="margin:8px 0">
+      <span class="ct">Toyota — 효율의 거인</span>
+      <p>매출 최대(~$275B), 안정적 두 자릿수 마진과 하이브리드 강자. 그러나 시장은 여전히 <strong>P/S 1배 미만·P/E 10배 미만</strong>의 저배수 산업재로 평가.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="ct">시사점 — 시장은 완성차를 '싸게' 본다</span>
+    <p>테슬라를 제외하면 완성차는 모두 <strong>낮은 배수</strong>로 거래됩니다. 이는 시장이 자동차 사업을 <strong>경기순환적·자본집약적·약한 해자</strong>로 보고 초과수익을 오래 인정하지 않기 때문입니다. 포드는 그중에서도 마진이 가장 낮아 더 큰 폭으로 할인받고 있습니다 — 이것이 '회복하면 기회, 못 하면 함정'이라는 양면성의 출발점입니다.</p>
+  </div>
+  <div class="src"><b>출처:</b> 각사 2025 실적(8-K/10-K), companiesmarketcap, stock-analysis-on.net, GuruFocus. 시총·배수는 2026년 5~6월 기준 근사.</div>
+</div></section>
+
+<!-- ============ 09 생애주기 ============ -->
+<section id="lifecycle"><div class="wrap">
+  <div class="sec-tag">09 · 기업 생애주기</div>
+  <h2>성숙 단계 — 단, 구조조정이 겹친 성숙기</h2>
+  <p class="lead">기업은 도입 → 성장 → 성숙 → 정리 → 감소의 단계를 거칩니다. 어느 단계인지에 따라 적절한 평가법이 달라집니다. 현금흐름의 부호 패턴으로 판별합니다.</p>
+
+  <div class="lifecycle">
+    <div class="stg"><div class="nm">도입</div><div class="sub">영업− 투자− 재무+</div></div>
+    <div class="stg"><div class="nm">성장</div><div class="sub">영업+ 투자− 재무+</div></div>
+    <div class="stg active"><div class="nm">성숙</div><div class="sub">영업+ 투자− 재무−</div></div>
+    <div class="stg"><div class="nm">정리</div><div class="sub">혼합</div></div>
+    <div class="stg"><div class="nm">감소</div><div class="sub">영업− 투자+</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="font-size:15px">판별 근거</h3>
+      <ul class="clean" style="font-size:13.5px">
+        <li><b>영업현금흐름 (+)</b> — 2025년 +$21.3B로 강한 본업 현금창출</li>
+        <li><b>투자현금흐름 (−)</b> — 공장·EV·툴링에 연 ~$9~10B 투자</li>
+        <li><b>120년 업력·보합 매출·저성장 산업</b> — 전형적 성숙 기업</li>
+        <li>단, 2025년 <b>$19.5B 구조조정 상각</b>은 '정리' 단계 특성도 일부 시사</li>
+      </ul>
+    </div>
+    <div class="callout blue" style="margin-top:16px">
+      <span class="ct">왜 성숙 단계가 중요한가</span>
+      <p>성숙 단계 기업은 <strong>현금흐름 할인(DCF)과 CAP 분석이 가장 잘 맞습니다</strong>. (도입 단계라면 실물옵션·TAM 분석이, 감소 단계라면 청산가치가 더 적합합니다.) 포드는 본업이 안정적 현금을 내는 성숙 기업이므로 본 분석의 DCF·CAP 접근이 적절합니다. 다만 EV 구조조정이라는 '정리' 요소가 겹쳐 있어, 정상화 이익 추정에 보수성이 필요합니다.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 10 경쟁우위 정성분석 ============ -->
+<section id="porter"><div class="wrap">
+  <div class="sec-tag">10 · 경쟁우위 정성 분석</div>
+  <h2>5가지 힘과 '차별화 vs 원가' 진단</h2>
+  <p class="lead">산업의 매력도와 포드의 위치를 두 가지 틀로 봅니다 — 포터의 5 Forces(경쟁 압력)와, 초과수익의 원천이 '차별화'인지 '원가우위'인지의 진단입니다.</p>
+
+  <h3>포터의 5 Forces</h3>
+  <div class="card">
+    <div class="meter"><div class="lab">기존 경쟁 강도</div><div class="track"><div class="fill" style="width:90%;background:#B23A34"></div></div><div class="sc">매우강</div></div>
+    <div class="meter"><div class="lab">대체재 위협</div><div class="track"><div class="fill" style="width:72%;background:#C07A26"></div></div><div class="sc">강함</div></div>
+    <div class="meter"><div class="lab">구매자 교섭력</div><div class="track"><div class="fill" style="width:64%;background:#C07A26"></div></div><div class="sc">중상</div></div>
+    <div class="meter"><div class="lab">공급자 교섭력</div><div class="track"><div class="fill" style="width:52%;background:#2E7DA8"></div></div><div class="sc">중간</div></div>
+    <div class="meter"><div class="lab">신규 진입 위협</div><div class="track"><div class="fill" style="width:50%;background:#2E7DA8"></div></div><div class="sc">중간</div></div>
+    <p class="src" style="margin-top:10px">막대가 길수록 그 압력이 강해 산업 수익성에 불리. 포드는 '강한 경쟁 + 강한 대체재 + 가격에 민감한 구매자'라는 불리한 구도에 놓여 있습니다.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 style="font-size:14.5px">각 힘의 해석</h3>
+      <ul class="clean" style="font-size:13px">
+        <li><b>기존 경쟁(매우강):</b> 글로벌 과잉생산, 가격·인센티브 전쟁. GM·토요타·현대·테슬라·중국 업체</li>
+        <li><b>대체재(강):</b> 타 브랜드, EV/하이브리드 전환, 차량공유·대중교통</li>
+        <li><b>구매자(중상):</b> 소비자는 선택지 많고 가격 민감. 단 Ford Pro 플릿은 전환비용 존재</li>
+        <li><b>공급자(중):</b> 반도체·배터리·알루미늄 의존(노벨리스 사례). 다변화 진행 중</li>
+        <li><b>신규진입(중):</b> 자본 진입장벽 높지만 테슬라·중국 업체가 실제로 진입 성공</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14.5px">차별화 vs 원가우위 진단</h3>
+      <p class="tight" style="font-size:13.5px">지속적 해자는 보통 <b>① 높은 마진(차별화)</b> 또는 <b>② 높은 자본회전율(원가우위)</b> 중 하나에서 나옵니다.</p>
+      <div class="pillrow">
+        <span class="pill">NOPAT 마진 <b>~2.9%</b> · 산업 평균 수준</span>
+        <span class="pill">투자자본 회전율 <b>평균 수준</b></span>
+      </div>
+      <p class="tight" style="font-size:13.5px;margin-top:8px">포드는 <b>마진도 회전율도 산업 평균을 크게 웃돌지 못합니다.</b> 이는 회사 전체로는 <span class="kw">지속 가능한 강한 해자가 약하다</span>는 정량적 신호입니다(GM의 마진·ROIC가 더 높다는 점도 이를 뒷받침). 예외는 두 자릿수 마진의 <b>Ford Pro</b>로, 부분적 차별화가 존재합니다.</p>
+    </div>
+  </div>
+  <div class="callout neg">
+    <span class="ct">정성 결론</span>
+    <p>산업 구도(강한 경쟁·대체재)와 포드의 평균적 마진·회전율을 종합하면, <strong>회사 전체의 경쟁우위는 좁고(narrow) 지속성이 제한적</strong>입니다. 이 진단은 뒤에 나올 <strong>시장 내재 CAP ≈ 0년</strong>과 논리적으로 일치합니다 — 시장은 약한 해자를 정확히 반영하고 있는 셈입니다. <span class="conf">정성-정량 일관성 <b>높음 ~80%</b></span></p>
+  </div>
+</div></section>
+
+<!-- ============ 11 DCF 모델 ============ -->
+<section id="dcf"><div class="wrap">
+  <div class="sec-tag">11 · DCF 모델 결과</div>
+  <h2>현금흐름 전개 — '회복 지속' 기본 가정</h2>
+  <p class="lead">아래 표는 컨센서스·가이던스에 기반한 <strong>이익 회복 시나리오</strong>를 연도별로 펼친 것입니다(단위 $B, 주당가치 제외). 마진이 3.6%(2025)→6.5%로 회복한 뒤 안정된다고 가정하고, 미래 잉여현금흐름을 현재가치로 할인합니다. 이 가정 하에서 주당가치는 <strong>$24~26</strong>로 수렴합니다.</p>
+
+  <div class="tbl-wrap">
+    <table style="min-width:760px;font-size:12px">
+      <thead><tr><th>항목 / 연도</th><th>2025</th><th>2026</th><th>2027</th><th>2028</th><th>2029</th><th>2030</th><th>2031</th><th>2032</th><th>2033</th><th>2034</th></tr></thead>
+      <tbody>
+        <tr><td>매출</td><td class="num">187.3</td><td class="num">188.0</td><td class="num">189.0</td><td class="num">191.0</td><td class="num">194.0</td><td class="num">198.8</td><td class="num">203.8</td><td class="num">208.9</td><td class="num">214.1</td><td class="num">219.5</td></tr>
+        <tr><td>매출성장 %</td><td class="num">—</td><td class="num">0.4</td><td class="num">0.5</td><td class="num">1.1</td><td class="num">1.6</td><td class="num">2.5</td><td class="num">2.5</td><td class="num">2.5</td><td class="num">2.5</td><td class="num">2.5</td></tr>
+        <tr><td>조정 EBIT</td><td class="num">6.8</td><td class="num">9.0</td><td class="num">10.8</td><td class="num">11.5</td><td class="num">12.6</td><td class="num">12.9</td><td class="num">13.2</td><td class="num">13.6</td><td class="num">13.9</td><td class="num">14.3</td></tr>
+        <tr><td>EBIT 마진 %</td><td class="num">3.6</td><td class="num">4.8</td><td class="num">5.7</td><td class="num">6.0</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td><td class="num">6.5</td></tr>
+        <tr><td>NOPAT (세후)</td><td class="num">5.4</td><td class="num">7.2</td><td class="num">8.6</td><td class="num">9.2</td><td class="num">10.1</td><td class="num">10.3</td><td class="num">10.6</td><td class="num">10.9</td><td class="num">11.1</td><td class="num">11.4</td></tr>
+        <tr><td>순투자</td><td class="num">—</td><td class="num">4.0</td><td class="num">4.0</td><td class="num">3.5</td><td class="num">3.0</td><td class="num">1.9</td><td class="num">2.0</td><td class="num">2.0</td><td class="num">2.1</td><td class="num">2.1</td></tr>
+        <tr><td>잉여현금흐름(FCF)</td><td class="num">5.4</td><td class="num">3.2</td><td class="num">4.6</td><td class="num">5.7</td><td class="num">7.1</td><td class="num">8.4</td><td class="num">8.6</td><td class="num">8.9</td><td class="num">9.1</td><td class="num">9.3</td></tr>
+        <tr><td>FCF 현재가치</td><td class="num">—</td><td class="num">3.1</td><td class="num">4.0</td><td class="num">4.5</td><td class="num">5.1</td><td class="num">5.6</td><td class="num">5.2</td><td class="num">4.9</td><td class="num">4.6</td><td class="num">4.3</td></tr>
+        <tr><td>최종가치(페이드)</td><td class="num">—</td><td class="num">91</td><td class="num">97</td><td class="num">107</td><td class="num">110</td><td class="num">112</td><td class="num">115</td><td class="num">118</td><td class="num">121</td><td class="num">124</td></tr>
+        <tr><td>최종가치 PV</td><td class="num">—</td><td class="num">87</td><td class="num">85</td><td class="num">85</td><td class="num">80</td><td class="num">74</td><td class="num">70</td><td class="num">65</td><td class="num">61</td><td class="num">57</td></tr>
+        <tr><td>기업가치(EV)</td><td class="num">—</td><td class="num">90.4</td><td class="num">91.8</td><td class="num">96.7</td><td class="num">96.3</td><td class="num">96.7</td><td class="num">97.1</td><td class="num">97.5</td><td class="num">97.9</td><td class="num">98.2</td></tr>
+        <tr><td>주주가치(+순현금)</td><td class="num">—</td><td class="num">96.4</td><td class="num">97.8</td><td class="num">102.7</td><td class="num">102.3</td><td class="num">102.7</td><td class="num">103.1</td><td class="num">103.5</td><td class="num">103.9</td><td class="num">104.2</td></tr>
+        <tr class="hl-row"><td>주당가치 ($)</td><td class="num">—</td><td class="num">24.15</td><td class="num">24.52</td><td class="num">25.73</td><td class="num">25.64</td><td class="num">25.75</td><td class="num">25.85</td><td class="num">25.94</td><td class="num">26.03</td><td class="num">26.11</td></tr>
+        <tr><td>할인연도(연중)</td><td class="num">—</td><td class="num">0.5</td><td class="num">1.5</td><td class="num">2.5</td><td class="num">3.5</td><td class="num">4.5</td><td class="num">5.5</td><td class="num">6.5</td><td class="num">7.5</td><td class="num">8.5</td></tr>
+        <tr><td>ROIIC %</td><td class="num">—</td><td class="num">45.6</td><td class="num">35.0</td><td class="num">15.7</td><td class="num">30.7</td><td class="num">13.2</td><td class="num">13.2</td><td class="num">13.2</td><td class="num">13.2</td><td class="num">13.2</td></tr>
+      </tbody>
+      <caption>단위 $B(주당가치 제외). 연중(mid-year) 할인 적용. 회복 구간 ROIIC가 높은 것은 이익 증가가 '신규 투자'가 아닌 '마진 회복'에서 나오기 때문 → 최종가치에는 정상화 ROIIC 13%를 적용해 과대평가를 방지. 2025 EBIT는 보고된 조정치 $6.8B.</caption>
+    </table>
+  </div>
+
+  <h3>WACC(자본비용)와 최종가치 가정</h3>
+  <div class="grid2">
+    <div class="card">
+      <h3 style="font-size:14.5px">자본비용 — WACC 9.6%</h3>
+      <table style="min-width:auto;font-size:13px"><tbody>
+        <tr><td>무위험이자율 (10년 국채)</td><td class="num">4.45%</td></tr>
+        <tr><td>조정 베타 (원시 1.67 회귀조정)</td><td class="num">1.45</td></tr>
+        <tr><td>주식위험프리미엄(ERP)</td><td class="num">4.75%</td></tr>
+        <tr><td>→ 자기자본비용 Ke</td><td class="num">11.34%</td></tr>
+        <tr><td>세후 부채비용 (등급 BBB/Ba1)</td><td class="num">4.80%</td></tr>
+        <tr><td>자본구조 (자기자본/부채)</td><td class="num">73/27</td></tr>
+        <tr class="hl-row"><td>WACC</td><td class="num">9.6%</td></tr>
+      </tbody></table>
+      <p class="src">대안: 다모다란 2026.1 내재 ERP 4.23% 적용 시 WACC ≈ 9.0%(가치 상향 요인). 민감도에서 반영.</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14.5px">최종가치(페이드 모델) 가정</h3>
+      <table style="min-width:auto;font-size:13px"><tbody>
+        <tr><td>장기성장률 g (기대 인플레이션)</td><td class="num">2.5%</td></tr>
+        <tr><td>페이드 비율 f (자동차·부품)</td><td class="num">0.21</td></tr>
+        <tr><td>정상화 ROIIC (증분자본수익)</td><td class="num">13%</td></tr>
+        <tr><td>정상화 세율</td><td class="num">20%</td></tr>
+        <tr><td>발행주식수</td><td class="num">3.99B</td></tr>
+        <tr><td>자동차 부문 순현금</td><td class="num">+$6B</td></tr>
+        <tr class="hl-row"><td>기본 가정 적정가치</td><td class="num">~$25</td></tr>
+      </tbody></table>
+      <p class="src">페이드 비율 0.21 = 초과수익이 약 5년에 걸쳐 자본비용으로 수렴(자동차·부품 산업의 역사적 평균회귀 속도). 이 모델은 마이크로소프트 사례로 교차검증해 정확도를 확인함.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 12 시장 내재 CAP ============ -->
+<section id="cap"><div class="wrap">
+  <div class="sec-tag">12 · 시장 내재 CAP 및 해석</div>
+  <h2>이 분석의 심장 — 시장이 매긴 CAP는 사실상 0년</h2>
+  <p class="lead">'경쟁우위기간(CAP)'은 시장이 <strong>"이 회사가 자본비용을 넘는 초과수익을 몇 년이나 낼 것"</strong>으로 보는지를 나타냅니다. 주가를 거꾸로 풀어 이 기간을 읽으면, 포드에 대한 시장의 기대를 그대로 들여다볼 수 있습니다.</p>
+
+  <div class="chartbox">
+    <h3 style="font-size:16px">시장 내재 CAP — 동종/벤치마크 비교</h3>
+    <svg viewBox="0 0 700 150" width="100%" style="display:block">
+      <!-- axis -->
+      <line x1="50" y1="110" x2="660" y2="110" stroke="#15252E" stroke-width="1.5"/>
+      <!-- ticks 0,5,10,15,20 -->
+      <g font-family="IBM Plex Mono" font-size="11" fill="#6B7882" text-anchor="middle">
+        <line x1="50" y1="106" x2="50" y2="114" stroke="#6B7882"/><text x="50" y="130">0년</text>
+        <line x1="202" y1="106" x2="202" y2="114" stroke="#6B7882"/><text x="202" y="130">5</text>
+        <line x1="355" y1="106" x2="355" y2="114" stroke="#6B7882"/><text x="355" y="130">10</text>
+        <line x1="507" y1="106" x2="507" y2="114" stroke="#6B7882"/><text x="507" y="130">15</text>
+        <line x1="660" y1="106" x2="660" y2="114" stroke="#6B7882"/><text x="660" y="130">20년</text>
+      </g>
+      <!-- typical mature band 5-20 -->
+      <rect x="202" y="74" width="458" height="14" fill="#DCEAF2" rx="3"/>
+      <text x="431" y="68" text-anchor="middle" font-size="10.5" fill="#205B7C" font-family="IBM Plex Mono">성장·성숙 기업의 전형적 범위 (5~20년)</text>
+      <!-- reasonable 10-15 -->
+      <rect x="355" y="74" width="152" height="14" fill="#BCD6E6" rx="3"/>
+      <!-- Microsoft marker ~17.5 -->
+      <circle cx="583" cy="81" r="7" fill="#2E7DA8"/>
+      <text x="583" y="50" text-anchor="middle" font-size="11" font-weight="600" fill="#205B7C" font-family="Space Grotesk">MSFT</text>
+      <text x="583" y="35" text-anchor="middle" font-size="10" fill="#6B7882" font-family="IBM Plex Mono">17~18년</text>
+      <!-- Ford marker ~0 -->
+      <circle cx="50" cy="110" r="9" fill="#B23A34"/>
+      <text x="62" y="100" text-anchor="start" font-size="13" font-weight="700" fill="#B23A34" font-family="Space Grotesk">Ford ≈ 0년</text>
+      <text x="62" y="50" text-anchor="start" font-size="10.5" fill="#6B7882" font-family="IBM Plex Mono">시장은 초과수익을<tspan x="62" dy="13">거의 인정하지 않음</tspan></text>
+    </svg>
+  </div>
+
+  <h3>어떻게 0년이 나오는가 — 시장가 역산</h3>
+  <p>현재 주가 $15에 발행주식 39.9억 주를 곱하면 시가총액 약 $60B, 자동차 순현금($6B)을 빼면 <strong>기업가치(EV) 약 $53.9B</strong>입니다. 이 EV를 자본비용(9.6%)으로 나누면, 시장이 가정한 <strong>무성장·무초과수익 상태의 정상 이익(NOPAT)은 약 $5.2B</strong>입니다. 이는 2025년 <strong>저점</strong> 이익($5.4B)과 거의 같습니다.</p>
+
+  <div class="chartbox">
+    <h3 style="font-size:16px">시장은 어느 이익 수준을 가격에 반영하나? (무성장 영구가치 환산)</h3>
+    <div class="barrow"><div class="lab">2025 저점 EBIT $6.8B</div><div class="bartrack"><div class="barfill" style="width:60%;background:#B23A34">$15.7</div></div><div class="val">$15.7</div></div>
+    <div class="barrow"><div class="lab">2026E EBIT $9.0B</div><div class="bartrack"><div class="barfill" style="width:78%;background:#C07A26">$20.3</div></div><div class="val">$20.3</div></div>
+    <div class="barrow"><div class="lab">2027E EBIT $10.8B</div><div class="bartrack"><div class="barfill" style="width:92%;background:#2E7DA8">$24.1</div></div><div class="val">$24.1</div></div>
+    <div class="barrow"><div class="lab">2028E EBIT $11.5B</div><div class="bartrack"><div class="barfill" style="width:98%;background:#2C7D62">$25.5</div></div><div class="val">$25.5</div></div>
+    <div style="position:relative;margin-top:6px;border-top:2px dashed #15252E;padding-top:6px">
+      <span class="mono" style="font-size:12px;color:#15252E;font-weight:600">◀ 현재가 $15 — 2025 '저점' 이익 수준에 위치</span>
+    </div>
+    <p class="src" style="margin-top:10px">각 막대 = 해당 EBIT를 성장·초과수익 없이 영구히 반복한다고 볼 때의 주당가치. 현재가 $15는 가장 비관적인 '2025 저점' 수준에 걸려 있습니다. 즉 시장은 컨센서스의 2026~2027 회복을 거의 반영하지 않습니다.</p>
+  </div>
+
+  <div class="verdict">
+    <span class="ct">// 두 가지 렌즈로 본 같은 결론</span>
+    <p><strong>렌즈 ① — 컨센서스 이익을 믿는다면:</strong> 회복(2026~2027 EBIT $9~11B)을 모델에 넣으면 CAP를 0~1년만 줘도 가치는 $24~26입니다. 즉 컨센서스가 맞다면 <span class="hl">시장 내재 CAP는 0년(또는 음수)</span> — 시장은 회복 자체를 의심합니다.</p>
+    <p><strong>렌즈 ② — CAP를 정상 수준(5~15년)으로 본다면:</strong> 현재가에 맞추려면 정상 이익이 <span class="hl">$5B(저점 수준)</span>여야 합니다. 즉 시장은 회복이 없거나 곧 되돌아간다고 가정합니다.</p>
+    <p>두 렌즈 모두 한 곳을 가리킵니다 — <strong>시장은 포드가 자본비용을 넘는 가치를 거의 창출하지 못한다고 가격 매기고 있습니다.</strong> 이는 마이크로소프트(17~18년)나 전형적 성숙기업(5~20년)과 극명히 대비됩니다.</p>
+  </div>
+
+  <div class="callout">
+    <span class="ct">해석 — 비관인가, 기회인가</span>
+    <p>본 프레임워크의 기준에 따르면 <strong>'CAP 5년 미만 = 시장이 매우 비관적 = (해자가 확실하다면) 가치 후보'</strong>입니다. 그러나 핵심 단서가 붙습니다 — <strong>"해자가 확실하다면"</strong>. 포드의 해자는 좁습니다(Ford Pro 외엔 약함). 따라서 시장의 비관은 <strong>약한 해자를 반영한 합리적 평가일 수도</strong>, <strong>회복 실현 시의 과도한 비관일 수도</strong> 있습니다. 무게추는 전적으로 <strong>'이익 회복의 지속 가능성'</strong>에 달려 있습니다.</p>
+  </div>
+</div></section>
+
+<!-- ============ 13 Ford Energy(ESS)·주가 급등 ============ -->
+<section id="fordenergy"><div class="wrap">
+  <div class="sec-tag">13 · Ford Energy(ESS)와 최근 주가</div>
+  <h2>최근 주가 급등의 진짜 동인 — 자동차가 아니라 'AI 데이터센터'였다</h2>
+  <p class="lead">2026년 5월, 포드 주가는 한 달에 약 47% 급등해 2009년 4월 이후 최고의 월간 상승률을 기록하며 3년 만의 최고치(약 $18)에 도달했습니다. 그런데 이 급등의 동력은 트럭 판매가 아니라 새 에너지 저장(ESS) 사업, <strong>Ford Energy</strong>였습니다. 사용자께서 짚으신 가설이 사실로 확인됩니다.</p>
+
+  <h3>Ford Energy(ESS)란 무엇인가 — 비전공자용 정리</h3>
+  <p>ESS(Energy Storage System, 에너지 저장장치)는 전기를 대형 배터리에 저장해 두었다가 필요할 때 공급하는 설비입니다. <strong>Ford Energy</strong>는 포드가 EV 수요 둔화로 남게 된 <strong>전기차용 배터리 공장(켄터키)을 재활용</strong>해, 전력회사·데이터센터·대형 산업체에 공급하는 <strong>그리드(전력망)급 배터리 저장 시스템(BESS)</strong>을 만드는 신규 자회사입니다. AI 데이터센터가 폭증하면서 전력 수요와 전력망 안정용 저장장치 수요가 함께 커지는 흐름을 노린 것입니다.</p>
+
+  <div class="grid4">
+    <div class="chip"><div class="l">투자 규모</div><div class="v blue">$2B</div><div class="d">향후 2년, 켄터키 공장 전환</div></div>
+    <div class="chip"><div class="l">연 생산 목표</div><div class="v">20+GWh</div><div class="d">2027년 4분기 첫 인도</div></div>
+    <div class="chip"><div class="l">EDF 공급계약</div><div class="v am">최대 20GWh</div><div class="d">5년, 2028년 인도 시작</div></div>
+    <div class="chip"><div class="l">제품</div><div class="v" style="font-size:18px">FE-250/450</div><div class="d">2·4시간 LFP 컨테이너형</div></div>
+  </div>
+
+  <h3>주가는 왜·언제 움직였나 — 가격 타임라인</h3>
+  <div class="chartbox">
+    <svg viewBox="0 0 720 270" width="100%" style="display:block">
+      <!-- y grid + labels -->
+      <g font-family="IBM Plex Mono" font-size="10" fill="#6B7882">
+        <line x1="56" y1="36"  x2="690" y2="36"  stroke="#EDE8DC"/><text x="50" y="40" text-anchor="end">$18</text>
+        <line x1="56" y1="115" x2="690" y2="115" stroke="#EDE8DC"/><text x="50" y="119" text-anchor="end">$15.5</text>
+        <line x1="56" y1="195" x2="690" y2="195" stroke="#EDE8DC"/><text x="50" y="199" text-anchor="end">$13</text>
+        <line x1="56" y1="230" x2="690" y2="230" stroke="#D8D2C4"/><text x="50" y="234" text-anchor="end">$11.5</text>
+      </g>
+      <!-- x labels -->
+      <g font-family="IBM Plex Mono" font-size="10" fill="#6B7882" text-anchor="middle">
+        <text x="60"  y="250">'25.12</text><text x="198" y="250">'26.2</text>
+        <text x="336" y="250">4월</text><text x="474" y="250">5/12</text>
+        <text x="543" y="250">5월말</text><text x="680" y="250">6/16</text>
+      </g>
+      <!-- price polyline -->
+      <polyline fill="none" stroke="#2E7DA8" stroke-width="2.5"
+        points="60,162 129,159 198,141 267,190 336,208 405,184 474,107 543,36 612,91 680,122"/>
+      <!-- markers -->
+      <circle cx="336" cy="208" r="4.5" fill="#6B7882"/>
+      <circle cx="474" cy="107" r="5" fill="#C07A26"/>
+      <circle cx="543" cy="36"  r="6" fill="#2C7D62"/>
+      <circle cx="680" cy="122" r="6" fill="#B23A34"/>
+      <!-- annotations -->
+      <text x="336" y="225" text-anchor="middle" font-family="IBM Plex Sans KR" font-size="10" fill="#6B7882">봄 저점 ~$12</text>
+      <text x="430" y="98" text-anchor="end" font-family="IBM Plex Sans KR" font-size="10.5" font-weight="600" fill="#9A5F16">5/12 Ford Energy 출범</text>
+      <text x="543" y="26" text-anchor="middle" font-family="IBM Plex Sans KR" font-size="10.5" font-weight="600" fill="#2C7D62">~$18 · 3년 최고 (월 +47%)</text>
+      <text x="688" y="140" text-anchor="end" font-family="IBM Plex Sans KR" font-size="10.5" font-weight="600" fill="#B23A34">6월 되돌림 ~$15</text>
+    </svg>
+    <p class="src">2025년 12월 Ford Energy를 처음 발표했을 때 주가는 사실상 무반응(~$13.7)이었습니다. 같은 사업이 2026년 5월 'AI 데이터센터 수혜주'로 재해석되며 ~$18까지 폭등했고, 6월 들어 판매 부진·리콜·경쟁사 진입으로 ~$15로 되돌림했습니다.</p>
+  </div>
+
+  <div class="callout am">
+    <span class="ct">핵심 통찰 — 새 정보가 아니라 '기대치의 수정'이었다</span>
+    <p>가장 중요한 사실은 이것입니다. Ford Energy는 <strong>2025년 12월에 이미 발표</strong>됐고, 그때 시장은 거의 반응하지 않았습니다(한 애널리스트 표현으로는 "시장이 아무것도 하지 않았다"). 그런데 <strong>5월에 똑같은 사업을 시장이 'AI·데이터센터 플레이'로 다시 바라보면서</strong> 주가가 폭등했습니다. 새로운 펀더멘털 정보라기보다 <strong>서사(narrative)와 기대치의 재평가</strong>였던 것입니다. 이는 본 분석의 핵심 원리와 정확히 맞닿습니다 — <span class="kw">초과수익은 곧 기대치 수정의 결과</span>입니다. 5월의 급등은 시장이 포드에 매긴 기대치(CAP)가 일시적으로 위로 점프한 사건입니다.</p>
+  </div>
+
+  <h3>이 사건을 가치 관점에서 어떻게 읽나 — '실물 옵션'</h3>
+  <p>성숙 기업 안에서 시작된 신사업은 표준 현금흐름 모델로는 가치를 잡기 어려운 <strong>'실물 옵션(real option)'</strong>의 성격을 갖습니다. 권리는 있되 의무는 없는, 미래의 큰 기회에 대한 '입장권' 같은 것입니다. Ford Energy가 바로 그렇습니다 — 아직 매출은 없지만(2027~2028년부터), 성공하면 자동차 본업과 무관한 새 가치를 더할 수 있습니다. <strong>모건스탠리는 Ford Energy 사업만으로 약 $100억(주당 약 $2.5)의 가치가 있을 수 있다</strong>고 추정했습니다.</p>
+
+  <div class="chartbox">
+    <h3 style="font-size:16px">가치 분해 — 5월 고점 $18은 어떻게 나왔나</h3>
+    <div class="barrow"><div class="lab">코어 자동차<br><span style="font-size:10px;color:#6B7882">(내재 CAP≈0)</span></div><div class="bartrack" style="height:34px"><div class="barfill" style="width:62%;background:#205B7C;height:34px;line-height:34px">≈ $15</div></div><div class="val">$15</div></div>
+    <div class="barrow"><div class="lab">+ Ford Energy 옵션<br><span style="font-size:10px;color:#6B7882">(모건스탠리 추정)</span></div><div class="bartrack" style="height:34px"><div class="barfill" style="width:13%;background:#C07A26;height:34px;line-height:34px">~$2.5</div></div><div class="val">~$2.5</div></div>
+    <div class="barrow"><div class="lab" style="font-weight:700;color:#15252E">5월 고점</div><div class="bartrack" style="height:34px"><div class="barfill" style="width:74%;background:#2C7D62;height:34px;line-height:34px">≈ $17.8</div></div><div class="val">$17.8</div></div>
+    <p class="src" style="margin-top:10px">개념적 분해. 5월 고점(~$18)은 대략 '코어 자동차 저점가치(~$15)'에 'Ford Energy 옵션 기대(~$2.5~3)'가 더해진 수준으로 해석됩니다. 6월에 옵션 기대가 식으면서 다시 코어 수준(~$15)으로 되돌림했습니다.</p>
+  </div>
+
+  <div class="callout neg">
+    <span class="ct">왜 급등이 식었나 — 6월의 되돌림 요인</span>
+    <p>5월 고점 이후 주가는 약 15~17% 빠졌습니다. ① <strong>5월 미국 판매가 전년比 −13.6%</strong>로 부진했고, ② <strong>약 54.8만 대 리콜</strong>(센터콘솔)이 발표됐으며, ③ 결정적으로 <strong>GM도 동일한 배터리 저장 사업에 진출</strong>한다고 밝혀 Ford Energy의 '독점적 수혜' 서사가 약해졌습니다. 즉 ESS 옵션의 가치는 실재하지만 <strong>경쟁·실행 위험</strong>도 함께 드러난 것입니다.</p>
+  </div>
+
+  <div class="callout blue">
+    <span class="ct">신중론 — 시장이 앞서간 것일 수 있다</span>
+    <p>Ford Energy는 <strong>2027~2028년까지 매출이 없고</strong>, 연 20GWh 목표는 테슬라 메가팩 생산능력의 절반에도 못 미칩니다. 한 대형 리서치는 "사업이 수년간 매출을 내지 못하므로 시장이 과대평가하고 있을 수 있다"고 지적했습니다. 중국 배터리사 <strong>CATL과의 파트너십</strong>은 미국 정치권의 견제를 받고 있어 정책 리스크도 있습니다. 실제로 애널리스트 평균 목표주가는 약 <strong>$14.7</strong>(고점 $20, 저점 $10)로, 다수가 '보유(Hold)' 의견이며 급등이 시장 기대를 앞질렀다는 시각이 우세합니다(골드만삭스는 6월 11일 목표가를 $13→$16으로 상향, 의견은 중립 유지).</p>
+  </div>
+
+  <div class="verdict">
+    <span class="ct">// 사용자 가설에 대한 베이지안 평가</span>
+    <p><strong>"최근 주가 상승에 ESS 진출이 기여했다"는 가설은 사실입니다.</strong> 오히려 ESS는 <span class="hl">기여 요인이 아니라 주된 동인</span>이었습니다 — 5월 급등의 거의 전부가 Ford Energy를 'AI 데이터센터 수혜주'로 재평가한 데서 나왔습니다.</p>
+    <p>다만 두 가지 단서가 붙습니다. 첫째, 이는 <strong>새 정보가 아니라 기대치의 수정</strong>이었고(같은 사업이 2025년 12월엔 무반응), 둘째, 그 급등은 <strong>6월에 상당 부분 되돌림</strong>되어 현재가($15)는 본 분석의 코어 자동차 가치(내재 CAP≈0)와 다시 거의 일치합니다.</p>
+    <p>따라서 ESS는 본 분석의 결론을 뒤집지 않되, <strong>중요한 새 층(layer)을 더합니다</strong> — 포드는 이제 '저평가된 경기순환 완성차'에 더해 <strong>'AI 인프라에 연결된 옵션'</strong>을 품은 종목이 되었고, 이 옵션이 주가 변동성과 상방 잠재력을 동시에 키웁니다.</p>
+    <div style="margin-top:6px">
+      <span class="conf">5월 급등의 주된 동인이 ESS <b>높음 ~90%</b></span>
+      <span class="conf mid">새 정보보다 기대치 수정 <b>높음 ~80%</b></span>
+      <span class="conf mid">ESS의 실질 옵션 가치 존재 <b>중간 ~60%</b></span>
+      <span class="conf mid">현재가가 코어가치에 재수렴 <b>높음 ~80%</b></span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="ct">CAP 결론에 미치는 영향 — 추적 포인트 추가</span>
+    <p>본 보고서의 '내재 CAP ≈ 0년' 진단은 <strong>코어 자동차 사업</strong>을 평가한 것으로, Ford Energy 옵션은 포함돼 있지 않습니다. 앞으로는 자동차 마진 회복과 더불어 <strong>① EDF 외 추가 ESS 수주, ② 2027~2028년 실제 매출·마진 가시화, ③ GM 등 경쟁 심화 여부, ④ CATL 관련 정책 리스크</strong>를 함께 추적해야 합니다. ESS가 실적으로 증명되면 시장이 매긴 CAP가 구조적으로 위로 이동할 수 있습니다.</p>
+  </div>
+
+  <div class="src"><b>출처:</b> Ford Energy 보도자료(2026-05-11·05-18), EDF Power Solutions 발표(2026-05-18), Electrek·Energy-Storage.News·pv magazine(2026-05), Morningstar(D. Whiston, 2026-06-04)·WSJ·Barclays·Goldman Sachs(2026-06-11)·24/7 Wall St(2026-05-29). 주가: Investing.com·Robinhood(2026-06-16, ~$14.8~15.1). 모든 수치는 분석 시점 근사값.</div>
+</div></section>
+
+<!-- ============ 14 민감도·시나리오 ============ -->
+<section id="sensitivity"><div class="wrap">
+  <div class="sec-tag">14 · 민감도 및 시나리오 분석</div>
+  <h2>무엇이 가치를 움직이나 — 마진이 거의 전부</h2>
+  <p class="lead">기본 가정(적정가치 $25)을 흔들어 봤습니다. 결론은 분명합니다 — <strong>가치를 결정하는 변수는 '정상화 이익률(마진)' 하나</strong>이며, 자본비용·성장률·페이드 비율은 부차적입니다.</p>
+
+  <div class="chartbox">
+    <h3 style="font-size:16px">민감도 — 기본 가치 $25.19 기준 변동폭</h3>
+    <div class="barrow"><div class="lab">정상화 마진 4%↔8%</div><div class="bartrack"><div class="barfill" style="width:96%;background:#B23A34">$15.6 ↔ $30.9</div></div><div class="val">±최대</div></div>
+    <div class="barrow"><div class="lab">자본비용 ±1%p</div><div class="bartrack"><div class="barfill" style="width:42%;background:#C07A26">$22.6 ↔ $28.5</div></div><div class="val">±11%</div></div>
+    <div class="barrow"><div class="lab">장기성장률 ±2%p</div><div class="bartrack"><div class="barfill" style="width:14%;background:#2E7DA8">$24.5 ↔ $25.9</div></div><div class="val">±3%</div></div>
+    <div class="barrow"><div class="lab">페이드 비율 ±0.1</div><div class="bartrack"><div class="barfill" style="width:5%;background:#6B7882">$25.1 ↔ $25.5</div></div><div class="val">±1%</div></div>
+    <p class="src" style="margin-top:10px">막대 길이 = 가치 변동폭. <b>정상화 마진</b>이 압도적 — 마진 4%면 $15.6(현재가 부근), 8%(회사 목표)면 $30.9. 나머지 변수의 영향은 작습니다.</p>
+  </div>
+
+  <div class="callout am">
+    <span class="ct">왜 성장률·페이드의 영향이 작은가</span>
+    <p>포드의 초과수익(ROIC−WACC)이 얇기 때문입니다. 초과수익이 얇으면 그것이 '얼마나 오래 가는지(페이드)'나 '얼마나 빨리 자라는지(성장)'는 가치에 큰 차이를 만들지 못합니다. 반대로 <strong>이익의 절대 수준(마진)</strong>은 가치에 직결됩니다. 이것이 포드 분석에서 '회복 여부'가 전부인 이유입니다.</p>
+  </div>
+
+  <h3>강세 · 기본 · 약세 시나리오</h3>
+  <div class="chartbox">
+    <svg viewBox="0 0 700 200" width="100%" style="display:block">
+      <!-- baseline -->
+      <line x1="120" y1="20" x2="120" y2="180" stroke="#D8D2C4" stroke-width="1"/>
+      <!-- scale: $0 at x=120, $40 at x=660 → $1=13.5px -->
+      <!-- current price line $15 -->
+      <line x1="322" y1="14" x2="322" y2="186" stroke="#15252E" stroke-width="1.5" stroke-dasharray="5 4"/>
+      <text x="322" y="11" text-anchor="middle" font-size="10.5" font-family="IBM Plex Mono" fill="#15252E">현재가 $15</text>
+      <!-- bear $15.53 : width 209 -->
+      <rect x="120" y="30" width="210" height="34" fill="#B23A34" rx="4"/>
+      <text x="135" y="52" font-family="Space Grotesk" font-size="13" font-weight="600" fill="#fff">약세 $15.5</text>
+      <text x="345" y="52" font-size="11" fill="#6B7882" font-family="IBM Plex Mono">마진4.5%·WACC10.6%</text>
+      <!-- base $25.19 : width 340 -->
+      <rect x="120" y="78" width="340" height="34" fill="#C07A26" rx="4"/>
+      <text x="135" y="100" font-family="Space Grotesk" font-size="13" font-weight="600" fill="#fff">기본 $25.2</text>
+      <text x="475" y="100" font-size="11" fill="#6B7882" font-family="IBM Plex Mono">마진6.5%·WACC9.6%</text>
+      <!-- bull $34.11 : width 460 -->
+      <rect x="120" y="126" width="461" height="34" fill="#2C7D62" rx="4"/>
+      <text x="135" y="148" font-family="Space Grotesk" font-size="13" font-weight="600" fill="#fff">강세 $34.1</text>
+      <text x="596" y="148" font-size="11" fill="#6B7882" font-family="IBM Plex Mono">마진8%·WACC9%</text>
+    </svg>
+    <p class="src">현재가 $15는 <b>약세 시나리오($15.5)</b>에 정확히 위치합니다. 즉 주가는 '회복 미흡 + 높은 자본비용'을 가정한 가격입니다.</p>
+  </div>
+
+  <div class="grid3">
+    <div class="callout neg" style="margin:8px 0">
+      <span class="ct">약세 — $15.5</span>
+      <p>마진 4.5%에서 정체(회복 실패), 중국 경쟁·관세로 가격 압박, Model e 적자 지속, 초과수익 거의 소멸(ROIIC≈10%), 높은 자본비용(10.6%). <b>현재가가 여기.</b></p>
+    </div>
+    <div class="callout am" style="margin:8px 0">
+      <span class="ct">기본 — $25.2</span>
+      <p>마진 6.5%로 회복·안정(컨센서스 부근), 비용·보증비 절감 정착, Ford Pro 견조, 정상 ROIIC 13%, WACC 9.6%.</p>
+    </div>
+    <div class="callout pos" style="margin:8px 0">
+      <span class="ct">강세 — $34.1</span>
+      <p>회사 목표대로 2029년 마진 8% 달성, Ford Pro·Ford Energy 성장, 강한 ROIIC(16%), 낮은 자본비용(9%·낮은 ERP).</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 14 리스크·체크포인트 ============ -->
+<section id="risks"><div class="wrap">
+  <div class="sec-tag">15 · 리스크 및 점검 포인트</div>
+  <h2>무엇이 결론을 바꾸는가 — 그리고 무엇을 추적할 것인가</h2>
+  <p class="lead">이 분석의 결론은 고정된 정답이 아니라 <strong>새 증거가 들어오면 갱신되어야 할 추정</strong>입니다. 핵심 리스크와, 분기·연간으로 확인할 추적 지표를 정리합니다.</p>
+
+  <h3>핵심 리스크 — 가치를 훼손하는 요인</h3>
+  <div class="grid2">
+    <div class="card" style="border-left:4px solid var(--neg)">
+      <h3 style="font-size:14.5px">하방 리스크</h3>
+      <ul class="clean" style="font-size:13.5px">
+        <li><b>회복 실패(가장 중요):</b> 마진이 4%대에 머물면 가치는 현재가 부근($15)에 고정. 약세 시나리오 현실화</li>
+        <li><b>중국 경쟁(BYD 등):</b> 저가·고품질 EV의 글로벌 잠식이 가격·점유율을 구조적으로 압박</li>
+        <li><b>관세·무역정책:</b> 2025년 ~$2B 비용. 정책 급변 시 추가 타격</li>
+        <li><b>Model e 적자 지속:</b> EV 손실 축소가 지연되면 마진 회복 자체가 지연</li>
+        <li><b>경기 침체·고금리:</b> 신차는 경기민감재 — 수요 위축 시 이익 급감</li>
+        <li><b>리콜·품질비용:</b> 2025년 54.8만 대 리콜 등 워런티 부담 이력</li>
+        <li><b>캡티브 금융 리스크:</b> 경기 악화 시 Ford Credit 대손 증가 가능</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left:4px solid var(--pos)">
+      <h3 style="font-size:14.5px">상방 촉매 — 비관을 뒤집는 요인</h3>
+      <ul class="clean" style="font-size:13.5px">
+        <li><b>마진 회복 확인:</b> 분기 EBIT 마진이 5%→6%대로 안착하면 시장의 CAP 재평가 유발</li>
+        <li><b>Ford Pro 성장:</b> 소프트웨어 구독·상용 마진 확대가 '해자' 서사를 강화</li>
+        <li><b>비용·보증비 절감 정착:</b> 2025년 $1.5B 절감의 지속·확대</li>
+        <li><b>하이브리드 수요:</b> EV 둔화 환경에서 포드 하이브리드 라인업 수혜</li>
+        <li><b>저가 EV(UEV)·Ford Energy:</b> 2027년 신규 매출원이 적자 EV를 흑자 전환</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>추적 지표 — 정기적으로 확인할 것</h3>
+  <div class="tbl-wrap">
+    <table style="min-width:600px">
+      <thead><tr><th>주기</th><th>지표</th><th>무엇을 의미하나</th></tr></thead>
+      <tbody>
+        <tr><td>분기</td><td style="text-align:left">조정 EBIT 마진 추세</td><td style="text-align:left">회복의 핵심 증거 — 5%→6%대 안착 여부</td></tr>
+        <tr><td>분기</td><td style="text-align:left">Ford Pro EBIT</td><td style="text-align:left">유일한 강한 해자의 건전성</td></tr>
+        <tr><td>분기</td><td style="text-align:left">Model e 손실 추이</td><td style="text-align:left">적자 축소 속도 — 마진 회복의 발목</td></tr>
+        <tr><td>분기</td><td style="text-align:left">도매 판매대수·인센티브</td><td style="text-align:left">수요 강도와 가격결정력</td></tr>
+        <tr><td>분기</td><td style="text-align:left">보증·리콜 비용</td><td style="text-align:left">품질 비용이 마진을 잠식하는지</td></tr>
+        <tr><td>연간</td><td style="text-align:left">ROIIC(증분자본수익)</td><td style="text-align:left">초과수익 창출력 — CAP의 근거</td></tr>
+        <tr><td>연간</td><td style="text-align:left">내재 CAP 재추정</td><td style="text-align:left">시장 기대가 어디로 이동했는지</td></tr>
+        <tr><td>연간</td><td style="text-align:left">자본비용(WACC)·금리 환경</td><td style="text-align:left">할인율 변화가 가치에 미치는 영향</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout blue">
+    <span class="ct">다음 확인 시점</span>
+    <p>가장 가까운 점검 기회는 <strong>2026년 2분기 실적(7월 말 예정)</strong>입니다. 특히 조정 EBIT 마진의 방향, Ford Pro EBIT, Model e 손실 폭을 확인하면 '회복이 자리 잡는 중인지'에 대한 신호를 얻을 수 있습니다. <span class="conf mid">회복 신호의 조기 가시성 <b>중간 ~60%</b></span></p>
+  </div>
+</div></section>
+
+<!-- ============ 15 종합 판단 ============ -->
+<section id="judgment"><div class="wrap">
+  <div class="sec-tag">16 · 종합 판단</div>
+  <h2>균형 잡힌 결론 — 강세론과 약세론을 함께 본다</h2>
+  <p class="lead">이 분석은 매수·매도를 권하지 않습니다. 대신 시장이 무엇을 가정하는지, 그리고 그 가정이 합리적인지 양쪽 시각을 제시해 <strong>판단의 재료</strong>를 드리는 데 목적이 있습니다.</p>
+
+  <div class="grid2">
+    <div class="card" style="border-left:4px solid var(--pos)">
+      <h3 style="font-size:15.5px">강세론 (회복을 믿는다면)</h3>
+      <p class="tight" style="font-size:14px">시장은 포드에 CAP ≈ 0년을 부여하며 컨센서스 회복조차 반영하지 않습니다. 그러나 ① 2026년 1분기 실적이 큰 폭으로 예상을 상회했고(EPS +247%), ② Ford Pro라는 두 자릿수 마진의 견고한 사업이 회사를 떠받치며, ③ 회사가 비용·보증비 절감과 EV 적자 축소를 진행 중입니다. <strong>마진이 6.5%로만 회복해도 모델 가치는 $25</strong>로 현재가 대비 큰 괴리가 있습니다. 즉 시장의 비관이 과도할 가능성입니다.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--neg)">
+      <h3 style="font-size:15.5px">약세론 (해자를 의심한다면)</h3>
+      <p class="tight" style="font-size:14px">자동차는 본질적으로 <strong>약한 해자·경기순환·자본집약</strong> 산업이며, 포드의 마진(3.6%)은 GM(7.2%)에 구조적으로 뒤집니다. 2025년 저점은 일회성이 아니라 <strong>구조적 취약성(EV 적자·관세·품질비용·공급망)</strong>의 반영일 수 있고, 중국 업체의 부상은 장기 위협입니다. 시장의 'CAP 0년'은 <strong>약한 해자를 정확히 반영한 합리적 평가</strong>일 수 있으며, 또 한 번의 경기 하강이 오면 하방 위험도 실재합니다.</p>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <span class="ct">// 무게추가 실린 곳</span>
+    <p>두 시각의 승부는 <strong>단 하나의 질문</strong>으로 압축됩니다 — <span class="hl">"포드의 이익률 회복(6~8%)이 지속 가능한가, 그리고 Ford Pro의 해자가 그것을 지킬 만큼 두꺼운가?"</span></p>
+    <p>민감도 분석이 보여주듯, 이 질문의 답이 가치의 거의 전부를 결정합니다(마진 4%→$15.6, 6.5%→$25.2, 8%→$30.9). 자본비용·성장률·페이드 같은 다른 변수는 부차적입니다.</p>
+    <p>현재 주가 $15는 <strong>"회복은 실패한다"</strong>는 약세 시나리오에 가격이 맞춰져 있습니다. 따라서 이 종목의 판단은 결국 <strong>분기 실적에서 마진 회복의 증거가 쌓이는지를 확인하며 갱신해 나가는 문제</strong>입니다.</p>
+    <div style="margin-top:6px">
+      <span class="conf">시장가가 약세 시나리오에 위치 <b>높음 ~85%</b></span>
+      <span class="conf mid">회복 지속 가능성 <b>불확실 ~50%</b></span>
+      <span class="conf mid">Ford Pro 해자의 견고성 <b>중간 ~65%</b></span>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 16 한계와 가정 ============ -->
+<section id="limits"><div class="wrap">
+  <div class="sec-tag">17 · 한계와 가정</div>
+  <h2>이 분석이 무엇을 단순화했고, 무엇이 결론을 바꾸는가</h2>
+  <p class="lead">모든 가치평가는 가정 위에 서 있습니다. 정직한 분석은 그 가정과 한계를 드러내야 합니다. 아래는 본 분석에서 의도적으로 단순화한 부분과, 결론을 뒤집을 수 있는 조건입니다.</p>
+
+  <h3>주요 가정과 단순화</h3>
+  <ul class="clean">
+    <li><b>캡티브 금융 단순화:</b> Ford Credit(금융)과 자동차 사업은 자본구조가 본질적으로 다릅니다. 본 분석은 연결 조정 EBIT를 사용하고 자동차 부문 순현금(+$6B)을 자기자본 가치에 더하는 방식으로 단순화했습니다. 금융 부문을 별도 모델로 분리하면 결과가 일부 달라질 수 있습니다.</li>
+    <li><b>정상화 마진이 핵심 변수:</b> 가치의 거의 전부가 '회복 후 정상 마진' 가정에 의존합니다. 이 값(기본 6.5%)은 추정이며, 실제로는 4%~8% 범위에서 $15.6~$30.9로 크게 갈립니다. <span class="kw">단일 입력의 불확실성이 결과 전체를 지배</span>합니다.</li>
+    <li><b>저점 기준연도·조정치 사용:</b> 2025년은 EV 상각이 겹친 비정상 연도입니다. 회계상 순손실(−$8.2B)이 아니라 조정 EBIT($6.8B)를 기준으로 삼았는데, 이는 영업 체력을 보기 위함이지만 <strong>'조정' 항목 일부가 반복될 가능성</strong>(향후 추가 상각·구조조정)은 배제하지 못합니다.</li>
+    <li><b>경기순환 미반영:</b> 명시적 예측 경로는 완만한 회복을 가정할 뿐, <strong>침체 시나리오(특정 연도 이익 급감)를 명시적으로 모델링하지 않았습니다.</strong> 자동차는 경기민감재이므로 실제 경로는 더 들쭉날쭉할 수 있습니다.</li>
+    <li><b>WACC·베타·세율·순현금 가정:</b> 베타(1.45)는 회귀조정값이며 시점에 민감합니다. 무위험이자율(4.45%)·ERP(4.75%)·정상세율(20%)·순현금(+$6B)은 합리적 추정이나 시장 상황에 따라 변합니다. 자본비용 ±1%p가 가치를 ±11% 움직입니다.</li>
+    <li><b>ROIIC 처리:</b> 회복 구간의 높은 ROIIC(마진 회복에서 발생)를 최종가치에 그대로 쓰면 과대평가됩니다. 이를 막기 위해 <strong>최종가치에는 정상화 ROIIC 13%</strong>를 적용했습니다 — 이 정상화 수준 자체도 추정입니다.</li>
+    <li><b>시점 데이터:</b> 주가·시총·금리·경쟁사 지표는 2026년 6월 기준 근사값이며, 시장 데이터는 수시로 변합니다.</li>
+  </ul>
+
+  <div class="callout">
+    <span class="ct">결론을 바꿀 결정적 증거</span>
+    <p>다음이 확인되면 본 분석의 균형추가 이동합니다 — ① <strong>분기 조정 EBIT 마진이 5%대 이상으로 수개 분기 지속</strong>되면 '회복' 쪽으로(가치 상향), ② <strong>마진이 다시 4%대로 후퇴하거나 추가 상각·중국발 가격 붕괴</strong>가 나타나면 '약한 해자' 쪽으로(현재가 정당화). 가장 가까운 점검 시점은 <strong>2026년 2분기 실적(7월 말)</strong>입니다.</p>
+  </div>
+
+  <div class="callout blue">
+    <span class="ct">이 분석의 성격</span>
+    <p>본 자료는 <strong>경쟁우위기간(CAP) 관점에서 시장의 기대를 해부</strong>한 정보 제공용 분석입니다. 특정 주식의 매수·매도를 권하지 않으며, '적정가'를 단정하지도 않습니다. 목적은 <strong>"현재 주가에 어떤 기대가 들어 있는가"를 투명하게 보여주고, 그것이 사업·산업의 실제와 얼마나 부합하는지 스스로 판단할 재료를 제공</strong>하는 것입니다. 모든 추정에는 위에 적은 불확실성이 따릅니다.</p>
+  </div>
+</div></section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer"><div class="wrap">
+  <div>
+    <div style="font-family:'Space Grotesk';font-size:16px;font-weight:600;color:#fff">Ford Motor Company (F)</div>
+    <div class="mono" style="margin-top:6px">경쟁우위기간(CAP) 기반 기업·산업 분석 · 2026-06-16</div>
+    <div class="mono" style="margin-top:3px">방법론: 시장 내재 CAP 역산 · 페이드 모델 DCF (마이크로소프트 사례 교차검증)</div>
+  </div>
+  <div style="max-width:380px">
+    <b>핵심 결론:</b> 코어 자동차 기준 시장 내재 CAP ≈ 0년 — 현재가 $15는 2025 저점 이익을 무성장·무초과수익으로 환산한 수준(약세 시나리오 $15.5)에 위치. 2026년 5월 ESS(Ford Energy) 'AI 데이터센터' 재평가로 ~$18까지 급등 후 되돌림. 무게추는 '이익률 회복의 지속 가능성'이며, ESS는 상방 옵션 층으로 추가됨.
+    <div class="mono" style="margin-top:10px;font-size:10.5px">데이터 출처: Ford 8-K/10-K(2026.2), S&P Global Mobility, IBISWorld, Damodaran Online, companiesmarketcap, stock-analysis-on.net. 모든 수치는 분석 시점 근사값이며 정보 제공 목적임.</div>
+  </div>
+</div></footer>
+
+</body>
+</html>
