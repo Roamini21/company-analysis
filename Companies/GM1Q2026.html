@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제너럴 모터스(GM) 심층 분석 — 경쟁우위기간(CAP) & ESS 진출</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+  :root{
+    --ink:#0E1A2B; --ink2:#16263A; --ink3:#1F344C;
+    --steel:#51606F; --steel-light:#7A8794;
+    --paper:#F2F4F3; --card:#FFFFFF; --line:#D7DDE1;
+    --cyan:#0AA6BE; --cyan-deep:#077485; --cyan-tint:#E2F3F6;
+    --amber:#D8962F; --amber-tint:#FBF1DD;
+    --copper:#C2553B; --copper-tint:#F7E6E0;
+    --green:#3F8F6B; --green-tint:#E2F1EA;
+    --mono:'Space Mono', ui-monospace, monospace;
+    --disp:'Black Han Sans', 'Pretendard', sans-serif;
+    --body:'Pretendard', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);
+    line-height:1.72;font-size:16.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+  h1,h2,h3,h4{line-height:1.25;letter-spacing:-0.01em}
+  p{margin:0 0 1em}
+  a{color:var(--cyan-deep);text-decoration:none}
+  sup{font-size:.7em}
+
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(14,26,43,.97);
+    border-bottom:1px solid #233649;backdrop-filter:blur(6px)}
+  .topbar .wrap{display:flex;align-items:center;gap:14px;
+    padding-top:11px;padding-bottom:11px;flex-wrap:wrap}
+  .brandtag{font-family:var(--mono);font-weight:700;color:#fff;font-size:13px;
+    letter-spacing:.03em;white-space:nowrap;display:flex;align-items:center;gap:8px}
+  .brandtag .dot{width:9px;height:9px;border-radius:50%;background:var(--cyan);
+    box-shadow:0 0 0 3px rgba(10,166,190,.25)}
+  .nav{display:flex;flex-wrap:wrap;gap:5px 6px;align-items:center}
+  .nav a{font-family:var(--mono);font-size:11.5px;color:#AEBDCB;
+    border:1px solid #2C4258;border-radius:5px;padding:4px 8px;white-space:nowrap;
+    transition:all .15s;line-height:1.3}
+  .nav a:hover{color:#fff;border-color:var(--cyan);background:rgba(10,166,190,.14)}
+
+  .hero{background:radial-gradient(120% 90% at 85% -10%, #1C3A52 0%, var(--ink) 55%);
+    color:#EAF1F6;padding:54px 0 46px;border-bottom:3px solid var(--cyan)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;
+    color:var(--cyan);text-transform:uppercase;margin-bottom:14px}
+  .hero h1{font-family:var(--disp);font-weight:400;font-size:clamp(34px,6.4vw,62px);
+    color:#fff;letter-spacing:0;margin-bottom:6px}
+  .hero .sub{font-size:clamp(15px,2.2vw,18px);color:#B9C8D6;max-width:60ch;margin-top:10px}
+  .tldr{margin-top:26px;background:rgba(255,255,255,.05);border:1px solid #2E465C;
+    border-left:4px solid var(--cyan);border-radius:10px;padding:20px 22px;color:#E7EFF5}
+  .tldr b{color:#fff}
+  .tldr .ko-accent{color:var(--cyan)}
+  .quickstat{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+  .qs{background:rgba(255,255,255,.04);border:1px solid #2A4056;border-radius:10px;
+    padding:14px 14px 13px;color:#D5E0EA}
+  .qs .n{font-family:var(--disp);font-size:30px;color:#fff;line-height:1.05}
+  .qs .n.cy{color:var(--cyan)} .qs .n.am{color:var(--amber)}
+  .qs .l{font-family:var(--mono);font-size:10.5px;color:#90A2B3;margin-top:5px;letter-spacing:.02em}
+  @media(max-width:680px){.quickstat{grid-template-columns:repeat(2,1fr)}}
+
+  section{padding:46px 0}
+  section:nth-of-type(even){background:#EAEEEC}
+  .sec-no{font-family:var(--mono);font-size:12px;color:var(--cyan-deep);
+    letter-spacing:.16em;font-weight:700}
+  .sec-h{font-size:clamp(23px,3.6vw,31px);font-weight:800;color:var(--ink);
+    margin:6px 0 4px;letter-spacing:-0.02em}
+  .sec-lead{color:var(--steel);max-width:72ch;font-size:16px;margin-bottom:24px}
+  .divider{height:2px;background:linear-gradient(90deg,var(--cyan) 0 46px,var(--line) 46px);
+    margin-bottom:22px;border:0}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:22px 24px;color:var(--ink)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:820px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+  .mt{margin-top:18px} .mt2{margin-top:26px}
+
+  .h4{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:9px;
+    display:flex;align-items:center;gap:9px}
+  .h4 .tick{width:7px;height:18px;border-radius:2px;background:var(--cyan);flex:none}
+
+  .plain{background:var(--cyan-tint);border:1px solid #BDE2E8;border-left:4px solid var(--cyan);
+    border-radius:9px;padding:14px 16px;color:#0B3B43;font-size:15px;margin:14px 0}
+  .plain b{color:#062c33}
+  .plain .tag{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cyan-deep);
+    letter-spacing:.04em;display:block;margin-bottom:4px;text-transform:uppercase}
+  .warn{background:var(--amber-tint);border:1px solid #ECD6A3;border-left:4px solid var(--amber);
+    border-radius:9px;padding:14px 16px;color:#5C4112;font-size:15px;margin:14px 0}
+  .warn .tag{font-family:var(--mono);font-size:11px;font-weight:700;color:#9A6B16;
+    letter-spacing:.04em;display:block;margin-bottom:4px;text-transform:uppercase}
+  .warn b{color:#3f2c0a}
+  .risk{background:var(--copper-tint);border:1px solid #E6C2B6;border-left:4px solid var(--copper);
+    border-radius:9px;padding:14px 16px;color:#5A2718;font-size:15px;margin:14px 0}
+  .risk .tag{font-family:var(--mono);font-size:11px;font-weight:700;color:#A8462F;
+    letter-spacing:.04em;display:block;margin-bottom:4px;text-transform:uppercase}
+  .risk b{color:#3f1a10}
+
+  .conf{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);
+    font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;
+    background:#10283A;color:#cfe;border:1px solid #2C4256}
+  .conf.hi{background:var(--green-tint);color:#1f6347;border-color:#BBDFCA}
+  .conf.mid{background:var(--amber-tint);color:#7a560f;border-color:#E7CE9A}
+  .conf.lo{background:var(--copper-tint);color:#9c3f2a;border-color:#E2BBAE}
+
+  .tbl{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0;
+    background:var(--card)}
+  .tbl th,.tbl td{padding:9px 11px;text-align:right;border-bottom:1px solid #E7ECEF;
+    font-variant-numeric:tabular-nums}
+  .tbl th{background:var(--ink);color:#E6EEF4;font-weight:700;font-size:12px;
+    font-family:var(--mono);letter-spacing:.01em;text-align:right}
+  .tbl th:first-child,.tbl td:first-child{text-align:left}
+  .tbl td.lbl{font-weight:700;color:var(--ink);background:#F7F9F9}
+  .tbl tr:last-child td{border-bottom:0}
+  .tbl .num{font-family:var(--mono);font-size:13px}
+  .tbl .hl{background:var(--cyan-tint);color:#0B3B43;font-weight:700}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;
+    border-radius:10px;border:1px solid var(--line)}
+  .scroll-hint{font-family:var(--mono);font-size:10.5px;color:var(--steel-light);
+    text-align:right;margin-top:4px;display:none}
+  @media(max-width:680px){.scroll-hint{display:block}}
+
+  .bars{display:flex;flex-direction:column;gap:9px;margin-top:6px}
+  .bar-row{display:grid;grid-template-columns:128px 1fr 66px;align-items:center;gap:10px}
+  .bar-row .bl{font-size:13px;color:var(--ink);font-weight:600}
+  .bar-track{background:#E9EDEF;border-radius:6px;height:22px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:6px}
+  .bar-row .bv{font-family:var(--mono);font-size:12.5px;color:var(--steel);text-align:right}
+  @media(max-width:560px){.bar-row{grid-template-columns:92px 1fr 56px}}
+
+  .legend{display:flex;flex-direction:column;gap:10px}
+  .lg{display:flex;align-items:center;gap:11px}
+  .lg .sw{width:15px;height:15px;border-radius:4px;flex:none}
+  .lg .lt{font-size:14px;color:var(--ink)} .lg .lt b{font-weight:800}
+  .lg .lv{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--steel)}
+
+  .swot{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.swot{grid-template-columns:1fr}}
+  .sq{border-radius:12px;padding:16px 18px}
+  .sq h4{font-size:15px;font-family:var(--mono);font-weight:700;margin-bottom:9px;
+    letter-spacing:.03em;display:flex;align-items:center;gap:8px}
+  .sq ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .sq li{font-size:13.5px;padding-left:15px;position:relative;line-height:1.5}
+  .sq li:before{content:"▪";position:absolute;left:0;top:0}
+  .sq.S{background:var(--green-tint);border:1px solid #BFE0CF;color:#1d4f39}
+  .sq.S h4,.sq.S li:before{color:#2e7a57}
+  .sq.W{background:var(--copper-tint);border:1px solid #E6C2B6;color:#5a2718}
+  .sq.W h4,.sq.W li:before{color:#b04c33}
+  .sq.O{background:var(--cyan-tint);border:1px solid #BDE2E8;color:#0b3b43}
+  .sq.O h4,.sq.O li:before{color:var(--cyan-deep)}
+  .sq.T{background:var(--amber-tint);border:1px solid #ECD6A3;color:#5c4112}
+  .sq.T h4,.sq.T li:before{color:#9a6b16}
+
+  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+  .fstep{flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;padding:13px 14px;color:var(--ink)}
+  .fstep .fn{font-family:var(--mono);font-size:11px;color:var(--cyan-deep);font-weight:700}
+  .fstep .ft{font-weight:800;font-size:14px;margin:3px 0 3px}
+  .fstep .fd{font-size:12.5px;color:var(--steel);line-height:1.5}
+  .farrow{display:flex;align-items:center;color:var(--cyan);font-size:20px;padding:0 4px;flex:none}
+  @media(max-width:680px){.farrow{transform:rotate(90deg);width:100%;justify-content:center;padding:3px 0}}
+
+  .porter{display:flex;flex-direction:column;gap:11px}
+  .pf{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:start}
+  .pf .pl{font-weight:700;font-size:14px;color:var(--ink)}
+  .pf .pl small{display:block;font-weight:400;color:var(--steel-light);font-size:11.5px;font-family:var(--mono)}
+  .pmeter{display:flex;flex-direction:column;gap:5px}
+  .pdots{display:flex;gap:4px}
+  .pdot{width:24px;height:8px;border-radius:3px;background:#E2E7EA}
+  .pdot.on-h{background:var(--copper)} .pdot.on-m{background:var(--amber)}
+  .pdesc{font-size:12.5px;color:var(--steel);line-height:1.5}
+  @media(max-width:560px){.pf{grid-template-columns:1fr}}
+
+  .scen{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:760px){.scen{grid-template-columns:1fr 1fr}}
+  .sc{border-radius:12px;padding:16px;text-align:center;border:1px solid}
+  .sc .st{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+  .sc .sp{font-family:var(--disp);font-size:33px;line-height:1.1;margin:6px 0 2px}
+  .sc .sd{font-size:12px;line-height:1.45}
+  .sc.bear{background:var(--copper-tint);border-color:#E2BBAE;color:#5a2718}
+  .sc.bear .sp{color:var(--copper)}
+  .sc.mkt{background:var(--ink);border-color:var(--ink);color:#dbe6ee}
+  .sc.mkt .sp{color:#fff}
+  .sc.base{background:var(--cyan-tint);border-color:#BDE2E8;color:#0b3b43}
+  .sc.base .sp{color:var(--cyan-deep)}
+  .sc.bull{background:var(--green-tint);border-color:#BFE0CF;color:#1d4f39}
+  .sc.bull .sp{color:#2e7a57}
+
+  .check{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .check li{display:flex;gap:11px;align-items:flex-start;font-size:14.5px;color:var(--ink)}
+  .check li .bx{width:17px;height:17px;border:2px solid var(--cyan);border-radius:4px;flex:none;margin-top:3px}
+
+  .src{font-size:12.5px;color:var(--steel)}
+  .src code{font-family:var(--mono);font-size:11.5px;background:#E9EDEF;padding:1px 6px;border-radius:4px;color:var(--ink2)}
+  footer{background:var(--ink);color:#9DB0C0;padding:34px 0 40px;font-size:13px}
+  footer b{color:#fff} footer a{color:var(--cyan)}
+  .fignote{font-family:var(--mono);font-size:11px;color:var(--steel-light);margin-top:8px}
+  svg{max-width:100%;height:auto}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <span class="brandtag"><span class="dot"></span>GM · NYSE</span>
+  <nav class="nav">
+    <a href="#s0">00 결론</a>
+    <a href="#s1">01 개요</a>
+    <a href="#s2">02 수익구조</a>
+    <a href="#s3">03 제품·기술</a>
+    <a href="#s4">04 산업</a>
+    <a href="#s5">05 생애주기</a>
+    <a href="#s6">06 해자</a>
+    <a href="#s7">07 SWOT</a>
+    <a href="#s8">08 피어비교</a>
+    <a href="#s9">09 ESS 진출</a>
+    <a href="#s10">10 밸류·CAP</a>
+    <a href="#s11">11 민감도</a>
+    <a href="#s12">12 리스크</a>
+    <a href="#s13">13 종합판단</a>
+    <a href="#s14">14 GM↔F 비교</a>
+    <a href="#s15">15 한계</a>
+  </nav>
+</div></div>
+
+<header class="hero" id="s0"><div class="wrap">
+  <div class="eyebrow">경쟁우위기간(CAP) 프레임워크 · 장기투자 분석 · 2026년 6월 16일 기준</div>
+  <h1>제너럴 모터스 (General Motors)</h1>
+  <div class="sub">미국 픽업트럭·SUV 시장을 지배하는 117년 역사의 자동차 기업이,
+    전기차 침체기를 맞아 남는 배터리 역량을 ‘에너지 저장장치(ESS)’로 돌리며 새 성장 서사를 찾고 있다.</div>
+
+  <div class="tldr">
+    <b>핵심 결론 (1–2문장).</b> 현재 주가(약 $82)는 GM을 <b class="ko-accent">‘경쟁우위가 거의 없고 이익이 서서히 줄어드는 회사’</b>로
+    가격 매기고 있습니다 — 시장 내재 CAP는 사실상 <b>0년 이하</b>이며, 2026년 예상 정상이익의 <b>약 절반(47%)이 소멸</b>한다고 가정한 수준입니다.
+    이 비관론이 과도한지는 결국 <b>① GM의 픽업트럭 과점이라는 진짜 해자가 얼마나 오래 가는가</b>와
+    <b>② 매년 반복되는 전기차 구조조정 비용이 일시적인가 구조적인가</b>에 달려 있고, 이번 <b class="ko-accent">ESS 진출</b>은
+    그 자체로 판도를 바꾸진 못하지만 ‘남는 배터리 설비 활용 + 성장 내러티브 재평가’라는 보조 가치를 더합니다.
+  </div>
+
+  <div class="quickstat">
+    <div class="qs"><div class="n">$82</div><div class="l">주가 (6/16, 범위 $81.5–84.1)</div></div>
+    <div class="qs"><div class="n cy">≤ 0년</div><div class="l">시장 내재 CAP</div></div>
+    <div class="qs"><div class="n am">~47%</div><div class="l">시장이 반영한 이익 소멸폭</div></div>
+    <div class="qs"><div class="n">$185B</div><div class="l">2025 매출 / 순이익 $2.7B</div></div>
+  </div>
+</div></header>
+
+<!-- ============ 01 개요 ============ -->
+<section id="s1"><div class="wrap">
+  <div class="sec-no">01 / COMPANY</div>
+  <h2 class="sec-h">GM은 어떤 회사인가</h2>
+  <hr class="divider">
+  <p class="sec-lead">한 문장으로: <b>GM은 미국 도로 위 픽업트럭과 대형 SUV를 가장 많이 파는 회사이며,
+  그 차를 팔고(제조) + 그 차를 사도록 돈을 빌려주며(금융) 수익을 냅니다.</b></p>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>설립과 정체성</div>
+      <p>1908년 윌리엄 듀런트가 설립한 미국 디트로이트 기반의 자동차 제조사입니다.
+      77년간(1931~2007) 세계 최대 자동차 회사였다가 2008년 토요타에 1위를 내줬고,
+      지금도 <b>미국 시장 1위(점유율 약 16.5%)</b>를 지키는 ‘빅3’의 맏형입니다.
+      2009년 금융위기 때 한 차례 파산·구조조정을 거쳐 재상장했습니다.</p>
+      <div class="bars mt">
+        <div class="bar-row"><span class="bl">시가총액</span><div class="bar-track"><div class="bar-fill" style="width:56%;background:var(--ink)"></div></div><span class="bv">~$74B</span></div>
+        <div class="bar-row"><span class="bl">2025 매출</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--cyan)"></div></div><span class="bv">$185B</span></div>
+        <div class="bar-row"><span class="bl">직원 수</span><div class="bar-track"><div class="bar-fill" style="width:42%;background:var(--steel)"></div></div><span class="bv">~156K</span></div>
+        <div class="bar-row"><span class="bl">생산 거점</span><div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--steel)"></div></div><span class="bv">8개국</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>핵심 브랜드 4개 + α</div>
+      <p>GM은 하나의 회사 아래 여러 ‘브랜드(자동차 상표)’를 둡니다. 각 브랜드는 노리는 고객층이 다릅니다.</p>
+      <table class="tbl">
+        <tr><th>브랜드</th><th>포지션</th></tr>
+        <tr><td class="lbl">Chevrolet</td><td style="text-align:left">대중 — 픽업·SUV·승용 (Silverado)</td></tr>
+        <tr><td class="lbl">GMC</td><td style="text-align:left">프리미엄 트럭·SUV (Sierra)</td></tr>
+        <tr><td class="lbl">Cadillac</td><td style="text-align:left">럭셔리 — 고마진</td></tr>
+        <tr><td class="lbl">Buick</td><td style="text-align:left">중상급 (특히 중국)</td></tr>
+        <tr><td class="lbl">Baojun·Wuling</td><td style="text-align:left">중국 합작(SAIC-GM-우링)</td></tr>
+      </table>
+      <p style="margin-top:8px;font-size:13.5px;color:var(--steel)">그 밖에 차량 연결 서비스 <b>OnStar</b>,
+      자동차 금융 <b>GM Financial</b>, 군용 차량 사업(국방)도 보유합니다. 한때 로보택시(Cruise)에 $100억을 썼지만 2024년 접었습니다.</p>
+    </div>
+  </div>
+
+  <div class="plain">
+    <span class="tag">쉽게 말하면</span>
+    GM의 ‘돈줄’은 화려한 신기술이 아니라 <b>미국인이 사랑하는 큰 픽업트럭(쉐보레 실버라도, GMC 시에라)과
+    대형 SUV(타호·서버번·에스컬레이드)</b>입니다. 이 차들은 비싸고 마진이 높아, 한 대 팔 때 이익이 작은 승용차보다 훨씬 큽니다.
+  </div>
+</div></section>
+
+<!-- ============ 02 수익구조 ============ -->
+<section id="s2"><div class="wrap">
+  <div class="sec-no">02 / HOW IT MAKES MONEY</div>
+  <h2 class="sec-h">GM은 어떻게 돈을 버는가</h2>
+  <hr class="divider">
+  <p class="sec-lead">매출의 거의 전부가 ‘차를 만들어 파는 일’에서 나오며, 그중 <b>5달러 중 4달러 이상이 북미(미국·캐나다) 한 지역</b>에서 발생합니다.
+  나머지는 차 살 돈을 빌려주는 금융업입니다.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>사업부별 매출 (2025년, 총 $185B)</div>
+      <!-- stacked segment bar -->
+      <div style="display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin:6px 0 16px">
+        <div style="width:83.5%;background:var(--ink);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--mono);font-size:12px">GMNA 83.5%</div>
+        <div style="width:9.2%;background:var(--cyan)"></div>
+        <div style="width:7.3%;background:var(--amber)"></div>
+      </div>
+      <div class="legend">
+        <div class="lg"><span class="sw" style="background:var(--ink)"></span><span class="lt"><b>GM 북미 (GMNA)</b> — 미국·캐나다 차량 판매</span><span class="lv">$154.3B</span></div>
+        <div class="lg"><span class="sw" style="background:var(--cyan)"></span><span class="lt"><b>GM Financial</b> — 자동차 할부·리스 금융</span><span class="lv">$17.1B</span></div>
+        <div class="lg"><span class="sw" style="background:var(--amber)"></span><span class="lt"><b>GM 인터내셔널 (GMI)</b> — 그 외 해외</span><span class="lv">$13.4B</span></div>
+      </div>
+      <div class="warn">
+        <span class="tag">집중 위험</span>
+        북미 의존도가 83.5%로 매우 높습니다. ‘한 바구니에 계란 몰아담기’ — 미국 경기·관세·규제 변화에
+        다각화된 경쟁사(토요타 등)보다 취약합니다. 해외(GMI)는 구조적으로 쪼그라드는 중입니다.
+      </div>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>이익 엔진의 정체</div>
+      <p>GM의 <b>EBIT(이자·세전 영업이익)</b> 약 $12.7B(2025) 중,</p>
+      <div class="bars">
+        <div class="bar-row"><span class="bl">자동차 부문</span><div class="bar-track"><div class="bar-fill" style="width:79%;background:var(--ink)"></div></div><span class="bv">~$10B</span></div>
+        <div class="bar-row"><span class="bl">GM Financial</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:var(--cyan)"></div></div><span class="bv">~$2.8B</span></div>
+      </div>
+      <p class="mt" style="font-size:14px">자동차 이익의 대부분은 다시 <b>북미 풀사이즈 픽업·SUV</b>에서 나옵니다.
+      소형 SUV(트랙스·앙비스타)가 판매량을 받쳐주지만, 진짜 ‘돈’은 큰 차에 있습니다.</p>
+      <div class="plain" style="margin-bottom:0">
+        <span class="tag">GM Financial이란?</span>
+        고객이 차를 ‘할부·리스’로 살 때 돈을 빌려주고 이자를 받는 <b>전속 금융 자회사</b>입니다(소매 대출잔액 ~$77B).
+        꾸준하고 질 좋은 이익을 내지만, 자체적으로 막대한 빚(~$110B+)을 안고 운영합니다 —
+        이 빚은 대출채권으로 상쇄되므로 GM 본체의 ‘순부채’와는 성격이 다릅니다(밸류에이션에서 별도 처리).
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>매출 흐름 한눈에 보기</div>
+    <div class="flow">
+      <div class="fstep"><div class="fn">SOURCE 1 · ~96%</div><div class="ft">신차·부품·액세서리 판매</div><div class="fd">딜러에게 도매 → 소비자 판매. 픽업·SUV가 핵심</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep"><div class="fn">SOURCE 2 · ~3%</div><div class="ft">서비스·소프트웨어</div><div class="fd">OnStar 구독, 커넥티드 서비스 (성장 중, 고마진)</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep"><div class="fn">SOURCE 3 · ~9%*</div><div class="ft">금융 이자 수익</div><div class="fd">GM Financial 할부·리스. *별도 사업부 매출 기준</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep" style="border-color:var(--cyan)"><div class="fn" style="color:var(--cyan-deep)">신규 · 미미</div><div class="ft">에너지·ESS</div><div class="fd">2026년 신설. 09장에서 상세 분석 ▼</div></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 03 제품·기술 ============ -->
+<section id="s3"><div class="wrap">
+  <div class="sec-no">03 / PRODUCT &amp; TECH</div>
+  <h2 class="sec-h">제품과 기술력 — 비전공자용 해설</h2>
+  <hr class="divider">
+  <p class="sec-lead">GM의 기술 경쟁력은 ‘배터리를 용도별로 골라 쓰는 전략’과 ‘차를 빠르게 갈아끼울 수 있는 공용 플랫폼’으로 요약됩니다.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>① 차량 라인업의 무게중심</div>
+      <p>GM 제품군은 크게 세 묶음입니다.</p>
+      <table class="tbl">
+        <tr><th>분류</th><th>대표 차종</th><th>역할</th></tr>
+        <tr><td class="lbl" style="text-align:left">풀사이즈 트럭/SUV</td><td style="text-align:left">실버라도·시에라·타호·에스컬레이드</td><td style="text-align:left">이익 엔진</td></tr>
+        <tr><td class="lbl" style="text-align:left">중소형 SUV/승용</td><td style="text-align:left">트랙스·이쿼녹스·앙비스타</td><td style="text-align:left">물량·점유율</td></tr>
+        <tr><td class="lbl" style="text-align:left">전기차(EV)</td><td style="text-align:left">얼티엄 기반 EV (블레이저·실버라도 EV)</td><td style="text-align:left">미래 베팅(현재 적자)</td></tr>
+      </table>
+      <div class="plain">
+        <span class="tag">Ultium(얼티엄) 플랫폼이란?</span>
+        <b>여러 전기차에 공통으로 쓰는 ‘레고 블록’ 같은 배터리·차대 기반</b>입니다.
+        같은 부품을 돌려쓰면 개발이 빠르고 원가가 낮아집니다. 다만 북미 EV 수요가 식으면서, 이 설비가
+        한동안 ‘남아도는(유휴)’ 상태가 됐습니다 — 이것이 09장 ESS 전환의 배경입니다.
+      </div>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>② 배터리 ‘화학’을 용도별로 분리</div>
+      <p>배터리는 안에 쓰는 재료(화학)에 따라 성격이 다릅니다. GM은 <b>하나로 다 하려던 방식에서, 쓰임새별 최적 배터리</b>로 전략을 바꿨습니다.</p>
+      <div class="grid2" style="gap:10px;margin-top:6px">
+        <div style="background:var(--ink);color:#dbe6ee;border-radius:9px;padding:11px 13px"><div style="font-family:var(--mono);font-size:11px;color:var(--cyan)">고성능 EV</div><b style="color:#fff">NCM</b><div style="font-size:12px">니켈·코발트·망간. 에너지밀도↑, 비쌈</div></div>
+        <div style="background:var(--ink);color:#dbe6ee;border-radius:9px;padding:11px 13px"><div style="font-family:var(--mono);font-size:11px;color:var(--cyan)">보급형 EV</div><b style="color:#fff">LFP</b><div style="font-size:12px">리튬인산철. 저렴·안전, 중국이 강함</div></div>
+        <div style="background:var(--ink);color:#dbe6ee;border-radius:9px;padding:11px 13px"><div style="font-family:var(--mono);font-size:11px;color:var(--cyan)">차세대 EV</div><b style="color:#fff">LMR</b><div style="font-size:12px">리튬망간리치. 차세대 후보</div></div>
+        <div style="background:var(--cyan-deep);color:#eafafc;border-radius:9px;padding:11px 13px;border:2px solid var(--cyan)"><div style="font-family:var(--mono);font-size:11px;color:#bfeef4">ESS(전력저장)</div><b style="color:#fff">나트륨이온</b><div style="font-size:12px">소금 기반. 싸고 풍부, 넓은 온도범위</div></div>
+      </div>
+      <p class="mt" style="font-size:13.5px;color:var(--steel)">에너지밀도가 낮은 나트륨이온은 ‘멀리 달려야 하는 차’엔 불리하지만,
+      ‘한자리에 고정된 전력저장장치’엔 충분하고 오히려 싸고 안전해 적합합니다.</p>
+    </div>
+  </div>
+
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>③ 차 한 대가 만들어지는 과정 (단순화 흐름도)</div>
+    <div class="flow">
+      <div class="fstep"><div class="fn">STEP 1</div><div class="ft">설계·플랫폼</div><div class="fd">얼티엄 등 공용 차대에 차종 얹기</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep"><div class="fn">STEP 2</div><div class="ft">배터리·부품 조달</div><div class="fd">LG와 합작(얼티엄셀즈)·협력사 공급</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep"><div class="fn">STEP 3</div><div class="ft">조립 공장</div><div class="fd">8개국 공장에서 차량 생산</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep"><div class="fn">STEP 4</div><div class="ft">딜러 도매</div><div class="fd">전국 딜러망에 ‘도매(wholesale)’ 판매 → 매출 인식</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep"><div class="fn">STEP 5</div><div class="ft">소비자 + 금융</div><div class="fd">OnStar·GM Financial로 추가 수익</div></div>
+    </div>
+    <div class="fignote">※ ‘도매(wholesale)’: GM은 소비자가 아니라 딜러에게 차를 넘길 때 매출로 잡습니다. 그래서 딜러 재고·공장 가동이 분기 실적을 흔듭니다.</div>
+  </div>
+</div></section>
+
+<!-- ============ 04 산업 ============ -->
+<section id="s4"><div class="wrap">
+  <div class="sec-no">04 / INDUSTRY</div>
+  <h2 class="sec-h">자동차 산업 — 구조·가치사슬·흐름</h2>
+  <hr class="divider">
+  <p class="sec-lead">자동차는 <b>경기에 민감하고(호황·불황을 크게 탐), 돈이 많이 들며(공장·연구비), 경쟁이 치열한</b> 산업입니다.
+  그래서 잘나가는 회사도 ‘초과 이익’을 오래 지키기 어렵습니다 — 이것이 CAP 분석의 출발점입니다.</p>
+
+  <div class="card">
+    <div class="h4"><span class="tick"></span>산업 가치사슬 (원자재 → 폐배터리 재활용까지)</div>
+    <div class="flow">
+      <div class="fstep"><div class="fn">상류</div><div class="ft">원자재·부품</div><div class="fd">철강·리튬·반도체·전장부품</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep"><div class="fn">중류</div><div class="ft">배터리·파워트레인</div><div class="fd">셀 제조(LG·CATL 등)·엔진·모터</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep" style="border-color:var(--cyan)"><div class="fn" style="color:var(--cyan-deep)">완성차 ★</div><div class="ft">GM 위치</div><div class="fd">설계·조립·브랜드 (가장 큰 부가가치+위험)</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep"><div class="fn">하류</div><div class="ft">딜러·금융·서비스</div><div class="fd">판매·할부·정비·중고차</div></div>
+      <div class="farrow">→</div>
+      <div class="fstep"><div class="fn">순환</div><div class="ft">재사용·재활용</div><div class="fd">폐EV배터리 → ESS 재활용(Redwood)</div></div>
+    </div>
+  </div>
+
+  <div class="grid2 mt">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>지금 산업을 흔드는 4대 흐름</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:11px">
+        <li><b style="color:var(--copper)">① EV 캐즘(수요 정체)</b> — 트럼프 2기 행정부의 EV 보조금 종료로 북미 전기차 수요가 급랭. 완성차들이 EV 설비를 줄이거나 용도 전환(→ ESS).</li>
+        <li><b style="color:var(--amber)">② 관세</b> — 수입 부품·차량 관세가 비용을 키움. GM의 2026년 ‘총 관세비용’ 추정 $2.5–3.5B(대법원 판결로 일부 경감).</li>
+        <li><b style="color:var(--ink)">③ 중국 부상</b> — BYD·CATL이 배터리·EV를 주도. 미국 밖 시장에서 레거시 업체를 위협(GM 해외사업 축소의 한 원인).</li>
+        <li><b style="color:var(--cyan-deep)">④ 전동화·자율주행·소프트웨어</b> — 장기적으로 ‘차=소프트웨어/서비스’로 가치 이동. 동시에 ‘차=에너지 저장·공급’ 결합(V2G).</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>성장성: 낮지만 ‘재편’ 기회</div>
+      <p>완성차 산업 자체는 성숙해 <b>실질 성장률이 거의 0</b>입니다(대략 인플레이션 수준). 미국 신차 판매량은 연 1,500만 대 안팎에서 큰 추세 변화가 없습니다.</p>
+      <p>대신 가치가 <b>‘많이 파는 것’에서 ‘옳은 차(고마진 트럭·SUV) + 소프트웨어 + 인접 사업(에너지)’</b>으로 재편되는 중입니다.
+      GM의 ESS 진출은 이 ‘인접 사업 재편’ 흐름에 올라타려는 시도입니다.</p>
+      <div class="plain" style="margin-bottom:0">
+        <span class="tag">왜 자동차주는 P/E가 낮을까</span>
+        ① 경기 타면 이익이 출렁이고 ② 매년 공장·연구비를 쏟아부어 현금이 잘 안 남고 ③ 경쟁·신규진입·대체(EV/자율주행)로 미래가 불확실하기 때문입니다.
+        그래서 시장은 자동차 이익에 <b>높은 위험 할인</b>을 매깁니다.
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 05 생애주기 ============ -->
+<section id="s5"><div class="wrap">
+  <div class="sec-no">05 / LIFECYCLE</div>
+  <h2 class="sec-h">생애주기 단계 — GM은 ‘성숙기’</h2>
+  <hr class="divider">
+  <p class="sec-lead">기업은 도입 → 성장 → 성숙 → 정리 → 감소의 5단계를 거칩니다.
+  이를 가르는 가장 단순한 방법은 <b>현금흐름표의 세 가지 흐름(영업·투자·재무)의 부호(+/−)</b>를 보는 것입니다.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>현금흐름 ‘지문’ 판별</div>
+      <table class="tbl">
+        <tr><th>현금흐름</th><th>GM 실제</th><th>의미</th></tr>
+        <tr><td class="lbl" style="text-align:left">영업활동</td><td class="hl">유입 (+)</td><td style="text-align:left">자동차 영업현금 ~$18.7B</td></tr>
+        <tr><td class="lbl" style="text-align:left">투자활동</td><td class="hl">유출 (−)</td><td style="text-align:left">설비투자 ~$10–12B</td></tr>
+        <tr><td class="lbl" style="text-align:left">재무활동</td><td class="hl">유출 (−)</td><td style="text-align:left">자사주매입·배당</td></tr>
+      </table>
+      <p class="mt" style="font-size:14px"><b>영업(+) · 투자(−) · 재무(−) = 전형적인 성숙기(Mature)</b>입니다.
+      돈을 벌어 ① 사업에 재투자하고 ② 남는 돈은 주주에게 돌려주는 단계.</p>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>주주환원이 거센 성숙기</div>
+      <p>GM은 벌어들인 현금으로 <b>자사주를 대량 소각</b>하고 있습니다 — 발행주식이 빠르게 줄어듭니다.</p>
+      <div class="bars">
+        <div class="bar-row"><span class="bl">2023년 말</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--steel)"></div></div><span class="bv">1.20B주</span></div>
+        <div class="bar-row"><span class="bl">2024년 말</span><div class="bar-track"><div class="bar-fill" style="width:83%;background:var(--cyan)"></div></div><span class="bv">995M주</span></div>
+        <div class="bar-row"><span class="bl">2025년 말</span><div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--ink)"></div></div><span class="bv">904M주</span></div>
+      </div>
+      <div class="plain" style="margin-bottom:0">
+        <span class="tag">투자 포인트</span>
+        2년 만에 주식 수를 <b>약 25% 줄였고</b>, 추가로 <b>$60억 자사주 매입</b>을 승인했습니다. 배당도 20% 인상($0.18/분기).
+        주식 수가 줄면 ‘1주당 몫’이 커져, 같은 이익이라도 주당 가치가 올라갑니다.
+      </div>
+    </div>
+  </div>
+  <div class="warn">
+    <span class="tag">방법론 메모</span>
+    성숙기 기업은 본 CAP·DCF 프레임워크에 적합합니다. 다만 GM의 ESS 사업부는 그 안에 들어앉은 ‘도입기(introduction)’ 성격이라,
+    09장에서 별도의 <b>TAM·실물옵션</b> 관점으로 다룹니다.
+  </div>
+</div></section>
+
+<!-- ============ 06 해자 + Porter ============ -->
+<section id="s6"><div class="wrap">
+  <div class="sec-no">06 / MOAT</div>
+  <h2 class="sec-h">경제적 해자와 경쟁 강도 (Porter 5 Forces)</h2>
+  <hr class="divider">
+  <p class="sec-lead"><b>해자(moat)</b>란 ‘경쟁자가 쉽게 못 넘어오게 막는 경제적 성벽’입니다.
+  결론부터: GM의 해자는 회사 ‘전체’가 아니라 <b>미국 풀사이즈 픽업트럭 과점</b>이라는 한 곳에 집중돼 있습니다.</p>
+
+  <div class="card">
+    <div class="h4"><span class="tick"></span>포터의 5가지 경쟁 압력 — 자동차 산업은 ‘빡센’ 동네</div>
+    <div class="porter">
+      <div class="pf"><div class="pl">기존 경쟁 강도<small>RIVALRY</small></div><div class="pmeter"><div class="pdots"><span class="pdot on-h"></span><span class="pdot on-h"></span><span class="pdot on-h"></span><span class="pdot on-h"></span><span class="pdot"></span></div><div class="pdesc"><b>높음.</b> 포드·토요타·스텔란티스·현대기아·테슬라·중국OEM 다수. 가격·인센티브 경쟁 치열.</div></div></div>
+      <div class="pf"><div class="pl">신규 진입 위협<small>NEW ENTRY</small></div><div class="pmeter"><div class="pdots"><span class="pdot on-m"></span><span class="pdot on-m"></span><span class="pdot on-m"></span><span class="pdot"></span><span class="pdot"></span></div><div class="pdesc"><b>중간.</b> 막대한 자본·규모가 진입장벽이지만, 테슬라가 가능함을 입증. 중국 EV가 장기 위협.</div></div></div>
+      <div class="pf"><div class="pl">구매자 교섭력<small>BUYERS</small></div><div class="pmeter"><div class="pdots"><span class="pdot on-h"></span><span class="pdot on-h"></span><span class="pdot on-h"></span><span class="pdot on-h"></span><span class="pdot"></span></div><div class="pdesc"><b>높음.</b> 소비자는 가격에 민감, 브랜드 전환 비용 낮음, 인센티브로 협상.</div></div></div>
+      <div class="pf"><div class="pl">공급자 교섭력<small>SUPPLIERS</small></div><div class="pmeter"><div class="pdots"><span class="pdot on-m"></span><span class="pdot on-m"></span><span class="pdot on-m"></span><span class="pdot"></span><span class="pdot"></span></div><div class="pdesc"><b>중간.</b> 노조(UAW) 협상력이 큼(파업 리스크), 반도체·배터리 공급사 영향.</div></div></div>
+      <div class="pf"><div class="pl">대체재 위협<small>SUBSTITUTES</small></div><div class="pmeter"><div class="pdots"><span class="pdot on-m"></span><span class="pdot on-m"></span><span class="pdot on-m"></span><span class="pdot"></span><span class="pdot"></span></div><div class="pdesc"><b>중간~높음.</b> EV 전환, 차량공유, 장기적 자율주행이 ‘소유’ 모델을 위협.</div></div></div>
+    </div>
+    <div class="fignote">붉은색=높음, 주황색=중간. 종합: 구조적으로 초과수익을 지키기 어려운 산업.</div>
+  </div>
+
+  <div class="grid2 mt">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>차별화 vs 원가우위 — GM은 ‘세그먼트 과점’형</div>
+      <p>해자의 원천을 가르는 두 잣대:</p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px">
+        <li>• <b>NOPAT 마진</b>(차별화 신호): GM은 ~6–7%로 산업 평균의 2배에 한참 못 미침 → 순수 차별화 기업 아님</li>
+        <li>• <b>투자자본 회전율</b>(원가우위 신호): 평균 수준 → 뚜렷한 원가 리더도 아님</li>
+      </ul>
+      <div class="plain" style="margin-bottom:0">
+        <span class="tag">GM의 진짜 해자</span>
+        전사 차원이 아니라 <b>‘미국 풀사이즈 픽업·대형SUV’라는 특정 세그먼트의 과점’</b>입니다.
+        여기서는 GM·포드·스텔란티스 3사가 높은 마진을 누립니다. 이유: ① <b>수입 트럭에 25% 관세(‘치킨세’)</b>로 외국차 진입이 막혀 있고
+        ② 브랜드 충성도가 매우 높으며 ③ 미국 소비자의 큰 차 선호가 구조적입니다. 수십 년간 지속된 견고한 성벽입니다.
+      </div>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>해자의 ‘폭’은 좁다 — ROIC가 증거</div>
+      <p><b>ROIC(투하자본이익률)</b>는 ‘투입한 자본 1달러로 얼마를 버는가’입니다. 이것이 <b>자본비용(WACC)</b>보다 높아야 가치가 창출됩니다.</p>
+      <div class="bars">
+        <div class="bar-row"><span class="bl">GM ROIC(2024)</span><div class="bar-track"><div class="bar-fill" style="width:54%;background:var(--copper)"></div></div><span class="bv">~5.4%</span></div>
+        <div class="bar-row"><span class="bl">GM ROIC(평년)</span><div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--amber)"></div></div><span class="bv">5–8%</span></div>
+        <div class="bar-row"><span class="bl">자본비용(WACC)</span><div class="bar-track"><div class="bar-fill" style="width:91%;background:var(--ink)"></div></div><span class="bv">~9.1%</span></div>
+      </div>
+      <div class="warn" style="margin-bottom:0">
+        <span class="tag">핵심 긴장</span>
+        ‘전체 투하자본’ 기준 GM의 ROIC(약 5–8%)는 자본비용(~9.1%)을 <b>밑돕니다</b> — 즉 평균적으로는 가치를 잘 못 만든다는 뜻.
+        반면 GM이 자체 발표하는 ‘조정 ROIC’는 훨씬 높습니다(계산 기준이 다름). 진실은 그 사이에 있고,
+        시장은 보수적(낮은 쪽)으로 봅니다. <span class="conf hi">확신도 높음 ~85%</span>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 07 SWOT ============ -->
+<section id="s7"><div class="wrap">
+  <div class="sec-no">07 / SWOT</div>
+  <h2 class="sec-h">SWOT 분석</h2>
+  <hr class="divider">
+  <p class="sec-lead">강점(S)·약점(W)·기회(O)·위협(T)을 한 화면에 정리했습니다. GM의 그림은 <b>‘견고한 현금엔진 + 구조적 역풍’</b>이 공존합니다.</p>
+  <div class="swot">
+    <div class="sq S">
+      <h4>S · 강점 (Strengths)</h4>
+      <ul>
+        <li>미국 풀사이즈 픽업·대형SUV 과점 — 고마진·고충성도, ‘치킨세’로 보호</li>
+        <li>강력한 브랜드 포트폴리오(쉐보레·GMC·캐딜락)</li>
+        <li>GM Financial — 꾸준한 고품질 금융이익(~$2.8B EBIT)</li>
+        <li>대규모 자사주 매입·배당(2년간 주식 25%↓)</li>
+        <li>수직계열 배터리 역량(얼티엄·LG 합작)</li>
+      </ul>
+    </div>
+    <div class="sq W">
+      <h4>W · 약점 (Weaknesses)</h4>
+      <ul>
+        <li>북미 매출 83.5% 집중 — 지역 경기·정책에 취약</li>
+        <li>전체 ROIC가 자본비용을 밑돎(평년 5–8% vs 9%)</li>
+        <li>EV 전환에서 대규모 손실·반복 구조조정 비용</li>
+        <li>해외(GMI)·중국 사업 구조적 축소</li>
+        <li>높은 경기 민감성(불황 시 이익 급감)</li>
+      </ul>
+    </div>
+    <div class="sq O">
+      <h4>O · 기회 (Opportunities)</h4>
+      <ul>
+        <li>ESS·전력저장 시장 진출(데이터센터·전력망 수요 폭증)</li>
+        <li>유휴 EV배터리 설비의 ESS 전환 → 좌초자산 회수</li>
+        <li>‘탈중국’ 미국산 나트륨이온 기술 선점(정책 수혜)</li>
+        <li>OnStar·커넥티드 서비스의 고마진 반복매출 확대</li>
+        <li>V2G(차량-전력망 연계) 생태계 선점</li>
+      </ul>
+    </div>
+    <div class="sq T">
+      <h4>T · 위협 (Threats)</h4>
+      <ul>
+        <li>관세 비용(2026년 $2.5–3.5B 총비용 추정)</li>
+        <li>장기적 중국 EV·자율주행의 파괴적 경쟁</li>
+        <li>경기침체 시 트럭·SUV 수요 급랭</li>
+        <li>UAW 노조 파업·인건비 상승</li>
+        <li>EV 정책 급변(보조금 종료)으로 전략 혼선</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 08 피어 비교 ============ -->
+<section id="s8"><div class="wrap">
+  <div class="sec-no">08 / PEERS</div>
+  <h2 class="sec-h">피어그룹 비교 — ‘디트로이트 3사’ 그리고 그 너머</h2>
+  <hr class="divider">
+  <p class="sec-lead">2026년 들어 ‘디트로이트의 승자’는 포드였습니다. 포드는 ‘Ford Energy(에너지)’ + ‘Ford Pro(상용·소프트웨어)’라는
+  <b>인접 사업 옵션</b>으로 재평가받아 YTD +13%, 반면 GM은 −3%, 스텔란티스는 −31%였습니다. GM의 6월 ESS 발표는 이 격차를 좁히려는 ‘맞불’입니다.</p>
+
+  <div class="tbl-scroll">
+    <table class="tbl" style="min-width:640px">
+      <tr><th>지표</th><th>GM</th><th>Ford (F)</th><th>Stellantis</th><th>Toyota</th><th>Tesla</th></tr>
+      <tr><td class="lbl">주가</td><td class="num">$82</td><td class="num">$14.8</td><td class="num">$6.9</td><td class="num">—</td><td class="num">$406</td></tr>
+      <tr><td class="lbl">시가총액</td><td class="num hl">~$74B</td><td class="num">~$59B</td><td class="num">~$21B</td><td class="num">~$300B</td><td class="num">~$1.3T</td></tr>
+      <tr><td class="lbl">정상이익 P/E*</td><td class="num hl">~6–7x</td><td class="num">~8–9x</td><td class="num">~5–6x</td><td class="num">~9–10x</td><td class="num">100x+</td></tr>
+      <tr><td class="lbl">2026 YTD</td><td class="num">−3%</td><td class="num">+13%</td><td class="num">−31%</td><td class="num">—</td><td class="num">—</td></tr>
+      <tr><td class="lbl">강점/서사</td><td style="text-align:left;font-size:12.5px">미국 트럭·SUV 엔진</td><td style="text-align:left;font-size:12.5px">Energy+Pro 옵션</td><td style="text-align:left;font-size:12.5px">EV 리셋·대규모 상각</td><td style="text-align:left;font-size:12.5px">최대·다각화·HEV강세</td><td style="text-align:left;font-size:12.5px">EV+에너지 고성장</td></tr>
+    </table>
+  </div>
+  <div class="scroll-hint">→ 표를 좌우로 넘겨보세요</div>
+  <div class="fignote">* ‘정상이익 P/E’ = 일회성 비용을 제외한 조정 EPS 기준. GM의 GAAP P/E는 2025년 대규모 EV 상각 탓에 ~30배대로 왜곡돼 보이지만, 정상이익 기준으론 6–7배로 매우 낮음.</div>
+
+  <div class="grid2 mt">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>밸류에이션 위치 — 자동차주 중에서도 ‘바닥권’</div>
+      <p>GM은 정상이익 대비 6–7배에 거래됩니다. 같은 디트로이트의 포드(8–9배), 다각화된 토요타(9–10배)보다 낮습니다.
+      성장 서사를 가진 테슬라(100배+)와는 차원이 다른 ‘가치주’ 영역입니다.</p>
+      <div class="bars">
+        <div class="bar-row"><span class="bl">Stellantis</span><div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--steel)"></div></div><span class="bv">5–6x</span></div>
+        <div class="bar-row"><span class="bl">GM</span><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--cyan)"></div></div><span class="bv">6–7x</span></div>
+        <div class="bar-row"><span class="bl">Ford</span><div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--steel)"></div></div><span class="bv">8–9x</span></div>
+        <div class="bar-row"><span class="bl">Toyota</span><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--ink)"></div></div><span class="bv">9–10x</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>포드 vs GM의 ‘옵션 서사’ 격차</div>
+      <p>핵심 차이는 <b>‘성장 인접사업 스토리’</b>였습니다.</p>
+      <table class="tbl">
+        <tr><th>항목</th><th>Ford</th><th>GM</th></tr>
+        <tr><td class="lbl" style="text-align:left">에너지 사업</td><td style="text-align:left">Ford Energy (선발)</td><td style="text-align:left">GM Energy (후발·6월)</td></tr>
+        <tr><td class="lbl" style="text-align:left">배터리 협력</td><td style="text-align:left">중국 CATL 기술</td><td style="text-align:left">미국산 나트륨이온</td></tr>
+        <tr><td class="lbl" style="text-align:left">상용·SW</td><td style="text-align:left">Ford Pro 강함</td><td style="text-align:left">상대적 약함</td></tr>
+      </table>
+      <p style="margin-top:8px;font-size:13.5px;color:var(--steel)">GM의 ESS·V2G 발표는 ‘우리도 인접 성장 옵션이 있다’는 신호 — 다음 장에서 그 실체와 가치를 따져봅니다.</p>
+    </div>
+  </div>
+  <div class="plain">
+    <span class="tag">바로가기</span>
+    포드를 <b>GM과 똑같은 CAP·역DCF 잣대로 나란히 정밀 비교</b>한 분석(밸류에이션·내재 CAP·ESS 정면 비교)은 <a href="#s14"><b>14장 ‘GM vs 포드’</b></a>에 통합돼 있습니다.
+  </div>
+</div></section>
+
+<!-- ============ 09 ESS ============ -->
+<section id="s9"><div class="wrap">
+  <div class="sec-no">09 / ENERGY STORAGE ★ 핵심 요청</div>
+  <h2 class="sec-h">ESS 진출 분석 — GM에 어떤 영향인가</h2>
+  <hr class="divider">
+  <p class="sec-lead">2026년 6월 9–10일, GM은 ‘GM Energy’를 통해 <b>전력망·데이터센터용 에너지 저장장치(ESS)</b> 시장 진출을 발표했습니다.
+  포드의 선행 진출(Ford Energy)을 뒤따르는 ‘맞불’이자, <b>전기차 침체로 남아도는 배터리 역량을 돈 되는 곳으로 돌리는</b> 전술적 방향 전환입니다.</p>
+
+  <div class="plain">
+    <span class="tag">ESS / BESS 가 뭔가요?</span>
+    <b>ESS(에너지 저장장치) = 배터리로 전기를 모아뒀다가 필요할 때 내보내는 ‘대형 보조배터리’</b>입니다.
+    태양광·풍력은 들쭉날쭉해서 저장이 필요하고, 특히 <b>AI 데이터센터</b>가 전기를 폭식하면서 수요가 급증 중입니다.
+    BESS는 ‘배터리 기반 ESS’를 뜻합니다.
+  </div>
+
+  <div class="grid2 mt">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>GM의 3단계 진입 전략</div>
+      <div class="flow" style="flex-direction:column;gap:10px">
+        <div class="fstep" style="min-width:auto"><div class="fn">단기 (이달~)</div><div class="ft">LFP 배터리 — 즉시 공급</div><div class="fd">LG에너지솔루션 합작사 ‘얼티엄셀즈’에서 상업용 ESS용 LFP 셀 생산 시작</div></div>
+        <div class="fstep" style="min-width:auto"><div class="fn">단기 (재활용)</div><div class="ft">폐EV배터리 재사용</div><div class="fd">Redwood Materials와 협력 — 약 1만 개 EV배터리를 네바다 Crusoe AI 데이터센터 등 인프라에 재사용</div></div>
+        <div class="fstep" style="min-width:auto;border-color:var(--cyan)"><div class="fn" style="color:var(--cyan-deep)">중장기 (2028~)</div><div class="ft">나트륨이온 — 차별화 베팅</div><div class="fd">스타트업 Peak Energy와 차세대 나트륨이온 셀 개발·전략투자. 미시간 워런 혁신센터서 시제품. 중국 밖 완성차 중 최초의 나트륨이온 셀 시도</div></div>
+      </div>
+      <p style="margin-top:10px;font-size:13.5px;color:var(--steel)">동시에 <b>V2G(차량-전력망 연계)</b>·공공충전 플랫폼(Energy Pass)도 공개 — 차·배터리·전력망을 하나로 잇는 ‘에너지 생태계’ 구상.
+      커트 켈티 부사장: “시장에 들어가는 쉬운 길이 바로 ESS다.”</p>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>포드와의 결정적 차이 — ‘탈중국’</div>
+      <p>두 회사 모두 에너지로 가지만 <b>공급망 철학이 다릅니다.</b></p>
+      <table class="tbl">
+        <tr><th></th><th>Ford Energy</th><th>GM Energy</th></tr>
+        <tr><td class="lbl" style="text-align:left">핵심 기술</td><td style="text-align:left">중국 CATL 활용</td><td class="hl" style="text-align:left">미국산 나트륨이온</td></tr>
+        <tr><td class="lbl" style="text-align:left">진입 시점</td><td style="text-align:left">선발</td><td style="text-align:left">후발(더 야심적)</td></tr>
+        <tr><td class="lbl" style="text-align:left">정책 노출</td><td style="text-align:left">중국 의존 리스크</td><td class="hl" style="text-align:left">관세·바이아메리칸 수혜</td></tr>
+      </table>
+      <div class="plain" style="margin-bottom:0">
+        <span class="tag">왜 중요한가</span>
+        켈티는 “<b>미국에서, 미국인이, 미국식 경영으로</b> 만들겠다”고 했습니다. 미국의 탈중국·관세 기조에서
+        <b>국산 배터리 공급망은 정책 수혜이자 잠재적 해자</b>가 될 수 있습니다. 단, 나트륨이온은 중국(CATL·BYD)이 앞서 있어 ‘기술 추격’이 전제입니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- ESS market growth chart -->
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>시장은 크고 빠르게 자란다 — 하지만 경쟁도 치열</div>
+    <div class="grid2" style="align-items:center">
+      <div>
+        <svg viewBox="0 0 560 280" role="img" aria-label="글로벌 BESS 시장 2025년 76.7B에서 2030년 172.2B로 성장">
+          <line x1="70" y1="235" x2="540" y2="235" stroke="#C7CED3" stroke-width="2"/>
+          <!-- 2025 bar -->
+          <rect x="130" y="155" width="110" height="80" rx="5" fill="#51606F"/>
+          <text x="185" y="145" text-anchor="middle" font-family="Space Mono" font-size="19" font-weight="700" fill="#0E1A2B">$76.7B</text>
+          <text x="185" y="256" text-anchor="middle" font-family="Space Mono" font-size="14" fill="#51606F">2025</text>
+          <!-- 2030 bar -->
+          <rect x="370" y="55" width="110" height="180" rx="5" fill="#0AA6BE"/>
+          <text x="425" y="45" text-anchor="middle" font-family="Space Mono" font-size="19" font-weight="700" fill="#077485">$172.2B</text>
+          <text x="425" y="256" text-anchor="middle" font-family="Space Mono" font-size="14" fill="#51606F">2030E</text>
+          <!-- CAGR arrow -->
+          <path d="M250 150 Q320 70 360 60" stroke="#D8962F" stroke-width="2.5" fill="none" stroke-dasharray="5 4"/>
+          <text x="305" y="100" text-anchor="middle" font-family="Space Mono" font-size="13" font-weight="700" fill="#9A6B16">~17.5%/yr</text>
+          <text x="70" y="25" font-family="Pretendard" font-size="13" font-weight="700" fill="#0E1A2B">글로벌 BESS 시장 규모</text>
+        </svg>
+        <div class="fignote">설치량 기준 200GWh(2025) → 1,200GWh(2030), 약 6배.</div>
+      </div>
+      <div>
+        <p style="font-size:14px;margin-bottom:8px">세부 시장별 성장 전망:</p>
+        <table class="tbl">
+          <tr><th>세부시장</th><th>2025</th><th>2030E</th><th>CAGR</th></tr>
+          <tr><td class="lbl" style="text-align:left">글로벌 BESS</td><td class="num">$76.7B</td><td class="num">$172B</td><td class="num">17.5%</td></tr>
+          <tr><td class="lbl" style="text-align:left">그리드급(협의)</td><td class="num">$10.7B</td><td class="num">$44B</td><td class="num">27%</td></tr>
+          <tr><td class="lbl" style="text-align:left">북미 BESS</td><td class="num">$10.0B</td><td class="num">$19.9B</td><td class="num">14.6%</td></tr>
+          <tr><td class="lbl" style="text-align:left">AI데이터센터</td><td class="num">$1.2B</td><td class="num">$4–6B</td><td class="num">28–38%</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="warn">
+      <span class="tag">경쟁 현실</span>
+      <b>테슬라는 2015년부터 ESS(메가팩)를 해온 강자</b>이고, 나트륨이온은 <b>중국 CATL·BYD가 선두</b>입니다.
+      GM은 후발 주자로, 파트너 Peak Energy가 이미 일부 계약(예: Jupiter Power 720MWh 등)을 확보했지만 ‘추격’ 위치입니다.
+    </div>
+  </div>
+
+  <!-- value impact -->
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>그래서 GM 가치에 ‘얼마짜리’ 영향인가</div>
+    <p>핵심 판단: <b>ESS는 그 자체로 GM의 운명을 바꾸진 못합니다.</b> $185B 자동차 매출 옆에서 ESS 매출은 2030년에도
+    잘해야 수십억 달러 규모이기 때문입니다. 다만 ‘옵션 + 전략 가치’로서는 의미가 있습니다.</p>
+    <div class="tbl-scroll">
+      <table class="tbl" style="min-width:560px">
+        <tr><th>시나리오 (~2030)</th><th>북미 SAM 점유</th><th>ESS 매출</th><th>영업마진</th><th>오늘 옵션가치*</th></tr>
+        <tr><td class="lbl">비관(Bear)</td><td class="num">3%</td><td class="num">$0.7B</td><td class="num">8%</td><td class="num">~$0.2B</td></tr>
+        <tr><td class="lbl hl">기본(Base)</td><td class="num hl">8%</td><td class="num hl">$1.8B</td><td class="num hl">12%</td><td class="num hl">~$0.9B</td></tr>
+        <tr><td class="lbl">낙관(Bull)</td><td class="num">15%</td><td class="num">$3.3B</td><td class="num">15%</td><td class="num">~$2.1B</td></tr>
+      </table>
+    </div>
+    <div class="fignote">* 2030년 사업가치를 현재가치로 할인하고 성공확률을 가중한 ‘실물옵션’ 추정. 주당 약 $0.2~2.3, 시총의 0.3~3% 수준.</div>
+
+    <div class="grid2 mt">
+      <div class="plain" style="margin:0">
+        <span class="tag">수치로 본 직접 가치</span>
+        위험조정 DCF 기준 ESS 옵션의 ‘오늘 가치’는 <b>대략 $1~3B(주당 $1~3)</b>로, 의미는 있으나 <b>변혁적이지 않습니다.</b>
+        시총 $74B의 약 1~4% 수준.
+      </div>
+      <div class="warn" style="margin:0">
+        <span class="tag">더 큰 ‘간접’ 가치 3가지</span>
+        <b>① 유휴 배터리 설비 활용</b> — EV 침체로 남는 얼티엄/LG 설비를 돌려 과거 투자 손실을 일부 회수.
+        <b>② 덜 경기 타는 매출</b> — 전력망·데이터센터는 자동차보다 수요가 안정적.
+        <b>③ 내러티브 재평가</b> — 포드가 ‘에너지 옵션’으로 재평가받았듯, 시장 심리상 주가 재평가 촉매가 될 수 있음.
+      </div>
+    </div>
+  </div>
+
+  <div class="risk">
+    <span class="tag">ESS 진출 — 종합 판정</span>
+    <b>방향성은 긍정적, 규모는 제한적.</b> CAP 관점에서 ESS는 ‘남는 자산 활용 + 잠재적 신규 해자(미국산 나트륨이온)’로
+    GM의 경쟁우위 기간을 <b>소폭 늘릴 수 있는 실물옵션</b>입니다. 그러나 2028년 이후 본격화, 테슬라·중국과의 경쟁, 작은 초기 규모를 감안하면
+    <b>핵심 투자논리는 여전히 ‘픽업·SUV 본업’</b>에 있습니다. ESS의 가장 현실적 효과는 ‘펀더멘털 한 방’보다 <b>심리·내러티브 재평가</b>입니다.
+    <span class="conf mid" style="margin-top:8px">ESS가 ‘유의미한 가치동인’이 될 확신도 ~35%</span>
+  </div>
+</div></section>
+
+<!-- ============ 10 밸류에이션 + CAP ============ -->
+<section id="s10"><div class="wrap">
+  <div class="sec-no">10 / VALUATION ENGINE</div>
+  <h2 class="sec-h">밸류에이션 엔진 — DCF와 시장 내재 CAP</h2>
+  <hr class="divider">
+  <p class="sec-lead">이 장의 목표는 ‘적정가 맞히기’가 아니라 <b>현재 주가가 어떤 미래를 가정하고 있는지 역산</b>하는 것입니다.
+  결론은 강력합니다: 시장은 GM에 <b>경쟁우위 기간(CAP)을 사실상 0년 이하</b>로, 즉 ‘초과수익 없음 + 이익 감소’를 가격 매기고 있습니다.</p>
+
+  <!-- WACC -->
+  <div class="card">
+    <div class="h4"><span class="tick"></span>1단계 · 자본비용(WACC) 계산</div>
+    <p><b>WACC = 투자자들이 GM에 요구하는 최소 연 수익률</b>. 미래 현금흐름을 ‘오늘 가치’로 깎을 때 쓰는 할인율입니다.</p>
+    <div class="grid3" style="gap:12px">
+      <div class="card" style="padding:14px"><div style="font-family:var(--mono);font-size:11px;color:var(--cyan-deep)">자기자본비용</div>
+        <div style="font-family:var(--mono);font-size:13px;margin-top:4px;color:var(--ink)">무위험 4.48%<br>+ 베타 1.20 × ERP 4.75%</div>
+        <div style="font-family:var(--disp);font-size:26px;color:var(--ink);margin-top:6px">10.2%</div></div>
+      <div class="card" style="padding:14px"><div style="font-family:var(--mono);font-size:11px;color:var(--cyan-deep)">세후 부채비용</div>
+        <div style="font-family:var(--mono);font-size:13px;margin-top:4px;color:var(--ink)">5.5% × (1 − 17% 세율)</div>
+        <div style="font-family:var(--disp);font-size:26px;color:var(--ink);margin-top:6px">4.6%</div></div>
+      <div class="card" style="padding:14px;background:var(--ink)"><div style="font-family:var(--mono);font-size:11px;color:var(--cyan)">→ WACC (자동차 기준)</div>
+        <div style="font-family:var(--mono);font-size:13px;margin-top:4px;color:#cfe">자본 81% · 부채 19%</div>
+        <div style="font-family:var(--disp);font-size:26px;color:#fff;margin-top:6px">9.1%</div></div>
+    </div>
+    <div class="warn">
+      <span class="tag">출처 충돌 알림</span>
+      본 프레임워크 표준 ERP는 <b>4.75%</b>이나, 다모다란 교수의 최신(2026.1) <b>내재 ERP는 4.23%</b>입니다.
+      4.23%를 쓰면 WACC가 약 8.5%로 낮아져 <b>내재가치는 더 올라가고, 시장의 비관은 더 두드러집니다</b>(즉 결론 방향은 강화).
+      또한 GM의 경기민감성을 반영해 할인율을 높게(12~14%) 잡는 견해도 있어 11장에서 함께 봅니다.
+    </div>
+  </div>
+
+  <!-- DCF table -->
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>2단계 · 가치 전개표 (DCF, 표준 가정)</div>
+    <p style="font-size:14px;margin-bottom:6px">컨센서스 수준 가정(매출 ~2.5% 성장, EBITA 마진 7.5%, 세율 17%, 페이드 0.21, 연중할인)을 넣으면:</p>
+    <div class="tbl-scroll">
+      <table class="tbl" style="min-width:720px">
+        <tr><th>연도</th><th>매출</th><th>성장%</th><th>EBITA</th><th>NOPAT</th><th>투자</th><th>FCF</th><th>FCF현가</th></tr>
+        <tr><td class="lbl">2026</td><td class="num">186</td><td class="num">0.5</td><td class="num">14.0</td><td class="num">11.6</td><td class="num">3.5</td><td class="num">8.1</td><td class="num">7.8</td></tr>
+        <tr><td class="lbl">2027</td><td class="num">190</td><td class="num">2.0</td><td class="num">14.3</td><td class="num">11.8</td><td class="num">3.6</td><td class="num">8.3</td><td class="num">7.3</td></tr>
+        <tr><td class="lbl">2028</td><td class="num">195</td><td class="num">2.5</td><td class="num">14.6</td><td class="num">12.1</td><td class="num">3.6</td><td class="num">8.5</td><td class="num">6.8</td></tr>
+        <tr><td class="lbl">2029</td><td class="num">200</td><td class="num">2.5</td><td class="num">15.0</td><td class="num">12.4</td><td class="num">3.7</td><td class="num">8.7</td><td class="num">6.4</td></tr>
+        <tr><td class="lbl">2030</td><td class="num">205</td><td class="num">2.5</td><td class="num">15.4</td><td class="num">12.7</td><td class="num">3.8</td><td class="num">8.9</td><td class="num">6.0</td></tr>
+        <tr><td class="lbl">2031–35</td><td class="num">210→232</td><td class="num">2.5</td><td class="num">~16–17</td><td class="num">~13–14</td><td class="num">~4</td><td class="num">~9–10</td><td class="num">5.7→4.4</td></tr>
+        <tr><td class="lbl hl">합계 현가</td><td class="num" colspan="5" style="text-align:left">명시적 FCF 현가 합 ≈ $59B</td><td class="num hl">$59B</td><td class="num hl"></td></tr>
+        <tr><td class="lbl hl">최종가치</td><td class="num" colspan="5" style="text-align:left">페이드 모델 기준 TV ≈ $161B → 현가 ≈ $70B</td><td class="num hl">$70B</td><td class="num hl"></td></tr>
+      </table>
+    </div>
+    <div class="scroll-hint">→ 표를 좌우로 넘겨보세요</div>
+    <div class="grid3 mt" style="gap:12px">
+      <div class="card" style="padding:14px;text-align:center"><div style="font-family:var(--mono);font-size:11px;color:var(--steel)">기업가치(EV)</div><div style="font-family:var(--disp);font-size:30px;color:var(--ink)">$130B</div></div>
+      <div class="card" style="padding:14px;text-align:center"><div style="font-family:var(--mono);font-size:11px;color:var(--steel)">+ 자동차 순현금</div><div style="font-family:var(--disp);font-size:30px;color:var(--ink)">+$4B</div></div>
+      <div class="card" style="padding:14px;text-align:center;background:var(--cyan-tint);border-color:#BDE2E8"><div style="font-family:var(--mono);font-size:11px;color:var(--cyan-deep)">→ 주당 내재가치</div><div style="font-family:var(--disp);font-size:30px;color:var(--cyan-deep)">~$149</div></div>
+    </div>
+    <div class="plain" style="margin-bottom:0">
+      <span class="tag">무엇을 뜻하나</span>
+      표준 가정으로 계산한 내재가치(~$140–150)는 현재가($82)의 <b>약 1.8배</b>입니다.
+      즉 시장은 이런 ‘이익 유지’ 시나리오를 믿지 않고 있습니다 — 그래서 ‘시장이 실제로 가정한 것’을 역산해야 합니다(3단계).
+    </div>
+  </div>
+
+  <!-- value bridge -->
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>3단계 · 시장 내재 가치 — ‘무성장 가치’조차 주가를 웃돈다</div>
+    <div class="grid2" style="align-items:center">
+      <div>
+        <svg viewBox="0 0 560 300" role="img" aria-label="무성장가치 121B 대 시장 기업가치 70B 비교">
+          <line x1="60" y1="262" x2="530" y2="262" stroke="#C7CED3" stroke-width="2"/>
+          <rect x="110" y="62" width="120" height="200" rx="5" fill="#0E1A2B"/>
+          <text x="170" y="52" text-anchor="middle" font-family="Space Mono" font-size="20" font-weight="700" fill="#0E1A2B">$121B</text>
+          <text x="170" y="282" text-anchor="middle" font-family="Pretendard" font-size="12.5" fill="#51606F">무성장 가치</text>
+          <text x="170" y="298" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#7A8794">NOPAT/WACC</text>
+          <rect x="330" y="146" width="120" height="116" rx="5" fill="#0AA6BE"/>
+          <text x="390" y="136" text-anchor="middle" font-family="Space Mono" font-size="20" font-weight="700" fill="#077485">$70B</text>
+          <text x="390" y="282" text-anchor="middle" font-family="Pretendard" font-size="12.5" fill="#51606F">시장 기업가치</text>
+          <text x="390" y="298" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#7A8794">시총−순현금</text>
+          <!-- gap bracket -->
+          <line x1="475" y1="62" x2="475" y2="146" stroke="#C2553B" stroke-width="2"/>
+          <line x1="468" y1="62" x2="482" y2="62" stroke="#C2553B" stroke-width="2"/>
+          <line x1="468" y1="146" x2="482" y2="146" stroke="#C2553B" stroke-width="2"/>
+          <text x="490" y="100" font-family="Space Mono" font-size="15" font-weight="700" fill="#C2553B">−$51B</text>
+          <text x="490" y="118" font-family="Pretendard" font-size="11" fill="#C2553B">시장 비관</text>
+        </svg>
+      </div>
+      <div>
+        <p style="font-size:14px">‘무성장 가치(NOPAT ÷ WACC)’는 <b>회사가 더 이상 성장 안 하고 현재 이익만 영원히 유지할 때의 가치</b>입니다.
+        성장이 0이어도 GM은 <b>주당 ~$139</b>의 가치가 나옵니다.</p>
+        <p style="font-size:14px">그런데 시장 기업가치는 <b>$70B</b>뿐. 둘의 차이 <b>−$51B</b>가 ‘시장의 비관’의 크기입니다.</p>
+        <div class="risk" style="margin:10px 0 0">
+          <span class="tag">역산 결과</span>
+          시장가가 함의하는 ‘지속가능 NOPAT’은 <b>약 $6.4B</b>($70B×9.1%)에 불과 — 2026년 예상 정상 NOPAT(~$12B)의 <b>절반</b>.
+          달리 말하면, 시장은 GM 이익이 <b>매년 약 −6.7%씩 영구히 감소</b>한다고 가정한 셈입니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAP spectrum -->
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>4단계 · 시장 내재 CAP — 스펙트럼 위 GM의 위치</div>
+    <svg viewBox="0 0 600 150" role="img" aria-label="경쟁우위기간 CAP 스펙트럼에서 GM은 0년 이하 극단적 비관 구간">
+      <!-- pointer -->
+      <polygon points="46,30 34,12 58,12" fill="#0E1A2B"/>
+      <text x="46" y="8" text-anchor="middle" font-family="Space Mono" font-size="12" font-weight="700" fill="#0E1A2B">GM ≤0년</text>
+      <!-- zones -->
+      <rect x="40"  y="40" width="104" height="32" fill="#C2553B"/>
+      <rect x="144" y="40" width="104" height="32" fill="#D8962F"/>
+      <rect x="248" y="40" width="104" height="32" fill="#3F8F6B"/>
+      <rect x="352" y="40" width="104" height="32" fill="#D8962F"/>
+      <rect x="456" y="40" width="104" height="32" fill="#C2553B"/>
+      <!-- ticks -->
+      <g font-family="Space Mono" font-size="11" fill="#51606F" text-anchor="middle">
+        <text x="40" y="90">0</text><text x="144" y="90">5</text><text x="248" y="90">10</text>
+        <text x="352" y="90">15</text><text x="456" y="90">20</text><text x="560" y="90">25년</text>
+      </g>
+      <!-- zone labels -->
+      <g font-family="Pretendard" font-size="10.5" fill="#fff" text-anchor="middle" font-weight="700">
+        <text x="92" y="60">매우 비관</text>
+        <text x="196" y="60">약간 비관</text>
+        <text x="300" y="60">합리적</text>
+        <text x="404" y="60">약간 낙관</text>
+        <text x="508" y="60">과도 낙관</text>
+      </g>
+      <g font-family="Pretendard" font-size="10" fill="#51606F" text-anchor="middle">
+        <text x="92" y="112">해자 확실 시</text><text x="92" y="124">매수 후보</text>
+        <text x="300" y="112">시장 합의</text>
+        <text x="508" y="112">회피 고려</text>
+      </g>
+    </svg>
+    <div class="plain" style="margin-bottom:0">
+      <span class="tag">해석 (프레임워크 기준표)</span>
+      <b>내재 CAP &lt; 5년 = ‘시장이 매우 비관적, 해자가 확실하다면 매수 후보’</b> 구간입니다.
+      GM은 이 구간의 <b>가장 왼쪽 끝(0년 이하)</b>에 위치 — 시장이 GM에 ‘지속가능한 경쟁우위가 없다’고 보고 있다는 뜻입니다.
+      <span class="conf hi" style="margin-top:8px">‘시장이 0/음(−) CAP를 반영’ 확신도 ~90%</span>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 11 민감도 & 시나리오 ============ -->
+<section id="s11"><div class="wrap">
+  <div class="sec-no">11 / SENSITIVITY</div>
+  <h2 class="sec-h">민감도 &amp; 시나리오 분석</h2>
+  <hr class="divider">
+  <p class="sec-lead">GM 가치를 좌우하는 것은 ‘CAP 길이’가 아니라 <b>① 지속가능한 이익(NOPAT) 수준과 ② 할인율(위험)</b>입니다.
+  아래 표에서 현재 주가($82)가 어떤 조합에서 나오는지 직접 확인할 수 있습니다.</p>
+
+  <div class="card">
+    <div class="h4"><span class="tick"></span>주당 가치 = f(지속가능 NOPAT, WACC)</div>
+    <div class="tbl-scroll">
+      <table class="tbl" style="min-width:620px">
+        <tr><th>NOPAT \ WACC</th><th>8.1%</th><th>9.1% (기본)</th><th>10.1%</th><th>12.0%</th><th>14.0%</th></tr>
+        <tr><td class="lbl">$7B (강한 비관)</td>
+          <td class="num" style="background:var(--amber-tint);color:#5c4112">103</td>
+          <td class="num" style="background:var(--amber-tint);color:#5c4112">91</td>
+          <td class="num" style="background:var(--copper-tint);color:#5a2718;font-weight:700">82</td>
+          <td class="num" style="background:var(--copper-tint);color:#5a2718">69</td>
+          <td class="num" style="background:var(--copper-tint);color:#5a2718">59</td></tr>
+        <tr><td class="lbl">$9B</td>
+          <td class="num" style="background:var(--green-tint);color:#1d4f39">131</td>
+          <td class="num" style="background:var(--cyan-tint);color:#0b3b43">116</td>
+          <td class="num" style="background:var(--amber-tint);color:#5c4112">105</td>
+          <td class="num" style="background:var(--amber-tint);color:#5c4112">88</td>
+          <td class="num" style="background:var(--copper-tint);color:#5a2718;font-weight:700">75</td></tr>
+        <tr><td class="lbl">$11B (기본)</td>
+          <td class="num" style="background:var(--green-tint);color:#1d4f39">159</td>
+          <td class="num" style="background:var(--green-tint);color:#1d4f39;font-weight:700">141</td>
+          <td class="num" style="background:var(--green-tint);color:#1d4f39">127</td>
+          <td class="num" style="background:var(--cyan-tint);color:#0b3b43">106</td>
+          <td class="num" style="background:var(--amber-tint);color:#5c4112">91</td></tr>
+        <tr><td class="lbl">$13B (낙관)</td>
+          <td class="num" style="background:var(--green-tint);color:#1d4f39">187</td>
+          <td class="num" style="background:var(--green-tint);color:#1d4f39">166</td>
+          <td class="num" style="background:var(--green-tint);color:#1d4f39">149</td>
+          <td class="num" style="background:var(--green-tint);color:#1d4f39">125</td>
+          <td class="num" style="background:var(--cyan-tint);color:#0b3b43">107</td></tr>
+      </table>
+    </div>
+    <div class="scroll-hint">→ 표를 좌우로 넘겨보세요</div>
+    <div class="fignote">초록=상승여력 큼, 청록=상승, 주황=중립권, 적갈=현재가 부근/이하. 굵은 숫자 = 현재가($82)와 일치하는 조합.</div>
+    <div class="warn">
+      <span class="tag">현재가의 정체</span>
+      $82는 <b>‘지속가능 NOPAT $7B + 높은 할인율(10%대)’</b> 또는 <b>‘정상 NOPAT $11B + 12~14% 위험할인’</b> 조합에서 나옵니다.
+      즉 시장은 ‘이익 절반은 못 지킨다’ 또는 ‘위험이 매우 크다’ 중 하나(또는 둘 다)를 가정합니다.
+    </div>
+  </div>
+
+  <div class="grid2 mt">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>페이드(해자 지속성)엔 ‘둔감’ — 중요한 발견</div>
+      <div class="bars">
+        <div class="bar-row"><span class="bl">강한 해자 0.10</span><div class="bar-track"><div class="bar-fill" style="width:96%;background:var(--green)"></div></div><span class="bv">$143</span></div>
+        <div class="bar-row"><span class="bl">자동차 기본 0.21</span><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--cyan)"></div></div><span class="bv">$141</span></div>
+        <div class="bar-row"><span class="bl">약한/침식 0.40</span><div class="bar-track"><div class="bar-fill" style="width:94%;background:var(--amber)"></div></div><span class="bv">$140</span></div>
+      </div>
+      <p class="mt" style="font-size:13.5px;color:var(--steel)">페이드 비율을 0.10→0.40으로 크게 바꿔도 값이 $140~143로 거의 안 변합니다.
+      <b>GM은 ‘성장 프리미엄(PVGO)’이 거의 없어, CAP·해자 길이보다 ‘현재 이익이 진짜인가’가 훨씬 중요</b>하다는 의미입니다.</p>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>강세·기본·약세 시나리오</div>
+      <div class="scen">
+        <div class="sc bear"><div class="st">약세</div><div class="sp">$73</div><div class="sd">NOPAT $7.5B<br>WACC 12%·페이드0.40</div></div>
+        <div class="sc mkt"><div class="st">현재가</div><div class="sp">$82</div><div class="sd">시장 위치<br>약세에 근접</div></div>
+        <div class="sc base"><div class="st">기본</div><div class="sp">$143</div><div class="sd">NOPAT $11B·9.1%<br>페이드0.21 +ESS</div></div>
+        <div class="sc bull"><div class="st">강세</div><div class="sp">$185</div><div class="sd">NOPAT $13B·8.5%<br>페이드0.12 +ESS</div></div>
+      </div>
+      <p class="mt" style="font-size:13.5px;color:var(--steel)">현재가는 <b>약세 시나리오에 바짝 붙어</b> 있습니다.
+      ‘이익이 정상적으로 유지’되기만 해도(기본) 상당한 상승여력이 열리는 구조입니다.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 12 리스크 & 체크포인트 ============ -->
+<section id="s12"><div class="wrap">
+  <div class="sec-no">12 / RISKS</div>
+  <h2 class="sec-h">주요 리스크 &amp; 분기 체크포인트</h2>
+  <hr class="divider">
+  <p class="sec-lead">시장의 비관이 ‘옳을 수도’ 있습니다. 약세론을 약화시키지 않고 ‘가장 강하게’ 세워본 리스크와, 분기마다 확인할 점검표입니다.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>약세론을 강하게 세우면 (Steel-man)</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;font-size:14px">
+        <li><b style="color:var(--copper)">① 반복되는 ‘일회성’ 비용</b> — 조정이익에서 빼는 EV 구조조정비가 2022~2026년 내내 반복(2025년 $7.9B, 2026 Q1 $1.1B). 구조적이라면 ‘진짜 이익’은 $8~9B로 더 낮음.</li>
+        <li><b style="color:var(--copper)">② 경기 민감성</b> — 불황이 오면 트럭·SUV 수요와 이익이 급감. 현재 이익은 ‘사이클 고점’일 수 있음.</li>
+        <li><b style="color:var(--copper)">③ 자본집약·낮은 ROIC</b> — 전체 ROIC가 자본비용 미만. 성장 투자가 가치를 못 만듦.</li>
+        <li><b style="color:var(--amber)">④ 중국·EV 파괴</b> — 장기적으로 BYD 등과 자율주행이 트럭 프랜차이즈를 침식할 위험.</li>
+        <li><b style="color:var(--amber)">⑤ 관세·노조</b> — $2.5~3.5B 관세, UAW 파업 리스크.</li>
+      </ul>
+      <div class="risk" style="margin-bottom:0">
+        <span class="tag">핵심</span>
+        이 약세론이 맞다면 GM은 ‘싼 게 아니라 합당하게 싼’ <b>가치함정</b>일 수 있습니다. 시장이 비싸게 본 게 아니라 <b>정확히 본</b> 것일 가능성.
+      </div>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>분기마다 확인할 체크포인트</div>
+      <ul class="check">
+        <li><span class="bx"></span>매출 성장률이 가정(≈인플레)과 일치하는가</li>
+        <li><span class="bx"></span>EBITA(조정) 마진 추세 — 인센티브 증가로 압박받는가</li>
+        <li><span class="bx"></span><b>‘일회성’ EV·구조조정 비용이 줄어드는가</b> (가장 중요)</li>
+        <li><span class="bx"></span>GAAP 순이익이 조정이익에 수렴하는가</li>
+        <li><span class="bx"></span>미국 픽업·대형SUV 점유율·가격이 유지되는가</li>
+        <li><span class="bx"></span>자사주 매입 속도(주식 수 감소)</li>
+        <li><span class="bx"></span>ESS·V2G 실제 계약·매출 발생 여부</li>
+        <li><span class="bx"></span>관세·금리 환경 변화 → WACC 재계산</li>
+      </ul>
+      <div class="warn" style="margin-bottom:0">
+        <span class="tag">매도 재검토 신호 (프레임워크)</span>
+        ROIC 2년 연속 하락 · 트럭 점유율 추세적 하락 · 성숙→정리 단계 전환 · 핵심 투자논리(트럭 마진) 붕괴.
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 13 종합 판단 ============ -->
+<section id="s13"><div class="wrap">
+  <div class="sec-no">13 / SYNTHESIS</div>
+  <h2 class="sec-h">종합 판단 — 무엇을 믿느냐의 문제</h2>
+  <hr class="divider">
+  <p class="sec-lead">GM은 ‘좋다/나쁘다’로 나뉘지 않습니다. 시장은 GM을 ‘쇠퇴하는 경기순환주’로 가격 매겼고,
+  이 비관이 과한지 합당한지는 <b>두 개의 검증 가능한 질문</b>으로 좁혀집니다.</p>
+
+  <div class="grid2">
+    <div class="card" style="background:var(--green-tint);border-color:#BFE0CF">
+      <div class="h4" style="color:#1d4f39"><span class="tick" style="background:var(--green)"></span>강세 논리 (시장이 과하게 비관)</div>
+      <p style="color:#1d4f39;font-size:14px">정상이익 6~7배, 순현금, 매년 주식 ~10% 소각. <b>미국 풀사이즈 트럭 과점</b>은 ‘치킨세’·브랜드 충성으로 수십 년 지켜진 진짜 해자.
+      이익만 ‘유지’돼도(CAP≥0) 주당 $130~150 가치. ESS·OnStar는 공짜 옵션. 시장은 EV 상각·관세 ‘노이즈’를 과대 반영 중.</p>
+    </div>
+    <div class="card" style="background:var(--copper-tint);border-color:#E6C2B6">
+      <div class="h4" style="color:#5a2718"><span class="tick" style="background:var(--copper)"></span>약세 논리 (시장이 정확)</div>
+      <p style="color:#5a2718;font-size:14px">조정이익은 ‘반복되는 일회성’ 비용을 가려 과대평가. 사이클 고점·자본집약·전체 ROIC&lt;자본비용.
+      중국·EV·자율주행이 장기 침식. 자동차에 높은 위험할인은 ‘정상’. $82는 비싼 게 아니라 <b>합당한 가격</b>일 수 있음(가치함정).</p>
+    </div>
+  </div>
+
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>판단을 가르는 두 질문 + 베이지안 확신도</div>
+    <div class="tbl-scroll">
+      <table class="tbl" style="min-width:600px">
+        <tr><th style="text-align:left">명제 / 질문</th><th>확신도</th><th style="text-align:left">근거 한 줄</th></tr>
+        <tr><td class="lbl">시장은 GM에 CAP 0/음(−), 즉 이익 감소를 반영</td><td><span class="conf hi">높음 ~90%</span></td><td style="text-align:left;font-size:12.5px">무성장 가치 $139 ≫ 주가 $82</td></tr>
+        <tr><td class="lbl">GM은 미국 트럭·SUV에 진짜 해자가 있다</td><td><span class="conf hi">높음 ~80%</span></td><td style="text-align:left;font-size:12.5px">수십 년 과점·관세보호·충성도</td></tr>
+        <tr><td class="lbl">★ 조정이익(~$11–12B)이 사이클 평균에서 지속가능</td><td><span class="conf mid">중간 ~50–55%</span></td><td style="text-align:left;font-size:12.5px">반복 구조조정·경기민감이 반론</td></tr>
+        <tr><td class="lbl">GM은 현재가에서 저평가</td><td><span class="conf mid">중간 ~55–60%</span></td><td style="text-align:left;font-size:12.5px">위 ★ 질문에 전적으로 의존</td></tr>
+        <tr><td class="lbl">ESS가 ‘유의미한’ 가치동인이 된다</td><td><span class="conf lo">낮음 ~35%</span></td><td style="text-align:left;font-size:12.5px">초기 규모 작고 경쟁 치열</td></tr>
+      </table>
+    </div>
+    <div class="plain mt">
+      <span class="tag">결론을 바꿀 새 증거</span>
+      <b>강세로</b>: EV/구조조정 비용이 실제로 종료(깨끗한 GAAP 분기) · 트럭 마진·점유율 유지 · ESS 실계약.
+      <b>약세로</b>: 경기침체로 트럭수요 급랭 · 구조조정비 지속 · 인센티브發 마진 압박 · 중국 EV의 의미있는 침투.
+    </div>
+    <div class="warn" style="margin-bottom:0">
+      <span class="tag">핵심 정리</span>
+      이 분석의 목적은 ‘정답 가격’ 제시가 아니라 <b>‘현재가가 무엇을 가정하는지(CAP ≤ 0 · 이익 감소)’를 드러내는 것</b>입니다.
+      그 가정이 맞을지는 위 ★ 두 질문(이익 지속성 · 트럭 해자)에 대한 투자자 각자의 판단에 달려 있습니다.
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 14 GM vs FORD ============ -->
+<section id="s14"><div class="wrap">
+  <div class="sec-no">14 / GM ↔ FORD</div>
+  <h2 class="sec-h">GM vs 포드(F) — 같은 프레임, 다른 평가</h2>
+  <hr class="divider">
+  <p class="sec-lead">동일한 CAP·역DCF 잣대를 포드에 그대로 적용하면 흥미로운 역설이 드러납니다:
+  <b>두 회사 모두 시장은 ‘경쟁우위 0년 이하 + 이익 감소’로 가격 매기지만, 더 수익성 높은 GM이 오히려 더 비관적으로</b> 평가됩니다.</p>
+
+  <div class="plain">
+    <span class="tag">핵심 역설</span>
+    GM은 포드보다 <b>마진이 두 배 가까이 높고(EBIT 6.9% vs 3.6%), 흑자(+$2.7B vs −$8.2B)이며, 절대이익도 큽니다(NOPAT $11B vs $7B).</b>
+    그런데 시장은 GM 이익 1달러를 <b>더 싸게(정상 P/E 6–7배 vs 포드 9–10배)</b> 매깁니다. 왜 그럴까요? — 포드의 <b>‘반복 수익 해자(Ford Pro)’와 ‘에너지 성장 서사’</b>에 시장이 웃돈을 주기 때문입니다.
+  </div>
+
+  <!-- comparison table -->
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>두 회사 한눈에 — 동일 프레임 기준</div>
+    <div class="tbl-scroll">
+      <table class="tbl" style="min-width:640px">
+        <tr><th style="text-align:left">지표</th><th style="background:#07788A">GM</th><th style="background:#9A6B16">FORD (F)</th><th style="text-align:left">함의</th></tr>
+        <tr><td class="lbl">주가 / 시가총액</td><td class="num">$82 / $74B</td><td class="num">$14.8 / $59B</td><td style="text-align:left;font-size:12px">GM이 더 큼</td></tr>
+        <tr><td class="lbl">2025 매출</td><td class="num">$185B</td><td class="num">$187B</td><td style="text-align:left;font-size:12px">사실상 동급</td></tr>
+        <tr><td class="lbl">2025 조정EBIT (마진)</td><td class="num hl">$12.7B (6.9%)</td><td class="num">$6.8B (3.6%)</td><td style="text-align:left;font-size:12px">GM 마진 우위</td></tr>
+        <tr><td class="lbl">2025 GAAP 순이익</td><td class="num hl">+$2.7B</td><td class="num">−$8.2B</td><td style="text-align:left;font-size:12px">포드 대규모 EV상각</td></tr>
+        <tr><td class="lbl">2026E 조정EBIT</td><td class="num">$13.5–15.5B</td><td class="num">$8.5–10.5B</td><td style="text-align:left;font-size:12px">둘 다 회복 전망</td></tr>
+        <tr><td class="lbl">조정 ROIC</td><td class="num">~5–8%(전체)</td><td class="num">~12.6%(조정)</td><td style="text-align:left;font-size:12px">기준 달라 단순비교 주의</td></tr>
+        <tr><td class="lbl">베타(원시) / WACC</td><td class="num">1.30 / 9.1%</td><td class="num">1.80 / 10.0%</td><td style="text-align:left;font-size:12px">포드가 더 변동성 큼</td></tr>
+        <tr><td class="lbl">배당수익률</td><td class="num">0.9%</td><td class="num hl">4.0%</td><td style="text-align:left;font-size:12px">포드는 배당주 성격</td></tr>
+        <tr><td class="lbl">자본환원 방식</td><td class="num">대규모 자사주</td><td class="num">고배당</td><td style="text-align:left;font-size:12px">GM 주식수 급감</td></tr>
+        <tr><td class="lbl">정상이익 P/E</td><td class="num hl">6–7x</td><td class="num">9–10x</td><td style="text-align:left;font-size:12px">GM이 더 쌈</td></tr>
+        <tr><td class="lbl">2026 YTD 주가</td><td class="num">−3%</td><td class="num hl">+13%</td><td style="text-align:left;font-size:12px">포드 우세</td></tr>
+        <tr><td class="lbl">무성장가치 / 주</td><td class="num">~$139</td><td class="num">~$19.5</td><td style="text-align:left;font-size:12px">둘 다 주가＞무성장가치</td></tr>
+        <tr><td class="lbl">시장 내재 이익소멸</td><td class="num" style="background:var(--copper-tint);color:#5a2718;font-weight:700">~47%</td><td class="num" style="background:var(--amber-tint);color:#5c4112;font-weight:700">~34%</td><td style="text-align:left;font-size:12px">GM 더 비관</td></tr>
+        <tr><td class="lbl">시장 내재 영구성장</td><td class="num">−6.6%/년</td><td class="num">−3.5%/년</td><td style="text-align:left;font-size:12px">GM 더 가파른 감소 가정</td></tr>
+        <tr><td class="lbl">시장 내재 CAP</td><td class="num" style="background:var(--copper-tint);color:#5a2718;font-weight:700">≤0년 (더 비관)</td><td class="num" style="background:var(--amber-tint);color:#5c4112;font-weight:700">≤0년 (덜 비관)</td><td style="text-align:left;font-size:12px">둘 다 해자 0 반영</td></tr>
+      </table>
+    </div>
+    <div class="scroll-hint">→ 표를 좌우로 넘겨보세요</div>
+  </div>
+
+  <!-- visual: discount to no-growth value -->
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>‘무성장가치 대비 시장가치’ — GM이 더 깊게 할인</div>
+    <div class="grid2" style="align-items:center">
+      <div>
+        <svg viewBox="0 0 600 320" role="img" aria-label="무성장가치 대비 시장가치 비율: GM 58퍼센트, 포드 74퍼센트">
+          <line x1="50" y1="252" x2="560" y2="252" stroke="#C7CED3" stroke-width="2"/>
+          <!-- GM -->
+          <rect x="95" y="62" width="62" height="190" rx="4" fill="#0E1A2B"/>
+          <rect x="170" y="142" width="62" height="110" rx="4" fill="#0AA6BE"/>
+          <text x="201" y="132" text-anchor="middle" font-family="Space Mono" font-size="17" font-weight="700" fill="#077485">58%</text>
+          <text x="165" y="274" text-anchor="middle" font-family="Pretendard" font-size="13" font-weight="700" fill="#0E1A2B">GM</text>
+          <text x="165" y="290" text-anchor="middle" font-family="Pretendard" font-size="10.5" fill="#C2553B">−42% 할인</text>
+          <!-- Ford -->
+          <rect x="355" y="62" width="62" height="190" rx="4" fill="#51606F"/>
+          <rect x="430" y="111" width="62" height="141" rx="4" fill="#D8962F"/>
+          <text x="461" y="101" text-anchor="middle" font-family="Space Mono" font-size="17" font-weight="700" fill="#9A6B16">74%</text>
+          <text x="425" y="274" text-anchor="middle" font-family="Pretendard" font-size="13" font-weight="700" fill="#0E1A2B">Ford</text>
+          <text x="425" y="290" text-anchor="middle" font-family="Pretendard" font-size="10.5" fill="#C2553B">−26% 할인</text>
+          <!-- legend -->
+          <rect x="50" y="26" width="13" height="13" rx="2" fill="#0E1A2B"/><text x="70" y="37" font-family="Pretendard" font-size="11" fill="#51606F">무성장가치(100%)</text>
+          <rect x="210" y="26" width="13" height="13" rx="2" fill="#0AA6BE"/><text x="230" y="37" font-family="Pretendard" font-size="11" fill="#51606F">시장 기업가치</text>
+        </svg>
+        <div class="fignote">막대 = 무성장가치(=현재이익만 영원히 유지 시 가치) 대비 시장가치 비율. 낮을수록 시장이 더 비관적.</div>
+      </div>
+      <div>
+        <p style="font-size:14px">둘 다 시장가치가 ‘무성장가치’를 밑돕니다(=이익 감소를 가정). 하지만 <b>GM은 무성장가치의 58%</b>(42% 할인)로,
+        <b>포드(74%, 26% 할인)보다 훨씬 깊게</b> 할인돼 있습니다.</p>
+        <div class="bars mt">
+          <div class="bar-row"><span class="bl">내재 이익소멸 · GM</span><div class="bar-track"><div class="bar-fill" style="width:94%;background:var(--copper)"></div></div><span class="bv">~47%</span></div>
+          <div class="bar-row"><span class="bl">내재 이익소멸 · Ford</span><div class="bar-track"><div class="bar-fill" style="width:68%;background:var(--amber)"></div></div><span class="bv">~34%</span></div>
+          <div class="bar-row"><span class="bl">정상 P/E · GM</span><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--cyan)"></div></div><span class="bv">~6.5x</span></div>
+          <div class="bar-row"><span class="bl">정상 P/E · Ford</span><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--ink)"></div></div><span class="bv">~9.5x</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- why the gap -->
+  <div class="grid2 mt">
+    <div class="card" style="background:var(--amber-tint);border-color:#ECD6A3">
+      <div class="h4" style="color:#5c4112"><span class="tick" style="background:var(--amber)"></span>시장이 포드에 ‘웃돈’을 주는 이유</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;font-size:14px;color:#5c4112">
+        <li><b>① Ford Pro(상용·소프트웨어)</b> — 유료 구독 879K(+30%), 소프트웨어·서비스 매출 ~$15B가 연 8% 성장. 자동차보다 <b>반복·고마진</b>이라 더 높은 배수를 받음.</li>
+        <li><b>② Ford Energy 서사</b> — $1.5B 투자, 2027년 4분기 20+GWh로 ‘인접 성장’ 스토리를 <b>먼저</b> 확보.</li>
+        <li><b>③ 조정 ROIC ~12.6%</b> — 자본비용을 웃도는 것으로 보이는 수치(GM 전체 ROIC는 미달).</li>
+        <li><b>④ 4% 배당수익률</b> — 인컴 투자자 유입.</li>
+      </ul>
+    </div>
+    <div class="card" style="background:var(--cyan-tint);border-color:#BDE2E8">
+      <div class="h4" style="color:#0b3b43"><span class="tick" style="background:var(--cyan)"></span>그래도 GM이 ‘더 깊은 가치’인 이유</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:9px;font-size:14px;color:#0b3b43">
+        <li><b>① 마진↑·배수↓</b> — 더 높은 이익에 더 낮은 배수 → 이익만 ‘유지’돼도 상승여력이 큼(무성장가치 $139 vs 주가 $82).</li>
+        <li><b>② 더 강한 본업 해자</b> — 미국 풀사이즈 픽업 과점은 Ford Pro와는 다른, 수십 년 검증된 구조적 성벽.</li>
+        <li><b>③ 자사주 소각</b> — 2년 만에 주식 25%↓. 배당(포드)보다 주당가치 누적에 직접적.</li>
+        <li><b>④ ESS 야심</b> — 6월 미국산 나트륨이온 발표로 포드와의 ‘서사 격차’를 좁히는 중.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ESS head to head -->
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>ESS 정면 비교 — Ford Energy vs GM Energy</div>
+    <div class="tbl-scroll">
+      <table class="tbl" style="min-width:600px">
+        <tr><th style="text-align:left">항목</th><th style="background:#9A6B16">Ford Energy</th><th style="background:#07788A">GM Energy</th></tr>
+        <tr><td class="lbl">진입 시점</td><td style="text-align:left">선발 (서사 선점)</td><td style="text-align:left">후발 (6월 ‘맞불’)</td></tr>
+        <tr><td class="lbl">규모·일정</td><td style="text-align:left">$1.5B 투자, 2027 4Q 20+GWh</td><td style="text-align:left">LFP 즉시, 나트륨이온 2028~</td></tr>
+        <tr><td class="lbl">핵심 기술</td><td style="text-align:left">중국 CATL 활용</td><td class="hl" style="text-align:left">미국산 나트륨이온 + 얼티엄/LG LFP</td></tr>
+        <tr><td class="lbl">공급망 철학</td><td style="text-align:left">속도·검증된 기술</td><td class="hl" style="text-align:left">탈중국·수직계열(정책 수혜)</td></tr>
+        <tr><td class="lbl">재활용</td><td style="text-align:left">—</td><td style="text-align:left">Redwood, EV배터리 1만개 재사용</td></tr>
+        <tr><td class="lbl">평가</td><td style="text-align:left">구체성·선점 우위</td><td style="text-align:left">기술 야심·주권 우위(실행 리스크)</td></tr>
+      </table>
+    </div>
+    <div class="warn">
+      <span class="tag">ESS 비교 — 종합</span>
+      같은 전략적 동작(<b>전기차 침체로 남는 배터리 설비를 폭증하는 전력망·데이터센터 저장 시장으로 전환</b>)을 다른 공급망 철학으로 실행 중입니다.
+      <b>포드</b>는 일정·규모가 구체적이고 시장 신뢰를 먼저 얻었고, <b>GM</b>은 ‘미국산 나트륨이온’으로 기술 주권을 노려 더 야심적이나 더 이릅니다.
+      두 회사 모두 ESS는 <b>펀더멘털 게임체인저가 아니라 심리·내러티브 레버</b>라는 점은 동일합니다.
+    </div>
+  </div>
+
+  <!-- verdict -->
+  <div class="card mt">
+    <div class="h4"><span class="tick"></span>같은 프레임, 다른 베팅 — 종합 판정</div>
+    <div class="grid2">
+      <div class="plain" style="margin:0">
+        <span class="tag">GM = 더 깊은 ‘가치’ 베팅</span>
+        무성장가치 대비 할인이 더 크고(58%), 정상 배수가 더 낮음(6–7배). 본업 트럭 해자가 버티고 이익이 유지되면 상승여력이 더 큼.
+        <b>핵심 베팅: ‘트럭 해자 지속 + 반복 EV비용 종료’.</b> <span class="conf mid">상대적 저평가 확신도 ~55%</span>
+      </div>
+      <div class="warn" style="margin:0">
+        <span class="tag">Ford = ‘퀄리티 서사’ 베팅</span>
+        Ford Pro의 반복 수익 해자와 에너지 서사가 프리미엄의 근거. 이 해자가 계속 복리로 자라면 프리미엄은 정당.
+        <b>핵심 베팅: ‘Ford Pro 모트의 지속·확장’.</b> <span class="conf mid">프리미엄 정당화 확신도 ~50%</span>
+      </div>
+    </div>
+    <div class="risk">
+      <span class="tag">공통의 분기점</span>
+      흥미롭게도 두 회사의 운명은 <b>같은 질문</b>에 달려 있습니다 — <b>‘조정이익(반복 EV·구조조정비를 뺀 수치)이 사이클 평균에서 정말 지속가능한가.’</b>
+      이것이 참이면 둘 다(특히 GM) 저평가, 거짓이면 둘 다 ‘합당하게 싼’ 경기순환주. CAP 프레임이 알려주는 것은 <b>‘시장이 둘 다 해자 0을 반영하되, GM에 더 가혹하다’</b>는 사실이며,
+      그 가혹함이 과한지는 위 핵심 베팅에 대한 판단에 달려 있습니다. <span class="conf hi">‘둘 다 CAP≤0 반영’ 확신도 ~90%</span>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ 15 한계와 가정 ============ -->
+
+<section id="s15"><div class="wrap">
+  <div class="sec-no">15 / LIMITS</div>
+  <h2 class="sec-h">한계와 가정 (Limitations &amp; Assumptions)</h2>
+  <hr class="divider">
+  <div class="grid2">
+    <div class="card">
+      <div class="h4"><span class="tick"></span>이 결론이 의존하는 핵심 가정</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px">
+        <li>• 지속가능 NOPAT를 보수적으로 ~$11B로 가정(컨센서스 $12B에서 소폭 할인). 이 값이 가장 민감.</li>
+        <li>• 연결 EBIT-조정을 ‘EBITA’ 대용으로 사용 — GM Financial 이익이 섞여 있음.</li>
+        <li>• 순부채 다리는 <b>자동차 순현금(+$4B)만</b> 반영, GM Financial 부채(~$110B+)는 대출채권과 상쇄된다고 가정(전속금융 단순화).</li>
+        <li>• WACC 9.1%는 자동차 중심 자본구조 기준. 경기민감 반영 시 더 높을 수 있음.</li>
+        <li>• ERP 4.75%(표준) 사용 — 다모다란 최신값 4.23%와 차이.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="h4"><span class="tick"></span>확신이 낮은 지점 / 다음 검증</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px">
+        <li>• <b>가장 취약</b>: ‘조정이익이 진짜 지속가능한가’ — 반복 구조조정비의 구조성 여부.</li>
+        <li>• GM Financial을 별도 평가하지 않고 단순화 → 정밀 가치엔 오차.</li>
+        <li>• 주가는 $81.5~84.1로 움직임 — 스냅샷 기준($82)일 뿐.</li>
+        <li>• ESS 옵션가치는 가정 의존도가 큰 ‘방향성’ 추정.</li>
+        <li><b>다음 단계</b>: 10-K로 자동차 vs GM Financial 분리 모델링, 사이클 평균이익 정규화, 트럭 세그먼트 마진 추세 추적.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="warn">
+    <span class="tag">방법론 정신</span>
+    이 보고서는 <b>정밀한 적정가가 아니라 방향성과 논리적 일관성</b>을 우선합니다. 모든 숫자는 공개 데이터와 명시된 가정에 기반한 추정이며,
+    새 분기 데이터가 나오면 가정과 비교해 재검토해야 합니다.
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p style="font-size:14px;color:#cfe;margin-bottom:10px"><b>데이터 출처 &amp; 기준 시점</b> (2026년 6월 16일 작성)</p>
+  <p class="src" style="color:#9DB0C0">
+    주가·밸류에이션: Google Finance, Investing.com, TradingView, Stockanalysis, Simply Wall St (2026/6/12–16, 주가 $81.5–84.1) ·
+    실적·가이던스: GM 8-K / 보도자료 (FY2025 매출 $185B·EBIT조정 $12.7B·순이익 $2.7B; 2026 가이던스 EBIT조정 $13.5–15.5B; Q1’26) ·
+    사업부 매출: GM 10-K, stockdividendscreener, bullfincher ·
+    ROIC·재무: stock-analysis-on.net, gurufocus, mlq.ai ·
+    거시: FRED 10년 국채 4.48%, 다모다란 ERP(2026.1 내재 4.23%; 표준 4.75% 적용) ·
+    ESS 시장: Grand View, MarketsandMarkets, Battery Council Intl, GlobeNewswire(AI데이터센터) ·
+    ESS 진출: GM 보도/블로그, TechCrunch, CNBC, energy-storage.news, ESS-News, ZDNet Korea·서울파이낸스·오토헤럴드 등 ·
+    피어: 24/7 Wall St, companiesmarketcap ·
+    Ford(F): Ford 8-K/보도자료·10-Q (FY2025 매출 $187.3B·조정EBIT $6.8B·GAAP −$8.2B; 2026 가이던스 조정EBIT $8.5–10.5B; Q1’26), 주가 $14.8·시총 ~$59B·베타 1.80(Investing·CNBC·Google Finance·Morningstar), Ford Energy $1.5B·20+GWh, Ford Pro 구독 879K, 자동차 순현금·컨센서스(MarketScreener·SeekingAlpha·Zacks).
+  </p>
+  <p class="src" style="color:#7A8794;margin-top:12px">
+    분석 프레임워크: 경쟁우위기간(CAP) 기반 역(逆)DCF — 현재 주가에 내재된 시장 기대(CAP·지속가능 이익)를 역산하는 방법론.
+    환율·시점에 따라 수치는 달라질 수 있으며, 새 분기 데이터로 가정을 재검토하는 것을 전제로 합니다.
+  </p>
+</div></footer>
+
+</body>
+</html>
