@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Syntec Optics (OPTX) 심층 분석 — 빛으로 본 기업과 산업</title>
+<style>
+  :root{
+    --canvas:#EDF0F4; --panel:#FFFFFF; --ink:#14181F; --ink-soft:#39414F; --ink-faint:#586172;
+    --line:#D7DCE4; --line-strong:#B7C0CC; --primary:#15506E; --primary-deep:#0D3346; --primary-bg:#E2EEF4;
+    --warm:#B23E29; --warm-bg:#FBE7E1; --pos:#156E47; --pos-bg:#E2F2EA; --neg:#A22E1C; --neg-bg:#FBE6E1;
+    --warn:#855300; --warn-bg:#FAEFD6; --dark:#0E131B; --dark-2:#141C26; --dark-panel:#19222E;
+    --dark-ink:#EAEEF5; --dark-ink-soft:#A9B4C3; --dark-line:#2A3543;
+    --mono:'SFMono-Regular',ui-monospace,'JetBrains Mono','Roboto Mono',Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI','Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    --spectrum:linear-gradient(90deg,#7A2FB0 0%,#2E63C8 28%,#159E86 52%,#C9941A 76%,#C24327 100%);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--sans);line-height:1.7;font-size:16.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  h1,h2,h3,h4{line-height:1.25;letter-spacing:-0.01em;margin:0}
+  p{margin:0 0 14px}
+  a{color:var(--primary);text-decoration:none}
+  .small{font-size:13.5px} .mono{font-family:var(--mono)} .nowrap{white-space:nowrap}
+  .annot{font-size:12px;color:var(--ink-faint);margin-top:6px}
+  .divider{height:1px;background:var(--line);margin:30px 0}
+  svg{max-width:100%;height:auto;display:block}
+  .chart-cap{font-size:12.5px;color:var(--ink-faint);margin-top:8px;line-height:1.6}
+
+  .hero{background:var(--dark);color:var(--dark-ink);padding:0 0 40px;position:relative;overflow:hidden}
+  .hero .topspectrum{height:6px;background:var(--spectrum)}
+  .hero-inner{padding-top:46px}
+  .eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--dark-ink-soft);margin-bottom:18px}
+  .hero h1{font-size:clamp(30px,5vw,52px);font-weight:800;color:var(--dark-ink);margin-bottom:6px}
+  .hero .ticker-line{font-family:var(--mono);color:#7FB4D4;font-size:14.5px;margin-bottom:22px;letter-spacing:.03em}
+  .hero .one-liner{font-size:clamp(17px,2.4vw,21px);color:#D6DEEA;max-width:780px;font-weight:400;border-left:3px solid #2E63C8;padding-left:18px;margin-bottom:30px}
+  .stat-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--dark-line);border:1px solid var(--dark-line);border-radius:12px;overflow:hidden}
+  @media(min-width:560px){.stat-strip{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:860px){.stat-strip{grid-template-columns:repeat(6,1fr)}}
+  .stat{background:var(--dark-panel);color:var(--dark-ink);padding:16px 14px}
+  .stat .v{font-family:var(--mono);font-size:21px;font-weight:700;color:#fff;letter-spacing:-.02em}
+  .stat .v.red{color:#F08A78} .stat .v.green{color:#74D3A4}
+  .stat .l{font-size:11.5px;color:var(--dark-ink-soft);margin-top:3px}
+
+  nav.toc{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav.toc .row{display:flex;flex-wrap:wrap;gap:7px 8px;padding:11px 20px;max-width:1080px;margin:0 auto;align-items:flex-start}
+  nav.toc a{white-space:nowrap;font-size:12.8px;color:var(--ink-soft);background:#F1F4F8;border:1px solid var(--line);border-radius:999px;padding:5px 11px;line-height:1.3;font-weight:500}
+  nav.toc a:hover{background:var(--primary-bg);color:var(--primary-deep);border-color:#9FC6DA}
+
+  section{padding:44px 0 8px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+  .sec-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--primary);background:var(--primary-bg);border-radius:6px;padding:3px 9px}
+  .sec-head h2{font-size:clamp(22px,3.3vw,30px);font-weight:800;color:var(--ink)}
+  .sec-sub{color:var(--ink-faint);font-size:15px;margin:2px 0 20px}
+  h3.block{font-size:18.5px;font-weight:700;margin:26px 0 12px;color:var(--primary-deep)}
+  h4.mini{font-size:15px;font-weight:700;margin:18px 0 8px;color:var(--ink)}
+
+  .card{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:14px 0}
+  .grid2{display:grid;gap:14px} @media(min-width:720px){.grid2{grid-template-columns:1fr 1fr}}
+  .grid3{display:grid;gap:14px} @media(min-width:720px){.grid3{grid-template-columns:repeat(3,1fr)}}
+
+  .callout{border-radius:12px;padding:16px 18px;margin:16px 0;border:1px solid}
+  .callout .ttl{font-weight:700;font-size:14.5px;margin-bottom:6px}
+  .callout div{line-height:1.65}
+  .c-info{background:var(--primary-bg);color:#10384C;border-color:#A9CCDD}
+  .c-info .ttl{color:#0D3346}
+  .c-pos{background:var(--pos-bg);color:#0E4A30;border-color:#A6D6BD} .c-pos .ttl{color:#0E4A30}
+  .c-neg{background:var(--neg-bg);color:#7A2316;border-color:#E2A99D} .c-neg .ttl{color:#7A2316}
+  .c-warn{background:var(--warn-bg);color:#5E3B00;border-color:#E2C98A} .c-warn .ttl{color:#5E3B00}
+
+  .verdict{background:#11202B;color:#EAF1F6;border-radius:16px;padding:26px;margin:18px 0;border:1px solid #1d3543}
+  .verdict h3{color:#fff;font-size:20px;margin-bottom:10px} .verdict p{color:#D2DEE7}
+  .verdict .hl{color:#86C7E6;font-weight:700} .verdict .badge-row{margin-top:14px}
+
+  .badge{display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:700;border-radius:999px;padding:3px 10px;border:1px solid;margin:2px 4px 2px 0}
+  .b-high{background:var(--pos-bg);color:#0E4A30;border-color:#A6D6BD}
+  .b-mid{background:var(--warn-bg);color:#5E3B00;border-color:#E2C98A}
+  .b-low{background:var(--neg-bg);color:#7A2316;border-color:#E2A99D}
+  .b-neutral{background:#EBEFF4;color:#39414F;border-color:#CBD3DD}
+  .b-on-dark{background:#16323f;color:#9FD2EA;border-color:#27566b}
+
+  .table-scroll{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:12px;-webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse;width:100%;font-size:14px;background:var(--panel);color:var(--ink);min-width:520px}
+  thead th{background:#11202B;color:#EAF1F6;font-weight:600;text-align:right;padding:11px 12px;font-size:13px;white-space:nowrap;border-bottom:1px solid #1d3543}
+  thead th:first-child{text-align:left}
+  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:right;font-family:var(--mono);font-size:13px}
+  tbody td:first-child{text-align:left;font-family:var(--sans);color:var(--ink-soft)}
+  tbody tr:last-child td{border-bottom:none}
+  tr.rowhi td{background:var(--primary-bg);color:#0D3346;font-weight:600}
+  tr.rowhi td:first-child{color:#0D3346}
+  tr.rowtot td{background:#F1F4F8;color:var(--ink);font-weight:700;border-top:2px solid var(--line-strong)}
+  .pos-c{color:var(--pos)!important} .neg-c{color:var(--neg)!important}
+  caption{caption-side:bottom;text-align:left;color:var(--ink-faint);font-size:12px;padding:8px 4px;font-family:var(--sans);line-height:1.5}
+
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:16px 0}
+  .flow .step{flex:1 1 130px;min-width:118px;background:#F7F9FB;border:1px solid var(--line);border-radius:11px;padding:12px;text-align:center}
+  .flow .step .ic{font-size:20px}
+  .flow .step .t{font-weight:700;font-size:13.5px;margin-top:4px;color:var(--ink)}
+  .flow .step .d{font-size:11.5px;color:var(--ink-faint);margin-top:3px;line-height:1.45}
+  .flow .arrow{align-self:center;color:var(--primary);font-weight:800;font-size:18px;flex:0 0 auto}
+
+  .swot{display:grid;gap:12px;margin:14px 0} @media(min-width:720px){.swot{grid-template-columns:1fr 1fr}}
+  .swot .q{border-radius:13px;padding:16px 18px;border:1px solid}
+  .swot .q h4{font-size:15px;margin-bottom:8px}
+  .swot .q ul{margin:0;padding-left:18px} .swot .q li{margin:4px 0;font-size:13.8px}
+  .sw-s{background:var(--pos-bg);color:#0E4A30;border-color:#A6D6BD}
+  .sw-w{background:var(--neg-bg);color:#7A2316;border-color:#E2A99D}
+  .sw-o{background:var(--primary-bg);color:#10384C;border-color:#A9CCDD}
+  .sw-t{background:var(--warn-bg);color:#5E3B00;border-color:#E2C98A}
+
+  .rate{display:flex;align-items:center;gap:12px;margin:9px 0}
+  .rate .lab{flex:0 0 150px;font-size:13.5px;color:var(--ink-soft)}
+  .rate .track{flex:1;height:9px;background:#E7ECF1;border-radius:5px;overflow:hidden;border:1px solid var(--line)}
+  .rate .fill{height:100%;border-radius:5px}
+  .rate .val{flex:0 0 auto;font-family:var(--mono);font-size:12px;color:var(--ink-faint);width:90px;text-align:right}
+
+  .lifecycle{display:flex;gap:4px;margin:14px 0;flex-wrap:wrap}
+  .lifecycle .ph{flex:1 1 90px;text-align:center;padding:10px 6px;border-radius:9px;border:1px solid var(--line);background:#F7F9FB;font-size:12px;color:var(--ink-faint)}
+  .lifecycle .ph.active{background:#11202B;color:#fff;border-color:#11202B}
+  .lifecycle .ph.active .pt{color:#86C7E6}
+  .lifecycle .ph .pt{font-weight:700;font-size:13px;color:var(--ink);display:block}
+
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:14px;margin:8px 0}
+  .kv dt{color:var(--ink-faint)} .kv dd{margin:0;font-family:var(--mono);color:var(--ink);text-align:right}
+
+  .footer{background:var(--dark);color:var(--dark-ink-soft);padding:30px 0;margin-top:40px;font-size:13px}
+  .footer .wrap{display:flex;flex-direction:column;gap:6px}
+  .footer a{color:#86C7E6}
+  .src-list{font-size:12px;color:var(--dark-ink-soft);line-height:1.8}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="topspectrum"></div>
+  <div class="wrap hero-inner">
+    <div class="eyebrow">경쟁우위기간(CAP) 프레임워크 심층 분석 · 비전공자용</div>
+    <h1>Syntec Optics</h1>
+    <div class="ticker-line">NASDAQ: OPTX · 광학·포토닉스 제조 · 미국 뉴욕주 로체스터 · 분석 기준일 2026-06-15(종가)</div>
+    <p class="one-liner">“빛을 다루는 부품을 깎고 찍어 만드는 미국의 작은 공장이, ‘국방 자국생산·우주·AI’ 이야기를 타고 매출의 약 17배짜리 몸값을 받고 있다.”</p>
+    <div class="stat-strip">
+      <div class="stat"><div class="v">$12.23</div><div class="l">주가(6/15 종가)</div></div>
+      <div class="stat"><div class="v">~$4.9억</div><div class="l">시가총액(대략)</div></div>
+      <div class="stat"><div class="v red">~17x</div><div class="l">EV/매출(업종 3.4x)</div></div>
+      <div class="stat"><div class="v green">+870%</div><div class="l">최근 12개월 주가</div></div>
+      <div class="stat"><div class="v">$28.1M</div><div class="l">2025 매출(정체)</div></div>
+      <div class="stat"><div class="v red">-$1.8M</div><div class="l">2025 순손익(적자)</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc"><div class="row">
+  <a href="#concl">핵심 결론</a><a href="#overview">기업 개요</a><a href="#revenue">수익 구조</a>
+  <a href="#tech">제품·기술</a><a href="#industry">산업 분석</a><a href="#lifecycle">생애주기</a>
+  <a href="#moat">경쟁우위·해자</a><a href="#swot">SWOT</a><a href="#peers">피어 비교</a>
+  <a href="#financials">재무</a><a href="#valuation">밸류에이션 역산</a><a href="#sensitivity">민감도</a>
+  <a href="#scenario">시나리오</a><a href="#risk">리스크·체크포인트</a><a href="#synthesis">종합 판단</a><a href="#limits">한계와 가정</a>
+</div></nav>
+
+<div class="wrap">
+
+<section id="concl">
+  <div class="sec-head"><span class="sec-num">01</span><h2>핵심 결론</h2></div>
+  <p class="sec-sub">먼저 한두 문장으로. 그다음 근거가 이어집니다.</p>
+  <div class="verdict">
+    <h3>한눈에</h3>
+    <p>OPTX는 <span class="hl">매출이 약 $28M에서 수년째 정체</span>되고 <span class="hl">회계상 적자(GAAP)</span>인 초소형 미국 광학 부품 회사인데, 시장은 이 회사를 <span class="hl">매출의 약 17배(시총 ~$4.9억)</span>로 평가합니다. 업종 평균(매출의 약 3.4배)의 다섯 배 수준입니다.</p>
+    <p>현재 주가에는 “국방 자국생산 의무화 + 저궤도 위성·AI 데이터센터·바이오 광학으로의 <b>대규모 사업 전환</b>이 성공한다”는 매우 낙관적 기대가 들어 있습니다. 현금흐름으로 역산하면 <span class="hl">관대한 성공 시나리오(매출 5~6배 성장 + 영업마진 18%)조차 주당 약 $2~5</span>로, 현재가 $12.23를 크게 밑돕니다. 시장은 펀더멘털과 과거 성공률을 한참 웃도는 “전환 옵션”에 값을 매기고 있습니다.</p>
+    <p>프레임워크 용어로는, 현재 수익률(ROIC)이 자본비용보다 낮아 <b>표준 ‘내재 경쟁우위기간(CAP)’ 자체를 계산할 수 없는 상태</b>이며, 주가에 내재된 기대치는 분류상 <b>“과도한 낙관” 구간</b>에 해당합니다. (정보 제공용 판단이며 매수·매도 권고가 아닙니다.)</p>
+    <div class="badge-row">
+      <span class="badge b-on-dark">밸류에이션 과열: 확신 ~90%</span>
+      <span class="badge b-on-dark">내재 기대 ≈ 매출 40~50%+ CAGR: ~75%</span>
+      <span class="badge b-on-dark">전환 완전 성공(강세): ~20%</span>
+    </div>
+  </div>
+  <div class="grid3">
+    <div class="callout c-pos" style="margin:6px 0"><div class="ttl">✓ 강세 핵심</div><div class="small">미국 내 수직통합 생산 + <b>FY2026 NDAA 834조</b>(광학·유리 자국생산 의무, 2030 기한)라는 구조적 호재. 국방·우주·AI·바이오 모두 성장 시장.</div></div>
+    <div class="callout c-neg" style="margin:6px 0"><div class="ttl">✕ 약세 핵심</div><div class="small">매출 정체/감소(2025 -1.3%, 1Q26 -8.5%), 적자·음(-) ROIC, 얇은 현금(증자 의존), <b>고객 3곳=매출 48%</b>, 관계자 SPAC·내부지분 집중. 수주는 건당 $2~5M 소액.</div></div>
+    <div class="callout c-warn" style="margin:6px 0"><div class="ttl">! 주가를 움직인 것</div><div class="small">소액 수주 보도 + $21.5M 증자 + <b>6/26 러셀3000 편입</b> + 모멘텀·개인 매수. 정식 월스트리트 애널리스트 커버리지는 사실상 없음.</div></div>
+  </div>
+</section>
+
+<section id="overview">
+  <div class="sec-head"><span class="sec-num">02</span><h2>기업 개요 — 이 회사는 무엇을 하는가</h2></div>
+  <p class="sec-sub">“광학(optics)”이 낯설다면: 빛을 모으고·꺾고·거르는 부품(렌즈·거울·광학창)을 정밀하게 만드는 회사라고 생각하면 됩니다.</p>
+  <div class="callout c-info"><div class="ttl">📌 한 문장 요약</div><div>신텍 옵틱스는 <b>플라스틱·유리로 정밀 광학 부품(렌즈·거울·광학창)과 조립품을 “설계부터 완제품까지” 한 공장에서 만들어 국방·우주·의료·통신 장비사에 납품하는 미국의 소형 ‘맞춤형 광학 공장’</b>입니다.</div></div>
+  <h3 class="block">설립과 상장 배경</h3>
+  <p>뿌리는 1980년대 시작된 여러 정밀 제조업체이고, 알 카푸어(Al Kapoor) 회장이 1997년 전후 이들을 묶어 <b>Syntec Optics</b>를 만들었습니다. 본사는 뉴욕주 로체스터, 약 90,000평방피트 공장에서 직원 약 164명이 일합니다. 회사는 “수십 년 운영해 온, 미국 내 최대 규모의 맞춤형·다전방시장 광학/포토닉스 제조사 중 하나”라고 소개합니다.</p>
+  <p>2023년 11월 <b>SPAC(기업인수목적회사)</b> OmniLit Acquisition Corp과 합병해 나스닥에 우회 상장했습니다(티커 OPTX). 여기서 중요한 거버넌스 포인트가 있습니다.</p>
+  <div class="callout c-warn"><div class="ttl">⚠ 거버넌스: 관계자(self-affiliated) SPAC 구조</div><div class="small">합병 상대 SPAC(OmniLit)의 CEO·회장이 바로 신텍의 회장·최대주주인 <b>알 카푸어 본인</b>이었습니다(이해상충 구조). SPAC 투자자 약 91%가 합병 전 자금 상환을 택해 <b>상장으로 확보한 현금은 매우 적었습니다</b>(신탁 잔액 ~$14M). 가격 도달 시 카푸어에게 지급되는 <b>언아웃 주식</b>($12.50/$14.00/$15.50 분할 베스팅)이 있어 향후 희석 요인입니다. (확신: 높음 ~90%, SEC 공시)</div></div>
+  <h3 class="block">경영진</h3>
+  <dl class="kv card" style="margin-top:6px">
+    <dt>회장 겸 CEO</dt><dd>Al Kapoor — 30년+ 재직, 하버드 MBA·아이오와주립대 공학석사</dd>
+    <dt>CFO</dt><dd>Dean Rudy</dd>
+    <dt>최고제조책임자</dt><dd>Joe Moore</dd>
+    <dt>사업개발 VP</dt><dd>Matt Carey — 국방부 지침 대응 전담</dd>
+  </dl>
+  <p class="annot">※ 일부 자동 생성 녹취록에 “John Doe” 같은 자리표시자 이름이 섞여 있으나 오류이며, 실제 경영진은 위와 같습니다.</p>
+</section>
+
+<section id="revenue">
+  <div class="sec-head"><span class="sec-num">03</span><h2>수익 구조 — 어떻게 돈을 버는가</h2></div>
+  <p class="sec-sub">한 줄 요약: 장비 제조사(OEM)로부터 부품/조립품 <b>주문(PO)</b>을 받아 만들어 파는 B2B 제조 매출. 광고·구독 같은 건 없습니다.</p>
+  <h3 class="block">돈의 흐름</h3>
+  <div class="flow">
+    <div class="step"><div class="ic">🛰️</div><div class="t">전방 OEM 고객</div><div class="d">국방·우주·의료·통신 장비사</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="ic">📝</div><div class="t">주문(PO)</div><div class="d">건당 보통 $2~5M 발주</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="ic">🏭</div><div class="t">신텍 생산</div><div class="d">설계→몰딩→코팅→조립 사내 일괄</div></div>
+    <div class="arrow">→</div>
+    <div class="step"><div class="ic">💵</div><div class="t">납품·매출</div><div class="d">출하 시 매출, 일부 선수금</div></div>
+  </div>
+  <h3 class="block">4대 전방시장(end-market)</h3>
+  <p>회사는 회계상 <b>단일 사업부문</b>으로 보고해 시장별 정확한 매출 비중을 공개하지 않습니다. 아래는 “정확한 %”가 아니라 제품군과 최근 흐름입니다(정직 표시). 2023~2024년엔 통신만 +$1.0M, 소비재·국방·의료는 감소. 2026년엔 국방·우주·바이오 수주가 활발.</p>
+  <div class="grid2">
+    <div class="card" style="margin:8px 0"><h4 class="mini">🛡️ 국방 <span class="badge b-neutral">핵심·정책 수혜</span></h4><div class="small" style="color:var(--ink-soft)">경량 야간투시경 광학, 광학-기계 조립품, 조준경, 병사·조종사용 AR/XR, AI 탑재 AR 카메라, 다중스펙트럼 초정밀 거울, 보호 돔·창, 레이저 표적·미사일 유도 광학.</div></div>
+    <div class="card" style="margin:8px 0"><h4 class="mini">🛰️ 우주(LEO 위성) <span class="badge b-neutral">성장 동력</span></h4><div class="small" style="color:var(--ink-soft)">저궤도 위성 통신용 광학(레이저 통신). 2025년 1~11월 $2.6M+ 출하, 10월 누적 17,000번째. 2026년 3월 월 생산 4배, 6월 누적 수주 $4.3M.</div></div>
+    <div class="card" style="margin:8px 0"><h4 class="mini">🩺 바이오메디컬 <span class="badge b-neutral">대형 고객</span></h4><div class="small" style="color:var(--ink-soft)">일회용 진단 광학, 수술·센싱 거울, 미세유체 부품. 2026년 6월 중환자용 $4.6M 수주. 단, 1Q26 출하 지연이 분기 부진의 직접 원인.</div></div>
+    <div class="card" style="margin:8px 0"><h4 class="mini">💡 통신·AI / 소비재·과학기기 <span class="badge b-neutral">신규·소형</span></h4><div class="small" style="color:var(--ink-soft)">마이크로렌즈 어레이, AI 데이터센터 광 연결, 자율주행·로보틱스·HUD·스캐너 광학, 과학기기·핵융합 실험 정밀 광학.</div></div>
+  </div>
+  <div class="callout c-neg"><div class="ttl">⚠ 고객 집중 위험</div><div><b>상위 3개 고객이 매출의 48%</b>(2024·2025). 그중 하나는 미국 국방부 계열. 한 고객 변동이 분기 실적을 흔들고(1Q26 실제 발생), 국방 예산 의존도가 높습니다. (확신: 높음 ~90%, 10-K)</div></div>
+</section>
+
+<section id="tech">
+  <div class="sec-head"><span class="sec-num">04</span><h2>제품·서비스 및 기술력</h2></div>
+  <p class="sec-sub">핵심은 “<b>수직통합</b>”. 보통 여러 회사가 나눠 하는 광학 제조의 모든 단계를 한 지붕(미국 내)에서 직접 합니다.</p>
+  <h3 class="block">제조 가치사슬 — 처음부터 끝까지 한 공장에서</h3>
+  <div class="flow">
+    <div class="step"><div class="ic">✏️</div><div class="t">① 설계</div><div class="d">광학·기계 설계·시뮬레이션</div></div><div class="arrow">→</div>
+    <div class="step"><div class="ic">🔧</div><div class="t">② 금형·툴링</div><div class="d">사내 금형 제작</div></div><div class="arrow">→</div>
+    <div class="step"><div class="ic">🫗</div><div class="t">③ 몰딩·가공</div><div class="d">폴리머/유리 몰딩, 다이아몬드 가공</div></div><div class="arrow">→</div>
+    <div class="step"><div class="ic">🌈</div><div class="t">④ 코팅</div><div class="d">원자층 박막 코팅</div></div><div class="arrow">→</div>
+    <div class="step"><div class="ic">🧩</div><div class="t">⑤ 조립</div><div class="d">광학·전자광학 조립</div></div><div class="arrow">→</div>
+    <div class="step"><div class="ic">📷</div><div class="t">⑥ 전자 통합</div><div class="d">이미징 모듈·전자 통합</div></div>
+  </div>
+  <p class="annot">왜 중요한가: 외주가 끼면 공급망이 흔들리고 군수 보안 요건을 맞추기 어렵습니다. “미국 내 일괄 생산”은 뒤의 <b>국방 자국생산 의무(NDAA)</b>와 정확히 맞물리는 강점입니다.</p>
+  <h3 class="block">핵심 기술(비전공자용 풀이)</h3>
+  <div class="grid2">
+    <div class="card" style="margin:8px 0"><h4 class="mini">🫗 폴리머(플라스틱) 광학</h4><div class="small" style="color:var(--ink-soft)">유리로 만들던 렌즈를 <b>플라스틱으로 정밀 성형</b>하는 기술의 선구자. 장점은 <b>가볍고·싸고·대량생산</b>에 유리. 야간투시경처럼 가벼워야 하는 국방 장비에서 특히 유용.</div></div>
+    <div class="card" style="margin:8px 0"><h4 class="mini">💎 단일점 다이아몬드 터닝 + 고굴절 기술</h4><div class="small" style="color:var(--ink-soft)">다이아몬드 공구로 광학면을 <b>나노미터 수준</b>으로 깎는 초정밀 가공. 특허 고굴절 기술로 복잡한 렌즈 제작 가능.</div></div>
+    <div class="card" style="margin:8px 0"><h4 class="mini">🌈 박막 코팅</h4><div class="small" style="color:var(--ink-soft)">렌즈 표면에 얇은 막을 입혀 <b>반사를 줄이거나 특정 파장만 통과</b>시킴. 적외선·열화상·다중스펙트럼 성능을 좌우.</div></div>
+    <div class="card" style="margin:8px 0"><h4 class="mini">🧩 옵토-메커니컬 조립</h4><div class="small" style="color:var(--ink-soft)">렌즈·거울을 기구·전자부품과 결합해 <b>“바로 쓸 수 있는 광학 모듈/카메라”</b>로. 단순 부품보다 부가가치 높음(‘부품→솔루션’ 방향).</div></div>
+  </div>
+  <div class="callout c-info"><div class="ttl">🔎 균형 잡힌 시각</div><div class="small">이 역량들은 <b>실재하고 미국 내에서 이만큼 통합한 곳이 드뭅니다</b>(강점). 다만 “폴리머 광학·다이아몬드 터닝”은 신텍만의 독점이 아니며(예: LightPath의 유리몰딩·칼코제나이드), 차별화의 핵심은 단일 기술보다 <b>“통합·미국 생산·군수 인증의 결합”</b>에 있습니다. (확신: 중간 ~70%)</div></div>
+</section>
+
+<section id="industry">
+  <div class="sec-head"><span class="sec-num">05</span><h2>산업 분석 — 광학·포토닉스 생태계</h2></div>
+  <p class="sec-sub">“포토닉스”는 빛(光子)을 다루는 기술 전반. 스마트폰 카메라부터 위성 레이저 통신, AI 데이터센터 광케이블까지 포함됩니다.</p>
+  <h3 class="block">시장 규모와 성장성 — “전체는 천천히, 일부는 폭발적으로”</h3>
+  <p>업계 단체 SPIE 추산으로, 빛이 관여하는 제품·서비스는 2023년 세계 경제의 15%+(약 $16조)에 달합니다. 다만 “전체 포토닉스”는 거대하지만 성장은 완만(~5.8% CAGR)합니다. 진짜 빠른 곳은 일부 하위 영역입니다.</p>
+  <div class="card">
+    <h4 class="mini">하위 시장별 연평균 성장률(CAGR) — 출처별 추정치</h4>
+    <svg viewBox="0 0 680 210" role="img" aria-label="시장별 CAGR 막대그래프">
+      <line x1="178" y1="14" x2="178" y2="182" stroke="#D7DCE4"/>
+      <text x="168" y="40" text-anchor="end" font-size="13" fill="#39414F">전체 포토닉스</text>
+      <rect x="178" y="28" width="91" height="20" rx="4" fill="#8FA8B6"/><text x="279" y="43" font-family="monospace" font-size="12" fill="#39414F">5.8%</text>
+      <text x="168" y="78" text-anchor="end" font-size="13" fill="#39414F">광 인터커넥트</text>
+      <rect x="178" y="66" width="204" height="20" rx="4" fill="#4E8AA8"/><text x="392" y="81" font-family="monospace" font-size="12" fill="#39414F">~13%</text>
+      <text x="168" y="116" text-anchor="end" font-size="13" fill="#39414F">실리콘포토닉스(AI)</text>
+      <rect x="178" y="104" width="455" height="20" rx="4" fill="url(#sp)"/><text x="640" y="119" font-family="monospace" font-size="12" fill="#39414F" text-anchor="end">29.6%</text>
+      <text x="168" y="154" text-anchor="end" font-size="13" fill="#A22E1C">OPTX 매출(실제)</text>
+      <rect x="178" y="142" width="3" height="20" rx="2" fill="#A22E1C"/><text x="188" y="157" font-family="monospace" font-size="12" fill="#A22E1C">약 -1% (정체)</text>
+      <defs><linearGradient id="sp" x1="0" x2="1"><stop offset="0" stop-color="#2E63C8"/><stop offset="1" stop-color="#159E86"/></linearGradient></defs>
+      <text x="178" y="178" font-family="monospace" font-size="11" fill="#586172">0%</text>
+      <text x="633" y="178" font-family="monospace" font-size="11" fill="#586172" text-anchor="end">30%</text>
+    </svg>
+    <div class="chart-cap">핵심: AI 데이터센터용 실리콘 포토닉스는 ~30%로 폭발 중이지만 이 영역은 대형사(Coherent·Lumentum·Marvell·Broadcom·Fabrinet)가 지배합니다. OPTX는 그 옆에서 “물리 광학 부품”을 대는 주변부 공급사이며, <b>실제 매출은 정체</b>입니다.</div>
+  </div>
+  <h3 class="block">산업 가치사슬에서 OPTX의 위치</h3>
+  <div class="flow">
+    <div class="step"><div class="ic">⛏️</div><div class="t">소재</div><div class="d">폴리머·광학유리·알루미늄</div></div><div class="arrow">→</div>
+    <div class="step" style="background:#11202B;border-color:#11202B"><div class="ic">🏭</div><div class="t" style="color:#fff">광학 부품/조립 <span style="color:#86C7E6">← OPTX</span></div><div class="d" style="color:#A9B4C3">렌즈·거울·창·모듈</div></div><div class="arrow">→</div>
+    <div class="step"><div class="ic">🔭</div><div class="t">시스템 통합사</div><div class="d">광학기기·카메라 통합</div></div><div class="arrow">→</div>
+    <div class="step"><div class="ic">🛰️</div><div class="t">OEM</div><div class="d">방산·위성·의료기기사</div></div><div class="arrow">→</div>
+    <div class="step"><div class="ic">🪖</div><div class="t">최종 사용자</div><div class="d">군·병원·통신사</div></div>
+  </div>
+  <p class="annot">OPTX는 사슬의 <b>‘부품/조립’ 단계</b>. 단가는 시스템보다 낮지만 군수·우주는 인증 장벽이 높아 한 번 들어가면 잘 안 바뀌는 특성이 있습니다.</p>
+  <h3 class="block">가장 중요한 산업 트렌드: 국방 자국생산(온쇼어링)</h3>
+  <div class="callout c-pos"><div class="ttl">🇺🇸 FY2026 NDAA 834조 — 강세 논리의 척추</div><div class="small">방산용 <b>유리·광학 시스템</b>의 “적성국” 의존을 줄이도록 명시하고, <b>2030년 1월 1일까지</b> 국방 프로그램 고객이 광학 부품 원산지를 추적하고 <b>국내 공급처로 전환</b>하도록 요구합니다. “미국 내 수직통합 광학 생산”을 가진 OPTX·LightPath 같은 회사에 규제 주도형 수요를 만들 수 있습니다.<br><b>균형:</b> (1) 이 혜택은 OPTX 독점이 아니라 LightPath 등도 누리고, (2) 법적 수요가 실제 수주·매출로 얼마나·언제 전환될지는 아직 “기대”이며 2025~1Q26 실적엔 미반영. (확신: 호재 실재성 ~80% / 전환 규모·시점 불확실)</div></div>
+  <p>그 밖의 트렌드: ① 위성 “Space 2.0”(LEO 대량 발사·레이저 통신 전환), ② AI 데이터센터 광 연결 수요 폭증(단 핵심 가치는 대형 반도체·트랜시버 업체가 차지), ③ 바이오 진단 자동화, ④ 국방 장비 현대화. 산업의 큰 방향은 우호적이며, 관건은 OPTX가 <b>얼마나 큰 몫</b>을 가져오느냐입니다.</p>
+</section>
+
+<section id="lifecycle">
+  <div class="sec-head"><span class="sec-num">06</span><h2>기업 생애주기 단계 판별</h2></div>
+  <p class="sec-sub">방법: 도입→성장→성숙→정리→감소 중 어디인지는 “현금흐름표의 부호 조합”으로 가늠합니다(Dickinson 2011).</p>
+  <div class="table-scroll"><table>
+    <caption>FY2025 현금흐름 부호 — 단위 백만 달러</caption>
+    <thead><tr><th>활동</th><th>2025 금액</th><th>부호</th><th>의미</th></tr></thead>
+    <tbody>
+      <tr><td>영업활동 현금흐름</td><td>+0.67</td><td class="pos-c">유입 (+)</td><td>본업에서 현금 ‘약간’ 번다</td></tr>
+      <tr><td>투자활동 현금흐름</td><td>-0.64</td><td class="neg-c">유출 (−)</td><td>설비 투자(소액)</td></tr>
+      <tr><td>재무활동 현금흐름</td><td>-0.27</td><td class="neg-c">유출 (−)</td><td>순(純) 부채 상환</td></tr>
+    </tbody>
+  </table></div>
+  <div class="lifecycle">
+    <div class="ph"><span class="pt">도입</span>적자·투자기</div>
+    <div class="ph"><span class="pt">성장</span>고성장</div>
+    <div class="ph active"><span class="pt">성숙(부호상)</span>+ / − / −</div>
+    <div class="ph"><span class="pt">정리</span>혼조</div>
+    <div class="ph"><span class="pt">감소</span>쇠퇴</div>
+  </div>
+  <div class="callout c-warn"><div class="ttl">⚖ 판별: “부호상 성숙, 그러나 수익성은 도입/정체형” — 모순 상태</div><div class="small">현금흐름 부호(+/−/−)는 <b>성숙기</b> 패턴입니다. 그런데 성숙기 통상 ROIC ~11%인 반면, OPTX는 <b>영업적자 → ROIC가 음(-)</b>으로 “도입기” 수익률(-2.9%)에 가깝습니다. 매출도 정체. 즉 <b>40년 된 회사인데 수익은 자본비용에 못 미치는 ‘저수익·정체형 성숙기’</b>입니다. 시장은 이를 <b>‘도입/초기 성장기’처럼</b> 평가합니다. 2026년 증자(재무 유입)로 성장 자세로 전환 중인 점도 단계 이동 신호.</div></div>
+  <div class="callout c-info"><div class="ttl">📐 방법론에 미치는 영향(중요)</div><div class="small">본 프레임워크는 <b>ROIC&gt;자본비용</b>일 때 “내재 CAP 역산”이 잘 작동합니다. OPTX는 <b>현재 ROIC가 자본비용보다 낮아 초과수익이 ‘음수’</b>입니다. 초과수익이 음수면 “초과수익을 몇 년 유지하느냐(CAP)”라는 질문 자체가 성립하지 않습니다. 따라서 표준 CAP 역산 대신, 도입기 기업에 권장되는 방식(TAM·역산 시나리오)으로 접근합니다(§11). (확신: 높음 ~85%)</div></div>
+</section>
+
+<section id="moat">
+  <div class="sec-head"><span class="sec-num">07</span><h2>경쟁 우위 분석 — 경제적 해자(Moat)</h2></div>
+  <p class="sec-sub">“해자”란 경쟁자가 쉽게 따라오지 못하게 막는 구조적 강점(성 둘레 방어용 물길의 비유).</p>
+  <h3 class="block">포터의 5가지 경쟁요인(간략 평가)</h3>
+  <div class="rate"><div class="lab">신규 진입 위협</div><div class="track"><div class="fill" style="width:42%;background:#4E8AA8"></div></div><div class="val">중간</div></div>
+  <div class="rate"><div class="lab">기존 경쟁 강도</div><div class="track"><div class="fill" style="width:62%;background:#C9941A"></div></div><div class="val">중상</div></div>
+  <div class="rate"><div class="lab">공급자 교섭력</div><div class="track"><div class="fill" style="width:38%;background:#4E8AA8"></div></div><div class="val">중하</div></div>
+  <div class="rate"><div class="lab">구매자 교섭력</div><div class="track"><div class="fill" style="width:74%;background:#B23E29"></div></div><div class="val">높음(집중!)</div></div>
+  <div class="rate"><div class="lab">대체재 위협</div><div class="track"><div class="fill" style="width:40%;background:#4E8AA8"></div></div><div class="val">중하</div></div>
+  <p class="annot">진입장벽(인증·정밀 제조)은 어느 정도 있지만, <b>고객이 소수(상위 3곳 48%)라 구매자 협상력이 매우 큽니다</b>. 경쟁은 미국 내 LightPath 등 상장사 + Optimax·Edmund Optics·Jenoptik 등 비상장사와 겹칩니다.</p>
+  <h3 class="block">차별화 vs 원가 우위 (프레임워크 진단)</h3>
+  <div class="callout c-neg"><div class="ttl">진단: 현재로선 “지속 가능한 해자가 재무로 입증되지 않음”</div><div class="small">기준 — <b>차별화</b>는 “NOPAT 마진이 산업평균의 2배+”, <b>원가우위</b>는 “자본회전율이 산업평균의 1.5배+”. OPTX의 <b>NOPAT 마진은 음수</b>(영업적자), 회전율도 특출나지 않습니다. 즉 <b>현재 재무상 어느 해자도 ‘입증’되지 않습니다.</b> 회사가 주장하는 “미션크리티컬 독점 공정”의 경제적 효과가 아직 마진·수익률로 나타나지 않은 상태. (확신: 높음 ~85%, 재무 기반)</div></div>
+  <h3 class="block">잠재적 해자 원천 — 강세론자의 관점(공정하게 복원)</h3>
+  <div class="grid2">
+    <div class="card" style="margin:8px 0"><h4 class="mini">① 전환비용·인증 잠금</h4><div class="small" style="color:var(--ink-soft)">군수·우주·의료에서 인증된 공급사를 바꾸려면 재인증·신뢰성 검증에 큰 비용·시간이 듭니다. 야간투시경엔 2018년부터 들어가 있음 → 반복 수주의 끈적함.</div></div>
+    <div class="card" style="margin:8px 0"><h4 class="mini">② 수직통합 × 미국 생산(규제 해자 가능성)</h4><div class="small" style="color:var(--ink-soft)">NDAA 자국생산 의무가 “미국 내 일괄 광학 생산”을 사실상 요건화하면, 통합 역량 자체가 규제 기반 해자로 전환될 수 있음. 다만 LightPath 등과 공유.</div></div>
+  </div>
+  <div class="callout c-info"><div class="ttl">종합(해자)</div><div class="small">“좁고 잠재적인” 해자는 있을 수 있으나(전환비용·미국 생산), <b>아직 초과수익(높은 ROIC)으로 증명되지 않았습니다.</b> 해자의 ‘존재 가능성’과 ‘경제적 입증’은 구분해야 합니다. IT/기술 하드웨어 섹터 평균 <b>페이드 비율 0.17~0.20</b>(평균적 지속성)을 적용하되, 입증 부족을 감안해 보수적으로 봐야 합니다.</div></div>
+</section>
+
+<section id="swot">
+  <div class="sec-head"><span class="sec-num">08</span><h2>SWOT 분석</h2></div>
+  <div class="swot">
+    <div class="q sw-s"><h4>💪 강점 (Strengths)</h4><ul>
+      <li>설계→조립까지 <b>미국 내 수직통합</b> 광학 생산</li>
+      <li>국방·우주·의료·통신 <b>다변화된 전방시장</b></li>
+      <li>야간투시경 등 <b>장기 인증·반복 수주</b> 트랙</li>
+      <li>폴리머 광학·다이아몬드 터닝 등 정밀 역량</li>
+      <li>2025년 총마진 개선(20%→23.3%, 4Q 24%)</li>
+    </ul></div>
+    <div class="q sw-w"><h4>⚠ 약점 (Weaknesses)</h4><ul>
+      <li><b>매출 정체</b>($28~30M, 2025 -1.3%, 1Q26 -8.5%)</li>
+      <li><b>GAAP 적자·음(-) ROIC</b>, 얇은 현금(증자 의존)</li>
+      <li><b>고객 3곳=매출 48%</b> 집중</li>
+      <li>초소형(직원 164명) → 규모의 경제 부족</li>
+      <li>관계자 SPAC 출신·언아웃 희석·반복 증자</li>
+    </ul></div>
+    <div class="q sw-o"><h4>🚀 기회 (Opportunities)</h4><ul>
+      <li><b>NDAA 자국생산 의무</b>(2030 기한) 구조적 수요</li>
+      <li>LEO 위성·레이저 통신 대량 확산</li>
+      <li>AI 데이터센터·바이오 진단 광학 수요</li>
+      <li>설계→양산 전환 프로그램의 매출화</li>
+      <li>파편화된 광학 업계 <b>볼트온 인수</b> 여지</li>
+    </ul></div>
+    <div class="q sw-t"><h4>🌩 위협 (Threats)</h4><ul>
+      <li><b>밸류에이션 과열</b> 되돌림(EV/매출 17x)</li>
+      <li>LightPath 등 경쟁사(더 빠른 성장·높은 마진)</li>
+      <li>국방예산·정책·수출통제 변동</li>
+      <li>대형 고객 이탈·주문 지연</li>
+      <li>모멘텀/패시브 자금 이탈 시 변동성</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="peers">
+  <div class="sec-head"><span class="sec-num">09</span><h2>피어그룹 비교</h2></div>
+  <p class="sec-sub">가장 비슷한 상장 경쟁사는 <b>LightPath Technologies(LPTH)</b>. 대형 광학 리더(Coherent·Fabrinet)와도 비교합니다.</p>
+  <div class="table-scroll"><table>
+    <caption>2026년 6월 기준 근사치. 손실 기업이 많아 P/E 대신 EV/매출 비교가 유효(회사도 동일). 수치는 벤더별 차이가 있어 “대략값”.</caption>
+    <thead><tr><th>기업</th><th>시총</th><th>TTM 매출</th><th>매출 성장</th><th>총마진</th><th>흑자?</th><th>EV/매출</th></tr></thead>
+    <tbody>
+      <tr class="rowhi"><td>Syntec Optics (OPTX)</td><td>~$0.49B</td><td>~$28M</td><td class="neg-c">-1% (정체)</td><td>23%</td><td class="neg-c">적자</td><td>~17x</td></tr>
+      <tr><td>LightPath (LPTH)</td><td>~$1.03B</td><td>~$44M*</td><td class="pos-c">+100%+</td><td>36%</td><td class="neg-c">적자</td><td>~13–23x</td></tr>
+      <tr><td>Coherent (COHR)</td><td>~$81B</td><td>~$6B</td><td class="pos-c">성장(AI)</td><td>~35%</td><td class="pos-c">흑자</td><td>~3–4x</td></tr>
+      <tr><td>Fabrinet (FN)</td><td>~$12B</td><td>~$3.5B</td><td class="pos-c">성장</td><td>~12%</td><td class="pos-c">흑자</td><td>~3x</td></tr>
+      <tr class="rowtot"><td>광학 업종 평균</td><td>—</td><td>—</td><td>—</td><td>—</td><td>혼재</td><td>~3.4x</td></tr>
+    </tbody>
+  </table></div>
+  <p class="annot">* LPTH의 TTM 매출은 인수 반영 지연으로 ~$44M이나, 최근 분기(FY26 3분기) $19.1M(+109% YoY)로 연환산 시 ~$76M 수준. LPTH도 2026년 6월 $50M 증자.</p>
+  <div class="card">
+    <h4 class="mini">EV/매출 배수 비교 — “이야기주”는 비싸고, 대형 흑자주는 싸다</h4>
+    <svg viewBox="0 0 680 200" role="img" aria-label="EV/매출 비교 막대그래프">
+      <line x1="150" y1="14" x2="150" y2="180" stroke="#D7DCE4"/>
+      <text x="142" y="40" text-anchor="end" font-size="13" fill="#A22E1C">OPTX</text>
+      <rect x="150" y="28" width="425" height="20" rx="4" fill="#B23E29"/><text x="582" y="43" font-family="monospace" font-size="12" fill="#A22E1C">~17x</text>
+      <text x="142" y="74" text-anchor="end" font-size="13" fill="#855300">LPTH</text>
+      <rect x="150" y="62" width="400" height="20" rx="4" fill="#C9941A"/><text x="557" y="77" font-family="monospace" font-size="12" fill="#855300">~13–23x</text>
+      <text x="142" y="108" text-anchor="end" font-size="13" fill="#39414F">COHR</text>
+      <rect x="150" y="96" width="88" height="20" rx="4" fill="#4E8AA8"/><text x="245" y="111" font-family="monospace" font-size="12" fill="#39414F">~3.5x</text>
+      <text x="142" y="142" text-anchor="end" font-size="13" fill="#39414F">FN</text>
+      <rect x="150" y="130" width="75" height="20" rx="4" fill="#4E8AA8"/><text x="232" y="145" font-family="monospace" font-size="12" fill="#39414F">~3x</text>
+      <text x="142" y="176" text-anchor="end" font-size="13" fill="#15506E">업종 평균</text>
+      <rect x="150" y="164" width="85" height="18" rx="4" fill="#15506E"/><text x="242" y="178" font-family="monospace" font-size="12" fill="#15506E">~3.4x</text>
+    </svg>
+    <div class="chart-cap">관찰: OPTX는 <b>성장이 가장 느린데도 가장 비싼</b> 축입니다. LPTH는 매출 +100%·총마진 36%로 “비싼 값”의 성장 근거라도 있으나, OPTX는 정체 매출에 17배 배수가 붙어 있습니다.</div>
+  </div>
+</section>
+
+<section id="financials">
+  <div class="sec-head"><span class="sec-num">10</span><h2>재무 분석</h2></div>
+  <p class="sec-sub">출처: 회사 2025 연간 실적·10-K. 일부 벤더가 상충해(예: 2024 매출 $28.45M vs 일부 $29.4M) 회사 감사 재무제표를 우선 사용.</p>
+  <h3 class="block">손익계산서 (단위 백만 달러)</h3>
+  <div class="table-scroll"><table>
+    <thead><tr><th>항목</th><th>2025</th><th>2024</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td>순매출</td><td>28.08</td><td>28.45</td><td>-1.3% (정체)</td></tr>
+      <tr><td>매출원가</td><td>21.55</td><td>22.75</td><td>원가 절감</td></tr>
+      <tr><td>매출총이익</td><td>6.53</td><td>5.70</td><td>마진 20%→23.3%</td></tr>
+      <tr><td>판관비(G&amp;A)</td><td>7.05</td><td>8.28</td><td>-$1.2M 절감</td></tr>
+      <tr class="rowhi"><td>영업손익</td><td>-0.52</td><td>-2.58</td><td>적자 축소</td></tr>
+      <tr><td>이자비용 등</td><td>-0.84</td><td>-0.42</td><td>부채 이자</td></tr>
+      <tr class="rowtot"><td>순손익</td><td>-1.79</td><td>-2.48</td><td>EPS -$0.05</td></tr>
+    </tbody>
+  </table></div>
+  <h3 class="block">재무상태표 핵심 (2025년 말, 백만 달러)</h3>
+  <div class="grid3">
+    <div class="card" style="margin:6px 0"><div class="small" style="color:var(--ink-faint)">현금</div><div class="mono" style="font-size:22px;color:var(--neg)">$0.36M</div><div class="small">매우 빈약 → 4월 증자 필요</div></div>
+    <div class="card" style="margin:6px 0"><div class="small" style="color:var(--ink-faint)">총부채(차입+리스)</div><div class="mono" style="font-size:22px;color:var(--ink)">~$11.2M</div><div class="small">신용한도 $6.8M 포함</div></div>
+    <div class="card" style="margin:6px 0"><div class="small" style="color:var(--ink-faint)">자기자본(장부)</div><div class="mono" style="font-size:22px;color:var(--ink)">$9.5M</div><div class="small">주당 장부가 ~$0.24(증자 전)</div></div>
+  </div>
+  <h3 class="block">현금흐름·“조정 EBITDA”의 함정</h3>
+  <div class="table-scroll"><table>
+    <caption>회사 발표 “조정 EBITDA”는 비현금·일회성 + 주식보상(SBC)을 더해 부풀려질 수 있음. 본 프레임워크는 SBC를 실제 비용으로 처리.</caption>
+    <thead><tr><th>지표(2025)</th><th>금액(백만$)</th><th>해석</th></tr></thead>
+    <tbody>
+      <tr><td>영업현금흐름</td><td class="pos-c">+0.67</td><td>본업 현금 소폭 +</td></tr>
+      <tr><td>설비투자(Capex)</td><td>0.64</td><td>감가상각($2.6M)보다 적음 → 설비 축소 중</td></tr>
+      <tr><td>감가상각비(D&amp;A)</td><td>2.61</td><td>—</td></tr>
+      <tr><td>주식보상(SBC)</td><td>0.30</td><td>‘조정’ 시 더해짐(주의)</td></tr>
+      <tr><td>회사 발표 “조정 EBITDA”</td><td>3.02</td><td>마진 ~10.7%</td></tr>
+      <tr class="rowhi"><td>일회성·SBC 제외 보수적 EBITDA</td><td>~2.0</td><td>마진 ~7% (더 현실적)</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout c-warn"><div class="ttl">! 1분기 2026 — 인플렉션은 아직</div><div class="small">매출 $6.5M(-8.5% YoY), 총이익 $1.0M(-56.5%), 순손실 $0.9M. 바이오 출하 지연 탓이라 하나, <b>“수주 보도는 많은데 실제 매출은 줄었다”</b>는 점이 핵심입니다. 2분기 가이던스 $7.5~8.5M — 폭발적 인플렉션이 아니라 점진적 회복. (확신: 높음 ~90%)</div></div>
+</section>
+
+<section id="valuation">
+  <div class="sec-head"><span class="sec-num">11</span><h2>밸류에이션 — 시장 내재 기대치 역산</h2></div>
+  <p class="sec-sub">본 프레임워크 핵심: “적정가”를 맞추지 않고, <b>“현재 주가가 성립하려면 시장은 무엇을 믿어야 하는가”</b>를 거꾸로 풉니다. ROIC가 음수라 표준 CAP 대신 ‘미래 재무 역산 + TAM’ 방식을 씁니다.</p>
+
+  <h3 class="block">1단계 — 자본비용(WACC) 산정 (CAPM 기반)</h3>
+  <div class="table-scroll"><table>
+    <caption>무위험이자율은 2026-06-16 10년 국채(약 4.47~4.48%). 베타는 상장 이력이 짧고 변동성이 커 불안정(원시 ~2.9 → ‘1로 회귀’ 조정 시 ~2.3); 보수적으로 2.0 사용.</caption>
+    <thead><tr><th>입력값</th><th>값</th><th>근거</th></tr></thead>
+    <tbody>
+      <tr><td>무위험이자율(10년 국채)</td><td>4.48%</td><td>FRED/시장, 2026-06-16</td></tr>
+      <tr><td>자기자본 위험프리미엄(ERP)</td><td>4.75%</td><td>프레임워크 표준(다모다란 계열); 2026초 내재 ERP ~4.23%</td></tr>
+      <tr><td>베타(조정)</td><td>~2.0</td><td>원시 ~2.9 → 회귀조정 ~2.3, 보수적 2.0</td></tr>
+      <tr class="rowhi"><td>자기자본비용</td><td>~14.0%</td><td>4.48% + 2.0 × 4.75%</td></tr>
+      <tr><td>부채비중(E≈98%)</td><td>~2%</td><td>증자 후 부채 미미 → WACC ≈ 자기자본비용</td></tr>
+      <tr class="rowtot"><td>WACC(기본)</td><td>~14%</td><td>불확실 범위 12~16%</td></tr>
+    </tbody>
+  </table></div>
+  <p class="annot">장기성장률 g=2.5%(기대 인플레이션 수준; 단 2026년 6월 인플레가 다소 높게 나옴), 최종가치 페이드 비율 0.20(IT/기술 하드웨어 평균).</p>
+
+  <h3 class="block">2단계 — “관대한 성공 시나리오” DCF (전시 23 형식)</h3>
+  <p>전제: 온쇼어링·우주·AI·바이오가 <b>대체로 성공</b>해 매출이 10년간 강하게 성장(연 25%대 출발)하고, 영업마진이 적자에서 18%까지 확대된다고 가정. 즉 <b>이미 매우 우호적인 시나리오</b>입니다.</p>
+  <div class="table-scroll"><table>
+    <caption>단위 백만 달러. WACC 14%, 연중(mid-year) 할인. 투자 = 매출증가분의 약 30%(성장 자본). 이는 ‘적정가’가 아니라 가정에 따른 결과값.</caption>
+    <thead><tr><th>항목</th><th>26E</th><th>27E</th><th>28E</th><th>29E</th><th>30E</th><th>31E</th><th>32E</th><th>33E</th><th>34E</th><th>35E</th></tr></thead>
+    <tbody>
+      <tr><td>매출</td><td>30.0</td><td>37.5</td><td>46.9</td><td>58.6</td><td>73.2</td><td>89.3</td><td>107</td><td>127</td><td>146</td><td>163</td></tr>
+      <tr><td>매출성장%</td><td>7%</td><td>25%</td><td>25%</td><td>25%</td><td>25%</td><td>22%</td><td>20%</td><td>18%</td><td>15%</td><td>12%</td></tr>
+      <tr><td>EBITA 마진%</td><td>6%</td><td>8%</td><td>10%</td><td>12%</td><td>14%</td><td>15%</td><td>16%</td><td>17%</td><td>18%</td><td>18%</td></tr>
+      <tr><td>NOPAT</td><td>1.4</td><td>2.4</td><td>3.7</td><td>5.6</td><td>8.1</td><td>10.6</td><td>13.6</td><td>17.0</td><td>20.7</td><td>23.2</td></tr>
+      <tr><td>미래 투자</td><td>0.6</td><td>2.3</td><td>2.8</td><td>3.5</td><td>4.4</td><td>4.8</td><td>5.4</td><td>5.8</td><td>5.7</td><td>5.2</td></tr>
+      <tr class="rowhi"><td>잉여현금흐름(FCF)</td><td>0.8</td><td>0.1</td><td>0.9</td><td>2.0</td><td>3.7</td><td>5.8</td><td>8.2</td><td>11.2</td><td>15.0</td><td>17.9</td></tr>
+      <tr><td>FCF의 현재가치</td><td>0.8</td><td>0.1</td><td>0.6</td><td>1.3</td><td>2.1</td><td>2.8</td><td>3.5</td><td>4.2</td><td>4.9</td><td>5.2</td></tr>
+    </tbody>
+  </table></div>
+  <div class="table-scroll"><table>
+    <caption>합산·최종가치 (백만 달러). 최종가치는 페이드 모델(k=14%, g=2.5%, f=0.20, 최종 ROIIC≈16%).</caption>
+    <thead><tr><th>구성</th><th>금액</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td>명시기간 FCF의 PV 합계</td><td>~25.5</td><td>10년</td></tr>
+      <tr><td>최종가치(2035년 말)</td><td>~171</td><td>대부분 ‘정상상태’ 가치(NOPAT/k), 해자 프리미엄은 미미</td></tr>
+      <tr><td>최종가치의 PV</td><td>~46</td><td>—</td></tr>
+      <tr class="rowhi"><td>기업가치(EV)</td><td>~$72M</td><td>= 25.5 + 46</td></tr>
+      <tr><td>+ 순현금(증자 후 추정)</td><td>~+4</td><td>—</td></tr>
+      <tr class="rowtot"><td>자본가치 → 주당가치</td><td>~$1.9 / 주</td><td>÷ 40.3M주</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout c-neg"><div class="ttl">📉 충격적 결과: 관대한 성공 시나리오조차 주당 ~$1.9 (현재가의 약 -85%)</div><div class="small">매출이 10년간 <b>약 5.8배</b>(28M→163M) 늘고 마진이 18%까지 오르는 “성공” 가정에도, 14% 자본비용에선 주당 ~$1.9입니다. 자본비용을 관대하게 10%로 낮춰도(아래 민감도) ~$3.3에 그칩니다. <b>가정을 크게 바꿔도 결론의 방향(현재가가 비싸다)은 견고합니다.</b></div></div>
+
+  <h3 class="block">3단계 — 현재가 $12.23를 정당화하려면(역산)</h3>
+  <p>위와 반대로 풀면, EV ~$490M·자본비용 14%를 맞추기 위한 조건은:</p>
+  <ul style="margin:0 0 14px;padding-left:20px">
+    <li><b>경로 A(장기 DCF):</b> 최종연도 NOPAT ~$230M+ 필요 → 18% 마진 가정 시 매출 ~$1,600M(<b>현재의 약 57배</b>), 즉 10년간 약 <b>50% CAGR</b>.</li>
+    <li><b>경로 B(5년 후 배수 회수):</b> 오늘 $490M을 14%로 5년 환산 시 2030년 EV ~$943M 필요 → 산업 평균 배수(EV/매출 ~3.4x) 적용 시 <b>2030년 매출 ~$240~280M</b>(현재의 8~10배, 약 50%+ CAGR).</li>
+  </ul>
+  <div class="callout c-warn"><div class="ttl">⚠ 내재 기대치 vs 과거 기저율(base rate)</div><div class="small">두 경로 모두 <b>“장기간 40~50%+ 매출 성장 + 강한 마진”</b>을 가리킵니다. 본 프레임워크 통계상 (1) 직전 3년 20%+ 성장한 기업 중 <b>향후 3년에도 20%+ 유지하는 비율은 31%</b>, (2) <b>신규 상장 기업의 약 70%는 초기 주가를 정당화하지 못함</b>입니다. 50% CAGR을 10년 유지하는 것은 역사적으로 극히 드문 ‘초우량 승자(슈퍼스타)’의 영역입니다. <b>‘내재 CAP’은 측정 불가(현 ROIC&lt;자본비용)이며, 주가가 반영하는 것은 CAP 길이가 아니라 미래 사업 ‘규모’가 수십 배 커진다는 베팅</b>입니다. (확신: 방향성 높음 ~80%)</div></div>
+
+  <div class="card">
+    <h4 class="mini">밸류에이션 갭 한눈에</h4>
+    <svg viewBox="0 0 680 150" role="img" aria-label="DCF 가치 vs 시장가 비교">
+      <text x="20" y="40" font-size="13" fill="#39414F">DCF 관대 기본(주당)</text>
+      <rect x="20" y="50" width="80" height="26" rx="5" fill="#4E8AA8"/>
+      <text x="110" y="68" font-family="monospace" font-size="13" fill="#39414F">~$2 (범위 $2~5)</text>
+      <text x="20" y="106" font-size="13" fill="#A22E1C">시장가(6/15)</text>
+      <rect x="20" y="116" width="500" height="26" rx="5" fill="#B23E29"/>
+      <text x="530" y="134" font-family="monospace" font-size="14" fill="#A22E1C" font-weight="bold">$12.23</text>
+      <text x="300" y="40" font-size="12" fill="#586172">← 갭: 시장은 DCF 기본 대비 약 3~6배</text>
+    </svg>
+    <div class="chart-cap">막대 길이는 주당 가치에 비례. 시장가는 관대한 성공 DCF의 약 3~6배 위에 있습니다.</div>
+  </div>
+</section>
+
+<section id="sensitivity">
+  <div class="sec-head"><span class="sec-num">12</span><h2>민감도 분석</h2></div>
+  <p class="sec-sub">가정을 흔들어 결론이 얼마나 바뀌는지 봅니다. 핵심: <b>어느 칸도 현재가 $12.23에 못 미칩니다.</b></p>
+  <h3 class="block">자본비용 × 초기 5년 매출 성장률 (주당 가치, $)</h3>
+  <div class="table-scroll"><table>
+    <caption>마진 경로는 기본(최종 18%) 고정. 모든 값은 가정 기반 ‘예시’이며 정밀 목표가가 아님. 음영 셀일수록 강세 가정.</caption>
+    <thead><tr><th>매출 CAGR \ WACC</th><th>14%</th><th>12%</th><th>10%</th></tr></thead>
+    <tbody>
+      <tr><td>18% (완만)</td><td>~1.4</td><td>~1.8</td><td>~2.4</td></tr>
+      <tr class="rowhi"><td>25% (기본)</td><td>~1.9</td><td>~2.5</td><td>~3.3</td></tr>
+      <tr><td>32% (공격적)</td><td>~2.5</td><td>~3.4</td><td>~4.5</td></tr>
+      <tr><td>40% (매우 공격적)</td><td>~3.9</td><td>~5.2</td><td>~7.0</td></tr>
+    </tbody>
+  </table></div>
+  <div class="grid3">
+    <div class="callout c-info" style="margin:6px 0"><div class="ttl">성장률 ±</div><div class="small">매출 CAGR을 25%→40%로 올려도(14% WACC) ~$3.9. 현재가에 닿으려면 50%+ CAGR + 추가 가정 필요.</div></div>
+    <div class="callout c-info" style="margin:6px 0"><div class="ttl">마진 ±</div><div class="small">최종 EBITA 마진 15%↔22% 변경 시 주당 가치 약 ±25~35% 변동. 그래도 기본 칸은 $1.5~3 부근.</div></div>
+    <div class="callout c-info" style="margin:6px 0"><div class="ttl">페이드 ±</div><div class="small">페이드 0.30(해자 약함)↔0.10(해자 강함)로 바꿔도 최종가치 변화는 제한적(초과수익 자체가 작아서). 결론 불변.</div></div>
+  </div>
+  <div class="callout c-neg"><div class="ttl">결론(민감도)</div><div class="small">성장·자본비용·마진·페이드를 광범위하게 흔들어도 <b>합리적 범위의 DCF는 대체로 주당 $1.5~7</b>에 머뭅니다. 현재가 $12.23는 이 범위를 벗어나 있어, “전환 대성공 또는 전략적 피인수” 같은 <b>꼬리(tail) 시나리오</b>를 가정해야 설명됩니다. (확신: 높음 ~85%)</div></div>
+</section>
+
+<section id="scenario">
+  <div class="sec-head"><span class="sec-num">13</span><h2>시나리오 분석 (강세 / 기본 / 약세)</h2></div>
+  <p class="sec-sub">확률은 주관적(베이지안) 추정이며, 새 증거가 나오면 갱신해야 합니다. ‘목표가’가 아니라 “무엇이 사실이어야 하는가”의 틀입니다.</p>
+  <div class="grid3">
+    <div class="card" style="margin:8px 0;border-color:#A6D6BD">
+      <h4 class="mini" style="color:#0E4A30">🟢 강세(Bull) <span class="badge b-high">~20%</span></h4>
+      <div class="small" style="color:var(--ink-soft)"><b>무엇이 사실이어야:</b> NDAA 온쇼어링 수요가 실제 대형 수주로 전환 + 우주/AI/바이오 동시 성공 → 10년 <b>35~45% CAGR</b>로 매출 수억$, 영업마진 20%+. 또는 대형 방산·광학사에 <b>전략적 프리미엄 피인수</b>.<br><b>함의:</b> 현재가($12.23) 정당화 또는 상회 가능.</div>
+    </div>
+    <div class="card" style="margin:8px 0;border-color:#A9CCDD">
+      <h4 class="mini" style="color:#10384C">🔵 기본(Base) <span class="badge b-mid">~45%</span></h4>
+      <div class="small" style="color:var(--ink-soft)"><b>무엇이 사실이어야:</b> 전환은 성공하되 완만 → 10년 <b>~20~25% CAGR</b>로 매출 $150~200M, 마진 15~18%. 흑자 전환하나 ‘초우량’까진 아님.<br><b>함의:</b> DCF상 주당 <b>~$2~5</b>. 현재가보다 낮음.</div>
+    </div>
+    <div class="card" style="margin:8px 0;border-color:#E2A99D">
+      <h4 class="mini" style="color:#7A2316">🔴 약세(Bear) <span class="badge b-low">~35%</span></h4>
+      <div class="small" style="color:var(--ink-soft)"><b>무엇이 사실이어야:</b> 인플렉션 불발 → 매출 정체/감소, 적자 지속, 추가 희석/현금 압박. 배수가 업종 평균(3~4x)으로 수렴.<br><b>함의:</b> 주당 <b>~$1~2 이하</b>. 모멘텀/패시브 자금 이탈 시 변동성 큼.</div>
+    </div>
+  </div>
+  <div class="callout c-info"><div class="ttl">시나리오 종합</div><div class="small">강세가 실현되면 큰 보상이 가능하나(구조적 호재는 실재), <b>그 결과가 현재가에 이미 상당 부분 ‘선반영’</b>되어 있습니다. 즉 강세가 ‘맞아도’ 추가 상승 여지는 제한적일 수 있고, 빗나가면 하방이 큽니다(비대칭). 본 프레임워크 매핑상 내재 기대치는 <b>“과도한 낙관(회피 고려)” 구간</b>에 위치합니다 — 이는 정보용 분류이며 매매 지시가 아닙니다.</div></div>
+</section>
+
+<section id="risk">
+  <div class="sec-head"><span class="sec-num">14</span><h2>주요 리스크 및 체크포인트</h2></div>
+  <div class="grid2">
+    <div class="card" style="margin:8px 0">
+      <h4 class="mini">핵심 리스크</h4>
+      <ul style="margin:0;padding-left:18px;font-size:14px;color:var(--ink-soft)">
+        <li><b>밸류에이션 되돌림</b> — EV/매출 17x(업종 3.4x)의 정상화 압력</li>
+        <li><b>고객 집중</b> — 3곳 48%, 국방예산 의존; 주문 지연이 분기 직격(1Q26)</li>
+        <li><b>실행/전환 실패</b> — ‘수주 보도’가 매출로 전환되지 못할 위험</li>
+        <li><b>희석</b> — 반복 증자 + 언아웃 주식(최대 수백만~수천만 주 잠재)</li>
+        <li><b>거버넌스</b> — 관계자 SPAC, 내부지분 집중</li>
+        <li><b>유동성·재무</b> — 현금 얇음, 신용한도 의존; 마진 변동성</li>
+        <li><b>경쟁</b> — LightPath(빠른 성장·고마진) 및 대형/비상장 광학사</li>
+        <li><b>커버리지 공백</b> — 정식 애널리스트 부재 → 가격 발견 취약, 모멘텀 의존</li>
+      </ul>
+    </div>
+    <div class="card" style="margin:8px 0">
+      <h4 class="mini">분기/연간 체크포인트(가정 검증용)</h4>
+      <ul style="margin:0;padding-left:18px;font-size:14px;color:var(--ink-soft)">
+        <li>☐ 매출이 실제로 <b>두 자릿수 성장</b>으로 전환되는가(2Q26~)</li>
+        <li>☐ 총마진이 24%+에서 더 확대되는가</li>
+        <li>☐ 우주 광학 ‘월 생산 4배·연 3배’가 매출로 확인되는가</li>
+        <li>☐ NDAA 온쇼어링이 <b>구체적 대형 계약</b>으로 나타나는가</li>
+        <li>☐ 영업현금흐름·흑자 전환 진척, 추가 증자/희석 규모</li>
+        <li>☐ 고객 집중도(48%) 완화 여부</li>
+        <li>☐ 6/26 러셀 편입 후 패시브 매수 종료 시 수급 변화</li>
+        <li>☐ 언아웃 주식 베스팅에 따른 주식수 증가</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout c-warn"><div class="ttl">매도(논리 붕괴) 신호 — 프레임워크 기준</div><div class="small">반대로 ‘강세 논리’가 깨지는 신호: 매출 2분기 연속 감소, 마진 재악화, 대형 고객 이탈, 추가 대규모 희석, 우주/국방 수주 모멘텀 둔화. 이 중 다수가 동시에 나타나면 내재 기대치와 현실의 괴리가 더 커집니다.</div></div>
+</section>
+
+<section id="synthesis">
+  <div class="sec-head"><span class="sec-num">15</span><h2>종합 판단 자료</h2></div>
+  <div class="verdict">
+    <h3>내부 관점(펀더멘털) vs 외부 관점(주가)</h3>
+    <p><span class="hl">내부:</span> 40년 역사의 소형 미국 광학 제조사. 진짜 강점(미국 내 수직통합, 군수 인증, 다변화 전방시장)이 있고 산업 방향도 우호적이나, <b>현재는 매출 정체·적자·음(-) ROIC</b>로 “저수익 정체형 성숙기”에 머물러 있습니다.</p>
+    <p><span class="hl">외부:</span> 시장은 매출의 17배(업종 5배)를 매기며, 이 회사를 <b>‘곧 수십 배 커질 초기 성장 기업’</b>처럼 평가합니다. 현금흐름 역산상 내재 기대치는 <b>장기 40~50%+ 매출 성장</b>으로, 과거 기저율과 충돌합니다.</p>
+    <p><span class="hl">핵심 통찰:</span> 현재가가 사는 것은 ‘경쟁우위기간(CAP)의 길이’가 아니라 <b>‘미래 사업 규모가 수십 배 커진다’는 전환 옵션</b>입니다. 구조적 호재(NDAA 온쇼어링)는 실재하지만, 그 잠재 수요가 <b>실제 매출·이익으로 전환되었다는 증거는 아직 없습니다</b>(2025·1Q26 매출은 오히려 감소). 보상은 비대칭적입니다 — 강세가 맞아도 선반영 탓에 추가 상승은 제한적일 수 있고, 빗나가면 하방이 큽니다.</p>
+    <p style="margin-bottom:0"><span class="hl">관찰해야 할 것:</span> ① 매출의 실제 두 자릿수 전환, ② 마진 추가 확대, ③ NDAA가 ‘보도’가 아닌 ‘대형 계약’으로 가시화, ④ 희석 규모. 이 지표들이 ‘기대치’를 따라잡는지가 향후 핵심입니다. <b>(본 분석은 정보 제공 목적이며, 매수·매도 권고가 아닙니다.)</b></p>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="sec-head"><span class="sec-num">16</span><h2>한계와 가정 (Limitations &amp; Assumptions)</h2></div>
+  <p class="sec-sub">이 분석이 의존하는 가정과 취약점을 투명하게 밝힙니다(비판적 사고 원칙).</p>
+  <div class="grid2">
+    <div class="card" style="margin:8px 0">
+      <h4 class="mini">이 결론이 의존하는 핵심 가정</h4>
+      <ul style="margin:0;padding-left:18px;font-size:13.8px;color:var(--ink-soft)">
+        <li>DCF 입력(매출 25% CAGR·마진 18%·WACC 14%·페이드 0.20)은 <b>분석자의 가정</b>이며, 달라지면 값도 달라짐</li>
+        <li>‘과거 기저율’(고성장 지속 31%, 신규상장 70% 미달성)이 OPTX에도 대체로 적용된다는 전제</li>
+        <li>업종 평균 EV/매출 3.4x가 적정 비교 기준이라는 전제</li>
+        <li>증자 후 순현금 ‘대략 중립’ 추정(분기 현금 변동으로 부정확)</li>
+      </ul>
+    </div>
+    <div class="card" style="margin:8px 0">
+      <h4 class="mini">확신이 낮은 지점 / 데이터 상충</h4>
+      <ul style="margin:0;padding-left:18px;font-size:13.8px;color:var(--ink-soft)">
+        <li><b>주식 수·시총</b>: 벤더별 40.3M~43.6M주, 시총 $490M~$534M로 상충. <b>언아웃 주식</b>(가격 도달 시 추가 발행) 규모·시점 불확실 → 희석 변수</li>
+        <li><b>2024 매출</b>: 회사 공시 $28.45M vs 일부 벤더 $29.4M(회사 수치 채택)</li>
+        <li><b>베타</b>: 상장 이력 짧고 변동성 커 매우 불안정(2.0~2.9 범위)</li>
+        <li><b>애널리스트 추정 부재</b>: 떠도는 ‘목표가’ 다수는 알고리즘 사이트 산출물(신뢰 낮음)</li>
+        <li>시장별 매출 % 미공개(단일 부문) → 수익구조는 질적 추정</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout c-info"><div class="ttl">이 결론이 틀릴 수 있는 조건 / 다음 검증 단계</div><div class="small"><b>틀릴 수 있는 조건:</b> (1) 매출이 향후 수개 분기 실제로 30~40%+ 가속, (2) NDAA가 단기에 대형·반복 계약으로 전환, (3) 마진이 20%+로 빠르게 확대, (4) 전략적 프리미엄 피인수 — 이 중 다수가 현실화되면 ‘과도한 낙관’ 판단을 상향 수정해야 합니다. <b>다음 검증:</b> 10-Q/10-K로 분기 매출·마진·현금·주식수 추적, 수주의 ‘매출 전환’ 여부 확인, 베타·자본비용 재추정, 러셀 편입 후 수급 관찰. 새 증거가 나오면 위 확률(강세 ~20%, 기본 ~45%, 약세 ~35%)을 갱신.</div></div>
+</section>
+
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <div style="height:4px;background:var(--spectrum);border-radius:3px;margin-bottom:14px;max-width:200px"></div>
+    <div style="color:var(--dark-ink);font-weight:700;font-size:15px;margin-bottom:4px">Syntec Optics (NASDAQ: OPTX) — CAP 프레임워크 심층 분석</div>
+    <div>분석 기준일: 2026년 6월 15일 종가(주가·시총), 일부 시장데이터 6월 16일 기준. 본 자료는 정보 제공·교육 목적의 분석이며 특정 종목의 매수·매도 권유가 아닙니다.</div>
+    <div class="src-list" style="margin-top:10px">
+      <b>주요 출처:</b> 회사 SEC 공시(10-K FY2025/FY2024, 8-K, S-4, 증자 공시) 및 실적 보도자료(GlobeNewswire), 가격·재무 데이터(Yahoo Finance·StockAnalysis·StockTitan·Investing.com·Tickeron·Simply Wall St), 산업 자료(SPIE, DataM/Mordor/Straits/Technavio 포토닉스·광인터커넥트·실리콘포토닉스 추정), 피어(LightPath·Coherent·Fabrinet 공시/벤더), 거시(FRED 10년 국채, 다모다란 ERP 2026). 출처별 수치 상충 시 회사 감사 재무제표 우선.
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
