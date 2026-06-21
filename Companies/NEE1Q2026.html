@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextEra Energy (NEE) — CAP 기반 장기 투자 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B1B2B;        /* deep navy (dark section bg) */
+  --ink2:#12293E;       /* panel */
+  --ink3:#1B3A55;       /* lighter panel */
+  --paper:#EEF2F5;      /* cool page bg */
+  --card:#FFFFFF;
+  --teal:#0E8C9A;       /* primary accent */
+  --teal-d:#0A6E78;     /* darker teal for text/links */
+  --teal-bright:#14B9CC;
+  --amber:#E08A2B;      /* energy/sun accent */
+  --amber-d:#B96E16;
+  --green:#2E8B6B;      /* renewables (muted) */
+  --red:#C0492F;        /* risk/negative */
+  --red-d:#9E3A24;
+  --tx:#15242E;         /* body text dark */
+  --tx-mut:#475862;     /* muted text on light (≈6:1) */
+  --tx-light:#EAF1F5;   /* text on dark */
+  --tx-lmut:#9FB4C2;    /* muted on dark */
+  --bd:#D7DFE5;         /* light border */
+  --bd-d:rgba(255,255,255,0.14);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--tx);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;line-height:1.18;letter-spacing:-0.01em;color:var(--tx)}
+.mono{font-family:'IBM Plex Mono',monospace}
+a{color:var(--teal-d)}
+sup{font-size:.7em}
+
+/* ---------- TOP BAR / NAV ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(11,27,43,0.96);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--bd-d)}
+.topbar .wrap{display:flex;align-items:center;gap:14px;
+  min-height:54px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:9px;color:var(--tx-light);
+  font-family:'Space Grotesk';font-weight:700;white-space:nowrap}
+.brand .dot{width:11px;height:11px;border-radius:50%;
+  background:var(--teal-bright);box-shadow:0 0 10px var(--teal-bright)}
+.brand .tk{font-family:'IBM Plex Mono';font-weight:600;color:var(--teal-bright);font-size:.92em}
+.nav{display:flex;flex-wrap:wrap;gap:5px 6px;align-items:center;
+  min-height:32px;margin-left:auto}
+.nav a{font-family:'IBM Plex Mono';font-size:11.5px;font-weight:500;
+  color:var(--tx-lmut);text-decoration:none;white-space:nowrap;
+  padding:4px 9px;border:1px solid var(--bd-d);border-radius:999px;background:transparent}
+.nav a:hover{color:var(--ink);background:var(--teal-bright);border-color:var(--teal-bright)}
+
+/* ---------- HERO ---------- */
+.hero{background:
+   radial-gradient(1100px 500px at 78% -8%, rgba(20,185,204,0.18), transparent 60%),
+   radial-gradient(800px 420px at 8% 108%, rgba(224,138,43,0.12), transparent 55%),
+   linear-gradient(180deg,#0B1B2B 0%,#0E2336 100%);
+  color:var(--tx-light);padding:54px 0 46px;border-bottom:1px solid var(--bd-d)}
+.eyebrow{font-family:'IBM Plex Mono';font-size:12px;font-weight:500;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--teal-bright);margin:0 0 16px}
+.hero h1{font-size:clamp(30px,5.2vw,52px);font-weight:700;color:#fff;margin:0 0 18px;max-width:18ch}
+.hero .lede{font-size:clamp(16px,2vw,19px);color:#D6E2EB;max-width:62ch;margin:0 0 28px;line-height:1.6}
+.hero .lede b{color:#fff;font-weight:600}
+.hero .lede .hl{color:var(--teal-bright);font-weight:600}
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:6px}
+.stat{background:rgba(255,255,255,0.05);border:1px solid var(--bd-d);
+  border-radius:13px;padding:15px 16px}
+.stat .k{font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--tx-lmut);margin:0 0 7px}
+.stat .v{font-family:'Space Grotesk';font-size:25px;font-weight:700;color:#fff;line-height:1}
+.stat .s{font-size:12px;color:var(--tx-lmut);margin-top:6px}
+.stat .v.teal{color:var(--teal-bright)} .stat .v.amber{color:#F0A847}
+
+/* ---------- SECTIONS ---------- */
+section{padding:46px 0}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+.sec-num{font-family:'IBM Plex Mono';font-size:13px;font-weight:600;color:var(--teal);
+  border:1px solid var(--teal);border-radius:7px;padding:2px 8px;white-space:nowrap}
+.sec-head h2{font-size:clamp(23px,3.3vw,32px);font-weight:700;margin:0}
+.sec-sub{color:var(--tx-mut);font-size:15.5px;max-width:74ch;margin:2px 0 26px}
+.lead-para{font-size:17px;color:var(--tx);max-width:78ch}
+p{max-width:78ch}
+
+.divider-light{height:1px;background:var(--bd);border:0;margin:0}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:15px;
+  padding:22px 24px;color:var(--tx)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card h3{font-size:18px;margin:0 0 10px}
+.card h4{font-size:15px;margin:0 0 7px;color:var(--teal-d)}
+.card p{font-size:14.5px;color:var(--tx);margin:0 0 8px}
+.muted{color:var(--tx-mut)}
+
+/* callouts — each self-contained (bg + text + border) */
+.callout{border-radius:13px;padding:16px 18px;border:1px solid;margin:18px 0}
+.callout .lab{font-family:'IBM Plex Mono';font-size:11px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;margin:0 0 7px;display:block}
+.co-teal{background:#E7F6F7;border-color:#9FD9DE;color:#0A3940}
+.co-teal .lab{color:#0A6E78}
+.co-amber{background:#FBF1E2;border-color:#EAC58C;color:#5A3D12}
+.co-amber .lab{color:#B96E16}
+.co-red{background:#FBEAE5;border-color:#E8B3A4;color:#5E2417}
+.co-red .lab{color:#9E3A24}
+.co-green{background:#E6F4EE;border-color:#A6D8C3;color:#173E31}
+.co-green .lab{color:#1F6B51}
+.co-ink{background:#0E2336;border:1px solid var(--bd-d);color:#E3ECF2}
+.co-ink .lab{color:var(--teal-bright)}
+.callout p{margin:0;color:inherit;font-size:14.5px}
+.callout p+p{margin-top:8px}
+.callout b{color:inherit;font-weight:700}
+
+/* dark panel */
+.panel-dark{background:linear-gradient(180deg,#0E2336,#0B1B2B);
+  border:1px solid var(--bd-d);border-radius:16px;padding:24px 26px;color:var(--tx-light)}
+.panel-dark h3{color:#fff} .panel-dark p{color:#CFDCE6}
+.panel-dark .mut{color:var(--tx-lmut)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--bd);border-radius:13px;background:var(--card)}
+table.data{border-collapse:collapse;width:100%;min-width:560px;font-size:13.5px}
+table.data th,table.data td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--bd);color:var(--tx)}
+table.data th{background:#0E2336;color:var(--tx-light);font-family:'IBM Plex Mono';
+  font-size:11.5px;font-weight:600;letter-spacing:.03em;text-align:right;position:sticky;top:0}
+table.data td:first-child,table.data th:first-child{text-align:left}
+table.data tbody tr:nth-child(even){background:#F6F9FA}
+table.data .num{font-family:'IBM Plex Mono'}
+table.data tr.hi td{background:#E7F6F7;color:#0A3940;font-weight:600}
+table.data tr.hi td:first-child{color:#0A3940}
+.cap{font-size:12px;color:var(--tx-mut);margin-top:9px}
+
+/* chips / badges */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.chip{font-family:'IBM Plex Mono';font-size:12px;font-weight:500;padding:4px 10px;
+  border-radius:999px;border:1px solid;white-space:nowrap}
+.chip.t{background:#E7F6F7;border-color:#9FD9DE;color:#0A5660}
+.chip.a{background:#FBF1E2;border-color:#EAC58C;color:#8A5210}
+.chip.g{background:#E6F4EE;border-color:#A6D8C3;color:#1F6B51}
+.chip.r{background:#FBEAE5;border-color:#E8B3A4;color:#8E3320}
+.chip.n{background:#E9EEF2;border-color:#C7D2DA;color:#33454F}
+
+/* small label */
+.kicker{font-family:'IBM Plex Mono';font-size:12px;font-weight:600;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--teal-d);margin:0 0 8px}
+
+/* two-engine diagram */
+.engines{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+.engine{border-radius:14px;padding:18px 20px;border:1px solid}
+.engine.fpl{background:#E7F6F7;border-color:#9FD9DE;color:#0A3940}
+.engine.neer{background:#E6F4EE;border-color:#A6D8C3;color:#173E31}
+.engine .pct{font-family:'Space Grotesk';font-size:34px;font-weight:700;line-height:1}
+.engine .nm{font-weight:700;font-size:16px;margin:4px 0 2px}
+.engine .ds{font-size:13.5px}
+.engine.fpl .pct{color:#0A6E78} .engine.neer .pct{color:#1F6B51}
+.engine ul{margin:10px 0 0;padding-left:18px;font-size:13px}
+.engine li{margin:3px 0}
+
+/* generic list */
+ul.clean{margin:8px 0;padding-left:20px}
+ul.clean li{margin:6px 0;font-size:14.5px}
+
+/* footnote refs */
+.src{font-size:12.5px;color:var(--tx-mut)}
+
+/* responsive */
+@media(max-width:860px){
+  .grid2,.grid3,.engines,.statgrid{grid-template-columns:1fr}
+  .statgrid{grid-template-columns:1fr 1fr}
+  .nav{width:100%;margin-left:0}
+}
+@media(max-width:520px){
+  body{font-size:16px}
+  .statgrid{grid-template-columns:1fr 1fr}
+}
+
+/* confidence tag */
+.conf{display:inline-block;font-family:'IBM Plex Mono';font-size:11px;font-weight:600;
+  padding:2px 8px;border-radius:6px;background:#0E2336;color:var(--teal-bright);
+  border:1px solid var(--bd-d);vertical-align:middle}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP NAV ===== -->
+<div class="topbar">
+  <div class="wrap">
+    <span class="brand"><span class="dot"></span>NextEra Energy <span class="tk">NYSE:NEE</span></span>
+    <nav class="nav">
+      <a href="#overview">개요</a>
+      <a href="#revenue">수익구조</a>
+      <a href="#tech">기술·제품</a>
+      <a href="#industry">산업분석</a>
+      <a href="#lifecycle">생애주기</a>
+      <a href="#moat">해자·5Forces</a>
+      <a href="#swot">SWOT</a>
+      <a href="#peers">피어비교</a>
+      <a href="#wind">풍력정책</a>
+      <a href="#merger">도미니언합병</a>
+      <a href="#valuation">내재CAP</a>
+      <a href="#sensitivity">민감도</a>
+      <a href="#risk">리스크</a>
+      <a href="#verdict">종합판단</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">CAP 기반 장기 투자 분석 · 기준일 2026-06-16</p>
+    <h1>전력이 부족한 시대, 가장 큰 발전 회사</h1>
+    <p class="lede">
+      넥스트에라 에너지는 <b>규제로 보호받는 플로리다 전력 독점 사업(FPL)</b>과
+      <b>미국 최대 청정에너지·전력저장 개발사(NEER)</b>를 결합한, 시가총액 기준 세계 최대 전력회사입니다.
+      AI 데이터센터발(發) 전력 수요 폭증의 한복판에 서 있으며, 현재 주가는 시장이 NEE에게
+      <span class="hl">매우 긴 "경쟁 우위 기간(CAP)"</span>을 부여하고 있음을 시사합니다.
+    </p>
+    <div class="statgrid">
+      <div class="stat"><p class="k">현재가 (6/15 종가)</p><div class="v">$86.1</div><p class="s">52주 $67.2–$98.8</p></div>
+      <div class="stat"><p class="k">시가총액</p><div class="v">~$180B</div><p class="s">세계 1위 전력회사</p></div>
+      <div class="stat"><p class="k">생애주기 단계</p><div class="v teal">성장</div><p class="s">현금흐름 패턴 기준</p></div>
+      <div class="stat"><p class="k">시장 내재 CAP</p><div class="v amber">~28–34년</div><p class="s">자기자본 기준 역산</p></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== CORE CONCLUSION ===== -->
+<section id="conclusion" style="padding-top:40px">
+  <div class="wrap">
+    <p class="kicker">핵심 결론 (먼저 읽으세요)</p>
+    <div class="panel-dark">
+      <h3 style="font-size:21px;margin-bottom:12px">한 문단 요약</h3>
+      <p style="font-size:16.5px;color:#E3ECF2;max-width:80ch">
+        NEE는 <b style="color:#fff">현금흐름상 "성장 단계"에 있는 보기 드문 규제 유틸리티</b>로, 안정적인 독점 사업과
+        고성장 재생에너지를 동시에 가진 복합 기업입니다. 현재 주가($86)는 표준 기업가치(unlevered) 모델로는 설명되지 않으며,
+        규제 유틸리티에 맞는 <b style="color:#fff">자기자본 기준 모델</b>로 역산하면 시장은 NEE가 <b style="color:#14B9CC">약 8%의 이익 성장을 25~35년간
+        자기자본비용을 초과하는 수익률로 지속</b>한다고 가격에 반영하고 있습니다. 이는 프레임워크가 "합리적"이라 보는 10~15년을
+        크게 넘어, <b style="color:#F0A847">안전마진이 얇음</b>을 뜻합니다. 한편 사용자가 주목한 <b style="color:#fff">트럼프 풍력 규제 철회는 NEE에
+        제한적 호재</b>(NEE의 포워드 파이프라인은 풍력이 아닌 태양광·저장장치 중심)이며, 진짜 변수는 <b style="color:#fff">세액공제 단계적
+        폐지(OBBBA)</b>와 <b style="color:#fff">도미니언 670억 달러 합병</b>입니다.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px">
+        <span class="chip t">성장 단계 (Op+ / Inv− / Fin+)</span>
+        <span class="chip a">내재 CAP ~28–34년 · 신뢰도 중간(65%)</span>
+        <span class="chip g">고든 기대수익 10.8% &gt; Ke 8.27%</span>
+        <span class="chip r">풍력 철회 = 제한적 호재 · 신뢰도 높음(75%)</span>
+        <span class="chip n">도미니언 합병이 최대 촉매·리스크</span>
+      </div>
+    </div>
+    <p class="src" style="margin-top:12px">
+      ※ 본 보고서는 정보 제공용 분석이며 특정 종목의 매수·매도를 권하지 않습니다. 모든 수치는 출처와 기준 시점을 본문/말미에 표기했습니다.
+      "적정 가치"가 아니라 <b>현재가에 내재된 시장 기대치</b>를 역산하는 접근을 사용합니다.
+    </p>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 1. 기업 개요 ===== -->
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><h2>기업 개요 — NEE는 무엇을 하는 회사인가</h2></div>
+    <p class="sec-sub">처음 접하는 분을 위해, 회사의 정체부터 한 문장으로 정리하고 두 개의 "엔진"을 풀어 설명합니다.</p>
+
+    <div class="co-ink callout">
+      <span class="lab">한 문장 정의</span>
+      <p style="font-size:16px">
+        NEE는 <b>"플로리다에서 600만 가구에 전기를 파는 규제 독점 회사"</b>와
+        <b>"미국 전역에 풍력·태양광·배터리 발전소를 지어 장기 계약으로 전기를 파는 최대 개발사"</b>를
+        한 지붕 아래 둔, <b>세계에서 가장 큰 전력회사</b>입니다.
+      </p>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="card">
+        <h4>설립 배경과 정체성</h4>
+        <p>1925년 플로리다에서 전력회사로 출발(법인 'FPL Group' 1984년 → 2010년 'NextEra Energy'로 개명).
+        본사는 플로리다 주노비치. CEO는 <b>존 케첨(John Ketchum)</b>. 직원 약 1만 7,400명, 미국·캐나다에서 사업합니다.</p>
+        <p class="muted">왜 이름에 'Next Era(다음 시대)'가 붙었나 — 전통 전력회사이면서도 일찌감치 재생에너지로 방향을 튼
+        정체성을 담은 것입니다. 실제로 미국 최대 풍력·태양광 사업자가 되었습니다.</p>
+      </div>
+      <div class="card">
+        <h4>두 개의 사업 부문</h4>
+        <ul class="clean">
+          <li><b>FPL (Florida Power &amp; Light)</b> — 플로리다의 규제 전력 유틸리티. 약 600만 계정(약 1,200만 명),
+          발전설비 약 36GW. <b>회사 영업이익의 약 70%</b>를 책임지는 안정적 엔진.</li>
+          <li><b>NEER (NextEra Energy Resources)</b> — 경쟁 시장에서 풍력·태양광·원자력·가스·배터리 발전소를 짓고 운영.
+          약 40GW 규모. 미국 최대 재생에너지·저장 개발사. <b>고성장 엔진</b>.</li>
+        </ul>
+        <div class="chips">
+          <span class="chip t">규제 독점 + 청정에너지</span>
+          <span class="chip g">미국 최대 재생에너지 개발사</span>
+          <span class="chip n">시총 세계 1위 전력회사</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="co-amber callout" style="margin-top:18px">
+      <span class="lab">비전공자를 위한 핵심 비유</span>
+      <p>FPL은 <b>"통행료 도로"</b>와 비슷합니다 — 정부(규제기관)가 정해준 구역에서 독점적으로 전기를 공급하고,
+      투자한 설비(요금기반, rate base)에 대해 <b>허가된 수익률(약 10.95%)</b>을 안정적으로 법으로 보장받습니다.
+      NEER은 <b>"부동산 개발업"</b>에 가깝습니다 — 발전소를 지어 대기업·데이터센터와 10~20년 장기 전기 공급 계약을 맺고,
+      정부 세액공제까지 받아 수익을 냅니다. 안정성(FPL) + 성장성(NEER)의 조합이 NEE의 정체성입니다.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 2. 수익 구조 ===== -->
+<section id="revenue">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><h2>수익 구조 — 이 회사는 어떻게 돈을 버는가</h2></div>
+    <p class="sec-sub">2025년 매출 약 274억 달러. 이익의 약 70%는 규제 사업(FPL), 약 30%는 재생에너지(NEER)에서 나옵니다.</p>
+
+    <div class="engines">
+      <div class="engine fpl">
+        <div class="pct">~70%</div>
+        <div class="nm">FPL · 규제 독점 전력</div>
+        <div class="ds">"요금기반 × 허가 수익률" 공식으로 이익이 정해지는 안정 엔진</div>
+        <ul>
+          <li>설비(요금기반)에 투자 → 규제기관이 허가한 <b>ROE 10.95%</b>로 회수</li>
+          <li>2025년 4년 요금안 승인: 2026년 +$945M, 2027년 +$705M 요금 인상</li>
+          <li>분기마다 약 10만 가구 순증 (플로리다 인구 유입)</li>
+          <li>향후 4년 약 <b>$40B</b> 투자 (태양광 5.3GW·저장 3.4GW 등)</li>
+        </ul>
+      </div>
+      <div class="engine neer">
+        <div class="pct">~30%</div>
+        <div class="nm">NEER · 재생에너지·저장</div>
+        <div class="ds">발전소를 지어 장기계약(PPA)·세액공제로 수익을 내는 성장 엔진</div>
+        <ul>
+          <li>풍력·태양광·저장 발전소 → <b>10~20년 장기 전기판매계약(PPA)</b></li>
+          <li>연방 <b>세액공제(PTC·ITC)</b> 활용 → 실효세율을 크게 낮춤</li>
+          <li>계약 수익률: 태양광 10%대 중반, <b>풍력·저장 20% 이상</b></li>
+          <li>수주잔고 약 33GW, 데이터센터향 파이프라인 60GW+</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- revenue flow infographic -->
+    <div class="card" style="margin-top:18px">
+      <h3>돈의 흐름 한눈에 보기</h3>
+      <svg viewBox="0 0 980 250" width="100%" role="img" aria-label="NEE 수익 흐름도" style="max-width:100%;height:auto">
+        <defs>
+          <marker id="ar" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#475862"></path>
+          </marker>
+        </defs>
+        <!-- inputs -->
+        <rect x="8" y="30" width="180" height="58" rx="10" fill="#E7F6F7" stroke="#9FD9DE"></rect>
+        <text x="98" y="55" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#0A3940">자본 투자</text>
+        <text x="98" y="74" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#0A5660">설비·발전소 건설</text>
+
+        <rect x="8" y="148" width="180" height="58" rx="10" fill="#E6F4EE" stroke="#A6D8C3"></rect>
+        <text x="98" y="173" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#173E31">정부 세액공제</text>
+        <text x="98" y="192" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#1F6B51">PTC · ITC</text>
+
+        <!-- engines -->
+        <rect x="300" y="22" width="210" height="74" rx="12" fill="#0E2336" stroke="#1B3A55"></rect>
+        <text x="405" y="50" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#fff">FPL (규제)</text>
+        <text x="405" y="72" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#9FB4C2">요금기반 × 허가 ROE</text>
+
+        <rect x="300" y="140" width="210" height="74" rx="12" fill="#0E2336" stroke="#1B3A55"></rect>
+        <text x="405" y="168" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#fff">NEER (경쟁)</text>
+        <text x="405" y="190" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#9FB4C2">장기 PPA + 세액공제</text>
+
+        <!-- outputs -->
+        <rect x="640" y="58" width="200" height="64" rx="12" fill="#FBF1E2" stroke="#EAC58C"></rect>
+        <text x="740" y="84" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#5A3D12">영업이익 ~$8.3B</text>
+        <text x="740" y="104" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#8A5210">영업이익률 30%</text>
+
+        <rect x="640" y="140" width="200" height="64" rx="12" fill="#FFFFFF" stroke="#D7DFE5"></rect>
+        <text x="740" y="166" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#15242E">배당 + 재투자</text>
+        <text x="740" y="186" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#475862">배당수익률 ~2.8%</text>
+
+        <!-- arrows -->
+        <line x1="188" y1="59" x2="298" y2="59" stroke="#475862" stroke-width="2" marker-end="url(#ar)"></line>
+        <line x1="188" y1="177" x2="298" y2="177" stroke="#475862" stroke-width="2" marker-end="url(#ar)"></line>
+        <line x1="510" y1="59" x2="638" y2="86" stroke="#475862" stroke-width="2" marker-end="url(#ar)"></line>
+        <line x1="510" y1="177" x2="638" y2="160" stroke="#475862" stroke-width="2" marker-end="url(#ar)"></line>
+        <line x1="740" y1="122" x2="740" y2="138" stroke="#475862" stroke-width="2" marker-end="url(#ar)"></line>
+      </svg>
+      <p class="cap">출처: NEE FY2025 손익계산서(StockAnalysis/Fiscal.ai), 회사 IR. 영업이익률 30.2%는 2024·2025년 모두 안정적.</p>
+    </div>
+
+    <div class="co-teal callout">
+      <span class="lab">눈여겨볼 특이점 — 마이너스 세율</span>
+      <p>NEE의 2025년 <b>실효세율은 −17.7%</b>였습니다(세금을 내는 게 아니라 오히려 환급받음). 재생에너지
+      세액공제(PTC·ITC) 덕분입니다. 이것이 NEE 이익의 숨은 원천이자, 뒤에서 다룰 <b>트럼프 세액공제 폐지(OBBBA)</b>가
+      위협하는 핵심 가치동인입니다. 일부 공제는 세금주식(tax equity) 투자자(소수지분)에게 넘어갑니다.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+<!-- ===== 3. 제품/서비스 및 기술력 ===== -->
+<section id="tech">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><h2>제품·서비스 및 기술력 — 어떻게 만들고 파는가</h2></div>
+    <p class="sec-sub">전력회사는 "물건"이 아니라 "전기를 만들고, 옮기고, 파는 능력"을 팝니다. 두 사업의 작동 방식을 흐름도로 풀어봅니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>① 규제 유틸리티(FPL)의 작동 원리</h4>
+        <p>발전(원자력·가스·태양광) → 송전(고압) → 배전(가정·기업) → 요금 청구. 핵심은
+        <b>"규제 협약(regulatory compact)"</b>입니다. 회사가 설비에 투자하면 규제기관이 그 투자금(요금기반)에
+        <b>허가된 수익률</b>을 얹어 요금으로 회수하도록 허용합니다. 독점 대가로 가격·수익률을 규제받는 구조입니다.</p>
+        <ul class="clean">
+          <li>요금기반(rate base): 약 8~10%/년 성장 (데이터센터·인구 유입)</li>
+          <li>허가 ROE 10.95% · 자기자본비율 59.6% (2025년 4년 요금안)</li>
+          <li>송배전망 약 93,000 마일, 변전소 932개</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>② 재생에너지(NEER)의 작동 원리</h4>
+        <p>부지 확보 → 인허가·계통연계 → 건설 → <b>장기 전기판매계약(PPA)</b> → 운영. 여기에 두 가지
+        "금융 기술"이 더해집니다: <b>세금주식(tax equity)</b> 구조로 세액공제를 현금화하고,
+        <b>금리 스왑</b>으로 조달비용을 고정합니다. 대규모로 표준화해 <b>최저 비용</b>으로 짓는 것이 경쟁력입니다.</p>
+        <ul class="clean">
+          <li>수주잔고 ~33GW (2026년 1분기 기준)</li>
+          <li>2026년 1분기 신규 4GW 수주(태양광 2.2 · 저장 1.3 · 풍력 0.5GW)</li>
+          <li>하이퍼스케일러용 2~5GW 단위 대형 프로젝트로 전환 중</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- renewable build process flow -->
+    <div class="card" style="margin-top:16px">
+      <h3>재생에너지 프로젝트 생애 (NEER 가치 창출 과정)</h3>
+      <svg viewBox="0 0 980 130" width="100%" role="img" aria-label="재생에너지 프로젝트 흐름" style="max-width:100%;height:auto">
+        <defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#0A6E78"></path></marker></defs>
+        <!-- 5 steps -->
+        <g font-family="Space Grotesk" font-weight="600" font-size="13" fill="#0A3940">
+          <rect x="6" y="40" width="170" height="52" rx="10" fill="#E7F6F7" stroke="#9FD9DE"></rect>
+          <text x="91" y="62" text-anchor="middle">1. 부지·계통연계</text>
+          <text x="91" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5" fill="#0A5660">인터커넥션 큐 확보</text>
+
+          <rect x="208" y="40" width="170" height="52" rx="10" fill="#E7F6F7" stroke="#9FD9DE"></rect>
+          <text x="293" y="62" text-anchor="middle">2. 인허가·착공</text>
+          <text x="293" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5" fill="#0A5660">세액공제 세이프하버</text>
+
+          <rect x="410" y="40" width="170" height="52" rx="10" fill="#E7F6F7" stroke="#9FD9DE"></rect>
+          <text x="495" y="62" text-anchor="middle">3. 건설(자본투입)</text>
+          <text x="495" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5" fill="#0A5660">규모의 경제·조달</text>
+
+          <rect x="612" y="40" width="170" height="52" rx="10" fill="#E6F4EE" stroke="#A6D8C3"></rect>
+          <text x="697" y="62" text-anchor="middle" fill="#173E31">4. 장기계약 가동</text>
+          <text x="697" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5" fill="#1F6B51">10~20년 PPA 현금</text>
+
+          <rect x="814" y="40" width="160" height="52" rx="10" fill="#FBF1E2" stroke="#EAC58C"></rect>
+          <text x="894" y="62" text-anchor="middle" fill="#5A3D12">5. 자산 재활용</text>
+          <text x="894" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5" fill="#8A5210">매각→재투자</text>
+        </g>
+        <g stroke="#0A6E78" stroke-width="2" marker-end="url(#ar2)">
+          <line x1="176" y1="66" x2="206" y2="66"></line>
+          <line x1="378" y1="66" x2="408" y2="66"></line>
+          <line x1="580" y1="66" x2="610" y2="66"></line>
+          <line x1="782" y1="66" x2="812" y2="66"></line>
+        </g>
+      </svg>
+      <p class="cap">핵심 기술력 = ① 인터커넥션 큐 선점 ② 대규모 표준화 건설로 최저 LCOE ③ 세금주식·금리스왑 등 금융 엔지니어링.
+      이 세 가지가 NEER의 "원가 우위" 해자를 만듭니다.</p>
+    </div>
+
+    <div class="co-teal callout">
+      <span class="lab">기술 용어 쉽게 풀기</span>
+      <p><b>PPA(전력판매계약)</b>: 발전소가 생산할 전기를 미리 정한 가격에 장기간 사주기로 한 계약 → 안정적 현금흐름.
+      <b>인터커넥션 큐</b>: 발전소를 전력망에 연결하기 위한 대기열 → 자리를 먼저 잡은 사업자가 유리.
+      <b>세금주식(tax equity)</b>: 세액공제를 활용할 수 있는 금융기관에 지분을 팔아 공제 혜택을 현금으로 바꾸는 구조.
+      <b>LCOE</b>: 발전 단가 → 낮을수록 경쟁력.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 4. 산업 분석 ===== -->
+<section id="industry">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><h2>산업 분석 — 전력 산업의 구조와 미래</h2></div>
+    <p class="sec-sub">수십 년간 "저성장 안정 배당주"였던 전력 산업이, AI 데이터센터 수요로 <b>"성장 산업"으로 재평가</b>되는 중입니다.</p>
+
+    <div class="grid3">
+      <div class="card">
+        <h4>산업 구조</h4>
+        <p>미국 전력은 ① <b>규제 유틸리티</b>(지역 독점, 가격·수익률 규제)와 ② <b>경쟁 발전</b>(시장 가격)으로
+        나뉩니다. NEE는 둘을 모두 가진 드문 회사입니다.</p>
+      </div>
+      <div class="card">
+        <h4>최대 트렌드: 전력 수요 급증</h4>
+        <p>10년 넘게 정체했던 미국 전력 수요가 <b>AI 데이터센터·전기화·재산업화</b>로 급증("verge of surge").
+        업계는 5년간 약 <b>$1.4조</b> 투자 계획.</p>
+      </div>
+      <div class="card">
+        <h4>정책 환경 (양날의 검)</h4>
+        <p><b>IRA</b>가 재생에너지에 세액공제를 줬지만, 트럼프의 <b>OBBBA</b>가 이를 단계적으로 폐지.
+        반면 가스·원자력·송전망 투자는 가속.</p>
+      </div>
+    </div>
+
+    <!-- value chain -->
+    <div class="card" style="margin-top:16px">
+      <h3>전력 산업 가치사슬 (Value Chain)</h3>
+      <svg viewBox="0 0 980 120" width="100%" role="img" aria-label="전력 가치사슬" style="max-width:100%;height:auto">
+        <defs><marker id="ar3" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#475862"></path></marker></defs>
+        <g font-family="Space Grotesk" font-weight="600" font-size="13.5" fill="#fff">
+          <rect x="6" y="38" width="150" height="50" rx="9" fill="#1B3A55"></rect><text x="81" y="68" text-anchor="middle">발전</text>
+          <rect x="194" y="38" width="150" height="50" rx="9" fill="#1B3A55"></rect><text x="269" y="68" text-anchor="middle">송전</text>
+          <rect x="382" y="38" width="150" height="50" rx="9" fill="#1B3A55"></rect><text x="457" y="68" text-anchor="middle">배전</text>
+          <rect x="570" y="38" width="150" height="50" rx="9" fill="#1B3A55"></rect><text x="645" y="68" text-anchor="middle">소매·판매</text>
+          <rect x="758" y="38" width="216" height="50" rx="9" fill="#0E8C9A"></rect><text x="866" y="62" text-anchor="middle">최종 수요</text>
+          <text x="866" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#E7F6F7">데이터센터·전기화</text>
+        </g>
+        <g stroke="#475862" stroke-width="2" marker-end="url(#ar3)">
+          <line x1="156" y1="63" x2="192" y2="63"></line>
+          <line x1="344" y1="63" x2="380" y2="63"></line>
+          <line x1="532" y1="63" x2="568" y2="63"></line>
+          <line x1="720" y1="63" x2="756" y2="63"></line>
+        </g>
+        <text x="270" y="22" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#0A6E78">FPL: 발전→송전→배전→판매 모두 보유 (수직통합)</text>
+        <text x="760" y="108" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#1F6B51">NEER: 발전(재생) → 전국 도매·PPA</text>
+      </svg>
+    </div>
+
+    <div class="panel-dark" style="margin-top:16px">
+      <h3>왜 지금 "전력 슈퍼사이클"인가</h3>
+      <p style="max-width:82ch">생성형 AI 한 개 데이터센터 단지는 도시 하나만큼 전기를 씁니다.
+      엑셀에너지는 <b style="color:#fff">"1GW 데이터센터 = 100만 가구"</b>에 해당한다고 표현합니다.
+      AEP는 2030년까지 시스템 피크가 <b style="color:#fff">63GW</b> 늘어날 수 있다고 보며(그중 80%+가 데이터센터),
+      NEE의 데이터센터향 파이프라인은 6개월 만에 50GW→60GW+로 확대됐습니다. 이 수요는
+      <b style="color:#14B9CC">규제 유틸리티(FPL)의 요금기반 성장</b>과 <b style="color:#14B9CC">NEER의 발전소 수주</b> 양쪽을 모두 키웁니다.</p>
+      <div class="chips" style="margin-top:12px">
+        <span class="chip t">미국 전력수요 10년 정체 → 급증 전환</span>
+        <span class="chip n">업계 5년 $1.4조 투자</span>
+        <span class="chip a">데이터센터가 수요 증가의 80%+</span>
+      </div>
+    </div>
+    <p class="src" style="margin-top:10px">출처: Gabelli Utilities Outlook 2026, Morningstar, Utility Dive, 각 사 IR (2025–2026).</p>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 5. 생애주기 판별 ===== -->
+<section id="lifecycle">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">05</span><h2>생애주기 단계 판별 — NEE는 "성장 단계"</h2></div>
+    <p class="sec-sub">현금흐름표의 세 부호(영업/투자/재무)로 기업의 생애 단계를 판별합니다. NEE는 공공서비스 기업으로는 이례적으로 <b>성장 단계</b>입니다.</p>
+
+    <!-- cash flow bars -->
+    <div class="card">
+      <h3>FY2025 현금흐름 패턴</h3>
+      <svg viewBox="0 0 980 230" width="100%" role="img" aria-label="현금흐름 막대" style="max-width:100%;height:auto">
+        <line x1="60" y1="115" x2="940" y2="115" stroke="#D7DFE5" stroke-width="1.5"></line>
+        <text x="50" y="119" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="#475862">0</text>
+        <!-- Operating + -->
+        <rect x="130" y="58" width="150" height="57" rx="7" fill="#2E8B6B"></rect>
+        <text x="205" y="48" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#1F6B51">+$12.5B</text>
+        <text x="205" y="138" text-anchor="middle" font-family="Inter" font-weight="600" font-size="13.5" fill="#15242E">영업활동</text>
+        <text x="205" y="156" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5" fill="#475862">현금 유입(+)</text>
+        <!-- Investing - -->
+        <rect x="415" y="115" width="150" height="92" rx="7" fill="#C0492F"></rect>
+        <text x="490" y="227" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#9E3A24">−$23.9B</text>
+        <text x="490" y="100" text-anchor="middle" font-family="Inter" font-weight="600" font-size="13.5" fill="#15242E">투자활동</text>
+        <text x="490" y="83" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5" fill="#475862">대규모 유출(−)</text>
+        <!-- Financing + -->
+        <rect x="700" y="55" width="150" height="60" rx="7" fill="#0E8C9A"></rect>
+        <text x="775" y="45" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#0A6E78">+$13.0B</text>
+        <text x="775" y="138" text-anchor="middle" font-family="Inter" font-weight="600" font-size="13.5" fill="#15242E">재무활동</text>
+        <text x="775" y="156" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5" fill="#475862">자본 조달(+)</text>
+      </svg>
+      <p class="cap">출처: NEE FY2025 현금흐름표. 5년 연속(2021–2025) 동일 패턴 확인.</p>
+    </div>
+
+    <div class="grid2" style="margin-top:16px">
+      <div class="co-teal callout" style="margin:0">
+        <span class="lab">판별 결과</span>
+        <p><b>영업(+) · 투자(−) · 재무(+) = 성장 단계.</b> 영업현금($12.5B)보다 훨씬 많이 투자($23.9B)하기 위해
+        외부에서 자본을 조달(장기채 $23.4B 발행)합니다. 배당 $4.7B를 내고도 순재무현금이 강하게 +입니다.</p>
+      </div>
+      <div class="card" style="margin:0">
+        <h4>왜 중요한가</h4>
+        <p>대부분의 전력회사는 "성숙 단계"(투자보다 배당·자사주에 쓰는 단계)입니다. NEE가 <b>성장 단계</b>라는 것은
+        지금도 막대하게 투자해 미래 이익을 키우고 있다는 뜻이며, <b>CAP·DCF 분석에 적합</b>한 단계입니다.
+        동시에, 이 투자가 <b>자본비용을 초과하는 수익</b>을 내는지가 가치의 핵심 질문이 됩니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 6. 경쟁 우위 / 해자 / 5 Forces ===== -->
+<section id="moat">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">06</span><h2>경쟁 우위 — 해자(Moat)와 포터 5 Forces</h2></div>
+    <p class="sec-sub">NEE의 해자는 두 종류입니다: FPL의 <b>규제 독점(구조적 해자)</b>과 NEER의 <b>규모·원가 우위</b>. 그리고 낮은 자본비용.</p>
+
+    <!-- Porter 5 forces -->
+    <div class="card">
+      <h3>포터의 5 Forces 평가</h3>
+      <div class="grid2" style="gap:12px;margin-top:6px">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0">
+            <span style="font-weight:600;font-size:14px">신규 진입 위협</span><span class="chip g">낮음</span>
+          </div>
+          <p class="muted" style="font-size:13px;margin:0">규제 독점·막대한 자본·규모의 경제가 진입을 사실상 차단.</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px">
+            <span style="font-weight:600;font-size:14px">기존 경쟁 강도</span><span class="chip a">중간</span>
+          </div>
+          <p class="muted" style="font-size:13px;margin:0">규제 시장은 경쟁 제한적, 재생에너지 개발은 입찰 경쟁 존재.</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px">
+            <span style="font-weight:600;font-size:14px">대체재 위협</span><span class="chip a">중간↑</span>
+          </div>
+          <p class="muted" style="font-size:13px;margin:0">분산형 태양광·저장·수요반응이 점증. 다만 전력망은 여전히 필수.</p>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0">
+            <span style="font-weight:600;font-size:14px">공급자 교섭력</span><span class="chip a">중간</span>
+          </div>
+          <p class="muted" style="font-size:13px;margin:0">터빈·기자재 공급사(예: GE 베르노바), 공급망·관세 변수. NEE는 규모로 일부 상쇄.</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px">
+            <span style="font-weight:600;font-size:14px">구매자 교섭력</span><span class="chip a">낮음→중간</span>
+          </div>
+          <p class="muted" style="font-size:13px;margin:0">규제 요금 고객은 사실상 종속. 단, 대형 데이터센터 고객은 협상력 상승.</p>
+          <div class="co-green callout" style="margin:16px 0 0">
+            <span class="lab">종합</span>
+            <p style="font-size:13px">전반적으로 <b>방어적 구조</b>. FPL은 독점 보호, NEER은 규모 우위. 다만 정책·금리·공급망이 외부 변수.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:16px">
+      <div class="card">
+        <h4>차별화 vs 원가 우위 진단</h4>
+        <p>영업이익률 <b>30.2%</b>로 동종 규제 유틸리티 중 최고(DUK 26%, AEP 24%, Q1'26 기준). 이는 부분적
+        <b>차별화</b>(우량 규제환경·자산믹스)를 시사합니다. 동시에 NEER의 <b>규모 기반 원가 우위</b>가 핵심 해자입니다.</p>
+        <div class="chips">
+          <span class="chip t">영업이익률 30% (피어 최고)</span>
+          <span class="chip g">최대 규모 = 최저 조달·건설비</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>해자의 지속 가능성</h4>
+        <p>FPL 규제 독점은 <b>매우 지속적</b>(법·면허로 보호). NEER 원가 우위는 <b>규모가 유지되는 한</b> 지속되나,
+        세액공제 폐지·금리·경쟁으로 일부 약화 가능. 공공서비스 섹터의 평균회귀 속도(<b>페이드 비율 0.30</b>)는 빠른 편 —
+        이는 "초과수익이 평균으로 비교적 빨리 회귀"함을 뜻합니다.</p>
+      </div>
+    </div>
+
+    <div class="co-amber callout">
+      <span class="lab">중요한 균형 시각 (반대 논리도 강하게)</span>
+      <p>NEE 강세론은 "규제 독점 + 최저원가 + AI수요"를 듭니다. 그러나 <b>비관 측 핵심 논리</b>도 만만치 않습니다:
+      ① 자기자본 기준 ROE(~12~14%)는 좋지만 <b>총자본 기준 수익률(ROIC ~5%)은 자본비용에 근접</b>해, 레버리지가
+      빼면 가치창출 폭이 크지 않습니다. ② 공공서비스 섹터는 역사적으로 <b>가장 낮은 ROIC, 가장 빠른 평균회귀</b>를 보였습니다.
+      ③ 거대 투자($23B/년)가 정말 자본비용을 넘는 수익을 낼지는 세액공제·규제·금리에 달려 있습니다.
+      이 균형이 뒤의 밸류에이션 해석에서 핵심이 됩니다.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 7. SWOT ===== -->
+<section id="swot">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">07</span><h2>SWOT 분석</h2></div>
+    <p class="sec-sub">강점·약점·기회·위협을 한눈에. 각 항목은 본문 근거와 연결됩니다.</p>
+    <div class="grid2">
+      <div class="callout co-green" style="margin:0">
+        <span class="lab">Strengths · 강점</span>
+        <ul class="clean" style="margin:4px 0 0">
+          <li>세계 최대 규모 → 조달·건설 <b>원가 우위</b></li>
+          <li>FPL의 <b>우호적 규제환경</b>·요금기반 고성장</li>
+          <li>미국 최대 재생·저장 개발 플랫폼</li>
+          <li>AI·데이터센터 수요의 직접 수혜 포지션</li>
+          <li>영업이익률 30%(피어 최고), 8%+ EPS 가이던스 일관 유지</li>
+        </ul>
+      </div>
+      <div class="callout co-red" style="margin:0">
+        <span class="lab">Weaknesses · 약점</span>
+        <ul class="clean" style="margin:4px 0 0">
+          <li>높은 레버리지: 총부채 <b>$95.6B</b>(순부채 $92.8B)</li>
+          <li>총자본 기준 ROIC(~5%)가 자본비용에 근접</li>
+          <li>복잡한 회계(세금주식·소수지분), GAAP 변동성 큼</li>
+          <li><b>세액공제 의존도</b> 높음 → 정책 리스크에 취약</li>
+          <li>장기 듀레이션 자산 → <b>금리 민감</b></li>
+        </ul>
+      </div>
+      <div class="callout co-teal" style="margin:0">
+        <span class="lab">Opportunities · 기회</span>
+        <ul class="clean" style="margin:4px 0 0">
+          <li>AI·데이터센터 전력 수요 슈퍼사이클</li>
+          <li><b>도미니언 합병</b>(670억 달러) → 규모·버지니아 데이터센터 허브 확보</li>
+          <li>배터리 저장 시장 고성장</li>
+          <li>전기화(EV·산업) 장기 수요</li>
+          <li>풍력 인허가 규제 철회(제한적 호재)</li>
+        </ul>
+      </div>
+      <div class="callout co-amber" style="margin:0">
+        <span class="lab">Threats · 위협</span>
+        <ul class="clean" style="margin:4px 0 0">
+          <li><b>OBBBA 세액공제 단계 폐지</b>(2027말/2026.7.4 착공 기준)</li>
+          <li>금리 상승·인플레이션 재점화(2026년 진행 중)</li>
+          <li>도미니언 합병 <b>규제 승인 리스크</b></li>
+          <li>거대 자본계획의 <b>실행 리스크</b></li>
+          <li>정책 변동성(IRA↔OBBBA, 관세)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+<!-- ===== 8. 피어그룹 비교 ===== -->
+<section id="peers">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">08</span><h2>피어그룹 비교 — 대형 전력 유틸리티</h2></div>
+    <p class="sec-sub">NEE를 동종 대형 전력회사와 비교합니다. NEE는 가장 비싸지만(P/E 27배대), 가장 높은 성장 목표(8%+)와 영업이익률(30%)을 가집니다.</p>
+    <div class="tbl-wrap">
+      <table class="data">
+        <thead>
+          <tr><th>기업 (티커)</th><th>주가($)</th><th>시총($B)</th><th>P/E</th><th>EPS 성장목표</th><th>배당수익률</th><th>애널 목표가($)</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hi"><td>NextEra (NEE)</td><td class="num">86</td><td class="num">186.5</td><td class="num">27.3</td><td class="num">8%+ (~’35)</td><td class="num">2.8%</td><td class="num">93.96</td></tr>
+          <tr><td>Southern (SO)</td><td class="num">93</td><td class="num">104.5</td><td class="num">24.1</td><td class="num">5–7%</td><td class="num">3.2%</td><td class="num">101.2</td></tr>
+          <tr><td>Constellation (CEG)</td><td class="num">282</td><td class="num">102.2</td><td class="num">44.1</td><td class="num">고변동(원자력)</td><td class="num">0.6%</td><td class="num">394.1</td></tr>
+          <tr><td>Duke (DUK)</td><td class="num">122–127</td><td class="num">98.7</td><td class="num">20.1</td><td class="num">5–7%</td><td class="num">3.4%</td><td class="num">138.3</td></tr>
+          <tr><td>American Elec. (AEP)</td><td class="num">126</td><td class="num">68.2</td><td class="num">19.0</td><td class="num">6–8%(→9%)</td><td class="num">3.0%</td><td class="num">137.5</td></tr>
+          <tr><td>Sempra (SRE)</td><td class="num">92</td><td class="num">59.9</td><td class="num">33.4</td><td class="num">고성장</td><td class="num">2.9%</td><td class="num">102.6</td></tr>
+          <tr><td>Dominion (D) <span class="chip n" style="font-size:10px;padding:1px 6px">NEE 인수 대상</span></td><td class="num">59–66</td><td class="num">52.2</td><td class="num">17.6</td><td class="num">~9%</td><td class="num">4.5%</td><td class="num">65.6</td></tr>
+          <tr><td>Xcel (XEL)</td><td class="num">77</td><td class="num">47.9</td><td class="num">23.7</td><td class="num">6–8%+</td><td class="num">3.0%</td><td class="num">89.8</td></tr>
+          <tr><td>Exelon (EXC)</td><td class="num">44–46</td><td class="num">47.5</td><td class="num">17.2</td><td class="num">5–7%</td><td class="num">3.6%</td><td class="num">50.9</td></tr>
+          <tr><td>Entergy (ETR)</td><td class="num">100–108</td><td class="num">45.3</td><td class="num">25.7</td><td class="num">8–9%</td><td class="num">2.6%</td><td class="num">109.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">출처: Simply Wall St(시총·P/E·목표가, 기준 ~2026-03-22), Yahoo Finance(주가, ~2026-06-15), Gabelli/Morningstar(성장목표). 주가는 변동성으로 범위 표기. P/E는 자료원별 차이 가능.</p>
+
+    <div class="grid2" style="margin-top:16px">
+      <div class="card">
+        <h4>NEE의 상대적 위치</h4>
+        <p>NEE는 <b>최대 시총·최고 영업이익률·가장 높은 장기 성장목표(8%+)</b>를 가진 대신, <b>밸류에이션도
+        가장 비싼 축</b>(P/E 27배대, 배당수익률은 평균 이하 2.8%)입니다. "프리미엄을 주고 사는 퀄리티 성장 유틸리티"의 전형입니다.</p>
+      </div>
+      <div class="card">
+        <h4>주의: 합병으로 피어 지형이 바뀜</h4>
+        <p>피어 중 <b>도미니언(D)은 NEE가 인수 중</b>입니다. 또한 NEE는 과거 <b>듀크(DUK)에도 합병을 제안했다가 거절</b>당한
+        것으로 알려졌습니다. 전력 산업이 <b>대형화·통합</b>으로 가고 있어, 단순 피어 비교 시 이 점을 감안해야 합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 9. 트럼프 풍력 정책 영향 (사용자 핵심 질문) ===== -->
+<section id="wind">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">09</span><h2>트럼프 풍력 규제 철회 — NEE 영향과 최대 수혜 피어</h2></div>
+    <p class="sec-sub">사용자가 주목한 뉴스입니다. 결론부터: <b>NEE에는 제한적 호재</b>이며, 피어 중에서는 <b>도미니언(해상풍력)</b>이 가장 직접 수혜 — 그런데 그 도미니언을 NEE가 인수 중입니다.</p>
+
+    <!-- timeline -->
+    <div class="card">
+      <h3>무슨 일이 있었나 (타임라인)</h3>
+      <svg viewBox="0 0 980 150" width="100%" role="img" aria-label="풍력정책 타임라인" style="max-width:100%;height:auto">
+        <line x1="40" y1="75" x2="940" y2="75" stroke="#D7DFE5" stroke-width="2"></line>
+        <!-- nodes -->
+        <g font-family="IBM Plex Mono" font-size="10.5">
+          <circle cx="110" cy="75" r="8" fill="#C0492F"></circle>
+          <text x="110" y="50" text-anchor="middle" font-weight="600" fill="#9E3A24">2025.01.20</text>
+          <text x="110" y="105" text-anchor="middle" fill="#475862">취임 첫날</text>
+          <text x="110" y="120" text-anchor="middle" fill="#475862">풍력 인허가 동결</text>
+
+          <circle cx="370" cy="75" r="8" fill="#C0492F"></circle>
+          <text x="370" y="50" text-anchor="middle" font-weight="600" fill="#9E3A24">2025.12</text>
+          <text x="370" y="105" text-anchor="middle" fill="#475862">해상풍력 공사</text>
+          <text x="370" y="120" text-anchor="middle" fill="#475862">중단 명령(CVOW 등)</text>
+
+          <circle cx="630" cy="75" r="8" fill="#E08A2B"></circle>
+          <text x="630" y="50" text-anchor="middle" font-weight="600" fill="#B96E16">2025.12.08</text>
+          <text x="630" y="105" text-anchor="middle" fill="#475862">법원, 동결 무효</text>
+          <text x="630" y="120" text-anchor="middle" fill="#475862">17개 주 승소</text>
+
+          <circle cx="890" cy="75" r="9" fill="#2E8B6B"></circle>
+          <text x="890" y="50" text-anchor="middle" font-weight="700" fill="#1F6B51">2026.06.16</text>
+          <text x="890" y="105" text-anchor="middle" font-weight="600" fill="#1F6B51">행정부 항소 취하</text>
+          <text x="890" y="120" text-anchor="middle" fill="#475862">동결 사실상 종료</text>
+        </g>
+      </svg>
+      <p class="cap">출처: E&amp;E News/Politico, Gizmodo, Reuters, CNBC, Utility Dive (2025–2026). 6/16 제1순회항소법원이 내무부의 항소 자진취하를 인용 → 전국 풍력 동결이 더 이상 집행 불가.</p>
+    </div>
+
+    <div class="co-teal callout">
+      <span class="lab">NEE에 미치는 영향 — 제한적 호재 <span class="conf">신뢰도 높음 ~75%</span></span>
+      <p><b>① NEE의 포워드 파이프라인은 풍력이 아니라 태양광·저장 중심.</b> 향후 개발 계획은 태양광 31.5~41.5GW vs 풍력 8.5~14.5GW로,
+      태양광·저장이 3~4배. 2026년 1분기 신규 수주 4GW 중 풍력은 0.5GW뿐이었습니다.</p>
+      <p><b>② NEE는 대부분 육상·사유지에 건설</b>해, 연방 토지·해역 인허가 동결의 영향이 상대적으로 작았습니다. NEE는 해상풍력 노출이 미미합니다.</p>
+      <p><b>③ 진짜 변수는 인허가가 아니라 "세액공제 폐지(OBBBA)"</b>입니다. 이번 철회는 인허가 장애만 제거할 뿐, 세액공제 시한
+      (2027말 가동 또는 2026.7.4 착공 세이프하버)을 바꾸지 않습니다. NEE는 "상시 건설" 전략으로 2029년까지 파이프라인을 보호 중입니다.</p>
+    </div>
+
+    <div class="panel-dark">
+      <h3>그렇다면 피어 중 최대 수혜는? — <span style="color:#14B9CC">도미니언(D)</span> <span class="conf">신뢰도 중간 ~65%</span></h3>
+      <p style="max-width:84ch">풍력 규제 철회는 <b style="color:#fff">동결당한 해상풍력 프로젝트</b>를 가진 회사에 가장 크게 작용합니다.
+      대형 전력 유틸리티 피어 중 <b style="color:#14B9CC">도미니언</b>이 <b style="color:#fff">Coastal Virginia Offshore Wind(CVOW, 2.6GW, 터빈 176기)</b> —
+      미국 최대 해상풍력 — 을 보유해 가장 직접적인 수혜입니다. 그런데 <b style="color:#F0A847">그 도미니언을 NEE가 인수 중</b>이므로,
+      이 수혜는 결국 합병 후 NEE 진영으로 귀속됩니다.</p>
+      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div style="background:rgba(255,255,255,0.05);border:1px solid var(--bd-d);border-radius:11px;padding:13px 15px;color:#E3ECF2">
+          <div style="font-family:IBM Plex Mono;font-size:11px;color:#9FB4C2">피어 내 1순위</div>
+          <div style="font-family:Space Grotesk;font-weight:700;font-size:16px;color:#14B9CC;margin:3px 0">Dominion (D)</div>
+          <div style="font-size:12.5px;color:#CFDCE6">CVOW 2.6GW 해상풍력. 가장 직접 수혜. 단, NEE가 인수 중.</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border:1px solid var(--bd-d);border-radius:11px;padding:13px 15px;color:#E3ECF2">
+          <div style="font-family:IBM Plex Mono;font-size:11px;color:#9FB4C2">가치사슬 관점</div>
+          <div style="font-family:Space Grotesk;font-weight:700;font-size:16px;color:#fff;margin:3px 0">GE 베르노바 (GEV)</div>
+          <div style="font-size:12.5px;color:#CFDCE6">터빈 제조사. 육상풍력 수주 +85% 회복. 단, 풍력부문은 적자(~$4억), 주가는 가스·전력망(AI) 동력.</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border:1px solid var(--bd-d);border-radius:11px;padding:13px 15px;color:#E3ECF2">
+          <div style="font-family:IBM Plex Mono;font-size:11px;color:#9FB4C2">순수 레버리지</div>
+          <div style="font-family:Space Grotesk;font-weight:700;font-size:16px;color:#fff;margin:3px 0">Ørsted (해외)</div>
+          <div style="font-size:12.5px;color:#CFDCE6">해상풍력 순수기업. 동결 때 −11%. 단일 최대 레버리지지만 국내 피어 아님·구조적 난항.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="co-amber callout">
+      <span class="lab">단순 서사를 경계하라 (비판적 시각)</span>
+      <p>"트럼프가 풍력 규제를 풀었으니 풍력주가 오른다"는 단순 논리는 위험합니다. 현실은: <b>미국 풍력(특히 해상)은
+      구조적으로 어려운 상태</b> — 고비용, 관세, OEM 적자, 세액공제 폐지. 이번 인허가 철회는 <b>장애물 하나를 치웠을 뿐</b>,
+      경제성(세액공제·관세·비용)을 바꾸지 못합니다. 실제로 풍력 전문기업 대신 <b>가스터빈·전력망</b>을 가진 회사들이
+      AI 수요로 더 큰 수혜를 보고 있습니다. <b>NEE에게도 이번 뉴스는 부차적 변수</b>이며, 세액공제 향방과 합병이 훨씬 중요합니다.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 10. 도미니언 합병 ===== -->
+<section id="merger">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">10</span><h2>도미니언 합병 — NEE의 최대 촉매이자 리스크</h2></div>
+    <p class="sec-sub">2026년 5월 18일 발표된 670억 달러 전액주식 합병. 미국 역사상 최대 전력 합병으로, 분석의 가장 중요한 변수입니다.</p>
+
+    <div class="statgrid" style="margin-bottom:6px">
+      <div class="stat" style="background:#fff;border-color:#D7DFE5">
+        <p class="k" style="color:#475862">거래 규모</p><div class="v" style="color:#15242E">$67B</div><p class="s" style="color:#475862">전액 주식 + 현금 $360M</p></div>
+      <div class="stat" style="background:#fff;border-color:#D7DFE5">
+        <p class="k" style="color:#475862">교환비율</p><div class="v" style="color:#15242E">0.8138</div><p class="s" style="color:#475862">도미니언 1주당 NEE 주식</p></div>
+      <div class="stat" style="background:#fff;border-color:#D7DFE5">
+        <p class="k" style="color:#475862">합산 기업가치</p><div class="v" style="color:#0A6E78">~$420B</div><p class="s" style="color:#475862">세계 최대 규제 유틸리티</p></div>
+      <div class="stat" style="background:#fff;border-color:#D7DFE5">
+        <p class="k" style="color:#475862">예상 종결</p><div class="v" style="color:#B96E16">~2027</div><p class="s" style="color:#475862">규제 승인 조건(최대 2028.8)</p></div>
+    </div>
+
+    <div class="grid2" style="margin-top:14px">
+      <div class="card">
+        <h4>합병의 핵심 내용</h4>
+        <ul class="clean">
+          <li>합병 후 <b>약 1,000만 고객</b>(플로리다·버지니아·노스/사우스캐롤라이나), <b>110GW</b> 발전</li>
+          <li>지분: NEE 주주 <b>74.5%</b> · 도미니언 주주 25.5%</li>
+          <li>합산 추정: 자산 $373.2B, 2025 순이익 $8.95B, 영업권 $43.0B</li>
+          <li>NEE가 회계상 인수자, 도미니언은 완전자회사化(2단계 합병)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>왜 합치나 — AI 데이터센터</h4>
+        <p>도미니언은 <b>세계 최대 데이터센터 허브(북부 버지니아)</b>에 전력을 공급합니다(구글·아마존·MS·메타가 고객).
+        합병의 명시적 동기는 <b>AI·데이터센터 전력 수요</b>입니다. NEE의 청정에너지 개발력 + 도미니언의 데이터센터 입지를 결합하는 전략.</p>
+        <p class="muted">전통적 "비용 시너지"보다 <b>"수요 대응 능력(용량 확보)"</b>에 초점을 둔, 새로운 유형의 유틸리티 통합입니다.</p>
+      </div>
+    </div>
+
+    <div class="co-red callout">
+      <span class="lab">합병 리스크 — 분석의 최대 불확실성</span>
+      <p><b>규제 승인</b>이 최대 관문입니다. 거래 규모($420B EV)와 "데이터센터 vs 일반 가정 요금" 형평성 문제로
+      <b>전례 없는 규제 심사</b>가 예상됩니다. 다수 주(플로리다·버지니아·캐롤라이나)와 연방 승인이 필요하며,
+      종결 시한은 2027년 11월(조건부 2028년 8월까지 연장 가능). 승인 실패·지연·조건부 승인 모두 가능성이 있습니다.
+      따라서 본 보고서의 NEE <b>단독 기준</b> 밸류에이션은 합병 성사 여부에 따라 크게 달라질 수 있습니다.</p>
+    </div>
+    <p class="src">출처: NEE SEC Form 8-K (2026-06-15), Dominion IR, Wikipedia(거래 개요), CNBC, Washington Post 보도. 일부 종결 시점은 자료원별로 "12~18개월" vs "2027 중후반" 등 차이가 있어 병기.</p>
+  </div>
+</section>
+
+<hr class="divider-light">
+<!-- ===== 11. DCF / 내재 CAP ===== -->
+<section id="valuation">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">11</span><h2>DCF와 시장 내재 CAP — 시장이 가격에 담은 기대</h2></div>
+    <p class="sec-sub">"적정가"를 맞추는 대신, <b>현재가 $86이 정당화되려면 시장은 무엇을 믿어야 하는가</b>를 역산합니다. 그 답이 "내재 경쟁 우위 기간(CAP)"입니다.</p>
+
+    <!-- WACC build -->
+    <div class="card">
+      <h3>1) 자본비용 산출 (CAPM 기반)</h3>
+      <div class="tbl-wrap" style="border:none">
+        <table class="data" style="min-width:480px">
+          <tbody>
+            <tr><td>무위험 이자율 (10년 미 국채, 6/16)</td><td class="num">4.47%</td></tr>
+            <tr><td>베타 (원시 0.67~0.73 → 1로 회귀조정)</td><td class="num">0.80</td></tr>
+            <tr><td>주식위험프리미엄 ERP (프레임워크 표준)</td><td class="num">4.75%</td></tr>
+            <tr class="hi"><td>자기자본비용 Ke = 4.47% + 0.80 × 4.75%</td><td class="num">8.27%</td></tr>
+            <tr><td>세후 부채비용 (5.2% × (1−21%))</td><td class="num">4.11%</td></tr>
+            <tr><td>자본구조 (시장가치): 자기자본 / 부채</td><td class="num">65% / 35%</td></tr>
+            <tr class="hi"><td><b>WACC (가중평균자본비용)</b></td><td class="num"><b>6.82%</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cap">참고: 다모다란 2026년판 <b>내재 ERP는 4.23%</b>(2026.1.1)로 프레임워크 표준 4.75%보다 낮습니다. 4.23% 적용 시 Ke≈7.85%, WACC≈6.5%로 낮아집니다. 10년 기대인플레이션(손익분기)은 2.29%(프레임워크 장기성장률 표준은 2.5%).</p>
+    </div>
+
+    <!-- methodology pivot -->
+    <div class="co-amber callout">
+      <span class="lab">방법론 주의 — 표준(기업가치) 모델이 NEE에선 작동하지 않음</span>
+      <p>먼저 표준 <b>기업가치(unlevered) DCF</b>를 돌렸습니다. 결과: NOPAT(영업이익×(1−세율) ≈ $7.4B)을 자본비용으로
+      나눈 정상상태 기업가치가 <b>순부채($92.8B)+소수지분($11.9B)에 못 미쳐</b>, 자기자본 가치가 주당 약 $2로 나옵니다(시장가 $86).
+      시장이 매기는 EV/NOPAT는 <b>38배</b>인데 정상상태는 15배입니다.</p>
+      <p>이는 NEE가 <b>고레버리지 규제 유틸리티</b>이기 때문입니다: ① 수익은 <b>자기자본(규제 ROE ~11%)</b> 위에서 나고 값싼 부채가 구조의 일부이며,
+      ② <b>세액공제</b>가 만드는 큰 가치가 영업이익에 안 잡히고, ③ 막대한 <b>건설중자산(CWIP)</b>이 아직 이익을 못 냅니다.
+      따라서 규제 유틸리티에 맞는 <b>자기자본 기준(잔여이익) 모델</b>로 전환합니다. (이 한계는 말미 "한계와 가정"에서 재차 명시)</p>
+    </div>
+
+    <!-- Equity-side Exhibit 23 -->
+    <div class="card">
+      <h3>2) 자기자본 기준 전시(Exhibit) — 연도별 가치 적립</h3>
+      <p class="muted" style="font-size:14px">기준: 2025년 조정 순이익 $7,683M, 성장 8%(가이던스), 증분 ROE 12%, 자기자본비용 8.27%, 페이드 0.30, 장기성장 2.5%.
+      "이 연도까지 8% 성장을 명시적으로 가정"했을 때의 주당가치가 오른쪽 끝 열입니다 — 그 값이 $86에 닿는 연수가 <b>내재 CAP</b>.</p>
+      <div class="tbl-wrap">
+        <table class="data" style="min-width:640px">
+          <thead><tr><th>연도</th><th>순이익($M)</th><th>성장</th><th>재투자율</th><th>주주현금(FCFE,$M)</th><th>현가계수</th><th>→ 이 연도까지면 주당가치</th></tr></thead>
+          <tbody>
+            <tr><td>2026</td><td class="num">8,298</td><td class="num">8%</td><td class="num">67%</td><td class="num">2,766</td><td class="num">0.961</td><td class="num">$49.7</td></tr>
+            <tr><td>2030</td><td class="num">11,289</td><td class="num">8%</td><td class="num">67%</td><td class="num">3,763</td><td class="num">0.699</td><td class="num">$54.3</td></tr>
+            <tr><td>2035</td><td class="num">16,588</td><td class="num">8%</td><td class="num">67%</td><td class="num">5,529</td><td class="num">0.470</td><td class="num">$60.1</td></tr>
+            <tr><td>2040</td><td class="num">24,373</td><td class="num">8%</td><td class="num">67%</td><td class="num">8,124</td><td class="num">0.316</td><td class="num">$65.7</td></tr>
+            <tr><td>2045</td><td class="num">35,812</td><td class="num">8%</td><td class="num">67%</td><td class="num">11,937</td><td class="num">0.212</td><td class="num">$71.3</td></tr>
+            <tr class="hi"><td>~2059</td><td class="num">—</td><td class="num">8%</td><td class="num">67%</td><td class="num">—</td><td class="num">—</td><td class="num">$86.0 ← 현재가</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cap">재투자율 67% = 성장 8% ÷ 증분 ROE 12% (성장 자금 조달). FCFE(주주잉여현금)는 순이익의 33%. 페이드 모델로 명시기간 이후 초과수익이 점차 평균회귀. 연중(mid-year) 할인 적용.</p>
+    </div>
+
+    <!-- value build chart -->
+    <div class="card">
+      <h3>3) 주당가치가 $86에 닿는 데 필요한 연수</h3>
+      <svg viewBox="0 0 980 320" width="100%" role="img" aria-label="주당가치 적립 곡선" style="max-width:100%;height:auto">
+        <!-- consistent scale: x = 70 + yr*21.5 (yr0..40) ; y = 270 - val*2.5 ($0 at 270, $90 at 45) -->
+        <!-- y gridlines -->
+        <g stroke="#E4EAEF" stroke-width="1">
+          <line x1="70" y1="207.5" x2="930" y2="207.5"></line>
+          <line x1="70" y1="145" x2="930" y2="145"></line>
+          <line x1="70" y1="82.5" x2="930" y2="82.5"></line>
+        </g>
+        <!-- axes -->
+        <line x1="70" y1="270" x2="930" y2="270" stroke="#9FB4C2" stroke-width="1.5"></line>
+        <line x1="70" y1="40" x2="70" y2="270" stroke="#9FB4C2" stroke-width="1.5"></line>
+        <!-- y labels -->
+        <g font-family="IBM Plex Mono" font-size="11" fill="#475862" text-anchor="end">
+          <text x="62" y="274">$0</text><text x="62" y="211.5">$25</text><text x="62" y="149">$50</text><text x="62" y="86.5">$75</text><text x="62" y="49">$90</text>
+        </g>
+        <!-- steady state line $44.9 (y=157.75) -->
+        <line x1="70" y1="157.75" x2="930" y2="157.75" stroke="#475862" stroke-width="1.2" stroke-dasharray="3 4"></line>
+        <text x="78" y="152" font-family="IBM Plex Mono" font-size="10.5" fill="#475862">무성장 가치 $44.9</text>
+        <!-- price line $86 (y=55) -->
+        <line x1="70" y1="55" x2="930" y2="55" stroke="#C0492F" stroke-width="1.6" stroke-dasharray="6 5"></line>
+        <text x="924" y="48" text-anchor="end" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#9E3A24">현재가 $86</text>
+        <!-- area fill under curve (subtle) -->
+        <polyline fill="#0E8C9A" opacity="0.08" stroke="none"
+          points="91.5,145.75 134.5,140 177.5,134.25 242,125.5 285,119.75 328,114.25 392.5,105.75 457,97.25 500,91.75 607.5,78.25 715,64.75 790.25,55 790.25,270 91.5,270"></polyline>
+        <!-- value curve -->
+        <polyline fill="none" stroke="#0E8C9A" stroke-width="3" stroke-linejoin="round"
+          points="91.5,145.75 134.5,140 177.5,134.25 242,125.5 285,119.75 328,114.25 392.5,105.75 457,97.25 500,91.75 607.5,78.25 715,64.75 790.25,55"></polyline>
+        <!-- vertical guide at crossing -->
+        <line x1="790.25" y1="55" x2="790.25" y2="270" stroke="#C0492F" stroke-width="1" stroke-dasharray="2 4" opacity="0.55"></line>
+        <!-- crossing marker -->
+        <circle cx="790.25" cy="55" r="6" fill="#C0492F" stroke="#fff" stroke-width="1.5"></circle>
+        <text x="790.25" y="289" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="13" fill="#9E3A24">~33.5년</text>
+        <!-- x labels -->
+        <g font-family="IBM Plex Mono" font-size="11" fill="#475862" text-anchor="middle">
+          <text x="91.5" y="288">1y</text><text x="285" y="288">10y</text><text x="500" y="288">20y</text><text x="715" y="288">30y</text><text x="916" y="288">40y</text>
+        </g>
+        <text x="500" y="310" text-anchor="middle" font-family="Inter" font-size="12" fill="#475862">명시적 8% 성장 가정 기간 (년)</text>
+      </svg>
+      <p class="cap">곡선이 $86(빨간 점선)에 닿는 지점 ≈ 33.5년. 즉 시장은 NEE가 약 8% 성장을 매우 오래 지속한다고 가격에 반영. "무성장 가치"는 $44.9에 불과 → 주가의 절반 이상이 "장기 성장 기대".</p>
+    </div>
+
+    <!-- SIGNATURE: Implied CAP ruler -->
+    <div class="panel-dark" style="margin-top:18px">
+      <h3>4) 내재 CAP를 "자(ruler)" 위에 놓으면</h3>
+      <p class="mut" style="margin-bottom:18px">프레임워크의 해석 기준에 NEE의 내재 CAP(~28–34년)를 올려놓습니다. 참고로 초우량 성장주(예: 대형 소프트웨어)의 내재 CAP도 보통 17~18년 수준입니다.</p>
+      <svg viewBox="0 0 980 175" width="100%" role="img" aria-label="내재 CAP 해석 자" style="max-width:100%;height:auto">
+        <!-- bands: 0-5 green, 5-10 lgreen, 10-15 neutral, 15-20 amber, 20-40 red -->
+        <!-- x: 0->70, 40->930 => 21.5px/yr -->
+        <rect x="70" y="60" width="107.5" height="34" fill="#2E8B6B"></rect>
+        <rect x="177.5" y="60" width="107.5" height="34" fill="#5DA98C"></rect>
+        <rect x="285" y="60" width="107.5" height="34" fill="#7C8B95"></rect>
+        <rect x="392.5" y="60" width="107.5" height="34" fill="#E08A2B"></rect>
+        <rect x="500" y="60" width="430" height="34" fill="#C0492F"></rect>
+        <!-- band labels -->
+        <g font-family="IBM Plex Mono" font-size="10" fill="#fff" text-anchor="middle">
+          <text x="123" y="81">&lt;5y 매수후보</text>
+          <text x="231" y="81">5–10 비관</text>
+          <text x="338" y="81">10–15 합리</text>
+          <text x="446" y="81">15–20 낙관</text>
+          <text x="715" y="81">20y+ 과도한 낙관</text>
+        </g>
+        <!-- ticks -->
+        <g font-family="IBM Plex Mono" font-size="10.5" fill="#9FB4C2" text-anchor="middle">
+          <text x="70" y="112">0</text><text x="177.5" y="112">5</text><text x="285" y="112">10</text>
+          <text x="392.5" y="112">15</text><text x="500" y="112">20</text><text x="607.5" y="112">25</text>
+          <text x="715" y="112">30</text><text x="822.5" y="112">35</text><text x="930" y="112">40</text>
+        </g>
+        <!-- MSFT benchmark ~17.5 -->
+        <line x1="446" y1="50" x2="446" y2="94" stroke="#EAF1F5" stroke-width="1.5" stroke-dasharray="3 3"></line>
+        <text x="446" y="44" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#CFDCE6">초우량 성장주 ~17–18y</text>
+        <!-- NEE band 28-34 -->
+        <rect x="672" y="55" width="129" height="44" fill="none" stroke="#14B9CC" stroke-width="2.5" rx="5"></rect>
+        <text x="736" y="135" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#14B9CC">NEE ~28–34년</text>
+        <text x="736" y="155" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5" fill="#9FB4C2">강세 ~22y · 약세(성장6%) 정당화 불가</text>
+      </svg>
+      <div class="co-ink callout" style="margin-top:6px;background:rgba(20,185,204,0.08);border-color:rgba(20,185,204,0.3)">
+        <span class="lab">해석 — 단, 기계적으로 "과도"로 읽지 말 것</span>
+        <p style="color:#E3ECF2">NEE의 내재 CAP는 표준 "합리적" 범위(10~15년)를 크게 넘습니다. 그러나 중요한 단서가 있습니다:
+        NEE의 <b style="color:#fff">성장률(8%)이 자기자본비용(8.27%)에 매우 근접</b>합니다. 이 경우 가치가 성장 지속성에 극도로 민감해지고,
+        긴 CAP가 "과대평가"라기보다 <b style="color:#14B9CC">"낮은 자본비용 위에서 오래 복리되는 장기 듀레이션 자산"</b>이라는 뜻일 수 있습니다.
+        실제 <b style="color:#fff">고든식 기대수익률 = 배당 2.8% + 성장 8% = 10.8%</b>로 Ke 8.27%를 <b style="color:#fff">+2.6%p 상회</b> →
+        성장이 지속되면 가치는 자본비용 위에서 복리됩니다. 결론: <b style="color:#F0A847">"과대평가"가 아니라 "안전마진이 얇고, 장기 실행에 크게 의존"</b>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+<!-- ===== 12. 민감도 & 시나리오 ===== -->
+<section id="sensitivity">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">12</span><h2>민감도와 시나리오 — 무엇이 바뀌면 결론이 달라지나</h2></div>
+    <p class="sec-sub">내재 CAP는 가정에 매우 민감합니다. 특히 <b>성장률과 자본비용</b>이 핵심 — 둘이 서로 근접하기 때문입니다.</p>
+
+    <!-- sensitivity bars/table -->
+    <div class="card">
+      <h3>1) 단일 변수 민감도 (내재 CAP, 년)</h3>
+      <div class="tbl-wrap">
+        <table class="data" style="min-width:560px">
+          <thead><tr><th>변수</th><th>비관 시나리오</th><th>기본</th><th>낙관 시나리오</th></tr></thead>
+          <tbody>
+            <tr><td>자기자본비용 (Ke)</td><td class="num">+1%p → 수렴 안 됨</td><td class="num">8.27% → 33.5y</td><td class="num">−1%p → 17.5y</td></tr>
+            <tr><td>이익 성장률 (g)</td><td class="num">6% → 수렴 안 됨</td><td class="num">8% → 33.5y</td><td class="num">10% → 22.1y</td></tr>
+            <tr><td>증분 자기자본수익률 (ROE)</td><td class="num">11% → 42.6y</td><td class="num">12% → 33.5y</td><td class="num">14% → 25.1y</td></tr>
+            <tr><td>페이드 비율 (평균회귀 속도)</td><td class="num">0.40 → 33.7y</td><td class="num">0.30 → 33.5y</td><td class="num">0.20 → 33.2y</td></tr>
+            <tr><td>기준 이익 (어느 순이익을 쓰나)</td><td class="num">GAAP → 43.6y</td><td class="num">조정 → 33.5y</td><td class="num">2026E → 28.3y</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cap">"수렴 안 됨" = 해당 가정에서는 어떤 연수를 가정해도 주당가치가 $86에 닿지 않음 → 그 가정 하에선 현재가가 정당화되지 않음(과대평가 신호).</p>
+    </div>
+
+    <div class="co-amber callout">
+      <span class="lab">가장 중요한 발견 — 성장률 ≈ 자본비용</span>
+      <p>NEE의 성장률 8%가 자기자본비용 8.27%에 <b>매우 근접</b>합니다. 이 "칼날 위(knife-edge)" 상태에서는:
+      ① 성장이 8% 미만(예: 6%)으로 떨어지면 <b>현재가가 전혀 정당화되지 않고</b>, ② 자본비용이 1%p 오르면(금리 상승)
+      마찬가지로 정당화 불가, ③ 반대로 자본비용이 1%p 내리면 내재 CAP가 33.5년 → 17.5년으로 급감(매력 상승).
+      <b>페이드(평균회귀)는 거의 영향이 없습니다</b> — 명시기간의 성장이 가치를 지배하기 때문. 즉 NEE 투자판단의 핵심은
+      "8%+ 성장이 정말 장기 지속되는가"와 "금리 환경" 두 가지로 압축됩니다.</p>
+    </div>
+
+    <!-- scenarios -->
+    <h3 style="margin:26px 0 4px">2) 통합 시나리오</h3>
+    <div class="grid3">
+      <div class="callout co-green" style="margin:0">
+        <span class="lab">강세 (Bull)</span>
+        <p style="font-size:22px;font-family:'Space Grotesk';font-weight:700;margin:2px 0 8px">내재 CAP ~22.6년</p>
+        <p style="font-size:13px">성장 9% · ROE 13% · 페이드 0.25. AI 수요로 성장 가속, 세액공제 연착륙, 합병 시너지 실현, 금리 안정.
+        그래도 22년이라는 긴 CAP가 필요 → "성공해야 본전" 구조.</p>
+      </div>
+      <div class="callout co-teal" style="margin:0">
+        <span class="lab">기본 (Base)</span>
+        <p style="font-size:22px;font-family:'Space Grotesk';font-weight:700;margin:2px 0 8px">내재 CAP ~33.5년</p>
+        <p style="font-size:13px">성장 8%(가이던스) · ROE 12% · 페이드 0.30. 가이던스대로 8% 성장이 매우 오래 지속된다고 시장이 가격에 반영.
+        프레임워크 "합리적" 범위(10~15년)를 크게 초과 → 안전마진 얇음.</p>
+      </div>
+      <div class="callout co-red" style="margin:0">
+        <span class="lab">약세 (Bear)</span>
+        <p style="font-size:22px;font-family:'Space Grotesk';font-weight:700;margin:2px 0 8px">정당화 불가</p>
+        <p style="font-size:13px">성장 6% · ROE 11% · 페이드 0.40. 세액공제 폐지 충격, 합병 무산·지연, 금리 상승.
+        이 경우 $86은 <b>어떤 CAP로도 정당화되지 않음</b> → 하방 위험 구간.</p>
+      </div>
+    </div>
+    <p class="src" style="margin-top:12px">신뢰도: 시나리오 자체의 발생 확률은 외생 변수(정책·금리·합병)에 크게 좌우되어 <span class="conf">중간 ~60%</span>. 모델 메커니즘(민감도 방향성)에 대한 신뢰도는 <span class="conf">높음 ~85%</span>.</p>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 13. 리스크 & 체크포인트 ===== -->
+<section id="risk">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">13</span><h2>핵심 리스크와 모니터링 체크포인트</h2></div>
+    <p class="sec-sub">"무엇이 8%+ 성장과 초과수익을 깰 수 있는가"를 중심으로 정리하고, 분기마다 무엇을 확인할지 제시합니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>① 세액공제 폐지 (OBBBA) — 최우선</h4>
+        <p>재생에너지 세액공제는 <b>2027년 말 가동</b> 또는 <b>2026년 7월 4일 착공 세이프하버</b>를 충족해야 유지됩니다.
+        NEE 이익의 숨은 동력(실효세율 −17.7%)이 약화되면 NEER 수익성과 성장률이 직접 타격받습니다.</p>
+        <div class="chips"><span class="chip r">발생 시 영향: 큼</span><span class="chip a">진행 중</span></div>
+      </div>
+      <div class="card">
+        <h4>② 금리·인플레이션</h4>
+        <p>NEE는 <b>장기 듀레이션·고레버리지</b> 자산이라 금리에 민감합니다. 2026년 인플레이션 재점화·금리 인상 확률 상승은
+        자본비용을 높여(민감도 표 참조) 밸류에이션을 압박합니다.</p>
+        <div class="chips"><span class="chip r">발생 시 영향: 큼</span><span class="chip a">진행 중</span></div>
+      </div>
+      <div class="card">
+        <h4>③ 도미니언 합병 승인</h4>
+        <p>$420B 규모의 전례 없는 합병. <b>규제 승인 실패·지연·조건부 승인</b> 모두 가능. 무산 시 성장 스토리와
+        데이터센터 입지 확보 전략이 흔들립니다.</p>
+        <div class="chips"><span class="chip r">발생 시 영향: 큼</span><span class="chip n">~2027 결정</span></div>
+      </div>
+      <div class="card">
+        <h4>④ 실행 리스크 (거대 자본계획)</h4>
+        <p>연 $23B 이상 투자가 정말 <b>자본비용을 초과하는 수익</b>을 내야 합니다. 공급망·관세·인허가 지연,
+        프로젝트 비용 초과는 ROIC를 자본비용 아래로 끌어내릴 수 있습니다.</p>
+        <div class="chips"><span class="chip a">발생 시 영향: 중간</span><span class="chip a">상시</span></div>
+      </div>
+    </div>
+
+    <div class="panel-dark" style="margin-top:16px">
+      <h3>분기별 체크포인트 (이 지표들을 추적하세요)</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin-top:10px">
+        <p style="color:#CFDCE6;font-size:14px;margin:6px 0">▸ <b style="color:#fff">조정 EPS가 8%+ 궤도</b>를 유지하는가 (가이던스 재확인 여부)</p>
+        <p style="color:#CFDCE6;font-size:14px;margin:6px 0">▸ <b style="color:#fff">NEER 수주잔고</b>(~33GW) 증감과 데이터센터 계약 체결</p>
+        <p style="color:#CFDCE6;font-size:14px;margin:6px 0">▸ <b style="color:#fff">세액공제 관련 입법·규정</b> 진행과 세이프하버 충족 현황</p>
+        <p style="color:#CFDCE6;font-size:14px;margin:6px 0">▸ <b style="color:#fff">FPL 요금기반 성장률</b>과 허가 ROE 유지 여부</p>
+        <p style="color:#CFDCE6;font-size:14px;margin:6px 0">▸ <b style="color:#fff">합병 규제 승인 단계</b>(주별·연방) 및 조건</p>
+        <p style="color:#CFDCE6;font-size:14px;margin:6px 0">▸ <b style="color:#fff">자본비용 환경</b>: 10년 국채금리·신용등급·이자비용</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 14. 종합 판단 ===== -->
+<section id="verdict">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">14</span><h2>종합 판단 자료</h2></div>
+    <p class="sec-sub">매수·매도를 권하지 않습니다. 대신 의사결정에 필요한 균형 잡힌 그림을 제공합니다.</p>
+
+    <div class="grid2">
+      <div class="callout co-teal" style="margin:0">
+        <span class="lab">강세 논거 (Bull case)</span>
+        <ul class="clean" style="margin:4px 0 0">
+          <li>현금흐름상 <b>성장 단계</b>의 보기 드문 규제 유틸리티</li>
+          <li>FPL 규제 독점 + NEER 원가 우위 = 이중 해자</li>
+          <li>AI·데이터센터 <b>전력 슈퍼사이클</b>의 직접 수혜</li>
+          <li>고든 기대수익 10.8% &gt; 자본비용 8.27% (+2.6%p)</li>
+          <li>도미니언 합병으로 규모·데이터센터 입지 확대 가능</li>
+        </ul>
+      </div>
+      <div class="callout co-amber" style="margin:0">
+        <span class="lab">약세 논거 (Bear case)</span>
+        <ul class="clean" style="margin:4px 0 0">
+          <li>내재 CAP ~28–34년 = <b>안전마진 얇음</b></li>
+          <li>성장 8% ≈ 자본비용 8.27% → <b>극도의 민감성</b></li>
+          <li>세액공제 폐지 시 핵심 가치동인 약화</li>
+          <li>금리 상승에 취약(장기 듀레이션·고레버리지)</li>
+          <li>합병 무산·지연 리스크, 거대 자본 실행 리스크</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel-dark" style="margin-top:16px">
+      <h3>한 줄 정리</h3>
+      <p style="font-size:16.5px;color:#E3ECF2;max-width:82ch">
+        NEE는 <b style="color:#fff">우량한 사업과 강력한 구조적 수요</b>를 가졌지만, 현재가는 <b style="color:#14B9CC">"오랜 기간 성공이 이어진다"는
+        시나리오를 이미 상당 부분 반영</b>하고 있습니다. "싸다/비싸다"의 이분법보다, <b style="color:#F0A847">"8%+ 성장이 장기 지속될 것인가,
+        세액공제·금리·합병이라는 세 변수가 어떻게 풀릴 것인가"</b>에 대한 본인의 견해가 투자판단의 핵심이 됩니다.
+      </p>
+      <div class="chips" style="margin-top:14px">
+        <span class="chip t">퀄리티: 높음</span>
+        <span class="chip a">밸류에이션: 프리미엄(안전마진 얇음)</span>
+        <span class="chip r">핵심 변수: 성장 지속·세액공제·금리·합병</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 한계와 가정 (필수) ===== -->
+<section id="limits">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">!</span><h2>한계와 가정 (반드시 함께 읽으세요)</h2></div>
+    <p class="sec-sub">이 분석이 <b>틀릴 수 있는 지점</b>과 <b>전제 조건</b>을 명시합니다. 분석의 신뢰도는 이 한계들을 인지할 때 비로소 올바르게 해석됩니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>모델의 구조적 한계</h4>
+        <ul class="clean">
+          <li><b>기업가치(unlevered) 모델은 NEE에 부적합</b>했습니다(주당 ~$2 산출). 고레버리지 규제 유틸리티의 특성상
+          자기자본 기준 모델로 전환했으나, 이 역시 단순화된 모델입니다.</li>
+          <li><b>성장률(8%)이 자본비용(8.27%)에 근접</b>해 결과가 입력값에 극도로 민감합니다. 따라서 "33.5년" 같은
+          점추정보다 <b>"28~34년 범위, 그리고 강세 ~22년"</b>으로 해석해야 합니다.</li>
+          <li>실효세율을 보수적 <b>10%로 정규화</b>했습니다(실제 −17.7%). 세액공제를 그대로 반영하면 가치가 더 높게,
+          공제가 폐지되면 더 낮게 나옵니다.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>입력값·데이터의 불확실성</h4>
+        <ul class="clean">
+          <li><b>ERP 4.75%</b>(프레임워크 표준) 대신 다모다란 내재 ERP <b>4.23%</b>를 쓰면 자본비용이 낮아져 밸류에이션이 더 매력적으로 보입니다.</li>
+          <li>순이익 정의(GAAP $6,835M vs 조정 $7,683M)에 따라 내재 CAP가 43.6년 ↔ 33.5년으로 달라집니다. <b>조정 이익</b>을 기본으로 사용했습니다.</li>
+          <li>주가·시총·목표가는 <b>자료원과 기준일이 상이</b>(2026-03 ~ 06)해 일부 범위로 표기했습니다.</li>
+          <li>합병 종결 시점은 자료원별로 "12~18개월" vs "2027 중후반"으로 차이가 있습니다.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="co-ink callout" style="margin-top:16px">
+      <span class="lab">무엇이 바뀌면 결론을 바꿔야 하는가 (베이지안 갱신 조건)</span>
+      <p style="color:#E3ECF2">▸ <b style="color:#fff">성장 가이던스 하향</b>(8%+ → 6%대): 약세 시나리오로 전환, 현재가 정당화 어려움.<br>
+      ▸ <b style="color:#fff">세액공제 조기·전면 폐지</b>: NEER 수익성·성장 직접 타격, 가치 하향.<br>
+      ▸ <b style="color:#fff">금리 추가 상승</b>(자본비용 +1%p): 밸류에이션 정당화 불가 구간 진입.<br>
+      ▸ <b style="color:#fff">합병 무산/대규모 조건부 승인</b>: 성장 스토리 재평가 필요.<br>
+      ▸ 반대로 <b style="color:#14B9CC">데이터센터 대형 계약 가속 + 금리 하락</b>: 강세 시나리오(내재 CAP ~22년) 강화.</p>
+    </div>
+
+    <div class="co-amber callout">
+      <span class="lab">분석 태도에 대한 자기 점검</span>
+      <p>본 분석은 "그럴듯하게 들리는" 단일 숫자를 피하고, <b>모델이 깨지는 지점</b>(기업가치 모델 실패)과
+      <b>반대 논리</b>(낮은 ROIC·빠른 평균회귀)를 함께 제시했습니다. "트럼프가 풍력을 풀었으니 호재"라는 <b>단순 서사도 명시적으로 경계</b>했습니다.
+      그럼에도 미래 예측에는 본질적 불확실성이 있으며, 본 자료는 <b>확정적 예측이 아니라 의사결정을 돕는 구조화된 분석</b>입니다.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider-light">
+
+<!-- ===== 출처 & 데이터 기준일 ===== -->
+<section id="sources" style="padding-bottom:30px">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">§</span><h2>출처와 데이터 기준일</h2></div>
+    <div class="grid2">
+      <div class="card">
+        <h4>재무·시장 데이터</h4>
+        <ul class="clean" style="font-size:13.5px">
+          <li><b>재무제표</b>: StockAnalysis / Fiscal.ai (FY2025), SEC Form 8-K 대조</li>
+          <li><b>주가·베타</b>: Yahoo Finance, Investing.com (~2026-06-15/16)</li>
+          <li><b>피어 데이터</b>: Simply Wall St (시총·P/E·목표가, ~2026-03-22)</li>
+          <li><b>거시</b>: FRED(10년 국채 4.47%, 손익분기 인플레 2.29%), 다모다란(내재 ERP 4.23%, 2026-01)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>사업·정책·뉴스</h4>
+        <ul class="clean" style="font-size:13.5px">
+          <li><b>합병</b>: NEE SEC 8-K (2026-06-15), Dominion IR, CNBC, Washington Post</li>
+          <li><b>풍력 정책</b>: E&amp;E News/Politico, Reuters, CNBC, Utility Dive (2025–2026)</li>
+          <li><b>산업 전망</b>: Gabelli Utilities Outlook 2026, Morningstar, 각 사 IR</li>
+          <li><b>프레임워크</b>: CAP(경쟁우위기간) 역산 방법론 — 유틸리티 페이드 0.30 적용</li>
+        </ul>
+      </div>
+    </div>
+    <p class="src" style="margin-top:14px">분석 기준일: <b>2026년 6월 16일</b>. 한국어·영어 교차 검색으로 자료를 수집했으며, 자료원 간 수치 차이는 본문에 병기했습니다.
+    수치는 보고서 작성 시점 기준이며 이후 변동될 수 있습니다.</p>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer style="background:#0B1B2B;color:#9FB4C2;padding:30px 0 40px;border-top:1px solid rgba(255,255,255,0.12)">
+  <div class="wrap">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <span style="width:11px;height:11px;border-radius:50%;background:#14B9CC;box-shadow:0 0 10px #14B9CC"></span>
+      <span style="font-family:'Space Grotesk';font-weight:700;color:#EAF1F5;font-size:16px">NextEra Energy · CAP 기반 장기 투자 분석</span>
+    </div>
+    <p style="font-size:13px;color:#9FB4C2;max-width:80ch;margin:0">
+      본 보고서는 정보 제공 목적의 분석 자료이며, 특정 증권의 매수·매도·보유를 권유하지 않습니다.
+      "적정 가치"가 아니라 현재가에 내재된 시장의 기대치를 역산하는 접근을 사용했습니다.
+      모든 신뢰도는 베이지안 관점에서 제시되었으며, 새로운 증거가 나오면 갱신되어야 합니다.
+    </p>
+    <p style="font-family:'IBM Plex Mono';font-size:11.5px;color:#5E7385;margin-top:14px">기준일 2026-06-16 · NYSE:NEE</p>
+  </div>
+</footer>
+
+</body>
+</html>
