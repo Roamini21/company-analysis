@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seagate Technology (STX) — 기업·산업 완전 분석 + CAP 밸류에이션</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#13161D; --bg2:#181C25; --bg3:#1F2430; --bg4:#262C3A;
+    --line:#2A3140; --line2:#39414F;
+    --ink:#ECEAE1; --ink2:#A8AEBC; --ink3:#6C7385;
+    --amber:#D69A4C; --amber-b:#E8B468; --amber-d:#8C6633;
+    --cyan:#56B6C2; --cyan-d:#3E8893; --cyan-b:#7FD3DD;
+    --red:#C9645A; --green:#6FB58A; --violet:#9A8CC9;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --sans:'IBM Plex Sans',system-ui,sans-serif;
+    --disp:'Space Grotesk',var(--sans);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--sans);
+    font-weight:300; line-height:1.75; font-size:16px;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(60rem 40rem at 88% -8%, rgba(214,154,76,.07), transparent 60%),
+                     radial-gradient(50rem 40rem at -5% 22%, rgba(86,182,194,.055), transparent 55%);
+    background-attachment:fixed;
+  }
+  .wrap{max-width:1060px; margin:0 auto; padding:0 28px}
+
+  /* ---------- masthead ---------- */
+  .mast{padding:60px 0 32px; border-bottom:1px solid var(--line)}
+  .kicker{font-family:var(--mono); font-size:12px; letter-spacing:.26em; text-transform:uppercase;
+    color:var(--amber); display:flex; gap:13px; align-items:center; flex-wrap:wrap}
+  .kicker .dot{width:6px;height:6px;background:var(--amber);border-radius:50%;box-shadow:0 0 12px var(--amber)}
+  h1{font-family:var(--disp); font-weight:700; font-size:clamp(2rem,4.6vw,3.1rem);
+    line-height:1.06; letter-spacing:-.02em; margin:18px 0 10px; color:var(--ink)}
+  h1 .tick{color:var(--amber)}
+  .onel{font-size:1.12rem; color:var(--ink); font-weight:400; max-width:64ch; line-height:1.6}
+  .onel b{color:var(--amber-b); font-weight:600}
+  .metarow{display:flex; gap:30px; flex-wrap:wrap; margin-top:26px; font-family:var(--mono); font-size:13px}
+  .metarow div span{display:block; color:var(--ink3); font-size:11px; letter-spacing:.07em; text-transform:uppercase; margin-bottom:3px}
+  .metarow div b{font-weight:500; color:var(--ink); font-size:15px}
+  .metarow .pos{color:var(--green)} .metarow .neg{color:var(--red)} .metarow .warn{color:var(--amber-b)}
+
+  /* ---------- hero: platter ---------- */
+  .hero{display:grid; grid-template-columns:1fr 1fr; gap:36px; align-items:center;
+    padding:42px 0; border-bottom:1px solid var(--line)}
+  .hero-copy .he{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan); margin-bottom:12px}
+  .hero-copy h2.ht{font-family:var(--disp); font-weight:600; font-size:1.55rem; line-height:1.3; letter-spacing:-.01em; margin-bottom:14px; color:var(--ink)}
+  .hero-copy p{color:var(--ink2); font-size:.98rem; margin-bottom:0}
+  .platter-wrap{display:flex; justify-content:center}
+  svg{display:block; max-width:100%; height:auto}
+  .spin{transform-origin:250px 185px; animation:spin 26s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media(prefers-reduced-motion:reduce){.spin{animation:none}}
+
+  /* ---------- TOC ---------- */
+  .toc{padding:26px 0; border-bottom:1px solid var(--line)}
+  .toc .tl{font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--ink3); margin-bottom:14px}
+  .toc-grid{display:flex; flex-wrap:wrap; gap:8px}
+  .toc-grid a{font-family:var(--mono); font-size:12.5px; color:var(--ink2); text-decoration:none;
+    border:1px solid var(--line2); border-radius:30px; padding:6px 13px; white-space:nowrap; transition:.15s}
+  .toc-grid a:hover{border-color:var(--amber); color:var(--amber-b)}
+  .toc-grid a .n{color:var(--amber); margin-right:6px}
+  .toc .part-lbl{width:100%; font-family:var(--disp); font-weight:600; font-size:.95rem; color:var(--cyan); margin:14px 0 4px}
+  .toc .part-lbl:first-child{margin-top:0}
+
+  /* ---------- sections ---------- */
+  section{padding:48px 0; border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--amber); display:flex; gap:12px; align-items:baseline; margin-bottom:8px}
+  .eyebrow .num{color:var(--ink3)}
+  h2{font-family:var(--disp); font-weight:600; font-size:1.6rem; letter-spacing:-.01em; color:var(--ink); margin-bottom:18px; line-height:1.22}
+  h3{font-family:var(--disp); font-weight:500; font-size:1.13rem; color:var(--ink); margin:28px 0 10px}
+  h4.sub{font-family:var(--disp); font-weight:500; font-size:1rem; color:var(--cyan-b); margin:20px 0 8px}
+  p{margin-bottom:14px; color:var(--ink2)}
+  p strong, li strong{color:var(--ink); font-weight:500}
+  .lead{font-size:1.07rem; color:var(--ink); font-weight:300; line-height:1.7}
+  a{color:var(--cyan)}
+  .term{color:var(--amber-b); font-weight:500; border-bottom:1px dotted var(--amber-d)}
+
+  ul.clean{list-style:none; margin:6px 0 16px}
+  ul.clean li{position:relative; padding-left:20px; margin-bottom:9px; color:var(--ink2)}
+  ul.clean li::before{content:"›"; position:absolute; left:2px; color:var(--amber); font-family:var(--mono)}
+
+  /* confidence chip */
+  .conf{display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px;
+    padding:3px 10px; border-radius:30px; border:1px solid var(--line2); color:var(--ink2); background:var(--bg2); vertical-align:middle}
+  .conf b{font-weight:600}
+  .conf.hi{border-color:rgba(111,181,138,.4); color:var(--green)}
+  .conf.mid{border-color:rgba(214,154,76,.4); color:var(--amber-b)}
+  .conf.lo{border-color:rgba(201,100,90,.4); color:var(--red)}
+
+  /* tables */
+  .tbl-wrap{overflow-x:auto; margin:18px 0 8px; border:1px solid var(--line); border-radius:10px}
+  table{width:100%; border-collapse:collapse; font-family:var(--mono); font-size:13px; min-width:560px}
+  caption{caption-side:top; text-align:left; font-family:var(--mono); font-size:11.5px; color:var(--ink3);
+    padding:12px 16px 0; letter-spacing:.04em}
+  thead th{background:var(--bg3); color:var(--ink2); font-weight:500; text-align:right; padding:11px 14px;
+    border-bottom:1px solid var(--line2); white-space:nowrap; font-size:12px; letter-spacing:.03em}
+  thead th:first-child{text-align:left}
+  tbody td{padding:9px 14px; text-align:right; border-bottom:1px solid var(--line); color:var(--ink2); white-space:nowrap}
+  tbody td:first-child{text-align:left; color:var(--ink)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover td{background:rgba(86,182,194,.04)}
+  .t-amber{color:var(--amber-b)!important} .t-cyan{color:var(--cyan)!important}
+  .t-red{color:var(--red)!important} .t-green{color:var(--green)!important} .t-ink{color:var(--ink)!important}
+  tr.hl td{background:rgba(214,154,76,.07)}
+  tr.hl td:first-child{color:var(--amber-b)}
+  tfoot td{padding:10px 14px; font-weight:600; color:var(--ink); border-top:1px solid var(--line2); text-align:right}
+  tfoot td:first-child{text-align:left}
+
+  /* callout cards */
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:18px 0}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:18px 0}
+  .card{background:var(--bg2); border:1px solid var(--line); border-radius:11px; padding:20px 22px}
+  .card.accent{border-left:3px solid var(--amber)}
+  .card.cyan{border-left:3px solid var(--cyan)}
+  .card.red{border-left:3px solid var(--red)}
+  .card.green{border-left:3px solid var(--green)}
+  .card h4{font-family:var(--disp); font-weight:600; font-size:1rem; margin-bottom:9px; color:var(--ink); display:flex; gap:9px; align-items:center; flex-wrap:wrap}
+  .card h4 .tag{font-family:var(--mono); font-size:10px; padding:2px 7px; border-radius:4px; letter-spacing:.05em}
+  .tag.bull{background:rgba(86,182,194,.14); color:var(--cyan)}
+  .tag.bear{background:rgba(201,100,90,.14); color:var(--red)}
+  .card p{font-size:.92rem; margin-bottom:0; color:var(--ink2)}
+  .card .big{font-family:var(--mono); font-weight:600; font-size:1.8rem; color:var(--ink); display:block; margin:4px 0 6px}
+  .card.cyan .big{color:var(--cyan-b)} .card.accent .big{color:var(--amber-b)}
+
+  /* keynum strip */
+  .keynums{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line);
+    border:1px solid var(--line); border-radius:11px; overflow:hidden; margin:20px 0}
+  .keynums div{background:var(--bg2); padding:18px 16px}
+  .keynums .n{font-family:var(--mono); font-weight:600; font-size:1.45rem; color:var(--amber-b)}
+  .keynums .n.cy{color:var(--cyan-b)}
+  .keynums .l{font-size:11.5px; color:var(--ink3); margin-top:4px; letter-spacing:.02em; line-height:1.45}
+
+  /* note box */
+  .note{background:var(--bg2); border:1px solid var(--line2); border-radius:11px; padding:18px 22px; margin:18px 0;
+    font-size:.93rem; color:var(--ink2)}
+  .note .nh{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--cyan); margin-bottom:7px}
+  .note.warn{border-color:var(--amber-d)} .note.warn .nh{color:var(--amber-b)}
+  .note p:last-child{margin-bottom:0}
+
+  /* glossary inline def */
+  .defbox{background:rgba(86,182,194,.06); border:1px solid var(--cyan-d); border-radius:10px; padding:14px 18px; margin:14px 0; font-size:.92rem; color:var(--ink2)}
+  .defbox b{color:var(--cyan-b)}
+
+  /* timeline */
+  .tline{position:relative; margin:20px 0 8px; padding-left:26px}
+  .tline::before{content:""; position:absolute; left:7px; top:6px; bottom:6px; width:2px; background:var(--line2)}
+  .tev{position:relative; margin-bottom:16px}
+  .tev::before{content:""; position:absolute; left:-23px; top:6px; width:9px;height:9px;border-radius:50%; background:var(--amber); box-shadow:0 0 0 3px var(--bg)}
+  .tev .ty{font-family:var(--mono); font-size:12px; color:var(--amber-b); font-weight:600}
+  .tev .td{font-size:.93rem; color:var(--ink2); margin-top:2px}
+  .tev .td b{color:var(--ink)}
+
+  /* HDD anatomy labels under svg */
+  .anatomy{background:var(--bg2); border:1px solid var(--line); border-radius:12px; padding:24px; margin:18px 0; text-align:center}
+  .anatomy .leg{display:flex; flex-wrap:wrap; gap:10px 22px; justify-content:center; margin-top:16px; font-family:var(--mono); font-size:12px}
+  .anatomy .leg span{color:var(--ink2); display:inline-flex; align-items:center; gap:7px}
+  .anatomy .leg .sw{width:11px;height:11px;border-radius:2px; flex:none}
+
+  /* revenue flow */
+  .revbar{margin:18px 0}
+  .revbar .rrow{display:flex; align-items:center; gap:14px; margin-bottom:12px}
+  .revbar .rname{flex:0 0 150px; font-size:.92rem; color:var(--ink)}
+  .revbar .rname small{display:block; color:var(--ink3); font-size:.78rem; font-family:var(--mono)}
+  .revbar .track{flex:1; height:30px; background:var(--bg3); border-radius:6px; overflow:hidden; position:relative}
+  .revbar .fill{height:100%; display:flex; align-items:center; padding-left:12px; font-family:var(--mono); font-size:12px; font-weight:600; color:#10141b; white-space:nowrap}
+
+  /* value chain flow */
+  .vchain{display:flex; flex-wrap:wrap; align-items:stretch; gap:0; margin:20px 0; border:1px solid var(--line); border-radius:12px; overflow:hidden}
+  .vchain .vc{flex:1 1 0; min-width:155px; padding:18px 16px; background:var(--bg2); border-right:1px solid var(--line); position:relative}
+  .vchain .vc:last-child{border-right:none}
+  .vchain .vc.core{background:rgba(214,154,76,.07)}
+  .vchain .vc .vn{font-family:var(--mono); font-size:10.5px; color:var(--amber); letter-spacing:.14em; text-transform:uppercase}
+  .vchain .vc .vt{font-family:var(--disp); font-weight:600; font-size:.98rem; margin:6px 0 6px; color:var(--ink)}
+  .vchain .vc p{font-size:.82rem; margin:0; color:var(--ink3); line-height:1.5}
+  .vchain .vc .who{display:block; margin-top:8px; font-family:var(--mono); font-size:11px; color:var(--cyan)}
+
+  /* SWOT */
+  .swot{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:20px 0}
+  .sq{border-radius:12px; padding:20px 22px; border:1px solid var(--line)}
+  .sq h4{font-family:var(--disp); font-weight:600; font-size:1.05rem; margin-bottom:10px; display:flex; align-items:center; gap:9px}
+  .sq ul{list-style:none}
+  .sq li{position:relative; padding-left:16px; margin-bottom:7px; font-size:.9rem; line-height:1.5}
+  .sq li::before{content:"–"; position:absolute; left:0}
+  .sq.s{background:rgba(111,181,138,.07); border-color:rgba(111,181,138,.32)}
+  .sq.s h4{color:var(--green)} .sq.s li{color:#cfe3d6} .sq.s li::before{color:var(--green)}
+  .sq.w{background:rgba(201,100,90,.07); border-color:rgba(201,100,90,.32)}
+  .sq.w h4{color:var(--red)} .sq.w li{color:#ecd2ce} .sq.w li::before{color:var(--red)}
+  .sq.o{background:rgba(86,182,194,.07); border-color:rgba(86,182,194,.32)}
+  .sq.o h4{color:var(--cyan-b)} .sq.o li{color:#cfe6ea} .sq.o li::before{color:var(--cyan)}
+  .sq.t{background:rgba(214,154,76,.07); border-color:rgba(214,154,76,.32)}
+  .sq.t h4{color:var(--amber-b)} .sq.t li{color:#ecdcc4} .sq.t li::before{color:var(--amber)}
+
+  /* moat bars */
+  .moat{margin:18px 0}
+  .moat .mrow{display:grid; grid-template-columns:170px 1fr; gap:14px; align-items:center; margin-bottom:13px}
+  .moat .mlab{font-size:.92rem; color:var(--ink)}
+  .moat .mtrack{height:10px; background:var(--bg3); border-radius:6px; overflow:hidden}
+  .moat .mfill{height:100%; background:linear-gradient(90deg,var(--cyan-d),var(--cyan))}
+  .moat .mfill.am{background:linear-gradient(90deg,var(--amber-d),var(--amber))}
+  .moat .mnote{font-family:var(--mono); font-size:11px; color:var(--ink3); grid-column:2; margin-top:-7px}
+
+  /* flow steps (thesis) */
+  .flow{display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin:20px 0; border:1px solid var(--line); border-radius:11px; overflow:hidden}
+  .flow .step{flex:1 1 0; min-width:155px; padding:18px; background:var(--bg2); border-right:1px solid var(--line); position:relative}
+  .flow .step:last-child{border-right:none; background:rgba(214,154,76,.06)}
+  .flow .step .s-n{font-family:var(--mono); font-size:11px; color:var(--amber); letter-spacing:.15em}
+  .flow .step .s-t{font-family:var(--disp); font-weight:500; font-size:.97rem; margin:6px 0 5px; color:var(--ink)}
+  .flow .step p{font-size:.83rem; margin:0; color:var(--ink3)}
+
+  /* valuation ladder */
+  .vbox{display:grid; grid-template-columns:1.05fr .95fr; gap:36px; align-items:center; margin:14px 0}
+  .ladder{position:relative; height:420px; padding-left:8px; border-left:1px solid var(--line2); margin-left:6px}
+  .ladder .scale-cap{position:absolute; left:-6px; top:-22px; font-family:var(--mono); font-size:10px; color:var(--ink3); letter-spacing:.1em}
+  .mark{position:absolute; left:0; right:0; display:flex; align-items:center; gap:10px; transform:translateY(50%)}
+  .mark .bar{height:2px; background:var(--line2); flex:0 0 18px}
+  .mark .lab{font-family:var(--mono); font-size:12px; color:var(--ink2); white-space:nowrap}
+  .mark .val{font-family:var(--mono); font-weight:600; font-size:14px; margin-left:auto}
+  .mark.market .node{position:absolute; left:-5px; width:12px;height:12px;border-radius:50%; background:var(--amber); box-shadow:0 0 0 4px rgba(214,154,76,.18),0 0 18px var(--amber)}
+  .mark.market .lab,.mark.market .val{color:var(--amber-b)}
+  .mark.market .bar{background:linear-gradient(90deg,var(--amber),transparent); flex-basis:54px}
+  .mark.fund .node{position:absolute; left:-4px; width:10px;height:10px;border-radius:50%;background:var(--cyan)}
+  .mark.fund .lab,.mark.fund .val{color:var(--cyan)}
+  .mark.bear .node{position:absolute; left:-4px; width:9px;height:9px;border-radius:50%;background:var(--red)}
+  .mark.bear .lab,.mark.bear .val{color:var(--red)}
+  .mark.tick{opacity:.5}
+  .mark.tick .node{position:absolute;left:-2px;width:5px;height:5px;border-radius:50%;background:var(--ink3)}
+  .mark.tick .lab,.mark.tick .val{color:var(--ink3); font-size:11px}
+  .gap-band{position:absolute; left:-1px; width:3px; background:linear-gradient(var(--amber),var(--cyan)); opacity:.35; border-radius:2px}
+
+  /* final verdict */
+  .final{background:linear-gradient(180deg,rgba(214,154,76,.08),rgba(31,36,48,.4));
+    border:1px solid var(--amber-d); border-radius:14px; padding:30px 32px; margin:10px 0}
+  .final .vh{font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--amber-b); margin-bottom:12px}
+  .final .vbig{font-family:var(--disp); font-weight:600; font-size:1.45rem; line-height:1.32; color:var(--ink); margin-bottom:14px}
+  .final .vbig em{font-style:normal; color:var(--amber)}
+  .final p{color:var(--ink2); font-size:.96rem}
+  .final p.k{color:var(--ink)}
+  .final p:last-child{margin-bottom:0}
+
+  footer{padding:40px 0 70px; color:var(--ink3); font-family:var(--mono); font-size:12px; line-height:1.8}
+  footer .dis{margin-top:14px; padding-top:14px; border-top:1px solid var(--line); max-width:82ch}
+
+  @media(max-width:880px){
+    .hero{grid-template-columns:1fr; gap:30px}
+    .vbox{grid-template-columns:1fr; gap:28px}
+    .grid2,.grid3,.swot{grid-template-columns:1fr}
+    .keynums{grid-template-columns:repeat(2,1fr)}
+    .moat .mrow{grid-template-columns:120px 1fr}
+    .revbar .rname{flex-basis:120px}
+    .metarow{gap:20px}
+  }
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===================== MASTHEAD ===================== -->
+  <header class="mast">
+    <div class="kicker"><span class="dot"></span> 기업·산업 완전 분석 + CAP 밸류에이션 · 비전공자용 · 2026년 6월 20일</div>
+    <h1>Seagate Technology <span class="tick">STX</span></h1>
+    <p class="onel">Seagate는 <b>하드디스크 드라이브(HDD)</b>를 만드는 세계 1·2위 기업입니다. HDD는 자석을 입힌 금속·유리 원판을 빠르게 돌려 데이터를 기록하는 장치로, 같은 용량을 가장 싸게 저장하는 수단입니다. AI 시대에 폭증한 “대용량 데이터를 값싸게 보관”하는 수요가 이 회사의 실적을 띄우고 있습니다.</p>
+    <div class="metarow">
+      <div><span>티커 / 거래소</span><b>STX · NASDAQ</b></div>
+      <div><span>현재가</span><b>$1,065</b></div>
+      <div><span>시가총액</span><b>$240.7B</b></div>
+      <div><span>1년 수익률</span><b class="pos">+614%</b></div>
+      <div><span>HDD 시장점유율</span><b>~40–44%</b></div>
+      <div><span>FY26E 매출</span><b>~$12.0B</b></div>
+    </div>
+  </header>
+
+  <!-- ===================== HERO: PLATTER ===================== -->
+  <div class="hero">
+    <div class="hero-copy">
+      <div class="he">이 회사를 한 장으로 이해하기</div>
+      <h2 class="ht">“돌아가는 원판에 자석으로 0과 1을 새긴다”</h2>
+      <p>오른쪽 그림이 HDD의 핵심입니다. 자성 물질을 입힌 <span class="term">플래터(원판)</span>가 분당 7,200번 회전하고, <span class="term">읽기/쓰기 헤드</span>가 머리카락 굵기의 수천 분의 1 높이로 떠서 원판 표면의 자석 방향을 바꿔(쓰기) 또는 읽어(읽기) 데이터를 다룹니다. 이 단순하지만 정교한 기계가 전 세계 데이터의 대부분을 값싸게 보관합니다. Seagate는 1979년 이후 4제타바이트(40억 테라바이트)가 넘는 저장 용량을 출하했습니다.</p>
+    </div>
+    <div class="platter-wrap">
+      <svg viewBox="0 0 500 380" role="img" aria-label="HDD 내부 구조 다이어그램">
+        <defs>
+          <radialGradient id="plat" cx="50%" cy="42%" r="60%">
+            <stop offset="0%" stop-color="#2b3340"/>
+            <stop offset="62%" stop-color="#222a36"/>
+            <stop offset="100%" stop-color="#1a212b"/>
+          </radialGradient>
+          <linearGradient id="arm" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#E8B468"/>
+            <stop offset="100%" stop-color="#B9842F"/>
+          </linearGradient>
+        </defs>
+        <!-- platter (spinning tracks) -->
+        <circle cx="250" cy="185" r="150" fill="url(#plat)" stroke="#39414F" stroke-width="1.5"/>
+        <g class="spin">
+          <circle cx="250" cy="185" r="132" fill="none" stroke="#56B6C2" stroke-width="1" opacity="0.30"/>
+          <circle cx="250" cy="185" r="116" fill="none" stroke="#56B6C2" stroke-width="1" opacity="0.24"/>
+          <circle cx="250" cy="185" r="100" fill="none" stroke="#56B6C2" stroke-width="1" opacity="0.30"/>
+          <circle cx="250" cy="185" r="84" fill="none" stroke="#56B6C2" stroke-width="1" opacity="0.22"/>
+          <circle cx="250" cy="185" r="68" fill="none" stroke="#56B6C2" stroke-width="1" opacity="0.28"/>
+          <circle cx="250" cy="185" r="52" fill="none" stroke="#56B6C2" stroke-width="1" opacity="0.20"/>
+          <!-- a sector marker so spin is visible -->
+          <line x1="250" y1="185" x2="250" y2="45" stroke="#56B6C2" stroke-width="1" opacity="0.18"/>
+          <circle cx="250" cy="100" r="2.5" fill="#7FD3DD" opacity="0.7"/>
+        </g>
+        <!-- spindle hub -->
+        <circle cx="250" cy="185" r="30" fill="#161B23" stroke="#4a5365" stroke-width="1.5"/>
+        <circle cx="250" cy="185" r="9" fill="#39414F"/>
+        <!-- actuator arm: pivot bottom-right to head over platter -->
+        <g>
+          <circle cx="430" cy="320" r="15" fill="#1E222C" stroke="#8C6633" stroke-width="1.5"/>
+          <circle cx="430" cy="320" r="5" fill="#D69A4C"/>
+          <path d="M430 320 L300 120" stroke="url(#arm)" stroke-width="11" stroke-linecap="round"/>
+          <!-- head slider -->
+          <rect x="291" y="108" width="22" height="16" rx="3" transform="rotate(57 302 116)" fill="#E8B468"/>
+          <!-- counterweight -->
+          <path d="M430 320 L470 382" stroke="#B9842F" stroke-width="7" stroke-linecap="round" opacity="0.7"/>
+        </g>
+        <!-- labels -->
+        <g font-family="IBM Plex Mono, monospace" font-size="12.5" fill="#A8AEBC">
+          <line x1="250" y1="40" x2="250" y2="22" stroke="#56B6C2" stroke-width="1"/>
+          <text x="250" y="16" text-anchor="middle" fill="#7FD3DD">트랙 (동심원 데이터 길)</text>
+          <line x1="302" y1="116" x2="380" y2="70" stroke="#E8B468" stroke-width="1"/>
+          <text x="384" y="66" fill="#E8B468">읽기/쓰기 헤드</text>
+          <line x1="370" y1="230" x2="430" y2="250" stroke="#E8B468" stroke-width="1"/>
+          <text x="436" y="254" fill="#E8B468">액추에이터 암</text>
+          <text x="436" y="270" fill="#6C7385" font-size="10.5">(헤드를 좌우로 이동)</text>
+          <line x1="250" y1="185" x2="120" y2="300" stroke="#A8AEBC" stroke-width="1" opacity="0.6"/>
+          <text x="40" y="316" fill="#A8AEBC">스핀들 (회전축·모터)</text>
+          <text x="40" y="332" fill="#6C7385" font-size="10.5">7,200 RPM 회전</text>
+          <text x="40" y="120" fill="#A8AEBC">플래터 (자성 원판)</text>
+          <line x1="95" y1="124" x2="135" y2="150" stroke="#A8AEBC" stroke-width="1" opacity="0.6"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ===================== TOC ===================== -->
+  <nav class="toc">
+    <div class="tl">목차</div>
+    <div class="toc-grid">
+      <span class="part-lbl">PART 1 · 기업과 산업 완전 이해</span>
+      <a href="#s1"><span class="n">01</span>핵심 요약</a>
+      <a href="#s2"><span class="n">02</span>기업 개요·역사</a>
+      <a href="#s3"><span class="n">03</span>HDD 작동 원리</a>
+      <a href="#s4"><span class="n">04</span>제품·수익 구조</a>
+      <a href="#s5"><span class="n">05</span>HAMR 기술력</a>
+      <a href="#s6"><span class="n">06</span>산업 분석·가치사슬</a>
+      <a href="#s7"><span class="n">07</span>피어그룹 비교</a>
+      <a href="#s8"><span class="n">08</span>SWOT 분석</a>
+      <a href="#s9"><span class="n">09</span>경제적 해자</a>
+      <span class="part-lbl">PART 2 · 투자 분석 (CAP 역DCF)</span>
+      <a href="#s10"><span class="n">10</span>사용자 가설 검증</a>
+      <a href="#s11"><span class="n">11</span>TAM 추산</a>
+      <a href="#s12"><span class="n">12</span>DCF·Exhibit-23</a>
+      <a href="#s13"><span class="n">13</span>WACC·내재 CAP</a>
+      <a href="#s14"><span class="n">14</span>민감도·시나리오</a>
+      <a href="#s15"><span class="n">15</span>리스크·한계·종합</a>
+    </div>
+  </nav>
+
+  <!-- ===================== 01 핵심 요약 ===================== -->
+  <section id="s1">
+    <div class="eyebrow"><span class="num">01</span> 핵심 요약</div>
+    <h2>무엇을 하고, 어떻게 벌고, 지금 주가는 어떤 상태인가</h2>
+    <p class="lead">Seagate는 “대용량 데이터를 가장 싸게 보관하는 장치(HDD)”를 만드는 회사입니다. AI 붐으로 데이터센터가 폭증하면서 이 값싼 대용량 저장 수요가 구조적으로 커졌고, 그 결과 매출과 이익률이 동시에 빠르게 좋아지고 있습니다. 다만 주가는 이미 그 좋은 미래를 매우 많이 반영한 상태입니다.</p>
+
+    <div class="keynums">
+      <div><div class="n cy">~40–44%</div><div class="l">전 세계 HDD 시장점유율 (1·2위)</div></div>
+      <div><div class="n cy">88%</div><div class="l">출하 용량 중 데이터센터向 비중 (FQ3'26)</div></div>
+      <div><div class="n">47%</div><div class="l">최근 분기 매출총이익률 (사상 최고)</div></div>
+      <div><div class="n">~85–100x</div><div class="l">주가수익비율(PER) — 매우 높은 수준</div></div>
+    </div>
+
+    <h3>이 보고서가 답하는 것</h3>
+    <ul class="clean">
+      <li><strong>PART 1</strong>에서는 “Seagate가 어떤 회사이고, HDD가 무엇이며 어떻게 작동하는지, 어떻게 돈을 벌고, 어떤 기술과 해자를 가졌으며, 산업에서 어떤 위치인지”를 처음 접하는 사람도 이해하도록 그림과 함께 설명합니다.</li>
+      <li><strong>PART 2</strong>에서는 사용자님이 제시한 “엔비디아 멀티랙 확장 → HDD 랙 추가” 가설을 검증하고, 그 시나리오의 시장 규모(TAM)를 추산해 펀더멘털과 현재 주가의 합리성을 역산합니다.</li>
+    </ul>
+
+    <div class="note">
+      <div class="nh">투자 측면 한 줄 결론</div>
+      사업은 강하지만(매출·마진·점유율 모두 우수), 현재 $1,065 주가는 펀더멘털 기준 가장 낙관적인 시나리오($683)조차 약 56% 웃돕니다. 시장은 이미 향후 14년 이상의 20%대 고성장과 50% 마진을 가격에 반영한 상태로, “좋은 회사”와 “좋은 주가”는 구분해서 볼 필요가 있습니다. <span class="conf mid">확신도 <b>중간~70%</b></span>
+    </div>
+  </section>
+
+  <!-- ===================== 02 기업 개요 ===================== -->
+  <section id="s2">
+    <div class="eyebrow"><span class="num">02</span> 기업 개요 · 역사</div>
+    <h2>플로피를 대체한 PC 하드디스크에서, AI 데이터센터의 저장 강자로</h2>
+    <p>Seagate는 <strong>1978년 11월</strong> 미국 캘리포니아 스카츠밸리에서 <strong>Al Shugart(앨 슈가트)</strong>와 Finis Conner 등 5명이 세운 저장장치 회사입니다. 처음 이름은 ‘Shugart Technology’였으나, 슈가트가 앞서 세운 다른 회사(Xerox 자회사 Shugart Associates)와의 상표 분쟁을 피하려고 S·G·T 글자를 남겨 ‘Seagate’로 바꿨습니다. <span class="conf hi">확신도 <b>높음~90%</b></span></p>
+    <p>1980년 첫 제품 <strong>ST-506</strong>(5메가바이트, 5.25인치)을 내놓아 IBM의 첫 하드디스크 탑재 PC(IBM XT)에 대량 공급하면서 빠르게 성장했습니다. 이후 PC·노트북·아이팟 등 소형 드라이브 시대를 거쳐, 현재는 데이터센터용 초대용량 드라이브에 집중하고 있습니다.</p>
+
+    <div class="tline">
+      <div class="tev"><div class="ty">1978–80</div><div class="td"><b>창업과 ST-506</b> — 세계 최초 5.25인치 PC용 하드디스크 출시, IBM XT 공급으로 도약</div></div>
+      <div class="tev"><div class="ty">1991</div><div class="td"><b>BarraCuda 출시</b> — 업계 최초 7,200 RPM 드라이브. 1993년 누적 5,000만 대 출하</div></div>
+      <div class="tev"><div class="ty">2000–02</div><div class="td"><b>$20B 비상장 전환 후 재상장</b> — 2002년 뉴욕증시에 티커 <b>STX</b>로 재상장(현재는 NASDAQ). 이후 Maxtor 등 인수로 점유율 강화</div></div>
+      <div class="tev"><div class="ty">2010</div><div class="td"><b>법인 소재지 아일랜드 더블린으로 이전</b> — 운영 본사는 미국 프리몬트와 싱가포르</div></div>
+      <div class="tev"><div class="ty">2024</div><div class="td"><b>Mozaic HAMR 양산 시작</b> — 10년 넘게 개발한 차세대 기록 기술의 첫 상용화(아래 5장 참조)</div></div>
+      <div class="tev"><div class="ty">2025–26</div><div class="td"><b>AI發 구조적 호황</b> — 데이터센터 수요 급증으로 매출·마진 동시 확대. FY25 매출 $9.1B(+39%)</div></div>
+      <div class="tev"><div class="ty">2026.04</div><div class="td"><b>Lyve 클라우드 사업 매각 발표</b> — 클라우드 저장 서비스 자회사를 Wasabi에 매각, HDD 본업에 집중하는 선택</div></div>
+    </div>
+
+    <div class="grid3">
+      <div class="card"><h4>본사·법인</h4><p>운영 본사 미국 프리몬트 + 싱가포르, 법인 소재 아일랜드 더블린. CEO 겸 회장 Dave Mosley.</p></div>
+      <div class="card"><h4>생산·R&amp;D</h4><p>전 세계 7개 제조 시설, 4개 R&amp;D 거점. 1979년 이후 누적 4제타바이트+ 출하.</p></div>
+      <div class="card"><h4>핵심 정체성</h4><p>“대용량 저장(mass-capacity storage) 전문 기업”. 매출의 대부분이 HDD에서 발생.</p></div>
+    </div>
+  </section>
+
+  <!-- ===================== 03 HDD 작동 원리 ===================== -->
+  <section id="s3">
+    <div class="eyebrow"><span class="num">03</span> HDD 작동 원리 (비전공자용)</div>
+    <h2>레코드판과 바늘처럼: 돌아가는 자석 원판에 데이터를 새긴다</h2>
+    <p>HDD를 가장 쉽게 비유하면 <strong>LP 레코드판과 바늘</strong>입니다. 레코드판처럼 원판이 돌아가고, 바늘에 해당하는 헤드가 그 위를 움직이며 정보를 읽고 씁니다. 다만 소리 홈 대신 <strong>자석의 방향(N극·S극)으로 0과 1을 표현</strong>한다는 점이 다릅니다.</p>
+
+    <div class="anatomy">
+      <svg viewBox="0 0 720 300" role="img" aria-label="HDD 단면 구조와 데이터 기록 원리">
+        <defs>
+          <linearGradient id="armB" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#E8B468"/><stop offset="100%" stop-color="#B9842F"/></linearGradient>
+        </defs>
+        <!-- platter stack (side view) -->
+        <g>
+          <ellipse cx="200" cy="80" rx="150" ry="20" fill="#262C3A" stroke="#4a5365"/>
+          <ellipse cx="200" cy="80" rx="150" ry="20" fill="none" stroke="#56B6C2" stroke-opacity="0.25"/>
+          <rect x="50" y="80" width="300" height="46" fill="#222a36"/>
+          <ellipse cx="200" cy="126" rx="150" ry="20" fill="#1f2530" stroke="#4a5365"/>
+          <ellipse cx="200" cy="150" rx="150" ry="20" fill="#262C3A" stroke="#4a5365"/>
+          <rect x="50" y="150" width="300" height="46" fill="#222a36"/>
+          <ellipse cx="200" cy="196" rx="150" ry="20" fill="#1f2530" stroke="#4a5365"/>
+          <text x="200" y="240" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12.5" fill="#A8AEBC">플래터 여러 장을 쌓아 용량을 키움 (1~5장)</text>
+          <text x="200" y="258" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10.5" fill="#6C7385">고용량 드라이브는 내부를 헬륨으로 채워 마찰·진동을 줄임</text>
+        </g>
+        <!-- spindle -->
+        <rect x="195" y="60" width="10" height="156" fill="#39414F"/>
+        <!-- actuator arms reaching in -->
+        <g>
+          <path d="M620 103 L235 103" stroke="url(#armB)" stroke-width="7" stroke-linecap="round"/>
+          <path d="M620 173 L235 173" stroke="url(#armB)" stroke-width="7" stroke-linecap="round"/>
+          <rect x="226" y="96" width="16" height="9" rx="2" fill="#E8B468"/>
+          <rect x="226" y="166" width="16" height="9" rx="2" fill="#E8B468"/>
+          <circle cx="624" cy="138" r="16" fill="#1E222C" stroke="#8C6633"/>
+          <circle cx="624" cy="138" r="5" fill="#D69A4C"/>
+          <path d="M624 138 L617 105 M624 138 L617 171" stroke="#B9842F" stroke-width="6" stroke-linecap="round"/>
+        </g>
+        <g font-family="IBM Plex Mono, monospace" font-size="12.5">
+          <text x="500" y="92" fill="#E8B468">읽기/쓰기 헤드 (각 면마다 1개)</text>
+          <text x="612" y="142" fill="#A8AEBC">액추에이터</text>
+          <text x="710" y="212" fill="#6C7385" text-anchor="end">헤드는 원판에 닿지 않고</text>
+          <text x="710" y="228" fill="#6C7385" text-anchor="end">약 10나노미터 공기층 위에 뜸</text>
+        </g>
+      </svg>
+      <div class="leg">
+        <span><span class="sw" style="background:#56B6C2"></span>트랙·자성 표면 (데이터)</span>
+        <span><span class="sw" style="background:#E8B468"></span>헤드·암 (읽기/쓰기)</span>
+        <span><span class="sw" style="background:#4a5365"></span>플래터·스핀들 (회전)</span>
+      </div>
+    </div>
+
+    <h3>데이터가 저장되는 4단계</h3>
+    <ul class="clean">
+      <li><strong>회전</strong> — 스핀들 모터가 원판을 분당 7,200회(7.2K RPM) 일정하게 돌립니다. 모터의 80%는 일본 <span class="term">Nidec(니덱)</span>이 공급합니다.</li>
+      <li><strong>이동</strong> — 보이스코일이라는 전자석이 액추에이터 암을 좌우로 흔들어, 헤드를 원하는 <span class="term">트랙</span>(동심원 데이터 길)으로 정확히 옮깁니다.</li>
+      <li><strong>쓰기</strong> — 헤드에 전류를 흘려 만든 미세 자기장이 원판 표면의 아주 작은 영역(비트)의 자석 방향을 바꿉니다. 한 방향은 1, 반대 방향은 0.</li>
+      <li><strong>읽기</strong> — 원판이 헤드 밑을 지날 때 자석 방향의 변화가 헤드에 전류를 유도하고, 컨트롤러가 이를 0과 1로 해독합니다.</li>
+    </ul>
+
+    <div class="defbox">
+      <b>왜 HDD가 SSD보다 쌀까?</b> SSD(플래시 메모리)는 반도체 칩에 전자를 가둬 저장해 빠르지만 비쌉니다. HDD는 “자석 원판 + 기계 부품”이라 느리지만, 같은 용량을 만드는 비용이 훨씬 낮습니다. 현재 HDD는 테라바이트당 약 $15로, 기업용 SSD보다 2.5배, 초고용량 구간에서는 9~20배까지 저렴합니다. 그래서 “자주 안 보지만 절대 버릴 수 없는 대량 데이터”(백업·아카이브·AI 학습 원본 등)는 HDD에 보관합니다. <span class="conf hi">확신도 <b>높음~80%</b></span>
+    </div>
+
+    <h4 class="sub">기록 밀도를 높이는 비결: 더 작은 비트, 더 많은 트랙</h4>
+    <p>용량을 키우는 핵심은 회전 속도가 아니라 <strong>같은 면적에 더 많은 비트를 욱여넣는 것(면적 기록 밀도)</strong>입니다. 비트가 작아질수록 자석 상태가 열에 흔들려 사라질 위험이 커지는데(초상자성 한계), 이 물리적 벽을 넘기 위한 차세대 기술이 다음 장의 HAMR입니다.</p>
+  </section>
+
+  <!-- ===================== 04 제품·수익 구조 ===================== -->
+  <section id="s4">
+    <div class="eyebrow"><span class="num">04</span> 제품 포트폴리오 · 수익 구조</div>
+    <h2>매출의 80%가 데이터센터에서 나온다</h2>
+    <p>Seagate는 용도별로 브랜드를 나눠 HDD를 판매합니다. 같은 기술을 쓰되 신뢰성·진동 내성·펌웨어를 용도에 맞게 튜닝합니다.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <caption>주요 제품 라인 · 용도별</caption>
+        <thead><tr><th>브랜드</th><th>주 용도</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td>Exos</td><td>데이터센터·클라우드</td><td>최대 용량·24시간 가동의 “주력 엔진”. 매출 성장의 핵심. 평균 무고장시간 250만 시간</td></tr>
+          <tr><td>IronWolf / Pro</td><td>NAS(소규모 서버)</td><td>중소기업·크리에이터의 다중 베이 스토리지용. 진동 보정 기술 탑재</td></tr>
+          <tr><td>SkyHawk / AI</td><td>영상 감시(CCTV)</td><td>24시간 영상 녹화·AI 분석에 최적화. 표준 대비 3배 작업 부하 견딤</td></tr>
+          <tr><td>BarraCuda</td><td>일반 데스크톱</td><td>가정·사무용 대용량 저장의 보급형</td></tr>
+          <tr><td>FireCuda</td><td>게이밍·고성능</td><td>고성능 PC용. 일부는 SSD 라인업</td></tr>
+          <tr><td>Mozaic</td><td>플랫폼(브랜드)</td><td>제품이 아니라 HAMR 신기술 플랫폼 이름(3+, 4+, 5+ 세대)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>돈이 흘러 들어오는 구조</h3>
+    <p>회계연도 2026년부터 Seagate는 매출을 크게 두 시장으로 보고합니다. 압도적 비중은 <strong>데이터센터</strong>이고, 나머지가 소비자·엣지(<strong>Edge IoT</strong>)입니다.</p>
+
+    <div class="revbar">
+      <div class="rrow">
+        <div class="rname">데이터센터<small>nearline + 시스템</small></div>
+        <div class="track"><div class="fill" style="width:80%; background:linear-gradient(90deg,#D69A4C,#E8B468)">약 80% · 분기 $2.5B (+55% YoY)</div></div>
+      </div>
+      <div class="rrow">
+        <div class="rname">Edge IoT<small>소비자·NAS·SSD</small></div>
+        <div class="track"><div class="fill" style="width:20%; background:linear-gradient(90deg,#3E8893,#56B6C2)">약 20%</div></div>
+      </div>
+    </div>
+
+    <div class="defbox">
+      <b>“nearline(니어라인)”이란?</b> 자주 쓰는 데이터는 빠른 SSD에(online), 거의 안 쓰는 데이터는 테이프 등에(offline) 둡니다. 그 중간, “가끔은 꺼내 봐야 하는 대량 데이터”를 담는 계층이 nearline이고, 여기에 고용량 HDD가 쓰입니다. 클라우드·AI 데이터의 핵심 저장 계층으로, HDD 산업 용량의 약 90%를 차지합니다.
+    </div>
+
+    <p>수요의 질도 특이합니다. 경영진에 따르면 상위 3대 클라우드 사업자(CSP)의 미래 매출 약정(RPO)이 약 <strong>$1.1조</strong>로 거의 두 배가 됐고, nearline 물량은 <strong>2027년까지 사실상 완판</strong>입니다. 주문제작(BTO) 계약으로 물량·구성·가격이 FY2027까지 고정돼, 하드웨어 기업답지 않게 미래 가시성이 높습니다. 이에 경영진은 연 매출 성장 목표를 “저~중간 10%대”에서 “최소 20%”로 상향했습니다. <span class="conf hi">확신도 <b>높음~80%</b></span></p>
+  </section>
+
+  <!-- ===================== 05 HAMR ===================== -->
+  <section id="s5">
+    <div class="eyebrow"><span class="num">05</span> 핵심 기술력 — HAMR / Mozaic</div>
+    <h2>레이저로 원판을 ‘살짝 데워’ 더 촘촘히 기록한다</h2>
+    <p>Seagate의 가장 중요한 기술 자산은 <span class="term">HAMR(열보조 자기기록, Heat-Assisted Magnetic Recording)</span>이며, 브랜드명은 <strong>Mozaic</strong>입니다. 10년 넘게 개발해 2024년 처음 상용화했습니다. <span class="conf hi">확신도 <b>높음~80%</b></span></p>
+
+    <div class="grid2">
+      <div class="card cyan">
+        <h4>문제: 더 작게 만들면 자석이 흔들린다</h4>
+        <p>비트를 작게 만들수록 용량은 커지지만, 작은 자석은 상온의 열에도 방향이 흐트러져 데이터가 사라질 위험이 커집니다(초상자성 한계). 그래서 “열에 잘 안 흔들리는 단단한 자성 물질”을 써야 하는데, 이런 물질은 너무 단단해 일반 헤드로는 기록 자체가 안 됩니다.</p>
+      </div>
+      <div class="card accent">
+        <h4>해법: 쓸 때만 순간적으로 가열</h4>
+        <p>헤드에 미세 <strong>플라스모닉 레이저</strong>를 달아, 기록하려는 점만 순간적으로 데워 잠깐 ‘무르게’ 만든 뒤 자석 방향을 새기고, 즉시 식혀 단단하게 고정합니다. 이렇게 하면 단단한 고밀도 물질에도 안정적으로 기록할 수 있어 용량이 크게 늘어납니다.</p>
+      </div>
+    </div>
+
+    <h3>Mozaic 로드맵 — 디스크 한 장당 담는 용량</h3>
+    <div class="tbl-wrap">
+      <table>
+        <caption>HAMR 세대별 진척 · 디스크당 용량과 드라이브 용량</caption>
+        <thead><tr><th>세대</th><th>디스크당 용량</th><th>드라이브 용량</th><th>상태</th></tr></thead>
+        <tbody>
+          <tr><td>Mozaic 3+</td><td>~3TB</td><td>30TB+</td><td>주요 클라우드 고객 ~75% 채택</td></tr>
+          <tr class="hl"><td>Mozaic 4+</td><td>~4.4TB</td><td>44TB</td><td>2위까지 CSP 인증, CY26 말 HAMR 출하의 다수</td></tr>
+          <tr><td>Mozaic 5+</td><td>~5TB</td><td>50TB급</td><td>2027년 말 인증 시작 예정</td></tr>
+          <tr><td>장기 목표</td><td>~10TB</td><td>100TB</td><td>로드맵상 목표(연구 단계)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>중요한 점은 이 용량 증가를 <strong>추가 설비 투자 없이</strong> 주로 밀도 향상으로 달성한다는 것입니다. 즉 같은 공장에서 더 비싼(고용량) 드라이브를 찍어내므로 이익률이 좋아집니다. 이것이 최근 매출총이익률이 23%대에서 47%로 뛴 핵심 배경입니다.</p>
+  </section>
+
+  <!-- ===================== 06 산업 분석 ===================== -->
+  <section id="s6">
+    <div class="eyebrow"><span class="num">06</span> 산업 분석 · 가치사슬</div>
+    <h2>3개 회사가 89%를 나눠 갖는 과점, 그 위로 AI 수요가 쏟아진다</h2>
+    <p>HDD 산업은 진입이 극도로 어려운 <strong>과점 시장</strong>입니다. 사실상 <strong>Seagate · Western Digital · Toshiba</strong> 3사가 전 세계의 약 89%를 차지합니다. 수십 년간 수많은 업체가 인수·퇴출되며 3개만 남았고, 신규 진입은 거의 없습니다. <span class="conf hi">확신도 <b>높음~85%</b></span></p>
+
+    <h3>HDD 가치사슬 — 부품에서 클라우드까지</h3>
+    <div class="vchain">
+      <div class="vc">
+        <div class="vn">1 · 부품</div>
+        <div class="vt">핵심 부품</div>
+        <p>읽기/쓰기 헤드, 자성 미디어(원판), 유리 기판, 스핀들 모터, 컨트롤러 칩</p>
+        <span class="who">Nidec(모터 80%) · TDK · Hoya · Resonac</span>
+      </div>
+      <div class="vc core">
+        <div class="vn">2 · 조립(핵심)</div>
+        <div class="vt">드라이브 제조</div>
+        <p>부품을 정밀 조립해 완성 드라이브 생산. 헤드·미디어는 직접 생산(수직계열화)</p>
+        <span class="who">Seagate · WD · Toshiba</span>
+      </div>
+      <div class="vc">
+        <div class="vn">3 · 유통</div>
+        <div class="vt">판매 경로</div>
+        <p>하이퍼스케일러에 직납(BTO 계약), 서버 OEM, 채널·리테일 유통</p>
+        <span class="who">직납 · OEM · 채널</span>
+      </div>
+      <div class="vc">
+        <div class="vn">4 · 최종 고객</div>
+        <div class="vt">데이터 보관</div>
+        <p>클라우드·AI 데이터센터, 기업 서버, NAS, CCTV, 개인 PC</p>
+        <span class="who">CSP · 기업 · 소비자</span>
+      </div>
+    </div>
+
+    <div class="note">
+      <div class="nh">왜 이 구조가 중요한가 (진입장벽의 핵심)</div>
+      Seagate와 WD는 가장 어려운 부품인 <strong>헤드와 미디어를 직접 만듭니다(수직계열화)</strong>. 이 둘은 나노미터 수준의 정밀 공정이라, 새 경쟁자가 처음부터 갖추려면 10년 이상과 수십억 달러가 필요합니다. 모터 같은 일부 부품은 Nidec(80% 점유) 등에 의존하지만, 핵심 차별화 기술은 내부에 있습니다. 이것이 “돈이 있어도 못 들어오는” 강력한 진입장벽입니다.
+    </div>
+
+    <h3>산업 트렌드와 미래 방향</h3>
+    <ul class="clean">
+      <li><strong>구조적 수요 폭증</strong> — AI·클라우드가 만드는 데이터가 폭증하면서 nearline 용량 수요가 연 23~25% 성장합니다. 전 세계 데이터량은 2023년 132제타바이트에서 2028년 약 394제타바이트로 늘어날 전망(IDC). <span class="conf mid">확신도 <b>중간~70%</b></span></li>
+      <li><strong>공급은 빡빡, 가격은 상승</strong> — 3사가 무리하게 증설하지 않는 ‘공급 규율’ 속에 nearline은 2027년까지 완판, 리드타임 52주 이상, 가격은 분기당 약 4% 상승 중입니다.</li>
+      <li><strong>역설적 순풍: 낸드(플래시) 공급난</strong> — 2026년 들어 낸드 가격이 +70~90% 급등하면서, 대안인 플래시가 비싸진 만큼 HDD 수요가 더 단단해졌습니다.</li>
+      <li><strong>장기 위협: 플래시의 추격</strong> — 일부 플래시 업체는 “2028년 HDD 종말”을 주장합니다. 다만 9~20배 비용 격차가 단기에 좁혀지긴 어려워, 당분간은 “뜨거운 데이터=플래시, 차가운 대량 데이터=HDD”의 계층 분담이 유지될 가능성이 높습니다(아래 9·15장에서 상세히 검토). <span class="conf mid">확신도 <b>중간~60%</b></span></li>
+    </ul>
+  </section>
+
+  <!-- ===================== 07 피어 비교 ===================== -->
+  <section id="s7">
+    <div class="eyebrow"><span class="num">07</span> 피어그룹 비교</div>
+    <h2>Western Digital과의 양강 구도, 그리고 플래시 진영</h2>
+    <p>직접 경쟁자는 같은 HDD 3사이고, 더 넓게 보면 저장장치 시장에서 플래시(SSD) 진영과도 경쟁합니다.</p>
+
+    <h4 class="sub">HDD 직접 경쟁 3사</h4>
+    <div class="tbl-wrap">
+      <table>
+        <caption>HDD 3사 비교 · 점유율·기술·특징 (2026년 기준 추정)</caption>
+        <thead><tr><th>기업</th><th>유닛 점유율</th><th>수직계열화</th><th>차세대 기술</th><th>특징</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td>Seagate</td><td>~40–44%</td><td class="t-green">예 (헤드·미디어)</td><td>HAMR 양산 선도</td><td>HAMR 상용화 1위, 마진 우수</td></tr>
+          <tr><td>Western Digital</td><td>~42%</td><td class="t-green">예 (헤드·미디어)</td><td>HAMR 준비 중</td><td>최대 경쟁자, ePMR/UltraSMR 강점</td></tr>
+          <tr><td>Toshiba</td><td>~18%</td><td>부분</td><td>HAMR/MAMR 개발</td><td>3위, 일본 기반</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 class="sub">플래시(SSD) 진영 — 다른 저장 방식의 경쟁자</h4>
+    <div class="tbl-wrap">
+      <table>
+        <caption>저장 방식 비교 · HDD vs 플래시</caption>
+        <thead><tr><th>구분</th><th>HDD (Seagate)</th><th>플래시 / SSD</th></tr></thead>
+        <tbody>
+          <tr><td>저장 원리</td><td>자석 원판(기계식)</td><td>반도체 셀(전자식)</td></tr>
+          <tr><td>속도</td><td class="t-red">느림</td><td class="t-green">매우 빠름</td></tr>
+          <tr><td>TB당 비용</td><td class="t-green">~$15 (저렴)</td><td class="t-red">2.5~20배 비쌈</td></tr>
+          <tr><td>주 용도</td><td>대량·콜드 저장</td><td>고속·핫 데이터</td></tr>
+          <tr><td>주요 업체</td><td>Seagate·WD·Toshiba</td><td>삼성·SK하이닉스·Micron·Kioxia·SanDisk·Pure Storage</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>요점은 둘이 “완전 대체재”가 아니라 “역할 분담” 관계라는 것입니다. 데이터센터는 보통 속도가 필요한 데이터는 플래시에, 값싸게 대량 보관할 데이터는 HDD에 나눠 담는 계층형 구조를 씁니다. <span class="conf mid">확신도 <b>중간~70%</b></span></p>
+  </section>
+
+  <!-- ===================== 08 SWOT ===================== -->
+  <section id="s8">
+    <div class="eyebrow"><span class="num">08</span> SWOT 분석</div>
+    <h2>강점·약점·기회·위협 한눈에</h2>
+    <div class="swot">
+      <div class="sq s">
+        <h4>강점 (Strengths)</h4>
+        <ul>
+          <li>HAMR 양산 선도 + 헤드·미디어 수직계열화</li>
+          <li>HDD 시장 1·2위, 과점적 지위</li>
+          <li>매출총이익률 47%까지 확대, 강한 운영 레버리지</li>
+          <li>2027년까지 완판 수준의 높은 수요 가시성</li>
+        </ul>
+      </div>
+      <div class="sq w">
+        <h4>약점 (Weaknesses)</h4>
+        <ul>
+          <li>단일 제품(HDD) 의존도 높음</li>
+          <li>속도는 플래시에 구조적으로 열위</li>
+          <li>과거 경기 사이클에 민감했던 이력</li>
+          <li>일부 부품(모터 등) 외부 의존</li>
+        </ul>
+      </div>
+      <div class="sq o">
+        <h4>기회 (Opportunities)</h4>
+        <ul>
+          <li>AI發 대용량·콜드 저장 수요 구조적 성장</li>
+          <li>낸드 공급난으로 단기 반사이익</li>
+          <li>용량당 비용 우위로 데이터센터 표준 지위</li>
+          <li>멀티랙 스토리지 계층 확장(사용자 가설, 10장)</li>
+        </ul>
+      </div>
+      <div class="sq t">
+        <h4>위협 (Threats)</h4>
+        <ul>
+          <li>플래시(QLC SSD)의 콜드 영역 장기 침투</li>
+          <li>밸류에이션 자체의 부담(높은 PER)</li>
+          <li>경기 둔화 시 수요 사이클 되돌림</li>
+          <li>매파적 연준·금리 상승 환경</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 09 해자 ===================== -->
+  <section id="s9">
+    <div class="eyebrow"><span class="num">09</span> 경제적 해자 (Moat)</div>
+    <h2>“느린 소멸”을 막는 네 겹의 방어선</h2>
+    <p>경제적 해자는 경쟁자가 쉽게 따라올 수 없는 지속적 경쟁 우위를 뜻합니다. Seagate의 해자는 다음 네 가지이며, 강도를 막대 길이로 표현했습니다.</p>
+
+    <div class="moat">
+      <div class="mrow"><div class="mlab">구조적 비용 우위</div><div class="mtrack"><div class="mfill" style="width:88%"></div></div></div>
+      <div class="mnote">TB당 $15, SSD 대비 9~20배 저렴 — 단기에 좁혀지기 어려움</div>
+      <div class="mrow"><div class="mlab">과점 + 공급 규율</div><div class="mtrack"><div class="mfill" style="width:82%"></div></div></div>
+      <div class="mnote">3사 89% 점유, 무리한 증설 자제로 가격 방어</div>
+      <div class="mrow"><div class="mlab">수직계열화·진입장벽</div><div class="mtrack"><div class="mfill" style="width:85%"></div></div></div>
+      <div class="mnote">헤드·미디어 자체 생산 — 신규 진입에 10년+·수십억 달러 필요</div>
+      <div class="mrow"><div class="mlab">전환비용·계약 구조</div><div class="mtrack"><div class="mfill am" style="width:62%"></div></div></div>
+      <div class="mnote">BTO 장기계약으로 고객 락인, 단 기술 추월 시 약화 가능</div>
+      <div class="mrow"><div class="mlab">기술 리드 (HAMR)</div><div class="mtrack"><div class="mfill am" style="width:68%"></div></div></div>
+      <div class="mnote">HAMR 양산 선도, 단 WD·Toshiba도 추격 중이라 영구적이진 않음</div>
+    </div>
+
+    <p>이 해자들은 영구적 독점이 아니라 “경쟁 우위가 천천히만 줄어들도록” 막는 방어선입니다. 밸류에이션 프레임워크(2부)에서는 이 ‘완만한 소멸 속도’를 페이드(fade) 비율로 반영합니다. <span class="conf mid">확신도 <b>중간~70%</b></span></p>
+  </section>
+
+  <!-- ===================== 10 가설 검증 ===================== -->
+  <section id="s10">
+    <div class="eyebrow"><span class="num">10</span> 사용자 가설 검증 — 멀티랙과 ‘HDD 랙’</div>
+    <h2>방향은 맞다. 그러나 추가된 스토리지 랙의 정체가 핵심이다</h2>
+    <p>사용자님의 가설은 “엔비디아가 GB(Grace Blackwell)에서 VR(Vera Rubin)로 넘어가며 랙 종류가 2종→4종으로 늘었고(NVL72·Superchip에 이어 CPU·스토리지 랙 추가), 그 배경은 스케일아웃 인터커넥트가 광통신(CPO)으로 전환되며 안정성을 얻었기 때문이다. 그렇다면 다음에 추가될 랙은 HDD 랙이 떠오른다”는 것입니다. 단계별로 검증했습니다.</p>
+
+    <div class="flow">
+      <div class="step"><div class="s-n">전제 ①</div><div class="s-t">GB → VR 전환</div><p>가속 컴퓨팅 플랫폼 세대 교체 — 사실</p></div>
+      <div class="step"><div class="s-n">전제 ②</div><div class="s-t">랙 종류 분화</div><p>NVL72·CPU·추론·스토리지·이더넷 등 다층 랙으로 확장 — 사실(2종→다종)</p></div>
+      <div class="step"><div class="s-n">전제 ③</div><div class="s-t">CPO 광통신 안정화</div><p>Spectrum-6·Quantum-X CPO 스위치 전환, 전력효율 5x·신뢰성 10x 주장 — 사실</p></div>
+      <div class="step"><div class="s-n">추론 ④</div><div class="s-t">“다음은 HDD 랙”</div><p>방향성은 합리적이나, 이미 추가된 스토리지 랙은 HDD가 아닌 플래시 — 보정 필요</p></div>
+    </div>
+
+    <div class="note warn">
+      <div class="nh">결정적 사실 보정 · 이름 충돌 주의</div>
+      엔비디아가 Vera Rubin 세대에서 정식 티어로 추가한 스토리지 랙의 코드명은 <strong>BlueField-4 ‘STX’(컨텍스트 메모리 스토리지)</strong>입니다. 이는 에이전트형 추론의 KV 캐시·벡터DB·컨텍스트 메모리를 담는 <strong>플래시·NVMe 기반</strong> 장비로, 수혜는 Kioxia·Micron·SanDisk·삼성 등 낸드 진영에 돌아갑니다. 명칭이 Seagate 티커(STX)와 우연히 겹치지만 <strong>전혀 다른 대상</strong>이며 Seagate의 HDD와 직접 관계가 없습니다. 파트너는 Supermicro·Cloudian·DDN, 출시는 2026년 하반기. <span class="conf hi">확신도 <b>높음~90%</b></span>
+    </div>
+
+    <h3>그렇다면 Seagate의 진짜 자리는?</h3>
+    <p>엔비디아의 플래시 스토리지 랙은 ‘뜨거운(hot)’ 컨텍스트 계층입니다. Seagate의 HDD는 그 아래 <strong>‘따뜻한·차가운(warm/cold)’ 벌크 계층</strong>(학습 데이터 원본, RAG 코퍼스, 체크포인트, 아카이브)을 담당합니다. 이 수요는 이미 강력해 2027년까지 완판 상태입니다.</p>
+
+    <div class="grid2">
+      <div class="card cyan">
+        <h4>가설의 강점 <span class="tag bull">지지 증거</span></h4>
+        <p>티어형 저장 구조는 표준이 되고 있고, 벌크 계층의 절대 용량은 AI 데이터 폭증과 함께 커집니다. ‘HDD 랙’이라는 형식이 공식화되지 않아도 수요 자체는 이미 존재합니다.</p>
+      </div>
+      <div class="card red">
+        <h4>가설의 한계 <span class="tag bear">반대 증거</span></h4>
+        <p>엔비디아가 HDD를 별도 랙으로 표준화할 유인은 약합니다. 랙 단위 표준화는 저지연·고대역 장비(플래시)에 집중되고, 대용량 저비용 저장은 기존 스토리지 서버로 충분합니다.</p>
+      </div>
+    </div>
+    <p>따라서 이 시나리오는 <strong>상방 옵션(optionality)</strong>으로 다루는 것이 옳습니다. 펀더멘털의 기본 전제로 깔되, ‘HDD 랙 공식화’ 자체는 불확실한 보너스로 분리해 평가했습니다. <span class="conf mid">확신도 <b>중간~65%</b></span></p>
+  </section>
+
+  <!-- ===================== 11 TAM ===================== -->
+  <section id="s11">
+    <div class="eyebrow"><span class="num">11</span> TAM 추산 — 스토리지 랙 시나리오</div>
+    <h2>니어라인 HDD TAM: 2025년 약 $22B → 2030년 $52B(기본)·$71B(강세)</h2>
+    <p>엑사바이트 수요와 TB당 단가를 곱하는 상향식으로 추산했습니다. 2025년 니어라인 약 1,300 EB × $16/TB ≈ $21~24B를 기준으로 세 시나리오를 구성했습니다. <span class="conf mid">확신도 <b>중간~60%</b> — 시장조사기관 추정($49~53B)은 더 크나 범위가 넓어 보수치 채택</span></p>
+
+    <div class="tbl-wrap">
+      <table>
+        <caption>니어라인/데이터센터 HDD TAM 추산 · 2025 → 2030(5년) · 단위 $B</caption>
+        <thead><tr><th>시나리오</th><th>EB CAGR</th><th>단가 변화</th><th>2030 EB</th><th>2030 TAM</th><th>매출 CAGR</th></tr></thead>
+        <tbody>
+          <tr><td class="t-red">약세 — 플래시 잠식</td><td>+12%</td><td>−6%/년</td><td>2,291</td><td class="t-red">$27B</td><td>+5.3%</td></tr>
+          <tr class="hl"><td>기본 — AI 벌크티어</td><td>+24%</td><td>−3%/년</td><td>3,811</td><td class="t-amber">$52B</td><td>+20.3%</td></tr>
+          <tr><td class="t-cyan">강세 — HDD 랙 추가</td><td>+28%</td><td>보합</td><td>4,467</td><td class="t-cyan">$71B</td><td>+28.0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>점유율 약 45%, 회사 매출 중 니어라인 비중 약 78%로 환산한 Seagate 포착 매출입니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <caption>Seagate 포착 가능 매출 추정 · FY26E $12B → 2030 · 단위 $B</caption>
+        <thead><tr><th>시나리오</th><th>2030 니어라인 매출</th><th>환산 전사 매출</th><th>FY26→30 CAGR</th></tr></thead>
+        <tbody>
+          <tr><td class="t-red">약세</td><td>$12B</td><td>$16B</td><td class="t-red">+6.6%</td></tr>
+          <tr class="hl"><td>기본</td><td>$24B</td><td>$30B</td><td class="t-amber">+26.0%</td></tr>
+          <tr><td class="t-cyan">강세</td><td>$32B</td><td>$41B</td><td class="t-cyan">+36.1%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <div class="nh">DCF와의 정합성 교차검증</div>
+      DCF 기본 경로의 FY31(≈CY2030) 매출은 약 $24B로, TAM 상향식 기본치($30B)보다 보수적입니다. 두 방법이 같은 자릿수($24~30B)에서 수렴하므로 추정은 내부적으로 일관됩니다. 즉 <strong>TAM은 펀더멘털(기본·강세 적정가치)을 충분히 지지</strong>합니다. 다만 이를 전부 반영해도 도달 가능한 매출 경로는 현재가가 요구하는 경로에는 미치지 못합니다.
+    </div>
+  </section>
+
+  <!-- ===================== 12 DCF ===================== -->
+  <section id="s12">
+    <div class="eyebrow"><span class="num">12</span> DCF · Exhibit-23</div>
+    <h2>기본 시나리오 적정가치 $349 — 현재가의 약 3분의 1</h2>
+    <p>현금흐름할인(DCF)을 Mauboussin Exhibit-23 형식으로 전개했습니다. 가정: 매출성장 20%에서 점진 둔화, EBITA(이자·세전·상각전 영업이익) 마진 42→46% 후 안정, 투자 매출의 8%, 중간시점 할인, 페이드 0.20, WACC 11.1%. (세후영업이익 = NOPAT)</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <caption>Exhibit-23 기본 시나리오 · 단위 $B</caption>
+        <thead><tr><th>FY</th><th>매출</th><th>성장%</th><th>EBITA</th><th>마진%</th><th>NOPAT</th><th>투자</th><th>FCF</th><th>PV(FCF)</th></tr></thead>
+        <tbody>
+          <tr><td>2027</td><td>14.4</td><td>20.0</td><td>6.05</td><td>42</td><td>5.02</td><td>1.15</td><td>3.87</td><td>3.67</td></tr>
+          <tr><td>2028</td><td>17.0</td><td>18.0</td><td>7.48</td><td>44</td><td>6.21</td><td>1.36</td><td>4.85</td><td>4.14</td></tr>
+          <tr><td>2029</td><td>19.5</td><td>15.0</td><td>8.79</td><td>45</td><td>7.30</td><td>1.56</td><td>5.74</td><td>4.41</td></tr>
+          <tr><td>2030</td><td>21.9</td><td>12.0</td><td>10.07</td><td>46</td><td>8.36</td><td>1.75</td><td>6.61</td><td>4.57</td></tr>
+          <tr><td>2031</td><td>24.1</td><td>10.0</td><td>11.07</td><td>46</td><td>9.19</td><td>1.93</td><td>7.27</td><td>4.53</td></tr>
+          <tr><td>2032</td><td>26.0</td><td>8.0</td><td>11.96</td><td>46</td><td>9.93</td><td>2.08</td><td>7.85</td><td>4.40</td></tr>
+          <tr><td>2033</td><td>27.6</td><td>6.0</td><td>12.40</td><td>45</td><td>10.29</td><td>2.20</td><td>8.09</td><td>4.09</td></tr>
+          <tr><td>2034</td><td>28.9</td><td>5.0</td><td>13.02</td><td>45</td><td>10.81</td><td>2.32</td><td>8.49</td><td>3.86</td></tr>
+          <tr><td>2035</td><td>30.1</td><td>4.0</td><td>13.24</td><td>44</td><td>10.99</td><td>2.41</td><td>8.58</td><td>3.51</td></tr>
+          <tr><td>2036</td><td>31.1</td><td>3.5</td><td>13.71</td><td>44</td><td>11.38</td><td>2.49</td><td>8.88</td><td>3.27</td></tr>
+          <tr><td>2037</td><td>32.1</td><td>3.0</td><td>14.12</td><td>44</td><td>11.72</td><td>2.57</td><td>9.15</td><td>3.04</td></tr>
+          <tr><td>2038</td><td>32.9</td><td>2.5</td><td>14.47</td><td>44</td><td>12.01</td><td>2.63</td><td>9.38</td><td>2.80</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td>합계</td><td colspan="7">PV(FCF) $46.3B + PV(터미널) $35.7B = EV $82.0B → 자기자본 $79.0B → <span class="t-amber">$349/주</span></td></tr>
+        </tfoot>
+      </table>
+    </div>
+    <p>적정가치 기준 EV/NOPAT은 23.4배인데, 현재가 기준으로는 <strong>69.6배</strong>로 하드웨어 기업에 적용하기 어려운 프리미엄입니다. <span class="conf hi">확신도 <b>높음~75%</b></span></p>
+  </section>
+
+  <!-- ===================== 13 WACC / CAP ===================== -->
+  <section id="s13">
+    <div class="eyebrow"><span class="num">13</span> WACC · 내재 CAP</div>
+    <h2>현재가는 ‘14년 이상의 20% 성장’을 요구한다</h2>
+    <p>자본비용(WACC) = 10년물 4.45% + 베타 × ERP. 1년 급등으로 원시 베타(2.08)는 과대평가됐다고 보아 베타 1.5를 기본으로, 전 구간을 함께 제시합니다. ERP는 Damodaran 내재치(4.23%)와 표준(4.75%)을 절충한 4.5%, 터미널 성장률은 기대인플레 반영 2.5%입니다.</p>
+    <div class="grid2">
+      <div class="card accent"><h4>기본 WACC</h4><span class="big">11.1%</span><p>베타 1.5 기준. 베타 1.2 → 9.75%, 원시 베타 2.08 → 13.65% 구간.</p></div>
+      <div class="card"><h4>거시 환경</h4><p>매파적 Warsh 연준 아래 2026년 금리 인상 가능성. 즉 “낮은 WACC로 현재가를 정당화”하는 길은 거시적으로 열려 있지 않습니다. <span class="conf mid">확신도 <b>중간~60%</b></span></p></div>
+    </div>
+
+    <p><strong>역DCF의 핵심 질문:</strong> 현재가 $1,065를 정당화하려면 몇 년간 고성장을 지속해야 하는가? (마진 46~47% 유지 가정)</p>
+    <div class="tbl-wrap">
+      <table>
+        <caption>현재가 정당화에 필요한 ‘매출 성장 지속 연수’</caption>
+        <thead><tr><th>할인율</th><th>연 20% 성장</th><th>연 25% 성장</th><th>연 30% 성장</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td>WACC 11.1% (베타1.5)</td><td class="t-amber">14년</td><td>11년</td><td>9년</td></tr>
+          <tr><td>WACC 10.3% (베타1.3)</td><td>13년</td><td>10년</td><td>8년</td></tr>
+          <tr><td>WACC 9.5% (베타1.1)</td><td>11년</td><td>9년</td><td>7년</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note warn">
+      <div class="nh">프레임워크 해석 — 내재 CAP이란</div>
+      CAP(경쟁우위 기간)은 “초과수익을 내는 기간”입니다. 내재 CAP이 5년 미만이면 비관(매수 기회), 10~15년이면 합리적, 15~20년이면 낙관, 20년 초과면 과도한 낙관(회피)입니다. STX의 내재 CAP은 기본 WACC에서 <strong>약 14년</strong>으로 ‘합리적’의 상단이며, 마진이 50%까지 더 오르거나 성장이 더 길어진다는 가정을 얹어야 현재가에 닿습니다. 즉 <strong>‘합리적’의 천장에 걸쳐 ‘과도한 낙관’으로 넘어가는 경계</strong>에 있습니다.
+    </div>
+  </section>
+
+  <!-- ===================== 14 민감도/시나리오 ===================== -->
+  <section id="s14">
+    <div class="eyebrow"><span class="num">14</span> 민감도 · 시나리오</div>
+    <h2>강세 가정을 모두 끌어모아도 $683 — 현재가까지 56% 부족</h2>
+
+    <div class="vbox">
+      <div>
+        <p>오른쪽 사다리는 결론을 한눈에 보여줍니다. 시장가 $1,065가 펀더멘털 기반의 약세·기본·강세 가치 전부를 위에서 내려다보고 있습니다. 가장 낙관적인 강세 시나리오($683)와도 56%의 간극이 있습니다.</p>
+        <div class="tbl-wrap" style="margin-top:8px">
+          <table style="min-width:0">
+            <caption>세 시나리오 종합 · 적정가치 $/주</caption>
+            <thead><tr><th>시나리오</th><th>적정가치</th><th>현재가 대비</th></tr></thead>
+            <tbody>
+              <tr><td class="t-red">약세</td><td class="t-red">$122</td><td>−89%</td></tr>
+              <tr class="hl"><td>기본</td><td class="t-amber">$349</td><td>−67%</td></tr>
+              <tr><td class="t-cyan">강세</td><td class="t-cyan">$683</td><td>−36%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ladder" aria-label="밸류에이션 사다리">
+        <div class="scale-cap">$/주 · 0 → 1,200</div>
+        <div class="gap-band" style="bottom:29.1%; height:59.65%"></div>
+        <div class="mark market" style="bottom:88.75%"><span class="node"></span><span class="bar"></span><span class="lab">시장가 (현재)</span><span class="val">$1,065</span></div>
+        <div class="mark tick" style="bottom:95.4%"><span class="node"></span><span class="bar" style="flex-basis:18px"></span><span class="lab">52주 최고</span><span class="val">$1,145</span></div>
+        <div class="mark fund" style="bottom:56.9%"><span class="node"></span><span class="bar"></span><span class="lab">강세(Bull)</span><span class="val">$683</span></div>
+        <div class="mark fund" style="bottom:29.1%"><span class="node"></span><span class="bar"></span><span class="lab">기본(Base)</span><span class="val">$349</span></div>
+        <div class="mark bear" style="bottom:10.2%"><span class="node"></span><span class="bar"></span><span class="lab">약세(Bear)</span><span class="val">$122</span></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card accent"><h4>WACC × 터미널 성장 민감도</h4><p>기본 경로에서 할인율·터미널 성장을 모두 흔들어도 적정가치는 <strong>$269~$435</strong> 범위입니다. 가장 관대한 조합(WACC 9.8%, g 3.5%)에서도 $435로 현재가의 41%에 그칩니다.</p></div>
+      <div class="card cyan"><h4>페이드 비율 민감도</h4><p>페이드를 0.10~0.30으로 바꿔도 적정가치는 <strong>$348~$351</strong>로 거의 불변입니다. 터미널 가치 비중이 작아 해자 가정이 결론을 바꾸지 못한다는 뜻입니다.</p></div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <caption>WACC × 터미널 성장률 민감도 그리드 · 기본 경로 · $/주</caption>
+        <thead><tr><th>WACC \ g</th><th>1.5%</th><th>2.5%</th><th>3.5%</th></tr></thead>
+        <tbody>
+          <tr><td>9.8%</td><td>$407</td><td>$419</td><td class="t-cyan">$435</td></tr>
+          <tr class="hl"><td>11.1%</td><td>$343</td><td class="t-amber">$349</td><td>$358</td></tr>
+          <tr><td>12.0%</td><td>$309</td><td>$314</td><td>$319</td></tr>
+          <tr><td>13.3%</td><td class="t-red">$269</td><td>$271</td><td>$274</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>결론은 견고합니다. 합리적 가정의 어느 조합에서도 적정가치는 현재가에 크게 못 미칩니다. <span class="conf hi">확신도 <b>높음~75%</b></span></p>
+  </section>
+
+  <!-- ===================== 15 리스크/한계/종합 ===================== -->
+  <section id="s15">
+    <div class="eyebrow"><span class="num">15</span> 리스크 · 한계 · 종합 판단</div>
+    <h2>강세론도 비합리적이지 않다 — 그러나 가격이 그 강세론을 ‘초과’했다</h2>
+
+    <h3>강세론 정면 검토 — 무엇이 틀릴 수 있나</h3>
+    <ul class="clean">
+      <li><strong>낸드 공급난이 역설적 순풍</strong> — 2026년 3분기까지 낸드 +70~90% 급등으로 플래시 가격 우위가 약화돼 HDD 수요를 떠받칩니다. 길어지면 강세 쪽으로 기웁니다. <span class="conf mid">확신도 <b>중간~60%</b></span></li>
+      <li><strong>이례적 수요 가시성</strong> — 2027년까지 완판, 2028년 협상 진행은 일반 하드웨어 사이클과 질적으로 다릅니다.</li>
+      <li><strong>마진 상향 여력</strong> — 매출총이익률이 처음 50%를 넘는 국면으로, 본 모델의 마진 가정이 보수적일 수 있습니다.</li>
+    </ul>
+
+    <h3>약세 리스크 — 무엇을 경계해야 하나</h3>
+    <ul class="clean">
+      <li><strong>플래시의 콜드 영역 침투</strong> — 일부 업체가 “2028년 HDD 종말”과 300TB급 플래시를 내세웁니다. 9~20배 비용 격차로 단기 현실성은 낮으나 장기 한계 변수입니다. <span class="conf mid">확신도 <b>중간~55%</b></span></li>
+      <li><strong>사이클 되돌림</strong> — 현재 호조가 공급 부족의 산물이라면 증설·수요 둔화 시 빠르게 정상화될 수 있습니다.</li>
+      <li><strong>밸류에이션 자체가 리스크</strong> — 85~100배 PER은 작은 실망에도 큰 조정으로 이어질 수 있습니다.</li>
+    </ul>
+
+    <div class="note">
+      <div class="nh">한계와 가정 (분석의 경계)</div>
+      이 분석은 다음 가정 위에 성립하며 그 밖에서는 결론이 달라질 수 있습니다. (1) 베타·ERP·터미널 성장 등 자본비용 입력값은 추정치이며 급등 후 베타는 불안정합니다. (2) TAM은 상향식 보수 추정으로, 시장조사기관 추정($49~53B)을 쓰면 규모가 커집니다. (3) ‘HDD 랙 공식화’는 미확인 촉매로 상방 옵션으로만 반영했습니다. (4) 마진 50%+ 지속 가능성은 검증되지 않은 신국면입니다. (5) 본 분석은 ‘적정가치 단정’이 아니라 ‘현재가가 요구하는 가정의 합리성’ 평가이며 단기 주가 방향을 예측하지 않습니다. 모든 수치는 2026년 6월 중순 공개 자료 기준입니다.
+    </div>
+
+    <h3>핵심 체크포인트 — 판단을 바꿀 신호</h3>
+    <ul class="clean">
+      <li>FY2027~28 BTO 계약의 물량·단가 갱신 조건 (가격 규율 지속 여부)</li>
+      <li>매출총이익률 50%+ 정착 여부와 증분마진 추이</li>
+      <li>엔비디아·하이퍼스케일러의 HDD 전용 랙/레퍼런스 아키텍처 공식화 여부 (상방 촉매 현실화)</li>
+      <li>QLC 플래시의 TB당 단가가 HDD 대비 격차를 의미 있게 좁히는지 (구조적 위협)</li>
+      <li>낸드 공급난 해소 시점 (HDD 순풍의 소멸 시점)</li>
+    </ul>
+
+    <div class="final">
+      <div class="vh">종합 판단 · 베이지안 결론</div>
+      <div class="vbig">사업은 <em>강세(strong)</em>, 주식은 <em>고평가(rich)</em>. TAM과 펀더멘털은 기본 $349·강세 $683까지의 가치를 정당화하지만, 현재 $1,065는 그 강세 시나리오마저 약 56% 초과한다.</div>
+      <p>사용자님의 멀티랙·CPO 논리는 타당하고, ‘HDD 랙’ 시나리오는 매력적인 상방 옵션입니다. 다만 이미 추가된 스토리지 랙은 플래시(BlueField-4 STX)이지 Seagate HDD가 아니라는 점, 그리고 그 옵션을 전부 반영해도 현재가에는 닿지 못한다는 점이 핵심입니다.</p>
+      <p class="k"><strong>스탠스:</strong> 신규 펀더멘털 매수로는 권하기 어렵습니다(밸류에이션 경계). 보유자는 강세 논리의 현실화(낸드 공급난 지속·HDD 랙 공식화·마진 50%+ 정착)와 약세 신호(사이클 되돌림·플래시 침투)를 체크포인트로 추적하며 비중을 관리하는 접근이 합리적입니다. <span class="conf mid">종합 확신도 <b>중간~70%</b></span></p>
+    </div>
+  </section>
+
+  <footer>
+    Seagate Technology (STX) — 기업·산업 완전 분석 + CAP 역DCF 밸류에이션<br>
+    Mauboussin / Counterpoint Global 프레임워크 기반 · 작성일 2026-06-20 (KST) · 비전공자용<br>
+    <div class="dis">본 문서는 정보 제공·교육 목적의 분석이며 투자 자문이나 매매 권유가 아닙니다. 모든 추정치는 가정에 의존하며 실제와 다를 수 있습니다. 본 분석은 적정가치를 단정하지 않고 현재가가 내포한 가정의 합리성을 역산한 것으로, 단기 주가 방향을 예측하지 않습니다. 투자 판단과 그 결과의 책임은 투자자 본인에게 있습니다.</div>
+  </footer>
+
+</div>
+</body>
+</html>
