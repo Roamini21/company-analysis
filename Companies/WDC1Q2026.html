@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Western Digital (WDC) — CAP 프레임워크 기업·산업 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16191F;--ink-soft:#3C424D;--ink-faint:#5C6470;--paper:#F5F6F8;--card:#FFFFFF;--line:#DDE1E7;
+  --slate:#0F2129;--slate-2:#16303B;--teal:#0E7C86;--teal-deep:#0A5A62;--teal-tint:#E2F1F2;--teal-tint-ink:#0A444A;
+  --copper:#B5641F;--copper-tint:#F6E8DA;--copper-tint-ink:#7A3F10;--green:#2E7D52;--green-tint:#E2F0E8;--green-tint-ink:#1E5638;
+  --red:#B23A48;--red-tint:#F6E2E4;--red-tint-ink:#7E2530;--gold:#C2772E;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Inter",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:16.5px;line-height:1.72;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word;}
+.wrap{max-width:1040px;margin:0 auto;padding:0 22px;}
+h1,h2,h3,h4{font-family:"Space Grotesk",sans-serif;line-height:1.18;letter-spacing:-0.01em;color:var(--ink);}
+h2{font-size:1.92rem;font-weight:700;margin:0 0 4px;}
+h3{font-size:1.26rem;font-weight:600;margin:30px 0 10px;}
+h4{font-size:1.02rem;font-weight:600;margin:20px 0 8px;}
+p{margin:0 0 14px;}
+a{color:var(--teal-deep);}
+.mono{font-family:"IBM Plex Mono",monospace;}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.74rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-deep);}
+.small{font-size:.86rem;}
+.faint{color:var(--ink-faint);}
+strong{font-weight:600;}
+.hero{background:var(--slate);color:#EAF1F2;padding:54px 0 40px;position:relative;overflow:hidden;}
+.hero .wrap{position:relative;z-index:2;}
+.hero h1{color:#FFFFFF;font-size:2.7rem;font-weight:700;margin:10px 0 6px;letter-spacing:-0.02em;}
+.hero .sub{color:#A9C3C7;font-size:1.06rem;max-width:680px;margin:0 0 4px;}
+.hero .ticker{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-weight:600;letter-spacing:.04em;}
+.platter{position:absolute;right:-160px;top:-120px;width:520px;height:520px;z-index:1;opacity:.5;}
+.platter circle{fill:none;stroke:#27484F;stroke-width:1;}
+.platter .spindle{fill:#1A343C;stroke:#2E5860;}
+.snapshot{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#27484F;border:1px solid #27484F;border-radius:12px;overflow:hidden;margin-top:26px;}
+.snap{background:var(--slate-2);padding:15px 16px;}
+.snap .k{font-family:"IBM Plex Mono",monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:#7FA6AC;}
+.snap .v{font-family:"Space Grotesk",sans-serif;font-size:1.34rem;font-weight:600;color:#FFFFFF;margin-top:3px;}
+.snap .d{font-size:.76rem;color:#9CBBC0;margin-top:1px;}
+@media(max-width:680px){.snapshot{grid-template-columns:repeat(2,1fr);} .hero h1{font-size:2.05rem;} .platter{opacity:.28;}}
+nav.toc{position:sticky;top:0;z-index:50;background:rgba(245,246,248,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+nav.toc .row{display:flex;flex-wrap:wrap;gap:7px;padding:11px 0;}
+nav.toc a{display:inline-block;white-space:nowrap;font-family:"IBM Plex Mono",monospace;font-size:.72rem;font-weight:500;letter-spacing:.02em;color:var(--ink-soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 11px;text-decoration:none;}
+nav.toc a:hover{border-color:var(--teal);color:var(--teal-deep);background:var(--teal-tint);}
+section{padding:42px 0;border-bottom:1px solid var(--line);}
+section.dark{background:var(--slate);color:#E7EEEF;border-bottom:none;}
+section.dark h2,section.dark h3,section.dark h4{color:#FFFFFF;}
+section.dark .eyebrow{color:#5FB4BC;}
+section.dark p{color:#C5D6D9;}
+section.dark .faint{color:#90AEB3;}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+.sec-num{font-family:"IBM Plex Mono",monospace;font-size:.8rem;font-weight:600;color:var(--teal);border:1px solid var(--teal);border-radius:6px;padding:2px 8px;}
+section.dark .sec-num{color:#5FB4BC;border-color:#2E5860;}
+.card{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:14px 0;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+@media(max-width:760px){.grid2,.grid3,.grid4{grid-template-columns:1fr;}}
+.callout{border-radius:12px;padding:18px 20px;margin:16px 0;border:1px solid;}
+.callout .lab{font-family:"IBM Plex Mono",monospace;font-size:.72rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;display:block;}
+.c-key{background:var(--teal-tint);color:var(--teal-tint-ink);border-color:#BFE0E2;}
+.c-key .lab{color:var(--teal-deep);}
+.c-key strong{color:#063238;}
+.c-warn{background:var(--copper-tint);color:var(--copper-tint-ink);border-color:#E8CFB4;}
+.c-warn .lab{color:var(--copper);}
+.c-risk{background:var(--red-tint);color:var(--red-tint-ink);border-color:#E8C7CB;}
+.c-risk .lab{color:var(--red);}
+.c-pos{background:var(--green-tint);color:var(--green-tint-ink);border-color:#C5E2D2;}
+.c-pos .lab{color:var(--green);}
+/* 함정 방지: 어두운 섹션 안의 콜아웃 텍스트는 섹션 규칙이 아니라 콜아웃 자체 색을 상속 */
+section.dark .callout p,section.dark .callout li,section.dark .callout strong,section.dark .callout ul{color:inherit;}
+.conf{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.72rem;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid;}
+.conf-h{background:var(--green-tint);color:var(--green-tint-ink);border-color:#C5E2D2;}
+.conf-m{background:var(--copper-tint);color:var(--copper-tint-ink);border-color:#E8CFB4;}
+.conf-l{background:var(--red-tint);color:var(--red-tint-ink);border-color:#E8C7CB;}
+table.tb{width:100%;border-collapse:collapse;margin:14px 0;font-size:.9rem;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+table.tb th{background:#EEF1F4;color:var(--ink);text-align:left;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:.82rem;padding:10px 12px;border-bottom:1px solid var(--line);}
+table.tb td{padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink-soft);vertical-align:top;}
+table.tb tr:last-child td{border-bottom:none;}
+table.tb td.num,table.tb th.num{font-family:"IBM Plex Mono",monospace;text-align:right;white-space:nowrap;}
+table.tb tr.hl td{background:var(--teal-tint);color:var(--teal-tint-ink);font-weight:600;}
+.tb-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px;}
+.tb-scroll table.tb{margin:0;min-width:660px;}
+.scrollnote{font-size:.74rem;color:var(--ink-faint);font-family:"IBM Plex Mono",monospace;margin:4px 2px 0;}
+.statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+@media(max-width:680px){.statrow{grid-template-columns:1fr;}}
+.stat{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--teal);border-radius:8px;padding:12px 14px;}
+.stat .v{font-family:"Space Grotesk",sans-serif;font-size:1.5rem;font-weight:700;color:var(--ink);}
+.stat .k{font-size:.8rem;color:var(--ink-faint);}
+.tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.7rem;background:#EEF1F4;color:var(--ink-soft);border:1px solid var(--line);border-radius:6px;padding:2px 8px;margin:2px 3px 2px 0;}
+ul.tight{margin:8px 0 14px;padding-left:20px;}
+ul.tight li{margin:5px 0;}
+.divlabel{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:24px 0 4px;}
+.bar-track{background:#EAEDF1;border-radius:6px;height:26px;position:relative;overflow:hidden;border:1px solid var(--line);}
+.bar-fill{height:100%;display:flex;align-items:center;padding:0 9px;color:#fff;font-family:"IBM Plex Mono",monospace;font-size:.78rem;font-weight:600;white-space:nowrap;}
+footer{background:var(--slate);color:#9CBBC0;padding:30px 0;font-size:.82rem;}
+.term{border-bottom:1px dotted var(--teal);}
+svg{max-width:100%;height:auto;}
+.cap-note{font-size:.8rem;color:var(--ink-faint);margin-top:6px;}
+</style>
+</head>
+<body>
+<header class="hero">
+  <svg class="platter" viewBox="0 0 520 520" aria-hidden="true">
+    <circle cx="260" cy="260" r="250"/><circle cx="260" cy="260" r="210"/>
+    <circle cx="260" cy="260" r="170"/><circle cx="260" cy="260" r="130"/>
+    <circle cx="260" cy="260" r="92"/><circle cx="260" cy="260" r="58"/>
+    <circle class="spindle" cx="260" cy="260" r="30"/>
+  </svg>
+  <div class="wrap">
+    <div class="eyebrow" style="color:#5FB4BC">CAP 프레임워크 · 기업/산업 완전 분석</div>
+    <h1>Western Digital</h1>
+    <p class="sub"><span class="ticker">NASDAQ: WDC</span> — 2025년 2월 낸드(플래시) 사업을 분사하고, 데이터센터용 대용량 하드디스크(HDD)에만 집중하는 “순수 HDD 기업”으로 재탄생한 회사.</p>
+    <p class="sub" style="font-size:.92rem;color:#8FB1B6">한 문장 요약 · <strong style="color:#DCE9EA">세상의 데이터를 가장 싸게 보관하는 ‘회전하는 자석 원판’을 만들어, AI 시대 클라우드 사업자에게 파는 두 회사 중 하나.</strong></p>
+    <div class="snapshot">
+      <div class="snap"><div class="k">주가 (’26.6.18)</div><div class="v">~$750</div><div class="d">52주 $58 → ~$800</div></div>
+      <div class="snap"><div class="k">시가총액</div><div class="v">~$256B</div><div class="d">순현금 / EV ≈ $255B</div></div>
+      <div class="snap"><div class="k">FY26E 매출</div><div class="v">~$12.8B</div><div class="d">+35% YoY / 연환산 $14.6B</div></div>
+      <div class="snap"><div class="k">시장 내재 CAP</div><div class="v">~16–25년</div><div class="d">정상범위(10–15년) 상회</div></div>
+    </div>
+    <p class="small" style="color:#7FA6AC;margin-top:14px">기준 시점: 2026년 6월 20일 · 모든 데이터는 웹 검색으로 확보(출처·시점 하단 명시) · 정보 제공 목적이며 매수·매도 권유가 아닙니다.</p>
+  </div>
+</header>
+<nav class="toc"><div class="wrap"><div class="row">
+  <a href="#conclusion">핵심 결론</a>
+  <a href="#thesis">① HDD 랙 & TAM 논지</a>
+  <a href="#overview">② 기업 개요</a>
+  <a href="#revenue">③ 수익 구조</a>
+  <a href="#tech">④ 제품·기술</a>
+  <a href="#industry">⑤ 산업 분석</a>
+  <a href="#tam">⑥ TAM 추산</a>
+  <a href="#moat">⑦ 해자</a>
+  <a href="#swot">⑧ SWOT</a>
+  <a href="#peer">⑨ 피어 비교</a>
+  <a href="#lifecycle">⑩ 생애주기</a>
+  <a href="#dcf">⑪ DCF</a>
+  <a href="#cap">⑫ 내재 CAP</a>
+  <a href="#sens">⑬ 민감도</a>
+  <a href="#scenario">⑭ 시나리오</a>
+  <a href="#risk">⑮ 리스크</a>
+  <a href="#synthesis">⑯ 종합</a>
+  <a href="#limits">한계와 가정</a>
+  <a href="#sources">데이터 출처</a>
+</div></div></nav>
+<section id="conclusion">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">결론</span><h2>핵심 결론</h2></div>
+    <div class="callout c-key">
+      <span class="lab">한 단락 요약</span>
+      <p style="margin-bottom:10px;font-size:1.05rem"><strong>WDC는 AI 데이터 폭증의 실질적 수혜 기업이 맞지만, 현재 주가는 “지금의 초정상 이익(매출총이익률 50%+, ROIC ~37%)이 약 16~25년간 지속된다”는 전제를 가격에 담고 있습니다.</strong> 이는 CAP 프레임워크의 ‘정상 범위(10~15년)’를 넘어서고, “20년 초과 = 과도한 낙관” 구간에 걸칩니다. HDD가 역사적으로 극심한 사이클 산업(FY22 EPS $8.22 → FY23 ~$0.07, 약 99% 붕괴)임을 감안하면, 현재가는 “이번엔 다르다 — AI가 사이클을 구조적 성장으로 바꿨다”에 강하게 베팅한 상태입니다.</p>
+      <p style="margin-bottom:0">사용자의 “HDD 랙” 논지는 <strong>방향(AI → HDD 수요의 구조적 확대)은 옳지만, 메커니즘(엔비디아 랙-스케일 패브릭에 HDD 랙이 추가)은 기술적으로 어긋납니다.</strong> HDD는 너무 느려서 GPU·플래시 패브릭에 직접 들어가지 않고, 별도의 ‘오브젝트/데이터레이크/아카이브’ 계층에 네트워크로 붙습니다. 수요 결론은 살아남지만 ‘랙’ 형태는 아닙니다. <span class="conf conf-m">확신도: 중간 ~65%</span></p>
+    </div>
+    <div class="statrow">
+      <div class="stat"><div class="v">~71×</div><div class="k">EV ÷ FY26 NOPAT (정점 이익 기준)</div></div>
+      <div class="stat"><div class="v">~88%</div><div class="k">가치 중 ‘미래 성장분(PVGO)’ 비중</div></div>
+      <div class="stat"><div class="v">2–3년</div><div class="k">실제 계약(LTA)으로 확보된 가시성</div></div>
+    </div>
+    <p class="small faint">※ 시장은 ‘2~3년치 계약 가시성’ 위에 ‘약 16~25년의 초정상 수익 지속’을 가격으로 얹어 놓았습니다. 이 간극이 곧 위험이자, 강세론자가 메워야 할 입증 부담입니다. (PVGO = Present Value of Growth Opportunities, 현재 가치 중 ‘앞으로의 성장’이 차지하는 부분. 88%라는 것은 가치의 거의 전부가 미래 성장 기대라는 뜻.)</p>
+  </div>
+</section>
+
+<section id="thesis" class="dark">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><h2 style="color:#fff">사용자 논지 검증 — “HDD 랙이 멀티랙에 추가될 것인가?”</h2></div>
+    <p>사용자의 논지를 <strong>주장 → 이유 → 증거</strong> 3단으로 분해해 각 고리를 독립 검증했습니다(아첨 없이, 반대 근거까지 강하게 복원). 결론부터: <strong style="color:#fff">전제 1·2는 대체로 사실, 전제 3(‘HDD 랙’ 추가)은 기술적으로 어긋남, 그러나 ‘AI가 HDD 수요를 구조적으로 키운다’는 핵심 결론 자체는 별도 메커니즘으로 성립.</strong></p>
+
+    <h3 style="color:#fff">논지의 논리 사슬과 판정</h3>
+    <div class="tb-scroll">
+    <table class="tb">
+      <thead><tr><th>고리</th><th>사용자 주장</th><th>검증 결과 (증거)</th><th class="num">확신도</th></tr></thead>
+      <tbody>
+        <tr><td><strong>전제 1</strong><br>랙 종류 증가</td><td>GB(Grace Blackwell)→VR(Vera Rubin) 전환으로 랙이 2종→4종(NVL72, Superchip, +CPU, +스토리지)으로 증가</td><td><strong>사실 — 오히려 과소.</strong> 2026년 3월 GTC에서 엔비디아는 Vera Rubin 플랫폼을 <strong>5종 랙</strong>으로 공식 발표: ① NVL72 GPU 랙 ② Vera CPU 랙 ③ Groq 3 LPX 추론 랙 ④ <strong>BlueField-4 STX 스토리지 랙</strong> ⑤ Spectrum-6 SPX 네트워킹 랙. ‘스토리지 랙’은 실존한다.</td><td class="num"><span class="conf conf-h">높음<br>~90%</span></td></tr>
+        <tr><td><strong>전제 2</strong><br>광 인터커넥트가 안정화</td><td>스케일아웃 인터커넥트가 광통신(CPO 스위치)으로 전환되어 안정성을 확보했고, 이것이 멀티랙 확장의 배경</td><td><strong>부분 사실, ‘안정화’는 다소 앞서감.</strong> 엔비디아 CPO 스위치(Quantum-X 2026 초, Spectrum-X 2026 하반기)는 실재. 그러나 엔비디아는 CPO를 <em>스케일업이 아닌 스케일아웃에 ‘먼저’</em> 적용 중인데, 그 이유가 “공급망 미성숙·제조 난이도·신뢰성 데이터 수집”이다(SemiAnalysis). 즉 ‘아직 검증 중’이라 스케일아웃을 시험대로 쓰는 단계. 다만 ‘광 전환이 멀티랙(분산·디스aggregation)을 가능케 한다’는 방향은 옳다.</td><td class="num"><span class="conf conf-m">중간<br>~55%</span></td></tr>
+        <tr><td><strong>전제 3</strong><br>다음은 HDD 랙</td><td>다음에 추가될 랙은 HDD 랙이 떠오른다</td><td><strong>기술적으로 어긋남(추측).</strong> HDD는 지연시간(latency)이 SSD의 수백~수천 배라 NVLink/CPO 저지연 패브릭에 들어가지 않는다. 엔비디아의 ‘스토리지 랙(BlueField-4 STX)’은 <strong>플래시/SSD 기반</strong>(KV 캐시·핫데이터). 대용량 HDD는 GPU 패브릭이 아니라 <strong>별도의 오브젝트·데이터레이크·아카이브 계층</strong>(Dell ObjectScale, Cloudian 등 NVIDIA 인증 스토리지 파트너)에 표준 이더넷으로 붙는다.</td><td class="num"><span class="conf conf-m">반증<br>~70%</span></td></tr>
+        <tr class="hl"><td><strong>핵심 결론</strong><br>HDD TAM 확대</td><td>AI 확산 → HDD TAM 확대 → 펀더멘털 상향</td><td><strong>성립(단, 다른 경로).</strong> ‘랙’ 형태는 아니지만, 모든 AI 워크로드(훈련 체크포인트·추론 로그·RAG 코퍼스·합성데이터·에이전트 상태·피지컬AI 센서데이터)가 영구 저장돼 결국 값싼 HDD로 내려온다. 이미 WDC 클라우드 매출 +48% YoY, 매출의 89%가 클라우드, 2028년까지 ‘완판’. 방향은 강하게 지지된다.</td><td class="num"><span class="conf conf-h">높음<br>~85%</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="scrollnote">→ 좌우로 스크롤하면 전체 표를 볼 수 있습니다.</p>
+
+    <h3 style="color:#fff">왜 HDD는 ‘랙’이 아니라 ‘옆 계층’인가 — AI 데이터센터의 저장 위계</h3>
+    <p>AI 데이터센터의 저장장치는 ‘속도 ↔ 비용’ 위계로 배치됩니다. 빠를수록 GPU에 가깝고 비싸며, 쌀수록 멀고 느립니다. 사용자의 직관(저장이 점점 큰 비중)은 맞지만, 그 ‘큰 비중’은 패브릭 안의 랙이 아니라 아래 그림의 <strong>맨 아래 두 계층</strong>에서 폭증합니다.</p>
+    <div class="card" style="background:var(--slate-2);border-color:#27484F">
+      <div style="display:grid;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px"><div style="flex:0 0 120px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#7FA6AC">GPU 내부</div><div style="flex:1;background:#0E7C86;color:#fff;border-radius:7px;padding:9px 13px"><strong>HBM4 메모리</strong> — 가장 빠름·가장 비쌈 (Rubin GPU 288GB)</div></div>
+        <div style="display:flex;align-items:center;gap:12px"><div style="flex:0 0 120px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#7FA6AC">패브릭 내 랙</div><div style="flex:1;background:#1C6A72;color:#fff;border-radius:7px;padding:9px 13px"><strong>플래시 스토리지 랙 (BlueField-4 STX)</strong> — KV 캐시·핫데이터 (= 엔비디아 ‘스토리지 랙’)</div></div>
+        <div style="display:flex;align-items:center;gap:12px"><div style="flex:0 0 120px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#7FA6AC">네트워크 접속</div><div style="flex:1;background:#9C6B2E;color:#fff;border-radius:7px;padding:9px 13px"><strong>올플래시 NAS/병렬파일 (VAST·WEKA·Dell Lightning)</strong> — 훈련 데이터 고속 공급</div></div>
+        <div style="display:flex;align-items:center;gap:12px"><div style="flex:0 0 120px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#7FA6AC">대용량 계층</div><div style="flex:1;background:#B5641F;color:#fff;border-radius:7px;padding:9px 13px"><strong>오브젝트/데이터레이크 (HDD 기반) — Dell ObjectScale 등</strong> ← <strong>WDC HDD가 여기</strong></div></div>
+        <div style="display:flex;align-items:center;gap:12px"><div style="flex:0 0 120px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:#7FA6AC">콜드 아카이브</div><div style="flex:1;background:#7A3F10;color:#fff;border-radius:7px;padding:9px 13px"><strong>딥 아카이브 (HDD/테이프)</strong> — 장기 보관·백업 ← <strong>WDC HDD가 여기</strong></div></div>
+      </div>
+      <p class="small" style="color:#9CBBC0;margin:12px 0 0">엔비디아의 ‘랙-스케일 co-design’은 위 3개 계층(저지연·플래시)에 집중. HDD는 아래 2개 계층에서 폭증하지만, 이는 ‘NVL 패브릭 안의 랙’이 아니라 ‘이더넷으로 연결된 인증 파트너 스토리지’ 형태. 그래서 ‘HDD 랙’은 안 나오더라도 HDD 수요는 커진다.</p>
+    </div>
+
+    <div class="callout c-warn" style="margin-top:18px">
+      <span class="lab">논지를 더 강하게 만든다면 (Steel-man)</span>
+      <p style="margin-bottom:0">사용자 논지의 <strong>가장 강한 버전</strong>은 ‘랙’이 아니라 ‘부착비(attach)’다. 엔비디아가 데이터센터 전체를 ‘하나의 시스템’으로 설계(extreme co-design)하면서 스토리지 계층까지 <em>인증·참조설계로 표준화</em>하고 있고(Dell ObjectScale은 신형에서 HDD 용량 +45%), GPU 1대가 늘 때 영구 저장 데이터가 비선형적으로 늘어난다. 따라서 “GPU 증설 → HDD 부착량 증가”라는 비율 자체가 구조적으로 커지는 그림은 설득력이 있다. 다만 이는 ‘랙 추가’가 아니라 ‘부착 계수 상승’으로 모델링해야 하며, 본 분석의 TAM(⑥)·시나리오(⑭)에 그렇게 반영했다.</p>
+    </div>
+  </div>
+</section>
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><h2>기업 개요 — 처음 보는 분을 위한 완전 해설</h2></div>
+    <p><strong>Western Digital(웨스턴디지털, WDC)</strong>은 1970년 설립된 미국 회사로, 원래는 반도체 부품을 만들다가 1980~90년대에 ‘하드디스크 드라이브(HDD)’ 제조사로 자리 잡았습니다. HDD란 <span class="term">데이터를 자석으로 코팅한 원판(platter)에 기록하고, 그 원판을 빠르게 회전시키며 ‘헤드’라는 바늘로 읽고 쓰는 저장장치</span>입니다. USB 메모리나 SSD가 ‘전기로 기억하는 반도체’라면, HDD는 ‘물리적으로 회전하는 자석 원판’입니다 — 느리지만 <strong>1테라바이트(TB)당 가격이 압도적으로 쌉니다.</strong></p>
+
+    <h3>회사의 역사 — 두 번의 인수, 한 번의 결별</h3>
+    <ul class="tight">
+      <li><strong>2012년:</strong> 히타치의 HDD 사업부(HGST)를 인수 → HDD 세계 1~2위로 도약.</li>
+      <li><strong>2016년:</strong> 낸드 플래시(SSD의 핵심 칩) 제조사 <strong>SanDisk</strong>를 인수 → ‘HDD + 플래시’를 모두 가진 종합 저장 기업이 됨.</li>
+      <li><strong>문제:</strong> HDD(안정적·고마진)와 플래시(변동성 큰 메모리 사이클)는 성격이 너무 달라, 투자자들은 ‘섞여서 가치를 알기 어렵다(컨글로머릿 디스카운트)’고 불평. 행동주의 펀드 Elliott이 분할을 압박.</li>
+      <li><strong>2025년 2월:</strong> 플래시 사업을 <strong>SanDisk(SNDK)</strong>라는 별도 상장사로 분사. 그 결과 오늘의 WDC는 <strong>오직 HDD만 하는 ‘순수 플레이’</strong>가 됨.</li>
+    </ul>
+
+    <div class="callout c-key">
+      <span class="lab">이 회사를 한 문장으로</span>
+      <p style="margin-bottom:0"><strong>“AI·클라우드 시대에 폭증하는 데이터를 가장 저렴하게 ‘대용량 보관’하는, 회전식 자석 원판(HDD)을 만드는 두 회사 중 하나.”</strong> 고객의 89%가 클라우드/하이퍼스케일러(아마존·구글·메타·마이크로소프트 같은 초대형 데이터센터 운영사)입니다.</p>
+    </div>
+
+    <h3>지금 왜 화제인가 — ‘AI 스토리지 슈퍼사이클’</h3>
+    <p>분사 직후 ‘깨끗한 HDD 회사’가 된 WDC는 AI 붐의 직접 수혜를 받았습니다. AI 모델은 학습·추론 과정에서 어마어마한 데이터를 만들어내고, 그 데이터는 어딘가에 ‘영구 저장’되어야 합니다. 그 자리를 HDD가 맡으면서 주문이 폭주했고, 공급이 수요를 못 따라가 가격이 급등했습니다. 그 결과:</p>
+    <div class="statrow">
+      <div class="stat"><div class="v">+970%</div><div class="k">2025년 한 해 주가 상승</div></div>
+      <div class="stat"><div class="v">+250%</div><div class="k">2026년 연초 이후(YTD) 추가 상승</div></div>
+      <div class="stat"><div class="v">50%+</div><div class="k">매출총이익률 (역사적 정점, 2023년엔 22%)</div></div>
+    </div>
+    <p class="small faint">CEO Irving Tan: “사실상 모든 AI 워크로드 — 훈련, 추론, 에이전트 AI, 피지컬 AI — 가 데이터를 만들고, 그 데이터는 HDD에 영구적·비용효율적으로 저장된다.” 회사는 2028년까지 생산 용량이 ‘완판’되었다고 밝혔습니다.</p>
+  </div>
+</section>
+
+<section id="revenue">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><h2>수익 구조 — 이 회사는 어떻게 돈을 버는가</h2></div>
+    <p>WDC의 매출은 단순합니다: <strong>HDD를 만들어 판다.</strong> 하지만 그 매출이 결정되는 ‘엔진’은 두 개의 변수의 곱이라는 점이 핵심입니다.</p>
+
+    <div class="card">
+      <div style="text-align:center;font-family:'Space Grotesk';font-weight:600;font-size:1.15rem;margin-bottom:6px">매출 = 출하 용량(엑사바이트) <span style="color:var(--teal)">×</span> 용량당 가격($/TB)</div>
+      <div class="grid2" style="margin-top:14px">
+        <div style="background:var(--teal-tint);color:var(--teal-tint-ink);border:1px solid #BFE0E2;border-radius:10px;padding:14px 16px">
+          <div class="mono" style="font-size:.72rem;letter-spacing:.1em;color:var(--teal-deep)">변수 1 — 출하 용량(EB)</div>
+          <p style="margin:6px 0 0">팔린 드라이브의 ‘총 저장용량’. AI 데이터 폭증으로 <strong>구조적으로 증가</strong>(WDC 전망 2024~28년 연 +23%). 1 EB(엑사바이트) = 100만 TB.</p>
+        </div>
+        <div style="background:var(--copper-tint);color:var(--copper-tint-ink);border:1px solid #E8CFB4;border-radius:10px;padding:14px 16px">
+          <div class="mono" style="font-size:.72rem;letter-spacing:.1em;color:var(--copper)">변수 2 — 용량당 가격($/TB)</div>
+          <p style="margin:6px 0 0">기술 발전으로 <strong>장기적으로 하락</strong>하는 게 정상이나, 현재는 ‘공급 부족’으로 <strong>예외적 상승 중</strong>. 이 변수가 사이클을 만든다.</p>
+        </div>
+      </div>
+      <p class="small faint" style="margin:12px 0 0">→ 두 변수는 역사적으로 <strong>반대 방향</strong>으로 움직였습니다(용량↑·가격↓). 지금처럼 ‘용량↑ + 가격↑’이 동시에 나는 국면은 드물고, 그래서 이익이 폭발했습니다. 이 동시성이 깨지는 시점이 곧 위험입니다.</p>
+    </div>
+
+    <h3>엔드마켓 구성 — 사실상 클라우드 ‘단일’ 의존</h3>
+    <p>분사 후 WDC 매출은 세 갈래(클라우드·클라이언트·컨슈머)지만, 압도적으로 클라우드(데이터센터 니어라인 HDD)에 쏠려 있습니다.</p>
+    <div style="margin:14px 0">
+      <div style="margin-bottom:10px"><div class="small" style="margin-bottom:3px"><strong>클라우드(데이터센터 니어라인)</strong> — Q3 FY26 기준 매출의 ~89%</div>
+        <div class="bar-track"><div class="bar-fill" style="width:89%;background:var(--teal)">~89%</div></div></div>
+      <div style="margin-bottom:10px"><div class="small" style="margin-bottom:3px"><strong>클라이언트(PC·노트북)</strong></div>
+        <div class="bar-track"><div class="bar-fill" style="width:8%;background:#6E8A92;min-width:42px">~8%</div></div></div>
+      <div><div class="small" style="margin-bottom:3px"><strong>컨슈머(외장하드·NAS)</strong></div>
+        <div class="bar-track"><div class="bar-fill" style="width:5%;background:#9AAAB0;min-width:42px">~3%</div></div></div>
+    </div>
+    <div class="callout c-risk">
+      <span class="lab">수익 구조의 양날의 검</span>
+      <p style="margin-bottom:0"><strong>장점:</strong> 상위 5개 하이퍼스케일러와 장기계약(LTA)을 맺어 ‘완판’ 가시성 확보. <strong>위험:</strong> 매출의 ~89%가 소수 클라우드 고객에 집중 → 한 곳만 구매를 늦춰도 충격. ‘니어라인(nearline)’이란 자주 쓰진 않지만 즉시 접근 가능해야 하는 데이터를 담는 데이터센터용 대용량 드라이브를 뜻합니다.</p>
+    </div>
+
+    <h3>벌어들인 현금을 어떻게 쓰나 — 자본 경량 + 주주환원</h3>
+    <p>WDC는 자본을 거의 안 쓰고도(분기 설비투자 ~$1.5억, 매출의 ~4%) 막대한 현금을 만듭니다. 그 현금으로 빚을 갚고 자사주를 사고 배당을 줍니다.</p>
+    <ul class="tight">
+      <li><strong>부채 축소:</strong> $47.5억 → $16억 (순현금 전환, 신용등급 상향).</li>
+      <li><strong>자사주 매입:</strong> $40억 규모 프로그램 진행(Q3 FY26 한 분기에만 $7.5억, 290만 주).</li>
+      <li><strong>배당:</strong> 분기 $0.15(20% 인상). 잉여현금흐름(FCF)의 100%+ 를 주주에게 환원.</li>
+      <li><strong>FCF 마진:</strong> ~29% → 30%+ 목표 (FY26 FCF ~$33억 추정).</li>
+    </ul>
+  </div>
+</section>
+<section id="tech">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><h2>제품·기술 — HDD는 어떻게 작동하고, 무엇이 경쟁을 가르나</h2></div>
+    <h3>HDD가 작동하는 원리 (아주 쉽게)</h3>
+    <p>HDD 안에는 <strong>거울처럼 매끈한 자석 원판</strong>이 여러 장 겹쳐 들어 있고, 1분에 7,200번씩 회전합니다. 그 위를 머리카락 굵기의 1만분의 1 높이로 ‘읽기/쓰기 헤드’가 떠다니며, 원판 표면의 미세한 자석 방향(N/S)을 바꿔 0과 1을 기록합니다.</p>
+    <div class="card">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:stretch">
+        <div style="flex:1;min-width:130px;background:#EEF1F4;border:1px solid var(--line);border-radius:9px;padding:11px 13px"><div class="mono small" style="color:var(--teal-deep)">1. 회전</div><div class="small" style="color:var(--ink-soft)">자석 원판이 고속 회전</div></div>
+        <div style="align-self:center;color:var(--teal);font-weight:700">→</div>
+        <div style="flex:1;min-width:130px;background:#EEF1F4;border:1px solid var(--line);border-radius:9px;padding:11px 13px"><div class="mono small" style="color:var(--teal-deep)">2. 헤드 이동</div><div class="small" style="color:var(--ink-soft)">헤드가 원하는 트랙으로 이동</div></div>
+        <div style="align-self:center;color:var(--teal);font-weight:700">→</div>
+        <div style="flex:1;min-width:130px;background:#EEF1F4;border:1px solid var(--line);border-radius:9px;padding:11px 13px"><div class="mono small" style="color:var(--teal-deep)">3. 자화 변경</div><div class="small" style="color:var(--ink-soft)">표면 자석 방향으로 0·1 기록</div></div>
+        <div style="align-self:center;color:var(--teal);font-weight:700">→</div>
+        <div style="flex:1;min-width:130px;background:#EEF1F4;border:1px solid var(--line);border-radius:9px;padding:11px 13px"><div class="mono small" style="color:var(--teal-deep)">4. 밀도가 가치</div><div class="small" style="color:var(--ink-soft)">같은 면적에 더 많이 = 더 싼 TB</div></div>
+      </div>
+      <p class="small faint" style="margin:12px 0 0">핵심 경쟁력은 ‘면적당 얼마나 많은 데이터를 욱여넣느냐(<strong>면적 밀도, areal density</strong>)’입니다. 밀도가 높을수록 한 드라이브 용량이 커지고, TB당 비용·전력·공간이 줄어 데이터센터에 유리합니다.</p>
+    </div>
+
+    <h3>밀도를 높이는 핵심 기술 — 그리고 WDC의 ‘아킬레스건’</h3>
+    <p>밀도를 높이는 방법이 곧 기술 경쟁의 전부입니다. 여기서 <strong>WDC는 경쟁사 Seagate에 한 발 뒤처져 있습니다.</strong></p>
+    <div class="grid2">
+      <div class="card" style="margin:0">
+        <h4 style="margin-top:0">WDC의 길 — ePMR / UltraSMR</h4>
+        <p class="small" style="color:var(--ink-soft)"><strong>ePMR</strong>은 기존 자기기록을 개선한 방식, <strong>UltraSMR</strong>은 데이터 트랙을 기왓장처럼 겹쳐 용량을 짜내는 방식. 검증·신뢰성이 높아 하이퍼스케일러가 선호. 현재 40TB ePMR을 2026년 하반기 양산 예정. <strong>HAMR(차세대)은 44TB로 4개 고객 인증 중이나 상대적으로 지연.</strong></p>
+      </div>
+      <div class="card" style="margin:0">
+        <h4 style="margin-top:0">Seagate의 길 — HAMR(Mozaic)</h4>
+        <p class="small" style="color:var(--ink-soft)"><strong>HAMR</strong>(열보조자기기록)은 미세 레이저로 원판을 순간 가열해 더 촘촘히 기록하는 차세대 기술. Seagate은 Mozaic으로 <strong>먼저 상용화</strong>해 30TB·40TB 드라이브를 5개 클라우드 고객에 인증, 2030년 100TB 로드맵. 밀도 경쟁에서 앞섬.</p>
+      </div>
+    </div>
+    <div class="callout c-warn">
+      <span class="lab">기술 리스크 — 비전공자용 핵심</span>
+      <p style="margin-bottom:0">‘HAMR’은 레이저로 원판을 가열해야 해서 제조가 까다롭습니다. Seagate이 이 어려운 기술을 먼저 안정화하면, 같은 공간에 더 많은 데이터를 더 싸게 담을 수 있어 <strong>WDC가 점유율·가격 경쟁에서 밀릴 위험</strong>이 있습니다. 반대로 WDC의 UltraSMR가 ‘충분히 좋고 더 안정적’이라 고객이 계속 선호하면 격차는 문제되지 않을 수 있습니다. 이 기술 경쟁의 향방은 분기별로 추적해야 할 핵심 변수입니다. <span class="conf conf-m">확신도: 중간 ~60%</span></p>
+    </div>
+    <div class="divlabel">용량 로드맵 (드라이브 1대 기준)</div>
+    <table class="tb"><thead><tr><th>시점</th><th>WDC</th><th>Seagate</th></tr></thead><tbody>
+      <tr><td>2025~26 주력</td><td class="num">26~32TB (ePMR/UltraSMR)</td><td class="num">30TB (Mozaic 3+ HAMR)</td></tr>
+      <tr><td>2026</td><td class="num">40TB ePMR (하반기 양산), 44TB HAMR 인증중</td><td class="num">40TB+ (Mozaic 4+) 양산 시작</td></tr>
+      <tr><td>로드맵</td><td class="num">100TB+ 목표</td><td class="num">50TB(’26말)→100TB(’30)</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<section id="industry">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">05</span><h2>산업 분석 — HDD 산업의 구조·트렌드·미래</h2></div>
+    <h3>산업 구조 — 사실상 ‘듀오폴리(2社 과점)’</h3>
+    <p>HDD 산업은 수십 년의 통폐합 끝에 <strong>WDC와 Seagate 두 회사가 시장의 대부분</strong>을, 일본 Toshiba가 소규모를 차지하는 구조로 정리됐습니다. 신규 진입은 사실상 불가능합니다(수십 년의 정밀 제조 노하우·특허·자본 필요). 이 ‘2社 과점’이 본 분석의 강세 논리의 뿌리입니다 — 가격을 두고 출혈 경쟁할 동기가 약하기 때문입니다.</p>
+    <div class="statrow">
+      <div class="stat"><div class="v">~2.5社</div><div class="k">사실상 전체 공급(WDC·Seagate·소형 Toshiba)</div></div>
+      <div class="stat"><div class="v">~278M</div><div class="k">2025년 연간 HDD 출하 대수(추정)</div></div>
+      <div class="stat"><div class="v">~68%</div><div class="k">총 엑사바이트 중 니어라인(데이터센터) 비중</div></div>
+    </div>
+
+    <h3>가치사슬 (Value Chain) — WDC는 어디에 있나</h3>
+    <div class="card">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:stretch">
+        <div style="flex:1;min-width:120px;background:#EEF1F4;border:1px solid var(--line);border-radius:9px;padding:10px 12px"><div class="mono small faint">부품</div><div class="small"><strong>헤드·미디어·모터</strong><br>(WDC·Seagate 상당 부분 내재화)</div></div>
+        <div style="align-self:center;color:var(--copper)">▸</div>
+        <div style="flex:1;min-width:120px;background:var(--teal-tint);border:1px solid #BFE0E2;border-radius:9px;padding:10px 12px"><div class="mono small" style="color:var(--teal-deep)">드라이브 제조 ← WDC</div><div class="small" style="color:var(--teal-tint-ink)"><strong>HDD 설계·조립</strong><br>핵심 부가가치·마진 발생 지점</div></div>
+        <div style="align-self:center;color:var(--copper)">▸</div>
+        <div style="flex:1;min-width:120px;background:#EEF1F4;border:1px solid var(--line);border-radius:9px;padding:10px 12px"><div class="mono small faint">시스템/스토리지</div><div class="small"><strong>JBOD·스토리지 어레이</strong><br>Dell·HPE·VAST·Cloudian</div></div>
+        <div style="align-self:center;color:var(--copper)">▸</div>
+        <div style="flex:1;min-width:120px;background:#EEF1F4;border:1px solid var(--line);border-radius:9px;padding:10px 12px"><div class="mono small faint">최종 수요</div><div class="small"><strong>하이퍼스케일러</strong><br>AWS·구글·MS·메타</div></div>
+      </div>
+      <p class="small faint" style="margin:12px 0 0">WDC는 가치사슬에서 ‘드라이브 제조’를 담당하며, 헤드·미디어 등 핵심 부품을 상당 부분 내재화해 마진을 방어합니다. 앞서 ①에서 본 ‘엔비디아 인증 스토리지 파트너(Dell ObjectScale 등)’는 이 사슬의 ‘시스템’ 단계에 해당하며, WDC HDD를 담아 하이퍼스케일러에 납품합니다.</p>
+    </div>
+
+    <h3>핵심 트렌드 ① — ‘대수’가 아니라 ‘용량(엑사바이트)’의 게임</h3>
+    <p>지난 10년간 HDD ‘대수’는 감소해 왔습니다(저용량 시장을 SSD에 내줌). 그러나 ‘출하 용량(엑사바이트)’은 폭증 중입니다. 산업이 ‘단가 싸움’에서 ‘용량 성장’으로 체질이 바뀌었습니다.</p>
+    <div class="card">
+      <div class="divlabel" style="margin-top:0">HDD 산업 출하 용량 추이·전망 (엑사바이트, EB)</div>
+      <svg viewBox="0 0 680 230" role="img" aria-label="HDD 엑사바이트 출하 추이">
+        <line x1="50" y1="190" x2="660" y2="190" stroke="#DDE1E7"/>
+        <line x1="50" y1="20" x2="50" y2="190" stroke="#DDE1E7"/>
+        <text x="20" y="30" font-family="IBM Plex Mono" font-size="10" fill="#5C6470">9000</text>
+        <text x="20" y="110" font-family="IBM Plex Mono" font-size="10" fill="#5C6470">4500</text>
+        <text x="30" y="193" font-family="IBM Plex Mono" font-size="10" fill="#5C6470">0</text>
+        <!-- bars: 2022 1500, 2024 ~2300, 2025 ~1900? use trajectory 1500->9000 -->
+        <g font-family="IBM Plex Mono" font-size="10" fill="#5C6470" text-anchor="middle">
+          <rect x="80"  y="158" width="60" height="32"  fill="#9C6B2E"/><text x="110" y="205">2022</text><text x="110" y="150" fill="#7A3F10">1,500</text>
+          <rect x="190" y="142" width="60" height="48"  fill="#B5641F"/><text x="220" y="205">2024</text><text x="220" y="134" fill="#7A3F10">2,300</text>
+          <rect x="300" y="118" width="60" height="72"  fill="#1C6A72"/><text x="330" y="205">2026E</text><text x="330" y="110" fill="#0A444A">3,600</text>
+          <rect x="410" y="78"  width="60" height="112" fill="#127982"/><text x="440" y="205">2028E</text><text x="440" y="70" fill="#0A444A">~9,000</text>
+          <rect x="520" y="40"  width="60" height="150" fill="#0E7C86"/><text x="550" y="205">2030E*</text><text x="550" y="32" fill="#0A444A">~12,000</text>
+        </g>
+      </svg>
+      <p class="small faint" style="margin:8px 0 0">출처: Coughlin Associates(2022→2028 약 6배), WDC 전망(2024~28 용량 +23% CAGR). 2030E*는 추세 외삽(불확실). 핵심: 용량 수요는 우상향이 강하다 — 단, 아래 ‘가격’과 함께 봐야 매출이 보인다.</p>
+    </div>
+
+    <h3>핵심 트렌드 ② — SSD가 HDD를 대체할까? (장기 핵심 쟁점)</h3>
+    <p>오래된 ‘SSD가 HDD를 죽인다’는 예측은 데이터센터 대용량 영역에서는 아직 빗나갔습니다. 이유는 단순합니다 — <strong>TB당 가격</strong>입니다.</p>
+    <ul class="tight">
+      <li>HDD는 여전히 SSD보다 <strong>TB당 약 2.5~6배 저렴</strong>(데이터센터 대용량 기준).</li>
+      <li>낸드(SSD 원료) 생산능력이 HDD를 대체하기엔 부족: 한 추정은 2029년에도 낸드 생산이 HDD 용량 대비 <strong>약 405 EB 부족</strong>하다고 봄(Blocks &amp; Files).</li>
+      <li>역할 분담: SSD=핫·고속(추론·훈련 캐시), HDD=대용량·콜드(데이터레이크·아카이브). AI는 <strong>양쪽 모두</strong>를 키운다.</li>
+    </ul>
+    <div class="callout c-warn">
+      <span class="lab">그러나 — 반대 시나리오도 살려둬야</span>
+      <p style="margin-bottom:0">낸드가 대규모 공급 과잉에 빠져 SSD 가격이 급락하면, HDD의 저용량~중용량(예: 20TB대) 영역부터 잠식이 시작될 수 있습니다. 또한 2026년 3월에는 ‘AI 소프트웨어 효율화 도구가 하드웨어 수요를 줄일 수 있다’는 우려로 스토리지주가 일시 급락하기도 했습니다. ‘이번엔 다르다’가 영원하리라는 보장은 없습니다. <span class="conf conf-m">확신도: 중간 ~55%</span></p>
+    </div>
+  </div>
+</section>
+<section id="tam" class="dark">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">06</span><h2 style="color:#fff">TAM 추산 — ‘AI 부착’ 논지를 펀더멘털에 반영하기</h2></div>
+    <p>사용자 요청대로, ①의 ‘AI가 HDD 수요를 구조적으로 키운다(부착 계수 상승)’ 논지를 정량 모델로 옮겼습니다. 핵심은 ③에서 본 공식 — <strong>매출 = 엑사바이트 × $/TB</strong> — 을 산업 전체와 WDC에 적용하는 것입니다. 두 변수의 ‘동시 방향’ 가정이 결과를 가릅니다.</p>
+
+    <div class="card" style="background:var(--slate-2);border-color:#27484F">
+      <div class="divlabel" style="color:#7FA6AC;margin-top:0">HDD 산업·WDC 매출 전망 (2025 기준 → 2030E)</div>
+      <div class="tb-scroll">
+      <table class="tb">
+        <thead><tr><th>시나리오</th><th>EB CAGR</th><th>$/TB 가정</th><th class="num">산업 매출 ’30E</th><th class="num">WDC 매출 ’30E</th><th class="num">WDC 매출 CAGR<br>(FY26→30)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>강세</strong> (AI 부착·공급부족 지속)</td><td>+30%</td><td>거의 보합 (−2%/yr)</td><td class="num">~$108B</td><td class="num">~$54B</td><td class="num">~43%</td></tr>
+          <tr class="hl"><td><strong>기본</strong> (WDC 용량 가이던스)</td><td>+23%</td><td>완만한 하락 (−8%/yr)</td><td class="num">~$60B</td><td class="num">~$30B</td><td class="num">~23%</td></tr>
+          <tr><td><strong>약세</strong> (수요 정상화)</td><td>+12%</td><td>역사적 침식 재개 (−18%/yr)</td><td class="num">~$21B</td><td class="num">~$10B</td><td class="num">~−5%</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="scrollnote" style="color:#7FA6AC">→ 좌우 스크롤 가능. 가정: 2025 산업매출 ~$30B, 출하 ~1,900 EB, $/TB ~$16, WDC 니어라인 점유 ~42%, 니어라인이 WDC 매출의 ~85%.</p>
+    </div>
+
+    <div class="callout c-warn" style="background:#3A2A16;border-color:#5C3F1C;color:#F0DEC6">
+      <span class="lab" style="color:#E0A95A">TAM 추산의 가장 중요한 통찰</span>
+      <p style="margin-bottom:0;color:#F0DEC6">강세(매출 +43% CAGR)와 약세(매출 <strong>−5%, 즉 감소</strong>)의 차이는 거의 전적으로 <strong>$/TB 가정</strong>에서 나옵니다. HDD 매출은 ‘용량 × 가격’인데 두 변수가 역사적으로 반대로 움직였기 때문에, <strong>용량이 6배로 늘어도 가격이 충분히 떨어지면 매출은 안 늘 수 있습니다.</strong> ‘AI 부착’ 논지가 옳아도(용량↑), ‘가격이 버틴다(과점 규율·공급부족 지속)’가 동시에 성립해야 강세 시나리오가 현실이 됩니다. 이 둘의 동시 성립이 핵심 베팅입니다.</p>
+    </div>
+
+    <h3 style="color:#fff">‘HDD 랙’ 논지를 부착 계수로 환산하면</h3>
+    <p>‘HDD 랙’이라는 형태는 안 나오더라도, GPU 1대당 부착되는 영구저장 용량이 늘면 효과는 비슷합니다. 강세 시나리오(EB +30%)는 사실상 “AI 빌드아웃 가속 → GPU당 HDD 부착 계수 상승 + 과점 가격 유지”를 가정한 것입니다. 이 강세 매출 경로(FY30 ~$54B)가 ⑫의 DCF ‘강세’ 케이스(시작 성장률 30%)와 연결되며, 그 경우에도 시장가를 정당화하려면 <strong>그 고성장이 약 16년 지속</strong>되어야 합니다 — TAM 확대는 ‘필요조건’이지 ‘충분조건’이 아닙니다.</p>
+  </div>
+</section>
+
+<section id="moat">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">07</span><h2>경제적 해자(Moat) 분석</h2></div>
+    <p>‘해자(moat)’란 경쟁사가 쉽게 침범하지 못하게 막는 구조적 경쟁우위를 뜻합니다. WDC의 해자는 ‘브랜드’보다 <strong>과점 구조 + 규모·노하우 진입장벽</strong>에 가깝습니다.</p>
+
+    <h3>포터의 5가지 힘 (5 Forces) 간략 평가</h3>
+    <div class="tb-scroll">
+    <table class="tb">
+      <thead><tr><th>힘</th><th class="num">강도</th><th>해석</th></tr></thead>
+      <tbody>
+        <tr><td>신규 진입 위협</td><td class="num"><span class="conf conf-h">매우 낮음</span></td><td>수십 년의 정밀 제조 노하우·특허·자본이 필요. 사실상 신규 진입 불가 — <strong>해자의 핵심</strong>.</td></tr>
+        <tr><td>기존 경쟁 강도</td><td class="num"><span class="conf conf-m">중간</span></td><td>WDC vs Seagate 2社. 과거엔 출혈 경쟁도 있었으나 현재는 ‘마진 우선’ 규율. 단 HAMR 기술 경쟁은 진행형.</td></tr>
+        <tr><td>대체재 위협 (SSD)</td><td class="num"><span class="conf conf-m">중간</span></td><td>대용량 영역은 TB당 가격 차(2.5~6배)로 방어 중이나, 낸드 가격 급락 시 장기 잠식 리스크 상존.</td></tr>
+        <tr><td>구매자 교섭력</td><td class="num"><span class="conf conf-l">높음</span></td><td>소수 하이퍼스케일러가 대량 구매 → 평시엔 가격 압박 강함. <strong>현재는 공급부족으로 일시 역전</strong>(공급자 우위).</td></tr>
+        <tr><td>공급자 교섭력</td><td class="num"><span class="conf conf-h">낮음</span></td><td>핵심 부품(헤드·미디어) 상당 부분 내재화 → 공급자 의존 낮음.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="scrollnote">→ 좌우 스크롤 가능.</p>
+
+    <h3>차별화 vs 원가 우위 — 무엇이 해자인가</h3>
+    <div class="grid2">
+      <div class="card" style="margin:0"><h4 style="margin-top:0">현재 지표 (정점 국면)</h4>
+        <ul class="tight" style="margin:0"><li>NOPAT 마진 ~29% (정점)</li><li>ROIC ~37% (정점·일부 왜곡)</li><li>매출총이익률 50%+ (역대 최고)</li></ul></div>
+      <div class="card" style="margin:0"><h4 style="margin-top:0">해석</h4>
+        <p class="small" style="color:var(--ink-soft);margin:0">현재의 초고마진은 ‘지속 가능한 차별화’보다 <strong>사이클 정점 + 공급부족 가격</strong>의 산물에 가깝습니다. 진짜 해자는 ‘2社 과점 구조 + 진입장벽’이며, 이것이 <strong>중기적으로 자본비용 초과 수익(ROIC&gt;WACC)을 가능케 하는 근거</strong>입니다. 다만 ‘얼마나 오래(=CAP)’가 핵심 질문입니다.</p></div>
+    </div>
+    <div class="callout c-key">
+      <span class="lab">해자의 지속 가능성 — 핵심 판단</span>
+      <p style="margin-bottom:0"><strong>구조적 해자(과점·진입장벽)는 진짜입니다. 그러나 ‘현재 수준의 초정상 이익률’이 해자의 산물이라고 보긴 어렵습니다.</strong> 과점이 보장하는 것은 ‘적정 초과수익’이지 ‘50%+ 매출총이익률의 영구 지속’이 아닙니다. 과거 이 과점 구조에서도 2023년 매출총이익률은 22%까지 떨어졌습니다. 해자는 ‘하방을 막아주는’ 역할은 하되, 현재가가 가정하는 ‘정점 이익률 20년 지속’까지 보장하진 않습니다. <span class="conf conf-m">확신도: 중간 ~65%</span></p>
+    </div>
+  </div>
+</section>
+<section id="swot">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">08</span><h2>SWOT 분석</h2></div>
+    <div class="grid2">
+      <div class="callout c-pos" style="margin:0">
+        <span class="lab">Strengths · 강점</span>
+        <ul class="tight" style="margin:0">
+          <li>2社 과점의 한 축 — 높은 진입장벽</li>
+          <li>순현금 전환·신용등급 상향 — 견고한 재무</li>
+          <li>자본 경량(설비투자 ~매출 4%) → FCF 마진 ~30%</li>
+          <li>2028년까지 ‘완판’·하이퍼스케일러 장기계약(LTA)</li>
+          <li>UltraSMR 등 검증된·신뢰성 높은 제품군</li>
+        </ul>
+      </div>
+      <div class="callout c-risk" style="margin:0">
+        <span class="lab">Weaknesses · 약점</span>
+        <ul class="tight" style="margin:0">
+          <li><strong>HAMR 기술 Seagate 대비 지연</strong> — 밀도 경쟁 열위 가능</li>
+          <li>매출의 ~89%가 소수 클라우드 고객에 집중</li>
+          <li>현재 이익률이 사이클 정점 — 정상화 위험</li>
+          <li>단일 제품(HDD)·단일 산업 의존 (분산 없음)</li>
+        </ul>
+      </div>
+      <div class="callout c-key" style="margin:0">
+        <span class="lab">Opportunities · 기회</span>
+        <ul class="tight" style="margin:0">
+          <li>AI 데이터 폭증 — 구조적 용량 수요(EB +23%+)</li>
+          <li>‘소버린 AI’ — 국가별 데이터센터 신설 수요</li>
+          <li>드라이브 대당 용량↑ → 대당 매출↑</li>
+          <li>NVIDIA 인증 스토리지 생태계로 HDD 부착 표준화</li>
+        </ul>
+      </div>
+      <div class="callout c-warn" style="margin:0">
+        <span class="lab">Threats · 위협</span>
+        <ul class="tight" style="margin:0">
+          <li><strong>사이클 반전</strong> — AI 자본지출 둔화 시 공급과잉·가격 붕괴</li>
+          <li>낸드/SSD 가격 급락 시 HDD 잠식</li>
+          <li>중국 공급·지정학·관세 변수</li>
+          <li>AI SW 효율화로 하드웨어 수요 둔화 우려(’26.3 급락 사례)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="peer">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">09</span><h2>피어그룹 비교 — WDC vs Seagate vs Toshiba</h2></div>
+    <p>직접 비교 대상은 사실상 Seagate(STX) 하나입니다. Toshiba는 소규모이고, SanDisk(SNDK)는 같은 모회사 출신이지만 ‘낸드/SSD’로 사업이 다릅니다.</p>
+    <div class="tb-scroll">
+    <table class="tb">
+      <thead><tr><th>항목</th><th>Western Digital (WDC)</th><th>Seagate (STX)</th><th>Toshiba</th></tr></thead>
+      <tbody>
+        <tr><td>사업 초점</td><td>순수 HDD (대용량)</td><td>순수 HDD (대용량) + 일부 SSD</td><td>HDD (소규모·니치)</td></tr>
+        <tr><td class="num">시가총액(’26.6)</td><td class="num">~$256B</td><td class="num">~$242B</td><td class="num">(비상장 HDD부문)</td></tr>
+        <tr><td class="num">최근 분기 매출</td><td class="num">$3.34B (Q3 FY26)</td><td class="num">~$3.3B 대</td><td class="num">소규모</td></tr>
+        <tr><td>핵심 밀도 기술</td><td>ePMR/UltraSMR (HAMR 추격)</td><td><strong>HAMR(Mozaic) 선도</strong></td><td>기존 PMR 중심</td></tr>
+        <tr><td>재무 건전성</td><td><strong>순현금</strong> (D/E 매우 낮음)</td><td>레버리지 높음 (D/E 매우 큼)</td><td>—</td></tr>
+        <tr><td class="num">밸류에이션(P/E)</td><td class="num">~44×</td><td class="num">~100×</td><td class="num">—</td></tr>
+        <tr><td>투자 성격</td><td>균형형·재무 안정·성장 빠름</td><td>고베타·기술 선도·변동성↑</td><td>참고용</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="scrollnote">→ 좌우 스크롤 가능. 수치는 출처별 차이가 있어 ‘대략값’으로 표기.</p>
+    <div class="grid2">
+      <div class="callout c-pos" style="margin:0"><span class="lab">WDC가 더 나은 점</span><p style="margin:0">깨끗한 재무(순현금), 빠른 매출 성장, 안정적 제품. ‘재무 리스크는 피하되 HDD 사이클에 올라타고 싶은’ 포지션에 부합.</p></div>
+      <div class="callout c-warn" style="margin:0"><span class="lab">Seagate이 더 나은 점</span><p style="margin:0">HAMR 밀도 기술 선도(2030 100TB 로드맵), 배당 매력. 단 레버리지가 높고 변동성이 크다. 같은 산업이라 <strong>두 종목 주가는 강하게 동행</strong>(둘 다 1년 +700~970%).</p></div>
+    </div>
+    <p class="small faint">시사점: WDC와 Seagate는 ‘같은 사이클을 타는 한 쌍’입니다. 따라서 WDC 분석의 결론(현재가에 정점 이익 장기지속이 내재)은 Seagate에도 대체로 적용되며, 둘 중 하나의 사이클 반전은 보통 다른 하나에도 전이됩니다.</p>
+  </div>
+</section>
+
+<section id="lifecycle">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">10</span><h2>생애주기 단계 판별</h2></div>
+    <p>현금흐름표의 부호(영업·투자·재무)로 기업의 ‘생애주기 단계’를 판별합니다. WDC의 현재 패턴은 명확합니다.</p>
+    <div class="grid3">
+      <div class="card" style="margin:0;border-left:3px solid var(--green)"><div class="mono small faint">영업활동 현금흐름</div><div style="font-size:1.4rem;font-weight:700;color:var(--green)">유입 (+)</div><div class="small faint">FY26 9개월 +$25.4억</div></div>
+      <div class="card" style="margin:0;border-left:3px solid var(--red)"><div class="mono small faint">투자활동 현금흐름</div><div style="font-size:1.4rem;font-weight:700;color:var(--red)">유출 (−)</div><div class="small faint">설비투자(소액)</div></div>
+      <div class="card" style="margin:0;border-left:3px solid var(--red)"><div class="mono small faint">재무활동 현금흐름</div><div style="font-size:1.4rem;font-weight:700;color:var(--red)">유출 (−)</div><div class="small faint">자사주·배당·부채상환</div></div>
+    </div>
+    <div class="callout c-key">
+      <span class="lab">판정 — 성숙(Mature) 단계, 단 ‘대형 상승 사이클’ 한가운데</span>
+      <p style="margin-bottom:0">영업(+)·투자(−)·재무(−) 패턴은 전형적인 <strong>‘성숙’ 단계</strong>입니다(번 돈으로 주주환원·부채상환). 그런데 동시에 매출이 +35% 성장하는 ‘성장기 같은’ 모습도 보입니다. 정확히는 <strong>‘구조적으로 성숙한 사이클 산업이 대형 상승 사이클을 통과 중’</strong>인 상태입니다. 이는 DCF+CAP 분석에 적합한 단계이며, 동시에 ‘현재의 성장·이익률을 영구 가정하면 안 된다’는 경고이기도 합니다. <span class="conf conf-h">확신도: 높음 ~85%</span></p>
+    </div>
+  </div>
+</section>
+<section id="dcf">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">11</span><h2>DCF 모델 — 기본 케이스 연도별 전시</h2></div>
+    <p>아래는 <strong>기본(중립) 운영 가정</strong>에 따른 10년 명시적 예측 테이블입니다. 가정: 매출 성장률 25%→4% 점감, EBITA 마진 35%(비GAAP 영업이익률에서 주식보상비용을 ‘비용’으로 처리해 약간 보수화), 세율 17%, WACC 11.5%, 연중(mid-year) 할인.</p>
+    <div class="tb-scroll">
+    <table class="tb">
+      <thead><tr>
+        <th>FY</th><th class="num">매출</th><th class="num">성장%</th><th class="num">EBITA</th><th class="num">마진%</th><th class="num">NOPAT</th><th class="num">투자</th><th class="num">FCF</th><th class="num">FCF의 PV</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>2027</td><td class="num">16.0</td><td class="num">25</td><td class="num">5.60</td><td class="num">35</td><td class="num">4.65</td><td class="num">0.34</td><td class="num">4.31</td><td class="num">4.08</td></tr>
+        <tr><td>2028</td><td class="num">19.6</td><td class="num">23</td><td class="num">6.87</td><td class="num">35</td><td class="num">5.70</td><td class="num">0.39</td><td class="num">5.31</td><td class="num">4.51</td></tr>
+        <tr><td>2029</td><td class="num">23.6</td><td class="num">20</td><td class="num">8.27</td><td class="num">35</td><td class="num">6.86</td><td class="num">0.44</td><td class="num">6.42</td><td class="num">4.89</td></tr>
+        <tr><td>2030</td><td class="num">27.9</td><td class="num">18</td><td class="num">9.75</td><td class="num">35</td><td class="num">8.10</td><td class="num">0.48</td><td class="num">7.62</td><td class="num">5.20</td></tr>
+        <tr><td>2031</td><td class="num">32.2</td><td class="num">16</td><td class="num">11.28</td><td class="num">35</td><td class="num">9.36</td><td class="num">0.51</td><td class="num">8.85</td><td class="num">5.42</td></tr>
+        <tr><td>2032</td><td class="num">36.5</td><td class="num">13</td><td class="num">12.79</td><td class="num">35</td><td class="num">10.61</td><td class="num">0.53</td><td class="num">10.09</td><td class="num">5.54</td></tr>
+        <tr><td>2033</td><td class="num">40.6</td><td class="num">11</td><td class="num">14.19</td><td class="num">35</td><td class="num">11.78</td><td class="num">0.52</td><td class="num">11.26</td><td class="num">5.55</td></tr>
+        <tr><td>2034</td><td class="num">44.1</td><td class="num">9</td><td class="num">15.42</td><td class="num">35</td><td class="num">12.80</td><td class="num">0.50</td><td class="num">12.30</td><td class="num">5.44</td></tr>
+        <tr><td>2035</td><td class="num">46.9</td><td class="num">6</td><td class="num">16.40</td><td class="num">35</td><td class="num">13.61</td><td class="num">0.46</td><td class="num">13.15</td><td class="num">5.21</td></tr>
+        <tr><td>2036</td><td class="num">48.7</td><td class="num">4</td><td class="num">17.06</td><td class="num">35</td><td class="num">14.16</td><td class="num">0.39</td><td class="num">13.76</td><td class="num">4.89</td></tr>
+        <tr class="hl"><td>합계/말</td><td class="num" colspan="6">명시적 10년 FCF의 PV 합계 → <strong>$50.8B</strong></td><td class="num">$50.8B</td></tr>
+        <tr class="hl"><td>최종가치</td><td class="num" colspan="6">페이드 모델(f=0.20, 말기 ROIIC 18%, g=2.5%) → 최종가치 $129B, 그 PV</td><td class="num">$43.5B</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="scrollnote">→ 좌우 스크롤 가능. 단위 $B(EPS·% 제외). ‘투자’가 작은 이유는 WDC가 자본 경량이기 때문(설비투자 ~매출 4%).</p>
+    <div class="statrow">
+      <div class="stat"><div class="v">~$94B</div><div class="k">기본 10년 DCF 기업가치(EV)</div></div>
+      <div class="stat"><div class="v">~$247–279</div><div class="k">주당 환산(희석/기본)</div></div>
+      <div class="stat"><div class="v">~$750</div><div class="k">실제 시장 주가</div></div>
+    </div>
+    <div class="callout c-warn">
+      <span class="lab">이 테이블이 말하는 것</span>
+      <p style="margin-bottom:0">위 기본 케이스는 매출이 10년 뒤 <strong>$48.7B(현재의 약 4배)</strong>까지 커지는, 결코 보수적이지 않은 시나리오입니다. 그런데도 10년 명시적 가치는 <strong>~$94B(주당 ~$250–280)</strong>로, 시장가 $750과 큰 차이가 납니다. 즉 시장은 ‘10년치 고성장’만으로는 설명되지 않으며, <strong>그 이상의 ‘기간(CAP)’ 또는 더 공격적인 마진·성장</strong>을 가격에 담고 있습니다. 이것이 다음 섹션(⑫)의 출발점입니다.</p>
+    </div>
+  </div>
+</section>
+
+<section id="wacc" class="dark">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">11b</span><h2 style="color:#fff">WACC 및 최종가치 가정</h2></div>
+    <div class="grid2">
+      <div class="card" style="background:var(--slate-2);border-color:#27484F">
+        <h4 style="margin-top:0;color:#fff">WACC(자본비용) 산출 — CAPM</h4>
+        <table class="tb" style="background:transparent;border:none">
+          <tbody style="color:#C5D6D9">
+            <tr><td style="color:#C5D6D9">무위험 이자율 (10년 국채, ’26.6.18)</td><td class="num" style="color:#fff">4.46%</td></tr>
+            <tr><td style="color:#C5D6D9">베타 (원시 ~1.85 → 블룸 조정)</td><td class="num" style="color:#fff">~1.57</td></tr>
+            <tr><td style="color:#C5D6D9">ERP (프로젝트 표준 / 다모다란 ’26)</td><td class="num" style="color:#fff">4.75% / 4.23%</td></tr>
+            <tr><td style="color:#C5D6D9">자기자본비용</td><td class="num" style="color:#fff">11.0~11.9%</td></tr>
+            <tr class="hl"><td>채택 WACC (순현금 → ≈자기자본비용)</td><td class="num">11.5%</td></tr>
+          </tbody>
+        </table>
+        <p class="small" style="color:#90AEB3;margin:6px 0 0">WDC는 순현금이라 부채 비중이 거의 0 → WACC ≈ 자기자본비용. 베타는 분사·급등으로 왜곡 가능해 ±로 민감도 검증(⑬).</p>
+      </div>
+      <div class="card" style="background:var(--slate-2);border-color:#27484F">
+        <h4 style="margin-top:0;color:#fff">최종가치(페이드 모델) 가정</h4>
+        <table class="tb" style="background:transparent;border:none">
+          <tbody style="color:#C5D6D9">
+            <tr><td style="color:#C5D6D9">장기 성장률 g (기대 인플레이션)</td><td class="num" style="color:#fff">2.5%</td></tr>
+            <tr><td style="color:#C5D6D9">(참고) 10년 기대 인플레이션</td><td class="num" style="color:#fff">~2.33%</td></tr>
+            <tr><td style="color:#C5D6D9">페이드 비율 f (정보기술 섹터)</td><td class="num" style="color:#fff">0.20</td></tr>
+            <tr><td style="color:#C5D6D9">(참고) 기술 하드웨어 산업군 f</td><td class="num" style="color:#fff">0.17</td></tr>
+            <tr><td style="color:#C5D6D9">말기 증분 ROIC (ROIIC)</td><td class="num" style="color:#fff">~18%</td></tr>
+          </tbody>
+        </table>
+        <p class="small" style="color:#90AEB3;margin:6px 0 0">페이드 비율은 ‘초과수익이 평균으로 회귀하는 속도’. 0.20은 ‘평균적 지속성’. 상품·사이클 산업이라 더 빠른 회귀(0.30)도 시나리오에서 검토.</p>
+      </div>
+    </div>
+    <p class="small faint">※ 흥미로운 사실: 후속 민감도(⑬)에서 보듯, <strong>페이드 비율을 0.10~0.30으로 바꿔도 내재 CAP는 거의 변하지 않습니다(~24.5~24.7년).</strong> 현재 밸류에이션이 ‘완만한 영구 초과수익’이 아니라 ‘장기간의 높은 성장’에 좌우된다는 뜻입니다 — 즉 최종가치보다 명시적 고성장 기간이 가치의 핵심입니다.</p>
+  </div>
+</section>
+<section id="cap">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">12</span><h2>시장 내재 CAP — 역산 결과</h2></div>
+    <p>‘적정가치’를 구하는 대신, <strong>현재 주가($750)를 정당화하려면 시장이 몇 년의 초과수익(가치창출) 기간을 가정해야 하는가</strong>를 역산했습니다. 운영 가정을 고정하고 명시적 가치창출 기간을 늘려가며 시장 EV($255B)와 일치하는 지점을 찾았습니다.</p>
+
+    <div class="card">
+      <div class="divlabel" style="margin-top:0">시장 내재 CAP 위치 (프레임워크 해석 구간 대비)</div>
+      <svg viewBox="0 0 700 130" role="img" aria-label="내재 CAP 스케일">
+        <!-- band scale 0-30 yrs mapped to x 40-660 -->
+        <defs></defs>
+        <!-- bands -->
+        <rect x="40"  y="44" width="103" height="24" fill="#E2F0E8"/>            <!-- 0-5 -->
+        <rect x="143" y="44" width="103" height="24" fill="#CFE8DA"/>            <!-- 5-10 -->
+        <rect x="246" y="44" width="103" height="24" fill="#E2F1F2"/>            <!-- 10-15 normal -->
+        <rect x="349" y="44" width="103" height="24" fill="#F6E8DA"/>            <!-- 15-20 -->
+        <rect x="452" y="44" width="208" height="24" fill="#F6E2E4"/>            <!-- 20-30 excessive -->
+        <!-- ticks -->
+        <g font-family="IBM Plex Mono" font-size="10" fill="#5C6470" text-anchor="middle">
+          <text x="40" y="84">0</text><text x="143" y="84">5</text><text x="246" y="84">10</text>
+          <text x="349" y="84">15</text><text x="452" y="84">20</text><text x="660" y="84">30년</text>
+        </g>
+        <!-- band labels -->
+        <g font-family="Inter" font-size="9.5" fill="#3C424D" text-anchor="middle">
+          <text x="194" y="38">비관(매수후보)</text>
+          <text x="297" y="38" fill="#0A444A">합리적</text>
+          <text x="400" y="38" fill="#7A3F10">약간 낙관</text>
+          <text x="556" y="38" fill="#7E2530">과도한 낙관(회피 고려)</text>
+        </g>
+        <!-- implied CAP range 16-25: x for 16=40+16*(620/30)=40+330.7=370.7 ; 25=40+516.7=556.7 -->
+        <rect x="371" y="40" width="186" height="32" fill="none" stroke="#0F2129" stroke-width="2" stroke-dasharray="4 3" rx="4"/>
+        <!-- markers -->
+        <g font-family="IBM Plex Mono" font-size="10" font-weight="600">
+          <line x1="371" y1="34" x2="371" y2="78" stroke="#B5641F" stroke-width="2"/>
+          <text x="371" y="104" fill="#7A3F10" text-anchor="middle">강세 ~16y</text>
+          <line x1="557" y1="34" x2="557" y2="78" stroke="#B23A48" stroke-width="2"/>
+          <text x="557" y="104" fill="#7E2530" text-anchor="middle">기본 ~25y</text>
+        </g>
+        <text x="40" y="122" font-family="Inter" font-size="10" fill="#5C6470">시장이 가격에 담은 ‘초정상 수익 지속’ 추정 구간 (운영 가정에 따라 16~25년)</text>
+      </svg>
+    </div>
+
+    <h3>시나리오별 내재 CAP</h3>
+    <p>각 행은 ‘내부적으로 일관된 가정 묶음’입니다. 가정이 공격적일수록(강세) 더 짧은 CAP로도 현재가가 설명되고, 보수적일수록 비현실적으로 긴 CAP가 필요합니다.</p>
+    <div class="tb-scroll">
+    <table class="tb">
+      <thead><tr><th>시나리오</th><th class="num">WACC</th><th>성장(시작→말)</th><th class="num">EBITA 마진</th><th class="num">내재 CAP</th><th>해석</th></tr></thead>
+      <tbody>
+        <tr><td><strong>강세</strong> (구조적 AI)</td><td class="num">11.0%</td><td>30%→5%</td><td class="num">39%</td><td class="num"><strong>~16.4년</strong></td><td>‘약간 낙관’ 상단 — 해자 근거가 매우 강해야 정당화</td></tr>
+        <tr class="hl"><td><strong>기본</strong> (정점 마진 지속)</td><td class="num">11.5%</td><td>25%→4%</td><td class="num">35%</td><td class="num"><strong>~24.6년</strong></td><td>‘과도한 낙관’ 구간 — 회피 고려 신호</td></tr>
+        <tr><td><strong>기본-보수</strong> (마진 정상화)</td><td class="num">11.5%</td><td>18%→4%</td><td class="num">28%</td><td class="num"><strong>~51년</strong></td><td>사실상 시장이 이 가정을 쓰고 있지 않음</td></tr>
+        <tr><td><strong>약세</strong> (사이클 회귀)</td><td class="num">12.5%</td><td>10%→2.5%</td><td class="num">22%</td><td class="num"><strong>도달 불가</strong></td><td>어떤 CAP로도 현재가 설명 불가</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="scrollnote">→ 좌우 스크롤 가능.</p>
+
+    <div class="callout c-risk">
+      <span class="lab">가장 결정적인 한 가지 발견</span>
+      <p style="margin-bottom:0">CAP를 ‘정상적’인 <strong>12년</strong>으로 고정하고 EBITA 마진을 거꾸로 풀면, <strong>마진 70%(HDD 역사상 최고치를 한참 상회)를 넣어도 EV는 ~$197B로 현재가($255B)에 미달</strong>합니다. 즉 <strong>‘정상적 가치창출 기간(약 12년)’으로는 어떤 마진을 가정해도 현재 주가를 정당화할 수 없습니다.</strong> 현재가는 본질적으로 ‘초정상 수익이 사이클 1~2회를 넘어 약 16~25년간 끊기지 않는다’를 요구합니다. <span class="conf conf-h">확신도: 높음 ~80%</span></p>
+    </div>
+
+    <div class="callout c-key">
+      <span class="lab">프레임워크 해석</span>
+      <p style="margin-bottom:0">기본 케이스 내재 CAP ~24.6년은 “<strong>20년 초과 = 과도한 낙관 = 회피 고려</strong>” 구간입니다. 가장 강세적인 ‘구조적 AI’ 가정에서도 ~16.4년으로 “15~20년 = 약간 낙관, 해자 근거가 강력해야”에 해당합니다. 어느 쪽이든 시장은 <strong>‘이번엔 다르다’ 시나리오를 거의 완전히 가격에 반영</strong>한 상태이며, ‘비관/합리적’ 구간(매수 후보)과는 거리가 멉니다.</p>
+    </div>
+  </div>
+</section>
+
+<section id="sens">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">13</span><h2>민감도 분석</h2></div>
+    <p>기본 운영 케이스를 고정하고 한 변수씩 흔들어 내재 CAP가 어떻게 변하는지 봤습니다. <strong>성장률이 압도적으로 지배적인 변수</strong>입니다.</p>
+
+    <div class="grid2">
+      <div class="card" style="margin:0">
+        <h4 style="margin-top:0">자본비용(WACC) ±</h4>
+        <table class="tb" style="margin:0"><tbody>
+          <tr><td>9.5%</td><td class="num">~19.5년</td></tr>
+          <tr><td>10.5%</td><td class="num">~22.0년</td></tr>
+          <tr class="hl"><td>11.5% (기본)</td><td class="num">~24.6년</td></tr>
+          <tr><td>12.5%</td><td class="num">~27.6년</td></tr>
+          <tr><td>13.5%</td><td class="num">~31.1년</td></tr>
+        </tbody></table>
+        <p class="small faint" style="margin:8px 0 0">가장 관대한 WACC(9.5%, ‘안정 테크기업’ 취급)에서도 내재 CAP ~20년.</p>
+      </div>
+      <div class="card" style="margin:0">
+        <h4 style="margin-top:0">매출 성장률(시작값) — 지배 변수</h4>
+        <table class="tb" style="margin:0"><tbody>
+          <tr><td>15% → 4%</td><td class="num">&gt;60년(도달 불가)</td></tr>
+          <tr><td>20% → 4%</td><td class="num">~34.8년</td></tr>
+          <tr class="hl"><td>25% → 4% (기본)</td><td class="num">~24.6년</td></tr>
+          <tr><td>30% → 4%</td><td class="num">~19.3년</td></tr>
+          <tr><td>35% → 4%</td><td class="num">~16.0년</td></tr>
+        </tbody></table>
+        <p class="small faint" style="margin:8px 0 0">시작 성장률 15%면 어떤 기간으로도 현재가 설명 불가. 밸류에이션은 ‘초고성장 지속’에 사활.</p>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:14px">
+      <div class="card" style="margin:0">
+        <h4 style="margin-top:0">EBITA 마진 (12년 고정, 필요 EV)</h4>
+        <table class="tb" style="margin:0"><tbody>
+          <tr><td>30%</td><td class="num">EV $83B</td></tr>
+          <tr><td>40%</td><td class="num">EV $111B</td></tr>
+          <tr><td>50%</td><td class="num">EV $140B</td></tr>
+          <tr><td>60%</td><td class="num">EV $169B</td></tr>
+          <tr><td>70%</td><td class="num">EV $197B</td></tr>
+        </tbody></table>
+        <p class="small faint" style="margin:8px 0 0">목표 $255B. 12년 기간으론 마진 70%로도 미달 → 기간이 핵심.</p>
+      </div>
+      <div class="card" style="margin:0">
+        <h4 style="margin-top:0">페이드 비율 f (최종가치)</h4>
+        <table class="tb" style="margin:0"><tbody>
+          <tr><td>0.10 (강한 해자)</td><td class="num">~24.5년</td></tr>
+          <tr class="hl"><td>0.20 (섹터 평균)</td><td class="num">~24.6년</td></tr>
+          <tr><td>0.30 (빠른 회귀)</td><td class="num">~24.7년</td></tr>
+        </tbody></table>
+        <p class="small faint" style="margin:8px 0 0"><strong>거의 무영향</strong> — 가치가 ‘완만한 영구 초과수익’이 아니라 ‘장기 고성장’에 의존함을 재확인.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="scenario" class="dark">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">14</span><h2 style="color:#fff">시나리오 분석 — 강세 / 기본 / 약세</h2></div>
+    <div class="grid3">
+      <div class="card" style="margin:0;background:var(--slate-2);border-color:#27484F;border-top:3px solid var(--green)">
+        <div class="mono small" style="color:#6FD49B">강세 (BULL)</div>
+        <h4 style="margin:4px 0 8px;color:#fff">‘구조적 AI’가 사이클을 죽였다</h4>
+        <ul class="tight small" style="color:#C5D6D9">
+          <li>EB +30% CAGR, 가격 보합(과점 규율 유지)</li>
+          <li>WDC 매출 FY30 ~$54B (+43% CAGR)</li>
+          <li>마진 39% 유지, HAMR 따라잡기 성공</li>
+          <li>내재 CAP ~16년이 ‘현실’이 됨</li>
+        </ul>
+        <p class="small" style="color:#90AEB3;margin:6px 0 0">→ 현재가가 정당화되려면 이 시나리오 + 16년 지속이 필요. 가능하나 입증 부담 큼.</p>
+      </div>
+      <div class="card" style="margin:0;background:var(--slate-2);border-color:#27484F;border-top:3px solid var(--teal)">
+        <div class="mono small" style="color:#5FB4BC">기본 (BASE)</div>
+        <h4 style="margin:4px 0 8px;color:#fff">강한 성장, 점진적 정상화</h4>
+        <ul class="tight small" style="color:#C5D6D9">
+          <li>EB +23% CAGR, 가격 완만한 하락</li>
+          <li>WDC 매출 FY30 ~$30B (+23% CAGR)</li>
+          <li>마진 35%→점차 하향</li>
+          <li>내재 CAP ~25년이 필요(=과도)</li>
+        </ul>
+        <p class="small" style="color:#90AEB3;margin:6px 0 0">→ 펀더멘털은 견조하나, 이 가정으론 현재가가 ‘과도한 낙관’ 구간. 주당 ~$250–280 수준이 ‘10년 명시가치’.</p>
+      </div>
+      <div class="card" style="margin:0;background:var(--slate-2);border-color:#27484F;border-top:3px solid var(--red)">
+        <div class="mono small" style="color:#E68A95">약세 (BEAR)</div>
+        <h4 style="margin:4px 0 8px;color:#fff">사이클 반전 — 역사 반복</h4>
+        <ul class="tight small" style="color:#C5D6D9">
+          <li>AI 자본지출 둔화 → 공급과잉</li>
+          <li>가격 역사적 침식 재개 → 매출 <strong>감소(-5%)</strong></li>
+          <li>마진 22%로 회귀(2023년 수준)</li>
+          <li>어떤 CAP로도 현재가 설명 불가</li>
+        </ul>
+        <p class="small" style="color:#90AEB3;margin:6px 0 0">→ FY22→23 사례(EPS $8.22→$0.07)가 재현되면 하방 위험 큼. 발생 확률은 낮아 보이나 0은 아님.</p>
+      </div>
+    </div>
+    <div class="callout c-key" style="background:#13343C;border-color:#27484F;color:#DCEBED">
+      <span class="lab" style="color:#5FB4BC">세 시나리오를 관통하는 한 문장</span>
+      <p style="margin-bottom:0;color:#DCEBED">현재 주가는 <strong style="color:#fff">강세 시나리오가 ‘기본값’으로 가격에 박혀 있는</strong> 상태입니다. 강세가 실현돼도 추가 상승 여지는 제한적이고(이미 반영), 기본/약세로 흐르면 하방이 큽니다 — 전형적인 ‘비대칭(상방 작고 하방 큰)’ 위험 구조. 단, AI 빌드아웃이 시장 기대를 또 한 번 초과하면 이 비대칭은 깨질 수 있습니다.</p>
+    </div>
+  </div>
+</section>
+
+<section id="risk">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">15</span><h2>주요 리스크 및 분기별 체크포인트</h2></div>
+    <h3>핵심 리스크 (영향도·관찰가능성 순)</h3>
+    <div class="tb-scroll">
+    <table class="tb">
+      <thead><tr><th>리스크</th><th>메커니즘</th><th class="num">관찰 신호</th></tr></thead>
+      <tbody>
+        <tr><td><strong>사이클 반전</strong></td><td>하이퍼스케일러 자본지출 둔화 → 주문 감소·공급과잉 → 가격·마진 붕괴</td><td class="num">분기 매출총이익률, 니어라인 ASP, 고객 가이던스</td></tr>
+        <tr><td><strong>가격($/TB) 하락</strong></td><td>공급부족 해소 시 역사적 단가 침식 재개 → 매출 정체/감소</td><td class="num">$/TB 추세, 산업 가동률, 신규 증설 발표</td></tr>
+        <tr><td><strong>HAMR 경쟁 열위</strong></td><td>Seagate의 밀도 우위 확대 → WDC 점유율·믹스 악화</td><td class="num">WDC HAMR 인증 진척, 40TB+ 양산 일정</td></tr>
+        <tr><td><strong>고객 집중</strong></td><td>매출 89% 클라우드 → 1개 대형 고객 둔화로 큰 충격</td><td class="num">상위 5고객 비중, LTA 갱신 동향</td></tr>
+        <tr><td><strong>SSD/낸드 잠식</strong></td><td>낸드 과잉 → SSD 가격 급락 → 중·저용량 HDD 대체</td><td class="num">낸드 현물가, SSD $/TB 격차</td></tr>
+        <tr><td><strong>AI SW 효율화</strong></td><td>데이터/연산 효율 기술이 하드웨어 수요 증가율 둔화</td><td class="num">하이퍼스케일러 스토리지 예산 가이던스</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="scrollnote">→ 좌우 스크롤 가능.</p>
+
+    <div class="grid2">
+      <div class="card" style="margin:0">
+        <h4 style="margin-top:0">매 분기 확인</h4>
+        <ul class="tight" style="margin:0">
+          <li>매출총이익률 추세 (50%+ 유지 vs 하락 전환?)</li>
+          <li>니어라인 ASP / 엑사바이트 출하 증가율</li>
+          <li>클라우드 매출 비중·상위 고객 동향</li>
+          <li>HAMR/UltraSMR 인증·양산 진척</li>
+          <li>자사주 매입 속도·잉여현금흐름 마진</li>
+        </ul>
+      </div>
+      <div class="card" style="margin:0">
+        <h4 style="margin-top:0">연간 재검토 & 매도 고려 신호</h4>
+        <ul class="tight" style="margin:0">
+          <li>내재 CAP 재계산 (진입 시점 대비 50%+ 상승 시 경계)</li>
+          <li>ROIC 2년 연속 하락</li>
+          <li>생애주기 ‘성숙 → 정리’ 전환 징후</li>
+          <li>매출총이익률의 추세적 하락 시작(사이클 정점 통과)</li>
+          <li>핵심 가정(과점 규율·AI 수요·가격) 붕괴</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout c-warn">
+      <span class="lab">다음 일정</span>
+      <p style="margin-bottom:0">차기 실적(Q4 FY26·연간)은 <strong>2026년 7월 말~8월 초</strong> 예정. 확인 포인트: ① Q4 매출이 가이던스($3.65B)·마진(51~52%)을 충족·초과하는가, ② FY27 가이던스에서 성장률·마진 지속성이 확인되는가, ③ 가격 환경에 대한 경영진 코멘트(공급부족 지속 vs 완화). 이 세 가지가 ‘강세 시나리오 지속 여부’의 1차 분기점입니다.</p>
+    </div>
+  </div>
+</section>
+
+<section id="synthesis">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">16</span><h2>종합 판단 자료</h2></div>
+    <h3>시장은 무엇을 가정하고 있나</h3>
+    <p>현재 $750의 주가는 다음 다섯 가지가 <strong>동시에, 약 16~25년간</strong> 성립한다고 가정합니다. 이것이 강세론자가 입증해야 할 부담이자, 약세론자가 공격할 지점입니다.</p>
+    <div class="card">
+      <ol style="margin:0;padding-left:22px">
+        <li style="margin:6px 0"><strong>AI 데이터 수요</strong>가 ‘버블’이 아니라 ‘구조적’이고, 향후 ~2십 년 성장 지속</li>
+        <li style="margin:6px 0"><strong>HDD 2社 과점 규율</strong>이 유지되어 증설 경쟁·가격 전쟁이 없음</li>
+        <li style="margin:6px 0"><strong>낸드/SSD</strong>가 TB당 가격에서 HDD를 따라잡지 못해 대용량 영역 방어</li>
+        <li style="margin:6px 0"><strong>WDC</strong>가 Seagate에 밀도(HAMR) 경쟁에서 치명적으로 밀리지 않음</li>
+        <li style="margin:6px 0"><strong>이익률</strong>이 사이클 정점 부근(매출총이익률 50%+)에서 장기간 유지</li>
+      </ol>
+    </div>
+
+    <h3>내재 CAP의 섹터 평균 대비 합리성</h3>
+    <p>정보기술 섹터의 평균적 지속성(페이드 0.20)과 ‘합리적 범위(10~15년)’를 기준으로 보면, WDC의 내재 CAP(~16~25년)는 <strong>섹터 평균을 상회</strong>합니다. 슈퍼스타 소프트웨어 기업(높은 전환비용·네트워크 효과)이라면 장기 CAP가 정당화될 수 있으나, <strong>WDC는 상품성(commodity)이 강한 하드웨어 사이클 기업</strong>이라는 점에서 동일한 장기 CAP를 부여하기엔 근거가 약합니다. 과점 해자는 ‘하방 방어’엔 유효하나 ‘정점 이익률의 20년 지속’까진 보장하지 못합니다.</p>
+
+    <div class="callout c-key">
+      <span class="lab">최종 종합 (정보 제공 · 권유 아님)</span>
+      <p style="margin-bottom:10px"><strong>펀더멘털:</strong> WDC는 AI 데이터 폭증의 실질적 수혜 기업이며, 과점 구조·순현금·높은 FCF 마진 등 질적 강점이 분명합니다. 사용자의 ‘AI → HDD TAM 확대’ 방향성도 옳습니다.</p>
+      <p style="margin-bottom:10px"><strong>밸류에이션:</strong> 그러나 현재 주가는 이 모든 강점을 이미 ‘강세 시나리오 기본값’으로 반영했고, 내재 CAP가 ‘과도한 낙관’ 구간에 있습니다. ‘정상적 기간(12년)’으론 어떤 마진으로도 정당화되지 않는다는 점이 핵심입니다.</p>
+      <p style="margin-bottom:0"><strong>위험 구조:</strong> 상방은 제한적이고 하방(사이클 반전 시)은 큰 비대칭 구조로 보입니다. <span class="conf conf-m">전체 판단 확신도: 중간 ~65%</span> — AI 빌드아웃의 지속성·가격 규율이라는 두 핵심 변수의 불확실성이 크기 때문입니다.</p>
+    </div>
+  </div>
+</section>
+
+<section id="limits">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">∴</span><h2>한계와 가정 (Limitations &amp; Assumptions)</h2></div>
+    <div class="grid2">
+      <div class="card" style="margin:0">
+        <h4 style="margin-top:0">이 결론이 의존하는 핵심 가정</h4>
+        <ul class="tight" style="margin:0">
+          <li>WACC 11.5%(베타 ~1.57). 베타는 분사·급등으로 왜곡 가능 — 9.5~13.5% 범위로 검증.</li>
+          <li>FY26 매출 ~$12.8B, 비GAAP 영업이익률 ~36%(SBC 비용 처리 시 ~35%).</li>
+          <li>순현금 ~$1B, 주식 수 ~342M(기본)/~385M(희석) — 출처별 편차 존재.</li>
+          <li>장기성장 2.5%, 페이드 0.20(정보기술).</li>
+        </ul>
+      </div>
+      <div class="card" style="margin:0">
+        <h4 style="margin-top:0">확신도 낮은 지점</h4>
+        <ul class="tight" style="margin:0">
+          <li>TAM의 $/TB 경로 — 강세/약세를 가르는 최대 불확실성.</li>
+          <li>‘AI 수요=구조적인가, 사이클인가’ — 본 분석의 미해결 핵심 쟁점.</li>
+          <li>ROIC ~37%는 일회성 Sandisk 이익으로 일부 왜곡 가능(정상 ROIC는 더 낮음).</li>
+          <li>‘HDD 랙’ 메커니즘 반증은 현재 기술 구조 기준 — 미래 아키텍처 변화 시 재평가 필요.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout c-warn">
+      <span class="lab">이 결론이 틀릴 수 있는 조건 & 다음 검증 단계</span>
+      <p style="margin-bottom:6px"><strong>틀릴 수 있는 조건:</strong> ① AI 빌드아웃이 또 한 번 컨센서스를 크게 초과해 EB·가격이 동반 상승 지속 → 강세 CAP가 ‘과도’가 아니라 ‘적정’이 됨. ② 과점 규율이 예상보다 훨씬 견고해 마진이 구조적으로 재평가됨. ③ 베타·WACC가 시장의 위험 인식을 과대평가(실제로 더 안정적).</p>
+      <p style="margin-bottom:0"><strong>다음 검증:</strong> Q4 FY26 실적의 마진 지속성·FY27 가이던스 / $/TB와 산업 가동률 추세 / HAMR 인증 진척 / 하이퍼스케일러 자본지출 사이클 / 정상화된 ROIC(일회성 제거 후) 재계산.</p>
+    </div>
+    <p class="small faint">방법론 메모: 본 분석은 ‘적정가치 산출’이 아니라 ‘현재가에 내재된 시장 기대(CAP)를 역산’하는 접근입니다. 정밀값보다 방향성과 논리적 일관성을 우선했으며, 모든 추정에는 오차가 있습니다.</p>
+  </div>
+</section>
+
+<section id="sources">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">출처</span><h2>데이터 출처 및 기준 시점</h2></div>
+    <p class="small faint">기준 시점: 2026년 6월 20일. 여러 출처가 상충하는 경우 ‘대략값’으로 표기하고 보수적으로 반영했습니다.</p>
+    <div class="tb-scroll">
+    <table class="tb">
+      <thead><tr><th>항목</th><th>값 / 내용</th><th>출처 (기준일)</th></tr></thead>
+      <tbody>
+        <tr><td>WDC 주가·시총·베타</td><td>~$750, ~$256B, 베타 ~1.83~1.92</td><td>Yahoo/StockInvest/TradingView/StockAnalysis (’26.6.18)</td></tr>
+        <tr><td>분기 실적(Q1~Q3 FY26)</td><td>매출 2.82/3.02/3.34B, 비GAAP EPS 1.78/2.13/2.72</td><td>WDC 8-K/보도자료·실적발표 (’25.10~’26.4)</td></tr>
+        <tr><td>Q4 FY26 가이던스</td><td>매출 ~$3.65B, 마진 51~52%, EPS $3.25</td><td>WDC 보도자료 (’26.4.30)</td></tr>
+        <tr><td>FY25 연간</td><td>매출 $9.52B(+51%), 영업이익 $2.1B, 순익 $1.9B</td><td>WDC 8-K (’25.7.30), Blocks &amp; Files</td></tr>
+        <tr><td>사이클 역사</td><td>영업이익 FY23 −$379M→FY25 +$2.1B; FY22 EPS $8.22→FY23 ~$0.07</td><td>TIKR, Motley Fool (’23·’26)</td></tr>
+        <tr><td>설비투자·FCF</td><td>Q3 capex $145M, FCF $978M(마진 29%)</td><td>WDC 실적·The Globe and Mail (’26.4)</td></tr>
+        <tr><td>10년 국채 수익률</td><td>4.46%</td><td>FRED/CNBC/TradingEconomics (’26.6.18)</td></tr>
+        <tr><td>ERP (다모다란)</td><td>내재 4.23% (’26.1.1) / 프로젝트 표준 4.75%</td><td>Damodaran 2026 ERP, BVResources</td></tr>
+        <tr><td>10년 기대 인플레이션</td><td>~2.33%</td><td>FRED T10YIE (’26.4)</td></tr>
+        <tr><td>HDD 산업·엑사바이트</td><td>EB 2022 ~1,500→2028 ~9,000; WDC EB +23% CAGR; 듀오폴리</td><td>Coughlin Associates, Mordor, WDC, Blocks &amp; Files</td></tr>
+        <tr><td>$/TB·SSD 비교</td><td>HDD ~$15~17/TB, SSD 대비 2.5~6배 저렴; 낸드 ~405EB 부족(’29)</td><td>Mordor, Seagate, Horizon Tech (’25~’26)</td></tr>
+        <tr><td>NVIDIA Vera Rubin 랙</td><td>5종 랙(NVL72·Vera CPU·Groq LPX·BlueField-4 STX 스토리지·Spectrum-6 SPX)</td><td>NVIDIA GTC 보도자료 via Barchart (’26.3.16)</td></tr>
+        <tr><td>CPO/광 스케일아웃</td><td>Quantum-X ’26초, Spectrum-X ’26하; 스케일아웃 우선=검증 단계</td><td>NVIDIA, ServeTheHome, SemiAnalysis (’25~’26)</td></tr>
+        <tr><td>AI 스토리지 위계</td><td>HDD=오브젝트/데이터레이크/아카이브(Dell ObjectScale 등 인증 파트너)</td><td>NVIDIA AI Data Platform, Dell, Blocks &amp; Files (’25~’26)</td></tr>
+        <tr><td>Seagate 비교</td><td>HAMR(Mozaic) 선도, 레버리지 높음, P/E ~100×</td><td>Globe and Mail, Barchart, Tickeron (’25~’26)</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="scrollnote">→ 좌우 스크롤 가능. DCF·TAM 수치는 위 입력값에 기반한 자체 모델 산출이며, 방향성 제시가 목적입니다.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0 0 6px;color:#C5D6D9"><strong style="color:#fff">Western Digital (WDC)</strong> · CAP 프레임워크 기업·산업 분석 · 기준일 2026-06-20</p>
+    <p style="margin:0;color:#7FA6AC">본 문서는 정보 제공 목적이며, 특정 종목의 매수·매도 권유가 아닙니다. 모든 추정에는 불확실성이 있으며, 투자 판단과 책임은 이용자 본인에게 있습니다.</p>
+  </div>
+</footer>
+</body>
+</html>
