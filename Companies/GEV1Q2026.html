@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GE Vernova (GEV) — 경쟁우위기간(CAP) 기반 장기 분석</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --paper:#F7F4EF; --ink:#1B2127; --ink-soft:#46525C; --ink-faint:#6C7780;
+  --slate:#1E2B33; --slate-2:#27373F; --slate-3:#33454D;
+  --on-slate:#ECF2F1; --on-slate-soft:#A7BABF;
+  --copper:#B5673A; --copper-deep:#8C4E2A; --copper-tint:#F3E3D8;
+  --teal:#1F6F6B; --teal-soft:#2E8C86; --teal-tint:#DCEEEC;
+  --clay:#A8442F; --clay-tint:#F3DED8;
+  --gold:#B98E33; --gold-tint:#F1E7CC;
+  --card:#FFFFFF; --card-border:#E6DDD2; --card-2:#FBF6EF;
+  --shadow:0 1px 2px rgba(27,33,39,.05),0 6px 22px rgba(27,33,39,.06);
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --sans:"Pretendard","Pretendard Variable",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); line-height:1.72; font-size:17px;
+  -webkit-font-smoothing:antialiased; letter-spacing:-.01em;
+}
+.wrap{max-width:1060px; margin:0 auto; padding:0 22px}
+h1,h2,h3,h4{line-height:1.25; letter-spacing:-.02em; color:var(--ink); font-weight:800}
+p{margin:.7em 0}
+a{color:var(--copper-deep)}
+.num{font-family:var(--mono); font-feature-settings:"tnum" 1; letter-spacing:-.02em}
+.tag{font-family:var(--mono); font-size:.72rem; letter-spacing:.04em; text-transform:uppercase}
+
+/* ---------- NAV (wraps, never clips) ---------- */
+.nav{position:sticky; top:0; z-index:50; background:rgba(30,43,51,.97);
+  backdrop-filter:blur(8px); border-bottom:1px solid #11181d}
+.nav-in{max-width:1060px; margin:0 auto; padding:9px 14px;
+  display:flex; flex-wrap:wrap; gap:5px 6px; align-items:center; min-height:auto}
+.nav .brand{color:var(--on-slate); font-weight:800; font-size:.86rem;
+  margin-right:8px; white-space:nowrap}
+.nav .brand b{color:var(--copper)}
+.nav a{color:var(--on-slate-soft); text-decoration:none; font-size:.76rem;
+  padding:4px 9px; border-radius:999px; white-space:nowrap; border:1px solid transparent;
+  transition:.15s}
+.nav a:hover{color:#fff; background:var(--slate-3); border-color:#41545c}
+
+/* ---------- HERO ---------- */
+.hero{background:
+   radial-gradient(120% 120% at 88% -10%, #2c4148 0%, rgba(44,65,72,0) 55%),
+   linear-gradient(180deg,#1c2930 0%, #1f2d35 100%);
+  color:var(--on-slate); padding:54px 0 42px; border-bottom:3px solid var(--copper)}
+.hero .eyebrow{color:var(--copper); font-family:var(--mono); font-size:.78rem;
+  letter-spacing:.14em; text-transform:uppercase; margin-bottom:14px}
+.hero h1{color:#fff; font-size:clamp(2rem,5vw,3.15rem); margin:0 0 6px}
+.hero .ticker{color:var(--on-slate-soft); font-family:var(--mono); font-size:.95rem; margin-bottom:18px}
+.hero .lede{color:var(--on-slate); font-size:1.12rem; max-width:62ch; margin:0 0 26px}
+.hero .lede b{color:#fff}
+.statgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:6px}
+.statgrid .s{background:rgba(255,255,255,.05); border:1px solid #3a4d55;
+  border-radius:12px; padding:13px 14px; color:var(--on-slate)}
+.statgrid .s .k{font-family:var(--mono); font-size:.66rem; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--on-slate-soft); margin-bottom:5px}
+.statgrid .s .v{font-family:var(--mono); font-size:1.34rem; font-weight:700; color:#fff}
+.statgrid .s .d{font-size:.74rem; color:var(--on-slate-soft); margin-top:2px}
+
+/* ---------- SECTIONS ---------- */
+section{padding:50px 0}
+.sec-no{font-family:var(--mono); color:var(--copper); font-weight:700; font-size:.82rem;
+  letter-spacing:.08em; display:block; margin-bottom:6px}
+section > .wrap > h2{font-size:clamp(1.5rem,3.2vw,2.05rem); margin:0 0 6px}
+.sub{color:var(--ink-soft); font-size:1.02rem; max-width:70ch; margin:.2em 0 1.4em}
+.band{background:var(--card-2); border-top:1px solid var(--card-border); border-bottom:1px solid var(--card-border)}
+.dark{background:linear-gradient(180deg,#1e2b33,#22313a); color:var(--on-slate)}
+.dark h2,.dark h3{color:#fff}
+.dark .sec-no{color:var(--copper)}
+.dark .sub{color:var(--on-slate-soft)}
+
+/* ---------- CARDS (self-contained colors) ---------- */
+.card{background:var(--card); color:var(--ink); border:1px solid var(--card-border);
+  border-radius:14px; padding:20px 22px; box-shadow:var(--shadow)}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+.grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+.callout{background:var(--copper-tint); color:#3a2113; border:1px solid #e3c3ad;
+  border-left:4px solid var(--copper); border-radius:10px; padding:15px 18px; margin:16px 0}
+.callout.teal{background:var(--teal-tint); color:#10302e; border-color:#bcdcd8; border-left-color:var(--teal)}
+.callout.gold{background:var(--gold-tint); color:#3d3009; border-color:#e2d09a; border-left-color:var(--gold)}
+.callout.clay{background:var(--clay-tint); color:#3f1710; border-color:#e7c4ba; border-left-color:var(--clay)}
+.callout b{color:inherit}
+.callout .lab{font-family:var(--mono); font-size:.7rem; letter-spacing:.06em;
+  text-transform:uppercase; font-weight:700; opacity:.8; display:block; margin-bottom:3px}
+
+/* confidence chips */
+.conf{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono);
+  font-size:.72rem; font-weight:600; padding:2px 9px; border-radius:999px;
+  background:#eef3f3; color:#1b4f4c; border:1px solid #cfe2e0; white-space:nowrap}
+.conf.mid{background:#f6ecdf; color:#7a4421; border-color:#e6cdb4}
+.conf.low{background:#f4e0da; color:#7e2e1f; border-color:#e7c2b8}
+.conf .dot{width:7px; height:7px; border-radius:50%; background:currentColor}
+
+/* lists */
+ul.clean{list-style:none; padding:0; margin:.6em 0}
+ul.clean li{position:relative; padding:6px 0 6px 22px; border-bottom:1px solid #efe8de}
+ul.clean li:last-child{border-bottom:none}
+ul.clean li::before{content:""; position:absolute; left:2px; top:15px; width:8px; height:8px;
+  border-radius:2px; background:var(--copper)}
+ul.clean.teal li::before{background:var(--teal)}
+
+/* tables */
+.tbl-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;
+  border:1px solid var(--card-border); border-radius:14px; background:var(--card);
+  -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);
+          mask-image:linear-gradient(90deg,#000 96%,transparent)}
+table{border-collapse:collapse; width:100%; font-size:.9rem}
+.tbl-scroll table{-webkit-mask-image:none; mask-image:none}
+th,td{padding:10px 12px; text-align:right; border-bottom:1px solid #eee6db; white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{background:var(--slate); color:var(--on-slate); font-weight:700; font-size:.78rem;
+  letter-spacing:.02em; position:sticky; top:0}
+tbody tr:nth-child(even){background:#fbf7f1}
+tbody td{font-family:var(--mono); color:var(--ink)}
+tbody td:first-child{font-family:var(--sans); font-weight:600}
+tr.hl td{background:var(--copper-tint); color:#3a2113; font-weight:700}
+tr.hl td:first-child{color:#3a2113}
+.pos{color:var(--teal)} .neg{color:var(--clay)}
+
+/* SWOT */
+.swot{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.swot .q{border-radius:14px; padding:18px 20px; border:1px solid}
+.swot .S{background:var(--teal-tint); color:#10302e; border-color:#bcdcd8}
+.swot .W{background:var(--clay-tint); color:#3f1710; border-color:#e7c4ba}
+.swot .O{background:#e6f0ef; color:#163a37; border-color:#c4ddda}
+.swot .T{background:var(--gold-tint); color:#3d3009; border-color:#e2d09a}
+.swot .q h4{margin:0 0 8px; font-size:1.05rem; display:flex; align-items:center; gap:8px; color:inherit}
+.swot .q .ic{font-family:var(--mono); font-size:.74rem; font-weight:800; padding:3px 7px;
+  border-radius:6px; background:rgba(0,0,0,.07); color:inherit}
+.swot .q ul{margin:0; padding-left:18px}
+.swot .q li{margin:5px 0; font-size:.92rem}
+
+/* figure caption */
+figure{margin:18px 0}
+figcaption{font-size:.8rem; color:var(--ink-faint); margin-top:8px; font-family:var(--mono)}
+.svgbox{background:var(--card); border:1px solid var(--card-border); border-radius:14px;
+  padding:18px; box-shadow:var(--shadow)}
+.svgbox.onslate{background:#1a262d; border-color:#33454d}
+svg{display:block; width:100%; height:auto}
+
+/* mini metric row */
+.metarow{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:14px 0}
+.metarow .m{background:var(--card); border:1px solid var(--card-border); border-radius:12px;
+  padding:13px 15px; color:var(--ink)}
+.metarow .m .k{font-family:var(--mono); font-size:.64rem; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--ink-faint); margin-bottom:4px}
+.metarow .m .v{font-family:var(--mono); font-size:1.28rem; font-weight:700; color:var(--ink)}
+.metarow .m .v.c{color:var(--copper-deep)} .metarow .m .v.t{color:var(--teal)} .metarow .m .v.r{color:var(--clay)}
+.metarow .m .d{font-size:.74rem; color:var(--ink-soft); margin-top:2px}
+
+.kv{display:flex; justify-content:space-between; gap:14px; padding:7px 0; border-bottom:1px solid #efe8de}
+.kv:last-child{border-bottom:none}
+.kv .k{color:var(--ink-soft)} .kv .v{font-family:var(--mono); font-weight:600}
+
+footer{background:#161f25; color:var(--on-slate-soft); padding:34px 0 40px; font-size:.86rem}
+footer b{color:var(--on-slate)}
+footer a{color:#cf9b76}
+
+@media(max-width:780px){
+  body{font-size:16px}
+  .statgrid,.grid4,.metarow{grid-template-columns:1fr 1fr}
+  .grid2,.grid3,.swot{grid-template-columns:1fr}
+  .hero{padding:40px 0 34px}
+}
+@media(max-width:460px){
+  .statgrid,.grid4,.metarow{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav-in">
+    <span class="brand"><b>GEV</b> · CAP 분석</span>
+    <a href="#conclusion">핵심결론</a>
+    <a href="#overview">기업개요</a>
+    <a href="#revenue">수익구조</a>
+    <a href="#tech">제품·기술</a>
+    <a href="#lifecycle">생애주기</a>
+    <a href="#industry">산업분석</a>
+    <a href="#moat">해자·5Forces</a>
+    <a href="#swot">SWOT</a>
+    <a href="#peers">피어비교</a>
+    <a href="#dcf">DCF</a>
+    <a href="#cap">내재 CAP</a>
+    <a href="#sensitivity">민감도</a>
+    <a href="#scenario">시나리오</a>
+    <a href="#risk">리스크</a>
+    <a href="#synthesis">종합판단</a>
+    <a href="#limits">한계·가정</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">경쟁우위기간(CAP) 역산 · 장기 투자 분석 · 기준일 2026-06-22</div>
+    <h1>GE Vernova</h1>
+    <div class="ticker">NYSE: GEV &nbsp;·&nbsp; 전력·전기화(Electrification) 인프라 &nbsp;·&nbsp; 2024년 GE에서 분사</div>
+    <p class="lede">전 세계 전력의 약 4분의 1을 생산하는 발전 설비를 만드는 회사입니다. AI 데이터센터발 전력 수요 폭증의 핵심 수혜주로 1년 새 주가가 약 3배 올랐지만, <b>현재 주가에는 20년을 훨씬 넘는 "초장기 초과수익"이 이미 반영</b>되어 있습니다 — 즉 안전마진이 거의 없는 구간입니다.</p>
+    <div class="statgrid">
+      <div class="s"><div class="k">현재가 (6/22 종가)</div><div class="v">$1,128</div><div class="d">52주 +127%</div></div>
+      <div class="s"><div class="k">시가총액</div><div class="v">~$300B</div><div class="d">EV ~$292B</div></div>
+      <div class="s"><div class="k">내재 CAP (도출)</div><div class="v">20년+</div><div class="d">"과도한 낙관" 구간</div></div>
+      <div class="s"><div class="k">애널리스트 목표가</div><div class="v">$1,212</div><div class="d">+7.5% (38인 평균)</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 1. 핵심 결론 ============ -->
+<section id="conclusion">
+  <div class="wrap">
+    <span class="sec-no">01 — 핵심 결론</span>
+    <h2>한 문장 결론</h2>
+    <p class="sub">이 보고서의 방법은 "이 주식의 적정 가격은 얼마인가"를 맞히는 것이 아니라, <b>"지금 주가가 성립하려면 시장은 무엇을 믿고 있어야 하는가"</b>를 거꾸로 풀어보는 것입니다. 그 믿음이 합리적인지 판단하는 재료를 제공합니다.</p>
+
+    <div class="callout">
+      <span class="lab">결론 (요지)</span>
+      GE Vernova는 가스터빈 과점이라는 <b>진짜 해자</b>와 AI·전력화라는 <b>구조적 순풍</b>을 동시에 갖춘 드문 기업입니다. 다만 현재 주가($1,128)는 합리적·낙관적 가정을 모두 쌓아 올린 강세 시나리오(약 $733)마저 넘어섭니다. 표준 가정으로 역산한 <b>시장 내재 CAP는 20년을 초과</b>하며, 이는 프레임워크 척도에서 "과도한 낙관"에 해당합니다. <span class="conf">신뢰도 높음 · ~80%<span class="dot"></span></span>
+    </div>
+
+    <!-- ===== SIGNATURE: CAP GAUGE ===== -->
+    <figure>
+      <div class="svgbox onslate">
+        <svg viewBox="0 0 920 250" role="img" aria-label="시장 내재 CAP 게이지">
+          <defs>
+            <linearGradient id="zoneGrad" x1="0" x2="1">
+              <stop offset="0" stop-color="#2E8C86"/>
+              <stop offset="0.42" stop-color="#B98E33"/>
+              <stop offset="0.72" stop-color="#B5673A"/>
+              <stop offset="1" stop-color="#A8442F"/>
+            </linearGradient>
+          </defs>
+          <text x="20" y="34" fill="#ECF2F1" font-size="18" font-weight="800" font-family="Pretendard,sans-serif">시장이 GEV에 매기고 있는 "초과수익 지속 연수" (내재 CAP)</text>
+          <text x="20" y="56" fill="#A7BABF" font-size="12.5" font-family="Pretendard,sans-serif">짧을수록 비관(주가 매력적), 길수록 낙관(주가 부담). 막대 위 눈금은 예측연수입니다.</text>
+
+          <!-- track -->
+          <rect x="20" y="96" width="820" height="26" rx="13" fill="url(#zoneGrad)" opacity="0.92"/>
+          <!-- zone ticks -->
+          <g font-family="JetBrains Mono,monospace" font-size="11" fill="#ECF2F1" text-anchor="middle">
+            <line x1="184" y1="92" x2="184" y2="126" stroke="#0e171c" stroke-width="1.5"/>
+            <line x1="348" y1="92" x2="348" y2="126" stroke="#0e171c" stroke-width="1.5"/>
+            <line x1="512" y1="92" x2="512" y2="126" stroke="#0e171c" stroke-width="1.5"/>
+            <line x1="676" y1="92" x2="676" y2="126" stroke="#0e171c" stroke-width="1.5"/>
+            <text x="102" y="143">5년</text><text x="266" y="143">10년</text>
+            <text x="430" y="143">15년</text><text x="594" y="143">20년</text>
+            <text x="772" y="143">20년+</text>
+          </g>
+          <!-- zone labels -->
+          <g font-family="Pretendard,sans-serif" font-size="11.5" text-anchor="middle" fill="#0f1b1f" font-weight="700">
+            <text x="102" y="113">매우 비관</text>
+            <text x="266" y="113">약간 비관</text>
+            <text x="430" y="113">합리적</text>
+            <text x="594" y="113">약간 낙관</text>
+            <text x="772" y="113" fill="#fff">과도한 낙관</text>
+          </g>
+
+          <!-- markers -->
+          <g font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">
+            <!-- base ~ $409 -> around 8-9yr equivalent value -->
+            <line x1="300" y1="70" x2="300" y2="96" stroke="#ECF2F1" stroke-width="2"/>
+            <circle cx="300" cy="70" r="5" fill="#ECF2F1"/>
+            <text x="300" y="62" fill="#ECF2F1" text-anchor="middle">기본가치 $409</text>
+
+            <!-- bull ~ $733 -> ~18yr -->
+            <line x1="560" y1="70" x2="560" y2="96" stroke="#F1E7CC" stroke-width="2"/>
+            <circle cx="560" cy="70" r="5" fill="#F1E7CC"/>
+            <text x="560" y="62" fill="#F1E7CC" text-anchor="middle">강세가치 $733</text>
+
+            <!-- market price marker pushed beyond 20yr -->
+            <line x1="860" y1="78" x2="860" y2="160" stroke="#fff" stroke-width="2.5"/>
+            <polygon points="860,160 850,178 870,178" fill="#fff"/>
+            <rect x="742" y="186" width="158" height="46" rx="9" fill="#A8442F" stroke="#e7c4ba" stroke-width="1"/>
+            <text x="821" y="205" fill="#fff" text-anchor="middle" font-size="12.5" font-weight="800">현재 주가 $1,128</text>
+            <text x="821" y="222" fill="#f3ded8" text-anchor="middle" font-size="10.5">척도 밖 — 20년+ 영역</text>
+          </g>
+          <text x="20" y="232" fill="#7e9499" font-size="11" font-family="JetBrains Mono,monospace">기본·강세 가치는 본 보고서 DCF 결과를 CAP 척도에 사상(寫像)한 위치입니다.</text>
+        </svg>
+      </div>
+      <figcaption>그림 1 · 내재 CAP 게이지 — 현재 주가는 본 분석의 강세 시나리오 가치($733)마저 넘어, 척도 우측 끝(20년+)을 벗어납니다.</figcaption>
+    </figure>
+
+    <div class="grid3" style="margin-top:18px">
+      <div class="card"><div class="tag" style="color:var(--teal)">기본 시나리오</div><div class="num" style="font-size:1.7rem;font-weight:700;color:var(--teal)">$409</div><p style="margin:.3em 0 0;font-size:.9rem;color:var(--ink-soft)">WACC 10%, 10년 예측+페이드. 표준 가정 중심값.</p></div>
+      <div class="card"><div class="tag" style="color:var(--copper-deep)">강세 시나리오</div><div class="num" style="font-size:1.7rem;font-weight:700;color:var(--copper-deep)">$733</div><p style="margin:.3em 0 0;font-size:.9rem;color:var(--ink-soft)">WACC 8.5%, 15년 고성장, 마진 21%. 낙관 가정.</p></div>
+      <div class="card"><div class="tag" style="color:var(--clay)">현재 주가</div><div class="num" style="font-size:1.7rem;font-weight:700;color:var(--clay)">$1,128</div><p style="margin:.3em 0 0;font-size:.9rem;color:var(--ink-soft)">강세가치 대비 +54%. 추가 조건이 더 필요.</p></div>
+    </div>
+    <p style="font-size:.92rem;color:var(--ink-soft);margin-top:14px">아래에서 회사가 무엇을 하는지(개요·수익구조·기술), 어떤 산업·해자에 속하는지, 그리고 위 숫자가 어떻게 나왔는지(DCF·내재 CAP·민감도·시나리오)를 차례로 풉니다. 이 자료는 학습·정보 제공용이며 매수·매도를 권유하지 않습니다.</p>
+  </div>
+</section>
+
+<!-- ============ 2. 기업 개요 ============ -->
+<section id="overview" class="band">
+  <div class="wrap">
+    <span class="sec-no">02 — 기업 개요</span>
+    <h2>GE Vernova는 무엇을 하는 회사인가</h2>
+    <p class="sub">처음 접하는 분을 위해 가장 쉬운 비유부터: <b>전기를 "만드는 기계"와 그 전기를 "옮기는 장비"를 함께 파는 회사</b>입니다. 발전소의 심장(터빈)과 전력망의 혈관(변압기·차단기)을 모두 공급합니다.</p>
+
+    <div class="callout teal">
+      <span class="lab">한 문장 요약</span>
+      <b>"전 세계 전력의 약 25%가 GE 터빈으로 생산됩니다. GE Vernova는 그 발전 설비(가스·원자력·수력·풍력)와 전력을 송배전하는 전기화 장비를 만들고, 설치된 장비를 수십 년간 유지·보수하며 안정적 수익을 버는 에너지 인프라 기업입니다."</b>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.15rem">설립 배경</h3>
+        <p style="font-size:.96rem">발명가 토머스 에디슨까지 거슬러 올라가는 100년 넘는 전력 사업이 뿌리입니다. 모회사 <b>제너럴 일렉트릭(GE)</b>이 2024년 4월 사업을 셋으로 쪼개면서, 전력·에너지 부문이 <b>GE Vernova라는 독립 회사로 분사·상장</b>했습니다. (항공엔진은 GE Aerospace, 의료기기는 GE HealthCare로 분리)</p>
+        <ul class="clean teal" style="margin-top:10px">
+          <li>본사: 미국 매사추세츠주 케임브리지 · 직원 약 7.5만 명</li>
+          <li>상장: 2024년 4월, NYSE 티커 GEV</li>
+          <li>"Vernova" = 라틴어 verde(녹색)+nova(새로움) — 에너지 전환을 상징</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.15rem">3개 핵심 사업부</h3>
+        <ul class="clean">
+          <li><b>Power(발전)</b> — 가스터빈·원자력·수력. 회사의 핵심 수익 엔진. 매출의 52%.</li>
+          <li><b>Electrification(전기화)</b> — 변압기·송배전·전력변환·그리드 소프트웨어. 가장 빠르게 성장. 매출의 25%.</li>
+          <li><b>Wind(풍력)</b> — 육상·해상 풍력 터빈. 현재 적자, 축소·정상화 중. 매출의 24%.</li>
+        </ul>
+        <p style="font-size:.9rem;color:var(--ink-soft);margin-bottom:0">쉽게 말해 두 사업(Power·Electrification)이 돈을 벌고, 한 사업(Wind)이 그 일부를 까먹는 구조입니다.</p>
+      </div>
+    </div>
+
+    <div class="metarow" style="margin-top:18px">
+      <div class="m"><div class="k">FY25 매출</div><div class="v">$38.1B</div><div class="d">전년 +9.0%</div></div>
+      <div class="m"><div class="k">조정 EBITDA 마진</div><div class="v c">8.4%</div><div class="d">2028 목표 20%</div></div>
+      <div class="m"><div class="k">순현금</div><div class="v t">~$8B</div><div class="d">사실상 무차입</div></div>
+      <div class="m"><div class="k">수주잔고(백로그)</div><div class="v">$163B</div><div class="d">2028 목표 $200B</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. 수익 구조 ============ -->
+<section id="revenue">
+  <div class="wrap">
+    <span class="sec-no">03 — 수익 구조 시각화</span>
+    <h2>이 회사는 어떻게 돈을 버는가</h2>
+    <p class="sub">수익은 크게 두 갈래입니다. ① 장비를 <b>한 번 판매</b>하고(가스터빈 1기 등), ② 그 장비를 <b>수십 년간 유지·보수</b>하며 반복 수익(서비스 계약)을 얻습니다. 이 두 번째가 안정성의 핵심입니다.</p>
+
+    <div class="grid2">
+      <figure style="margin-top:0">
+        <div class="svgbox">
+          <svg viewBox="0 0 360 340" role="img" aria-label="FY25 사업부별 매출 비중">
+            <text x="180" y="26" text-anchor="middle" font-size="15" font-weight="800" fill="#1B2127" font-family="Pretendard,sans-serif">FY25 사업부별 매출 ($38.1B)</text>
+            <!-- donut: Power 52% Electrification 25% Wind 24% (rounded) -->
+            <g transform="translate(180,170)">
+              <!-- circumference based arcs, r=92, stroke 46 -->
+              <circle r="92" fill="none" stroke="#eee6db" stroke-width="46"/>
+              <!-- Power 51.9% -> 0 to 0.519 -->
+              <circle r="92" fill="none" stroke="#1F6F6B" stroke-width="46"
+                stroke-dasharray="300.0 277.9" transform="rotate(-90)"/>
+              <!-- Electrification 25.3% -> start 0.519 -->
+              <circle r="92" fill="none" stroke="#B5673A" stroke-width="46"
+                stroke-dasharray="146.3 431.6" stroke-dashoffset="-300.0" transform="rotate(-90)"/>
+              <!-- Wind 23.9% -> start 0.772 -->
+              <circle r="92" fill="none" stroke="#A8442F" stroke-width="46"
+                stroke-dasharray="138.2 439.7" stroke-dashoffset="-446.3" transform="rotate(-90)"/>
+              <text y="-4" text-anchor="middle" font-size="13" fill="#46525C" font-family="Pretendard,sans-serif">매출 합계</text>
+              <text y="20" text-anchor="middle" font-size="22" font-weight="800" fill="#1B2127" font-family="JetBrains Mono,monospace">$38.1B</text>
+            </g>
+            <g font-family="Pretendard,sans-serif" font-size="12.5">
+              <rect x="40" y="306" width="12" height="12" rx="3" fill="#1F6F6B"/><text x="58" y="316" fill="#1B2127">Power 52%</text>
+              <rect x="150" y="306" width="12" height="12" rx="3" fill="#B5673A"/><text x="168" y="316" fill="#1B2127">전기화 25%</text>
+              <rect x="262" y="306" width="12" height="12" rx="3" fill="#A8442F"/><text x="280" y="316" fill="#1B2127">풍력 24%</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption>그림 2 · 매출의 절반 이상이 Power. 풍력은 매출 비중은 크지만 이익엔 마이너스 기여.</figcaption>
+      </figure>
+
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.12rem">사업부별 수익성 (FY25)</h3>
+        <div class="tbl-scroll" style="border:none;box-shadow:none">
+          <table>
+            <thead><tr><th>사업부</th><th>매출</th><th>EBITDA</th><th>마진</th></tr></thead>
+            <tbody>
+              <tr><td>Power 발전</td><td>$19.8B</td><td class="pos">$2.9B</td><td class="pos">14.7%</td></tr>
+              <tr><td>Electrification</td><td>$9.6B</td><td class="pos">$1.4B</td><td class="pos">14.9%</td></tr>
+              <tr><td>Wind 풍력</td><td>$9.1B</td><td class="neg">−$0.6B</td><td class="neg">−6.6%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:.9rem;color:var(--ink-soft);margin-bottom:0">Power와 Electrification은 두 자릿수 마진을 내지만, Wind는 적자입니다. 경영진은 2028년 Wind 흑자전환(마진 6%)을 목표로 하며, 회사 전체 마진 개선의 상당 부분이 "풍력 적자 축소 + 가격 인상"에서 나옵니다.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px;font-size:1.15rem">돈이 흐르는 길 — 그리고 숨은 강점 한 가지</h3>
+    <figure>
+      <div class="svgbox">
+        <svg viewBox="0 0 920 230" role="img" aria-label="수익 흐름과 선수금 구조">
+          <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#46525C"/></marker></defs>
+          <g font-family="Pretendard,sans-serif">
+            <!-- step boxes -->
+            <rect x="18" y="60" width="150" height="64" rx="12" fill="#DCEEEC" stroke="#bcdcd8"/>
+            <text x="93" y="86" text-anchor="middle" font-size="13" font-weight="800" fill="#10302e">① 대규모 수주</text>
+            <text x="93" y="106" text-anchor="middle" font-size="11" fill="#10302e">가스터빈·그리드 계약</text>
+
+            <rect x="208" y="60" width="160" height="64" rx="12" fill="#F3E3D8" stroke="#e3c3ad"/>
+            <text x="288" y="80" text-anchor="middle" font-size="13" font-weight="800" fill="#3a2113">② 고객 선수금</text>
+            <text x="288" y="98" text-anchor="middle" font-size="11" fill="#3a2113">계약 시 미리 현금 입금</text>
+            <text x="288" y="114" text-anchor="middle" font-size="11" font-weight="700" fill="#8C4E2A">FY25 +$8.0B</text>
+
+            <rect x="408" y="60" width="150" height="64" rx="12" fill="#fff" stroke="#E6DDD2"/>
+            <text x="483" y="86" text-anchor="middle" font-size="13" font-weight="800" fill="#1B2127">③ 장비 제작·인도</text>
+            <text x="483" y="106" text-anchor="middle" font-size="11" fill="#46525C">수년에 걸쳐 매출 인식</text>
+
+            <rect x="598" y="60" width="150" height="64" rx="12" fill="#fff" stroke="#E6DDD2"/>
+            <text x="673" y="86" text-anchor="middle" font-size="13" font-weight="800" fill="#1B2127">④ 장기 서비스</text>
+            <text x="673" y="106" text-anchor="middle" font-size="11" fill="#46525C">수십 년 유지·보수 반복수익</text>
+
+            <rect x="788" y="60" width="118" height="64" rx="12" fill="#1F6F6B" stroke="#16544f"/>
+            <text x="847" y="86" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">⑤ 이익·현금</text>
+            <text x="847" y="106" text-anchor="middle" font-size="11" fill="#DCEEEC">주주 환원</text>
+
+            <line x1="168" y1="92" x2="206" y2="92" stroke="#46525C" stroke-width="2" marker-end="url(#ar)"/>
+            <line x1="368" y1="92" x2="406" y2="92" stroke="#46525C" stroke-width="2" marker-end="url(#ar)"/>
+            <line x1="558" y1="92" x2="596" y2="92" stroke="#46525C" stroke-width="2" marker-end="url(#ar)"/>
+            <line x1="748" y1="92" x2="786" y2="92" stroke="#46525C" stroke-width="2" marker-end="url(#ar)"/>
+
+            <text x="18" y="30" font-size="14" font-weight="800" fill="#1B2127">제품을 만들기 "전에" 고객이 돈을 먼저 낸다 → 사업을 고객 돈으로 굴린다</text>
+            <text x="18" y="170" font-size="12.5" fill="#46525C">②번이 핵심입니다. 수주잔고(미인식 매출)가 <tspan font-family="JetBrains Mono,monospace" font-weight="700" fill="#8C4E2A">$25.8B</tspan>(FY25)→<tspan font-family="JetBrains Mono,monospace" font-weight="700" fill="#8C4E2A">$31.8B</tspan>(최근 12개월)로 쌓여 있어,</text>
+            <text x="18" y="190" font-size="12.5" fill="#46525C">GEV는 자기 돈을 거의 묶지 않고도 성장합니다. 이 "마이너스 운전자본" 구조가 현금흐름을 강하게 만드는 숨은 무기입니다.</text>
+            <text x="18" y="214" font-size="11" fill="#6C7780" font-family="JetBrains Mono,monospace">단, 이 효과는 수주 "증가 속도"에 의존 — 성장이 정상화되면 약해집니다(뒤에서 자세히).</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>그림 3 · 수익 흐름 5단계. 고객 선수금이 투자자본을 음(−)으로 만들어 ROIC가 비정상적으로 높게 나타나는 원인입니다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 4. 제품/기술 ============ -->
+<section id="tech" class="band">
+  <div class="wrap">
+    <span class="sec-no">04 — 제품·서비스 및 기술력</span>
+    <h2>무엇을, 어떻게 만드는가</h2>
+    <p class="sub">GEV의 기술력은 "아무나 못 만드는 거대하고 정밀한 기계"에 있습니다. 특히 대형 가스터빈은 제트엔진에 버금가는 초정밀 기술로, 전 세계에서 사실상 3개 회사만 만들 수 있습니다.</p>
+
+    <div class="grid3">
+      <div class="card">
+        <div class="tag" style="color:var(--teal)">Power · 핵심</div>
+        <h3 style="margin:6px 0 8px;font-size:1.1rem">가스터빈</h3>
+        <p style="font-size:.93rem;margin-top:0">천연가스를 태워 그 힘으로 거대한 날개(터빈)를 돌리고, 그 회전으로 발전기를 돌려 전기를 만듭니다. GEV의 <b>HA급 터빈</b>은 세계 최고 효율급으로, 1기가 도시 하나에 전력을 공급할 수 있습니다.</p>
+        <p style="font-size:.86rem;color:var(--ink-soft);margin-bottom:0">왜 어려운가: 1,600℃ 넘는 연소 가스를 견디는 소재·냉각·정밀가공 기술이 필요. 수십 년 노하우 없이는 불가능.</p>
+      </div>
+      <div class="card">
+        <div class="tag" style="color:var(--copper-deep)">Electrification · 성장</div>
+        <h3 style="margin:6px 0 8px;font-size:1.1rem">그리드 장비</h3>
+        <p style="font-size:.93rem;margin-top:0">발전소에서 만든 고압 전기를 가정·공장이 쓸 수 있게 전압을 바꾸고(<b>변압기</b>), 안전하게 끊고 잇고(<b>차단기</b>), 흐름을 제어(<b>그리드 소프트웨어</b>)합니다. 전력망의 "혈관·신경"에 해당합니다.</p>
+        <p style="font-size:.86rem;color:var(--ink-soft);margin-bottom:0">2025년 Prolec(변압기) 인수($5.3B)로 북미 변압기 역량 강화. 대기시간이 3년 새 2배로 늘 만큼 공급 부족.</p>
+      </div>
+      <div class="card">
+        <div class="tag" style="color:var(--clay)">Wind · 정상화</div>
+        <h3 style="margin:6px 0 8px;font-size:1.1rem">풍력 터빈</h3>
+        <p style="font-size:.93rem;margin-top:0">바람으로 날개를 돌려 전기를 만듭니다. 육상은 미국 시장 점유율이 높지만, <b>해상 풍력</b>은 비용·프로젝트 지연으로 큰 손실을 냈습니다. 현재 사업 규모를 줄이며 흑자전환을 노립니다.</p>
+        <p style="font-size:.86rem;color:var(--ink-soft);margin-bottom:0">리스크 포인트: 해상풍력(예: Vineyard Wind)은 정책·소송 변수에 노출.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px;font-size:1.15rem">가스 발전이 전기를 만드는 과정 (가장 쉽게)</h3>
+    <figure>
+      <div class="svgbox">
+        <svg viewBox="0 0 920 170" role="img" aria-label="가스발전 과정 흐름도">
+          <defs><marker id="ar2" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#B5673A"/></marker></defs>
+          <g font-family="Pretendard,sans-serif" font-size="12.5">
+            <g><circle cx="78" cy="80" r="40" fill="#F3E3D8" stroke="#e3c3ad"/><text x="78" y="76" text-anchor="middle" font-weight="800" fill="#3a2113">천연가스</text><text x="78" y="94" text-anchor="middle" font-size="11" fill="#3a2113">연료 투입</text></g>
+            <g><circle cx="268" cy="80" r="40" fill="#DCEEEC" stroke="#bcdcd8"/><text x="268" y="72" text-anchor="middle" font-weight="800" fill="#10302e">연소·터빈</text><text x="268" y="90" text-anchor="middle" font-size="11" fill="#10302e">날개 고속회전</text><text x="268" y="105" text-anchor="middle" font-size="10" fill="#10302e">(GEV HA터빈)</text></g>
+            <g><circle cx="458" cy="80" r="40" fill="#fff" stroke="#E6DDD2"/><text x="458" y="76" text-anchor="middle" font-weight="800" fill="#1B2127">발전기</text><text x="458" y="94" text-anchor="middle" font-size="11" fill="#46525C">회전→전기</text></g>
+            <g><circle cx="648" cy="80" r="40" fill="#fff" stroke="#E6DDD2"/><text x="648" y="76" text-anchor="middle" font-weight="800" fill="#1B2127">변압기</text><text x="648" y="94" text-anchor="middle" font-size="11" fill="#46525C">전압 변환</text><text x="648" y="108" text-anchor="middle" font-size="10" fill="#8C4E2A">(GEV 전기화)</text></g>
+            <g><circle cx="838" cy="80" r="40" fill="#1F6F6B" stroke="#16544f"/><text x="838" y="76" text-anchor="middle" font-weight="800" fill="#fff">전력망</text><text x="838" y="94" text-anchor="middle" font-size="11" fill="#DCEEEC">가정·공장</text></g>
+            <line x1="118" y1="80" x2="226" y2="80" stroke="#B5673A" stroke-width="2.2" marker-end="url(#ar2)"/>
+            <line x1="308" y1="80" x2="416" y2="80" stroke="#B5673A" stroke-width="2.2" marker-end="url(#ar2)"/>
+            <line x1="498" y1="80" x2="606" y2="80" stroke="#B5673A" stroke-width="2.2" marker-end="url(#ar2)"/>
+            <line x1="688" y1="80" x2="796" y2="80" stroke="#B5673A" stroke-width="2.2" marker-end="url(#ar2)"/>
+            <text x="20" y="28" font-size="13" font-weight="800" fill="#1B2127">한눈에: 연료 → 회전 → 전기 → 전압변환 → 우리 집</text>
+            <text x="20" y="150" font-size="11.5" fill="#46525C">파란 단계(터빈)와 변압기 단계 모두 GEV의 제품이 들어갑니다 — 발전과 송배전 양쪽에 걸친 드문 회사입니다.</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>그림 4 · 가스발전 5단계. GEV는 ②터빈과 ④변압기를 모두 공급해 "전력 가치사슬"의 두 길목을 점유합니다.</figcaption>
+    </figure>
+
+    <div class="callout teal">
+      <span class="lab">기술 해자의 핵심</span>
+      대형 중부하(baseload) 가스터빈을 양산할 수 있는 회사는 <b>GE Vernova · Siemens Energy · 미쓰비시 파워</b> 셋뿐이며, 셋이 생산능력의 70% 이상을 차지합니다. 그중 GEV가 중부하 시장 점유율 <b>25~30%로 세계 1위</b>입니다. 한 번 설치된 터빈은 20~30년간 GEV 부품·서비스에 묶이므로(전환비용↑), 판매가 곧 장기 수익으로 이어집니다. <span class="conf">신뢰도 높음 · ~85%<span class="dot"></span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. 생애주기 ============ -->
+<section id="lifecycle">
+  <div class="wrap">
+    <span class="sec-no">05 — 기업 생애주기 단계</span>
+    <h2>GEV는 지금 어느 단계에 있나</h2>
+    <p class="sub">기업의 "현금이 드나드는 방향"을 보면 생애주기를 판별할 수 있습니다(도입→성장→성숙→정리→감소). GEV의 현금흐름 부호는 <b>성숙(Mature)</b> 신호이지만, 실질은 마진 확장과 수요 상승을 동반한 "성장형 성숙"에 가깝습니다.</p>
+
+    <figure>
+      <div class="svgbox">
+        <svg viewBox="0 0 920 200" role="img" aria-label="현금흐름 부호로 본 생애주기">
+          <g font-family="Pretendard,sans-serif">
+            <text x="20" y="30" font-size="14" font-weight="800" fill="#1B2127">FY25 현금흐름 부호 → 성숙 단계</text>
+            <!-- three CF boxes -->
+            <rect x="40" y="58" width="240" height="78" rx="12" fill="#DCEEEC" stroke="#bcdcd8"/>
+            <text x="160" y="82" text-anchor="middle" font-size="12.5" fill="#10302e">영업활동 현금흐름</text>
+            <text x="160" y="112" text-anchor="middle" font-size="22" font-weight="800" fill="#1F6F6B" font-family="JetBrains Mono,monospace">＋$5.0B</text>
+
+            <rect x="340" y="58" width="240" height="78" rx="12" fill="#F3DED8" stroke="#e7c4ba"/>
+            <text x="460" y="82" text-anchor="middle" font-size="12.5" fill="#3f1710">투자활동 현금흐름</text>
+            <text x="460" y="112" text-anchor="middle" font-size="22" font-weight="800" fill="#A8442F" font-family="JetBrains Mono,monospace">−$0.8B</text>
+
+            <rect x="640" y="58" width="240" height="78" rx="12" fill="#F3DED8" stroke="#e7c4ba"/>
+            <text x="760" y="82" text-anchor="middle" font-size="12.5" fill="#3f1710">재무활동 현금흐름</text>
+            <text x="760" y="112" text-anchor="middle" font-size="22" font-weight="800" fill="#A8442F" font-family="JetBrains Mono,monospace">−$3.8B</text>
+
+            <text x="40" y="168" font-size="12.5" fill="#46525C">＋ / − / − 조합 = <tspan font-weight="800" fill="#1B2127">성숙(Mature)</tspan> — 영업에서 현금을 벌어 빚을 늘리지 않고 자사주·배당으로 환원하는 전형적 패턴.</text>
+            <text x="40" y="188" font-size="11.5" fill="#6C7780">유의: CAP 프레임워크상 DCF·CAP 분석이 가장 적합한 구간은 "성장·성숙"이며, GEV는 여기에 해당합니다.</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>그림 5 · 현금흐름 부호 판별(Dickinson 방식). 재무활동 −$3.8B는 자사주매입 −$3.3B+배당이 주원인.</figcaption>
+    </figure>
+
+    <div class="callout gold">
+      <span class="lab">해석상 주의</span>
+      현금흐름 부호는 "성숙"이지만, 매출은 2026년 +19% 성장이 예상되고 마진은 8%→20%(2028 목표)로 <b>구조적으로 확장 중</b>입니다. 즉 회계적 단계(성숙)와 사업 모멘텀(성장)이 어긋나 있어, 단순히 "성숙=저성장"으로 보면 안 됩니다. 본 DCF는 이 점을 반영해 초기 고성장 후 점진적 둔화(페이드)를 가정합니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. 산업 분석 ============ -->
+<section id="industry" class="dark">
+  <div class="wrap">
+    <span class="sec-no">06 — 산업 분석</span>
+    <h2>전력 산업: 15년 정체 끝, 구조적 성장의 시작</h2>
+    <p class="sub">GEV가 속한 산업을 모르면 이 회사를 이해할 수 없습니다. 미국 전력 수요는 약 15년간 거의 정체했는데, <b>AI 데이터센터·전기화·재산업화</b>가 겹치며 수십 년 만에 다시 구조적으로 성장하는 국면에 진입했습니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.12rem;color:var(--ink)">수요 측: 무엇이 전기를 끌어당기나</h3>
+        <ul class="clean">
+          <li>미국 데이터센터 전력 수요 <b>2030년까지 +130%</b> (183→426 TWh). 미국 전력 수요 증가분의 약 절반이 데이터센터.</li>
+          <li>글로벌 데이터센터 전력: 약 485 TWh(2025)→950 TWh(2030)로 거의 2배.</li>
+          <li>가스+석탄이 데이터센터 추가 수요의 <b>40% 이상</b>을 담당(즉각 가동 가능한 기저전원).</li>
+          <li>골드만삭스: 미국 전력 수요 2030년까지 연 2.6% 성장(과거 0~0.5%).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.12rem;color:var(--ink)">공급 측: 왜 GEV에 유리한가</h3>
+        <ul class="clean teal">
+          <li>가스터빈 인도 대기시간이 수년으로 늘어 <b>2030년 이후로 밀림</b> → 공급 병목 = 가격 결정력.</li>
+          <li>GEV 터빈 슬롯은 2030년까지 90% 이상 예약. 장비가 10~20% 인상에도 주문 쇄도.</li>
+          <li>변압기·케이블 대기시간 3년 새 2배 → Electrification 사업에 직접 호재.</li>
+          <li>가스터빈 주문량 9.5GW(2023)→20.2GW(2024)→<b>29.8GW(2025)</b>로 폭증.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top:26px;font-size:1.18rem;color:#fff">전력 산업 가치사슬 — GEV의 위치</h3>
+    <figure>
+      <div class="svgbox onslate">
+        <svg viewBox="0 0 920 210" role="img" aria-label="전력 산업 가치사슬">
+          <defs><marker id="ar3" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#A7BABF"/></marker></defs>
+          <g font-family="Pretendard,sans-serif" font-size="12">
+            <!-- chain boxes -->
+            <rect x="20" y="64" width="150" height="70" rx="11" fill="#2a3b43" stroke="#3a4d55"/>
+            <text x="95" y="90" text-anchor="middle" font-weight="800" fill="#ECF2F1">연료·기술</text>
+            <text x="95" y="108" text-anchor="middle" font-size="10.5" fill="#A7BABF">가스·원자력·바람</text>
+
+            <rect x="200" y="50" width="170" height="98" rx="11" fill="#B5673A" stroke="#8C4E2A"/>
+            <text x="285" y="78" text-anchor="middle" font-weight="800" fill="#fff">발전 설비</text>
+            <text x="285" y="96" text-anchor="middle" font-size="10.5" fill="#f3e3d8">가스·원자력·수력 터빈</text>
+            <text x="285" y="120" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">◆ GEV (Power)</text>
+            <text x="285" y="136" text-anchor="middle" font-size="10" fill="#f3e3d8">세계 1위 과점</text>
+
+            <rect x="400" y="50" width="170" height="98" rx="11" fill="#1F6F6B" stroke="#16544f"/>
+            <text x="485" y="78" text-anchor="middle" font-weight="800" fill="#fff">송배전·전기화</text>
+            <text x="485" y="96" text-anchor="middle" font-size="10.5" fill="#DCEEEC">변압기·차단기·SW</text>
+            <text x="485" y="120" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">◆ GEV (Electrification)</text>
+            <text x="485" y="136" text-anchor="middle" font-size="10" fill="#DCEEEC">고성장 부문</text>
+
+            <rect x="600" y="64" width="150" height="70" rx="11" fill="#2a3b43" stroke="#3a4d55"/>
+            <text x="675" y="90" text-anchor="middle" font-weight="800" fill="#ECF2F1">전력 회사</text>
+            <text x="675" y="108" text-anchor="middle" font-size="10.5" fill="#A7BABF">유틸리티·발전사업자</text>
+
+            <rect x="780" y="64" width="124" height="70" rx="11" fill="#2a3b43" stroke="#3a4d55"/>
+            <text x="842" y="86" text-anchor="middle" font-weight="800" fill="#ECF2F1">최종 수요</text>
+            <text x="842" y="103" text-anchor="middle" font-size="10.5" fill="#A7BABF">AI 데이터센터</text>
+            <text x="842" y="118" text-anchor="middle" font-size="10.5" fill="#A7BABF">공장·가정</text>
+
+            <line x1="170" y1="99" x2="198" y2="99" stroke="#A7BABF" stroke-width="2" marker-end="url(#ar3)"/>
+            <line x1="370" y1="99" x2="398" y2="99" stroke="#A7BABF" stroke-width="2" marker-end="url(#ar3)"/>
+            <line x1="570" y1="99" x2="598" y2="99" stroke="#A7BABF" stroke-width="2" marker-end="url(#ar3)"/>
+            <line x1="750" y1="99" x2="778" y2="99" stroke="#A7BABF" stroke-width="2" marker-end="url(#ar3)"/>
+
+            <text x="20" y="34" font-size="13.5" font-weight="800" fill="#fff">GEV는 가치사슬 한가운데 두 칸(발전+전기화)을 동시에 차지</text>
+            <text x="20" y="186" font-size="11" fill="#7e9499" font-family="JetBrains Mono,monospace">수요(우측)가 폭증하는데 공급(GEV 위치)이 병목 → 가격·물량 협상력이 GEV로 이동</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>그림 6 · 가치사슬에서 GEV는 "병목 구간"을 점유합니다. 이것이 현재 사이클에서 GEV가 가격 결정력을 갖는 구조적 이유입니다.</figcaption>
+    </figure>
+
+    <!-- steel-manning the bear -->
+    <div class="callout clay">
+      <span class="lab">반대 측 논거 (균형 — 강하게 복원)</span>
+      낙관 일변도는 위험합니다. 반대 측의 가장 강한 주장: ① 계획된 데이터센터의 약 <b>20%는 전력망 제약으로 지연</b> 위험이 있고, 2030년 수요 전망은 기관별로 최대 3배까지 편차가 납니다. ② 재생에너지도 연 22% 성장하며 데이터센터 추가 수요의 약 절반을 충족 — "가스만 승자"가 아닙니다. ③ Global Energy Monitor 등은 가스 발전 <b>과잉 설비·에너지 전환 역전</b> 위험을 경고합니다. ④ 역사적으로 터빈 업체는 수요를 과대 예측해 과잉투자한 전력이 있습니다. 즉 "구조적 성장"은 강력하지만 확정된 미래는 아닙니다. <span class="conf mid">신뢰도 중간 · ~60%<span class="dot"></span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. 경쟁우위 · 5 Forces · 해자 ============ -->
+<section id="moat">
+  <div class="wrap">
+    <span class="sec-no">07 — 경쟁 우위 정성 분석 · 경제적 해자</span>
+    <h2>해자(Moat): 무엇이 경쟁자를 막아주나</h2>
+    <p class="sub">"해자"란 경쟁자가 쉽게 따라올 수 없게 만드는 구조적 방어막입니다. GEV는 그중에서도 <b>가장 견고한 축</b>에 속하는 과점·전환비용·구조적 자금조달 우위를 동시에 보유합니다. 차별화(기술·브랜드) 우위형이며, 원가 우위형은 아닙니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.12rem">포터의 5 Forces 간략 평가</h3>
+        <ul class="clean">
+          <li><b>신규 진입 위협 — 매우 낮음.</b> 대형 가스터빈은 수십 년 노하우·자본·실적이 필요. 사실상 3사 과점.</li>
+          <li><b>대체재 위협 — 중간.</b> 재생에너지·배터리가 일부 대체하나, 기저전원으로서 가스터빈 대체엔 한계.</li>
+          <li><b>구매자 교섭력 — 현재 낮음.</b> 공급 병목으로 가격 결정력이 GEV에. 단, 사이클 반전 시 역전 가능.</li>
+          <li><b>공급자 교섭력 — 중간.</b> 특수 부품·소재 의존, 다만 GEV 규모로 상당 부분 내재화.</li>
+          <li><b>기존 경쟁 강도 — 중간.</b> Siemens Energy·미쓰비시와 경쟁하나 시장 자체가 폭증해 "파이 다툼"보다 "파이 확장" 국면.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.12rem">해자의 4가지 원천</h3>
+        <ul class="clean teal">
+          <li><b>과점 구조</b> — 중부하 터빈 3사 체제, GEV 세계 1위(25~30%).</li>
+          <li><b>설치기반 + 장기서비스(LTSA)</b> — 한 번 깔린 터빈은 20~30년 GEV에 묶임 → 높은 전환비용·반복 수익.</li>
+          <li><b>마이너스 운전자본</b> — 고객 선수금으로 사업을 굴림. 투자자본이 작거나 음(−) → 자본효율 구조적 우위.</li>
+          <li><b>가치사슬 양면 점유</b> — 발전+전기화를 한 회사가 제공(통합 솔루션 우위).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ROIC distortion explainer -->
+    <div class="callout">
+      <span class="lab">지표 읽을 때 주의 — ROIC 35%의 함정</span>
+      GEV의 ROIC가 35%+, ROE 75%로 "초우량"처럼 보이지만, 이는 ① 고객 선수금($25.8B)으로 <b>투자자본 분모가 매우 작아진 효과</b>와 ② 2025년 일회성 <b>세금 환입 $2.9B</b>으로 순이익이 부풀려진 효과가 큽니다. 따라서 "ROIC가 높으니 무조건 싸다"는 식의 해석은 위험하며, 본 DCF는 이를 정규화(세율 22% 등)해 반영했습니다. <span class="conf">신뢰도 높음 · ~80%<span class="dot"></span></span>
+    </div>
+
+    <div class="callout teal">
+      <span class="lab">해자의 지속 가능성 (장기 CAP 정당화 논거 — 균형)</span>
+      반대로, GEV의 긴 CAP을 옹호하는 논거도 강합니다: 가스터빈 과점은 대부분의 기업보다 <b>오래 방어 가능한 진짜 해자</b>이며, AI·전력화는 다년간 지속될 구조적 순풍입니다. 마진은 항공엔진(GE Aerospace 26%) 수준까지 상방 여지가 있고, 마이너스 운전자본은 구조적 강점입니다. 고품질 컴파운더는 역사적으로 오랜 기간 고평가를 유지하기도 합니다. <b>핵심 쟁점은 "이 해자가 20년 넘는 초과수익을 정당화할 만큼 충분히 길고 넓은가"</b>이며, 여기에 대한 판단이 곧 투자 판단입니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. SWOT ============ -->
+<section id="swot" class="band">
+  <div class="wrap">
+    <span class="sec-no">08 — SWOT 분석</span>
+    <h2>강점·약점·기회·위협</h2>
+    <p class="sub">내부 요인(강점·약점)과 외부 요인(기회·위협)을 한눈에 정리했습니다.</p>
+    <div class="swot">
+      <div class="q S">
+        <h4><span class="ic">S</span>강점 Strengths</h4>
+        <ul>
+          <li>대형 가스터빈 세계 1위 과점 지위(25~30%)</li>
+          <li>설치기반 기반 장기서비스(LTSA) 반복 수익</li>
+          <li>마이너스 운전자본 — 고객 자금으로 성장</li>
+          <li>발전+전기화 통합 제공, 사실상 무차입(순현금 $8B)</li>
+          <li>수주잔고 $163B로 수년치 매출 가시성</li>
+        </ul>
+      </div>
+      <div class="q W">
+        <h4><span class="ic">W</span>약점 Weaknesses</h4>
+        <ul>
+          <li>풍력(특히 해상) 적자 — 전사 마진 발목</li>
+          <li>GAAP 영업마진 3.7%로 아직 낮음(개선 "기대" 의존)</li>
+          <li>경기 민감한 대형 장비 — 사이클 하강 시 취약</li>
+          <li>2025 순이익이 일회성 세금혜택으로 과대</li>
+          <li>상장 26개월로 베타·변동성 추정이 불안정</li>
+        </ul>
+      </div>
+      <div class="q O">
+        <h4><span class="ic">O</span>기회 Opportunities</h4>
+        <ul>
+          <li>AI 데이터센터발 전력 수요 다년간 폭증</li>
+          <li>15년 정체 후 미국 전력의 구조적 성장 재개</li>
+          <li>마진 상방(항공엔진급 20%+ 잠재력)</li>
+          <li>변압기·그리드 공급 부족 → 가격·물량</li>
+          <li>차세대 원자력(SMR) 등 신규 성장 옵션</li>
+        </ul>
+      </div>
+      <div class="q T">
+        <h4><span class="ic">T</span>위협 Threats</h4>
+        <ul>
+          <li>고평가 — 실행 차질 시 큰 조정 위험</li>
+          <li>데이터센터 ~20% 전력망 제약으로 지연 가능</li>
+          <li>금리 상승 국면 — 고배수 성장주에 역풍</li>
+          <li>재생에너지 경쟁·에너지 전환 역전 가능성</li>
+          <li>관세·정책·해상풍력 소송(Vineyard Wind 등)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. 피어 비교 ============ -->
+<section id="peers">
+  <div class="wrap">
+    <span class="sec-no">09 — 피어그룹 비교</span>
+    <h2>경쟁사·유사기업과 비교</h2>
+    <p class="sub">가장 가까운 직접 경쟁사는 <b>지멘스 에너지</b>(같은 가스터빈·그리드·AI 수혜 스토리)이고, 가치평가 비교용으로는 분사 형제인 <b>GE Aerospace</b>가 유용합니다(같은 DNA, 더 높은 마진).</p>
+
+    <div class="tbl-scroll">
+      <table>
+        <thead>
+          <tr><th>항목</th><th>GE Vernova</th><th>Siemens Energy</th><th>GE Aerospace</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>사업</td><td>발전+전기화</td><td>발전+그리드</td><td>항공 엔진</td></tr>
+          <tr><td>시가총액</td><td>~$300B</td><td>~$182B</td><td>~$293B</td></tr>
+          <tr><td>매출(연)</td><td>$38B</td><td>~$45B</td><td>~$46B</td></tr>
+          <tr><td>EBITDA 마진</td><td class="neg">8.4%</td><td>~10%대</td><td class="pos">26%</td></tr>
+          <tr><td>EV/EBITDA (트레일링)</td><td class="neg">~86x</td><td>~31x</td><td>~28x</td></tr>
+          <tr><td>EV/EBITDA (2028E 조정)</td><td>~26x</td><td>—</td><td>—</td></tr>
+          <tr><td>P/E (트레일링/선행)</td><td>~32x / 74x</td><td>~100x</td><td>~35x / 36x</td></tr>
+          <tr><td>ROIC</td><td>35%*</td><td>—</td><td>29%</td></tr>
+          <tr><td>베타(출처별)</td><td>0.59~1.35</td><td>—</td><td>1.35</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.82rem;color:var(--ink-faint);margin-top:8px;font-family:var(--mono)">* GEV ROIC는 마이너스 운전자본으로 분모가 작아 과대 표시. 트레일링 배수는 마진 정상화 전이라 높게 보임.</p>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="callout teal">
+        <span class="lab">관찰 1 — 전방 기준이면 덜 비싸 보인다</span>
+        트레일링 EV/EBITDA 86x는 충격적이지만, 이는 마진(8.4%)이 정상화되기 "전"이기 때문입니다. 2028 조정 EBITDA(~$11.2B) 기준이면 ~26x로 내려와, 지멘스 에너지(31x)·GE 항공(28x)과 비슷한 범위입니다. 즉 시장은 "마진이 약속대로 3배 뛴다"를 전제로 가격을 매기고 있습니다.
+      </div>
+      <div class="callout gold">
+        <span class="lab">관찰 2 — 그래도 트레일링 기준 최상단</span>
+        반대로, 마진 확장이 실제로 일어나야 정당화되는 가격이라는 뜻이기도 합니다. 성장 둔화(2028년 이후 두 자릿수→한 자릿수)를 감안하면 전방 기준으로도 리치한 편이며, 실행이 어긋나면 배수가 빠르게 정상화될 수 있습니다.
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="lab">애널리스트 컨센서스 (38인, 6/16 기준)</span>
+      투자의견 "매수"(강력매수 24·매수 6·보유 8·매도 0). <b>목표가 평균 $1,212(+7.5%)</b>, 중앙값 $1,235, 범위 $836(−26%)~$1,424(+26%). 2026E 매출 $45.5B(+19.5%), 2026E 조정 EPS $15.24(전년比 −8.6% — 일회성 세금혜택 제거 효과), 2027E EPS $24.51(+60.9%). <b>상단마저 +26%</b>에 그쳐, 월가도 잔여 상승 여지는 제한적으로 봅니다. <span class="conf mid">신뢰도 중간~높음 · ~70%<span class="dot"></span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. DCF 모델 결과 ============ -->
+<section id="dcf" class="band">
+  <div class="wrap">
+    <span class="sec-no">10 — DCF 모델 결과</span>
+    <h2>현금흐름 할인(DCF) — 기본 시나리오</h2>
+    <p class="sub">미래의 잉여현금흐름(FCF)을 현재가치로 할인해 더한 것이 기업가치(EV)입니다. 계산 흐름은 <b>매출 → EBITA(이자·세금·무형상각 전 이익) → NOPAT(세후 영업이익) → FCF → 현재가치</b> 순입니다. 정밀한 정답이 아니라 "방향과 논리의 일관성"을 보는 도구입니다.</p>
+
+    <div class="metarow">
+      <div class="m"><div class="k">WACC (자본비용)</div><div class="v c">10.0%</div><div class="d">β 1.3 · Rf 4.5% · ERP 4.5%</div></div>
+      <div class="m"><div class="k">장기 성장률 g</div><div class="v">2.5%</div><div class="d">기대 인플레 수준</div></div>
+      <div class="m"><div class="k">정규화 세율</div><div class="v">22%</div><div class="d">NOL 효과 제거</div></div>
+      <div class="m"><div class="k">페이드 비율 f</div><div class="v">0.21</div><div class="d">산업분야 평균</div></div>
+    </div>
+
+    <div class="tbl-scroll" style="margin-top:8px">
+      <table>
+        <thead>
+          <tr>
+            <th>연도</th><th>매출 $M</th><th>성장%</th><th>EBITA $M</th><th>마진%</th>
+            <th>NOPAT $M</th><th>FCF전환%</th><th>FCF $M</th><th>할인계수</th><th>현재가치 $M</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2026E</td><td>45,491</td><td>19.5%</td><td>5,004</td><td>11.0%</td><td>3,903</td><td>130%</td><td>5,074</td><td>0.953</td><td>4,838</td></tr>
+          <tr><td>2027E</td><td>51,496</td><td>13.2%</td><td>7,467</td><td>14.5%</td><td>5,824</td><td>105%</td><td>6,115</td><td>0.867</td><td>5,301</td></tr>
+          <tr><td>2028E</td><td>57,521</td><td>11.7%</td><td>9,491</td><td>16.5%</td><td>7,403</td><td>95%</td><td>7,033</td><td>0.788</td><td>5,542</td></tr>
+          <tr><td>2029E</td><td>63,273</td><td>10.0%</td><td>11,073</td><td>17.5%</td><td>8,637</td><td>90%</td><td>7,773</td><td>0.716</td><td>5,568</td></tr>
+          <tr><td>2030E</td><td>68,335</td><td>8.0%</td><td>12,300</td><td>18.0%</td><td>9,594</td><td>88%</td><td>8,443</td><td>0.651</td><td>5,498</td></tr>
+          <tr><td>2031E</td><td>72,777</td><td>6.5%</td><td>13,100</td><td>18.0%</td><td>10,218</td><td>86%</td><td>8,787</td><td>0.592</td><td>5,202</td></tr>
+          <tr><td>2032E</td><td>76,416</td><td>5.0%</td><td>13,755</td><td>18.0%</td><td>10,729</td><td>85%</td><td>9,119</td><td>0.538</td><td>4,908</td></tr>
+          <tr><td>2033E</td><td>79,472</td><td>4.0%</td><td>14,305</td><td>18.0%</td><td>11,158</td><td>85%</td><td>9,484</td><td>0.489</td><td>4,640</td></tr>
+          <tr><td>2034E</td><td>82,055</td><td>3.2%</td><td>14,770</td><td>18.0%</td><td>11,521</td><td>85%</td><td>9,792</td><td>0.445</td><td>4,356</td></tr>
+          <tr><td>2035E</td><td>84,107</td><td>2.5%</td><td>15,139</td><td>18.0%</td><td>11,809</td><td>85%</td><td>10,037</td><td>0.404</td><td>4,059</td></tr>
+          <tr class="hl"><td>예측기간 PV 합계</td><td colspan="8">＝ $49,912M</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.82rem;color:var(--ink-faint);margin-top:8px;font-family:var(--mono)">연중(mid-year) 할인 적용. FCF전환율 130%→85%: 초기엔 선수금 효과로 FCF가 NOPAT을 상회, 성장 둔화 시 정상화. 단위 $M.</p>
+
+    <!-- valuation bridge -->
+    <h3 style="margin-top:26px;font-size:1.15rem">기업가치 → 주당 가치 다리(bridge)</h3>
+    <figure>
+      <div class="svgbox">
+        <svg viewBox="0 0 920 240" role="img" aria-label="가치 구성">
+          <g font-family="Pretendard,sans-serif">
+            <text x="20" y="28" font-size="14" font-weight="800" fill="#1B2127">기본 시나리오 가치 구성</text>
+            <!-- bars -->
+            <!-- scale: max ~138B -> width 760 from x=120 -->
+            <!-- PV explicit 49.9 -->
+            <g>
+              <text x="112" y="64" text-anchor="end" font-size="12" fill="#46525C">예측기간 FCF</text>
+              <rect x="120" y="52" width="275" height="22" rx="5" fill="#1F6F6B"/>
+              <text x="402" y="68" font-size="12" font-weight="700" fill="#1B2127" font-family="JetBrains Mono,monospace">$49.9B</text>
+            </g>
+            <!-- PV terminal 52.5 -->
+            <g>
+              <text x="112" y="98" text-anchor="end" font-size="12" fill="#46525C">최종가치 PV</text>
+              <rect x="120" y="86" width="289" height="22" rx="5" fill="#2E8C86"/>
+              <text x="416" y="102" font-size="12" font-weight="700" fill="#1B2127" font-family="JetBrains Mono,monospace">$52.5B</text>
+            </g>
+            <!-- EV 102.4 -->
+            <g>
+              <text x="112" y="132" text-anchor="end" font-size="12" fill="#46525C">＝ 기업가치 EV</text>
+              <rect x="120" y="120" width="564" height="22" rx="5" fill="#B5673A"/>
+              <text x="691" y="136" font-size="12" font-weight="700" fill="#1B2127" font-family="JetBrains Mono,monospace">$102.4B</text>
+            </g>
+            <!-- + net cash -> equity 110.4 -->
+            <g>
+              <text x="112" y="166" text-anchor="end" font-size="12" fill="#46525C">＋순현금 → 자기자본</text>
+              <rect x="120" y="154" width="608" height="22" rx="5" fill="#8C4E2A"/>
+              <text x="735" y="170" font-size="12" font-weight="700" fill="#1B2127" font-family="JetBrains Mono,monospace">$110.4B</text>
+            </g>
+            <!-- market cap 300 (clip) -->
+            <g>
+              <text x="112" y="200" text-anchor="end" font-size="12" fill="#A8442F" font-weight="700">현재 시가총액</text>
+              <rect x="120" y="188" width="760" height="22" rx="5" fill="#A8442F"/>
+              <text x="828" y="204" font-size="12" font-weight="800" fill="#fff" font-family="JetBrains Mono,monospace">~$300B</text>
+            </g>
+            <text x="120" y="232" font-size="12.5" fill="#46525C">기본가치 <tspan font-family="JetBrains Mono,monospace" font-weight="800" fill="#1B2127">$409/주</tspan> (자기자본 $110B ÷ 2.70억 주) vs 현재 <tspan font-family="JetBrains Mono,monospace" font-weight="800" fill="#A8442F">$1,128/주</tspan> — 시장은 약 2.7배를 지불</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>그림 7 · 기본 시나리오 EV $102B → 자기자본 $110B → 주당 $409. 현재 시총 ~$300B와의 격차가 "내재 CAP"으로 나타납니다.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ 11. WACC & 최종가치 가정 ============ -->
+<section id="wacc">
+  <div class="wrap">
+    <span class="sec-no">11 — WACC · 최종가치 가정</span>
+    <h2>할인율과 최종가치는 어떻게 정했나</h2>
+    <p class="sub">DCF에서 가장 민감한 두 입력은 <b>할인율(WACC)</b>과 <b>최종가치</b>입니다. 특히 GEV는 베타(주가 민감도) 추정이 출처별로 크게 갈려, 이 가정 하나가 결론을 좌우합니다.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.12rem">WACC = 10.0% (기본)</h3>
+        <div class="kv"><span class="k">무위험수익률 (10년 국채)</span><span class="v">4.50%</span></div>
+        <div class="kv"><span class="k">베타 β (기본 가정)</span><span class="v">1.30</span></div>
+        <div class="kv"><span class="k">주식위험프리미엄 ERP</span><span class="v">4.50%</span></div>
+        <div class="kv"><span class="k">자기자본비용 (CAPM)</span><span class="v">≈10.4%</span></div>
+        <div class="kv"><span class="k">부채 비중</span><span class="v">미미(순현금)</span></div>
+        <div class="kv"><span class="k">→ WACC (반올림)</span><span class="v" style="color:var(--copper-deep)">10.0%</span></div>
+        <p style="font-size:.86rem;color:var(--ink-soft);margin:10px 0 0">상장 26개월로 회귀 베타가 불안정해, 형제사 GE Aerospace(β 1.35)와 경기민감·고배수 특성을 참고해 1.3으로 설정했습니다.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.12rem">최종가치 (페이드 모델)</h3>
+        <p style="font-size:.95rem;margin-top:0">예측기간 이후엔 초과수익률이 영원하지 않다고 보고, 점진적으로 자본비용 수준으로 수렴(페이드)한다고 가정합니다. 가치동인 공식으로:</p>
+        <div class="callout teal" style="margin:10px 0">
+          <span class="lab">최종가치</span>
+          최종 ROIC <b>16%</b> · 장기성장 <b>2.5%</b> 가정 → 최종가치 약 <b>$136B</b>, 이를 10년 차로 할인해 현재가치 <b>$52.5B</b>.
+        </div>
+        <p style="font-size:.86rem;color:var(--ink-soft);margin-bottom:0">최종 ROIC를 16%로 둔 것은 "강한 해자이되 영원한 초과수익은 아니다"라는 절충입니다. 민감도(다음 섹션)에서 12%·20%도 테스트합니다.</p>
+      </div>
+    </div>
+
+    <div class="callout gold">
+      <span class="lab">핵심 인식 — 모든 게 할인율에 달렸다</span>
+      GEV의 가치는 <b>할인율에 극도로 민감</b>합니다. 시장이 GEV를 "방어적 구조성장 인프라주"로 보면 낮은 위험프리미엄(WACC ~7%)을 매기고, "경기민감 장비제조사"로 보면 높은 WACC(~11%)를 매깁니다. 베타가 0.59~1.35로 갈리는 만큼, 이 한 가지 관점 차이가 적정가치를 2배 가까이 벌립니다. <span class="conf low">신뢰도 낮음(베타 불확실) · ~45%<span class="dot"></span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. 시장 내재 CAP 역산 ============ -->
+<section id="cap" class="dark">
+  <div class="wrap">
+    <span class="sec-no">12 — 시장 내재 CAP 역산</span>
+    <h2>지금 주가는 "몇 년의 초과수익"을 가정하고 있나</h2>
+    <p class="sub">이 보고서의 핵심 단계입니다. "적정가"를 구하는 대신, <b>현재 주가가 성립하려면 시장이 가정해야 하는 경쟁우위기간(CAP)을 거꾸로 풀어</b> 그 합리성을 따집니다. 예측 기간을 5년부터 늘려가며 현재 주가와 만나는 지점을 찾습니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.12rem;color:var(--ink)">역산 결과</h3>
+        <ul class="clean">
+          <li>표준 가정(WACC 10%)으로는 <b>10년 예측+페이드 → $409</b>. 예측기간을 20년까지 늘려도 ~$510 수준으로 현재가에 한참 못 미침.</li>
+          <li>즉 격차는 "시간(예측기간)"만으로 메워지지 않음 — <b>고마진 + 장기고성장 + 저할인율</b>을 동시에 쌓아야 도달.</li>
+          <li>그 조합(강세 가정 + WACC 7%)을 모두 적용해야 비로소 <b>~$1,009</b>로 현재가에 근접.</li>
+          <li>따라서 시장 내재 CAP은 <b>20년을 초과</b>하는 것으로 도출되며, 이는 척도상 "과도한 낙관" 구간.</li>
+        </ul>
+        <div class="callout" style="margin:12px 0 0">
+          <span class="lab">도출된 내재 CAP</span>
+          <b>20년 초과</b> (표준 가정 기준). 가격 정당화에 "거의 모든 변수가 동시에 우호적"이어야 함 → <b>안전마진 희박</b>. <span class="conf">신뢰도 높음 · ~80%<span class="dot"></span></span>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.12rem;color:var(--ink)">시장이 암묵적으로 믿는 것</h3>
+        <p style="font-size:.95rem;margin-top:0">현재 시총(~$300B, EV ~$292B)이 성립하려면, 단순화하면 시장은 <b>영구 잉여현금흐름 약 $22B(연 2.5% 성장)</b>를 기대하는 셈입니다. 이를 충족하려면 GEV는 대략:</p>
+        <div class="kv"><span class="k">매출 규모</span><span class="v">~$120B+ (현재의 3배)</span></div>
+        <div class="kv"><span class="k">EBITA 마진</span><span class="v">20%대 유지</span></div>
+        <div class="kv"><span class="k">고성장 지속</span><span class="v">15년 내외 두 자릿수</span></div>
+        <div class="kv"><span class="k">할인율 관점</span><span class="v">방어주(WACC ~7%)</span></div>
+        <p style="font-size:.86rem;color:var(--ink-soft);margin:10px 0 0">이 모든 조건이 동시에 충족되어야 하며, 다년간 큰 실행 차질이 없어야 합니다. 불가능하진 않으나 "거의 완벽한 실행"을 요구합니다.</p>
+      </div>
+    </div>
+
+    <!-- two interpretations -->
+    <h3 style="margin-top:26px;font-size:1.18rem;color:#fff">핵심 쟁점: GEV는 어느 쪽인가</h3>
+    <div class="grid2">
+      <div class="callout teal" style="margin-top:8px">
+        <span class="lab">관점 A — 저위험 구조적 컴파운더</span>
+        가스터빈 과점 해자 + 다년 순풍 + 마이너스 운전자본을 갖춘 "인프라형 고품질 복리기업"으로 본다면, 낮은 WACC(~7%)와 긴 CAP이 정당화될 수 있습니다. 이 경우 강세 운영가정과 결합하면 현재가($1,128)도 설명 가능.
+      </div>
+      <div class="callout clay" style="margin-top:8px">
+        <span class="lab">관점 B — 경기민감 장비 제조사</span>
+        대형 자본재·경기 사이클 노출·실행 리스크를 강조하면 높은 WACC(~11%)가 합당하며, 이 경우 기본가치(~$363~409)와의 격차가 매우 큽니다. 현재가는 "사이클 고점 + 모멘텀 프리미엄"으로 해석됩니다.
+      </div>
+    </div>
+    <p style="color:var(--on-slate-soft);font-size:.95rem;margin-top:14px"><b style="color:#fff">결국 답은 "베타·위험 평가"에 달려 있습니다.</b> GEV가 A에 가깝다고 믿으면 현재가가 설명되고, B에 가깝다고 믿으면 고평가입니다. 본 분석은 표준 가정(중립적 β 1.3)에서 B 쪽에 무게가 실리지만, 베타 자체의 불확실성(0.59~1.35)이 커서 단정하지 않습니다. <span class="conf mid">종합 신뢰도 중간 · ~60%<span class="dot"></span></span></p>
+  </div>
+</section>
+
+<!-- ============ 13. 민감도 분석 ============ -->
+<section id="sensitivity">
+  <div class="wrap">
+    <span class="sec-no">13 — 민감도 분석</span>
+    <h2>가정이 바뀌면 가치는 얼마나 움직이나</h2>
+    <p class="sub">단일 숫자에 속지 않으려면, 핵심 가정을 흔들어 봐야 합니다. 아래는 기본 시나리오 구조에서 자본비용·마진·성장·페이드를 각각 바꿨을 때의 주당 가치($)입니다.</p>
+
+    <h3 style="font-size:1.1rem;margin-top:6px">① 자본비용(WACC) × 최종마진 — 가장 영향 큰 두 변수</h3>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>WACC ＼ 최종마진</th><th>−2%p (16%)</th><th>기본 (18%)</th><th>+2%p (20%)</th></tr></thead>
+        <tbody>
+          <tr><td>9%</td><td>$418</td><td>$469</td><td class="pos">$519</td></tr>
+          <tr class="hl"><td>10% (기본)</td><td>$365</td><td>$409</td><td>$453</td></tr>
+          <tr><td>11%</td><td class="neg">$324</td><td>$363</td><td>$403</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.84rem;color:var(--ink-faint);margin-top:8px;font-family:var(--mono)">이 표의 최대값($519)도 현재가 $1,128의 절반 이하. WACC ±1%p가 마진 ±2%p보다 영향이 큼.</p>
+
+    <div class="grid3" style="margin-top:18px">
+      <div class="card">
+        <div class="tag">② 장기성장률 g ±1%p</div>
+        <div class="kv"><span class="k">g 1.5%</span><span class="v">$397</span></div>
+        <div class="kv"><span class="k">g 2.5% (기본)</span><span class="v" style="color:var(--copper-deep)">$409</span></div>
+        <div class="kv"><span class="k">g 3.5%</span><span class="v">$424</span></div>
+        <p style="font-size:.84rem;color:var(--ink-soft);margin:8px 0 0">영향 상대적으로 작음(±$15 내외).</p>
+      </div>
+      <div class="card">
+        <div class="tag">③ 페이드(최종ROIC)</div>
+        <div class="kv"><span class="k">12% (강한 페이드/비관)</span><span class="v">$397</span></div>
+        <div class="kv"><span class="k">16% (중립/기본)</span><span class="v" style="color:var(--copper-deep)">$409</span></div>
+        <div class="kv"><span class="k">20% (약한 페이드/낙관)</span><span class="v">$416</span></div>
+        <p style="font-size:.84rem;color:var(--ink-soft);margin:8px 0 0">페이드 가정 변화의 영향도 제한적.</p>
+      </div>
+      <div class="card" style="background:var(--copper-tint);border-color:#e3c3ad;color:#3a2113">
+        <div class="tag" style="color:var(--copper-deep)">④ 현재가 도달 조건</div>
+        <div class="kv" style="border-color:#e3c3ad"><span class="k" style="color:#7a4421">강세가정 + WACC 7.5%</span><span class="v">$896</span></div>
+        <div class="kv" style="border-color:#e3c3ad"><span class="k" style="color:#7a4421">강세가정 + WACC 7.0%</span><span class="v">$1,009</span></div>
+        <p style="font-size:.84rem;margin:8px 0 0">현재가는 "강세 운영 + 방어주 할인율"을 동시에 쌓아야 근접.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="lab">민감도 종합</span>
+      개별 변수를 합리적 범위에서 흔들면 가치는 대략 <b>$324~$519</b> 안에서 움직입니다. 현재가 $1,128에 닿으려면 <b>여러 낙관 변수를 동시에</b> 극단까지 끌어올려야 하며(특히 WACC를 7%대 방어주 수준으로), 이는 안전마진이 거의 없음을 뜻합니다. <span class="conf">신뢰도 높음 · ~80%<span class="dot"></span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14. 시나리오 분석 ============ -->
+<section id="scenario" class="band">
+  <div class="wrap">
+    <span class="sec-no">14 — 시나리오 분석</span>
+    <h2>강세 · 기본 · 약세</h2>
+    <p class="sub">서로 다른 미래를 세 가지로 묶어 봤습니다. 막대는 각 시나리오의 주당 가치, 점선은 현재 주가입니다.</p>
+
+    <figure>
+      <div class="svgbox">
+        <svg viewBox="0 0 920 320" role="img" aria-label="시나리오별 주당 가치">
+          <g font-family="Pretendard,sans-serif">
+            <!-- baseline axis, scale: $1200 -> 720px from x=140; y baseline 250 -->
+            <line x1="140" y1="250" x2="900" y2="250" stroke="#cfc6ba" stroke-width="1.5"/>
+            <!-- current price dashed line at $1128 -> x = 140 + 1128/1200*720 = 140+676.8=816.8 -->
+            <line x1="816" y1="40" x2="816" y2="262" stroke="#A8442F" stroke-width="2" stroke-dasharray="6 5"/>
+            <text x="816" y="32" text-anchor="middle" fill="#A8442F" font-size="12" font-weight="800" font-family="JetBrains Mono,monospace">현재가 $1,128</text>
+
+            <!-- bars: bear 218, base 409, bull 733, bull+lowWACC 1009 -->
+            <!-- bar width via value/1200*720 ; y top = 250 - h, h via value? use horizontal bars instead for clarity -->
+            <!-- Use vertical bars -->
+            <!-- bear -->
+            <rect x="200" y="204" width="90" height="46" fill="#A8442F"/>
+            <text x="245" y="196" text-anchor="middle" font-size="13" font-weight="800" fill="#1B2127" font-family="JetBrains Mono,monospace">$218</text>
+            <text x="245" y="272" text-anchor="middle" font-size="12.5" font-weight="700" fill="#3f1710">약세</text>
+            <!-- base -->
+            <rect x="360" y="164" width="90" height="86" fill="#B5673A"/>
+            <text x="405" y="156" text-anchor="middle" font-size="13" font-weight="800" fill="#1B2127" font-family="JetBrains Mono,monospace">$409</text>
+            <text x="405" y="272" text-anchor="middle" font-size="12.5" font-weight="700" fill="#8C4E2A">기본</text>
+            <!-- bull -->
+            <rect x="520" y="96" width="90" height="154" fill="#1F6F6B"/>
+            <text x="565" y="88" text-anchor="middle" font-size="13" font-weight="800" fill="#1B2127" font-family="JetBrains Mono,monospace">$733</text>
+            <text x="565" y="272" text-anchor="middle" font-size="12.5" font-weight="700" fill="#10302e">강세</text>
+            <!-- bull + low WACC -->
+            <rect x="680" y="58" width="90" height="192" fill="#2E8C86" opacity="0.85"/>
+            <text x="725" y="50" text-anchor="middle" font-size="13" font-weight="800" fill="#1B2127" font-family="JetBrains Mono,monospace">$1,009</text>
+            <text x="725" y="272" text-anchor="middle" font-size="11.5" font-weight="700" fill="#10302e">강세+WACC7%</text>
+
+            <text x="140" y="300" font-size="12" fill="#46525C">읽는 법: 기본·강세 가정 모두 현재가에 못 미치며, "강세 운영 + 7% 할인율"을 함께 적용해야 비로소 현재가에 근접합니다.</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>그림 8 · 시나리오별 주당 가치. 점선(현재가)은 강세 막대($733)보다도 위에 있습니다.</figcaption>
+    </figure>
+
+    <div class="grid3">
+      <div class="card" style="border-top:3px solid var(--clay)">
+        <h3 style="margin:0 0 6px;font-size:1.05rem">약세 · $218</h3>
+        <p style="font-size:.88rem;margin:0;color:var(--ink-soft)">WACC 11.5%, 마진 14%대 정체, 성장 조기 둔화, 최종ROIC 12%. 사이클 둔화·풍력 부진 지속·경기민감 부각 시.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--copper)">
+        <h3 style="margin:0 0 6px;font-size:1.05rem">기본 · $409</h3>
+        <p style="font-size:.88rem;margin:0;color:var(--ink-soft)">WACC 10%, 마진 18%로 확장 후 유지, 10년 예측+페이드. 가이던스 대체로 달성하되 표준 위험 가정.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--teal)">
+        <h3 style="margin:0 0 6px;font-size:1.05rem">강세 · $733</h3>
+        <p style="font-size:.88rem;margin:0;color:var(--ink-soft)">WACC 8.5%, 마진 21%(항공급 근접), 15년 두 자릿수 성장, 최종ROIC 20%. 슈퍼사이클 장기화 + 마진 상방 실현.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 15. 리스크 & 체크포인트 ============ -->
+<section id="risk">
+  <div class="wrap">
+    <span class="sec-no">15 — 주요 리스크 · 분기별 체크포인트</span>
+    <h2>무엇을 지켜봐야 하나</h2>
+    <p class="sub">밸류에이션이 완벽한 실행을 요구하는 만큼, 아래 항목들이 어긋나면 빠른 재평가가 필요합니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.12rem">주요 리스크</h3>
+        <ul class="clean">
+          <li><b>고평가·실행 리스크</b> — 마진이 약속(2028 20%)대로 안 오르면 배수 급정상화.</li>
+          <li><b>운전자본 효과 소멸</b> — 현금흐름의 상당부분이 선수금 증가에 의존. 성장 정상화 시 약화(현금 천장 가능성).</li>
+          <li><b>경기 민감성</b> — 대형 자본재 수요는 금리·투자 사이클에 노출.</li>
+          <li><b>일회성 효과 제거</b> — 2025 세금혜택($2.9B) 소멸로 2026 조정 EPS는 전년比 −8.6% 역성장.</li>
+          <li><b>풍력·해상풍력</b> — Vineyard Wind 등 정책·소송·비용 변수. 적자 지속 시 발목.</li>
+          <li><b>금리·정책</b> — 매파적 통화정책은 고배수 성장주에 역풍. 관세 변수.</li>
+          <li><b>경쟁·전환</b> — 재생에너지 침투, 에너지 전환 역전 시 가스터빈 수요 가정 흔들림.</li>
+        </ul>
+      </div>
+      <div class="card" style="background:var(--card-2)">
+        <h3 style="margin-top:0;font-size:1.12rem">분기별 체크포인트</h3>
+        <ul class="clean teal">
+          <li><b>조정 EBITDA 마진</b> — 2026 가이던스 12~14% 경로 진입 여부.</li>
+          <li><b>가스터빈 주문·슬롯 예약</b> — 29.8GW(2025) 모멘텀 유지/가격 인상 지속?</li>
+          <li><b>FCF의 질</b> — 선수금 의존 vs 영업이익 기반 — 전환율 추세.</li>
+          <li><b>Electrification 백로그</b> — $30B→$60B(2028) 경로.</li>
+          <li><b>풍력 적자 축소</b> — 흑자전환(2028 마진 6%) 진척.</li>
+          <li><b>자사주·배당</b> — $10B 자사주·배당 2배 집행 속도.</li>
+          <li><b>다음 실적: 2026-07-22 (개장 전)</b>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 16. 종합 판단 ============ -->
+<section id="synthesis" class="dark">
+  <div class="wrap">
+    <span class="sec-no">16 — 종합 판단</span>
+    <h2>내재 CAP은 합리적인가</h2>
+    <p class="sub">섹터 평균 대비, 그리고 GEV의 해자 품질 대비, 현재 주가에 내포된 기대를 어떻게 봐야 할지 정리합니다.</p>
+
+    <div class="callout teal" style="margin-top:6px">
+      <span class="lab">주장(Claim) → 이유(Reason) → 근거(Evidence)</span>
+      <b>주장:</b> 현재 주가는 매우 긴 CAP(20년+)을 내포해 안전마진이 희박하다. &nbsp;<b>이유:</b> 표준 가정 DCF·민감도·시나리오 어디서도 합리적 범위($324~733)가 현재가($1,128)에 닿지 않으며, 도달엔 강세 운영가정과 방어주 수준 할인율(7%)을 동시에 요구한다. &nbsp;<b>근거:</b> 기본 EV $102B vs 시총 ~$300B, 2028E 기준으로도 EV/EBITDA ~26x·P/E ~37x, 애널리스트 상단마저 +26%.
+    </div>
+
+    <div class="grid2" style="margin-top:8px">
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.1rem;color:var(--ink)">섹터 평균 대비 합리성</h3>
+        <p style="font-size:.95rem;margin-top:0">산업분야 평균 페이드(f≈0.21)를 적용하면 통상적 기업의 내재 CAP은 10~15년이 "합리적" 구간입니다. GEV의 20년+는 이를 크게 상회합니다. 다만 가스터빈 과점 해자는 평균적 기업보다 길게 방어될 수 있어, <b>"평균보다 긴 CAP"은 일부 정당화</b>됩니다. 쟁점은 "20년+까지 정당한가"이며, 여기엔 의문이 큽니다.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.1rem;color:var(--ink)">균형 잡힌 결론</h3>
+        <p style="font-size:.95rem;margin-top:0">GEV는 <b>질적으로 우수한 기업</b>입니다(진짜 해자 + 구조적 순풍 + 자본효율). 동시에 현재 <b>가격은 거의 완벽한 다년 실행을 요구</b>합니다. "좋은 회사"와 "좋은 가격"은 다른 질문이며, 본 분석은 전자에 동의하되 후자엔 신중합니다.</p>
+      </div>
+    </div>
+
+    <div class="callout gold" style="margin-top:8px">
+      <span class="lab">결론을 바꿀 새 증거 (베이지안 관점)</span>
+      다음이 확인되면 판단을 상향할 수 있습니다: ① 마진이 가이던스를 <b>초과</b>해 항공급(22~25%)으로 빠르게 수렴, ② 선수금과 무관하게 <b>영업이익 기반 FCF</b>가 구조적으로 증가, ③ 베타가 지속적으로 <b>1 미만(방어주)</b>으로 확인되어 낮은 WACC가 정당화, ④ 데이터센터 전력 수요가 상단 전망대로 실현. 반대로 마진 정체·선수금 효과 소멸·사이클 둔화가 나타나면 하향. <span class="conf mid">현재 종합 신뢰도 중간 · ~60%<span class="dot"></span></span>
+    </div>
+    <p style="color:var(--on-slate-soft);font-size:.92rem;margin-top:14px">본 자료는 정보·학습 목적이며, 특정 매매를 권유하지 않습니다. 개인의 포트폴리오·위험성향·투자기간에 따라 해석은 달라질 수 있습니다.</p>
+  </div>
+</section>
+
+<!-- ============ 17. 한계와 가정 (필수) ============ -->
+<section id="limits">
+  <div class="wrap">
+    <span class="sec-no">17 — 한계와 가정</span>
+    <h2>이 분석이 기대는 가정과 그 한계</h2>
+    <p class="sub">모든 결론은 아래 가정 위에 서 있습니다. 가정이 틀리면 결론도 달라집니다 — 이 점을 명시하는 것이 분석의 정직성입니다.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.1rem">방법론적 한계</h3>
+        <ul class="clean">
+          <li>DCF는 "정밀한 정답"이 아니라 <b>방향·논리 점검 도구</b>입니다. 입력의 작은 변화가 결과를 크게 바꿉니다(특히 WACC).</li>
+          <li><b>베타가 핵심 불확실성</b>입니다. 0.59~1.35로 갈리며, 상장 26개월로 회귀 추정이 불안정합니다. β를 1.3으로 둔 것은 판단이며, 더 낮으면(방어주) 가치는 크게 상향됩니다.</li>
+          <li>마진 18%·최종ROIC 16% 등은 <b>경영진 가이던스에 기반한 가정</b>이며 아직 실현되지 않았습니다.</li>
+          <li>FCF전환율(130%→85%)은 선수금 효과의 점진적 소멸을 단순화한 것으로, 실제 경로는 다를 수 있습니다.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.1rem">데이터·시점 한계</h3>
+        <ul class="clean teal">
+          <li>주가·재무는 <b>2026-06-22 기준</b>이며, 다음 실적(7/22) 이후 빠르게 변할 수 있습니다.</li>
+          <li>ERP는 다모다란 2026년 초 4.23%를 참조하되 <b>4.5%로 절충</b>(2026년 3월 전쟁·유가 충격 반영 가능성).</li>
+          <li>피어(지멘스 에너지) 매출은 환율·세그먼트 집계에 따라 출처별 편차가 있어 ~$45B로 추정 사용.</li>
+          <li>본 분석은 단일 모델 관점이며, 다른 합리적 가정 체계에서는 다른 결론이 가능합니다.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="lab">반대 관점을 진지하게 (steel-manning)</span>
+      본 분석은 "고평가" 쪽에 다소 무게를 싣지만, 그 반대 논거도 강합니다: GEV가 <b>저위험 구조적 컴파운더</b>라면(과점 해자, 다년 순풍, 마이너스 운전자본, 항공급 마진 잠재력) 낮은 WACC와 20년+ CAP이 정당화되어 현재가가 설명됩니다. 고품질 기업이 오랜 기간 고평가를 유지한 역사적 사례도 많습니다. 따라서 "비싸다"는 단정이 아니라, <b>"현재가는 매우 긴 CAP을 요구하며 그 가정이 충족되어야 한다"</b>는 조건부 진술이 더 정확합니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 18. 데이터 출처 ============ -->
+<section id="sources" class="band">
+  <div class="wrap">
+    <span class="sec-no">18 — 데이터 출처 및 기준 시점</span>
+    <h2>출처 표기</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.05rem">시장·재무 데이터</h3>
+        <ul class="clean">
+          <li>주가·재무제표·컨센서스: stockanalysis.com / SEC 10-K·10-Q (기준 2026-06-22)</li>
+          <li>경영진 가이던스: GE Vernova 투자자의 날·실적 발표 (2024·2025·Q1 2026)</li>
+          <li>세그먼트 데이터: FY2025 연차보고서</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0;font-size:1.05rem">거시·산업 데이터</h3>
+        <ul class="clean teal">
+          <li>주식위험프리미엄(ERP): 다모다란 2026 업데이트 (4.23% → 4.5% 적용)</li>
+          <li>기대 인플레이션: FRED 10년 BEI 2.29% (→ g 2.5%)</li>
+          <li>전력 수요 전망: IEA 데이터센터·전력 전망 / 골드만삭스</li>
+          <li>피어: GE Aerospace·Siemens Energy 공시·집계 서비스</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:.84rem;color:var(--ink-faint);margin-top:12px;font-family:var(--mono)">출처 간 상충(예: 베타 0.59 vs 1.05 vs 1.35)은 본문에 명시했습니다. 추정·가정은 별도 표기했습니다.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>GE Vernova (NYSE: GEV) — 경쟁우위기간(CAP) 기반 장기 분석</b> · 기준일 2026-06-22 (다음 실적 2026-07-22)</p>
+    <p>본 자료는 정보·학습 목적의 분석이며, 매수·매도 등 특정 투자행위를 권유하지 않습니다. 모든 가정과 한계는 "한계와 가정" 섹션에 명시했습니다. 데이터는 작성 시점 기준이며 이후 변동될 수 있습니다.</p>
+    <p style="margin-top:14px;font-family:var(--mono);font-size:.78rem;color:#7e9499">방법: 매출→EBITA→NOPAT→FCF→PV의 현금흐름 할인, 페이드 모델 최종가치, 연중할인 적용. 결론은 시장 내재 CAP 역산에 기반합니다.</p>
+  </div>
+</footer>
+
+</body>
+</html>
