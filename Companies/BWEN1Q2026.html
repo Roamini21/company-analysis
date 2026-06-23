@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BWEN · Broadwind 기업·산업 심층 분석 (CAP 프레임워크)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#16191F; --graphite:#20252D; --steel:#323B46;
+  --paper:#EAEDEF; --paper2:#F6F7F8; --white:#FFFFFF;
+  --line:#CBD1D6; --line-dark:#39424D;
+  --copper:#B26B3A; --copper-soft:#EFDFD0; --copper-ink:#3C2410;
+  --teal:#1E6E7D; --teal-soft:#D2E6E9; --teal-ink:#0C2E34;
+  --amber:#B5852A; --amber-soft:#F1E6C6; --amber-ink:#3F2E07;
+  --green:#3B7A57; --green-soft:#D6E7DC; --green-ink:#143424;
+  --rust:#A8472F; --rust-soft:#F0D9D1; --rust-ink:#3A150C;
+  --txt:#16191F; --txt-soft:#586069; --txt-inv:#E7EAEC; --txt-inv-soft:#9BA4AD;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Noto Sans KR","IBM Plex Sans",sans-serif;background:var(--paper);color:var(--txt);
+  line-height:1.72;font-size:16px;-webkit-font-smoothing:antialiased}
+.mono{font-family:"IBM Plex Mono",monospace;font-feature-settings:"tnum"}
+.osw{font-family:"Oswald",sans-serif;letter-spacing:.02em}
+h1,h2,h3,h4{line-height:1.25;font-weight:900}
+a{color:var(--copper)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.sec{padding:64px 0;border-top:1px solid var(--line)}
+.sec.dark{background:var(--graphite);color:var(--txt-inv);border-top:1px solid var(--line-dark)}
+.sec.ink{background:var(--ink);color:var(--txt-inv);border-top:1px solid var(--line-dark)}
+.eyebrow{font-family:"Oswald",sans-serif;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  font-size:13px;color:var(--copper);display:flex;align-items:center;gap:10px}
+.eyebrow .num{font-family:"IBM Plex Mono",monospace;background:var(--copper);color:var(--white);
+  padding:2px 8px;border-radius:3px;font-size:12px;font-weight:600}
+.sec.dark .eyebrow,.sec.ink .eyebrow{color:#D89A66}
+h2.title{font-size:30px;margin:14px 0 8px;letter-spacing:-.01em}
+.lead{font-size:17px;color:var(--txt-soft);max-width:760px;margin-bottom:8px}
+.sec.dark .lead,.sec.ink .lead{color:var(--txt-inv-soft)}
+.sec h3{font-size:20px;margin:30px 0 12px}
+.sec p{margin:12px 0}
+/* 일반 p는 섹션 색을 상속받게 두고, 콜아웃·표 등 밝은 박스는 자체 색을 유지 */
+strong{font-weight:700}
+.u-copper{color:var(--copper);font-weight:700}
+.u-teal{color:var(--teal);font-weight:700}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(22,25,31,.97);
+  border-bottom:1px solid var(--line-dark);backdrop-filter:blur(6px)}
+.topbar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-top:10px;padding-bottom:10px}
+.brand{font-family:"Oswald",sans-serif;font-weight:700;color:var(--white);font-size:17px;
+  letter-spacing:.04em;white-space:nowrap;margin-right:6px}
+.brand .tk{color:var(--copper)}
+.navlinks{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+.navlinks a{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--txt-inv-soft);
+  text-decoration:none;padding:4px 8px;border-radius:4px;white-space:nowrap;line-height:1.4}
+.navlinks a:hover{background:var(--steel);color:var(--white)}
+.hero{background:radial-gradient(1100px 380px at 78% -8%,rgba(178,107,58,.20),transparent 60%),
+   radial-gradient(800px 360px at 8% 110%,rgba(30,110,125,.18),transparent 60%),var(--ink);
+  color:var(--txt-inv);padding:54px 0 60px}
+.hero .tag{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:#D89A66;letter-spacing:.12em}
+.hero h1{font-size:clamp(34px,6vw,58px);margin:10px 0 6px;letter-spacing:-.02em;color:var(--white)}
+.hero .sub{font-size:18px;color:var(--txt-inv-soft);max-width:720px}
+.hero .oneliner{font-size:19px;color:#F0E2D6;margin:18px 0 0;max-width:760px;
+  border-left:3px solid var(--copper);padding-left:16px;font-weight:500}
+.statrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.stat{background:rgba(255,255,255,.04);border:1px solid var(--line-dark);border-radius:8px;
+  padding:12px 16px;min-width:120px;color:var(--txt-inv)}
+.stat .k{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--txt-inv-soft);
+  text-transform:uppercase;letter-spacing:.08em}
+.stat .v{font-family:"Oswald",sans-serif;font-size:24px;font-weight:600;color:var(--white);margin-top:2px}
+.stat .v small{font-size:13px;color:var(--txt-inv-soft);font-weight:400}
+.verdict{background:var(--graphite);border:1px solid var(--line-dark);border-radius:12px;padding:22px;margin-top:30px;color:var(--txt-inv)}
+.verdict h4{color:var(--white);font-size:15px;font-family:"Oswald",sans-serif;letter-spacing:.06em;
+  text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+.verdict h4::before{content:"";width:10px;height:10px;background:var(--copper);border-radius:2px;transform:rotate(45deg)}
+.verdict p{color:var(--txt-inv);font-size:16px;margin:8px 0}
+.verdict .conf{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:#D89A66;margin-top:6px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:780px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.card{background:var(--white);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:18px}
+.card h4{font-size:16px;margin-bottom:6px;color:var(--ink)}
+.card p{font-size:14.5px;color:var(--txt-soft);margin:6px 0}
+.card .big{font-family:"Oswald",sans-serif;font-size:30px;font-weight:600;color:var(--ink)}
+.card .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--txt-soft);text-transform:uppercase;letter-spacing:.07em}
+.card-d{background:#171B22;color:var(--txt-inv);border:1px solid var(--line-dark);border-radius:10px;padding:18px}
+.card-d h4{color:var(--white);font-size:16px;margin-bottom:6px}
+.card-d p{color:var(--txt-inv-soft);font-size:14.5px;margin:6px 0}
+.card-d .big{font-family:"Oswald",sans-serif;font-size:30px;font-weight:600;color:var(--white)}
+.card-d .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--txt-inv-soft);text-transform:uppercase;letter-spacing:.07em}
+.cal{border-radius:9px;padding:15px 17px;margin:18px 0;border-left:5px solid}
+.cal p{margin:5px 0;font-size:14.5px}
+.cal .h{font-weight:700;font-family:"Oswald",sans-serif;letter-spacing:.04em;font-size:14px;text-transform:uppercase}
+.cal-copper{background:var(--copper-soft);color:var(--copper-ink);border-left-color:var(--copper)}
+.cal-copper p,.cal-copper .h{color:var(--copper-ink)}
+.cal-teal{background:var(--teal-soft);color:var(--teal-ink);border-left-color:var(--teal)}
+.cal-teal p,.cal-teal .h{color:var(--teal-ink)}
+.cal-amber{background:var(--amber-soft);color:var(--amber-ink);border-left-color:var(--amber)}
+.cal-amber p,.cal-amber .h{color:var(--amber-ink)}
+.cal-rust{background:var(--rust-soft);color:var(--rust-ink);border-left-color:var(--rust)}
+.cal-rust p,.cal-rust .h{color:var(--rust-ink)}
+.cal-green{background:var(--green-soft);color:var(--green-ink);border-left-color:var(--green)}
+.cal-green p,.cal-green .h{color:var(--green-ink)}
+.glossary{background:var(--paper2);border:1px dashed var(--line);border-radius:8px;padding:13px 16px;margin:14px 0}
+.glossary .g-h{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--copper);margin-bottom:4px}
+.glossary p{font-size:13.5px;color:var(--txt-soft);margin:4px 0}
+.glossary b{color:var(--txt)}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;margin:14px 0;font-family:"IBM Plex Mono",monospace}
+.tbl th,.tbl td{padding:8px 9px;text-align:right;border-bottom:1px solid var(--line)}
+.tbl th:first-child,.tbl td:first-child{text-align:left;font-family:"Noto Sans KR",sans-serif}
+.tbl thead th{background:var(--ink);color:var(--white);font-weight:600;border-bottom:2px solid var(--copper)}
+.tbl tbody tr{background:var(--white)}
+.tbl tbody td{color:var(--txt)}
+.tbl tbody tr:nth-child(even){background:var(--paper2)}
+.tbl .hl{background:var(--copper-soft)!important}
+.tbl .hl td{color:var(--copper-ink);font-weight:700}
+.scroll-x{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--white)}
+.scroll-x .tbl{margin:0}
+.scroll-hint{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--txt-soft);text-align:right;margin:4px 2px 0}
+.barline{display:flex;align-items:center;gap:10px;margin:8px 0}
+.barline .nm{font-size:13px;width:135px;flex:none;color:var(--txt)}
+.sec.dark .barline .nm{color:var(--txt-inv)}
+.bartrack{flex:1;background:var(--line);border-radius:5px;height:22px;overflow:hidden;position:relative}
+.sec.dark .bartrack{background:#2C343D}
+.barfill{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;
+  padding-right:7px;color:var(--white);font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600}
+.src{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--txt-soft);margin-top:8px}
+.sec.dark .src,.sec.ink .src{color:var(--txt-inv-soft)}
+.divlabel{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--txt-soft);margin:26px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.sec.dark .divlabel{color:var(--txt-inv-soft);border-color:var(--line-dark)}
+.pill{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;margin:2px 3px}
+.pill-g{background:var(--green-soft);color:var(--green-ink);border:1px solid #9BC2A8}
+.pill-r{background:var(--rust-soft);color:var(--rust-ink);border:1px solid #D2A293}
+.pill-a{background:var(--amber-soft);color:var(--amber-ink);border:1px solid #D9C58A}
+.pill-t{background:var(--teal-soft);color:var(--teal-ink);border:1px solid #9BC6CD}
+footer{background:var(--ink);color:var(--txt-inv-soft);padding:30px 0;border-top:1px solid var(--line-dark)}
+footer .wrap{font-family:"IBM Plex Mono",monospace;font-size:12px}
+footer b{color:var(--txt-inv)}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap">
+  <span class="brand"><span class="tk">BWEN</span> · Broadwind</span>
+  <nav class="navlinks">
+    <a href="#concl">핵심결론</a><a href="#overview">기업개요</a><a href="#revenue">수익구조</a>
+    <a href="#product">제품·기술</a><a href="#industry">산업분석</a><a href="#lifecycle">생애주기</a>
+    <a href="#moat">경쟁우위·해자</a><a href="#swot">SWOT</a><a href="#peer">피어비교</a>
+    <a href="#dcf">DCF·전시23</a><a href="#cap">내재CAP</a><a href="#sens">민감도</a>
+    <a href="#scenario">시나리오</a><a href="#risk">리스크</a><a href="#synth">종합·한계</a>
+  </nav>
+</div></div>
+
+<header class="hero"><div class="wrap">
+  <div class="tag">NASDAQ: BWEN · 정밀 제조 · 발전/핵심 인프라 · 2026-06-22 기준</div>
+  <h1>풍력을 버리고<br>전력 슈퍼사이클에 올라타다</h1>
+  <p class="sub">Broadwind는 미국의 풍력 타워 제조사였습니다. 2026년, 풍력 사업을 통째로 매각하고
+    천연가스 터빈·전력 인프라용 정밀 부품 회사로 변신하는 중입니다. 이 보고서는 이 회사가 무엇을 하고,
+    어떻게 돈을 벌며, 어떤 산업에 속하는지를 처음 보는 사람도 이해할 수 있도록 설명하고,
+    현재 주가에 시장이 어떤 기대를 담았는지를 역산합니다.</p>
+  <p class="oneliner">“한 문장 요약 — Broadwind는 발전소·데이터센터용 가스터빈에 들어가는 금속 부품과 기어를
+    미국 내에서 만드는 초소형(마이크로캡) 정밀 제조사로, 쇠퇴하는 풍력에서 빠져나와 호황기에 진입한
+    전력 공급망에 베팅하고 있습니다.”</p>
+  <div class="statrow">
+    <div class="stat"><div class="k">현재가</div><div class="v">$5.01</div></div>
+    <div class="stat"><div class="k">시가총액</div><div class="v">$115M<small> 마이크로캡</small></div></div>
+    <div class="stat"><div class="k">매출(TTM)</div><div class="v">$155M</div></div>
+    <div class="stat"><div class="k">EBITDA 마진</div><div class="v">9.5%</div></div>
+    <div class="stat"><div class="k">베타</div><div class="v">~1.7<small> 고변동</small></div></div>
+    <div class="stat"><div class="k">생애주기</div><div class="v">정리/전환</div></div>
+  </div>
+  <div class="verdict" id="concl">
+    <h4>핵심 결론</h4>
+    <p><strong>현재 주가 $5.01은 ‘신생 Broadwind(가스터빈·기어 사업)’가 자본비용을 초과하는 수익을
+      약 <span class="u-copper">7년</span> 동안 유지한다는 기대를 담고 있습니다.</strong>
+      이는 CAP 5~10년 구간(‘약간 비관적’)에 해당해, 시장이 과도한 낙관을 부리고 있지는 않다는 뜻입니다.</p>
+    <p>다만 이 ‘7년’은 <strong>두 가정 위에 위태롭게 서 있습니다</strong>: ① 약 3억 달러의 이월결손금(NOL)으로
+      세금을 거의 안 낸다는 점, ② 산업솔루션·기어 부문 마진이 계속 개선된다는 점. 둘 중 하나라도 무너지면(예: 법정세율 25% 적용),
+      동일 주가를 정당화하려면 40년 넘는 비현실적 CAP가 필요해집니다.</p>
+    <p class="conf">베이지안 확신도 — 내재 CAP가 5~10년 범위라는 판단: <strong>중간(약 65%)</strong>
+      · 회사가 ‘안정적 해자 기업’이라는 판단: <strong>낮음(약 25%)</strong></p>
+  </div>
+</div></header>
+
+<section class="sec" id="overview"><div class="wrap">
+  <div class="eyebrow"><span class="num">01</span> 기업 개요</div>
+  <h2 class="title">Broadwind은 ‘쇠를 깎고 용접해 전력 설비 부품을 만드는’ 미국 회사입니다</h2>
+  <p class="lead">설립부터 지금의 대전환까지, 비전공자도 이해할 수 있게 처음부터 풀어봅니다.</p>
+
+  <h3>① 원래 무엇이었나 — 풍력 타워 제조사</h3>
+  <p>Broadwind(브로드윈드)는 2004년 미국에서 시작했습니다. ‘Tower Tech Systems’라는 풍력 타워 제조 자산을
+    인수하면서 출발했고, 한동안 회사 이름도 <strong>Broadwind <em>Energy</em></strong>였습니다(2020년 5월 ‘Energy’를 떼고 Broadwind로 변경).
+    본사는 일리노이주 시서로(Cicero)이며 <strong>생산 시설이 100% 미국 내</strong>에 있습니다. 직원 수는 약 340명(풍력 철수 후 축소 예정)입니다.</p>
+  <p>풍력 타워란, 풍력 발전기의 날개(블레이드)와 발전기를 지상 100m 안팎 높이에 떠받치는 거대한 원통형 강철 기둥입니다.
+    Broadwind는 이 강철 기둥을 풍력 터빈 제조사(OEM)에 납품했습니다. 쉽게 말해
+    <strong>“바람개비를 세우는 거대한 쇠기둥을 만들어 파는 회사”</strong>였습니다.</p>
+
+  <div class="cal cal-amber">
+    <p class="h">2026년의 결정적 사건 — 풍력 철수</p>
+    <p>2026년 5월 5일, 회사는 텍사스주 애빌린(Abilene)의 <strong>풍력 타워 공장을 최대 1,950만 달러에 매각</strong>하고
+      풍력 시장에서 완전히 빠져나간다고 발표했습니다(2025년 위스콘신 매니토웍 공장 매각에 이은 두 번째 매각).
+      동시에 <strong>2026년 실적 가이던스(전망치)도 철회</strong>했습니다. 풍력 철수는 2026년 9월(애빌린 임대 종료)에 마무리됩니다.</p>
+    <p>→ 즉, 지금 분석하는 Broadwind는 ‘과거의 회사’가 아니라 <strong>변신 중인 회사</strong>입니다.
+      과거 재무제표(풍력 중심)는 미래를 그대로 보여주지 않습니다.</p>
+  </div>
+
+  <h3>② 왜 풍력을 버렸나 — 3가지 이유</h3>
+  <div class="grid g3">
+    <div class="card"><div class="lbl">이유 1 · 정책 리스크</div><h4>세금 혜택 만료</h4>
+      <p>미국 풍력 프로젝트 경제성은 연방 세액공제에 크게 의존하는데, 현 정책상 <strong>2027년 말 만료</strong> 예정입니다.
+        보조금이 사라지면 수요가 급감할 위험이 큽니다.</p></div>
+    <div class="card"><div class="lbl">이유 2 · 공급 과잉</div><h4>타워 가격 하락 압력</h4>
+      <p>회사 추정상 미국 내 풍력 타워 <strong>생산능력이 남아돈다</strong>고 봅니다. 공급 과잉은 가격 하락과 마진 잠식으로 이어집니다.</p></div>
+    <div class="card"><div class="lbl">이유 3 · 고객 집중</div><h4>한 OEM에 의존</h4>
+      <p>최근 풍력 매출이 <strong>대형 풍력 OEM 한 곳에 집중</strong>돼 있었습니다. 한 고객 의존 사업은 협상력이 약하고 위험합니다.</p></div>
+  </div>
+
+  <h3>③ 지금 무엇이 되려 하나 — ‘발전·핵심 인프라’ 정밀 제조사</h3>
+  <p>풍력에서 빠져나온 Broadwind는 이제 <strong>천연가스 발전소와 전력망(그리드)에 들어가는 정밀 금속 부품</strong>에 집중합니다.
+    핵심은 두 사업부 — <span class="u-teal">기어링(Gearing)</span>과 <span class="u-teal">산업솔루션(Industrial Solutions)</span>입니다.
+    이 두 부문은 지금 미국에서 일어나는 <strong>전력 수요 폭증(데이터센터·AI·노후 발전소 교체)</strong>의 수혜를 받고 있습니다(자세한 내용은 ‘산업 분석’ 참조).</p>
+
+  <div class="cal cal-copper">
+    <p class="h">CEO의 전략 한마디 (의역)</p>
+    <p>“풍력 타워 사업을 정리하고, 우리의 정밀 제조 역량이 강하게 요구되는 <strong>발전·송배전 인프라 시장</strong>으로 초점을 옮긴다.
+      미국은 지금 발전·전력망 투자가 여러 해 이어지는 사이클에 진입했다.” — Eric Blashford, CEO</p>
+  </div>
+
+  <div class="glossary">
+    <div class="g-h">처음 보는 용어 풀이</div>
+    <p><b>OEM</b> = 주문자상표부착생산. 여기서는 GE·지멘스처럼 ‘완제품(발전 터빈)을 만드는 큰 회사’를 뜻합니다.
+      Broadwind는 이들에게 부품을 납품하는 ‘협력업체’입니다.</p>
+    <p><b>마이크로캡(Micro-cap)</b> = 시가총액이 매우 작은 회사(보통 3억 달러 이하). 주가 변동이 크고 거래량이 적어 위험이 높습니다. Broadwind 시총은 약 1.15억 달러입니다.</p>
+    <p><b>가이던스(Guidance)</b> = 회사가 직접 제시하는 향후 실적 전망치. 이를 ‘철회’했다는 건 “이전 전망을 더는 믿지 말라”는 뜻으로, 불확실성이 커졌다는 신호입니다.</p>
+    <p><b>NOL(이월결손금)</b> = 과거에 낸 손실을 미래 이익과 상계해 세금을 줄일 수 있는 권리. Broadwind는 약 3억 달러를 보유해, 앞으로 수년간 세금을 거의 안 낼 수 있습니다.</p>
+  </div>
+  <p class="src">출처: 회사 보도자료·8-K(2026-05-05), Q1 2026 실적자료(2026-05-12), Yahoo Finance·StockAnalysis 기업 프로필. 기준 시점 2026-06-22.</p>
+</div></section>
+
+<!-- ============ 2. 수익 구조 ============ -->
+<section class="sec dark" id="revenue"><div class="wrap">
+  <div class="eyebrow"><span class="num">02</span> 수익 구조 시각화</div>
+  <h2 class="title">이 회사는 ‘부품을 만들어 OEM에 납품하고 대금을 받아’ 돈을 법니다</h2>
+  <p class="lead">3개 사업부의 매출 비중과, 돈이 들어오는 흐름을 한눈에 봅니다. (지금은 풍력 철수로 비중이 빠르게 바뀌는 중)</p>
+
+  <div class="divlabel">매출 흐름 — 돈이 들어오는 경로</div>
+  <svg viewBox="0 0 980 230" width="100%" style="max-width:980px" role="img" aria-label="매출 흐름도">
+    <defs>
+      <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+        <path d="M0,0 L9,4.5 L0,9 Z" fill="#D89A66"/></marker>
+    </defs>
+    <!-- 단계 박스 -->
+    <g font-family="Noto Sans KR" >
+      <rect x="10" y="70" width="150" height="86" rx="9" fill="#171B22" stroke="#39424D"/>
+      <text x="85" y="100" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">발전 OEM·산업 고객</text>
+      <text x="85" y="122" fill="#9BA4AD" font-size="11" text-anchor="middle">GE Vernova · 지멘스</text>
+      <text x="85" y="138" fill="#9BA4AD" font-size="11" text-anchor="middle">Caterpillar · 광산·철강</text>
+
+      <rect x="210" y="70" width="160" height="86" rx="9" fill="#171B22" stroke="#39424D"/>
+      <text x="290" y="98" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">주문·수주(Backlog)</text>
+      <text x="290" y="120" fill="#9BA4AD" font-size="11" text-anchor="middle">설계·견적 후 계약</text>
+      <text x="290" y="136" fill="#9BA4AD" font-size="11" text-anchor="middle">잔고가 미래 매출 가시성</text>
+
+      <rect x="420" y="70" width="170" height="86" rx="9" fill="#2A1B10" stroke="#B26B3A"/>
+      <text x="505" y="98" fill="#F0E2D6" font-size="14" font-weight="700" text-anchor="middle">Broadwind 공장</text>
+      <text x="505" y="120" fill="#E9D6C5" font-size="11" text-anchor="middle">절단·용접·기계가공</text>
+      <text x="505" y="136" fill="#E9D6C5" font-size="11" text-anchor="middle">조립·열처리·코팅</text>
+
+      <rect x="640" y="70" width="150" height="86" rx="9" fill="#171B22" stroke="#39424D"/>
+      <text x="715" y="98" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">납품·검수</text>
+      <text x="715" y="120" fill="#9BA4AD" font-size="11" text-anchor="middle">부품·조립품 인도</text>
+      <text x="715" y="136" fill="#9BA4AD" font-size="11" text-anchor="middle">품질 기준 충족</text>
+
+      <rect x="840" y="70" width="130" height="86" rx="9" fill="#10241A" stroke="#3B7A57"/>
+      <text x="905" y="105" fill="#D6E7DC" font-size="14" font-weight="700" text-anchor="middle">매출 인식</text>
+      <text x="905" y="127" fill="#A9CBB5" font-size="11" text-anchor="middle">대금 수취</text>
+    </g>
+    <g stroke="#D89A66" stroke-width="2" marker-end="url(#ar)" fill="none">
+      <line x1="162" y1="113" x2="206" y2="113"/>
+      <line x1="372" y1="113" x2="416" y2="113"/>
+      <line x1="592" y1="113" x2="636" y2="113"/>
+      <line x1="792" y1="113" x2="836" y2="113"/>
+    </g>
+    <text x="490" y="30" fill="#D89A66" font-family="IBM Plex Mono" font-size="12" text-anchor="middle" letter-spacing="2">수주(Backlog) → 생산 → 납품 → 매출. ‘수주잔고’가 늘면 미래 매출이 보인다는 신호</text>
+    <text x="490" y="200" fill="#9BA4AD" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">대부분이 ‘프로젝트형’ 수주 매출 — 배당은 없고, 번 돈은 사업 재투자·부채상환·인수에 사용</text>
+  </svg>
+
+  <div class="divlabel">3개 사업부 — 무엇이 매출을 만드나 (2025 프로포르마 비중 → 전환 후)</div>
+  <div class="grid g3">
+    <div class="card-d"><div class="lbl">사업부 1 · 철수 진행</div><h4>중공업 제조 (Heavy Fabrications)</h4>
+      <div class="big">51%<small style="font-size:13px;color:#9BA4AD"> → 축소</small></div>
+      <p>풍력 타워가 핵심이었으나 <strong>매각·철수 중</strong>. 남는 것은 천연가스용
+        <b style="color:#E9D6C5">압력조절장치(PRS)</b> 정도. Q1 매출 $16.4M(−35%).</p></div>
+    <div class="card-d"><div class="lbl">사업부 2 · 성장 핵심</div><h4>기어링 (Gearing)</h4>
+      <div class="big">~23%<small style="font-size:13px;color:#9BA4AD"> ↑</small></div>
+      <p>발전·석유가스·광산·철강용 <b style="color:#E9D6C5">기어·기어박스·정밀가공 부품</b> 및 수리·열처리.
+        Q1 매출 $8.5M(<span style="color:#9BCBA8">+42%</span>), 수주잔고 +107%.</p></div>
+    <div class="card-d"><div class="lbl">사업부 3 · 성장 핵심·고마진</div><h4>산업솔루션 (Industrial Solutions)</h4>
+      <div class="big">~26%<small style="font-size:13px;color:#9BA4AD"> ↑↑</small></div>
+      <p>복합화력 <b style="color:#E9D6C5">가스터빈용 부품·키팅·조립·공급망</b>.
+        Q1 매출 $9.2M(<span style="color:#9BCBA8">+64%</span>), <strong>EBITDA 마진 19.1%</strong>, 수주잔고 +89%.</p></div>
+  </div>
+
+  <div class="cal cal-teal" style="margin-top:20px">
+    <p class="h">핵심 통찰 — ‘쇠퇴 51% + 성장 49%’의 교체극</p>
+    <p>2025년엔 풍력(중공업) 비중이 절반을 넘었지만, 그 절반이 사라지고 있습니다.
+      대신 <strong>기어링·산업솔루션</strong>이 +40~64% 속도로 커지며 빈자리를 메웁니다.
+      특히 산업솔루션은 <strong>EBITDA 마진 19%</strong>로 풍력보다 훨씬 남는 장사입니다.
+      그래서 ‘매출은 일시적으로 줄어도, 이익의 질은 좋아지는’ 전환입니다.</p>
+  </div>
+
+  <div class="divlabel">과거 매출 추이 — ‘성장’이 아니라 ‘출렁임’이었다 (백만 USD)</div>
+  <div class="barline"><span class="nm">2021</span><div class="bartrack"><div class="barfill" style="width:71%;background:#5A6470">145.6</div></div></div>
+  <div class="barline"><span class="nm">2022</span><div class="bartrack"><div class="barfill" style="width:87%;background:#5A6470">176.8</div></div></div>
+  <div class="barline"><span class="nm">2023 (정점)</span><div class="bartrack"><div class="barfill" style="width:100%;background:#1E6E7D">203.5</div></div></div>
+  <div class="barline"><span class="nm">2024</span><div class="bartrack"><div class="barfill" style="width:70%;background:#A8472F">143.1</div></div></div>
+  <div class="barline"><span class="nm">2025</span><div class="bartrack"><div class="barfill" style="width:78%;background:#5A6470">158.1</div></div></div>
+  <div class="barline"><span class="nm">TTM(’26.3)</span><div class="bartrack"><div class="barfill" style="width:76%;background:#B26B3A">155.3</div></div></div>
+  <p style="font-size:14px;color:var(--txt-inv-soft);margin-top:10px">매출이 145 → 204 → 143으로 ‘롤러코스터’를 탄 것은
+    풍력 발주 사이클에 휘둘렸기 때문입니다. 이 변동성이 바로 회사가 풍력을 떠나려는 또 다른 이유입니다.</p>
+  <p class="src">출처: StockAnalysis(Fiscal.ai) 손익계산서, 회사 Q1 2026 실적자료. ‘프로포르마 비중’은 매니토웍 매각 반영 기준.</p>
+</div></section>
+
+<!-- ============ 3. 제품·기술 ============ -->
+<section class="sec" id="product"><div class="wrap">
+  <div class="eyebrow"><span class="num">03</span> 제품·서비스 및 기술력</div>
+  <h2 class="title">‘큰 쇳덩이를 정밀하게 깎고 붙이는’ 기술 — 쉽게 풀어봅니다</h2>
+  <p class="lead">Broadwind가 만드는 것이 정확히 무엇이고, 어떻게 만들며, 왜 아무나 못 만드는지 설명합니다.</p>
+
+  <div class="grid g3">
+    <div class="card"><div class="lbl">제품군 A · 산업솔루션</div><h4>가스터빈 ‘부품 꾸러미’</h4>
+      <p>천연가스 발전소의 심장인 <strong>가스터빈</strong>에 들어가는 수많은 부품 —
+        계측·제어장치, 밸브 조립품, 센서, 연료 시스템, 전기 정션박스·배선, 전자기계 장치 등을
+        <strong>모아서·조립해서·키트로 묶어</strong> OEM에 공급합니다.</p>
+      <p>비유하자면, OEM(GE·지멘스)이 ‘터빈 본체’를 만들 때 필요한 <strong>주변 부품 일체를 대신 준비해 주는 ‘부품 물류·조립 파트너’</strong>입니다.</p></div>
+    <div class="card"><div class="lbl">제품군 B · 기어링</div><h4>정밀 기어·기어박스</h4>
+      <p>회전력을 전달하는 <strong>톱니바퀴(기어)</strong>와 기어 묶음(기어박스), 정밀 가공 부품을 만듭니다.
+        발전기, 광산·굴착 장비, 철강·물류 설비 등 ‘힘이 세고 정밀해야 하는’ 기계에 들어갑니다.</p>
+      <p>한 번 만들고 끝이 아니라 <strong>수리·재생·열처리(금속을 단단하게 하는 가열 처리)</strong> 같은 애프터마켓 서비스도 제공합니다.</p></div>
+    <div class="card"><div class="lbl">제품군 C · 중공업(잔존)</div><h4>압력조절장치(PRS)·중대형 가공물</h4>
+      <p>풍력 타워는 떠나지만, <strong>천연가스 압력을 안전하게 낮춰주는 모듈형 장치(PRS)</strong>는 유지합니다.
+        대형·복잡한 금속 구조물을 정밀하게 제작하는 역량이 강점입니다.</p></div>
+  </div>
+
+  <div class="divlabel">생산 과정 — 쇳덩이가 부품이 되기까지</div>
+  <svg viewBox="0 0 980 180" width="100%" style="max-width:980px" role="img" aria-label="생산 공정 흐름도">
+    <defs><marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#1E6E7D"/></marker></defs>
+    <g font-family="Noto Sans KR">
+      <!-- six steps -->
+      <g>
+        <rect x="6"  y="56" width="142" height="70" rx="8" fill="#fff" stroke="#CBD1D6"/>
+        <text x="77" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#16191F">1. 설계·소싱</text>
+        <text x="77" y="106" text-anchor="middle" font-size="10.5" fill="#586069">도면화·자재 조달</text>
+      </g>
+      <g>
+        <rect x="168" y="56" width="142" height="70" rx="8" fill="#fff" stroke="#CBD1D6"/>
+        <text x="239" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#16191F">2. 절단·성형</text>
+        <text x="239" y="106" text-anchor="middle" font-size="10.5" fill="#586069">강판 절단·롤링</text>
+      </g>
+      <g>
+        <rect x="330" y="56" width="142" height="70" rx="8" fill="#fff" stroke="#CBD1D6"/>
+        <text x="401" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#16191F">3. 용접·기계가공</text>
+        <text x="401" y="106" text-anchor="middle" font-size="10.5" fill="#586069">정밀 깎기·접합</text>
+      </g>
+      <g>
+        <rect x="492" y="56" width="142" height="70" rx="8" fill="#fff" stroke="#CBD1D6"/>
+        <text x="563" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#16191F">4. 열처리·코팅</text>
+        <text x="563" y="106" text-anchor="middle" font-size="10.5" fill="#586069">경화·표면처리</text>
+      </g>
+      <g>
+        <rect x="654" y="56" width="142" height="70" rx="8" fill="#fff" stroke="#CBD1D6"/>
+        <text x="725" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#16191F">5. 조립·키팅</text>
+        <text x="725" y="106" text-anchor="middle" font-size="10.5" fill="#586069">부품 묶음 구성</text>
+      </g>
+      <g>
+        <rect x="816" y="56" width="158" height="70" rx="8" fill="#2A1B10" stroke="#B26B3A"/>
+        <text x="895" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#F0E2D6">6. 검사·납품</text>
+        <text x="895" y="106" text-anchor="middle" font-size="10.5" fill="#E9D6C5">품질검증 후 출하</text>
+      </g>
+    </g>
+    <g stroke="#1E6E7D" stroke-width="2" marker-end="url(#ar2)" fill="none">
+      <line x1="150" y1="91" x2="164" y2="91"/><line x1="312" y1="91" x2="326" y2="91"/>
+      <line x1="474" y1="91" x2="488" y2="91"/><line x1="636" y1="91" x2="650" y2="91"/>
+      <line x1="798" y1="91" x2="812" y2="91"/>
+    </g>
+    <text x="490" y="28" fill="#1E6E7D" font-family="IBM Plex Mono" font-size="12" text-anchor="middle" letter-spacing="1.5">‘수직 통합’ — 설계부터 검사까지 한 곳에서 처리하는 것이 경쟁력</text>
+    <text x="490" y="158" fill="#586069" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">공장: 시서로(IL, 기어) · 피츠버그(PA, 기어박스 수리·열처리) · 샌포드(NC, 산업솔루션)</text>
+  </svg>
+
+  <div class="cal cal-copper">
+    <p class="h">기술력의 핵심 — ‘왜 아무나 못 만드나’</p>
+    <p>발전 터빈 부품은 <strong>실패하면 발전소가 멈추는</strong> 고신뢰 부품이라, 엄격한 품질 인증과 추적성이 필요합니다.
+      Broadwind는 ① <strong>설계→가공→열처리→조립→검사</strong>를 한곳에서 처리하는 수직 통합,
+      ② <strong>대형·복잡 구조물</strong> 제작 경험, ③ <strong>100% 미국 내 생산</strong>이라는 점에서
+      ‘리쇼어링(국내 회귀)·공급망 안정’ 흐름의 수혜를 받습니다. 다만 이는 ‘대체 불가능한 독점 기술’이라기보다,
+      <strong>‘인증된 신뢰할 수 있는 국내 공급처’</strong>라는 성격에 가깝습니다(해자 분석 참조).</p>
+  </div>
+  <p class="src">출처: 회사 사업 설명(10-K/Q1 자료), Yahoo Finance 사업부 설명. 주요 고객: 지멘스 에너지, GE Vernova, Gerdau, Caterpillar, Konecranes.</p>
+</div></section>
+
+<!-- ============ 4. 산업 분석 ============ -->
+<section class="sec ink" id="industry"><div class="wrap">
+  <div class="eyebrow"><span class="num">04</span> 산업 분석</div>
+  <h2 class="title">왜 지금 ‘전력 부품’인가 — 한 세대 만의 전력 슈퍼사이클</h2>
+  <p class="lead">Broadwind가 올라타려는 산업의 구조·트렌드·성장성을 깊이 들여다봅니다. 이것이 투자 논리의 뿌리입니다.</p>
+
+  <h3>① 무슨 일이 벌어지고 있나 — 전기가 모자란다</h3>
+  <p>지난 20년간 미국 전력 수요는 거의 정체였습니다. 그런데 <strong>AI 데이터센터</strong>가 등장하면서 상황이 급변했습니다.
+    AI 한 번 학습·추론에 막대한 전기가 필요해, 빅테크들이 거대한 데이터센터를 짓고 있고, 여기에 <strong>안정적인 24시간 전력</strong>이 필요합니다.
+    태양광·풍력은 날씨에 따라 들쭉날쭉하지만, <strong>천연가스 발전</strong>은 언제든 켤 수 있어 ‘기저·보완 전원’으로 다시 각광받습니다.
+    여기에 <strong>노후 석탄발전소 폐쇄</strong>와 <strong>전력망(그리드) 현대화</strong>까지 겹쳐, 발전·송배전 설비 수요가 폭발하고 있습니다.</p>
+
+  <div class="cal cal-teal">
+    <p class="h">산업의 ‘체온계’ — GE Vernova (Broadwind의 핵심 고객)</p>
+    <p>세계 최대 가스터빈 제조사 중 하나인 GE Vernova의 2026년 1분기 수주잔고는 <strong>약 1,630억 달러</strong>,
+      가스터빈 계약·예약은 <strong>약 100GW</strong>(연말 110GW 목표)에 달합니다. 터빈 생산 ‘슬롯(자리)’이
+      <strong>2029~2030년까지 사실상 매진</strong>입니다. 데이터센터향 전력설비 주문은 1분기에만 작년 전체를 넘었습니다.</p>
+    <p>→ Broadwind는 이 거인의 <strong>공급망 협력사</strong>입니다. 고객의 수주잔고가 몇 년치 차 있다는 것은,
+      <strong>Broadwind의 산업솔루션·기어 부문도 향후 몇 년 매출 가시성이 좋다</strong>는 뜻입니다.</p>
+  </div>
+
+  <div class="divlabel">산업 가치사슬 — Broadwind은 어디에 있나</div>
+  <svg viewBox="0 0 980 250" width="100%" style="max-width:980px" role="img" aria-label="전력설비 가치사슬">
+    <g font-family="Noto Sans KR">
+      <!-- upstream -->
+      <rect x="10" y="90" width="150" height="74" rx="9" fill="#171B22" stroke="#39424D"/>
+      <text x="85" y="120" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">소재·원자재</text>
+      <text x="85" y="140" text-anchor="middle" fill="#9BA4AD" font-size="10.5">강철·합금·전자부품</text>
+      <!-- Broadwind layer (highlight) -->
+      <rect x="195" y="60" width="190" height="134" rx="11" fill="#2A1B10" stroke="#B26B3A" stroke-width="2"/>
+      <text x="290" y="86" text-anchor="middle" fill="#F0E2D6" font-size="13" font-weight="700">부품·조립 공급사</text>
+      <text x="290" y="106" text-anchor="middle" fill="#D89A66" font-size="12" font-weight="700">◀ Broadwind 위치 ▶</text>
+      <text x="290" y="128" text-anchor="middle" fill="#E9D6C5" font-size="10.5">기어·가공부품</text>
+      <text x="290" y="145" text-anchor="middle" fill="#E9D6C5" font-size="10.5">가스터빈 부품 키트</text>
+      <text x="290" y="162" text-anchor="middle" fill="#E9D6C5" font-size="10.5">압력조절장치(PRS)</text>
+      <text x="290" y="179" text-anchor="middle" fill="#9BA4AD" font-size="9.5">‘작은 협력사’ 단계</text>
+      <!-- OEM -->
+      <rect x="420" y="90" width="170" height="74" rx="9" fill="#0C2E34" stroke="#1E6E7D" stroke-width="2"/>
+      <text x="505" y="115" text-anchor="middle" fill="#D2E6E9" font-size="13" font-weight="700">터빈 OEM</text>
+      <text x="505" y="135" text-anchor="middle" fill="#9BC6CD" font-size="10.5">GE Vernova · 지멘스</text>
+      <text x="505" y="151" text-anchor="middle" fill="#9BC6CD" font-size="10.5">(완제품 터빈 제조)</text>
+      <!-- developers/utilities -->
+      <rect x="625" y="90" width="160" height="74" rx="9" fill="#171B22" stroke="#39424D"/>
+      <text x="705" y="115" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">발전사·EPC</text>
+      <text x="705" y="135" text-anchor="middle" fill="#9BA4AD" font-size="10.5">발전소 건설·운영</text>
+      <text x="705" y="151" text-anchor="middle" fill="#9BA4AD" font-size="10.5">유틸리티·IPP</text>
+      <!-- end demand -->
+      <rect x="820" y="90" width="150" height="74" rx="9" fill="#10241A" stroke="#3B7A57"/>
+      <text x="895" y="112" text-anchor="middle" fill="#D6E7DC" font-size="13" font-weight="700">최종 수요</text>
+      <text x="895" y="132" text-anchor="middle" fill="#A9CBB5" font-size="10.5">데이터센터·AI</text>
+      <text x="895" y="148" text-anchor="middle" fill="#A9CBB5" font-size="10.5">전력망·산업</text>
+    </g>
+    <g stroke="#5A6470" stroke-width="2" fill="none" marker-end="url(#ar)">
+      <line x1="162" y1="127" x2="191" y2="127"/><line x1="387" y1="127" x2="416" y2="127"/>
+      <line x1="592" y1="127" x2="621" y2="127"/><line x1="787" y1="127" x2="816" y2="127"/>
+    </g>
+    <text x="490" y="32" fill="#D89A66" font-family="IBM Plex Mono" font-size="12" text-anchor="middle" letter-spacing="1.5">Broadwind은 가치사슬의 ‘부품 공급’ 단계 — 거인(OEM) 앞단의 작은 협력사</text>
+    <text x="490" y="228" fill="#9BA4AD" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">함의: 수요 폭발의 ‘수혜’는 받지만, 가치사슬 위치상 ‘협상력’은 OEM 쪽이 강함 → 이익률·가격결정력 제약</text>
+  </svg>
+
+  <h3>② 성장성과 방향 — 호황이지만 ‘사이클’임을 잊지 말 것</h3>
+  <div class="grid g2">
+    <div class="card-d"><div class="lbl">상방 동력</div><h4>다년간의 투자 사이클</h4>
+      <p>· AI·데이터센터 전력 수요 급증<br>· 천연가스 발전 ‘재부상’(상시 가동 가능)<br>
+        · 석탄 폐쇄·노후 설비 교체<br>· 전력망 현대화·송배전 투자<br>· 리쇼어링/관세 → <strong>국내 공급처 선호</strong></p></div>
+    <div class="card-d"><div class="lbl">유의점</div><h4>‘이번엔 다르다’의 함정</h4>
+      <p>가스터빈은 역사적으로 <strong>붐-버스트(호황-불황)</strong>를 반복했습니다(2000년대 초 ‘가스터빈 버블’).
+        지금의 슈퍼사이클이 영원하지 않을 수 있고, 슬롯이 다 차면 <strong>몇 년 뒤 신규 발주가 둔화</strong>될 수 있습니다.
+        Broadwind 같은 부품사는 사이클 후반에 취약합니다.</p></div>
+  </div>
+
+  <div class="cal cal-amber">
+    <p class="h">대조 사례 — 풍력 부품사의 몰락이 주는 교훈</p>
+    <p>풍력 블레이드 대표 기업 <strong>TPI Composites</strong>는 현재 ‘TPICQ’ 티커로 거래되는 것으로 보입니다
+      (‘Q’ 접미사는 통상 파산/상장폐지 절차를 시사). 풍력 산업의 구조적 어려움(보조금 의존·과잉공급)이 부품사를 무너뜨린 사례로,
+      <strong>Broadwind가 풍력을 떠나는 결정의 타당성</strong>을 방증합니다. 동시에 ‘부품사는 산업 사이클에 취약하다’는 경고이기도 합니다.</p>
+  </div>
+  <p class="src">출처: GE Vernova 1Q26 8-K(2026-04-22)·Utility Dive·Power-Eng. 자연가스 터빈 수요/백로그. TPI 상태는 티커 표기(TPICQ) 기반 추정으로 추가 확인 권장.</p>
+</div></section>
+
+<!-- ============ 5. 생애주기 ============ -->
+<section class="sec" id="lifecycle"><div class="wrap">
+  <div class="eyebrow"><span class="num">05</span> 생애주기 단계 판별</div>
+  <h2 class="title">현금흐름으로 본 Broadwind = ‘정리/전환’ 단계</h2>
+  <p class="lead">CAP 분석은 ‘성장·성숙’ 기업에 가장 잘 맞습니다. Broadwind가 지금 어느 단계인지부터 정확히 짚습니다.</p>
+
+  <div class="glossary">
+    <div class="g-h">먼저 — 생애주기를 ‘현금흐름 부호’로 읽는 법</div>
+    <p>기업의 현금흐름표는 <b>영업활동(본업)</b>·<b>투자활동(설비·자산)</b>·<b>재무활동(빚·자본)</b> 셋으로 나뉩니다.
+      이 셋의 <b>+/− 부호 조합</b>으로 기업이 어느 생애 단계인지 가늠합니다. 예: 성숙기는 ‘영업+ / 투자− / 재무−’(돈 벌어 빚 갚고 주주환원).</p>
+  </div>
+
+  <div class="scroll-x">
+  <table class="tbl">
+    <thead><tr><th>연도</th><th>영업CF</th><th>투자CF</th><th>재무CF</th><th>해석(부호 패턴)</th></tr></thead>
+    <tbody>
+      <tr><td>2021</td><td>−12.8</td><td>−1.7</td><td>+12.0</td><td style="text-align:left;font-family:Noto Sans KR">도입형 (−,−,+)</td></tr>
+      <tr><td>2022</td><td>+16.6</td><td>−3.1</td><td>−1.7</td><td style="text-align:left;font-family:Noto Sans KR">성숙형 (+,−,−)</td></tr>
+      <tr><td>2023</td><td>−7.0</td><td>−6.4</td><td>+1.7</td><td style="text-align:left;font-family:Noto Sans KR">도입/적자형 (−,−,+)</td></tr>
+      <tr><td>2024</td><td>+13.8</td><td>−3.5</td><td>−3.7</td><td style="text-align:left;font-family:Noto Sans KR">성숙형 (+,−,−)</td></tr>
+      <tr class="hl"><td>2025</td><td>−15.4</td><td>+8.9</td><td>−0.8</td><td style="text-align:left;font-family:Noto Sans KR">감소/정리형 (−,+,−)</td></tr>
+      <tr class="hl"><td>TTM ’26.3</td><td>−4.4</td><td>+7.1</td><td>−2.9</td><td style="text-align:left;font-family:Noto Sans KR">감소/정리형 (−,+,−)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="scroll-hint">좌우 스크롤 가능 · 단위: 백만 USD</p>
+
+  <div class="cal cal-amber">
+    <p class="h">판정 — 부호가 ‘일관되지 않음’ = 정리/전환(Shake-out) 단계</p>
+    <p>Broadwind의 현금흐름 부호는 해마다 <strong>성숙↔감소↔도입을 오가며 일관성이 없습니다</strong>.
+      이런 ‘뒤섞인 신호’가 바로 <strong>정리/전환(shake-out)</strong> 단계의 특징입니다. 특히 최근(2025·TTM)의
+      <strong>투자활동 현금 유입(+)</strong>은 사업이 잘 돼서가 아니라 <strong>공장(매니토웍·애빌린)을 팔았기 때문</strong>이고,
+      <strong>영업활동 현금 유출(−)</strong>은 풍력 수주가 줄며 <strong>선수금(고객 선급금)이 빠져나갔기</strong> 때문입니다.</p>
+  </div>
+
+  <div class="grid g2">
+    <div class="card"><div class="lbl">방법론적 함의</div><h4>‘표준 CAP 분석’엔 까다로운 대상</h4>
+      <p>CAP 프레임워크는 본래 <strong>안정적 성장·성숙 기업</strong>에 적합합니다. 정리/전환 기업은 ‘일반적으로 회피’ 대상이며,
+        새로 시작하는 성장 사업(도입기)에는 <strong>실물옵션·TAM(시장규모) 관점</strong>이 더 적합합니다.</p></div>
+    <div class="card"><div class="lbl">그래서 본 보고서의 접근</div><h4>‘신생 BWEN’을 가정해 분석</h4>
+      <p>전환이 끝난 뒤의 <strong>‘신생 Broadwind(기어+산업솔루션)’</strong>를 분석 대상으로 삼습니다.
+        팔아 치운 풍력의 가치는 ‘매각대금(현금/부채상환)’으로 이미 반영됐다고 보고, <strong>지속될 핵심 사업</strong>의 미래만 현재가치화합니다.
+        단, 이는 가정이 많은 추정이며, 정밀치보다 <strong>방향성</strong>으로 해석해야 합니다.</p></div>
+  </div>
+  <p class="src">출처: StockAnalysis(Fiscal.ai) 현금흐름표. 생애주기 구분은 현금흐름 부호 패턴(Dickinson 2011 방식) 적용.</p>
+</div></section>
+
+<!-- ============ 6. 경쟁우위·해자 ============ -->
+<section class="sec dark" id="moat"><div class="wrap">
+  <div class="eyebrow"><span class="num">06</span> 경쟁 우위 정성 분석 · 경제적 해자</div>
+  <h2 class="title">해자는 ‘좁고 얕다’ — 사이클 수혜는 있으나 구조적 독점은 약하다</h2>
+  <p class="lead">포터의 5가지 힘으로 산업 매력도를 보고, ‘차별화 vs 원가우위’로 경쟁 전략을 진단합니다.</p>
+
+  <div class="glossary">
+    <div class="g-h">먼저 — ‘경제적 해자(Moat)’란?</div>
+    <p>‘해자’는 성을 둘러싼 물길처럼, <b>경쟁자가 쉽게 침범하지 못하게 막아 주는 지속적 경쟁우위</b>를 뜻합니다.
+      브랜드·특허·네트워크 효과·전환비용·원가우위 등이 해자의 원천입니다. 해자가 넓을수록 <b>높은 수익(ROIC)을 오래 유지</b>합니다.</p>
+  </div>
+
+  <div class="divlabel">포터의 5가지 힘 (Five Forces) — 산업 매력도 진단</div>
+  <div class="grid g3">
+    <div class="card-d"><div class="lbl">① 신규 진입 위협</div><h4 style="color:#E0C08A">중간</h4>
+      <p>설비·품질인증 장벽은 있으나 절대적이진 않음. 풍력엔 ‘과잉공급’ 존재. 발전 부품은 인증 진입장벽이 다소 높음.</p></div>
+    <div class="card-d"><div class="lbl">② 기존 경쟁 강도</div><h4 style="color:#E89B82">높음</h4>
+      <p>금속가공·계약제조는 <strong>파편화·경쟁 치열</strong>. 국내외 다수 가공업체와 경쟁. 가격 압박 상존.</p></div>
+    <div class="card-d"><div class="lbl">③ 공급자 교섭력</div><h4 style="color:#E0C08A">중간</h4>
+      <p>강철 등 <strong>원자재 가격 변동</strong>에 노출. 공급망 차질 리스크. 다만 대체 공급원은 존재.</p></div>
+    <div class="card-d"><div class="lbl">④ 구매자(고객) 교섭력</div><h4 style="color:#E89B82">높음 ⚠</h4>
+      <p><strong>최대 약점</strong>. GE Vernova·지멘스 등 <strong>소수 거대 OEM에 집중</strong>. 거인 고객이 가격·조건을 주도.</p></div>
+    <div class="card-d"><div class="lbl">⑤ 대체재 위협</div><h4 style="color:#E0C08A">중간</h4>
+      <p>OEM이 <strong>자체 생산(인소싱)</strong>하거나 타 공급사로 전환 가능. 부품 자체의 전환비용은 낮은 편.</p></div>
+    <div class="card-d" style="background:#2A1B10;border-color:#B26B3A"><div class="lbl" style="color:#D89A66">종합</div>
+      <h4 style="color:#F0E2D6">‘수요는 좋지만 위치가 약하다’</h4>
+      <p style="color:#E9D6C5">호황 산업이지만, 가치사슬상 <strong>작은 협력사</strong>라 ⑤힘 중 ②④가 불리. 구조적 매력도는 ‘중하’.</p></div>
+  </div>
+
+  <div class="divlabel">차별화 vs 원가우위 — 어느 쪽으로 돈을 버나</div>
+  <div class="grid g2">
+    <div class="card-d"><div class="lbl">진단 지표 1</div><h4>NOPAT 마진</h4>
+      <p>세후 영업이익률(NOPAT 마진)이 산업 평균의 2배+면 ‘차별화’ 신호. Broadwind는 영업이익률 ~5.5%(2025)로
+        <strong>평균 수준이거나 그 이하</strong> → <span class="pill pill-r">차별화 약함</span></p></div>
+    <div class="card-d"><div class="lbl">진단 지표 2</div><h4>투자자본 회전율 / ROIC</h4>
+      <p>역사적 ROIC(투하자본수익률)가 자본비용(WACC ~11.5%)과 <strong>비슷한 7~9%대</strong>로 추정 →
+        <strong>의미 있는 초과수익 없음</strong> → <span class="pill pill-r">원가우위도 뚜렷치 않음</span></p></div>
+  </div>
+
+  <div class="cal cal-rust">
+    <p class="h">냉정한 진단 — 과거의 Broadwind엔 ‘해자’가 없었다</p>
+    <p>역사적으로 <strong>ROIC ≈ WACC</strong>였습니다. 이는 ‘번 돈이 자본비용을 겨우 메우는’ 상태로,
+      <strong>지속 가능한 경제적 해자가 사실상 없었음</strong>을 뜻합니다(매출도 풍력 사이클에 출렁임).
+      차별화도, 원가우위도 뚜렷하지 않은 ‘평균적 계약 제조사’였습니다.</p>
+  </div>
+
+  <div class="cal cal-teal">
+    <p class="h">그러나 — ‘신생 BWEN’은 좁은 해자가 생길 여지</p>
+    <p>전환 후 사업엔 약하지만 실재하는 우위 요소가 있습니다: ① <strong>100% 미국 생산</strong>(리쇼어링·관세 수혜, 인증된 국내 공급처),
+      ② <strong>고신뢰 발전 부품 인증·추적성</strong>(전환비용 일부 발생), ③ <strong>산업솔루션 19% 마진</strong>(부가가치 높은 키팅·조립),
+      ④ 슬롯 매진으로 <strong>공급망 내 ‘확보된 자리’</strong>. 다만 이는 <strong>‘구조적 해자’라기보다 ‘사이클 + 입지’ 우위</strong>에 가깝습니다.
+      해자 폭 판정: <span class="pill pill-a">좁음(Narrow), 미검증</span></p>
+  </div>
+  <p class="src">출처: 재무비율 StockAnalysis, 세그먼트 마진 Q1 2026 자료. ROIC는 NOPAT/투하자본 추정치(리스 포함/제외에 따라 7~9% 범위).</p>
+</div></section>
+
+<!-- ============ 7. SWOT ============ -->
+<section class="sec" id="swot"><div class="wrap">
+  <div class="eyebrow"><span class="num">07</span> SWOT 분석</div>
+  <h2 class="title">강점·약점·기회·위협 한눈에</h2>
+  <p class="lead">전환기 기업답게, 기회와 위협이 동시에 큽니다.</p>
+
+  <div class="grid g2">
+    <div class="cal cal-green" style="margin:0">
+      <p class="h">S · 강점 (Strengths)</p>
+      <p>· <strong>100% 미국 생산</strong> — 리쇼어링·관세·공급망 안정 수혜<br>
+        · <strong>발전 슈퍼사이클 노출</strong> — 기어·산업솔루션 +40~64% 성장<br>
+        · <strong>사상 최대 수주잔고</strong>(산업솔루션 +89%, 기어 +107%)<br>
+        · <strong>약 3억$ 이월결손금(NOL)</strong> — 수년간 세금 거의 없음, M&A 실탄<br>
+        · <strong>산업솔루션 19% 마진</strong> — 이익의 질 개선<br>
+        · 애빌린 매각으로 <strong>부채 축소·유동성 개선</strong>(순레버리지 1.7x)</p>
+    </div>
+    <div class="cal cal-rust" style="margin:0">
+      <p class="h">W · 약점 (Weaknesses)</p>
+      <p>· <strong>초소형(마이크로캡)</strong> — 시총 ~$1.15억, 주가 변동 극심(베타 ~1.7)<br>
+        · <strong>역사적 ROIC ≈ WACC</strong> — 초과수익·해자 미약<br>
+        · <strong>들쭉날쭉·잦은 (−) 잉여현금흐름</strong>(2025 FCF −$19M)<br>
+        · <strong>고객 집중</strong> — 소수 거대 OEM 의존<br>
+        · <strong>작은 규모</strong> — OEM 대비 협상력 열위<br>
+        · <strong>가이던스 철회</strong> — 전망 불확실성 ↑</p>
+    </div>
+    <div class="cal cal-teal" style="margin:0">
+      <p class="h">O · 기회 (Opportunities)</p>
+      <p>· <strong>AI 데이터센터 전력 수요</strong> 폭증<br>
+        · <strong>천연가스 발전 재부상</strong>·석탄 폐쇄·그리드 현대화<br>
+        · <strong>NOL 활용 볼트온 M&A</strong> — 인수로 규모·마진 점프 가능<br>
+        · <strong>마진 확장</strong> 여지(고부가 산업솔루션 비중 ↑)<br>
+        · <strong>리쇼어링</strong> 정책 — 국내 공급처 선호 강화</p>
+    </div>
+    <div class="cal cal-amber" style="margin:0">
+      <p class="h">T · 위협 (Threats)</p>
+      <p>· <strong>가스터빈 사이클 반전</strong> — 슬롯 매진 후 발주 둔화 위험<br>
+        · <strong>핵심 고객 이탈</strong> 시 타격 큼(집중 리스크)<br>
+        · <strong>M&A 실행·고가 인수</strong> 리스크(가치 파괴 가능)<br>
+        · <strong>강철 등 원가 인플레이션</strong>·공급망 차질<br>
+        · <strong>경쟁·과잉공급</strong> — 가격 압박<br>
+        · 거시 침체 시 산업 자본지출 위축</p>
+    </div>
+  </div>
+  <p class="src">출처: 회사 자료·산업 데이터 종합. 강점/기회는 ‘전환 성공’ 시나리오, 약점/위협은 ‘전환 실패·사이클 반전’ 시나리오와 연결됨.</p>
+</div></section>
+
+<!-- ============ 8. 피어 비교 ============ -->
+<section class="sec dark" id="peer"><div class="wrap">
+  <div class="eyebrow"><span class="num">08</span> 피어그룹 비교</div>
+  <h2 class="title">‘작은 물고기, 큰 연못’ — 규모로 보는 Broadwind의 위치</h2>
+  <p class="lead">같은 ‘전력·산업 설비’ 테마의 회사들과 비교하면, Broadwind가 얼마나 작고 초기인지 드러납니다.</p>
+
+  <div class="divlabel">시가총액 비교 (대략, 2026 중반 · 로그적 규모 차이에 주목)</div>
+  <div class="barline"><span class="nm">GE Vernova (고객)</span><div class="bartrack"><div class="barfill" style="width:100%;background:#1E6E7D">~$1,300억+</div></div></div>
+  <div class="barline"><span class="nm">Powell Industries</span><div class="bartrack"><div class="barfill" style="width:38%;background:#3B7A57">~$100억</div></div></div>
+  <div class="barline"><span class="nm">Arcosa</span><div class="bartrack"><div class="barfill" style="width:30%;background:#5A6470">~$40억대</div></div></div>
+  <div class="barline"><span class="nm">Thermon</span><div class="bartrack"><div class="barfill" style="width:12%;background:#5A6470">~$10억대</div></div></div>
+  <div class="barline"><span class="nm">Broadwind (BWEN)</span><div class="bartrack"><div class="barfill" style="width:3%;background:#B26B3A;min-width:74px">~$1.15억</div></div></div>
+  <p style="font-size:13px;color:var(--txt-inv-soft);margin-top:8px">막대는 시각적 비교용(실제 비율과 다름). 요점: Broadwind는 비교군 중 <strong>압도적으로 작다</strong>.</p>
+
+  <div class="divlabel">정성 비교 — 같은 테마, 다른 체급·성숙도</div>
+  <div class="scroll-x">
+  <table class="tbl">
+    <thead><tr><th>기업</th><th>성격</th><th>규모</th><th>수익성</th><th>BWEN과의 관계</th></tr></thead>
+    <tbody>
+      <tr><td>Broadwind (BWEN)</td><td style="text-align:left;font-family:Noto Sans KR">전력부품 정밀제조(전환중)</td><td>초소형</td><td>박함(개선중)</td><td style="text-align:left;font-family:Noto Sans KR">본 분석 대상</td></tr>
+      <tr><td>Powell Industries</td><td style="text-align:left;font-family:Noto Sans KR">전기설비(스위치기어 등)</td><td>대형</td><td>우수</td><td style="text-align:left;font-family:Noto Sans KR">동일 ‘전력 붐’ 수혜의 ‘성공 모델’(12개월 +163%)</td></tr>
+      <tr><td>Arcosa</td><td style="text-align:left;font-family:Noto Sans KR">인프라 제품(풍력 철수 경험)</td><td>중대형</td><td>양호</td><td style="text-align:left;font-family:Noto Sans KR">‘풍력→인프라’ 전환 선례, 더 큰 규모</td></tr>
+      <tr><td>Thermon</td><td style="text-align:left;font-family:Noto Sans KR">산업용 공정 가열</td><td>중형</td><td>양호</td><td style="text-align:left;font-family:Noto Sans KR">산업 설비 니치 비교군</td></tr>
+      <tr><td>IES Holdings</td><td style="text-align:left;font-family:Noto Sans KR">인프라 솔루션</td><td>대형</td><td>우수</td><td style="text-align:left;font-family:Noto Sans KR">애빌린 공장 <strong>매수자</strong>(거래 상대)</td></tr>
+      <tr><td>GE Vernova</td><td style="text-align:left;font-family:Noto Sans KR">발전·전력 OEM</td><td>초대형</td><td>강함</td><td style="text-align:left;font-family:Noto Sans KR">BWEN의 <strong>핵심 고객</strong>(가치사슬 상단)</td></tr>
+      <tr><td>TPI Composites</td><td style="text-align:left;font-family:Noto Sans KR">풍력 블레이드</td><td>소형→부실</td><td>적자/파산추정</td><td style="text-align:left;font-family:Noto Sans KR">풍력 부품사의 <strong>반면교사</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="scroll-hint">좌우 스크롤 가능</p>
+
+  <div class="cal cal-teal">
+    <p class="h">피어 비교가 주는 두 메시지</p>
+    <p>① <strong>상방의 그림</strong>: Powell Industries는 같은 ‘전력 붐’을 타고 12개월간 시총이 +163% 뛴 ‘성공 모델’입니다.
+      Broadwind가 전환에 성공하면 ‘작은 Powell’ 같은 재평가 여지가 있습니다.<br>
+      ② <strong>현실의 거리</strong>: 그러나 Powell은 이미 크고 꾸준히 흑자인 반면, Broadwind는 <strong>초소형·전환 초기·수익성 미검증</strong>입니다.
+      ‘체급’과 ‘실적의 일관성’에서 격차가 큽니다.</p>
+  </div>
+  <p class="src">출처: 시총 MacroTrends·Public.com·StockAnalysis(2026.5~6). 수치는 시점에 따라 변동. 일부는 근사치.</p>
+</div></section>
+
+<!-- ============ 9. DCF · 전시23 ============ -->
+<section class="sec" id="dcf"><div class="wrap">
+  <div class="eyebrow"><span class="num">09</span> DCF 모델 · WACC 가정</div>
+  <h2 class="title">‘신생 BWEN’의 미래 현금흐름을 현재가치로 — 전시 23</h2>
+  <p class="lead">‘적정가’를 단정하지 않고, 미래 잉여현금흐름(FCF)을 할인해 ‘가치의 뼈대’를 세웁니다. 정밀치보다 방향성이 목적입니다.</p>
+
+  <div class="glossary">
+    <div class="g-h">3분 개념 — DCF가 뭔가요?</div>
+    <p><b>DCF(현금흐름할인법)</b>는 “이 사업이 앞으로 벌 현금을, 위험을 감안해 ‘오늘 돈’으로 환산하면 얼마인가”를 계산하는 방법입니다.
+      핵심 재료는 ① <b>FCF</b>(영업으로 번 뒤 재투자하고 남는 현금), ② <b>WACC</b>(투자자가 요구하는 할인율=자본비용),
+      ③ <b>터미널 가치</b>(예측 기간 이후의 가치, 보통 전체의 70%+).</p>
+  </div>
+
+  <div class="divlabel">WACC(자본비용) 산출 — ‘할인율’ 만들기</div>
+  <div class="grid g4">
+    <div class="card"><div class="lbl">무위험 이자율</div><div class="big">4.47%</div><p>미 10년 국채(2026.6)</p></div>
+    <div class="card"><div class="lbl">베타(조정)</div><div class="big">1.60</div><p>원시 1.7~2.3 → 1로 회귀조정</p></div>
+    <div class="card"><div class="lbl">위험 프리미엄(ERP)</div><div class="big">4.75%</div><p>프로젝트 표준<br>(다모다란 최신 4.23%)</p></div>
+    <div class="card" style="background:#2A1B10;border-color:#B26B3A"><div class="lbl" style="color:#D89A66">→ WACC</div><div class="big" style="color:#F0E2D6">~11.5%</div><p style="color:#E9D6C5">자기자본비용 12.1%<br>부채 비중 작음</p></div>
+  </div>
+  <div class="cal cal-amber">
+    <p class="h">데이터 충돌 알림 (출처 상충)</p>
+    <p>· <strong>ERP</strong>: 프로젝트 표준 가정은 <strong>4.75%</strong>이나, 다모다란 교수의 2026년 초 implied ERP는 <strong>4.23%</strong>입니다. 본 분석은 표준값 4.75%를 기본으로 쓰되, 민감도로 영향을 점검합니다.<br>
+      · <strong>장기성장률(g)</strong>: 프로젝트 표준 ‘약 2.5%’ vs FRED 10년 기대인플레이션 <strong>2.29%</strong>. 본 분석은 <strong>2.3%</strong>를 적용.<br>
+      · <strong>베타</strong>: 출처별 1.74~2.26로 편차. 사업 전환으로 과거 베타 신뢰도 낮음 → 조정 1.60 사용.</p>
+  </div>
+
+  <div class="divlabel">전시 23 — 시장 내재 CAP 모델 (신생 BWEN, 기본 시나리오 · 백만 USD)</div>
+  <div class="scroll-x">
+  <table class="tbl">
+    <thead><tr><th>항목</th><th>Y1</th><th>Y2</th><th>Y3</th><th>Y4</th><th>Y5</th><th>Y6</th><th>Y7</th><th>Y8</th><th>Y9</th><th>Y10</th></tr></thead>
+    <tbody>
+      <tr><td>연도(mid)</td><td>0.5</td><td>1.5</td><td>2.5</td><td>3.5</td><td>4.5</td><td>5.5</td><td>6.5</td><td>7.5</td><td>8.5</td><td>9.5</td></tr>
+      <tr><td>매출</td><td>118</td><td>132</td><td>147</td><td>165</td><td>185</td><td>200</td><td>216</td><td>233</td><td>252</td><td>272</td></tr>
+      <tr><td>매출성장%</td><td>12.0</td><td>12.0</td><td>12.0</td><td>12.0</td><td>12.0</td><td>8.0</td><td>8.0</td><td>8.0</td><td>8.0</td><td>8.0</td></tr>
+      <tr><td>EBITA</td><td>10.6</td><td>12.5</td><td>14.8</td><td>17.3</td><td>20.4</td><td>22.0</td><td>23.7</td><td>25.6</td><td>27.7</td><td>29.9</td></tr>
+      <tr><td>EBITA마진%</td><td>9.0</td><td>9.5</td><td>10.0</td><td>10.5</td><td>11.0</td><td>11.0</td><td>11.0</td><td>11.0</td><td>11.0</td><td>11.0</td></tr>
+      <tr><td>세율%(NOL)</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td></tr>
+      <tr><td>NOPAT</td><td>9.5</td><td>11.3</td><td>13.3</td><td>15.6</td><td>18.3</td><td>19.8</td><td>21.4</td><td>23.1</td><td>24.9</td><td>26.9</td></tr>
+      <tr><td>미래투자</td><td>6.9</td><td>7.8</td><td>8.7</td><td>9.7</td><td>10.9</td><td>8.1</td><td>8.8</td><td>9.5</td><td>10.3</td><td>11.1</td></tr>
+      <tr><td>잉여현금흐름</td><td>2.6</td><td>3.5</td><td>4.6</td><td>5.9</td><td>7.4</td><td>11.6</td><td>12.6</td><td>13.6</td><td>14.7</td><td>15.8</td></tr>
+      <tr><td>FCF 현재가치</td><td>2.5</td><td>3.0</td><td>3.5</td><td>4.0</td><td>4.6</td><td>6.4</td><td>6.2</td><td>6.0</td><td>5.8</td><td>5.7</td></tr>
+      <tr><td>ROIIC%</td><td>—</td><td>22.4</td><td>23.2</td><td>24.0</td><td>24.8</td><td>18.0</td><td>18.0</td><td>18.0</td><td>18.0</td><td>18.0</td></tr>
+      <tr class="hl"><td>주당가치$ (해당연도 종료시)</td><td>3.20</td><td>3.55</td><td>3.92</td><td>4.31</td><td>4.73</td><td>4.87</td><td>5.01</td><td>5.14</td><td>5.27</td><td>5.39</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="scroll-hint">좌우 스크롤 가능 · 연중(mid-year) 할인 적용</p>
+
+  <div class="cal cal-copper">
+    <p class="h">읽는 법 — 맨 아랫줄이 핵심</p>
+    <p>맨 아랫줄 ‘주당가치’는 <strong>“명시적 예측을 그 해까지만 하고 멈췄을 때의 주당 가치”</strong>입니다.
+      예측 기간을 늘릴수록(=초과수익을 더 오래 가정할수록) 가치가 커집니다. <strong>이 값이 현재가 $5.01과 같아지는 지점이 ‘시장 내재 CAP’</strong>입니다.
+      여기서는 <strong>Y7(약 7년)에서 정확히 $5.01</strong>에 도달합니다.</p>
+  </div>
+
+  <div class="grid g3">
+    <div class="card"><div class="lbl">가치 구성 (내재 CAP 7년 기준)</div><h4>명시적 FCF의 PV</h4><div class="big">$30M</div><p>전체 EV의 약 24%</p></div>
+    <div class="card"><div class="lbl">가치 구성</div><h4>터미널 가치의 PV</h4><div class="big">$95M</div><p>전체 EV의 약 76%</p></div>
+    <div class="card" style="background:#0C2E34;border-color:#1E6E7D"><div class="lbl" style="color:#9BC6CD">합계</div><h4 style="color:#D2E6E9">기업가치(EV)→주당</h4><div class="big" style="color:#fff">$5.01</div><p style="color:#9BC6CD">EV $125M − 순부채 $10M = 자기자본 $115M ÷ 23M주</p></div>
+  </div>
+  <p class="src">모델 가정: 시작매출 $105M(풍력 제외 핵심), 마진 8.5→11%, 세율 10%(NOL), WACC 11.5%, g 2.3%, 페이드 0.21, 터미널 ROIIC 13.5%. 자체 산출(방향성 목적).</p>
+</div></section>
+
+<!-- ============ 10. 시장 내재 CAP ============ -->
+<section class="sec ink" id="cap"><div class="wrap">
+  <div class="eyebrow"><span class="num">10</span> 시장 내재 CAP 및 해석</div>
+  <h2 class="title">시장은 ‘약 7년의 초과수익’을 가격에 넣었다</h2>
+  <p class="lead">CAP(경쟁우위기간)는 ‘회사가 자본비용을 초과하는 수익을 얼마나 오래 유지하는가’입니다. 현재가가 함축한 기간을 게이지로 표현합니다.</p>
+
+  <!-- CAP GAUGE (signature) -->
+  <svg viewBox="0 0 960 250" width="100%" style="max-width:960px;margin:12px 0" role="img" aria-label="시장 내재 CAP 게이지">
+    <defs>
+      <linearGradient id="capgrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#3B7A57"/><stop offset="35%" stop-color="#B5852A"/>
+        <stop offset="70%" stop-color="#B26B3A"/><stop offset="100%" stop-color="#A8472F"/>
+      </linearGradient>
+    </defs>
+    <!-- scale bar 0..25 -->
+    <rect x="70" y="120" width="820" height="26" rx="13" fill="url(#capgrad)"/>
+    <!-- ticks -->
+    <g font-family="IBM Plex Mono" font-size="12" fill="#9BA4AD" text-anchor="middle">
+      <line x1="70"  y1="116" x2="70"  y2="150" stroke="#39424D"/><text x="70" y="170">0</text>
+      <line x1="234" y1="116" x2="234" y2="150" stroke="#39424D"/><text x="234" y="170">5</text>
+      <line x1="398" y1="116" x2="398" y2="150" stroke="#39424D"/><text x="398" y="170">10</text>
+      <line x1="562" y1="116" x2="562" y2="150" stroke="#39424D"/><text x="562" y="170">15</text>
+      <line x1="726" y1="116" x2="726" y2="150" stroke="#39424D"/><text x="726" y="170">20</text>
+      <line x1="890" y1="116" x2="890" y2="150" stroke="#39424D"/><text x="890" y="170">25년+</text>
+    </g>
+    <!-- band labels -->
+    <g font-family="Noto Sans KR" font-size="11" text-anchor="middle">
+      <text x="152" y="100" fill="#7FB893">매우 비관(저평가)</text>
+      <text x="316" y="100" fill="#D9B45E">약간 비관</text>
+      <text x="480" y="100" fill="#D89A66">합리적 범위</text>
+      <text x="644" y="100" fill="#D89A66">약간 낙관</text>
+      <text x="808" y="100" fill="#E89B82">과도한 낙관(회피)</text>
+    </g>
+    <!-- range bar bull..bear -->
+    <rect x="168" y="150" width="295" height="8" rx="4" fill="#D89A66" opacity="0.5"/>
+    <text x="168" y="200" fill="#9BC6CD" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">강세 ~3년</text>
+    <text x="430" y="200" fill="#E89B82" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">약세 40년+ (정당화 불가) →</text>
+    <!-- needle at 7 yrs -> x = 70 + (7/25)*820 = 70+229.6 = 299.6 -->
+    <g>
+      <polygon points="300,108 292,90 308,90" fill="#FFFFFF"/>
+      <line x1="300" y1="90" x2="300" y2="146" stroke="#FFFFFF" stroke-width="3"/>
+      <circle cx="300" cy="146" r="6" fill="#FFFFFF"/>
+      <text x="300" y="80" fill="#fff" font-family="Oswald" font-size="22" font-weight="700" text-anchor="middle">7년</text>
+    </g>
+    <text x="480" y="232" fill="#9BA4AD" font-family="IBM Plex Mono" font-size="11" text-anchor="middle">기본 시나리오 내재 CAP ≈ 7년 · 가정에 따라 3년(강세)~40년+(약세)로 크게 흔들림</text>
+  </svg>
+
+  <div class="divlabel">해석 기준표 — 내재 CAP를 어떻게 읽나</div>
+  <div class="scroll-x">
+  <table class="tbl">
+    <thead><tr><th>내재 CAP</th><th>의미</th><th>방향성</th><th>BWEN 위치</th></tr></thead>
+    <tbody>
+      <tr><td>5년 미만</td><td style="text-align:left;font-family:Noto Sans KR">시장이 매우 비관적</td><td style="text-align:left;font-family:Noto Sans KR">저평가 후보</td><td></td></tr>
+      <tr class="hl"><td>5~10년</td><td style="text-align:left;font-family:Noto Sans KR">약간 비관적</td><td style="text-align:left;font-family:Noto Sans KR">해자 확실하면 매력</td><td style="text-align:left;font-family:Noto Sans KR">◀ 기본 7년 여기</td></tr>
+      <tr><td>10~15년</td><td style="text-align:left;font-family:Noto Sans KR">합리적 범위</td><td style="text-align:left;font-family:Noto Sans KR">중립</td><td></td></tr>
+      <tr><td>15~20년</td><td style="text-align:left;font-family:Noto Sans KR">약간 낙관적</td><td style="text-align:left;font-family:Noto Sans KR">강한 해자 근거 필요</td><td></td></tr>
+      <tr><td>20년 초과</td><td style="text-align:left;font-family:Noto Sans KR">과도한 낙관</td><td style="text-align:left;font-family:Noto Sans KR">회피 고려</td><td style="text-align:left;font-family:Noto Sans KR">법정세율 적용 시 여기(40년+)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="cal cal-teal">
+    <p class="h">핵심 해석 — ‘시장은 욕심부리지 않았다, 단 조건부로’</p>
+    <p>기본 가정에서 내재 CAP <strong>약 7년</strong>은 ‘약간 비관적’ 구간입니다. 즉 <strong>시장은 신생 BWEN에 과도한 미래를 가격에 넣지 않았습니다.</strong>
+      가스터빈 슈퍼사이클이 실제로 수년 지속되고(고객 GE Vernova 슬롯 2029~30 매진) 마진 개선이 이어진다면, ‘7년’은 오히려 <strong>달성 가능하거나 보수적</strong>일 수 있습니다.</p>
+    <p>그러나 이 결론은 <strong>NOL(저세율)·마진개선 가정에 절대적으로 의존</strong>합니다(다음 ‘민감도’ 참조). 그 점이 본 분석에서 가장 중요한 ‘불편한 진실’입니다.</p>
+  </div>
+  <p class="src">시장 내재 CAP = 모델 주당가치가 현재가 $5.01과 일치하는 명시적 예측기간(연중 할인). 자체 산출. 정밀치 아닌 방향 지표로 해석.</p>
+</div></section>
+
+<!-- ============ 11. 민감도 ============ -->
+<section class="sec" id="sens"><div class="wrap">
+  <div class="eyebrow"><span class="num">11</span> 민감도 분석</div>
+  <h2 class="title">‘7년’은 얼마나 단단한가 — 가정을 흔들어 본다</h2>
+  <p class="lead">내재 CAP가 어떤 가정에 가장 민감한지 보면, 어디를 주시해야 하는지 알 수 있습니다.</p>
+
+  <div class="divlabel">변수별 내재 CAP 변화 (기준 = 7.0년)</div>
+
+  <h3 style="font-size:16px;margin-top:8px">① 자본비용(WACC) ±1%p — <span class="u-copper">영향 매우 큼</span></h3>
+  <div class="barline"><span class="nm">WACC 10.5%</span><div class="bartrack"><div class="barfill" style="width:21%;background:#3B7A57">4.2년</div></div></div>
+  <div class="barline"><span class="nm">WACC 11.5% (기준)</span><div class="bartrack"><div class="barfill" style="width:35%;background:#B26B3A">7.0년</div></div></div>
+  <div class="barline"><span class="nm">WACC 12.5%</span><div class="bartrack"><div class="barfill" style="width:94%;background:#A8472F">18.7년</div></div></div>
+
+  <h3 style="font-size:16px">② 세율 (NOL 10% vs 법정 25%) — <span class="u-copper">영향 결정적 ⚠</span></h3>
+  <div class="barline"><span class="nm">세율 10% (NOL)</span><div class="bartrack"><div class="barfill" style="width:35%;background:#B26B3A">7.0년</div></div></div>
+  <div class="barline"><span class="nm">세율 25% (법정)</span><div class="bartrack"><div class="barfill" style="width:100%;background:#A8472F">40년+ (정당화 불가)</div></div></div>
+
+  <h3 style="font-size:16px">③ 시작매출 기반 (전환 후 핵심 규모)</h3>
+  <div class="barline"><span class="nm">$95M (보수)</span><div class="bartrack"><div class="barfill" style="width:64%;background:#B5852A">12.8년</div></div></div>
+  <div class="barline"><span class="nm">$105M (기준)</span><div class="bartrack"><div class="barfill" style="width:35%;background:#B26B3A">7.0년</div></div></div>
+  <div class="barline"><span class="nm">$115M (낙관)</span><div class="bartrack"><div class="barfill" style="width:23%;background:#3B7A57">4.5년</div></div></div>
+
+  <h3 style="font-size:16px">④ 장기성장률 g ±2%p / 페이드 비율 — 영향 작음</h3>
+  <div class="grid g2">
+    <div class="card"><div class="lbl">장기성장 g</div><p style="font-size:14px;color:var(--txt)"><span class="mono">0.3% → 7.8년</span> · <span class="mono">2.3% → 7.0년</span> · <span class="mono">4.3% → 6.1년</span><br>g는 결과에 비교적 둔감.</p></div>
+    <div class="card"><div class="lbl">페이드 비율(해자 지속성)</div><p style="font-size:14px;color:var(--txt)"><span class="mono">0.15 → 6.9년</span> · <span class="mono">0.21 → 7.0년</span> · <span class="mono">0.29 → 7.1년</span><br>경제적 이익이 작아 페이드 영향 미미.</p></div>
+  </div>
+
+  <div class="cal cal-rust">
+    <p class="h">민감도의 결론 — 두 개의 ‘스위치’가 모든 것을 좌우한다</p>
+    <p>① <strong>세율(NOL)</strong>: 가장 결정적. NOL로 세금이 거의 없다고 보면 7년이지만, <strong>법정세율(25%)로 정상화하면 ROIC가 WACC 아래로 떨어져
+      현재가를 ‘어떤 합리적 기간으로도’ 설명할 수 없습니다(40년+).</strong> → 현재 밸류에이션은 사실상 ‘NOL 가치 + 마진개선’에 기대고 있습니다.<br>
+      ② <strong>WACC</strong>: 초소형주라 할인율 1%p에 CAP가 4→19년으로 출렁입니다. 금리·위험인식 변화에 가치가 크게 흔들립니다.</p>
+  </div>
+  <p class="src">자체 DCF 민감도 산출. 각 행은 해당 변수만 바꾸고 나머지는 기준값 고정.</p>
+</div></section>
+
+<!-- ============ 12. 시나리오 ============ -->
+<section class="sec dark" id="scenario"><div class="wrap">
+  <div class="eyebrow"><span class="num">12</span> 시나리오 분석</div>
+  <h2 class="title">강세 · 기본 · 약세 — 세 갈래의 미래</h2>
+  <p class="lead">핵심 변수를 묶어 세 시나리오로 봅니다. 폭이 매우 넓다는 점 자체가 ‘이 주식의 성격’을 말해 줍니다.</p>
+
+  <div class="grid g3">
+    <div class="card-d" style="border-color:#3B7A57"><div class="lbl" style="color:#7FB893">강세 (BULL)</div>
+      <h4 style="color:#fff">내재 CAP ≈ 3년</h4>
+      <p>저WACC(10.5%) · 높은 매출기반($115M) · 강한 해자(페이드 0.15) · NOL 유지 · g 2.8%.</p>
+      <p style="color:#9BC6CD">→ 시장 기대(현재가)는 이 그림에선 <strong>‘쉽게 넘는 허들’</strong>. 전환 성공+슈퍼사이클 지속 시 재평가 여지.</p></div>
+    <div class="card-d" style="border-color:#B26B3A"><div class="lbl" style="color:#D89A66">기본 (BASE)</div>
+      <h4 style="color:#fff">내재 CAP ≈ 7~8년</h4>
+      <p>섹터 평균 가정. WACC 11.5% · 매출기반 $105M · 페이드 0.21 · NOL(저세율) · g 2.3%.</p>
+      <p style="color:#E9D6C5">→ ‘약간 비관적’ 구간. <strong>합리적이며 달성 가능</strong>하나 NOL·마진 전제 필요.</p></div>
+    <div class="card-d" style="border-color:#A8472F"><div class="lbl" style="color:#E89B82">약세 (BEAR)</div>
+      <h4 style="color:#fff">내재 CAP 40년+ </h4>
+      <p>고WACC(12.5%) · 낮은 기반($95M) · 약한 해자(페이드 0.29) · <strong>법정세율 25%</strong> · g 1.8%.</p>
+      <p style="color:#9BC6CD">→ 현재가를 <strong>펀더멘털로 정당화 불가</strong>. 즉 주가는 ‘M&A 성장·NOL 가치·모멘텀’을 선반영한 상태.</p></div>
+  </div>
+
+  <div class="cal cal-amber">
+    <p class="h">시나리오 폭이 주는 메시지</p>
+    <p>3년 ~ 40년+라는 <strong>극단적으로 넓은 분포</strong>는, 이 종목이 <strong>‘안정적 가치주’가 아니라 ‘전환·옵션성 베팅’</strong>임을 보여줍니다.
+      결과는 ‘전환 성공 여부’와 ‘NOL을 활용한 인수(M&A)로 규모·마진을 끌어올릴 수 있는가’에 달려 있습니다.
+      이런 종목은 <strong>소수의 좋은 분기(수주·마진·인수)</strong>가 쌓이며 ‘증명’되거나, 반대로 <strong>한 번의 실망</strong>으로 빠르게 되돌려질 수 있습니다.</p>
+  </div>
+  <p class="src">각 시나리오는 핵심 변수 묶음을 차등 적용한 자체 산출. 약세에서 ‘40년+’는 ‘현재가가 사실상 영구 초과수익을 가정’함을 의미.</p>
+</div></section>
+
+<!-- ============ 13. 리스크 ============ -->
+<section class="sec" id="risk"><div class="wrap">
+  <div class="eyebrow"><span class="num">13</span> 주요 리스크 · 분기별 체크포인트</div>
+  <h2 class="title">무엇이 논리를 깨뜨리는가, 그리고 무엇을 분기마다 볼 것인가</h2>
+  <p class="lead">투자 논리의 핵심 가정이 어디서 무너질 수 있는지, 어떤 신호를 추적할지 정리합니다.</p>
+
+  <div class="divlabel">핵심 리스크 (영향도 순)</div>
+  <div class="grid g2">
+    <div class="cal cal-rust" style="margin:0"><p class="h">① 전환·실행 리스크 (최상)</p>
+      <p>풍력 매출($56M)이 빠진 자리를 기어·산업솔루션이 충분히 빠르게·수익성 있게 메우지 못하면, ‘이익의 질 개선’ 논리가 무너집니다. 가이던스 철회로 가시성도 낮음.</p></div>
+    <div class="cal cal-rust" style="margin:0"><p class="h">② NOL·세율 가정 붕괴</p>
+      <p>밸류에이션이 ‘낮은 실효세율(NOL)’에 절대 의존. 만약 NOL 활용이 제약되거나 정상 세율이 적용되면 초과수익이 사라져 현재가 정당화 불가(민감도 참조).</p></div>
+    <div class="cal cal-amber" style="margin:0"><p class="h">③ 고객 집중 / 가스터빈 사이클</p>
+      <p>소수 거대 OEM(GE Vernova·지멘스) 의존. 슬롯 매진 후 발주 둔화·고객 인소싱·계약 이탈 시 타격. 가스터빈은 역사적 붐-버스트 산업.</p></div>
+    <div class="cal cal-amber" style="margin:0"><p class="h">④ M&A 리스크</p>
+      <p>NOL을 활용한 볼트온 인수가 ‘성장 동력’이지만, 동시에 <strong>고가 인수·통합 실패</strong> 시 가치 파괴 위험. 자본배분 규율이 관건.</p></div>
+    <div class="cal cal-amber" style="margin:0"><p class="h">⑤ 마이크로캡 변동성·유동성</p>
+      <p>시총 ~$1.15억, 베타 ~1.7. 거래량 적어 주가 급변. 최근 1년에도 ±100% 급등락. 단기 변동이 펀더멘털과 무관하게 큼.</p></div>
+    <div class="cal cal-amber" style="margin:0"><p class="h">⑥ 원가·공급망</p>
+      <p>강철 등 원자재 인플레이션, 공급망 차질이 박한 마진을 추가 압박할 수 있음. (Q4 실적에서 공급망 차질로 중공업 마진 훼손 사례 있었음)</p></div>
+  </div>
+
+  <div class="divlabel">분기별 체크포인트 — 매 분기 확인할 ‘계기판’</div>
+  <div class="grid g2">
+    <div class="card"><div class="lbl">성장의 ‘연료’</div><h4>수주·수주잔고(Backlog)</h4>
+      <p>산업솔루션·기어 <strong>수주잔고와 book-to-bill(수주/매출 비율)</strong>이 계속 1.0배 이상인가? (Q1: IS 1.6배) — 둔화 시 사이클 정점 경계.</p></div>
+    <div class="card"><div class="lbl">이익의 질</div><h4>세그먼트 EBITDA 마진</h4>
+      <p>산업솔루션 ~19%·기어 개선세가 유지·확대되는가? 전체 마진이 한 자릿수 후반→두 자릿수로 가는지.</p></div>
+    <div class="card"><div class="lbl">전환 완료</div><h4>풍력 철수·신규 매출 기반</h4>
+      <p>2026년 9월 애빌린 종료 후 <strong>‘신생 BWEN’의 분기 매출 런레이트</strong>가 얼마로 자리잡는가(본 모델 $105M 가정 검증).</p></div>
+    <div class="card"><div class="lbl">자본배분</div><h4>M&A·현금흐름·부채</h4>
+      <p>인수 발표 시 <strong>가격·시너지·NOL 활용</strong>이 합리적인가. 잉여현금흐름이 (+)로 전환되는가. 순레버리지 추이.</p></div>
+  </div>
+
+  <div class="cal cal-rust">
+    <p class="h">‘논리 붕괴’ 경보 — 다음이 보이면 재검토</p>
+    <p>· 핵심 고객(OEM) 이탈 또는 대형 계약 취소 · 산업솔루션 마진의 추세적 하락 · 수주잔고 2분기 연속 감소 ·
+      고가·부실 인수 · NOL 활용 제약 · 생애주기의 ‘정리→감소’ 고착(매출 회복 실패).</p>
+  </div>
+  <p class="src">출처: Q1 2026·Q4 2025 실적 코멘트, 산업 동향. 체크포인트는 CAP 프레임워크 분기/연간 점검 항목 적용.</p>
+</div></section>
+
+<!-- ============ 14. 종합·한계 ============ -->
+<section class="sec ink" id="synth"><div class="wrap">
+  <div class="eyebrow"><span class="num">14</span> 종합 판단 · 한계와 가정</div>
+  <h2 class="title">종합 — ‘조건부로 합리적인 전환 베팅’</h2>
+  <p class="lead">정보 제공 목적의 종합 정리입니다. 매수/매도 권유가 아니며, 판단은 독자의 몫입니다.</p>
+
+  <div class="divlabel">한 단락 종합</div>
+  <p style="font-size:16.5px">현재가 $5.01에 담긴 시장 기대는 <strong>‘신생 BWEN이 약 7년간 자본비용을 초과하는 수익을 유지한다’</strong>로 요약됩니다.
+    이는 과도한 낙관(‘약간 비관적’ 구간)은 아니며, <strong>가스터빈 슈퍼사이클(고객 GE Vernova 슬롯 2029~30 매진)과 100% 미국 생산·리쇼어링 수혜</strong>를 감안하면
+    달성 가능하거나 다소 보수적일 수 있습니다. 그러나 이 그림은 <strong>① 약 3억$ NOL에 의한 저세율, ② 산업솔루션·기어의 마진 개선</strong>이라는
+    두 전제 위에 서 있고, 둘 중 하나만 흔들려도(예: 법정세율 정상화) 현재가는 펀더멘털로 설명되지 않습니다.
+    역사적으로 ROIC ≈ WACC였던 ‘해자 없는 평균적 제조사’가, <strong>전환과 사이클을 통해 ‘좁은 해자’를 ‘증명’해 가는 과정</strong>으로 보는 것이 정확합니다.</p>
+
+  <div class="divlabel">베이지안 확신도 — 경쟁 가설</div>
+  <div class="grid g3">
+    <div class="card-d"><div class="lbl">가설 A · 약 40%</div><h4 style="color:#fff">‘합리적 7년’</h4>
+      <p>NOL·마진개선·사이클 지속이 맞물려, 내재 CAP 5~10년이 타당. 시장은 욕심부리지 않았다.</p></div>
+    <div class="card-d"><div class="lbl">가설 B · 약 40%</div><h4 style="color:#fff">‘선반영된 옵션’</h4>
+      <p>순수 유기적·정상세율로는 정당화 불가. 주가는 <strong>NOL 가치 + 미래 M&A + 모멘텀</strong>을 미리 반영.</p></div>
+    <div class="card-d"><div class="lbl">가설 C · 약 20%</div><h4 style="color:#fff">‘전환 실패/사이클 반전’</h4>
+      <p>고객 집중·사이클 반전·인수 실패로 ‘정리→감소’ 고착. 현재가는 과대.</p></div>
+  </div>
+  <p style="color:var(--txt-inv-soft);font-size:14px;margin-top:10px">→ 새 증거가 이 확률을 바꿉니다: <strong>수주잔고·세그먼트 마진·M&A 조건·풍력 철수 후 런레이트</strong>가 가설 A↔B↔C 사이의 무게를 이동시킬 것입니다.</p>
+
+  <div class="cal cal-amber" style="background:#241B0A;border-left-color:#B5852A">
+    <p class="h" style="color:#F1E6C6">한계와 가정 (Limitations &amp; Assumptions)</p>
+    <p style="color:#F1E6C6">· <strong>의존 가정</strong>: 신생 BWEN 시작매출 ~$105M, EBITA 마진 8.5→11%, 실효세율 10%(NOL), WACC 11.5%, g 2.3%, 페이드 0.21. 이들 대부분이 추정입니다.<br>
+      · <strong>확신 낮은 지점</strong>: ‘전환 후 매출 런레이트’와 ‘지속 가능한 마진’은 가이던스 철회로 검증이 어렵습니다. 베타·ERP도 출처 간 편차/전환으로 신뢰도 제한.<br>
+      · <strong>결론이 틀릴 조건</strong>: 법정세율 정상화, 고객 이탈, 가스터빈 사이클 조기 반전, 고가 인수 — 어느 하나라도 현실화되면 ‘7년’ 결론은 무너집니다.<br>
+      · <strong>방법론적 한계</strong>: 정리/전환 단계 기업은 CAP/DCF 적합도가 낮습니다. 본 분석은 ‘정밀 가치’가 아니라 <strong>‘시장이 무엇을 가정하는지’의 방향성</strong>으로만 사용해야 합니다.<br>
+      · <strong>미반영</strong>: 미발표 M&A의 가치/희석, NOL의 별도 자산가치는 모델에 직접 반영하지 않았습니다(상방 옵션).<br>
+      · <strong>다음 검증 단계</strong>: 10-Q/10-K로 세그먼트별 매출·마진·투하자본 재확인, 풍력 철수 후 첫 분기 런레이트 확인, NOL 잔액·사용 제약(Section 382) 점검.</p>
+  </div>
+
+  <div class="cal cal-teal">
+    <p class="h">최종 정리 (정보 제공 · 권유 아님)</p>
+    <p>Broadwind는 <strong>호황 산업에 막 올라탄, 해자가 좁고 미검증인 초소형 전환 기업</strong>입니다.
+      현재가의 시장 기대(약 7년 CAP)는 <strong>합리적이되 NOL·마진 전제에 조건부</strong>입니다.
+      ‘안정적 컴파운더’를 찾는다면 부합하지 않고, <strong>‘전환·옵션성·사이클 베팅’의 위험과 변동성을 이해하는</strong> 관점에서 접근해야 합니다.
+      개인의 포트폴리오 맥락·위험 감내도에 따른 판단은 독자의 몫입니다.</p>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p><b>BWEN · Broadwind, Inc.</b> — CAP 프레임워크 기반 기업·산업 분석 (정보 제공 목적, 매매 권유 아님)</p>
+  <p>기준 시점: 2026-06-22 · 현재가 $5.01 · 시총 ~$115M · 주식수 ~23M</p>
+  <p>주요 출처: 회사 8-K/보도자료(2026-05-05), Q1 2026 실적·IR 자료(2026-05-12), StockAnalysis(Fiscal.ai) 재무제표,
+    GE Vernova 1Q26 8-K, FRED(10년 기대인플레 2.29%), 다모다란 ERP(2026), 시장 데이터(MacroTrends 등). 수치는 시점에 따라 변동.</p>
+  <p style="margin-top:8px;color:#6B747D">DCF·내재 CAP는 다수 가정에 기반한 자체 추정으로, 정밀 가치가 아닌 ‘시장 기대의 방향성’ 지표입니다. 데이터·가정은 분기마다 재검토가 필요합니다.</p>
+</div></footer>
+
+</body>
+</html>
