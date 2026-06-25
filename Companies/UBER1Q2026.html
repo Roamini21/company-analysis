@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우버(UBER) 장기 투자 분석 · 시장 내재 CAP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root{
+  --ink:#111317; --ink-soft:#3A3F4A; --ink-mute:#5A6170;
+  --paper:#F1F4F8; --white:#FFFFFF;
+  --panel:#14161C; --panel2:#1B2030; --panel3:#22283A;
+  --line:#E1E6EC; --line-d:#2A3142;
+  --go:#00B86B; --go-deep:#00834C; --go-pale:#E9F9F1; --go-paletext:#0A5C38; --go-paleline:#BDEBD4;
+  --amber:#E8920C; --amber-deep:#B5710A; --amber-pale:#FCF3E2; --amber-paletext:#7A4D08; --amber-paleline:#F2DDB0;
+  --red:#E5484D; --red-deep:#BE363B; --red-pale:#FCECEC; --red-paletext:#8E2A2E; --red-paleline:#F3C9CB;
+  --blue:#2E6FF2; --blue-deep:#1E5AD6; --blue-pale:#EAF1FE; --blue-paletext:#163E9E; --blue-paleline:#C5D8FB;
+  --disp:"Space Grotesk","Pretendard Variable",Pretendard,system-ui,sans-serif;
+  --body:"Pretendard Variable",Pretendard,"Space Grotesk",system-ui,sans-serif;
+  --mono:"Space Mono","Space Grotesk",monospace;
+  --shadow:0 1px 2px rgba(17,19,23,.04),0 8px 24px rgba(17,19,23,.06);
+  --shadow-d:0 2px 8px rgba(0,0,0,.3),0 16px 48px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--paper);color:var(--ink);line-height:1.65;
+  font-feature-settings:"tnum";-webkit-font-smoothing:antialiased;font-size:16.5px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:700;line-height:1.18;letter-spacing:-.01em;color:var(--ink)}
+.tnum{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono)}
+a{color:var(--blue-deep);text-decoration:none}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--panel);color:#E8EBF2;position:relative;overflow:hidden;
+  border-bottom:1px solid var(--line-d)}
+.hero .grid-bg{position:absolute;inset:0;opacity:.5;
+  background-image:linear-gradient(rgba(120,134,168,.10) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(120,134,168,.10) 1px,transparent 1px);
+  background-size:34px 34px;mask-image:radial-gradient(ellipse 80% 90% at 70% 10%,#000 30%,transparent 75%)}
+.hero .wrap{position:relative;padding:64px 22px 72px}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:var(--disp);font-weight:600;
+  font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;
+  background:#1C2030;color:#9FB4E0;border:1px solid #2A3142;border-radius:100px;padding:7px 15px}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--go);box-shadow:0 0 0 4px rgba(0,184,107,.18)}
+.hero h1{font-size:clamp(30px,6vw,56px);color:#FFFFFF;margin:22px 0 8px;letter-spacing:-.025em}
+.hero h1 .accent{color:var(--go)}
+.hero .sub{font-family:var(--body);font-size:clamp(16px,2.4vw,20px);color:#B6BECF;max-width:660px;
+  line-height:1.6;font-weight:400}
+.ticker-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;margin:26px 0 4px}
+.ticker-row .tk{font-family:var(--disp);font-weight:700;font-size:22px;color:#FFFFFF;
+  background:#1C2030;border:1px solid #2A3142;border-radius:10px;padding:5px 13px}
+.ticker-row .px{font-family:var(--disp);font-weight:700;font-size:34px;color:#FFFFFF}
+.ticker-row .chg{font-family:var(--disp);font-weight:600;font-size:15px;color:#FF8A8E;
+  background:rgba(229,72,77,.14);border:1px solid rgba(229,72,77,.3);border-radius:8px;padding:3px 10px}
+.ticker-row .asof{font-size:13px;color:#7E879B;font-family:var(--body)}
+
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:38px;
+  background:#2A3142;border:1px solid #2A3142;border-radius:14px;overflow:hidden}
+.hero-stats .hs{background:#181B24;color:#E8EBF2;padding:18px 18px}
+.hero-stats .hs .k{font-size:12px;letter-spacing:.04em;color:#8590A6;font-family:var(--body);font-weight:500}
+.hero-stats .hs .v{font-family:var(--disp);font-weight:700;font-size:23px;color:#FFFFFF;margin-top:5px;line-height:1.1}
+.hero-stats .hs .n{font-size:11.5px;color:#6E788F;margin-top:3px}
+
+/* thesis callout in hero */
+.thesis{margin-top:34px;background:linear-gradient(180deg,#1C2030,#181B24);
+  border:1px solid #2A3142;border-left:3px solid var(--go);border-radius:14px;padding:22px 24px}
+.thesis .lbl{font-family:var(--disp);font-weight:600;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--go);margin-bottom:9px}
+.thesis p{color:#E4E8F0;font-size:17.5px;line-height:1.6}
+.thesis p b{color:#FFFFFF;font-weight:700}
+.thesis .cap-big{font-family:var(--disp);font-weight:700;color:var(--go);font-size:1.15em}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="grid-bg"></div>
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span>장기 투자 분석 · 시장 내재 CAP 역산</span>
+    <h1>우버는 <span class="accent">약 10년</span>의<br>초과수익을 약속받고 있다</h1>
+    <p class="sub">현재 주가 $71에는 "우버가 자본비용을 넘는 이익을 약 10년간 더 낼 것"이라는 시장의 기대가 담겨 있습니다. 이 보고서는 그 숨은 기대치(경쟁우위 기간, CAP)를 거꾸로 풀어내고, 우버라는 회사와 산업을 처음부터 끝까지 설명합니다.</p>
+
+    <div class="ticker-row">
+      <span class="tk">NYSE: UBER</span>
+      <span class="px tnum">$71</span>
+      <span class="chg tnum">▼ 고점 대비 −30%</span>
+      <span class="asof">2026년 6월 22일 종가 기준 · 52주 범위 $67–$102</span>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hs"><div class="k">시가총액</div><div class="v tnum">~$145B</div><div class="n">발행주식 20.4억 주</div></div>
+      <div class="hs"><div class="k">연간 매출 (2025)</div><div class="v tnum">$52.0B</div><div class="n">전년 대비 +18%</div></div>
+      <div class="hs"><div class="k">총 거래액 (GB)</div><div class="v tnum">$193B</div><div class="n">앱에서 오간 돈 총합</div></div>
+      <div class="hs"><div class="k">월 이용자 (MAPC)</div><div class="v tnum">2.02억</div><div class="n">연 136억 건 이용</div></div>
+    </div>
+
+    <div class="thesis">
+      <div class="lbl">한 줄 결론</div>
+      <p>중립 시나리오에서 시장 내재 CAP은 <span class="cap-big">약 10.3년</span>입니다. 이는 프레임워크 기준 <b>"합리적(중립)" 구간</b>으로, 시장이 우버에게 마이크로소프트급(17~18년)의 슈퍼스타 지위까지 요구하지는 않는다는 뜻입니다. 다만 이 결론은 마진 개선과 자율주행(AV) 전환이라는 가정에 크게 의존합니다. <b>확신도: 중간 (~65%)</b></p>
+    </div>
+  </div>
+</header>
+
+<style>
+/* ---------- LAYOUT / SECTIONS ---------- */
+section{padding:54px 0;border-bottom:1px solid var(--line);scroll-margin-top:104px}
+section:last-of-type{border-bottom:none}
+.sec-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:8px}
+.sec-num{flex:none;width:46px;height:46px;border-radius:12px;background:var(--ink);color:#fff;
+  font-family:var(--disp);font-weight:700;font-size:18px;display:flex;align-items:center;justify-content:center}
+.sec-head .t{flex:1}
+.sec-kicker{font-family:var(--disp);font-weight:600;font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue-deep);margin-bottom:6px}
+.sec-head h2{font-size:clamp(23px,3.6vw,32px)}
+.lead{font-size:18px;color:var(--ink-soft);max-width:760px;margin:18px 0 6px;line-height:1.65}
+.lead b{color:var(--ink);font-weight:600}
+p{margin:14px 0;color:var(--ink-soft)}
+p b{color:var(--ink);font-weight:600}
+.muted{color:var(--ink-mute);font-size:14.5px}
+
+/* ---------- NAV (transit stops) ---------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(241,244,248,.86);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line)}
+.nav .wrap{padding:11px 22px}
+.nav-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.nav .brand{font-family:var(--disp);font-weight:700;font-size:14px;color:var(--ink);
+  margin-right:8px;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
+.nav .brand .pin{width:9px;height:9px;border-radius:50%;background:var(--go);
+  box-shadow:0 0 0 3px rgba(0,184,107,.2)}
+.stop{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+  background:var(--white);color:var(--ink-soft);border:1px solid var(--line);border-radius:100px;
+  padding:5px 12px 5px 6px;font-size:13px;font-weight:500;transition:all .15s;font-family:var(--body)}
+.stop .sn{font-family:var(--disp);font-weight:700;font-size:11px;width:19px;height:19px;border-radius:50%;
+  background:var(--paper);color:var(--ink-mute);display:flex;align-items:center;justify-content:center;border:1px solid var(--line)}
+.stop:hover{border-color:var(--ink);color:var(--ink)}
+.stop:hover .sn{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ---------- CARDS / GRID ---------- */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--white);color:var(--ink);border:1px solid var(--line);border-radius:14px;
+  padding:22px;box-shadow:var(--shadow)}
+.card h3{font-size:18px;margin-bottom:8px}
+.card h4{font-size:15px;font-family:var(--disp);font-weight:600}
+.card p{font-size:15px;margin:9px 0}
+.card .ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:12px}
+
+/* stat tiles */
+.stat{background:var(--white);color:var(--ink);border:1px solid var(--line);border-radius:13px;padding:18px;box-shadow:var(--shadow)}
+.stat .k{font-size:13px;color:var(--ink-mute);font-weight:500}
+.stat .v{font-family:var(--disp);font-weight:700;font-size:27px;color:var(--ink);margin:5px 0 2px;line-height:1.1}
+.stat .n{font-size:12.5px;color:var(--ink-mute)}
+.stat.up .v{color:var(--go-deep)} .stat.down .v{color:var(--red-deep)}
+
+/* callouts (fully self-contained colors) */
+.callout{border-radius:13px;padding:18px 20px;margin:18px 0;border:1px solid}
+.callout .ttl{font-family:var(--disp);font-weight:700;font-size:14px;margin-bottom:7px;
+  display:flex;align-items:center;gap:8px;letter-spacing:.01em}
+.callout p{margin:7px 0;font-size:15px}
+.c-blue{background:var(--blue-pale);color:var(--blue-paletext);border-color:var(--blue-paleline)}
+.c-blue p,.c-blue .ttl{color:var(--blue-paletext)} .c-blue b{color:#0E2E78}
+.c-green{background:var(--go-pale);color:var(--go-paletext);border-color:var(--go-paleline)}
+.c-green p,.c-green .ttl{color:var(--go-paletext)} .c-green b{color:#06401F}
+.c-amber{background:var(--amber-pale);color:var(--amber-paletext);border-color:var(--amber-paleline)}
+.c-amber p,.c-amber .ttl{color:var(--amber-paletext)} .c-amber b{color:#5A3A06}
+.c-red{background:var(--red-pale);color:var(--red-paletext);border-color:var(--red-paleline)}
+.c-red p,.c-red .ttl{color:var(--red-paletext)} .c-red b{color:#6E1F22}
+
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--disp);font-weight:600;
+  font-size:11.5px;letter-spacing:.02em;border-radius:7px;padding:3px 9px;white-space:nowrap}
+.b-go{background:var(--go);color:#04210F} .b-amber{background:var(--amber);color:#2A1A00}
+.b-red{background:var(--red-deep);color:#fff} .b-blue{background:var(--blue-deep);color:#fff}
+.b-ghost{background:var(--paper);color:var(--ink-soft);border:1px solid var(--line)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;background:var(--white)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;min-width:540px}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);color:var(--ink-soft)}
+thead th{background:#F7F9FC;color:var(--ink);font-family:var(--disp);font-weight:600;font-size:13px;
+  letter-spacing:.02em;position:sticky;top:0;white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--disp);font-weight:500}
+tbody tr:hover td{background:#FAFBFD}
+.row-hl td{background:var(--blue-pale)!important;color:var(--blue-paletext);font-weight:600}
+.row-hl td b{color:#0E2E78}
+
+/* dark panel block */
+.panel{background:var(--panel);color:#E8EBF2;border-radius:16px;padding:30px;border:1px solid var(--line-d);
+  box-shadow:var(--shadow-d)}
+.panel h2,.panel h3,.panel h4{color:#fff}
+.panel p{color:#C2C9D6}
+.panel .sub{color:#97A1B5}
+.chip-l{background:#fff;color:var(--ink);border:1px solid #D7DCE5;border-radius:11px;padding:16px}
+.chip-l .k{color:var(--ink-mute);font-size:12.5px} .chip-l .v{color:var(--ink);font-family:var(--disp);font-weight:700;font-size:22px}
+
+/* eyebrow chip in light sections */
+.tag{display:inline-block;font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-mute);background:var(--paper);border:1px solid var(--line);
+  border-radius:6px;padding:3px 9px;margin-bottom:10px}
+
+figure{margin:22px 0}
+figcaption{font-size:13px;color:var(--ink-mute);margin-top:10px;text-align:center;font-family:var(--body)}
+svg{max-width:100%;height:auto;display:block}
+.note{font-size:13px;color:var(--ink-mute);margin-top:8px}
+
+@media (max-width:880px){
+  .g4{grid-template-columns:repeat(2,1fr)} .hero-stats{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:600px){
+  body{font-size:15.5px}
+  .g2,.g3{grid-template-columns:1fr} .g4{grid-template-columns:repeat(2,1fr)}
+  .sec-num{width:40px;height:40px;font-size:16px}
+  .hero .wrap{padding:48px 22px 56px}
+  .panel{padding:22px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="nav-row">
+      <span class="brand"><span class="pin"></span>UBER 분석</span>
+      <a class="stop" href="#s1"><span class="sn">1</span>핵심 결론</a>
+      <a class="stop" href="#s2"><span class="sn">2</span>회사 개요</a>
+      <a class="stop" href="#s3"><span class="sn">3</span>수익 구조</a>
+      <a class="stop" href="#s4"><span class="sn">4</span>기술·서비스</a>
+      <a class="stop" href="#s5"><span class="sn">5</span>산업 분석</a>
+      <a class="stop" href="#s6"><span class="sn">6</span>SWOT</a>
+      <a class="stop" href="#s7"><span class="sn">7</span>경제적 해자</a>
+      <a class="stop" href="#s8"><span class="sn">8</span>경쟁사 비교</a>
+      <a class="stop" href="#s9"><span class="sn">9</span>생애주기</a>
+      <a class="stop" href="#s10"><span class="sn">10</span>DCF·내재 CAP</a>
+      <a class="stop" href="#s11"><span class="sn">11</span>시나리오</a>
+      <a class="stop" href="#s12"><span class="sn">12</span>민감도</a>
+      <a class="stop" href="#s13"><span class="sn">13</span>종합 판단</a>
+      <a class="stop" href="#s14"><span class="sn">14</span>리스크</a>
+      <a class="stop" href="#s15"><span class="sn">15</span>한계·가정</a>
+    </div>
+  </div>
+</nav>
+
+<section id="s1"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">1</div>
+    <div class="t"><div class="sec-kicker">Executive Summary · 핵심 결론</div>
+      <h2>시장은 우버에게 "약 10년"을 지불하고 있다</h2></div>
+  </div>
+  <p class="lead">이 분석은 "우버의 적정 주가는 얼마인가?"를 맞히려 하지 않습니다. 대신 질문을 뒤집습니다. <b>"지금 주가 $71은 도대체 무엇을 가정하고 있는가?"</b> 그 가정의 핵심이 바로 <b>경쟁우위 기간(CAP, Competitive Advantage Period)</b>입니다.</p>
+
+  <div class="callout c-blue">
+    <div class="ttl">🧭 CAP(경쟁우위 기간)이란?</div>
+    <p>기업이 <b>자본비용(투자자가 요구하는 최소 수익률)보다 높은 이익</b>을 낼 수 있는 기간입니다. 경쟁이 치열한 시장에서는 결국 초과이익이 사라지므로, "얼마나 오래 남들보다 잘 벌 수 있는가"가 기업 가치의 핵심입니다. 주가를 거꾸로 풀면 <b>시장이 암묵적으로 가정한 CAP</b>이 나옵니다 — 이를 '시장 내재 CAP'이라 합니다.</p>
+  </div>
+
+  <div class="tag" style="margin-top:28px">시나리오별 시장 내재 CAP</div>
+  <div class="grid g3" style="margin-bottom:8px">
+    <div class="stat down"><div class="k">🔴 보수 (약세)</div><div class="v tnum">&gt;40년</div><div class="n">이 가정에선 현재가($71) 설명 불가 — 수렴값 $49</div></div>
+    <div class="stat"><div class="k">🟡 중립 (기본)</div><div class="v tnum" style="color:var(--amber-deep)">10.3년</div><div class="n">"합리적" 구간 — 기준 시나리오</div></div>
+    <div class="stat up"><div class="k">🟢 낙관 (강세)</div><div class="v tnum">6.8년</div><div class="n">짧은 CAP만 필요 — 저평가 신호</div></div>
+  </div>
+  <p class="note">※ 같은 주가라도 '회사를 어떻게 보느냐(가정)'에 따라 내재 CAP은 크게 달라집니다. 중립을 기준으로 읽되, 위·아래 폭을 함께 보는 것이 핵심입니다.</p>
+
+  <figure>
+  <svg viewBox="0 0 1000 220" role="img" aria-label="시장 내재 CAP 해석 눈금자">
+    <defs>
+      <linearGradient id="rulerg" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#00B86B"/><stop offset="0.42" stop-color="#E8920C"/>
+        <stop offset="0.62" stop-color="#E8920C"/><stop offset="1" stop-color="#E5484D"/>
+      </linearGradient>
+    </defs>
+    <!-- zone labels -->
+    <text x="20" y="28" font-family="Space Grotesk" font-weight="700" font-size="13" fill="#111317">CAP 해석 눈금자 (년)</text>
+    <!-- bar -->
+    <rect x="40" y="92" width="920" height="20" rx="10" fill="url(#rulerg)" opacity="0.92"/>
+    <!-- ticks 0..25 -->
+    <g font-family="Space Grotesk" font-size="11" fill="#5A6170">
+      <!-- scale: x = 40 + (yr/25)*920 -->
+      <line x1="40" y1="86" x2="40" y2="118" stroke="#fff" stroke-width="2"/><text x="40" y="138" text-anchor="middle">0</text>
+      <line x1="224" y1="86" x2="224" y2="118" stroke="#fff" stroke-width="1.5"/><text x="224" y="138" text-anchor="middle">5</text>
+      <line x1="408" y1="86" x2="408" y2="118" stroke="#fff" stroke-width="1.5"/><text x="408" y="138" text-anchor="middle">10</text>
+      <line x1="592" y1="86" x2="592" y2="118" stroke="#fff" stroke-width="1.5"/><text x="592" y="138" text-anchor="middle">15</text>
+      <line x1="776" y1="86" x2="776" y2="118" stroke="#fff" stroke-width="1.5"/><text x="776" y="138" text-anchor="middle">20</text>
+      <line x1="960" y1="86" x2="960" y2="118" stroke="#fff" stroke-width="2"/><text x="952" y="138" text-anchor="middle">25+</text>
+    </g>
+    <!-- zone captions -->
+    <g font-family="Pretendard Variable" font-size="11.5" font-weight="600">
+      <text x="132" y="166" text-anchor="middle" fill="#00834C">매우 비관 (저평가 후보)</text>
+      <text x="316" y="166" text-anchor="middle" fill="#B5710A">약간 비관</text>
+      <text x="500" y="166" text-anchor="middle" fill="#B5710A">합리적 / 중립</text>
+      <text x="684" y="166" text-anchor="middle" fill="#B5710A">약간 낙관</text>
+      <text x="868" y="166" text-anchor="middle" fill="#BE363B">과도한 낙관</text>
+    </g>
+    <!-- markers: 낙관 6.8 -> x=40+6.8/25*920=290.2 ; 중립 10.3 -> 419 ; MSFT 17.5 -> 684 -->
+    <g>
+      <line x1="290" y1="64" x2="290" y2="92" stroke="#00B86B" stroke-width="2.5"/>
+      <circle cx="290" cy="60" r="6" fill="#00B86B" stroke="#fff" stroke-width="2"/>
+      <text x="290" y="50" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="12" fill="#00834C">낙관 6.8</text>
+      <line x1="419" y1="64" x2="419" y2="92" stroke="#111317" stroke-width="3"/>
+      <circle cx="419" cy="60" r="7" fill="#E8920C" stroke="#111317" stroke-width="2.5"/>
+      <text x="419" y="50" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="13" fill="#111317">중립 10.3 ★</text>
+      <line x1="684" y1="74" x2="684" y2="92" stroke="#5A6170" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <circle cx="684" cy="74" r="5" fill="#fff" stroke="#5A6170" stroke-width="2"/>
+      <text x="684" y="200" text-anchor="middle" font-family="Pretendard Variable" font-weight="600" font-size="11" fill="#5A6170">참고: MS급 ~17.5</text>
+    </g>
+  </svg>
+  <figcaption>현재가 $71의 중립 내재 CAP(★ 10.3년)은 "합리적/중립" 구간 초입에 위치 — 시장이 슈퍼스타급 장기 우위(우측)까지 요구하지는 않음</figcaption>
+  </figure>
+
+  <div class="callout c-amber">
+    <div class="ttl">⚖️ 베이지안 종합 판단 (확신도: 중간 ~65%)</div>
+    <p><b>경쟁 가설을 함께 유지합니다.</b> 강세론(네트워크 효과·광고·마진 확대·AV 기회)은 약 7년의 CAP만 있으면 현재가가 정당화되어 부담이 작습니다. 반면 약세론(자율주행이 기사 모델을 잠식, 모빌리티 성장 둔화)이 맞다면 $71조차 비쌀 수 있습니다. 둘 사이에서 시장은 <b>중도(~10년)</b>를 택하고 있으며, 이는 우버의 규모·네트워크를 감안할 때 '합리적~약간 매력적'으로 기웁니다.</p>
+    <p><b>결론을 바꿀 새 증거:</b> ① 모빌리티 성장률이 두 자릿수를 회복하는가(↑) vs 한 자릿수로 굳는가(↓) ② AV 도입이 기사 비용을 줄여 마진을 키우는가(↑) vs 우버를 건너뛰고 직접 소비자에게 가는가(↓) ③ 비영업 지분투자($8.4B) 평가손익의 변동성.</p>
+  </div>
+</div></section>
+
+<section id="s2"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">2</div>
+    <div class="t"><div class="sec-kicker">Company Overview · 회사 개요</div>
+      <h2>우버는 어떤 회사인가</h2></div>
+  </div>
+
+  <div class="callout c-green">
+    <div class="ttl">📌 한 문장 요약</div>
+    <p style="font-size:17px"><b>우버는 스마트폰 앱 하나로 '이동이 필요한 사람'과 '태워다 줄 기사', '음식이 필요한 사람'과 '배달원', '화물이 필요한 회사'와 '트럭'을 실시간으로 연결해 주고, 그 거래의 일부를 수수료로 받는 세계 최대의 '이동·배달 중개 플랫폼'입니다.</b></p>
+  </div>
+
+  <p class="lead">우버는 직접 자동차를 소유하거나 음식을 만들지 않습니다. 우버가 가진 것은 <b>수요와 공급을 연결하는 거대한 앱과 알고리즘</b>입니다. 호텔 없는 숙박 플랫폼(에어비앤비)처럼, 우버는 <b>차 없는 운송회사</b>입니다.</p>
+
+  <div class="grid g2" style="margin-top:24px">
+    <div class="card">
+      <div class="ic" style="background:var(--blue-pale);color:var(--blue-deep)">🚀</div>
+      <h3>탄생 배경 (2009~)</h3>
+      <p>2009년 미국 샌프란시스코에서 시작됐습니다. 추운 밤 택시를 못 잡은 경험에서 출발해, "버튼 한 번으로 차를 부른다"는 아이디어를 앱으로 구현했습니다. 초기엔 검은색 고급차 호출 서비스(UberBlack)였지만, 곧 일반인이 자기 차로 손님을 태우는 <b>UberX</b>로 확장하며 폭발적으로 성장했습니다.</p>
+      <p>2019년 뉴욕증시(NYSE)에 상장했고, 오랜 적자 끝에 <b>2023년 처음으로 연간 영업흑자</b>를 달성하며 '돈 버는 회사'로 전환했습니다.</p>
+    </div>
+    <div class="card">
+      <div class="ic" style="background:var(--go-pale);color:var(--go-deep)">🌍</div>
+      <h3>지금의 우버</h3>
+      <p>현재 <b>70여 개국, 1만 개 이상의 도시</b>에서 운영됩니다. 매달 <b>2.02억 명</b>이 우버 앱을 쓰고(MAPC), 연간 <b>136억 건</b>의 이동·배달이 일어납니다. 1초에 약 430건씩 거래가 발생하는 셈입니다.</p>
+      <p>앱에서 한 해 동안 오간 돈(총 거래액·Gross Bookings)은 <b>$193B(약 270조 원)</b>에 달하며, 이 중 우버가 수수료로 가져가는 매출이 <b>$52B</b>입니다.</p>
+    </div>
+  </div>
+
+  <div class="tag" style="margin-top:30px">우버의 3개 사업 부문</div>
+  <div class="grid g3">
+    <div class="card">
+      <div class="ic" style="background:#EAF1FE;color:#1E5AD6">🚗</div>
+      <h3>모빌리티 (Mobility)</h3>
+      <p class="muted" style="margin:2px 0 10px">차량 호출 — 우버의 심장</p>
+      <p>사람을 A에서 B로 이동시키는 핵심 사업. 일반 승차공유(UberX), 고급차, 택시 연계, 오토바이·툭툭 등 포함. <b>매출의 약 57%</b>를 책임지는 가장 크고 수익성 높은 부문입니다.</p>
+      <p class="muted">미국 승차공유 시장 점유율 <b>약 76%</b>로 압도적 1위.</p>
+    </div>
+    <div class="card">
+      <div class="ic" style="background:var(--go-pale);color:var(--go-deep)">🍔</div>
+      <h3>배달 (Delivery)</h3>
+      <p class="muted" style="margin:2px 0 10px">우버이츠 — 빠르게 성장</p>
+      <p>음식 배달(우버이츠)에서 시작해 식료품·생필품 배달로 확장. 코로나 시기 급성장했고, 지금도 <b>분기 +34%</b>로 가장 빠르게 크는 부문. <b>매출의 약 34%</b>를 차지합니다.</p>
+      <p class="muted">광고 사업의 핵심 무대이기도 합니다(식당 노출 광고).</p>
+    </div>
+    <div class="card">
+      <div class="ic" style="background:var(--amber-pale);color:var(--amber-deep)">🚛</div>
+      <h3>화물 (Freight)</h3>
+      <p class="muted" style="margin:2px 0 10px">우버 프레이트 — 작지만 큰 시장</p>
+      <p>화주(짐 보낼 회사)와 트럭 기사를 연결하는 B2B 물류 중개. <b>매출의 약 9%</b>로 비중은 작고 현재 <b>손익분기 수준</b>. 거대한 트럭 운송 시장을 디지털화하려는 장기 베팅입니다.</p>
+      <p class="muted">경기 둔화에 민감해 변동성이 큰 부문입니다.</p>
+    </div>
+  </div>
+
+  <div class="callout c-blue" style="margin-top:26px">
+    <div class="ttl">💡 비전공자를 위한 핵심</div>
+    <p>우버를 이해하는 열쇠는 <b>"세 가지 사업이 같은 앱·같은 기사·같은 결제망을 공유한다"</b>는 점입니다. 출근길에 우버로 이동한 사람이 저녁엔 우버이츠로 음식을 시키고, 한 명의 기사가 낮엔 승객을 밤엔 음식을 나릅니다. 이 <b>'한 지붕 여러 사업'</b> 구조가 우버의 가장 큰 무기입니다(뒤 '경제적 해자'에서 자세히).</p>
+  </div>
+</div></section>
+
+<section id="s3"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">3</div>
+    <div class="t"><div class="sec-kicker">Business Model · 수익 구조</div>
+      <h2>우버는 어떻게 돈을 버는가</h2></div>
+  </div>
+  <p class="lead">핵심은 <b>"수수료(take rate)"</b> 한 단어입니다. 우버는 앱에서 일어나는 모든 거래에서 <b>일정 비율을 떼어</b> 수익으로 가져갑니다. 직접 차를 굴리거나 음식을 만들지 않으니, 거래가 늘수록 큰 추가 비용 없이 수익이 따라 늘어나는 구조입니다.</p>
+
+  <figure>
+  <svg viewBox="0 0 1000 430" role="img" aria-label="우버 수익 흐름 다이어그램">
+    <!-- Row 1: total bookings -->
+    <text x="20" y="34" font-family="Space Grotesk" font-weight="700" font-size="14" fill="#111317">앱에서 1년간 오간 돈 (총 거래액·Gross Bookings)</text>
+    <rect x="20" y="46" width="960" height="46" rx="9" fill="#1B2030"/>
+    <text x="500" y="75" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="20" fill="#fff">$193B</text>
+
+    <!-- connectors to split -->
+    <path d="M250,92 L250,126" stroke="#C7CEDA" stroke-width="2" fill="none"/>
+    <path d="M760,92 L760,126" stroke="#C7CEDA" stroke-width="2" fill="none"/>
+
+    <!-- Row 2: split 73% partners / 27% uber -->
+    <rect x="20" y="126" width="700" height="56" rx="9" fill="#EEF1F6" stroke="#D7DCE5"/>
+    <text x="370" y="150" text-anchor="middle" font-family="Pretendard Variable" font-weight="600" font-size="14" fill="#3A3F4A">기사 · 배달원 · 식당의 몫 (73%)</text>
+    <text x="370" y="172" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#111317">≈ $141B</text>
+
+    <rect x="732" y="126" width="248" height="56" rx="9" fill="#00B86B"/>
+    <text x="856" y="149" text-anchor="middle" font-family="Pretendard Variable" font-weight="700" font-size="13.5" fill="#04210F">우버 수수료 매출 (27%)</text>
+    <text x="856" y="172" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="18" fill="#04210F">$52B</text>
+
+    <!-- connector uber revenue down -->
+    <path d="M856,182 L856,210 L500,210 L500,232" stroke="#00B86B" stroke-width="2.5" fill="none"/>
+    <text x="500" y="226" text-anchor="middle" font-family="Pretendard Variable" font-weight="600" font-size="12.5" fill="#00834C">이 매출 $52B 에서 비용을 빼면 ↓</text>
+
+    <!-- Row 3: revenue -> costs / op income -->
+    <rect x="20" y="232" width="960" height="44" rx="9" fill="#0F1117"/>
+    <text x="500" y="260" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#fff">우버 매출  $52B</text>
+
+    <path d="M250,276 L250,308" stroke="#C7CEDA" stroke-width="2" fill="none"/>
+    <path d="M820,276 L820,308" stroke="#00B86B" stroke-width="2.5" fill="none"/>
+
+    <rect x="20" y="308" width="760" height="58" rx="9" fill="#FCECEC" stroke="#F3C9CB"/>
+    <text x="400" y="332" text-anchor="middle" font-family="Pretendard Variable" font-weight="600" font-size="13.5" fill="#8E2A2E">운영 비용 (보험·결제수수료·인건비·마케팅·R&D 등) 약 89%</text>
+    <text x="400" y="354" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#8E2A2E">≈ −$46B</text>
+
+    <rect x="792" y="308" width="188" height="58" rx="9" fill="#00B86B"/>
+    <text x="886" y="330" text-anchor="middle" font-family="Pretendard Variable" font-weight="700" font-size="13" fill="#04210F">영업이익 (11%)</text>
+    <text x="886" y="353" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#04210F">$5.6B</text>
+
+    <text x="20" y="404" font-family="Pretendard Variable" font-size="12.5" fill="#5A6170">※ 2025 회계연도 기준. 비율은 이해를 돕기 위한 근사치이며 회계상 항목과 정확히 일치하지 않을 수 있습니다.</text>
+  </svg>
+  <figcaption>돈의 흐름: 앱 거래액 $193B → 우버는 27%($52B)를 수수료로 → 비용을 뺀 영업이익 $5.6B</figcaption>
+  </figure>
+
+  <div class="grid g2" style="margin-top:10px">
+    <div>
+      <div class="tag">부문별 매출 비중 (2025)</div>
+      <svg viewBox="0 0 460 120" role="img" aria-label="부문별 매출 비중">
+        <rect x="0" y="20" width="262" height="40" fill="#2E6FF2"/>
+        <rect x="262" y="20" width="156" height="40" fill="#00B86B"/>
+        <rect x="418" y="20" width="42" height="40" fill="#E8920C"/>
+        <text x="131" y="45" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="14" fill="#fff">57%</text>
+        <text x="340" y="45" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="14" fill="#04210F">34%</text>
+        <text x="439" y="45" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="12" fill="#2A1A00">9%</text>
+        <g font-family="Pretendard Variable" font-size="12.5" font-weight="600">
+          <rect x="0" y="84" width="11" height="11" fill="#2E6FF2"/><text x="17" y="94" fill="#3A3F4A">모빌리티</text>
+          <rect x="110" y="84" width="11" height="11" fill="#00B86B"/><text x="127" y="94" fill="#3A3F4A">배달</text>
+          <rect x="190" y="84" width="11" height="11" fill="#E8920C"/><text x="207" y="94" fill="#3A3F4A">화물</text>
+        </g>
+      </svg>
+      <p class="note">모빌리티가 매출의 절반 이상. 배달이 빠르게 비중을 키우는 중.</p>
+    </div>
+    <div>
+      <div class="tag">부문별 수수료율 (take rate)</div>
+      <svg viewBox="0 0 460 120" role="img" aria-label="부문별 수수료율">
+        <g font-family="Space Grotesk" font-size="12" font-weight="600" fill="#111317">
+          <text x="0" y="34" font-family="Pretendard Variable" fill="#3A3F4A">모빌리티</text>
+          <rect x="90" y="22" width="300" height="18" rx="4" fill="#EEF1F6"/>
+          <rect x="90" y="22" width="270" height="18" rx="4" fill="#2E6FF2"/>
+          <text x="368" y="36" fill="#1E5AD6">~30%</text>
+          <text x="0" y="74" font-family="Pretendard Variable" fill="#3A3F4A">배달</text>
+          <rect x="90" y="62" width="300" height="18" rx="4" fill="#EEF1F6"/>
+          <rect x="90" y="62" width="173" height="18" rx="4" fill="#00B86B"/>
+          <text x="271" y="76" fill="#00834C">~19%</text>
+        </g>
+        <text x="0" y="108" font-family="Pretendard Variable" font-size="11.5" fill="#5A6170">화물은 회계방식이 달라(총액 기준) 직접 비교 제외</text>
+      </svg>
+      <p class="note">같은 $1 거래라도 모빌리티가 더 많은 수수료를 남겨, 매출 비중이 거래액 비중보다 높습니다.</p>
+    </div>
+  </div>
+
+  <div class="callout c-green" style="margin-top:24px">
+    <div class="ttl">💰 추가 수익원 — 점점 중요해지는 두 가지</div>
+    <p><b>① 광고 사업 (연 환산 ~$2B):</b> 우버이츠 앱에서 식당이 상단 노출을 위해 내는 광고비. 추가 비용이 거의 없어 <b>이익률이 매우 높은</b> '숨은 보석'입니다. <b>② 우버원 멤버십 (5천만+ 명):</b> 연회비를 내면 배달비 할인 등 혜택을 받는 구독 서비스. 가입자는 더 자주, 더 충성도 높게 이용하며 전체 거래액의 <b>약 절반</b>을 차지합니다.</p>
+  </div>
+</div></section>
+
+<section id="s4"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">4</div>
+    <div class="t"><div class="sec-kicker">Technology & Services · 기술과 서비스</div>
+      <h2>겉보기엔 단순한 앱, 속은 거대한 컴퓨터</h2></div>
+  </div>
+  <p class="lead">버튼 하나로 차가 오는 단순함 뒤에는 <b>수억 명의 위치, 수백만 대의 차량, 실시간 교통과 날씨를 0.1초 단위로 계산하는 기술</b>이 있습니다. 우버의 진짜 자산은 자동차가 아니라 이 <b>매칭·가격·경로 알고리즘</b>입니다.</p>
+
+  <div class="tag" style="margin-top:24px">한 번의 호출에서 벌어지는 일 (약 5초)</div>
+  <figure>
+  <svg viewBox="0 0 1000 150" role="img" aria-label="우버 호출 처리 흐름">
+    <!-- 5 steps along a route line -->
+    <line x1="70" y1="62" x2="930" y2="62" stroke="#D7DCE5" stroke-width="3"/>
+    <line x1="70" y1="62" x2="930" y2="62" stroke="#2E6FF2" stroke-width="3" stroke-dasharray="0 1"/>
+    <g font-family="Pretendard Variable">
+      <!-- step circles -->
+      <g><circle cx="70" cy="62" r="22" fill="#2E6FF2"/><text x="70" y="69" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#fff">1</text>
+        <text x="70" y="104" text-anchor="middle" font-weight="600" font-size="12.5" fill="#111317">호출</text>
+        <text x="70" y="122" text-anchor="middle" font-size="11" fill="#5A6170">출발·도착 입력</text></g>
+      <g><circle cx="285" cy="62" r="22" fill="#2E6FF2"/><text x="285" y="69" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#fff">2</text>
+        <text x="285" y="104" text-anchor="middle" font-weight="600" font-size="12.5" fill="#111317">매칭</text>
+        <text x="285" y="122" text-anchor="middle" font-size="11" fill="#5A6170">가장 가까운 기사 탐색</text></g>
+      <g><circle cx="500" cy="62" r="22" fill="#2E6FF2"/><text x="500" y="69" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#fff">3</text>
+        <text x="500" y="104" text-anchor="middle" font-weight="600" font-size="12.5" fill="#111317">가격 결정</text>
+        <text x="500" y="122" text-anchor="middle" font-size="11" fill="#5A6170">수요·공급 반영</text></g>
+      <g><circle cx="715" cy="62" r="22" fill="#2E6FF2"/><text x="715" y="69" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#fff">4</text>
+        <text x="715" y="104" text-anchor="middle" font-weight="600" font-size="12.5" fill="#111317">경로 안내</text>
+        <text x="715" y="122" text-anchor="middle" font-size="11" fill="#5A6170">실시간 길찾기</text></g>
+      <g><circle cx="930" cy="62" r="22" fill="#00B86B"/><text x="930" y="69" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#04210F">5</text>
+        <text x="930" y="104" text-anchor="middle" font-weight="600" font-size="12.5" fill="#111317">자동 결제</text>
+        <text x="930" y="122" text-anchor="middle" font-size="11" fill="#5A6170">하차 시 정산</text></g>
+    </g>
+  </svg>
+  </figure>
+
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card">
+      <div class="ic" style="background:#EAF1FE;color:#1E5AD6">🎯</div>
+      <h3>매칭 알고리즘</h3>
+      <p>수천 명의 대기 기사 중 단순히 '가장 가까운' 사람이 아니라, <b>도착 시간·교통·기사 동선까지 고려해 전체 효율이 가장 높은 짝</b>을 찾습니다. 이 0.x초의 계산이 대기시간을 줄이고 더 많은 운행을 가능하게 합니다.</p>
+    </div>
+    <div class="card">
+      <div class="ic" style="background:var(--amber-pale);color:var(--amber-deep)">📈</div>
+      <h3>탄력 요금 (Surge)</h3>
+      <p>비 오는 퇴근길처럼 <b>수요가 공급보다 많을 때 가격을 올립니다</b>. 비싸 보이지만, 이는 더 많은 기사를 그 지역으로 유도해 "아예 차가 안 잡히는" 상황을 막는 장치입니다. 수요와 공급을 실시간으로 맞추는 핵심 기술입니다.</p>
+    </div>
+    <div class="card">
+      <div class="ic" style="background:var(--go-pale);color:var(--go-deep)">🗺️</div>
+      <h3>지도·경로 최적화</h3>
+      <p>실시간 교통·도로 상황을 반영해 최적 경로와 도착 시간을 예측합니다. 수십억 건의 과거 운행 데이터가 쌓일수록 예측이 정확해지고, 이는 <b>다른 회사가 쉽게 따라오지 못하는 데이터 해자</b>가 됩니다.</p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:30px">
+    <div style="display:inline-block;font-family:var(--disp);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9FB4E0;background:#1C2030;border:1px solid #2A3142;border-radius:6px;padding:4px 10px;margin-bottom:14px">미래를 건 가장 큰 베팅</div>
+    <h3 style="font-size:22px">🤖 자율주행(AV) — 위협이자 기회</h3>
+    <p style="margin-top:12px">우버 비용의 가장 큰 부분은 <b style="color:#fff">기사에게 주는 돈</b>입니다. 만약 자율주행차가 기사를 대신하면, 그 비용이 사라져 <b style="color:#fff">이익이 폭발적으로 늘 수</b> 있습니다. 동시에, 자율주행 기술을 가진 회사(구글 웨이모, 테슬라 등)가 <b style="color:#fff">우버를 건너뛰고 직접 소비자에게</b> 서비스하면 우버가 불필요해질 위험도 있습니다.</p>
+    <p>우버의 전략은 "직접 만들기"가 아니라 <b style="color:#fff">"모두의 플랫폼 되기"</b>입니다. 웨이모·위라이드·루시드·리비안 등 <b style="color:#fff">20개 이상의 자율주행 파트너</b>와 손잡고, "어느 회사의 자율주행차든 우버 앱에서 부른다"는 그림을 그립니다. 누적 <b style="color:#fff">$10B 이상</b>을 투입했고, <b style="color:#fff">2026년 말까지 15개 도시</b>에 자율주행 서비스를 목표로 합니다.</p>
+    <div class="grid g2" style="margin-top:18px;gap:14px">
+      <div class="chip-l"><div class="k">🟢 기회 시나리오</div><p style="color:#111317;font-size:14px;margin:8px 0 0">자율주행차도 청소·정비·대기열 관리가 필요. 우버의 거대한 수요풀과 운영 노하우가 여전히 필요 → 우버는 '자율주행차의 배차 플랫폼'으로 진화, 마진 급등</p></div>
+      <div class="chip-l"><div class="k">🔴 위협 시나리오</div><p style="color:#111317;font-size:14px;margin:8px 0 0">웨이모·테슬라가 자체 앱으로 직접 고객 확보 → 우버는 중개자에서 밀려나 '기사 모델'의 가치가 훼손. 가장 큰 장기 리스크</p></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="s5"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">5</div>
+    <div class="t"><div class="sec-kicker">Industry Analysis · 산업 분석</div>
+      <h2>'이동의 디지털화'라는 거대한 흐름</h2></div>
+  </div>
+  <p class="lead">우버가 속한 산업은 <b>승차공유 · 음식배달 · 화물중개</b>를 아우르는 '온디맨드(즉시 호출) 플랫폼' 시장입니다. 공통점은 모두 <b>오프라인의 비효율(빈 차, 노는 시간)을 앱으로 메워 돈을 버는</b> 구조라는 점입니다.</p>
+
+  <div class="grid g3" style="margin-top:22px">
+    <div class="stat"><div class="k">글로벌 승차공유 시장</div><div class="v tnum">고성장</div><div class="n">도시화·차량 비소유 추세로 꾸준한 확대</div></div>
+    <div class="stat"><div class="k">음식배달 시장</div><div class="v tnum">성숙기 진입</div><div class="n">코로나 급성장 후 안정 성장 · 광고로 수익화</div></div>
+    <div class="stat"><div class="k">미국 화물중개</div><div class="v tnum">초기 디지털화</div><div class="n">거대하지만 아직 아날로그 · 장기 기회</div></div>
+  </div>
+
+  <div class="tag" style="margin-top:30px">산업 가치사슬 (Value Chain) — 우버가 쥔 고리</div>
+  <figure>
+  <svg viewBox="0 0 1000 170" role="img" aria-label="산업 가치사슬">
+    <defs><marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#9AA3B5"/></marker></defs>
+    <!-- 5 boxes -->
+    <g font-family="Pretendard Variable">
+      <rect x="10" y="40" width="172" height="64" rx="10" fill="#00B86B"/>
+      <text x="96" y="66" text-anchor="middle" font-weight="700" font-size="13.5" fill="#04210F">수요 창출</text>
+      <text x="96" y="86" text-anchor="middle" font-size="11.5" fill="#06401F">앱 · 브랜드 · 마케팅</text>
+
+      <rect x="212" y="40" width="172" height="64" rx="10" fill="#00B86B"/>
+      <text x="298" y="66" text-anchor="middle" font-weight="700" font-size="13.5" fill="#04210F">매칭 · 배차</text>
+      <text x="298" y="86" text-anchor="middle" font-size="11.5" fill="#06401F">알고리즘 · 가격</text>
+
+      <rect x="414" y="40" width="172" height="64" rx="10" fill="#EEF1F6" stroke="#C7CEDA"/>
+      <text x="500" y="66" text-anchor="middle" font-weight="700" font-size="13.5" fill="#3A3F4A">운행 수행</text>
+      <text x="500" y="86" text-anchor="middle" font-size="11.5" fill="#5A6170">기사 · 차량(외부)</text>
+
+      <rect x="616" y="40" width="172" height="64" rx="10" fill="#00B86B"/>
+      <text x="702" y="66" text-anchor="middle" font-weight="700" font-size="13.5" fill="#04210F">결제 · 정산</text>
+      <text x="702" y="86" text-anchor="middle" font-size="11.5" fill="#06401F">자동 결제망</text>
+
+      <rect x="818" y="40" width="172" height="64" rx="10" fill="#00B86B"/>
+      <text x="904" y="66" text-anchor="middle" font-weight="700" font-size="13.5" fill="#04210F">데이터 · 재투자</text>
+      <text x="904" y="86" text-anchor="middle" font-size="11.5" fill="#06401F">예측 정교화</text>
+
+      <line x1="184" y1="72" x2="210" y2="72" stroke="#9AA3B5" stroke-width="2" marker-end="url(#arr)"/>
+      <line x1="386" y1="72" x2="412" y2="72" stroke="#9AA3B5" stroke-width="2" marker-end="url(#arr)"/>
+      <line x1="588" y1="72" x2="614" y2="72" stroke="#9AA3B5" stroke-width="2" marker-end="url(#arr)"/>
+      <line x1="790" y1="72" x2="816" y2="72" stroke="#9AA3B5" stroke-width="2" marker-end="url(#arr)"/>
+    </g>
+    <text x="10" y="138" font-family="Pretendard Variable" font-size="12.5" fill="#5A6170">
+      <tspan fill="#00834C" font-weight="700">초록 = 우버가 직접 통제</tspan> · 회색 = 외부(기사·차량)에 의존 — 우버는 5개 고리 중 4개를 쥐고 자산은 가볍게 유지</text>
+  </svg>
+  </figure>
+
+  <div class="tag" style="margin-top:24px">포터의 5가지 경쟁 요인 (산업 매력도 진단)</div>
+  <figure>
+  <svg viewBox="0 0 1000 440" role="img" aria-label="포터의 5 Forces">
+    <g font-family="Pretendard Variable">
+      <!-- center -->
+      <rect x="370" y="180" width="260" height="80" rx="14" fill="#14161C"/>
+      <text x="500" y="212" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="16" fill="#fff">산업 내 경쟁</text>
+      <text x="500" y="234" text-anchor="middle" font-size="12" fill="#C2C9D6">미국 차량호출은 과점,</text>
+      <text x="500" y="250" text-anchor="middle" font-size="12" fill="#C2C9D6">배달은 더 치열</text>
+      <text x="500" y="172" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="12" fill="#B5710A">중간~높음</text>
+
+      <!-- top: new entrants -->
+      <rect x="350" y="20" width="300" height="74" rx="12" fill="#FCF3E2" stroke="#F2DDB0"/>
+      <text x="500" y="44" text-anchor="middle" font-weight="700" font-size="13.5" fill="#7A4D08">⬆ 신규 진입 위협 · 중간</text>
+      <text x="500" y="64" text-anchor="middle" font-size="11.5" fill="#7A4D08">앱은 복제 쉬우나, 규모·네트워크가</text>
+      <text x="500" y="80" text-anchor="middle" font-size="11.5" fill="#7A4D08">사실상 진입장벽 역할</text>
+      <line x1="500" y1="94" x2="500" y2="178" stroke="#C7CEDA" stroke-width="2"/>
+
+      <!-- bottom: substitutes -->
+      <rect x="350" y="346" width="300" height="74" rx="12" fill="#FCF3E2" stroke="#F2DDB0"/>
+      <text x="500" y="370" text-anchor="middle" font-weight="700" font-size="13.5" fill="#7A4D08">⬇ 대체재 위협 · 중간</text>
+      <text x="500" y="390" text-anchor="middle" font-size="11.5" fill="#7A4D08">대중교통·자가용·직접 픽업,</text>
+      <text x="500" y="406" text-anchor="middle" font-size="11.5" fill="#7A4D08">그리고 자율주행(양날의 칼)</text>
+      <line x1="500" y1="262" x2="500" y2="344" stroke="#C7CEDA" stroke-width="2"/>
+
+      <!-- left: suppliers -->
+      <rect x="20" y="180" width="300" height="80" rx="12" fill="#FCECEC" stroke="#F3C9CB"/>
+      <text x="170" y="206" text-anchor="middle" font-weight="700" font-size="13.5" fill="#8E2A2E">⬅ 공급자(기사) 교섭력 · 높음</text>
+      <text x="170" y="226" text-anchor="middle" font-size="11.5" fill="#8E2A2E">기사는 여러 앱 동시 사용 가능,</text>
+      <text x="170" y="242" text-anchor="middle" font-size="11.5" fill="#8E2A2E">규제·처우 개선 압력 = 비용 상승</text>
+      <line x1="320" y1="220" x2="368" y2="220" stroke="#C7CEDA" stroke-width="2"/>
+
+      <!-- right: buyers -->
+      <rect x="680" y="180" width="300" height="80" rx="12" fill="#FCF3E2" stroke="#F2DDB0"/>
+      <text x="830" y="206" text-anchor="middle" font-weight="700" font-size="13.5" fill="#7A4D08">구매자(고객) 교섭력 · 중간 ➡</text>
+      <text x="830" y="226" text-anchor="middle" font-size="11.5" fill="#7A4D08">가격 비교 쉬워 민감하나,</text>
+      <text x="830" y="242" text-anchor="middle" font-size="11.5" fill="#7A4D08">우버원·습관이 이탈을 늦춤</text>
+      <line x1="632" y1="220" x2="678" y2="220" stroke="#C7CEDA" stroke-width="2"/>
+    </g>
+  </svg>
+  <figcaption>종합: 양쪽(기사·고객) 모두 '갈아타기'가 쉬운 까다로운 산업 — 그래서 <b>규모와 네트워크 효과를 가진 1위</b>의 가치가 더 커진다</figcaption>
+  </figure>
+
+  <div class="callout c-blue">
+    <div class="ttl">🔭 산업의 미래 방향 (확신도: 높음 ~75%)</div>
+    <p><b>① 자율주행 전환</b>이 향후 10년 산업을 가를 최대 변수입니다. <b>② 배달의 광고화</b> — 단순 배달비를 넘어 앱 안 광고·구독으로 수익 모델이 진화. <b>③ 슈퍼앱화</b> — 이동·배달·결제·예약을 하나의 앱에 묶는 흐름. 우버는 이 세 흐름 모두에서 규모로 앞서 있으나, 자율주행 주도권은 아직 미지수입니다.</p>
+  </div>
+</div></section>
+
+<section id="s6"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">6</div>
+    <div class="t"><div class="sec-kicker">SWOT Analysis</div>
+      <h2>강점 · 약점 · 기회 · 위협</h2></div>
+  </div>
+  <p class="lead">우버의 현재 위치를 한눈에 정리하면, <b>"압도적 규모와 다각화라는 강점</b>을, <b>낮은 전환비용과 자율주행 불확실성이라는 위협"</b>이 마주보는 구도입니다.</p>
+
+  <style>
+    .swot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px}
+    .swot .q{border-radius:14px;padding:20px;border:1px solid}
+    .swot .q h3{font-size:17px;display:flex;align-items:center;gap:9px;margin-bottom:12px}
+    .swot .q ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+    .swot .q li{font-size:14.5px;line-height:1.5;padding-left:20px;position:relative}
+    .swot .q li::before{content:"";position:absolute;left:2px;top:8px;width:7px;height:7px;border-radius:2px}
+    .sw-s{background:var(--go-pale);border-color:var(--go-paleline)}
+    .sw-s h3,.sw-s li{color:var(--go-paletext)} .sw-s li::before{background:var(--go)}
+    .sw-w{background:var(--amber-pale);border-color:var(--amber-paleline)}
+    .sw-w h3,.sw-w li{color:var(--amber-paletext)} .sw-w li::before{background:var(--amber)}
+    .sw-o{background:var(--blue-pale);border-color:var(--blue-paleline)}
+    .sw-o h3,.sw-o li{color:var(--blue-paletext)} .sw-o li::before{background:var(--blue)}
+    .sw-t{background:var(--red-pale);border-color:var(--red-paleline)}
+    .sw-t h3,.sw-t li{color:var(--red-paletext)} .sw-t li::before{background:var(--red)}
+    @media(max-width:600px){.swot{grid-template-columns:1fr}}
+  </style>
+  <div class="swot">
+    <div class="q sw-s">
+      <h3>💪 강점 (Strengths)</h3>
+      <ul>
+        <li><b>압도적 규모·점유율</b> — 미국 차량호출 약 76%, 전 세계 2억 명 이용자. 규모 자체가 무기.</li>
+        <li><b>강력한 네트워크 효과</b> — 이용자↔기사가 서로를 끌어들이는 선순환.</li>
+        <li><b>사업 다각화</b> — 모빌리티·배달·화물·광고가 서로를 보완(한 부문 부진을 다른 부문이 상쇄).</li>
+        <li><b>흑자 전환·현금창출</b> — 2023년 흑자 전환 후 잉여현금흐름 $9.8B, 자사주 매입 중.</li>
+      </ul>
+    </div>
+    <div class="q sw-w">
+      <h3>⚠️ 약점 (Weaknesses)</h3>
+      <ul>
+        <li><b>낮은 진짜 수익성</b> — 회계상 이익엔 일회성 세금효과가 커서, 경제적 이익(NOPAT)은 보고이익보다 훨씬 작음.</li>
+        <li><b>기사 비용 의존</b> — 비용 대부분이 기사 보상. 인건비·규제에 취약.</li>
+        <li><b>변동성 큰 지분투자</b> — 비영업 지분($8.4B) 평가손익이 분기 순이익을 크게 흔듦.</li>
+        <li><b>모빌리티 성장 둔화 조짐</b> — 최근 분기 모빌리티 매출 +5%로 둔화.</li>
+      </ul>
+    </div>
+    <div class="q sw-o">
+      <h3>🚀 기회 (Opportunities)</h3>
+      <ul>
+        <li><b>자율주행 비용 혁신</b> — 성공 시 최대 비용(기사)이 줄어 마진 급등 가능.</li>
+        <li><b>고마진 광고 사업</b> — 연 $2B 규모로 빠르게 성장하는 '숨은 보석'.</li>
+        <li><b>우버원 멤버십 확대</b> — 5천만+ 가입자, 충성도·이용빈도 상승.</li>
+        <li><b>신흥시장·신사업</b> — 배달 품목 확장, 화물 디지털화, 슈퍼앱화.</li>
+      </ul>
+    </div>
+    <div class="q sw-t">
+      <h3>🌩️ 위협 (Threats)</h3>
+      <ul>
+        <li><b>자율주행 탈중개</b> — 웨이모·테슬라가 우버를 건너뛰면 핵심 가치 훼손(최대 리스크).</li>
+        <li><b>규제·노동 분류</b> — 기사를 '직원'으로 분류하면 비용 급증.</li>
+        <li><b>가격 경쟁</b> — 양쪽 모두 전환비용이 낮아 출혈 경쟁 위험.</li>
+        <li><b>경기 민감성</b> — 경기 둔화 시 외식·이동·화물 수요 동반 위축.</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<section id="s7"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">7</div>
+    <div class="t"><div class="sec-kicker">Economic Moat · 경제적 해자</div>
+      <h2>우버를 지키는 '성(城)의 해자'는 무엇인가</h2></div>
+  </div>
+  <p class="lead">'해자(Moat)'란 경쟁자가 쉽게 넘볼 수 없게 만드는 <b>지속 가능한 경쟁 우위</b>를 말합니다. 우버의 해자는 한마디로 <b>'규모에서 나오는 네트워크 효과'</b>이며, 이것이 앞서 본 CAP(경쟁우위 기간)의 실체입니다.</p>
+
+  <div class="tag" style="margin-top:24px">핵심 해자 — 네트워크 효과의 선순환(Flywheel)</div>
+  <figure>
+  <svg viewBox="0 0 740 440" role="img" aria-label="네트워크 효과 선순환">
+    <defs>
+      <marker id="cw" markerWidth="11" markerHeight="11" refX="6" refY="5.5" orient="auto">
+        <path d="M0,0 L11,5.5 L0,11 Z" fill="#2E6FF2"/></marker>
+    </defs>
+    <!-- center -->
+    <circle cx="370" cy="220" r="74" fill="#14161C"/>
+    <text x="370" y="210" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#fff">네트워크</text>
+    <text x="370" y="232" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="17" fill="#00B86B">선순환</text>
+    <text x="370" y="252" text-anchor="middle" font-family="Pretendard Variable" font-size="11" fill="#97A1B5">규모가 규모를 부른다</text>
+
+    <!-- 4 nodes (top, right, bottom, left) -->
+    <g font-family="Pretendard Variable">
+      <g><rect x="270" y="14" width="200" height="62" rx="12" fill="#EAF1FE" stroke="#C5D8FB"/>
+        <text x="370" y="40" text-anchor="middle" font-weight="700" font-size="14" fill="#163E9E">① 더 많은 이용자</text>
+        <text x="370" y="60" text-anchor="middle" font-size="11.5" fill="#163E9E">수요가 한 앱에 모임</text></g>
+      <g><rect x="528" y="188" width="200" height="64" rx="12" fill="#E9F9F1" stroke="#BDEBD4"/>
+        <text x="628" y="214" text-anchor="middle" font-weight="700" font-size="14" fill="#0A5C38">② 더 많은 기사 유입</text>
+        <text x="628" y="234" text-anchor="middle" font-size="11.5" fill="#0A5C38">손님 많으니 기사도 모임</text></g>
+      <g><rect x="270" y="364" width="200" height="64" rx="12" fill="#EAF1FE" stroke="#C5D8FB"/>
+        <text x="370" y="390" text-anchor="middle" font-weight="700" font-size="14" fill="#163E9E">③ 짧은 대기 · 낮은 가격</text>
+        <text x="370" y="410" text-anchor="middle" font-size="11.5" fill="#163E9E">밀도가 효율을 높임</text></g>
+      <g><rect x="12" y="188" width="200" height="64" rx="12" fill="#E9F9F1" stroke="#BDEBD4"/>
+        <text x="112" y="214" text-anchor="middle" font-weight="700" font-size="14" fill="#0A5C38">④ 더 나은 경험</text>
+        <text x="112" y="234" text-anchor="middle" font-size="11.5" fill="#0A5C38">→ 다시 ①로 (반복)</text></g>
+      <!-- curved arrows clockwise -->
+      <path d="M470,52 A180,180 0 0 1 612,188" fill="none" stroke="#2E6FF2" stroke-width="2.5" marker-end="url(#cw)"/>
+      <path d="M624,252 A180,180 0 0 1 470,398" fill="none" stroke="#2E6FF2" stroke-width="2.5" marker-end="url(#cw)"/>
+      <path d="M270,398 A180,180 0 0 1 116,252" fill="none" stroke="#2E6FF2" stroke-width="2.5" marker-end="url(#cw)"/>
+      <path d="M112,188 A180,180 0 0 1 270,52" fill="none" stroke="#2E6FF2" stroke-width="2.5" marker-end="url(#cw)"/>
+    </g>
+  </svg>
+  <figcaption>이용자가 늘면 기사가 늘고 → 대기·가격이 내려가 경험이 좋아지고 → 다시 이용자가 는다. 1위일수록 이 바퀴가 빨리 돌아 후발주자가 따라잡기 어렵다.</figcaption>
+  </figure>
+
+  <div class="tag" style="margin-top:26px">해자의 구성 요소와 강도</div>
+  <div class="grid g2">
+    <div class="card"><h4>🔗 네트워크 효과 <span class="badge b-go">강함</span></h4><p style="font-size:14.5px">양면 시장의 핵심 해자. 단, '지역 단위'로 작동해 새 도시에선 처음부터 다시 쌓아야 함(전국 단위 독점력은 제한적).</p></div>
+    <div class="card"><h4>📊 규모의 경제 <span class="badge b-go">강함</span></h4><p style="font-size:14.5px">고정비(앱·알고리즘·데이터)를 거대한 거래량에 분산. 규모가 클수록 단위 비용이 낮아짐.</p></div>
+    <div class="card"><h4>🔁 전환비용·습관 <span class="badge b-amber">중간</span></h4><p style="font-size:14.5px">우버원 멤버십·결제 등록·앱 익숙함이 이탈을 늦추나, 가격 비교는 여전히 쉬움(다중 앱 사용).</p></div>
+    <div class="card"><h4>🏷️ 브랜드·데이터 <span class="badge b-amber">중간</span></h4><p style="font-size:14.5px">'우버하다'가 동사가 될 만큼 강한 브랜드 + 수십억 건 운행 데이터. 모방은 어렵지만 결정적 잠금은 아님.</p></div>
+  </div>
+
+  <div class="tag" style="margin-top:26px">경쟁 우위의 성격 — 차별화 vs 원가 우위</div>
+  <div class="callout c-green">
+    <p>우버는 <b>'원가 우위형'에 가까운 차별화 기업</b>입니다. 제품을 비싸게 파는 명품형(고마진)이 아니라, <b>거대한 규모로 단위 비용을 낮춰 더 싸고 빠르게 공급</b>하는 쪽입니다. 정규화 영업이익률(NOPAT 마진)은 약 <b>8~9%</b>로 높지 않지만, 자산이 가벼워(차량 미보유) <b>투자자본 회전율이 높아</b> 자본수익률을 끌어올립니다. 즉 "마진은 얇지만 자본 효율로 버는" 플랫폼형 모델입니다.</p>
+  </div>
+
+  <div class="callout c-amber">
+    <div class="ttl">⏳ 해자의 지속 가능성 (확신도: 중간 ~60%)</div>
+    <p><b>긍정:</b> 규모·네트워크·다각화는 단기간에 무너지기 어렵고, 우버원·광고가 잠금을 강화하는 중. <b>이것이 내재 CAP 10년을 '합리적'으로 보게 하는 근거.</b> <b>경계:</b> 해자의 최대 약점은 <b>낮은 전환비용(양쪽 모두 갈아타기 쉬움)</b>과 <b>자율주행 탈중개 위험</b>. 만약 자율주행 기술 보유사가 직접 소비자에게 가면, 우버의 '수요 집결' 가치가 약해져 CAP이 빠르게 짧아질 수 있습니다. <b>해자는 넓되, 가장 깊은 곳에 자율주행이라는 균열 가능성이 있습니다.</b></p>
+  </div>
+</div></section>
+
+<section id="s8"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">8</div>
+    <div class="t"><div class="sec-kicker">Peer Comparison · 경쟁사 비교</div>
+      <h2>우버는 경쟁자들 사이에서 어디쯤인가</h2></div>
+  </div>
+  <p class="lead">우버의 경쟁 구도는 사업마다 다릅니다. <b>차량호출에선 미국 1위(리프트가 2위)</b>, <b>배달에선 미국에서 도어대시에 밀린 2위</b>, <b>동남아에선 그랩이 강자</b>입니다. 규모 면에서 우버는 단연 가장 큰 종합 플랫폼입니다.</p>
+
+  <div class="tag" style="margin-top:22px">시가총액 비교 (2026년 6월 기준)</div>
+  <figure>
+  <svg viewBox="0 0 760 180" role="img" aria-label="시가총액 비교">
+    <g font-family="Space Grotesk">
+      <!-- scale: max 145 -> width 560 ; x base 150 -->
+      <text x="0" y="34" font-family="Pretendard Variable" font-weight="600" font-size="13.5" fill="#3A3F4A">우버</text>
+      <rect x="120" y="20" width="560" height="24" rx="5" fill="#14161C"/>
+      <text x="688" y="38" font-weight="700" font-size="14" fill="#111317">$145B</text>
+      <text x="0" y="78" font-family="Pretendard Variable" font-weight="600" font-size="13.5" fill="#3A3F4A">도어대시</text>
+      <rect x="120" y="64" width="255" height="24" rx="5" fill="#2E6FF2"/>
+      <text x="383" y="82" font-weight="700" font-size="14" fill="#111317">$66B</text>
+      <text x="0" y="122" font-family="Pretendard Variable" font-weight="600" font-size="13.5" fill="#3A3F4A">리프트</text>
+      <rect x="120" y="108" width="20" height="24" rx="5" fill="#9AA3B5"/>
+      <text x="148" y="126" font-weight="700" font-size="14" fill="#111317">$5.3B</text>
+    </g>
+    <text x="0" y="162" font-family="Pretendard Variable" font-size="12" fill="#5A6170">우버는 미국 차량호출 2위 리프트의 약 27배, 배달 1위 도어대시의 2배가 넘는 규모</text>
+  </svg>
+  </figure>
+
+  <div class="tbl-wrap" style="margin-top:16px">
+    <table>
+      <thead><tr>
+        <th>기업</th><th class="num">시가총액</th><th class="num">매출 (2025)</th><th class="num">매출 성장</th>
+        <th>수익성</th><th>핵심 시장 · 강점</th>
+      </tr></thead>
+      <tbody>
+        <tr class="row-hl">
+          <td><b>우버 (UBER)</b></td><td class="num">~$145B</td><td class="num">$52.0B</td><td class="num">+18%</td>
+          <td>흑자 (FCF $9.8B)</td><td>글로벌 종합 1위 · 모빌리티+배달+화물+광고</td>
+        </tr>
+        <tr>
+          <td><b>도어대시 (DASH)</b></td><td class="num">~$66B</td><td class="num">$13.7B</td><td class="num">+28%</td>
+          <td>흑자 전환</td><td>미국 음식배달 1위(점유율 ~67%) · 식료품 확장</td>
+        </tr>
+        <tr>
+          <td><b>리프트 (LYFT)</b></td><td class="num">~$5.3B</td><td class="num">중소형</td><td class="num">한 자릿수~</td>
+          <td>조정기준 흑자</td><td>미국·캐나다 차량호출 2위 · 단일 사업 집중</td>
+        </tr>
+        <tr>
+          <td><b>그랩 (GRAB)</b></td><td class="num">중형(추정)</td><td class="num">~$3.8B</td><td class="num">고성장</td>
+          <td>흑자 전환</td><td>동남아 슈퍼앱 · 이동+배달+핀테크 결합</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">※ 시가총액은 2026년 6월 시장 변동에 따라 달라질 수 있으며, 그랩 시총은 별도 검증을 생략해 추정으로 표기. 매출은 각 사 2025 회계연도 기준.</p>
+
+  <div class="grid g2" style="margin-top:24px">
+    <div class="callout c-green" style="margin:0">
+      <div class="ttl">✅ 우버가 앞서는 점</div>
+      <p><b>규모와 다각화.</b> 단일 사업에 의존하는 리프트·그랩과 달리, 우버는 여러 사업이 한 플랫폼에서 시너지를 냅니다. 차량호출의 현금흐름으로 배달·화물·자율주행에 투자할 여력이 있고, 글로벌 사용자 기반은 광고 수익의 토대가 됩니다.</p>
+    </div>
+    <div class="callout c-amber" style="margin:0">
+      <div class="ttl">⚠️ 경쟁이 치열한 영역</div>
+      <p><b>배달은 도어대시가 미국에서 우위.</b> 우버이츠는 2위로, 점유율 격차가 큽니다. 차량호출도 리프트와의 가격 경쟁이 상존합니다. 즉 우버의 '1위'는 사업별로 견고함이 다르며, <b>배달 부문의 시장 지위는 모빌리티만큼 압도적이지 않습니다.</b></p>
+    </div>
+  </div>
+</div></section>
+
+<section id="s9"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">9</div>
+    <div class="t"><div class="sec-kicker">Lifecycle Stage · 생애주기 판별</div>
+      <h2>우버는 지금 '성숙기' 초입에 있다</h2></div>
+  </div>
+  <p class="lead">기업의 생애주기는 매출이 아니라 <b>현금흐름의 방향(부호)</b>으로 판별합니다. 회사가 돈을 어디서 만들고 어디에 쓰는지를 보면, 지금 어느 단계인지가 드러납니다. 우버의 현금흐름 부호는 <b>영업(+) · 투자(−) · 재무(−)</b>로, 전형적인 <b>성숙기(Mature)</b> 패턴입니다.</p>
+
+  <div class="tag" style="margin-top:22px">세 가지 현금흐름의 부호 (2025년)</div>
+  <div class="grid g3">
+    <div class="card" style="border-top:3px solid var(--go)">
+      <h4>영업활동 현금흐름</h4>
+      <div style="font-family:var(--disp);font-weight:700;font-size:30px;color:var(--go-deep);margin:6px 0">+$10.1B</div>
+      <p style="font-size:14px">본업에서 <b>현금이 들어옴(+)</b>. 사업이 스스로 돈을 버는 단계. 성장기를 지나 안정적 창출 국면.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)">
+      <h4>투자활동 현금흐름</h4>
+      <div style="font-family:var(--disp);font-weight:700;font-size:30px;color:var(--red-deep);margin:6px 0">−$3.6B</div>
+      <p style="font-size:14px">미래를 위해 <b>돈을 쓰는 중(−)</b>. 자율주행·지분투자 등. 단, 영업현금보다 작아 '과잉투자'는 아님.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)">
+      <h4>재무활동 현금흐름</h4>
+      <div style="font-family:var(--disp);font-weight:700;font-size:30px;color:var(--red-deep);margin:6px 0">−$5.7B</div>
+      <p style="font-size:14px"><b>주주에게 환원(−)</b>. 자사주 매입에 $6.5B. 더 이상 외부 자금에 기대지 않고 오히려 돌려주는 단계.</p>
+    </div>
+  </div>
+
+  <figure style="margin-top:28px">
+  <svg viewBox="0 0 1000 250" role="img" aria-label="기업 생애주기 5단계">
+    <!-- lifecycle curve -->
+    <path d="M40,200 C160,200 200,120 320,95 C440,70 470,60 560,62 C660,64 720,80 820,120 C900,150 940,180 960,200"
+          fill="none" stroke="#E1E6EC" stroke-width="3"/>
+    <!-- stage markers -->
+    <g font-family="Pretendard Variable" font-size="12.5">
+      <g><circle cx="120" cy="180" r="6" fill="#9AA3B5"/><text x="120" y="222" text-anchor="middle" font-weight="600" fill="#5A6170">도입</text>
+        <text x="120" y="240" text-anchor="middle" font-size="10.5" fill="#9AA3B5">영업− 투자− 재무+</text></g>
+      <g><circle cx="320" cy="95" r="6" fill="#9AA3B5"/><text x="320" y="222" text-anchor="middle" font-weight="600" fill="#5A6170">성장</text>
+        <text x="320" y="240" text-anchor="middle" font-size="10.5" fill="#9AA3B5">영업+ 투자− 재무+</text></g>
+      <!-- mature - highlighted -->
+      <g><circle cx="560" cy="62" r="11" fill="#00B86B" stroke="#fff" stroke-width="3"/>
+        <rect x="488" y="14" width="144" height="32" rx="8" fill="#00B86B"/>
+        <text x="560" y="35" text-anchor="middle" font-weight="700" font-size="13" fill="#04210F">★ 우버 = 성숙</text>
+        <text x="560" y="222" text-anchor="middle" font-weight="700" fill="#00834C">성숙</text>
+        <text x="560" y="240" text-anchor="middle" font-size="10.5" font-weight="700" fill="#00834C">영업+ 투자− 재무−</text></g>
+      <g><circle cx="780" cy="108" r="6" fill="#9AA3B5"/><text x="780" y="222" text-anchor="middle" font-weight="600" fill="#5A6170">정리</text>
+        <text x="780" y="240" text-anchor="middle" font-size="10.5" fill="#9AA3B5">부호 혼재</text></g>
+      <g><circle cx="940" cy="185" r="6" fill="#9AA3B5"/><text x="940" y="222" text-anchor="middle" font-weight="600" fill="#5A6170">쇠퇴</text>
+        <text x="940" y="240" text-anchor="middle" font-size="10.5" fill="#9AA3B5">영업+ 투자+ 재무−</text></g>
+    </g>
+  </svg>
+  <figcaption>현금흐름 부호로 본 위치 — 우버는 성장기를 막 지나 <b>성숙기 초입</b>. 여전히 두 자릿수 성장을 하면서도 현금을 벌어 주주에게 환원하기 시작한, 비교적 '젊은 성숙기'</figcaption>
+  </figure>
+
+  <div class="callout c-blue">
+    <div class="ttl">🧩 왜 이 판별이 중요한가</div>
+    <p>성숙기 기업은 <b>안정적 현금흐름을 바탕으로 미래 가치를 추정하기에 적합</b>합니다. 그래서 이 보고서의 DCF·CAP 분석이 의미를 갖습니다. 만약 도입기였다면 현금흐름이 마이너스라 DCF 대신 시장규모(TAM)·실물옵션 분석이 필요했을 것입니다. <b>우버는 DCF가 작동하는 단계에 있습니다.</b> 다만 '젊은 성숙기'라 성장 둔화 속도가 가치를 좌우합니다.</p>
+  </div>
+</div></section>
+
+<section id="s10"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">10</div>
+    <div class="t"><div class="sec-kicker">Reverse DCF · 현금흐름 할인 & 시장 내재 CAP</div>
+      <h2>주가 $71이 가정하는 '미래'를 거꾸로 푼다</h2></div>
+  </div>
+
+  <div class="callout c-blue">
+    <div class="ttl">🔄 이 분석의 방법 — '적정가 맞히기'가 아니라 '기대치 역산'</div>
+    <p>보통의 가치평가는 "이 회사의 적정 주가는 $X"라고 단언합니다. 하지만 미래는 아무도 모릅니다. 그래서 이 보고서는 반대로 접근합니다 — <b>"현재가 $71이 성립하려면, 우버가 몇 년간 초과수익(CAP)을 내야 하는가?"</b>를 계산합니다. 예측 기간을 1년씩 늘려가며 이론가치가 $71과 만나는 지점을 찾고, <b>그 '교차 연수'가 곧 시장 내재 CAP</b>입니다.</p>
+  </div>
+
+  <div class="grid g2" style="margin-top:24px;align-items:start">
+    <div>
+      <div class="tag">자본비용(WACC) 산출 — CAPM 기반</div>
+      <div class="card">
+        <p style="font-size:14px;margin:0 0 14px;color:var(--ink-mute)">투자자가 우버에 요구하는 최소 수익률. 이 값이 클수록 미래 현금을 더 깐깐하게 할인합니다.</p>
+        <svg viewBox="0 0 460 150" role="img" aria-label="WACC 빌드업">
+          <g font-family="Space Grotesk">
+            <!-- stacked bar -->
+            <text x="0" y="20" font-family="Pretendard Variable" font-size="12" font-weight="600" fill="#3A3F4A">자기자본비용(CoE) 구성</text>
+            <rect x="0" y="30" width="184" height="34" fill="#9AA3B5"/>
+            <rect x="184" y="30" width="226" height="34" fill="#2E6FF2"/>
+            <text x="92" y="52" text-anchor="middle" font-weight="700" font-size="13" fill="#fff">4.45%</text>
+            <text x="297" y="52" text-anchor="middle" font-weight="700" font-size="13" fill="#fff">5.46%</text>
+            <text x="0" y="84" font-family="Pretendard Variable" font-size="11.5" fill="#5A6170">무위험(10년 국채)</text>
+            <text x="410" y="84" text-anchor="end" font-family="Pretendard Variable" font-size="11.5" fill="#1E5AD6">베타 1.15 × ERP 4.75%</text>
+            <line x1="0" y1="98" x2="410" y2="98" stroke="#E1E6EC"/>
+            <text x="0" y="122" font-family="Pretendard Variable" font-size="13" font-weight="600" fill="#111317">= 자기자본비용 9.91%</text>
+            <text x="410" y="122" text-anchor="end" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#111317">WACC ≈ 9.5%</text>
+            <text x="0" y="142" font-family="Pretendard Variable" font-size="11" fill="#9AA3B5">(부채 비중 작아 가중평균 후 소폭 하락)</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div>
+      <div class="tag">핵심 가정값</div>
+      <div class="tbl-wrap">
+        <table style="min-width:0">
+          <tbody>
+            <tr><td>무위험수익률 (10년 국채)</td><td class="num">4.45%</td></tr>
+            <tr><td>주식 위험 프리미엄 (ERP)</td><td class="num">4.75%</td></tr>
+            <tr><td>베타 (시장 민감도)</td><td class="num">1.15</td></tr>
+            <tr class="row-hl"><td><b>가중평균자본비용 (WACC)</b></td><td class="num"><b>9.5%</b></td></tr>
+            <tr><td>영구성장률 (g, 장기 인플레)</td><td class="num">2.5%</td></tr>
+            <tr><td>페이드 비율 (운송업 평균)</td><td class="num">0.21</td></tr>
+            <tr><td>정규화 세율</td><td class="num">24%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">페이드 비율 = 초과수익이 매년 사라지는 속도. 높을수록 해자가 빨리 닳는다고 가정.</p>
+    </div>
+  </div>
+
+  <div class="callout c-amber" style="margin-top:22px">
+    <div class="ttl">🧮 보수적 출발점 — '보고이익'이 아닌 '경제적 이익'으로</div>
+    <p>우버의 2025년 회계 순이익 $10.1B에는 <b>일회성 세금 환입(약 $5B)</b>이 섞여 있어 실제보다 부풀려져 있습니다. 또 회계상 잉여현금흐름 $9.8B은 <b>주식보상비용·보험 부채 효과</b> 덕에 커 보입니다. 이 모델은 이런 일회성·비현금 효과를 걷어내고, <b>정규화 세율 24%를 적용한 경제적 이익(NOPAT) ≈ $4.4B</b>에서 출발합니다. 즉 <b>일부러 보수적으로</b> 잡았으며, 회사가 보고하는 현금흐름을 그대로 쓰면 내재 CAP은 더 짧게(=더 저렴하게) 나옵니다.</p>
+  </div>
+</div></section>
+
+<section id="s10b" style="border-top:none;padding-top:0"><div class="wrap">
+  <div class="tag">⭐ 핵심 차트 — 예측 기간이 길어질수록 이론가치는 어떻게 변하나</div>
+  <p style="margin-top:8px">아래 곡선은 "우버가 N년 동안 초과수익을 낸다"고 가정했을 때의 이론적 주당가치입니다. 이 곡선이 <b>현재가 $71(가로 점선)과 만나는 지점</b>이 곧 시장이 가정하는 경쟁우위 기간 = <b>내재 CAP</b>입니다.</p>
+
+  <figure>
+  <svg viewBox="0 0 1000 480" role="img" aria-label="예측기간별 주당가치와 현재가 교차점">
+    <!-- title -->
+    <text x="40" y="30" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#111317">중립 시나리오 · 예측기간(N년)별 이론 주당가치 ($)</text>
+    <!-- y gridlines & labels -->
+    <g font-family="Space Grotesk" font-size="11" fill="#9AA3B5">
+      <line x1="90" y1="400" x2="950" y2="400" stroke="#E1E6EC"/><text x="80" y="404" text-anchor="end">0</text>
+      <line x1="90" y1="332" x2="950" y2="332" stroke="#EEF1F6"/><text x="80" y="336" text-anchor="end">20</text>
+      <line x1="90" y1="264" x2="950" y2="264" stroke="#EEF1F6"/><text x="80" y="268" text-anchor="end">40</text>
+      <line x1="90" y1="196" x2="950" y2="196" stroke="#EEF1F6"/><text x="80" y="200" text-anchor="end">60</text>
+      <line x1="90" y1="128" x2="950" y2="128" stroke="#EEF1F6"/><text x="80" y="132" text-anchor="end">80</text>
+      <line x1="90" y1="60" x2="950" y2="60" stroke="#EEF1F6"/><text x="80" y="64" text-anchor="end">100</text>
+    </g>
+    <!-- x axis labels -->
+    <g font-family="Space Grotesk" font-size="11" fill="#5A6170">
+      <text x="90" y="422" text-anchor="middle">0년</text>
+      <text x="305" y="422" text-anchor="middle">5년</text>
+      <text x="520" y="422" text-anchor="middle">10년</text>
+      <text x="735" y="422" text-anchor="middle">15년</text>
+      <text x="950" y="422" text-anchor="middle">20년</text>
+      <text x="520" y="446" text-anchor="middle" font-family="Pretendard Variable" font-size="12.5" font-weight="600" fill="#3A3F4A">← 가정한 초과수익 기간 (예측 horizon) →</text>
+    </g>
+
+    <!-- $71 horizontal line -->
+    <line x1="90" y1="158.6" x2="950" y2="158.6" stroke="#E5484D" stroke-width="2" stroke-dasharray="7 5"/>
+    <rect x="780" y="138" width="170" height="22" rx="5" fill="#FCECEC" stroke="#F3C9CB"/>
+    <text x="865" y="153" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="12" fill="#8E2A2E">현재가 $71</text>
+
+    <!-- value curve -->
+    <polyline points="133,288.8 176,274.7 219,260.4 262,246.1 305,231.6 348,217.2 391,203 434,189 477,175.4 520,162.3 563,149.8 606,137.8 649,126.6 692,116.1 735,107.3 778,101.8 821,97.1 864,93.3 907,90.2 950,87.9"
+      fill="none" stroke="#2E6FF2" stroke-width="3"/>
+    <!-- area under curve up to crossing, subtle -->
+    <!-- crossing vertical line at N=10.3 (x=532.9) -->
+    <line x1="532.9" y1="158.6" x2="532.9" y2="400" stroke="#111317" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <!-- crossing point -->
+    <circle cx="532.9" cy="158.6" r="9" fill="#E8920C" stroke="#111317" stroke-width="2.5"/>
+    <!-- callout for crossing -->
+    <rect x="412" y="92" width="242" height="48" rx="9" fill="#14161C"/>
+    <text x="533" y="113" text-anchor="middle" font-family="Pretendard Variable" font-weight="700" font-size="13" fill="#fff">교차점 = 내재 CAP</text>
+    <text x="533" y="132" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="15" fill="#00B86B">≈ 10.3년</text>
+    <path d="M533,140 L533,150" stroke="#14161C" stroke-width="2"/>
+    <text x="542" y="382" font-family="Space Grotesk" font-weight="700" font-size="12" fill="#111317">10.3년</text>
+  </svg>
+  <figcaption>파란 곡선(이론가치)이 빨간 점선(현재가 $71)을 통과하는 지점이 <b>약 10.3년</b>. 즉 시장은 우버에게 "약 10년의 초과수익"을 매기고 있다. 곡선이 우상향하므로, 더 긴 우위를 믿을수록 가치는 더 커진다.</figcaption>
+  </figure>
+
+  <div class="tag" style="margin-top:26px">중립 시나리오 — 연도별 현금흐름 추정 (단위: $B)</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>연도</th><th class="num">매출</th><th class="num">매출 성장률</th><th class="num">EBITA 마진</th>
+        <th class="num">세후영업이익 NOPAT</th><th class="num">잉여현금흐름 FCF</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>2026</td><td class="num">58.8</td><td class="num">13.0%</td><td class="num">12.5%</td><td class="num">5.6</td><td class="num">4.7</td></tr>
+        <tr><td>2027</td><td class="num">66.1</td><td class="num">12.5%</td><td class="num">12.9%</td><td class="num">6.5</td><td class="num">5.5</td></tr>
+        <tr><td>2028</td><td class="num">74.1</td><td class="num">12.0%</td><td class="num">13.3%</td><td class="num">7.5</td><td class="num">6.4</td></tr>
+        <tr><td>2029</td><td class="num">82.6</td><td class="num">11.5%</td><td class="num">13.7%</td><td class="num">8.6</td><td class="num">7.4</td></tr>
+        <tr><td>2030</td><td class="num">91.7</td><td class="num">11.0%</td><td class="num">14.1%</td><td class="num">9.8</td><td class="num">8.4</td></tr>
+        <tr class="row-hl"><td><b>2031</b></td><td class="num">101.3</td><td class="num">10.5%</td><td class="num">14.5%</td><td class="num">11.2</td><td class="num">9.6</td></tr>
+        <tr><td>2032</td><td class="num">111.4</td><td class="num">10.0%</td><td class="num">14.9%</td><td class="num">12.6</td><td class="num">10.9</td></tr>
+        <tr><td>2033</td><td class="num">122.0</td><td class="num">9.5%</td><td class="num">15.3%</td><td class="num">14.2</td><td class="num">12.4</td></tr>
+        <tr><td>2034</td><td class="num">133.0</td><td class="num">9.0%</td><td class="num">15.7%</td><td class="num">15.9</td><td class="num">13.9</td></tr>
+        <tr><td>2035</td><td class="num">144.3</td><td class="num">8.5%</td><td class="num">16.1%</td><td class="num">17.7</td><td class="num">15.5</td></tr>
+        <tr><td>2036</td><td class="num">155.8</td><td class="num">8.0%</td><td class="num">16.5%</td><td class="num">19.5</td><td class="num">17.2</td></tr>
+        <tr><td>2037</td><td class="num">167.5</td><td class="num">7.5%</td><td class="num">16.9%</td><td class="num">21.5</td><td class="num">19.0</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">중립 가정: 매출 성장률은 13%에서 매년 둔화, EBITA 마진은 12.5%→상한 18%까지 점진 확대. 강조행(2031)은 현재가 $71과 교차하는 내재 CAP(~10년) 부근. 이후 햇수는 초과수익이 페이드 모델로 서서히 소멸한다고 가정.</p>
+</div></section>
+
+<section id="s11"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">11</div>
+    <div class="t"><div class="sec-kicker">Scenario Analysis · 시나리오 분석</div>
+      <h2>회사를 어떻게 보느냐에 따라 달라지는 '내재 CAP'</h2></div>
+  </div>
+  <p class="lead">같은 주가라도 가정이 다르면 내재 CAP은 크게 달라집니다. 우버를 <b>비관적으로 보면(약세)</b> 현재가가 너무 비싸 보이고, <b>낙관적으로 보면(강세)</b> 짧은 우위만으로도 정당화됩니다. 세 시나리오의 폭을 함께 봐야 균형 잡힌 판단이 가능합니다.</p>
+
+  <figure style="margin-top:22px">
+  <svg viewBox="0 0 1000 240" role="img" aria-label="시나리오별 내재 CAP 비교">
+    <!-- interpretation zones background, scale 0..25yr over x 150..950 (width 800) -> x=150+yr/25*800=150+32*yr -->
+    <rect x="150" y="40" width="160" height="150" fill="#E9F9F1"/>
+    <rect x="310" y="40" width="160" height="150" fill="#FCF3E2"/>
+    <rect x="470" y="40" width="160" height="150" fill="#FBF6EA"/>
+    <rect x="630" y="40" width="160" height="150" fill="#FCF3E2" opacity="0.6"/>
+    <rect x="790" y="40" width="160" height="150" fill="#FCECEC"/>
+    <g font-family="Pretendard Variable" font-size="10.5" font-weight="600">
+      <text x="230" y="56" text-anchor="middle" fill="#0A5C38">매우 비관</text>
+      <text x="390" y="56" text-anchor="middle" fill="#B5710A">약간 비관</text>
+      <text x="550" y="56" text-anchor="middle" fill="#B5710A">합리적</text>
+      <text x="710" y="56" text-anchor="middle" fill="#B5710A">약간 낙관</text>
+      <text x="870" y="56" text-anchor="middle" fill="#BE363B">과도</text>
+    </g>
+    <!-- x ticks -->
+    <g font-family="Space Grotesk" font-size="10" fill="#9AA3B5">
+      <text x="150" y="206" text-anchor="middle">0</text><text x="310" y="206" text-anchor="middle">5</text>
+      <text x="470" y="206" text-anchor="middle">10</text><text x="630" y="206" text-anchor="middle">15</text>
+      <text x="790" y="206" text-anchor="middle">20</text><text x="942" y="206" text-anchor="middle">25년+</text>
+    </g>
+    <!-- bars: 낙관 6.8 -> width 32*6.8=217.6 ; 중립 10.3 -> 329.6 ; 보수 >40 (clamp to edge) -->
+    <g font-family="Space Grotesk" font-weight="700" font-size="13">
+      <!-- 낙관 -->
+      <text x="142" y="92" text-anchor="end" font-family="Pretendard Variable" fill="#0A5C38">🟢 낙관</text>
+      <rect x="150" y="78" width="217.6" height="24" rx="5" fill="#00B86B"/>
+      <text x="378" y="96" fill="#00834C">6.8년</text>
+      <!-- 중립 -->
+      <text x="142" y="130" text-anchor="end" font-family="Pretendard Variable" fill="#B5710A">🟡 중립</text>
+      <rect x="150" y="116" width="329.6" height="24" rx="5" fill="#E8920C"/>
+      <text x="490" y="134" fill="#B5710A">10.3년 ★</text>
+      <!-- 보수 -->
+      <text x="142" y="168" text-anchor="end" font-family="Pretendard Variable" fill="#BE363B">🔴 보수</text>
+      <rect x="150" y="154" width="800" height="24" rx="5" fill="#E5484D" opacity="0.85"/>
+      <text x="940" y="172" text-anchor="end" fill="#fff">&gt;40년 (현재가 설명 불가)</text>
+    </g>
+  </svg>
+  <figcaption>세 시나리오의 내재 CAP — 낙관은 7년(저평가), 중립은 10년(합리적), 보수는 40년 넘게 필요(이 가정이면 현재가가 비쌈)</figcaption>
+  </figure>
+
+  <div class="tbl-wrap" style="margin-top:16px">
+    <table>
+      <thead><tr>
+        <th>구분</th><th>🟢 낙관 (강세)</th><th>🟡 중립 (기본)</th><th>🔴 보수 (약세)</th>
+      </tr></thead>
+      <tbody>
+        <tr><td><b>내재 CAP</b></td><td class="num" style="color:var(--go-deep);font-weight:700">6.8년</td><td class="num" style="color:var(--amber-deep);font-weight:700">10.3년</td><td class="num" style="color:var(--red-deep);font-weight:700">&gt;40년</td></tr>
+        <tr><td>초기 매출 성장률</td><td class="num">15%</td><td class="num">13%</td><td class="num">11%</td></tr>
+        <tr><td>성장 둔화 속도(연)</td><td class="num">−0.4%p</td><td class="num">−0.5%p</td><td class="num">−0.8%p</td></tr>
+        <tr><td>EBITA 마진 상한</td><td class="num">21%</td><td class="num">18%</td><td class="num">15%</td></tr>
+        <tr><td>재투자율(매출 대비)</td><td class="num">1.0%</td><td class="num">1.5%</td><td class="num">2.5%</td></tr>
+        <tr><td>페이드 비율(해자 소멸)</td><td class="num">0.15</td><td class="num">0.21</td><td class="num">0.29</td></tr>
+        <tr><td>핵심 전제</td><td>AV가 마진 혁신 + 광고 급성장</td><td>점진적 마진 개선, 성장 둔화</td><td>모빌리티 정체 + AV 탈중개</td></tr>
+        <tr><td>해석</td><td>저평가 신호</td><td>합리적 / 적정</td><td>고평가 신호</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout c-amber" style="margin-top:20px">
+    <div class="ttl">📐 시나리오가 말해주는 것 (확신도: 중간 ~65%)</div>
+    <p><b>비대칭이 핵심입니다.</b> 강세가 맞으면 약 7년의 우위만으로 충분(상승 여지 큼)하지만, 약세가 맞으면 40년 넘는 우위가 필요해 사실상 현재가 정당화가 불가능(하락 위험). 즉 <b>'좋게 되면 많이 오르고, 나쁘게 되면 많이 빠지는'</b> 구조입니다. 중립(10년)은 그 중간으로, 우버의 규모·네트워크를 고려할 때 <b>달성 가능성이 합리적인 수준</b>으로 판단합니다 — 다만 그 핵심 변수는 결국 마진 개선과 자율주행입니다.</p>
+  </div>
+</div></section>
+
+<section id="s12"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">12</div>
+    <div class="t"><div class="sec-kicker">Sensitivity Analysis · 민감도 분석</div>
+      <h2>어떤 가정이 결론을 가장 크게 흔드는가</h2></div>
+  </div>
+  <p class="lead">내재 CAP(10.3년)이 각 가정에 얼마나 민감한지 봅니다. 막대가 길수록 그 변수의 영향이 큽니다. 결론부터 말하면, <b>자본비용(WACC)과 초기 성장률</b>이 결과를 좌우하고, <b>장기 가정(영구성장률·페이드·마진 상한)은 의외로 거의 영향이 없습니다.</b></p>
+
+  <figure style="margin-top:22px">
+  <svg viewBox="0 0 1000 330" role="img" aria-label="민감도 토네이도 차트">
+    <!-- base vertical line at 10.3 (x=454.4) -->
+    <line x1="454.4" y1="50" x2="454.4" y2="288" stroke="#111317" stroke-width="2" stroke-dasharray="5 4"/>
+    <text x="454.4" y="40" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="12" fill="#111317">기준 10.3년</text>
+
+    <!-- x axis -->
+    <g font-family="Space Grotesk" font-size="10.5" fill="#9AA3B5">
+      <line x1="200" y1="288" x2="920" y2="288" stroke="#E1E6EC"/>
+      <text x="200" y="306" text-anchor="middle">5</text><text x="440" y="306" text-anchor="middle">10</text>
+      <text x="680" y="306" text-anchor="middle">15</text><text x="920" y="306" text-anchor="middle">20년</text>
+      <text x="560" y="324" text-anchor="middle" font-family="Pretendard Variable" font-size="11.5" fill="#5A6170">→ 내재 CAP (년)</text>
+    </g>
+
+    <g font-family="Pretendard Variable" font-weight="600" font-size="12.5">
+      <!-- 초기성장 (biggest, blue) -->
+      <text x="190" y="86" text-anchor="end" fill="#3A3F4A">초기 매출성장 ±2%p</text>
+      <rect x="353.6" y="71" width="417.6" height="26" rx="4" fill="#2E6FF2"/>
+      <text x="348" y="88" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#1E5AD6">16.9</text>
+      <text x="777" y="88" font-family="Space Grotesk" font-size="11" fill="#1E5AD6">8.2</text>
+
+      <!-- WACC (blue) -->
+      <text x="190" y="136" text-anchor="end" fill="#3A3F4A">자본비용 WACC ±1%p</text>
+      <rect x="344" y="121" width="259.2" height="26" rx="4" fill="#2E6FF2"/>
+      <text x="338" y="138" text-anchor="end" font-family="Space Grotesk" font-size="11" fill="#1E5AD6">13.4</text>
+      <text x="609" y="138" font-family="Space Grotesk" font-size="11" fill="#1E5AD6">8.0</text>
+
+      <!-- g (tiny, gray) -->
+      <text x="190" y="186" text-anchor="end" fill="#5A6170">영구성장률 g ±0.5%p</text>
+      <rect x="444.8" y="173" width="19.2" height="22" rx="4" fill="#C7CEDA"/>
+      <text x="474" y="189" font-family="Space Grotesk" font-size="10.5" fill="#9AA3B5">10.1–10.5</text>
+
+      <!-- fade (tiny, gray) -->
+      <text x="190" y="224" text-anchor="end" fill="#5A6170">페이드 비율 ±0.08</text>
+      <rect x="440" y="211" width="19.2" height="22" rx="4" fill="#C7CEDA"/>
+      <text x="470" y="227" font-family="Space Grotesk" font-size="10.5" fill="#9AA3B5">10.0–10.4</text>
+
+      <!-- margin (tiny, gray) -->
+      <text x="190" y="262" text-anchor="end" fill="#5A6170">EBITA 마진상한 ±2%p</text>
+      <rect x="454.4" y="249" width="12" height="22" rx="4" fill="#C7CEDA"/>
+      <text x="476" y="265" font-family="Space Grotesk" font-size="10.5" fill="#9AA3B5">10.3–10.5</text>
+    </g>
+  </svg>
+  <figcaption>토네이도 차트 — <b style="color:#1E5AD6">파란 막대(WACC·성장률)</b>는 결과를 크게 흔들지만, <b style="color:#5A6170">회색 막대(장기 가정)</b>는 거의 흔들지 못한다</figcaption>
+  </figure>
+
+  <div class="grid g2" style="margin-top:20px">
+    <div class="callout c-blue" style="margin:0">
+      <div class="ttl">🎯 가장 중요한 두 변수</div>
+      <p><b>① 자본비용(WACC):</b> 1%p만 낮아져도(8.5%) 내재 CAP은 8년으로 떨어져 현재가가 더 매력적으로 보입니다. 금리 환경이 우버 밸류에이션에 직접적입니다. <b>② 초기 성장률:</b> 향후 몇 년의 성장이 두 자릿수를 지키느냐가 관건. 11%로 둔화되면 16.9년이 필요해져 현재가가 부담스러워집니다.</p>
+    </div>
+    <div class="callout c-green" style="margin:0">
+      <div class="ttl">🔍 방법론적 시사점</div>
+      <p>장기 가정(영구성장·페이드)이 결과를 거의 못 바꾸는 이유는, 내재 CAP의 교차가 <b>먼 미래의 잔존가치가 아니라 '향후 10년의 현금흐름 누적'에서 결정</b>되기 때문입니다. 이는 결론이 <b>'먼 미래에 대한 막연한 낙관'이 아니라 '가까운 미래의 실제 실적'에 기반</b>함을 뜻하며, 분석의 견고함을 높입니다.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="s13"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">13</div>
+    <div class="t"><div class="sec-kicker">Synthesis · 종합 판단</div>
+      <h2>그래서, 현재가 $71은 비싼가 싼가</h2></div>
+  </div>
+  <p class="lead">지금까지의 분석을 종합하면, 현재가 $71에 담긴 시장의 기대(내재 CAP 약 10년)는 <b>'합리적' 구간에 위치</b>합니다. 시장은 우버에게 과도한 장밋빛 미래도, 비관적 몰락도 아닌 <b>'견조한 중간'</b>을 매기고 있습니다.</p>
+
+  <div class="tag" style="margin-top:22px">참고 — 다른 기업과의 내재 CAP 비교</div>
+  <figure>
+  <svg viewBox="0 0 1000 170" role="img" aria-label="내재 CAP 벤치마크 비교">
+    <!-- scale 0..20 over x 220..940 (width 720) -> x=220+36*yr -->
+    <g font-family="Pretendard Variable" font-weight="600" font-size="13">
+      <text x="210" y="52" text-anchor="end" fill="#3A3F4A">우버 (현재)</text>
+      <rect x="220" y="38" width="370.8" height="26" rx="5" fill="#E8920C"/>
+      <text x="600" y="56" font-family="Space Grotesk" font-weight="700" font-size="13" fill="#B5710A">~10년 · 합리적</text>
+
+      <text x="210" y="102" text-anchor="end" fill="#3A3F4A">마이크로소프트 (참고)</text>
+      <rect x="220" y="88" width="630" height="26" rx="5" fill="#9AA3B5"/>
+      <text x="858" y="106" font-family="Space Grotesk" font-weight="700" font-size="13" fill="#5A6170">~17–18년 · 슈퍼스타</text>
+    </g>
+    <g font-family="Space Grotesk" font-size="10.5" fill="#9AA3B5">
+      <line x1="220" y1="134" x2="940" y2="134" stroke="#E1E6EC"/>
+      <text x="220" y="152" text-anchor="middle">0</text><text x="400" y="152" text-anchor="middle">5</text>
+      <text x="580" y="152" text-anchor="middle">10</text><text x="760" y="152" text-anchor="middle">15</text><text x="940" y="152" text-anchor="middle">20년</text>
+    </g>
+  </svg>
+  <figcaption>시장은 우버에게 마이크로소프트급(17~18년)의 장기 지배력을 요구하지 않는다 — 그만큼 기대치의 문턱이 낮아, 실적이 받쳐주면 충족 가능성이 있다</figcaption>
+  </figure>
+
+  <div class="panel" style="margin-top:26px">
+    <h3 style="font-size:21px">⚖️ 베이지안 종합 — 경쟁하는 두 가설</h3>
+    <p style="margin-top:12px">데이터는 어느 한쪽을 확정해주지 않습니다. 두 가설을 <b style="color:#fff">함께</b> 들고 가는 것이 정직한 태도입니다.</p>
+    <div class="grid g2" style="margin-top:16px;gap:14px">
+      <div class="chip-l" style="border-left:3px solid #00B86B">
+        <div style="font-family:var(--disp);font-weight:700;color:#0A5C38;font-size:14px;margin-bottom:6px">🟢 강세 가설 (사전확률 ~55%)</div>
+        <p style="color:#111317;font-size:13.5px;margin:0">네트워크 효과는 견고하고, 광고·우버원이 마진을 끌어올리며, 자율주행은 비용을 낮추는 '기회'로 작동. 10년 우위는 충분히 달성 가능하며 현재가는 합리적~매력적. <b>약 7년만 맞아도 정당화됨.</b></p>
+      </div>
+      <div class="chip-l" style="border-left:3px solid #E5484D">
+        <div style="font-family:var(--disp);font-weight:700;color:#8E2A2E;font-size:14px;margin-bottom:6px">🔴 약세 가설 (사전확률 ~45%)</div>
+        <p style="color:#111317;font-size:13.5px;margin:0">모빌리티 성장이 한 자릿수로 굳고, 자율주행 보유사가 우버를 건너뛰어 '탈중개'가 일어나면 해자가 약화. 이 경우 40년 우위도 부족해 <b>현재가가 비쌈.</b></p>
+      </div>
+    </div>
+    <p style="margin-top:16px;color:#C2C9D6"><b style="color:#fff">종합 기울기:</b> 우버의 검증된 규모·현금창출력·다각화는 강세 가설에 다소 무게를 싣습니다. 다만 자율주행이라는 구조적 불확실성 때문에 확신을 높이긴 어렵습니다. <b style="color:#00B86B">순 판단: '합리적~약간 매력적', 확신도 중간(~65%).</b></p>
+  </div>
+
+  <div class="callout c-blue" style="margin-top:22px">
+    <div class="ttl">🔬 무엇이 이 판단을 바꾸는가 (베이지안 업데이트 트리거)</div>
+    <p><b>강세 쪽으로 갱신할 신호:</b> 모빌리티 성장률 두 자릿수 회복 · 자율주행 상용 도시에서 우버 경유 운행이 실제 마진을 개선 · 광고 매출이 $2B를 크게 상회. <b>약세 쪽으로 갱신할 신호:</b> 모빌리티 성장률 한 자릿수 고착 · 주요 자율주행사의 독자 앱이 의미 있는 점유율 확보 · 규제로 기사 '직원' 분류 확산 · 지분투자 평가손이 반복.</p>
+  </div>
+</div></section>
+
+<section id="s14"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">14</div>
+    <div class="t"><div class="sec-kicker">Risks & Checkpoints · 리스크와 점검 항목</div>
+      <h2>무엇을 지켜봐야 하는가</h2></div>
+  </div>
+  <p class="lead">투자 판단은 한 번으로 끝나지 않습니다. 아래 리스크가 현실화되는지, 핵심 지표가 어느 방향으로 가는지를 <b>분기마다 점검</b>하며 가설을 갱신해야 합니다.</p>
+
+  <div class="tag" style="margin-top:22px">핵심 리스크 (심각도 순)</div>
+  <div class="grid g2">
+    <div class="card" style="border-left:3px solid var(--red)">
+      <h4>① 자율주행 탈중개 <span class="badge b-red">심각도 높음</span></h4>
+      <p style="font-size:14px">웨이모·테슬라 등 기술 보유사가 자체 앱으로 직접 소비자에게 가면 우버의 중개 가치가 훼손. <b>장기 최대 리스크</b>이자 약세 가설의 핵심. 발생 시 내재 CAP이 빠르게 짧아짐.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--amber)">
+      <h4>② 모빌리티 성장 둔화 <span class="badge b-amber">진행 중</span></h4>
+      <p style="font-size:14px">최근 분기 모빌리티 매출 +5%로 둔화. 핵심 캐시카우의 성장이 한 자릿수로 굳으면, 민감도 분석상 내재 CAP이 16년 이상으로 치솟아 현재가가 부담스러워짐.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--amber)">
+      <h4>③ 규제 · 노동 분류 <span class="badge b-amber">상존</span></h4>
+      <p style="font-size:14px">여러 국가·주에서 기사를 '직원'으로 분류하려는 움직임. 현실화 시 인건비·복리후생 비용이 급증해 마진 가정이 무너질 수 있음.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--amber)">
+      <h4>④ 지분투자 변동성 <span class="badge b-amber">실적 노이즈</span></h4>
+      <p style="font-size:14px">비영업 지분($8.4B, 오로라·디디·그랩·조비 등) 평가손익이 분기 순이익을 크게 흔듦. 본업과 무관한 '회계상 잡음'이라 실적 해석을 어렵게 함.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--amber)">
+      <h4>⑤ 경쟁 심화 <span class="badge b-amber">중간</span></h4>
+      <p style="font-size:14px">배달에서 도어대시, 차량호출에서 리프트와의 가격 경쟁. 양쪽 모두 전환비용이 낮아 점유율·마진이 압박받을 수 있음.</p>
+    </div>
+    <div class="card" style="border-left:3px solid var(--amber)">
+      <h4>⑥ 경기 민감성 <span class="badge b-amber">중간</span></h4>
+      <p style="font-size:14px">경기 둔화 시 외식·이동·화물 수요가 동반 위축. 특히 화물 부문과 고가 이동 옵션이 민감.</p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:28px">
+    <h3 style="font-size:20px">📋 분기별 점검 체크리스트</h3>
+    <p style="margin-top:10px">다음 지표들이 <b style="color:#00B86B">초록 방향</b>이면 강세 가설을, <b style="color:#FF8A8E">빨강 방향</b>이면 약세 가설을 강화하는 신호입니다.</p>
+    <div class="tbl-wrap" style="margin-top:14px;background:#181B24;border-color:#2A3142">
+      <table style="background:transparent">
+        <thead><tr style="background:#22283A">
+          <th style="background:#22283A;color:#fff">점검 지표</th>
+          <th style="background:#22283A;color:#7CE7B0">강세 신호 🟢</th>
+          <th style="background:#22283A;color:#FF9C9F">약세 신호 🔴</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="color:#E8EBF2;border-color:#2A3142">모빌리티 매출 성장률</td><td style="color:#C2C9D6;border-color:#2A3142">두 자릿수 회복</td><td style="color:#C2C9D6;border-color:#2A3142">한 자릿수 고착</td></tr>
+          <tr><td style="color:#E8EBF2;border-color:#2A3142">자율주행 상용화</td><td style="color:#C2C9D6;border-color:#2A3142">우버 경유 운행이 마진 개선</td><td style="color:#C2C9D6;border-color:#2A3142">독자 앱이 점유율 확보</td></tr>
+          <tr><td style="color:#E8EBF2;border-color:#2A3142">EBITA 마진 추세</td><td style="color:#C2C9D6;border-color:#2A3142">꾸준한 확대</td><td style="color:#C2C9D6;border-color:#2A3142">정체 또는 하락</td></tr>
+          <tr><td style="color:#E8EBF2;border-color:#2A3142">광고 매출</td><td style="color:#C2C9D6;border-color:#2A3142">$2B 대폭 상회</td><td style="color:#C2C9D6;border-color:#2A3142">성장 둔화</td></tr>
+          <tr><td style="color:#E8EBF2;border-color:#2A3142">우버원 가입자</td><td style="color:#C2C9D6;border-color:#2A3142">증가 지속</td><td style="color:#C2C9D6;border-color:#2A3142">정체</td></tr>
+          <tr><td style="color:#E8EBF2;border-color:#2A3142">잉여현금흐름·자사주</td><td style="color:#C2C9D6;border-color:#2A3142">증가·매입 지속</td><td style="color:#C2C9D6;border-color:#2A3142">감소</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div></section>
+
+<section id="s15"><div class="wrap">
+  <div class="sec-head">
+    <div class="sec-num">15</div>
+    <div class="t"><div class="sec-kicker">Limitations & Assumptions · 한계와 가정</div>
+      <h2>이 분석이 말하지 않는 것</h2></div>
+  </div>
+  <p class="lead">모든 모델은 단순화된 가정 위에 서 있습니다. 결론을 올바르게 쓰려면 그 <b>한계를 분명히 아는 것</b>이 중요합니다. 아래는 이 분석에서 의식적으로 둔 가정과 그 한계입니다.</p>
+
+  <div class="grid g2" style="margin-top:22px">
+    <div class="card"><h4>1. 주식보상비용(SBC) 처리</h4><p style="font-size:14px">우버는 임직원에게 주식을 보상으로 지급(SBC)하는데, 이는 회계상 비현금 비용이라 잉여현금흐름을 부풀려 보이게 합니다. 모델은 NOPAT 기준으로 보수적으로 출발했으나, <b>주식 희석 효과를 완전히 정밀하게 반영하지는 못합니다.</b></p></div>
+    <div class="card"><h4>2. 정규화 세율 가정</h4><p style="font-size:14px">2025년의 일회성 세금 환입을 제거하고 <b>장기 세율을 24%로 가정</b>했습니다. 실제 실효세율은 지역별 사업 비중·세법 변화에 따라 달라질 수 있어, 이 가정이 NOPAT에 직접 영향을 줍니다.</p></div>
+    <div class="card"><h4>3. 지분투자를 장부가로 반영</h4><p style="font-size:14px">비영업 지분투자 $8.4B를 <b>장부가 그대로 자본가치에 더했습니다.</b> 오로라·조비 등의 실제 시장가치는 크게 변동할 수 있어, 주당가치에 ±오차를 만듭니다.</p></div>
+    <div class="card"><h4>4. 단일 경로 추정</h4><p style="font-size:14px">각 시나리오는 성장률·마진이 <b>매끄럽게 변하는 하나의 경로</b>를 가정합니다. 현실은 분기마다 들쭉날쭉하고, 경기·규제·기술 충격으로 경로 자체가 꺾일 수 있습니다.</p></div>
+    <div class="card"><h4>5. 장기 가정에 둔감 = 양날의 칼</h4><p style="font-size:14px">내재 CAP이 영구성장률·페이드에 둔감한 것은 견고함의 신호이지만, 동시에 <b>'자율주행 대전환' 같은 먼 미래의 급변을 모델이 잘 포착하지 못한다</b>는 한계이기도 합니다.</p></div>
+    <div class="card"><h4>6. 데이터 기준 시점</h4><p style="font-size:14px">모든 수치는 <b>2026년 6월 기준</b>입니다. 이후 실적 발표·주가·금리 변동에 따라 내재 CAP과 결론은 달라질 수 있으며, 정기적인 갱신이 필요합니다.</p></div>
+  </div>
+
+  <div class="callout c-amber" style="margin-top:22px">
+    <div class="ttl">🧭 가장 중요한 한계 — 이것은 '적정가'가 아니다</div>
+    <p>이 분석은 <b>"우버의 적정 주가는 얼마"라고 말하지 않습니다.</b> 오직 <b>"현재가 $71이 어떤 기대(내재 CAP ~10년)를 담고 있는가"</b>를 역산할 뿐입니다. 그 기대가 합리적인지 판단하는 것은 결국 읽는 사람의 몫이며, 이 보고서는 매수·매도를 권고하지 않습니다. 또한 강세/약세 가설의 확률(55/45 등)은 <b>분석자의 주관적 사전판단</b>으로, 새로운 증거가 나오면 반드시 갱신되어야 합니다.</p>
+  </div>
+
+  <div class="callout c-blue" style="margin-top:16px">
+    <div class="ttl">📊 분석 신뢰도 요약 (베이지안)</div>
+    <p>생애주기 판별 <b>높음(~90%)</b> · WACC·자본비용 추정 <b>높음(~80%)</b> · 시장 데이터 <b>높음(~85%)</b> · 산업·해자 정성평가 <b>중간(~65%)</b> · 시나리오별 성장·마진 가정 <b>중간(~60%)</b> · 자율주행의 장기 영향 <b>낮음(~40%)</b>. 종합 결론('합리적~약간 매력적')의 확신도는 <b>중간(~65%)</b>이며, 자율주행 전개가 최대 불확실성입니다.</p>
+  </div>
+</div></section>
+
+<footer style="background:#14161C;color:#97A1B5;padding:40px 0 48px;border-top:1px solid #2A3142">
+  <div class="wrap">
+    <div style="font-family:var(--disp);font-weight:700;font-size:16px;color:#fff;margin-bottom:6px">우버(UBER) 장기 투자 분석 · 시장 내재 CAP 역산</div>
+    <p style="color:#7E879B;font-size:13.5px;margin:8px 0 18px;max-width:720px">이 보고서는 경쟁우위 기간(CAP) 관점에서 현재 주가에 내재된 시장 기대치를 역산한 교육용 분석입니다. 특정 종목의 매수·매도를 권유하지 않으며, 투자 결정과 그 결과의 책임은 투자자 본인에게 있습니다.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:24px 40px;border-top:1px solid #2A3142;padding-top:18px">
+      <div><div style="color:#fff;font-size:12.5px;font-weight:600;margin-bottom:4px">데이터 기준</div>
+        <div style="font-size:12.5px">2026년 6월 22일 · 주가/실적 기준</div></div>
+      <div><div style="color:#fff;font-size:12.5px;font-weight:600;margin-bottom:4px">주요 출처</div>
+        <div style="font-size:12.5px">우버 분기 실적발표(8-K) · 미 재무부 국채금리 · 공개 시장 데이터</div></div>
+      <div><div style="color:#fff;font-size:12.5px;font-weight:600;margin-bottom:4px">분석 방법</div>
+        <div style="font-size:12.5px">역방향 DCF · 페이드 모델 · CAPM 자본비용 · 베이지안 시나리오</div></div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
