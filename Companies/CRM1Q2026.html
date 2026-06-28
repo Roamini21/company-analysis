@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salesforce (CRM) 심층 분석 · 시장 내재 경쟁우위 기간</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ DESIGN TOKENS ============ */
+:root{
+  --ink:#0C1B2A;            /* deep navy - dark panels */
+  --ink-2:#13283D;          /* lighter navy panel */
+  --ink-3:#1B354E;          /* card on navy */
+  --paper:#EBEFF3;          /* cool blue-grey paper (NOT cream) */
+  --card:#FFFFFF;           /* white card on paper */
+  --card-soft:#F5F8FA;      /* soft card */
+  --tx-dark:#13232F;        /* primary text on light */
+  --tx-mut:#536678;         /* muted text on light */
+  --tx-light:#E8EFF4;       /* primary text on dark */
+  --tx-lmut:#9DB1C2;        /* muted text on dark */
+  --amber:#E89B2C;          /* SIGNAL accent - the indicator */
+  --amber-d:#C57E15;
+  --amber-soft:#FBEFD8;     /* amber tint bg (light) */
+  --cyan:#2D8FB3;           /* data cool secondary */
+  --cyan-soft:#DFEEF3;
+  --green:#3C8A57;          /* positive */
+  --green-soft:#DDEEE2;
+  --brick:#BE5430;          /* negative / bear / risk */
+  --brick-soft:#F6E2D9;
+  --line:#D2DCE4;           /* hairline on light */
+  --line-d:rgba(232,239,244,.14); /* hairline on dark */
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans KR',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{font-family:var(--sans);background:var(--paper);color:var(--tx-dark);
+  line-height:1.72;font-weight:400;-webkit-font-smoothing:antialiased;font-size:16.5px}
+
+/* ============ TYPOGRAPHY ============ */
+h1,h2,h3,h4{font-weight:700;line-height:1.22;letter-spacing:-.01em}
+.eyebrow{font-family:var(--mono);font-size:.72rem;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500}
+
+/* ============ NAV ============ */
+nav{position:sticky;top:0;z-index:50;background:rgba(12,27,42,.96);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line-d)}
+.nav-in{max-width:1180px;margin:0 auto;padding:9px 22px;display:flex;align-items:center;
+  gap:8px 18px;flex-wrap:wrap}
+.nav-brand{font-family:var(--mono);font-weight:600;color:var(--amber);font-size:.84rem;
+  letter-spacing:.04em;white-space:nowrap;margin-right:6px}
+.nav-links{display:flex;flex-wrap:wrap;gap:5px 4px;min-height:fit-content}
+.nav-links a{font-family:var(--mono);font-size:.73rem;color:var(--tx-lmut);
+  text-decoration:none;padding:4px 9px;border-radius:5px;white-space:nowrap;
+  transition:all .15s;letter-spacing:.01em}
+.nav-links a:hover{color:var(--ink);background:var(--amber)}
+.nav-links a:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+/* ============ LAYOUT ============ */
+section{padding:74px 22px}
+.wrap{max-width:1180px;margin:0 auto}
+.narrow{max-width:880px;margin:0 auto}
+.sec-dark{background:var(--ink);color:var(--tx-light)}
+.sec-dark h2,.sec-dark h3,.sec-dark h4{color:#fff}
+.sec-paper{background:var(--paper)}
+.sec-white{background:var(--card)}
+
+.sec-head{margin-bottom:34px}
+.sec-num{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;color:var(--amber-d);
+  font-weight:600;display:block;margin-bottom:10px}
+.sec-dark .sec-num{color:var(--amber)}
+h2.sec-title{font-size:clamp(1.6rem,3.4vw,2.2rem);margin-bottom:14px}
+.sec-lead{font-size:1.04rem;color:var(--tx-mut);max-width:760px;line-height:1.7}
+.sec-dark .sec-lead{color:var(--tx-lmut)}
+
+/* ============ HERO ============ */
+.hero{background:linear-gradient(160deg,#0A1722 0%,#0C1B2A 45%,#102439 100%);
+  color:var(--tx-light);padding:54px 22px 64px;position:relative;overflow:hidden}
+.hero-grid-bg{position:absolute;inset:0;opacity:.5;
+  background-image:linear-gradient(var(--line-d) 1px,transparent 1px),
+  linear-gradient(90deg,var(--line-d) 1px,transparent 1px);
+  background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 70% at 70% 30%,#000,transparent)}
+.hero-in{max-width:1180px;margin:0 auto;position:relative;z-index:2}
+.hero-eyebrow{color:var(--amber);margin-bottom:22px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.hero-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);
+  box-shadow:0 0 0 4px rgba(232,155,44,.18)}
+.hero h1{font-size:clamp(2rem,5.4vw,3.5rem);line-height:1.1;margin-bottom:22px;color:#fff;
+  letter-spacing:-.025em}
+.hero h1 .hl{color:var(--amber)}
+.hero-sub{font-size:clamp(1rem,2vw,1.18rem);color:var(--tx-lmut);max-width:720px;
+  line-height:1.66;margin-bottom:40px}
+.hero-stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px;background:var(--line-d);border:1px solid var(--line-d);border-radius:12px;
+  overflow:hidden;margin-bottom:14px}
+.hstat{background:var(--ink-2);padding:20px 22px}
+.hstat .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;color:var(--tx-lmut);
+  text-transform:uppercase;margin-bottom:9px}
+.hstat .v{font-family:var(--mono);font-size:1.7rem;font-weight:600;color:#fff;line-height:1}
+.hstat .v .u{font-size:.85rem;color:var(--tx-lmut);font-weight:400}
+.hstat .d{font-size:.78rem;color:var(--tx-lmut);margin-top:7px}
+.hstat .v.amber{color:var(--amber)}
+.hstat .v.brick{color:#E88B5E}
+.hstat .v.green{color:#5DBd80}
+
+/* ============ CARDS / BOXES ============ */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px;
+  color:var(--tx-dark)}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+
+/* callout - self contained colors */
+.callout{border-radius:10px;padding:18px 20px;margin:22px 0;border:1px solid;
+  font-size:.95rem;line-height:1.66}
+.callout .ttl{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.co-amber{background:var(--amber-soft);border-color:#E6CB94;color:#5C4410}
+.co-amber .ttl{color:var(--amber-d)}
+.co-cyan{background:var(--cyan-soft);border-color:#A9D2DF;color:#11414F}
+.co-cyan .ttl{color:#1B6E89}
+.co-green{background:var(--green-soft);border-color:#A8D2B7;color:#1E4C30}
+.co-green .ttl{color:#2C6E45}
+.co-brick{background:var(--brick-soft);border-color:#E2B19D;color:#5E2A14}
+.co-brick .ttl{color:#A6431F}
+/* dark-section callout variant */
+.co-onink{background:var(--ink-3);border-color:var(--line-d);color:var(--tx-light)}
+.co-onink .ttl{color:var(--amber)}
+
+/* term gloss */
+.term{border-bottom:1.5px dotted var(--cyan);font-weight:500;color:inherit;cursor:help}
+.gloss{font-size:.86rem;color:var(--tx-mut);font-style:normal}
+
+/* confidence badge */
+.conf{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.7rem;
+  font-weight:500;padding:2px 9px;border-radius:20px;letter-spacing:.03em;
+  background:var(--ink);color:var(--amber);border:1px solid var(--amber);vertical-align:middle}
+.conf.light{background:var(--amber-soft);color:var(--amber-d);border-color:#E6C88E}
+.conf .bar{width:34px;height:5px;border-radius:3px;background:rgba(232,155,44,.25);position:relative;overflow:hidden}
+.conf .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--amber);display:block}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;
+  -webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:.86rem;background:var(--card)}
+th,td{padding:10px 13px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{background:var(--ink);color:var(--tx-light);font-family:var(--mono);font-weight:500;
+  font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;position:sticky;top:0}
+tbody tr:last-child td{border-bottom:none}
+tbody td{background:var(--card);color:var(--tx-dark)}
+tbody tr:nth-child(even) td{background:var(--card-soft);color:var(--tx-dark)}
+td.num,th.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+tr.hi td{background:var(--amber-soft)!important;color:#5C4410;font-weight:600}
+.tbl-cap{font-size:.78rem;color:var(--tx-mut);margin-top:9px;font-family:var(--mono);
+  letter-spacing:.02em}
+.sec-dark .tbl-cap{color:var(--tx-lmut)}
+
+/* pill / tag */
+.pill{display:inline-block;font-family:var(--mono);font-size:.7rem;font-weight:500;
+  padding:3px 10px;border-radius:20px;letter-spacing:.03em}
+.p-mat{background:var(--cyan-soft);color:#13414F;border:1px solid #A9D2DF}
+.p-grow{background:var(--green-soft);color:#1E4C30;border:1px solid #A8D2B7}
+.p-intro{background:var(--amber-soft);color:#5C4410;border:1px solid #E6C88E}
+.p-dec{background:var(--brick-soft);color:#5E2A14;border:1px solid #E2B19D}
+
+ul.clean{list-style:none;padding:0}
+ul.clean li{padding-left:22px;position:relative;margin-bottom:11px;line-height:1.62}
+ul.clean li::before{content:"";position:absolute;left:2px;top:11px;width:7px;height:7px;
+  background:var(--amber);border-radius:2px;transform:rotate(45deg)}
+.sec-dark ul.clean li::before{background:var(--amber)}
+
+.divider-label{display:flex;align-items:center;gap:14px;margin:30px 0 22px}
+.divider-label .ln{flex:1;height:1px;background:var(--line)}
+.sec-dark .divider-label .ln{background:var(--line-d)}
+.divider-label .tx{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--tx-mut);font-weight:600}
+.sec-dark .divider-label .tx{color:var(--tx-lmut)}
+
+/* source footnote */
+.src{font-family:var(--mono);font-size:.72rem;color:var(--tx-mut);letter-spacing:.01em;
+  margin-top:6px}
+.sec-dark .src{color:var(--tx-lmut)}
+
+/* svg helpers */
+svg{max-width:100%;height:auto;display:block}
+figure{margin:0}
+figcaption{font-size:.78rem;color:var(--tx-mut);margin-top:10px;font-family:var(--mono);
+  text-align:center;letter-spacing:.02em}
+.sec-dark figcaption{color:var(--tx-lmut)}
+
+/* footer */
+footer{background:#081521;color:var(--tx-lmut);padding:48px 22px;border-top:1px solid var(--line-d)}
+footer .wrap{font-size:.84rem;line-height:1.8}
+footer h4{color:#fff;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;
+  text-transform:uppercase;margin-bottom:14px}
+footer a{color:var(--amber);text-decoration:none}
+
+@media (max-width:640px){
+  body{font-size:15.5px}
+  section{padding:52px 18px}
+  .hstat .v{font-size:1.45rem}
+  th,td{padding:8px 10px;font-size:.8rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <div class="nav-in">
+    <span class="nav-brand">CRM · CAP 분석</span>
+    <div class="nav-links">
+      <a href="#summary">핵심결론</a>
+      <a href="#overview">기업개요</a>
+      <a href="#segments">사업구조</a>
+      <a href="#moat">경쟁우위</a>
+      <a href="#cap">내재 CAP</a>
+      <a href="#dcf">DCF·전시23</a>
+      <a href="#sensitivity">민감도</a>
+      <a href="#scenarios">시나리오</a>
+      <a href="#peers">피어비교</a>
+      <a href="#narrative">시장내러티브</a>
+      <a href="#risks">리스크</a>
+      <a href="#verdict">종합판단</a>
+      <a href="#limits">한계·가정</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-in">
+    <div class="hero-eyebrow eyebrow"><span class="dot"></span>역방향 DCF · 시장 내재 기대치 분석 · 기준일 2026-06-26</div>
+    <h1>시장은 세일즈포스에<br>단 <span class="hl">3~4년</span>의 경쟁우위만<br>지불하고 있습니다.</h1>
+    <p class="hero-sub">현재 주가 $158.37에는 "이 회사가 자본비용을 초과하는 초과수익을 앞으로 단 3~4년만 누린다"는
+    기대가 담겨 있습니다. 시장점유율 20.7%로 업계 1위, 포춘 500의 90%를 고객으로 둔 기업에 매겨진
+    이 기간은 역사적·구조적으로 극단적으로 짧습니다. 이 보고서는 그 숫자가 어떻게 도출되는지,
+    그리고 그 비관이 정당한지를 비전공자도 이해할 수 있게 분해합니다.</p>
+
+    <div class="hero-stat-row">
+      <div class="hstat">
+        <div class="k">현재 주가</div>
+        <div class="v">$158.37</div>
+        <div class="d">52주: $146 – $277</div>
+      </div>
+      <div class="hstat">
+        <div class="k">시가총액</div>
+        <div class="v">$129.7<span class="u">B</span></div>
+        <div class="d">발행주식 8.19억주</div>
+      </div>
+      <div class="hstat">
+        <div class="k">시장 내재 CAP</div>
+        <div class="v amber">~3.3<span class="u">년</span></div>
+        <div class="d">전략투자 제외 시 4.0년</div>
+      </div>
+      <div class="hstat">
+        <div class="k">고점 대비</div>
+        <div class="v brick">−56<span class="u">%</span></div>
+        <div class="d">YTD −40%</div>
+      </div>
+      <div class="hstat">
+        <div class="k">FCF 수익률</div>
+        <div class="v green">11.1<span class="u">%</span></div>
+        <div class="d">FY26 잉여현금흐름 기준</div>
+      </div>
+    </div>
+    <p class="src">주가·재무 데이터: Yahoo Finance, CNBC, StockAnalysis, 세일즈포스 IR (FY2026 실적, 2026-06-26 종가 기준). 단위 B=십억 달러.</p>
+  </div>
+</header>
+
+<!-- ============ 1. 핵심 결론 ============ -->
+<section id="summary" class="sec-paper">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">01 / EXECUTIVE SUMMARY</span>
+    <h2 class="sec-title">핵심 결론 — 주가에 담긴 '내기'를 먼저 봅니다</h2>
+    <p class="sec-lead">이 분석은 "적정 주가가 얼마인가"를 맞히려는 것이 아닙니다. 거꾸로,
+    <strong>지금 주가가 사실이라면 시장은 이 회사의 미래에 대해 무엇을 믿고 있는가</strong>를 역산합니다.
+    그 핵심 변수가 '경쟁우위 기간(CAP)'입니다.</p>
+  </div>
+
+  <div class="callout co-cyan">
+    <div class="ttl">◈ 먼저, CAP이 무엇인가요?</div>
+    <strong>CAP(Competitive Advantage Period, 경쟁우위 기간)</strong>은 한 기업이
+    "투자한 돈보다 더 많이 버는 상태(자본비용을 초과하는 수익)"를 유지할 수 있는 햇수입니다.
+    경쟁이 치열해지면 어떤 기업이든 결국 초과수익이 사라지는데, 그 행복한 시간이 <em>몇 년이나 남았느냐</em>가
+    주식 가치를 결정하는 가장 큰 동력입니다. 시장 주가를 거꾸로 풀면 "시장이 인정하는 CAP 햇수"가 나오고,
+    그 숫자를 회사의 실제 경쟁력과 비교해 과도한 비관/낙관을 판별합니다.
+  </div>
+
+  <div class="grid g3" style="margin:30px 0">
+    <div class="card">
+      <div class="eyebrow" style="color:var(--amber-d);margin-bottom:12px">발견 ①</div>
+      <h3 style="font-size:1.18rem;margin-bottom:10px">시장 내재 CAP ≈ 3~4년</h3>
+      <p style="font-size:.93rem;color:var(--tx-mut)">현재 주가를 정당화하려면 세일즈포스의 초과수익이
+      앞으로 <strong>3~4년</strong>만 지속되면 충분합니다. 자본비용·성장률·소멸률을 어떻게 바꿔도
+      이 값은 대체로 <strong>2~6년</strong> 범위를 벗어나지 않습니다.</p>
+      <div style="margin-top:14px"><span class="conf light"><span class="bar"><i style="width:85%"></i></span>신뢰도 높음 ~85%</span></div>
+    </div>
+    <div class="card">
+      <div class="eyebrow" style="color:var(--amber-d);margin-bottom:12px">발견 ②</div>
+      <h3 style="font-size:1.18rem;margin-bottom:10px">이것은 '극단적 비관' 구간</h3>
+      <p style="font-size:.93rem;color:var(--tx-mut)">해석 기준표에서 CAP 5년 미만은
+      <strong>"매우 비관적"</strong> 영역입니다. 비교 대상인 마이크로소프트가 약 17~18년을 인정받는 것과 비교하면,
+      시장은 세일즈포스의 경쟁력 수명을 동종 대형 SW의 <strong>1/5 수준</strong>으로 매기고 있습니다.</p>
+      <div style="margin-top:14px"><span class="conf light"><span class="bar"><i style="width:80%"></i></span>신뢰도 높음 ~80%</span></div>
+    </div>
+    <div class="card">
+      <div class="eyebrow" style="color:var(--amber-d);margin-bottom:12px">발견 ③</div>
+      <h3 style="font-size:1.18rem;margin-bottom:10px">핵심은 'AI가 좌석을 없앤다'는 공포</h3>
+      <p style="font-size:.93rem;color:var(--tx-mut)">비관의 근원은 실적 악화가 아니라 내러티브입니다.
+      AI 에이전트가 사람(=구독 좌석)을 대체하면 좌석당 과금 모델이 무너진다는
+      <strong>'SaaS 종말론'</strong>이 섹터 전체를 짓눌렀습니다. 정작 세일즈포스는 여전히 두 자릿수로 성장 중입니다.</p>
+      <div style="margin-top:14px"><span class="conf light"><span class="bar"><i style="width:75%"></i></span>신뢰도 높음 ~75%</span></div>
+    </div>
+  </div>
+
+  <div class="callout co-amber">
+    <div class="ttl">◈ 그래서 주가는 '하나의 질문'에 대한 베팅입니다</div>
+    이 주식을 산다는 것은 다음 한 가지에 베팅하는 것과 같습니다 — <strong>"세일즈포스의 경쟁우위가
+    정말 3~4년 만에 증발하는가, 아니면 평범한 10년 이상의 수명이라도 남아 있는가?"</strong>
+    뒤에서 보겠지만, 만약 후자(보통 수준의 10년 CAP)라면 가치는 주당 약 $239, 강세 시나리오에서는 $349~446입니다.
+    반대로 'AI가 좌석을 잠식한다'는 약세 시나리오가 현실이 되면 현재 $158조차 다소 비싼($110대) 것이 됩니다.
+    이 보고서의 목적은 어느 쪽이 맞는지 단정하는 것이 아니라, <strong>양쪽 논리를 같은 무게로 보여주어
+    독자가 스스로 확률을 매길 수 있게</strong> 하는 것입니다.
+  </div>
+
+  <div class="divider-label"><span class="tx">한눈에 보는 결론</span><span class="ln"></span></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>항목</th><th>결론</th><th>의미</th><th>신뢰도</th></tr></thead>
+      <tbody>
+        <tr><td>생애주기 단계</td><td style="text-align:left"><span class="pill p-mat">성숙기 (전사)</span></td><td style="text-align:left">강한 현금창출 + 인수·자사주매입. 단 AI로 재성장 시도 중</td><td class="num">높음 ~90%</td></tr>
+        <tr><td>해자(Moat)</td><td style="text-align:left">넓고 견고</td><td style="text-align:left">전환비용·생태계·데이터·점유율 1위(20.7%)</td><td class="num">중상 ~72%</td></tr>
+        <tr><td>시장 내재 CAP</td><td style="text-align:left"><strong>3.3년</strong> (전략투자 제외 4.0년)</td><td style="text-align:left">"매우 비관" 영역. 견고성 검증됨(2~6년)</td><td class="num">높음 ~85%</td></tr>
+        <tr><td>중립(10년 CAP) 가치</td><td style="text-align:left">주당 ~$239</td><td style="text-align:left">현재가 대비 +51% 잠재력 (가정 충족 시)</td><td class="num">중간 ~60%</td></tr>
+        <tr><td>핵심 쟁점</td><td style="text-align:left">AI=대체 vs AI=증폭</td><td style="text-align:left">좌석 잠식 공포 vs 데이터·관계 우위로 AI 수혜</td><td class="num">미결 ~50%</td></tr>
+        <tr><td>FCF 수익률</td><td style="text-align:left">11.1%</td><td style="text-align:left">대형 우량주로는 이례적으로 높음(저평가 신호)</td><td class="num">높음 ~88%</td></tr>
+      </tbody>
+    </table>
+    <div class="tbl-cap">신뢰도는 베이지안 관점의 주관적 확신도이며, 새로운 증거에 따라 갱신됩니다.</div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 2. 기업 개요 ============ -->
+<section id="overview" class="sec-white">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">02 / COMPANY OVERVIEW</span>
+    <h2 class="sec-title">기업 개요 — 세일즈포스는 무엇을 하는 회사인가</h2>
+    <p class="sec-lead">한 문장 요약: <strong>세일즈포스는 기업이 고객을 찾고·팔고·관리하고·지원하는
+    모든 활동을 인터넷(클라우드)에서 처리하게 해주는 세계 1위 'CRM' 소프트웨어 회사이며, 지금은 그 위에
+    AI 비서(에이전트)를 얹어 일을 자동으로 처리하게 만드는 단계로 넘어가고 있습니다.</strong></p>
+  </div>
+
+  <div class="grid g2" style="margin-bottom:28px">
+    <div class="card">
+      <h3 style="font-size:1.15rem;margin-bottom:14px">◈ 설립 배경과 'No Software'</h3>
+      <p style="margin-bottom:12px">1999년 오라클 임원 출신 <strong>마크 베니오프</strong>가 창업했습니다. 당시
+      기업용 소프트웨어는 CD로 설치하고 비싼 서버를 사야 했는데, 베니오프는 "소프트웨어를 사지 말고
+      <strong>전기처럼 인터넷으로 빌려 쓰자</strong>"는 아이디어를 내세웠습니다. 이것이 오늘날 표준이 된
+      <span class="term">SaaS<span class="gloss"> (Software as a Service, 서비스형 소프트웨어 — 매달 구독료를 내고 인터넷으로 쓰는 방식)</span></span>의 시작입니다.</p>
+      <p>'No Software'라는 도발적 슬로건으로 시장을 열었고, 지금은 직원 약 8.3만 명, 연 매출 약
+      <strong class="num">$41.5B(약 41.5십억 달러)</strong>의 거대 기업이 되었습니다.</p>
+    </div>
+    <div class="card">
+      <h3 style="font-size:1.15rem;margin-bottom:14px">◈ CRM이라는 핵심 개념</h3>
+      <p style="margin-bottom:12px"><strong>CRM(고객관계관리)</strong>은 쉽게 말해 "회사의 모든 고객 정보와
+      영업·고객지원 활동을 한곳에 모아두는 디지털 장부 + 업무 도구"입니다. 영업사원이 누구와 통화했는지,
+      어떤 고객이 무엇을 샀는지, 불만 접수는 어떻게 처리됐는지를 전부 기록하고 자동화합니다.</p>
+      <p>세일즈포스는 이 CRM 시장에서 <strong>점유율 20.7%로 압도적 1위</strong>입니다. 2위~5위(마이크로소프트·오라클·SAP·어도비)를
+      <strong>모두 합친 것보다 큽니다.</strong> 회사 이름이자 주식 티커가 'CRM'인 이유입니다.</p>
+    </div>
+  </div>
+
+  <div class="callout co-green">
+    <div class="ttl">◈ 쉽게 비유하면</div>
+    세일즈포스는 기업 영업·고객관리 부서의 <strong>'운영체제(OS)'</strong>에 가깝습니다. 한 번 회사의 모든 고객
+    데이터와 업무 절차가 이 위에 올라가면, 다른 제품으로 갈아타는 것은 회사의 신경계를 통째로 교체하는 것과 같아
+    매우 어렵습니다. 바로 이 점이 뒤에서 다룰 <strong>'해자(경쟁우위)'</strong>의 핵심입니다.
+  </div>
+
+  <div class="divider-label"><span class="tx">현재 밸류에이션 스냅샷</span><span class="ln"></span></div>
+  <div class="grid g4">
+    <div class="card" style="text-align:center;padding:22px">
+      <div class="eyebrow" style="color:var(--tx-mut);margin-bottom:8px">PER (실적기준)</div>
+      <div class="num" style="font-size:1.9rem;font-weight:600;color:var(--tx-dark)">20.3<span style="font-size:.9rem;color:var(--tx-mut)">x</span></div>
+      <div style="font-size:.8rem;color:var(--tx-mut);margin-top:6px">선행 비-GAAP 11.2x</div>
+    </div>
+    <div class="card" style="text-align:center;padding:22px">
+      <div class="eyebrow" style="color:var(--tx-mut);margin-bottom:8px">EV / EBITA</div>
+      <div class="num" style="font-size:1.9rem;font-weight:600;color:var(--tx-dark)">15.7<span style="font-size:.9rem;color:var(--tx-mut)">x</span></div>
+      <div style="font-size:.8rem;color:var(--tx-mut);margin-top:6px">기업가치/영업이익</div>
+    </div>
+    <div class="card" style="text-align:center;padding:22px">
+      <div class="eyebrow" style="color:var(--tx-mut);margin-bottom:8px">EV / 매출</div>
+      <div class="num" style="font-size:1.9rem;font-weight:600;color:var(--tx-dark)">3.8<span style="font-size:.9rem;color:var(--tx-mut)">x</span></div>
+      <div style="font-size:.8rem;color:var(--tx-mut);margin-top:6px">역사적 저점권</div>
+    </div>
+    <div class="card" style="text-align:center;padding:22px">
+      <div class="eyebrow" style="color:var(--tx-mut);margin-bottom:8px">배당수익률</div>
+      <div class="num" style="font-size:1.9rem;font-weight:600;color:var(--tx-dark)">1.1<span style="font-size:.9rem;color:var(--tx-mut)">%</span></div>
+      <div style="font-size:.8rem;color:var(--tx-mut);margin-top:6px">연 $1.76</div>
+    </div>
+  </div>
+  <p class="src">출처: StockAnalysis.com, CNBC, Investing.com (2026-06-26). EBITA=영업이익+인수무형자산 상각, 주식보상비용(SBC)은 비용으로 유지.</p>
+</div>
+</section>
+
+<!-- ============ 3. 사업 구조 심층 ============ -->
+<section id="segments" class="sec-dark">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">03 / BUSINESS SEGMENTS</span>
+    <h2 class="sec-title">사업 구조 — 이 회사는 '무엇으로' 돈을 버는가</h2>
+    <p class="sec-lead">매출의 <strong style="color:#fff">95%가 구독·지원료</strong>에서 나옵니다.
+    한 번 계약하면 매년 반복되는 안정적 수익이라는 뜻입니다. 그 구독 매출을 여섯 개 사업 영역으로
+    분해하면, 각 영역이 서로 다른 '생애주기 단계'에 있다는 점이 드러납니다.</p>
+  </div>
+
+  <figure style="background:var(--ink-2);border:1px solid var(--line-d);border-radius:14px;padding:30px 26px;margin-bottom:28px">
+    <div class="eyebrow" style="color:var(--amber);margin-bottom:20px">FY2026 매출 구성 · 총 $41.5B</div>
+    <svg viewBox="0 0 720 392" role="img" aria-label="세일즈포스 사업부별 매출 구성 막대그래프">
+      <!-- grid lines -->
+      <g stroke="rgba(232,239,244,.10)" stroke-width="1">
+        <line x1="250" y1="14" x2="250" y2="356"/>
+        <line x1="380" y1="14" x2="380" y2="356"/>
+        <line x1="510" y1="14" x2="510" y2="356"/>
+        <line x1="640" y1="14" x2="640" y2="356"/>
+      </g>
+      <g font-family="IBM Plex Mono" font-size="11" fill="#9DB1C2" text-anchor="middle">
+        <text x="250" y="374">$3B</text><text x="380" y="374">$6B</text>
+        <text x="510" y="374">$9B</text><text x="640" y="374">$12B</text>
+        <text x="120" y="374" fill="#9DB1C2">$0</text>
+      </g>
+      <!-- bars: scale 120(x0) .. base, 1B = 43.33px -->
+      <!-- Service 9.82 -->
+      <g>
+        <rect x="120" y="20" width="425.5" height="36" rx="4" fill="#2D8FB3"/>
+        <text x="120" y="14" font-family="IBM Plex Sans KR" font-size="13" font-weight="600" fill="#E8EFF4">Service Cloud · 고객지원</text>
+        <text x="555" y="42" font-family="IBM Plex Mono" font-size="14" font-weight="600" fill="#fff">$9.82B</text>
+        <text x="638" y="42" font-family="IBM Plex Mono" font-size="11" fill="#9DB1C2">24%</text>
+      </g>
+      <!-- Sales 9.03 -->
+      <g>
+        <rect x="120" y="76" width="391.3" height="36" rx="4" fill="#3AA6C9"/>
+        <text x="120" y="70" font-family="IBM Plex Sans KR" font-size="13" font-weight="600" fill="#E8EFF4">Sales Cloud · 영업</text>
+        <text x="521" y="98" font-family="IBM Plex Mono" font-size="14" font-weight="600" fill="#fff">$9.03B</text>
+        <text x="604" y="98" font-family="IBM Plex Mono" font-size="11" fill="#9DB1C2">22%</text>
+      </g>
+      <!-- Platform 8.88 -->
+      <g>
+        <rect x="120" y="132" width="384.8" height="36" rx="4" fill="#E89B2C"/>
+        <text x="120" y="126" font-family="IBM Plex Sans KR" font-size="13" font-weight="600" fill="#E8EFF4">Platform &amp; 기타 (Slack 포함)</text>
+        <text x="514" y="154" font-family="IBM Plex Mono" font-size="14" font-weight="600" fill="#fff">$8.88B</text>
+        <text x="597" y="154" font-family="IBM Plex Mono" font-size="11" fill="#9DB1C2">21%</text>
+      </g>
+      <!-- Integration 6.23 -->
+      <g>
+        <rect x="120" y="188" width="269.9" height="36" rx="4" fill="#5DBd80"/>
+        <text x="120" y="182" font-family="IBM Plex Sans KR" font-size="13" font-weight="600" fill="#E8EFF4">통합·분석 (MuleSoft·Tableau·Informatica)</text>
+        <text x="399" y="210" font-family="IBM Plex Mono" font-size="14" font-weight="600" fill="#fff">$6.23B</text>
+        <text x="482" y="210" font-family="IBM Plex Mono" font-size="11" fill="#9DB1C2">15%</text>
+      </g>
+      <!-- Marketing 5.43 -->
+      <g>
+        <rect x="120" y="244" width="235.3" height="36" rx="4" fill="#B5743C"/>
+        <text x="120" y="238" font-family="IBM Plex Sans KR" font-size="13" font-weight="600" fill="#E8EFF4">마케팅 &amp; 커머스</text>
+        <text x="365" y="266" font-family="IBM Plex Mono" font-size="14" font-weight="600" fill="#fff">$5.43B</text>
+        <text x="448" y="266" font-family="IBM Plex Mono" font-size="11" fill="#9DB1C2">13%</text>
+      </g>
+      <!-- Prof Svc 2.14 -->
+      <g>
+        <rect x="120" y="300" width="92.7" height="36" rx="4" fill="#6B7E8F"/>
+        <text x="120" y="294" font-family="IBM Plex Sans KR" font-size="13" font-weight="600" fill="#E8EFF4">전문 서비스 (컨설팅)</text>
+        <text x="222" y="322" font-family="IBM Plex Mono" font-size="14" font-weight="600" fill="#fff">$2.14B</text>
+        <text x="305" y="322" font-family="IBM Plex Mono" font-size="11" fill="#9DB1C2">5%</text>
+      </g>
+    </svg>
+    <figcaption>출처: 세일즈포스 FY2026 실적 발표(2026-02) 추정 배분. Slack·Data 360은 Platform에, Informatica는 통합·분석에 포함.</figcaption>
+  </figure>
+
+  <div class="callout co-onink">
+    <div class="ttl">◈ 핵심 통찰: 한 회사 안에 4개의 다른 '나이'가 있다</div>
+    전사를 하나로 보면 '성숙기'지만, 사업부별로 쪼개 보면 이야기가 달라집니다. 오래된 캐시카우(Sales·Service)가
+    안정적 현금을 뿜어내는 동안, 그 돈으로 키운 신사업(AI 에이전트)이 폭발적으로 성장하고 있습니다.
+    <strong>"늙은 몸통 위에 어린 심장을 이식하는 중"</strong>이라고 볼 수 있습니다.
+  </div>
+
+  <div class="tbl-wrap" style="margin-top:24px">
+    <table>
+      <thead><tr><th>사업 영역</th><th>매출비중</th><th>성장 성격</th><th>생애주기</th><th>경쟁 위치</th></tr></thead>
+      <tbody>
+        <tr><td>Sales Cloud (영업)</td><td class="num">22%</td><td style="text-align:left">저성장·고마진 캐시카우</td><td style="text-align:left"><span class="pill p-mat">성숙기</span></td><td style="text-align:left">글로벌 1위</td></tr>
+        <tr><td>Service Cloud (고객지원)</td><td class="num">24%</td><td style="text-align:left">안정 성장, AI 접목 활발</td><td style="text-align:left"><span class="pill p-mat">성숙기</span></td><td style="text-align:left">1위 (ServiceNow와 경합)</td></tr>
+        <tr><td>Platform·Slack</td><td class="num">21%</td><td style="text-align:left">앱 생태계+협업, AI 인터페이스화</td><td style="text-align:left"><span class="pill p-grow">성장기</span></td><td style="text-align:left">강력 (AppExchange 독점)</td></tr>
+        <tr><td>통합·분석 (Data/MuleSoft)</td><td class="num">15%</td><td style="text-align:left">데이터 통합 수요로 성장, Informatica 인수</td><td style="text-align:left"><span class="pill p-grow">성장기</span></td><td style="text-align:left">상위권 경쟁</td></tr>
+        <tr><td>마케팅 &amp; 커머스</td><td class="num">13%</td><td style="text-align:left">최근 둔화·약세 (우려 지점)</td><td style="text-align:left"><span class="pill p-dec">성숙/정체</span></td><td style="text-align:left">Adobe 등과 경쟁 심화</td></tr>
+        <tr class="hi"><td>Agentforce·AI·Data 360</td><td class="num">~3%*</td><td style="text-align:left"><strong>ARR +205% 폭증</strong> (작은 기반에서 급성장)</td><td style="text-align:left"><span class="pill p-intro">도입기</span></td><td style="text-align:left">선두 주자 자처</td></tr>
+      </tbody>
+    </table>
+    <div class="tbl-cap">*AI 매출(ARR $1.2B)은 아직 별도 보고 항목이 아니며 여러 클라우드에 분산. 전사 매출의 추정 비중. 출처: 세일즈포스 FY27 1분기 실적.</div>
+  </div>
+
+  <div class="grid g3" style="margin-top:28px">
+    <div class="card" style="background:var(--ink-3);border-color:var(--line-d);color:var(--tx-light)">
+      <div class="eyebrow" style="color:var(--amber);margin-bottom:10px">지역 분포</div>
+      <p style="font-size:.92rem;color:var(--tx-lmut)">미주 <strong style="color:#fff">~66%</strong> · 유럽 <strong style="color:#fff">~25%</strong> · 아·태 <strong style="color:#fff">~10%</strong>.
+      미국 의존도가 높아 미국 기업 IT 지출 경기에 민감합니다.</p>
+    </div>
+    <div class="card" style="background:var(--ink-3);border-color:var(--line-d);color:var(--tx-light)">
+      <div class="eyebrow" style="color:var(--amber);margin-bottom:10px">고객 기반</div>
+      <p style="font-size:.92rem;color:var(--tx-lmut)"><strong style="color:#fff">15만+ 고객사</strong>, 포춘 500의 <strong style="color:#fff">90%</strong>가 사용.
+      특정 고객 집중도가 낮아 한두 곳 이탈로 흔들리지 않는 분산된 매출 구조입니다.</p>
+    </div>
+    <div class="card" style="background:var(--ink-3);border-color:var(--line-d);color:var(--tx-light)">
+      <div class="eyebrow" style="color:var(--amber);margin-bottom:10px">수익 모델의 질</div>
+      <p style="font-size:.92rem;color:var(--tx-lmut)">반복 구독 95% → <strong style="color:#fff">예측가능성 높음</strong>.
+      미래 계약잔액(<span class="term" style="border-color:var(--amber)">cRPO<span class="gloss"> 향후 12개월 내 인식될 계약 잔액 — 단기 매출 선행지표</span></span>) $33.6B(+14%)로 성장 가시성 확보.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 4. 경쟁우위 분석 ============ -->
+<section id="moat" class="sec-white">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">04 / COMPETITIVE MOAT</span>
+    <h2 class="sec-title">경쟁우위 분석 — 해자는 얼마나 깊은가</h2>
+    <p class="sec-lead">CAP(경쟁우위 기간)이 길려면 '해자(경쟁자가 쉽게 못 넘는 방어벽)'가 견고해야 합니다.
+    세일즈포스의 해자를 포터의 5가지 경쟁 압력과 4가지 구조적 해자로 점검합니다. 결론부터:
+    <strong>해자는 넓고 견고하나, 'AI 대체재'라는 한 방향에서만 압력이 거셉니다.</strong></p>
+  </div>
+
+  <div class="divider-label"><span class="tx">포터의 5 Forces — 경쟁 압력 측정</span><span class="ln"></span></div>
+  <p style="color:var(--tx-mut);font-size:.93rem;margin-bottom:22px">각 막대가 길수록 그 방향의 경쟁 압력이 큽니다(회사에 불리). 압력이 작을수록 해자가 깊다는 뜻입니다.</p>
+
+  <figure style="background:var(--card-soft);border:1px solid var(--line);border-radius:14px;padding:28px 26px;margin-bottom:14px">
+    <svg viewBox="0 0 720 320" role="img" aria-label="포터의 5가지 경쟁 압력 강도 막대그래프">
+      <defs>
+        <linearGradient id="gPress" x1="0" x2="1">
+          <stop offset="0" stop-color="#3C8A57"/><stop offset="0.5" stop-color="#E89B2C"/>
+          <stop offset="1" stop-color="#BE5430"/>
+        </linearGradient>
+      </defs>
+      <!-- scale -->
+      <g font-family="IBM Plex Mono" font-size="11" fill="#536678">
+        <text x="250" y="306">낮음</text><text x="430" y="306" text-anchor="middle">중간</text><text x="610" y="306" text-anchor="end">높음</text>
+      </g>
+      <g stroke="#D2DCE4" stroke-width="1">
+        <line x1="250" y1="20" x2="250" y2="288"/><line x1="610" y1="20" x2="610" y2="288"/>
+      </g>
+      <!-- track baseline x=250, full width=360 (to 610) -->
+      <!-- 1 entrants: 0.42 -->
+      <g>
+        <text x="0" y="44" font-family="IBM Plex Sans KR" font-size="13" font-weight="600" fill="#13232F">① 신규 진입 위협</text>
+        <rect x="250" y="32" width="360" height="20" rx="10" fill="#EBEFF3"/>
+        <rect x="250" y="32" width="151" height="20" rx="10" fill="url(#gPress)"/>
+        <text x="411" y="47" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="#536678">낮음~중간</text>
+      </g>
+      <!-- 2 supplier 0.35 -->
+      <g>
+        <text x="0" y="100" font-family="IBM Plex Sans KR" font-size="13" font-weight="600" fill="#13232F">② 공급자 교섭력</text>
+        <rect x="250" y="88" width="360" height="20" rx="10" fill="#EBEFF3"/>
+        <rect x="250" y="88" width="126" height="20" rx="10" fill="url(#gPress)"/>
+        <text x="386" y="103" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="#536678">낮음</text>
+      </g>
+      <!-- 3 buyer 0.55 -->
+      <g>
+        <text x="0" y="156" font-family="IBM Plex Sans KR" font-size="13" font-weight="600" fill="#13232F">③ 구매자 교섭력</text>
+        <rect x="250" y="144" width="360" height="20" rx="10" fill="#EBEFF3"/>
+        <rect x="250" y="144" width="198" height="20" rx="10" fill="url(#gPress)"/>
+        <text x="458" y="159" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="#536678">중간</text>
+      </g>
+      <!-- 4 substitutes 0.80 - KEY -->
+      <g>
+        <text x="0" y="212" font-family="IBM Plex Sans KR" font-size="13" font-weight="700" fill="#BE5430">④ 대체재 위협 (AI)</text>
+        <rect x="250" y="200" width="360" height="20" rx="10" fill="#EBEFF3"/>
+        <rect x="250" y="200" width="288" height="20" rx="10" fill="url(#gPress)"/>
+        <text x="548" y="215" font-family="IBM Plex Mono" font-size="11" font-weight="700" fill="#BE5430">높음 ◀ 핵심</text>
+      </g>
+      <!-- 5 rivalry 0.72 -->
+      <g>
+        <text x="0" y="268" font-family="IBM Plex Sans KR" font-size="13" font-weight="600" fill="#13232F">⑤ 산업 내 경쟁</text>
+        <rect x="250" y="256" width="360" height="20" rx="10" fill="#EBEFF3"/>
+        <rect x="250" y="256" width="259" height="20" rx="10" fill="url(#gPress)"/>
+        <text x="519" y="271" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="#536678">중간~높음</text>
+      </g>
+    </svg>
+    <figcaption>압력 강도는 정성 평가에 기반한 분석가 판단. 신뢰도 중상 ~70%.</figcaption>
+  </figure>
+
+  <div class="grid g2" style="margin-bottom:14px">
+    <div class="callout co-green" style="margin:0">
+      <div class="ttl">◈ 방어가 강한 쪽 (①②)</div>
+      신규 진입자와 공급자 압력은 약합니다. 미션 크리티컬한 기업 시스템은 검증된 대형 벤더를 선호하고,
+      세일즈포스는 클라우드 인프라·인재를 협상할 규모를 갖췄습니다. 다만 AI는 'AI 네이티브 CRM' 스타트업의
+      진입 장벽을 일부 낮춥니다.
+    </div>
+    <div class="callout co-brick" style="margin:0">
+      <div class="ttl">◈ 압력이 거센 쪽 (④⑤)</div>
+      <strong>대체재(④)</strong>가 가장 큰 위협입니다 — AI 에이전트, 자체 구축, 마이크로소프트 번들링.
+      <strong>경쟁(⑤)</strong>도 치열합니다(MS·ServiceNow·Oracle·SAP·HubSpot). 이 두 방향이
+      현재 주가 비관의 원천입니다. 단, 전환비용이 이 압력을 상당 부분 상쇄합니다.
+    </div>
+  </div>
+
+  <div class="divider-label"><span class="tx">4가지 구조적 해자</span><span class="ln"></span></div>
+  <div class="grid g2">
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span class="pill p-mat" style="font-size:.72rem">매우 강함</span>
+        <h3 style="font-size:1.1rem">① 전환비용 (Switching Cost)</h3>
+      </div>
+      <p style="font-size:.93rem;color:var(--tx-mut)">한 기업의 모든 고객 데이터·업무 절차·수백 개 연동·직원 교육이
+      세일즈포스 위에 쌓이면, 갈아타는 것은 회사 신경계를 통째로 교체하는 일입니다. 평균 계약은 다년 단위이고,
+      이탈률(churn)이 낮습니다. <strong>해자의 가장 큰 기둥.</strong></p>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span class="pill p-mat" style="font-size:.72rem">강함</span>
+        <h3 style="font-size:1.1rem">② 생태계·네트워크 효과</h3>
+      </div>
+      <p style="font-size:.93rem;color:var(--tx-mut)"><strong>AppExchange</strong>(수천 개 서드파티 앱 장터),
+      수백만 명의 인증 관리자·개발자 커뮤니티(Trailblazer), 글로벌 시스템 통합 파트너망.
+      앱과 파트너가 많을수록 고객이 더 묶이고, 고객이 많을수록 앱이 더 모이는 <strong>선순환</strong>이 작동합니다.</p>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span class="pill p-grow" style="font-size:.72rem">심화 중</span>
+        <h3 style="font-size:1.1rem">③ 데이터 해자 (Data Moat)</h3>
+      </div>
+      <p style="font-size:.93rem;color:var(--tx-mut)">20여 년간 축적된 방대한 고객 데이터가 이제 <strong>AI의 연료</strong>가 됩니다.
+      <strong>Data 360</strong>은 흩어진 데이터를 묶어 AI 에이전트에게 '맥락'을 제공합니다.
+      역설적으로, AI 시대에 데이터를 가장 많이 가진 자가 가장 유리해져 <strong>해자가 더 깊어질 수 있습니다</strong>(강세 논거 핵심).</p>
+    </div>
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span class="pill p-mat" style="font-size:.72rem">강함</span>
+        <h3 style="font-size:1.1rem">④ 규모·브랜드</h3>
+      </div>
+      <p style="font-size:.93rem;color:var(--tx-mut)">점유율 1위(20.7%, 2~5위 합보다 큼), 막대한 R&D 규모,
+      그리고 "기업의 핵심 고객 시스템을 맡길 만큼 신뢰받는 브랜드". 대규모 R&D를 매년 쏟아부어
+      기능 격차를 유지할 체력이 있습니다.</p>
+    </div>
+  </div>
+
+  <div class="callout co-cyan" style="margin-top:26px">
+    <div class="ttl">◈ 차별화 vs 원가우위 — 어느 쪽 기업인가?</div>
+    세일즈포스는 명백히 <strong>차별화(Differentiation) 전략</strong> 기업입니다. 근거: NOPAT 마진
+    <strong class="num">~19%</strong>(EBITA 마진 24.1%)의 프리미엄 수익성, 높은 가격 결정력, 생태계 기반의 비가격 경쟁.
+    값싸게 파는 '원가우위'가 아니라, 묶어두고 비싸게 파는 '차별화'로 초과수익을 냅니다. 이런 기업의 CAP은
+    <strong>해자가 유지되는 한 길어야 정상</strong>입니다 — 그런데 시장은 3~4년만 인정합니다. 이 괴리가 분석의 출발점입니다.
+  </div>
+</div>
+</section>
+
+<!-- ============ 5. 시장 내재 CAP ============ -->
+<section id="cap" class="sec-dark">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">05 / MARKET-IMPLIED CAP</span>
+    <h2 class="sec-title">시장 내재 경쟁우위 기간 — 이 보고서의 심장</h2>
+    <p class="sec-lead">현재 주가 $158.37을 역방향 DCF로 풀면, 시장이 인정하는 경쟁우위 기간이 정확히 몇 년인지 나옵니다.
+    아래 '지평 게이지'에서 세일즈포스의 위치를 직접 확인하세요.</p>
+  </div>
+
+  <figure style="background:linear-gradient(180deg,#0E2034,#0A1722);border:1px solid var(--line-d);border-radius:16px;padding:36px 28px 28px;margin-bottom:26px">
+    <div class="eyebrow" style="color:var(--amber);margin-bottom:6px;text-align:center">내재 CAP 지평 게이지 · The Implied Horizon</div>
+    <svg viewBox="0 0 760 360" role="img" aria-label="시장 내재 경쟁우위 기간 게이지">
+      <defs>
+        <linearGradient id="needleG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#E89B2C"/><stop offset="1" stop-color="#C57E15"/>
+        </linearGradient>
+      </defs>
+      <!-- zone bands  track x:60..700 (640w), 25yr -> 25.6/yr ; y band 150..200 -->
+      <g>
+        <rect x="60"  y="150" width="128" height="52" fill="#2E7D5B"/>
+        <rect x="188" y="150" width="128" height="52" fill="#3F8C7A"/>
+        <rect x="316" y="150" width="128" height="52" fill="#4A6B86"/>
+        <rect x="444" y="150" width="128" height="52" fill="#A8732F"/>
+        <rect x="572" y="150" width="128" height="52" fill="#9E4528"/>
+      </g>
+      <!-- zone labels -->
+      <g font-family="IBM Plex Sans KR" font-size="12" font-weight="600" fill="#fff" text-anchor="middle">
+        <text x="124" y="172">매우 비관</text>
+        <text x="252" y="172">다소 비관</text>
+        <text x="380" y="172">합리적·중립</text>
+        <text x="508" y="172">다소 낙관</text>
+        <text x="636" y="172">과도</text>
+      </g>
+      <g font-family="IBM Plex Mono" font-size="10" fill="rgba(255,255,255,.82)" text-anchor="middle">
+        <text x="124" y="190">매수후보</text>
+        <text x="252" y="190">조건부 매력</text>
+        <text x="380" y="190">적정가</text>
+        <text x="508" y="190">주의</text>
+        <text x="636" y="190">회피</text>
+      </g>
+      <!-- year ticks -->
+      <g font-family="IBM Plex Mono" font-size="11" fill="#9DB1C2" text-anchor="middle">
+        <line x1="60"  y1="202" x2="60"  y2="210" stroke="#9DB1C2"/><text x="60"  y="226">0년</text>
+        <line x1="188" y1="202" x2="188" y2="210" stroke="#9DB1C2"/><text x="188" y="226">5</text>
+        <line x1="316" y1="202" x2="316" y2="210" stroke="#9DB1C2"/><text x="316" y="226">10</text>
+        <line x1="444" y1="202" x2="444" y2="210" stroke="#9DB1C2"/><text x="444" y="226">15</text>
+        <line x1="572" y1="202" x2="572" y2="210" stroke="#9DB1C2"/><text x="572" y="226">20</text>
+        <line x1="700" y1="202" x2="700" y2="210" stroke="#9DB1C2"/><text x="700" y="226">25년</text>
+      </g>
+
+      <!-- MSFT benchmark marker @17.5 -> x=508 -->
+      <g>
+        <line x1="508" y1="120" x2="508" y2="150" stroke="#6B8299" stroke-width="2" stroke-dasharray="3 3"/>
+        <circle cx="508" cy="120" r="5" fill="#6B8299"/>
+        <text x="508" y="108" font-family="IBM Plex Sans KR" font-size="11" font-weight="600" fill="#9DB1C2" text-anchor="middle">마이크로소프트</text>
+        <text x="508" y="138" font-family="IBM Plex Mono" font-size="10" fill="#9DB1C2" text-anchor="middle">~17.5년</text>
+      </g>
+
+      <!-- CRM main needle @3.3 -> x=60+3.3*25.6=144.48 -->
+      <g>
+        <line x1="144.5" y1="60" x2="144.5" y2="202" stroke="url(#needleG)" stroke-width="3.5"/>
+        <polygon points="144.5,206 137,194 152,194" fill="#E89B2C"/>
+        <circle cx="144.5" cy="60" r="7" fill="#E89B2C" stroke="#0A1722" stroke-width="2"/>
+        <rect x="78" y="30" width="133" height="30" rx="6" fill="#E89B2C"/>
+        <text x="144.5" y="50" font-family="IBM Plex Sans KR" font-size="13" font-weight="700" fill="#0A1722" text-anchor="middle">세일즈포스 ≈ 3.3년</text>
+      </g>
+      <!-- excl strat secondary @4.0 -> x=162.4 -->
+      <g>
+        <line x1="162.4" y1="150" x2="162.4" y2="202" stroke="#fff" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.7"/>
+        <text x="206" y="258" font-family="IBM Plex Mono" font-size="10" fill="#9DB1C2">└ 전략투자 제외 시 4.0년</text>
+      </g>
+
+      <!-- bottom note -->
+      <text x="60" y="300" font-family="IBM Plex Sans KR" font-size="12.5" fill="#C8D6E2">전제: WACC 8.25% · 장기성장 2.5% · 소멸률(fade) 0.22 · 연중할인 적용</text>
+      <text x="60" y="322" font-family="IBM Plex Sans KR" font-size="12.5" fill="#C8D6E2">민감도 검증: 가정을 바꿔도 내재 CAP은 <tspan font-family="IBM Plex Mono" fill="#E89B2C" font-weight="600">2.3 ~ 5.8년</tspan> 범위에 머묾</text>
+    </svg>
+    <figcaption>해석 기준은 동종 대형 SW 대비 상대 평가. 마이크로소프트 벤치마크는 동일 방법론 적용 시 추정치.</figcaption>
+  </figure>
+
+  <div class="grid g2" style="margin-bottom:14px">
+    <div class="callout co-onink" style="margin:0">
+      <div class="ttl">◈ 이 게이지가 말하는 것</div>
+      세일즈포스 바늘은 게이지 맨 왼쪽 <strong>'매우 비관'</strong> 구간에 꽂혀 있습니다. 시장은
+      "이 회사의 초과수익이 단 3~4년 뒤 평범한 수준으로 수렴한다"고 가격에 새겨 놓았습니다.
+      같은 잣대로 마이크로소프트는 약 17.5년을 인정받습니다 — <strong>5배 이상의 격차</strong>입니다.
+    </div>
+    <div class="callout co-onink" style="margin:0">
+      <div class="ttl">◈ 왜 '적정가 계산'이 아니라 '역산'인가</div>
+      누구도 미래를 정확히 모릅니다. 그래서 "내가 생각하는 적정가는 X"라고 우기는 대신,
+      <strong>"시장은 지금 이런 미래를 가정하고 있다"</strong>를 드러냅니다. 그러면 판단이 명확해집니다 —
+      "3~4년 만에 세일즈포스 해자가 무너진다는 가정, 나는 동의하는가?"
+    </div>
+  </div>
+
+  <div class="divider-label"><span class="tx">해석 기준표</span><span class="ln"></span></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>내재 CAP</th><th>시장 심리</th><th>일반적 함의</th><th>세일즈포스</th></tr></thead>
+      <tbody>
+        <tr class="hi"><td>5년 미만</td><td style="text-align:left">매우 비관</td><td style="text-align:left">해자가 견고하다면 매수 후보 (기대가 과도하게 낮음)</td><td style="text-align:left"><strong>◀ 현재 위치 (3.3년)</strong></td></tr>
+        <tr><td>5 ~ 10년</td><td style="text-align:left">다소 비관</td><td style="text-align:left">해자 확인되면 매력적</td><td style="text-align:left">—</td></tr>
+        <tr><td>10 ~ 15년</td><td style="text-align:left">합리적·중립</td><td style="text-align:left">대체로 공정한 가격</td><td style="text-align:left">중립 가치 ~$239</td></tr>
+        <tr><td>15 ~ 20년</td><td style="text-align:left">다소 낙관</td><td style="text-align:left">완벽한 실행을 요구</td><td style="text-align:left">MSFT ~17.5년</td></tr>
+        <tr><td>20년 초과</td><td style="text-align:left">과도</td><td style="text-align:left">실망 위험 큼, 회피 영역</td><td style="text-align:left">—</td></tr>
+      </tbody>
+    </table>
+    <div class="tbl-cap">'함의'는 일반 원칙이며 매매 권유가 아닙니다. 견고한 해자 + 낮은 내재 CAP의 조합이 핵심 관찰 포인트입니다.</div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 6. 재무·DCF 전시23 ============ -->
+<section id="dcf" class="sec-paper">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">06 / DCF MODEL · EXHIBIT 23</span>
+    <h2 class="sec-title">재무 분석과 DCF 모델 — 숫자의 골격</h2>
+    <p class="sec-lead">아래 표는 "만약 시장이 세일즈포스에 <strong>보통 수준의 10년 경쟁우위</strong>를 인정한다면 주가가 얼마일까"를
+    연도별로 계산한 것입니다(전시 23 형식). 결과는 주당 <strong>$238.98</strong> — 현재가보다 51% 높습니다.
+    즉 시장은 10년보다 훨씬 짧은 기간만 인정하고 있다는 뜻입니다.</p>
+  </div>
+
+  <div class="callout co-cyan">
+    <div class="ttl">◈ 표를 읽기 전, 3가지 용어</div>
+    <strong>EBITA</strong> = 영업이익 + 인수한 회사의 무형자산 상각(실제 현금 유출이 아니므로 더해줌). 단, 주식보상비용(SBC)은
+    진짜 비용으로 봐 빼지 않습니다. · <strong>NOPAT</strong>(세후영업이익) = EBITA에서 세금을 뺀 것, "본업으로 번 순수 현금성 이익". ·
+    <strong>FCF</strong>(잉여현금흐름) = NOPAT에서 성장에 재투자한 돈을 뺀, "주주에게 돌아갈 수 있는 현금".
+    이 FCF를 매년 '현재가치'로 할인해 더한 뒤, 10년 이후 가치(최종가치)를 얹어 회사 전체 가치를 구합니다.
+  </div>
+
+  <div class="divider-label"><span class="tx">전시 23 · 기본 시나리오 10년 추정</span><span class="ln"></span></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>연도</th><th class="num">매출($M)</th><th class="num">성장률</th><th class="num">EBITA</th>
+          <th class="num">마진</th><th class="num">NOPAT</th><th class="num">재투자</th><th class="num">FCF</th><th class="num">FCF 현재가치</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Y1</td><td class="num">46,093</td><td class="num">11.0%</td><td class="num">11,431</td><td class="num">24.8%</td><td class="num">9,030</td><td class="num">2,257</td><td class="num">6,773</td><td class="num">6,510</td></tr>
+        <tr><td>Y2</td><td class="num">50,702</td><td class="num">10.0%</td><td class="num">13,030</td><td class="num">25.7%</td><td class="num">10,294</td><td class="num">2,676</td><td class="num">7,618</td><td class="num">6,764</td></tr>
+        <tr><td>Y3</td><td class="num">55,519</td><td class="num">9.5%</td><td class="num">14,768</td><td class="num">26.6%</td><td class="num">11,667</td><td class="num">3,150</td><td class="num">8,517</td><td class="num">6,986</td></tr>
+        <tr><td>Y4</td><td class="num">60,515</td><td class="num">9.0%</td><td class="num">16,642</td><td class="num">27.5%</td><td class="num">13,147</td><td class="num">3,681</td><td class="num">9,466</td><td class="num">7,172</td></tr>
+        <tr><td>Y5</td><td class="num">65,659</td><td class="num">8.5%</td><td class="num">18,647</td><td class="num">28.4%</td><td class="num">14,731</td><td class="num">4,272</td><td class="num">10,459</td><td class="num">7,321</td></tr>
+        <tr><td>Y6</td><td class="num">71,240</td><td class="num">8.5%</td><td class="num">20,873</td><td class="num">29.3%</td><td class="num">16,490</td><td class="num">4,947</td><td class="num">11,543</td><td class="num">7,464</td></tr>
+        <tr><td>Y7</td><td class="num">77,296</td><td class="num">8.5%</td><td class="num">23,189</td><td class="num">30.0%</td><td class="num">18,319</td><td class="num">5,679</td><td class="num">12,640</td><td class="num">7,550</td></tr>
+        <tr><td>Y8</td><td class="num">83,866</td><td class="num">8.5%</td><td class="num">25,160</td><td class="num">30.0%</td><td class="num">19,876</td><td class="num">6,360</td><td class="num">13,516</td><td class="num">7,458</td></tr>
+        <tr><td>Y9</td><td class="num">90,994</td><td class="num">8.5%</td><td class="num">27,298</td><td class="num">30.0%</td><td class="num">21,566</td><td class="num">6,901</td><td class="num">14,665</td><td class="num">7,475</td></tr>
+        <tr><td>Y10</td><td class="num">98,729</td><td class="num">8.5%</td><td class="num">29,619</td><td class="num">30.0%</td><td class="num">23,399</td><td class="num">7,488</td><td class="num">15,911</td><td class="num">7,493</td></tr>
+      </tbody>
+    </table>
+    <div class="tbl-cap">전시 23의 라인 항목을 가독성을 위해 연도-행 구조로 재배열. 세율 21% 가정. 단위 $M(백만 달러).</div>
+  </div>
+
+  <div class="grid g2" style="margin-top:24px">
+    <div class="card">
+      <h3 style="font-size:1.08rem;margin-bottom:16px">◈ 가치 합산 (Y1~Y10 + 최종가치)</h3>
+      <table style="border:none">
+        <tbody style="font-family:var(--mono)">
+          <tr><td style="border-color:var(--line)">10년 FCF 현재가치 누계</td><td class="num" style="border-color:var(--line)">$72,192M</td></tr>
+          <tr><td style="border-color:var(--line)">최종가치 (페이드 모델)</td><td class="num" style="border-color:var(--line)">$304,513M</td></tr>
+          <tr><td style="border-color:var(--line)">최종가치의 현재가치</td><td class="num" style="border-color:var(--line)">$143,394M</td></tr>
+          <tr><td style="border-color:var(--line)"><strong>기업가치 (EV)</strong></td><td class="num" style="border-color:var(--line)"><strong>$215,586M</strong></td></tr>
+          <tr><td style="border-color:var(--line)">(−) 순부채</td><td class="num" style="border-color:var(--line);color:var(--brick)">−27,463</td></tr>
+          <tr><td style="border-color:var(--line)">(+) 전략투자 포트폴리오</td><td class="num" style="border-color:var(--line);color:var(--green)">+7,600</td></tr>
+          <tr><td style="border-color:var(--line)"><strong>주주가치</strong></td><td class="num" style="border-color:var(--line)"><strong>$195,723M</strong></td></tr>
+          <tr><td style="border:none">÷ 발행주식 819M</td><td class="num" style="border:none"> </td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:14px;padding:14px;background:var(--amber-soft);border:1px solid #E6C88E;border-radius:8px;color:#5C4410">
+        <span style="font-family:var(--mono);font-size:.78rem;letter-spacing:.05em">10년 CAP 가정 주당가치</span><br>
+        <strong class="num" style="font-size:1.7rem;color:#5C4410">$238.98</strong>
+        <span style="font-size:.85rem"> · 현재가 $158.37 대비 <strong>+51%</strong></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:1.08rem;margin-bottom:16px">◈ 자본비용(WACC) 산출</h3>
+      <p style="font-size:.88rem;color:var(--tx-mut);margin-bottom:14px">WACC = 회사가 자금(주주+빚)을 쓰는 데
+      드는 평균 비용. 미래 현금을 '현재가치'로 깎는 할인율입니다.</p>
+      <table style="border:none">
+        <tbody style="font-family:var(--mono);font-size:.84rem">
+          <tr><td style="border-color:var(--line)">무위험수익률 (미 10년 국채)</td><td class="num" style="border-color:var(--line)">4.40%</td></tr>
+          <tr><td style="border-color:var(--line)">베타 (조정)</td><td class="num" style="border-color:var(--line)">1.10</td></tr>
+          <tr><td style="border-color:var(--line)">주식위험프리미엄 (ERP)</td><td class="num" style="border-color:var(--line)">4.75%</td></tr>
+          <tr><td style="border-color:var(--line)"><strong>자기자본비용 (ke)</strong></td><td class="num" style="border-color:var(--line)"><strong>9.62%</strong></td></tr>
+          <tr><td style="border-color:var(--line)">세후 부채비용 (kd)</td><td class="num" style="border-color:var(--line)">3.71%</td></tr>
+          <tr><td style="border-color:var(--line)">자본구조 (자기자본/부채)</td><td class="num" style="border-color:var(--line)">76.7 / 23.3</td></tr>
+          <tr><td style="border:none"><strong>가중평균 자본비용 (WACC)</strong></td><td class="num" style="border:none"><strong style="color:var(--amber-d)">8.25%</strong></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:16px">
+        <h4 style="font-size:.92rem;margin-bottom:8px">최종가치 가정 (페이드 모델)</h4>
+        <ul class="clean" style="font-size:.86rem">
+          <li>장기 성장률 g = <strong>2.5%</strong> (장기 기대 인플레이션 수준)</li>
+          <li>소멸률 fade = <strong>0.22</strong> (소프트웨어·서비스 업종 평균 — 초과수익이 매년 22%씩 평범한 수준으로 수렴)</li>
+          <li>최종 증분투자수익률(ROIIC) ≈ <strong>26.6%</strong></li>
+          <li>연중(mid-year) 할인 적용</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout co-amber" style="margin-top:24px">
+    <div class="ttl">◈ 핵심: 이 표가 증명하는 것</div>
+    보통 수준의 10년 경쟁우위만 가정해도 적정가는 $239입니다. 그런데 시장가는 $158입니다. 따라서
+    <strong>시장은 10년보다 훨씬 짧은 ~3.3년만 인정</strong>하고 있다는 결론이 수치로 확정됩니다. 이 표는
+    "비싸다"는 게 아니라, 거꾸로 "시장이 이 회사의 미래를 얼마나 짧게 보는가"를 보여주는 장치입니다.
+  </div>
+  <p class="src">최종가치는 초과수익이 점진 소멸하는 페이드(fade) 방식 적용. 일반 영구성장 공식보다 보수적입니다. 모든 추정은 가정에 따라 달라지며 §07 민감도에서 검증합니다.</p>
+</div>
+</section>
+
+<!-- ============ 7. 민감도 분석 ============ -->
+<section id="sensitivity" class="sec-dark">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">07 / SENSITIVITY</span>
+    <h2 class="sec-title">민감도 분석 — 가정을 흔들어도 결론이 버티는가</h2>
+    <p class="sec-lead">"가정을 살짝 바꾸면 3.3년이 15년으로 뒤집히는 것 아닌가?"라는 의심에 답합니다.
+    핵심 변수를 모두 흔들어도 <strong style="color:#fff">내재 CAP은 2.3~5.8년 범위를 벗어나지 않습니다.</strong>
+    '매우 비관' 결론은 견고합니다. 신뢰도 높음 ~85%.</p>
+  </div>
+
+  <div class="divider-label"><span class="tx">2차원 히트맵 · 자본비용 × 소멸률</span><span class="ln"></span></div>
+  <div style="overflow-x:auto;border-radius:12px;border:1px solid var(--line-d)">
+  <table style="background:var(--ink-2);min-width:520px">
+    <thead>
+      <tr>
+        <th style="background:var(--ink-3);color:#fff">WACC ↓ / fade →</th>
+        <th class="num" style="background:var(--ink-3);color:#fff">fade 0.15</th>
+        <th class="num" style="background:var(--ink-3);color:#fff">0.20</th>
+        <th class="num" style="background:var(--ink-3);color:#fff">0.25</th>
+        <th class="num" style="background:var(--ink-3);color:#fff">0.30</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="background:var(--ink-2);color:var(--tx-light);border-color:var(--line-d)">7.75%</td>
+        <td class="num" style="background:#7A4A12;color:#fff;border-color:var(--line-d)">2.3</td>
+        <td class="num" style="background:#7A4A12;color:#fff;border-color:var(--line-d)">2.5</td>
+        <td class="num" style="background:#86551A;color:#fff;border-color:var(--line-d)">2.6</td>
+        <td class="num" style="background:#86551A;color:#fff;border-color:var(--line-d)">2.7</td>
+      </tr>
+      <tr>
+        <td style="background:var(--ink-2);color:var(--tx-light);border-color:var(--line-d)">8.25%</td>
+        <td class="num" style="background:#946420;color:#fff;border-color:var(--line-d)">3.1</td>
+        <td class="num" style="background:#A06D24;color:#fff;border-color:var(--line-d);font-weight:700;box-shadow:inset 0 0 0 2px #E89B2C">3.3</td>
+        <td class="num" style="background:#A06D24;color:#fff;border-color:var(--line-d)">3.4</td>
+        <td class="num" style="background:#A87528;color:#fff;border-color:var(--line-d)">3.5</td>
+      </tr>
+      <tr>
+        <td style="background:var(--ink-2);color:var(--tx-light);border-color:var(--line-d)">8.75%</td>
+        <td class="num" style="background:#B07E30;color:#fff;border-color:var(--line-d)">3.9</td>
+        <td class="num" style="background:#B68638;color:#fff;border-color:var(--line-d)">4.1</td>
+        <td class="num" style="background:#B68638;color:#fff;border-color:var(--line-d)">4.2</td>
+        <td class="num" style="background:#BC8E40;color:#fff;border-color:var(--line-d)">4.3</td>
+      </tr>
+      <tr>
+        <td style="background:var(--ink-2);color:var(--tx-light);border-color:var(--line-d)">9.25%</td>
+        <td class="num" style="background:#C99A4E;color:#1a1206;border-color:var(--line-d)">4.9</td>
+        <td class="num" style="background:#CC9E52;color:#1a1206;border-color:var(--line-d)">5.0</td>
+        <td class="num" style="background:#D2A65C;color:#1a1206;border-color:var(--line-d)">5.2</td>
+        <td class="num" style="background:#D2A65C;color:#1a1206;border-color:var(--line-d)">5.3</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="src" style="margin-top:10px">셀 값 = 내재 CAP(년). 색이 진할수록 더 비관적(낮은 CAP). 테두리 강조 셀이 기본 가정(8.25%·0.22 ≈ 3.3년). 가장 덜 비관적인 우하단(5.3년)조차 '비관' 영역.</p>
+
+  <div class="grid g2" style="margin-top:30px">
+    <figure style="background:var(--ink-2);border:1px solid var(--line-d);border-radius:12px;padding:24px">
+      <div class="eyebrow" style="color:var(--amber);margin-bottom:18px">자본비용 단일 민감도 (지배적 변수)</div>
+      <svg viewBox="0 0 380 240" role="img" aria-label="WACC 민감도 막대그래프">
+        <g font-family="IBM Plex Mono" font-size="11" fill="#9DB1C2">
+          <!-- bars: base x=110, scale 6yr->240px =>40px/yr -->
+          <text x="0" y="30" fill="#C8D6E2">7.25%</text>
+          <rect x="105" y="18" width="72" height="16" rx="3" fill="#7A4A12"/><text x="183" y="30" fill="#fff">1.8년</text>
+          <text x="0" y="64" fill="#C8D6E2">7.75%</text>
+          <rect x="105" y="52" width="104" height="16" rx="3" fill="#946420"/><text x="215" y="64" fill="#fff">2.6</text>
+          <text x="0" y="98" fill="#C8D6E2">8.25%</text>
+          <rect x="105" y="86" width="132" height="16" rx="3" fill="#E89B2C"/><text x="243" y="98" fill="#fff" font-weight="600">3.3 ◀</text>
+          <text x="0" y="132" fill="#C8D6E2">8.75%</text>
+          <rect x="105" y="120" width="168" height="16" rx="3" fill="#B68638"/><text x="279" y="132" fill="#fff">4.2</text>
+          <text x="0" y="166" fill="#C8D6E2">9.25%</text>
+          <rect x="105" y="154" width="204" height="16" rx="3" fill="#C99A4E"/><text x="315" y="166" fill="#fff">5.1</text>
+          <text x="0" y="200" fill="#C8D6E2">9.62%</text>
+          <rect x="105" y="188" width="232" height="16" rx="3" fill="#D2A65C"/><text x="343" y="200" fill="#fff">5.8</text>
+        </g>
+        <text x="105" y="228" font-family="IBM Plex Sans KR" font-size="10.5" fill="#9DB1C2">9.62% = 자기자본비용만 적용한 보수 상한</text>
+      </svg>
+      <figcaption>WACC가 1%p 오를 때마다 내재 CAP 약 +1년. 가장 영향력 큰 변수.</figcaption>
+    </figure>
+
+    <figure style="background:var(--ink-2);border:1px solid var(--line-d);border-radius:12px;padding:24px">
+      <div class="eyebrow" style="color:var(--amber);margin-bottom:18px">기타 변수 민감도 (영향 작음)</div>
+      <div style="font-family:var(--mono);font-size:.86rem;color:#C8D6E2">
+        <div style="margin-bottom:18px">
+          <div style="color:#9DB1C2;font-size:.74rem;letter-spacing:.08em;margin-bottom:8px">장기성장률 g (1.5% → 3.5%)</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="color:#fff;font-weight:600">3.7년</span>
+            <div style="flex:1;height:6px;background:rgba(232,239,244,.12);border-radius:3px;position:relative">
+              <span style="position:absolute;left:30%;width:14%;height:6px;background:var(--amber);border-radius:3px"></span>
+            </div>
+            <span style="color:#fff;font-weight:600">3.0년</span>
+          </div>
+          <div style="font-size:.74rem;color:#9DB1C2;margin-top:4px">변동 폭 0.7년 — 미미</div>
+        </div>
+        <div style="margin-bottom:18px">
+          <div style="color:#9DB1C2;font-size:.74rem;letter-spacing:.08em;margin-bottom:8px">소멸률 fade (0.15 → 0.30)</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="color:#fff;font-weight:600">3.1년</span>
+            <div style="flex:1;height:6px;background:rgba(232,239,244,.12);border-radius:3px;position:relative">
+              <span style="position:absolute;left:42%;width:8%;height:6px;background:var(--cyan);border-radius:3px"></span>
+            </div>
+            <span style="color:#fff;font-weight:600">3.5년</span>
+          </div>
+          <div style="font-size:.74rem;color:#9DB1C2;margin-top:4px">변동 폭 0.4년 — 미미</div>
+        </div>
+        <div>
+          <div style="color:#9DB1C2;font-size:.74rem;letter-spacing:.08em;margin-bottom:8px">최종 EBITA 마진 (26% → 34%)</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="color:#fff;font-weight:600">4.0년</span>
+            <div style="flex:1;height:6px;background:rgba(232,239,244,.12);border-radius:3px;position:relative">
+              <span style="position:absolute;left:30%;width:12%;height:6px;background:var(--green);border-radius:3px"></span>
+            </div>
+            <span style="color:#fff;font-weight:600">3.3년</span>
+          </div>
+          <div style="font-size:.74rem;color:#9DB1C2;margin-top:4px">26% 미만이 아니면 안정적</div>
+        </div>
+      </div>
+      <figcaption>성장률·소멸률·마진은 결론을 뒤집지 못합니다.</figcaption>
+    </figure>
+  </div>
+
+  <div class="callout co-onink" style="margin-top:26px">
+    <div class="ttl">◈ 베이지안 관점</div>
+    어떤 합리적 가정 조합에서도 내재 CAP이 '중립(10~15년)'에 도달하지 못합니다. 따라서
+    <strong>"시장이 세일즈포스를 매우 비관적으로 본다"</strong>는 명제의 확신도는 높습니다(~85%). 이 결론을 뒤집으려면
+    WACC가 12%를 크게 넘거나(현 금리 환경에서 비현실적), 회사가 구조적 적자로 전환해야 합니다.
+    그런 신호가 나타나면 이 판단을 즉시 갱신해야 합니다.
+  </div>
+</div>
+</section>
+
+<!-- ============ 8. 시나리오 분석 ============ -->
+<section id="scenarios" class="sec-white">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">08 / SCENARIOS</span>
+    <h2 class="sec-title">시나리오 분석 — 강세 / 기본 / 약세</h2>
+    <p class="sec-lead">미래는 셋 중 하나에 가깝게 펼쳐질 것입니다. 각 시나리오에서 "중립(10년)·다소낙관(15년)
+    경쟁우위를 인정할 때의 적정 주가"를 계산했습니다. 현재가 $158이 이 분포의 <strong>어디쯤</strong>에
+    있는지가 핵심입니다.</p>
+  </div>
+
+  <figure style="background:var(--card-soft);border:1px solid var(--line);border-radius:14px;padding:30px 26px;margin-bottom:24px">
+    <div class="eyebrow" style="color:var(--amber-d);margin-bottom:6px">시나리오별 적정 주가 ($)</div>
+    <svg viewBox="0 0 720 360" role="img" aria-label="시나리오별 적정주가 막대그래프">
+      <!-- x scale: value 0..480 -> x 150..690 (540px) => 1.125px/$ ; baseline x=150 -->
+      <!-- grid -->
+      <g stroke="#D2DCE4" stroke-width="1" font-family="IBM Plex Mono" font-size="10" fill="#536678">
+        <line x1="150" y1="20" x2="150" y2="300"/><text x="150" y="318" text-anchor="middle">$0</text>
+        <line x1="262.5" y1="20" x2="262.5" y2="300"/><text x="262.5" y="318" text-anchor="middle">$100</text>
+        <line x1="375" y1="20" x2="375" y2="300"/><text x="375" y="318" text-anchor="middle">$200</text>
+        <line x1="487.5" y1="20" x2="487.5" y2="300"/><text x="487.5" y="318" text-anchor="middle">$300</text>
+        <line x1="600" y1="20" x2="600" y2="300"/><text x="600" y="318" text-anchor="middle">$400</text>
+      </g>
+      <!-- current price line $158.37 -> x=150+158.37*1.125=328.2 -->
+      <line x1="328" y1="14" x2="328" y2="306" stroke="#13232F" stroke-width="2" stroke-dasharray="5 4"/>
+      <rect x="280" y="0" width="98" height="20" rx="4" fill="#13232F"/>
+      <text x="329" y="14" font-family="IBM Plex Mono" font-size="11" font-weight="600" fill="#fff" text-anchor="middle">현재 $158</text>
+
+      <!-- BULL group y=40 -->
+      <text x="0" y="56" font-family="IBM Plex Sans KR" font-size="13" font-weight="700" fill="#2C6E45">강세 (Bull)</text>
+      <!-- 10yr $349 -> w=349*1.125=392.6 -->
+      <rect x="150" y="46" width="392.6" height="22" rx="3" fill="#3C8A57"/><text x="550" y="62" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#2C6E45">$349 (10년)</text>
+      <!-- 15yr $446 -> w=501.75 -->
+      <rect x="150" y="72" width="501.75" height="22" rx="3" fill="#5DBd80"/><text x="660" y="88" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#2C6E45">$446</text>
+
+      <!-- BASE group y=120 -->
+      <text x="0" y="136" font-family="IBM Plex Sans KR" font-size="13" font-weight="700" fill="#C57E15">기본 (Base)</text>
+      <!-- 10yr $239 -> w=268.9 -->
+      <rect x="150" y="126" width="268.9" height="22" rx="3" fill="#E89B2C"/><text x="426" y="142" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#C57E15">$239 (10년)</text>
+      <!-- 15yr $287 -> w=322.9 -->
+      <rect x="150" y="152" width="322.9" height="22" rx="3" fill="#F0B95E"/><text x="480" y="168" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#C57E15">$287</text>
+
+      <!-- BEAR group y=200 -->
+      <text x="0" y="216" font-family="IBM Plex Sans KR" font-size="13" font-weight="700" fill="#A6431F">약세 (Bear)</text>
+      <!-- 10yr $115 -> w=129.4 -->
+      <rect x="150" y="206" width="129.4" height="22" rx="3" fill="#BE5430"/><text x="287" y="222" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#A6431F">$115 (10년)</text>
+      <!-- 15yr $110 -> w=123.75 -->
+      <rect x="150" y="232" width="123.75" height="22" rx="3" fill="#D88060"/><text x="281" y="248" font-family="IBM Plex Mono" font-size="12" font-weight="600" fill="#A6431F">$110</text>
+
+      <text x="150" y="282" font-family="IBM Plex Sans KR" font-size="11.5" fill="#536678">▲ 현재가는 약세($110대)보다 약간 위, 기본($239)보다 한참 아래에 위치</text>
+    </svg>
+    <figcaption>각 시나리오 고유의 WACC·소멸률·성장·마진 적용 후, 10년/15년 경쟁우위 인정 시 주당가치. 단위 $.</figcaption>
+  </figure>
+
+  <div class="tbl-wrap" style="margin-bottom:24px">
+    <table>
+      <thead><tr><th>시나리오</th><th>핵심 전제</th><th class="num">성장 경로</th><th class="num">최종마진</th><th class="num">WACC</th><th class="num">내재 CAP*</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--green)"><strong>강세</strong></td><td style="text-align:left">AI=증폭기. Agentforce/소비기반 과금이 좌석 감소를 상쇄·초과. 데이터 해자 심화</td><td class="num">12~13% 재가속</td><td class="num">34%</td><td class="num">7.89%</td><td class="num">1.9년</td></tr>
+        <tr class="hi"><td><strong>기본</strong></td><td style="text-align:left">점진 둔화. 성장 11%→8.5%로 식되 마진은 30%로 확대. 해자 유지</td><td class="num">11%→8.5%</td><td class="num">30%</td><td class="num">8.25%</td><td class="num">3.3년</td></tr>
+        <tr><td style="color:var(--brick)"><strong>약세</strong></td><td style="text-align:left">AI=대체재. 좌석 잠식으로 성장 급랭, 마진 압박. 경쟁 격화</td><td class="num">9%→2.5%</td><td class="num">27%</td><td class="num">8.80%</td><td class="num">∞**</td></tr>
+      </tbody>
+    </table>
+    <div class="tbl-cap">*각 시나리오 가정에서 현재가 $158을 정당화하는 데 필요한 CAP. **약세 가정에서는 무한 CAP으로도 $158에 못 미침(즉 현재가가 약세 가치보다 높음).</div>
+  </div>
+
+  <div class="grid g3">
+    <div class="callout co-green" style="margin:0">
+      <div class="ttl">강세가 맞다면</div>
+      현재가는 적정가($349~446)의 <strong>약 40%</strong>에 불과합니다. 시장이 1.9년의 CAP만 인정하는 것은
+      터무니없는 저평가가 됩니다. 데이터를 가장 많이 가진 기업이 AI 시대 최대 수혜자가 된다는 논리.
+    </div>
+    <div class="callout co-amber" style="margin:0">
+      <div class="ttl">기본이 맞다면</div>
+      적정가 $239~287. 현재가 대비 <strong>+51~81%</strong> 잠재력. 성장은 식어도 거대한 설치 기반에서
+      마진을 끌어올리며 견조한 현금을 창출. 가장 가능성 높은 경로로 평가.
+    </div>
+    <div class="callout co-brick" style="margin:0">
+      <div class="ttl">약세가 맞다면</div>
+      적정가 $110대로, 현재가 $158이 오히려 <strong>비쌉니다.</strong> 'SaaS 종말론'이 현실화돼
+      좌석 기반이 구조적으로 줄어드는 시나리오. 추가 하락 여지 존재.
+    </div>
+  </div>
+
+  <div class="callout co-cyan" style="margin-top:26px">
+    <div class="ttl">◈ 위험-보상의 비대칭</div>
+    현재가 $158은 약세 가치($110대)보다 <strong>약 40달러 위</strong>, 기본 가치($239)보다 <strong>약 80달러 아래</strong>입니다.
+    즉 시장은 약세에 가까운 미래를 가격에 반영하고 있습니다. 만약 현실이 기본·강세로 기운다면 상승 폭(+$80~290)이
+    하락 폭(−$45)보다 큽니다. 단, 이 비대칭이 매력적인지는 <strong>"약세가 실현될 확률을 얼마로 보느냐"</strong>에 전적으로 달려 있으며,
+    그 확률 판단은 독자의 몫입니다.
+  </div>
+</div>
+</section>
+
+<!-- ============ 9. 피어그룹 비교 ============ -->
+<section id="peers" class="sec-paper">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">09 / PEER COMPARISON</span>
+    <h2 class="sec-title">피어그룹 비교 — 경쟁사 사이에서 어디에 서 있나</h2>
+    <p class="sec-lead">세일즈포스는 CRM 순수 1위지만, 성장 속도는 더 작은 경쟁사들보다 느립니다. 이 '성장 격차'가
+    저평가의 한 축입니다. 동시에 흥미로운 점은 <strong>자본이 앱형 SaaS에서 AI 인프라로 이동</strong>하고 있다는 것입니다.</p>
+  </div>
+
+  <div class="tbl-wrap" style="margin-bottom:24px">
+    <table>
+      <thead><tr><th>기업</th><th>핵심 영역</th><th class="num">매출</th><th class="num">성장률</th><th class="num">시가총액</th><th class="num">PER</th><th>AI 내러티브</th></tr></thead>
+      <tbody>
+        <tr class="hi"><td><strong>Salesforce (CRM)</strong></td><td style="text-align:left">CRM 종합 1위</td><td class="num">$41.5B</td><td class="num">~11%</td><td class="num">$130B</td><td class="num">20x</td><td style="text-align:left">의구심 (좌석 잠식 우려)</td></tr>
+        <tr><td>Microsoft (MSFT)</td><td style="text-align:left">Dynamics+Copilot</td><td class="num">초대형</td><td class="num">~15%</td><td class="num">$3.1T</td><td class="num">~35x</td><td style="text-align:left">최대 수혜주 (번들링)</td></tr>
+        <tr><td>ServiceNow (NOW)</td><td style="text-align:left">업무흐름 자동화</td><td class="num">~$13B</td><td class="num">~22%</td><td class="num">$97B</td><td class="num">고PER</td><td style="text-align:left">양면 (성장 견조하나 -62% 조정)</td></tr>
+        <tr><td>Oracle (ORCL)</td><td style="text-align:left">DB+클라우드 인프라</td><td class="num">대형</td><td class="num">강세</td><td class="num">$428~552B</td><td class="num">~62x</td><td style="text-align:left"><strong>인프라 수혜</strong> (YTD +82%)</td></tr>
+        <tr><td>SAP</td><td style="text-align:left">ERP 1위</td><td class="num">대형</td><td class="num">클라우드+27%</td><td class="num">대형</td><td class="num">—</td><td style="text-align:left">안정적 전환</td></tr>
+        <tr><td>HubSpot (HUBS)</td><td style="text-align:left">중소·중견 CRM</td><td class="num">~$3.7B</td><td class="num">~21%</td><td class="num">$10B</td><td class="num">고PER</td><td style="text-align:left">SMB AI 접목</td></tr>
+        <tr><td>Adobe (ADBE)</td><td style="text-align:left">크리에이티브+마케팅</td><td class="num">대형</td><td class="num">~8.5%</td><td class="num">대형</td><td class="num">~20x</td><td style="text-align:left">의구심 (CRM과 유사 처지)</td></tr>
+      </tbody>
+    </table>
+    <div class="tbl-cap">출처: 각사 최근 실적·StockAnalysis (2026-06 기준). 일부는 변동성으로 범위·정성 표기. 성장률은 최근 분기 매출 YoY 근사.</div>
+  </div>
+
+  <figure style="background:var(--card);border:1px solid var(--line);border-radius:14px;padding:28px 26px;margin-bottom:24px">
+    <div class="eyebrow" style="color:var(--amber-d);margin-bottom:18px">성장률 vs 밸류에이션 — CRM의 위치</div>
+    <svg viewBox="0 0 720 300" role="img" aria-label="성장률 대 PER 산점도">
+      <!-- axes -->
+      <line x1="80" y1="250" x2="680" y2="250" stroke="#536678" stroke-width="1.5"/>
+      <line x1="80" y1="40" x2="80" y2="250" stroke="#536678" stroke-width="1.5"/>
+      <text x="380" y="285" font-family="IBM Plex Sans KR" font-size="12" fill="#536678" text-anchor="middle">매출 성장률 →</text>
+      <text x="30" y="145" font-family="IBM Plex Sans KR" font-size="12" fill="#536678" text-anchor="middle" transform="rotate(-90 30 145)">밸류에이션(PER) →</text>
+      <!-- x ticks 5%..25% -> x 80..680 -->
+      <g font-family="IBM Plex Mono" font-size="10" fill="#536678" text-anchor="middle">
+        <text x="170" y="266">8%</text><text x="320" y="266">14%</text><text x="470" y="266">20%</text><text x="620" y="266">24%</text>
+      </g>
+      <!-- points -->
+      <!-- CRM: growth 11% x~245, PER 20 y~175 -->
+      <circle cx="245" cy="178" r="13" fill="#E89B2C" stroke="#0A1722" stroke-width="1.5"/>
+      <text x="245" y="156" font-family="IBM Plex Sans KR" font-size="12" font-weight="700" fill="#C57E15" text-anchor="middle">CRM</text>
+      <text x="245" y="200" font-family="IBM Plex Mono" font-size="9" fill="#536678" text-anchor="middle">11%·20x</text>
+      <!-- NOW growth 22% x~545 PER high y~90 -->
+      <circle cx="545" cy="95" r="11" fill="#2D8FB3"/>
+      <text x="545" y="80" font-family="IBM Plex Sans KR" font-size="11" font-weight="600" fill="#1B6E89" text-anchor="middle">NOW</text>
+      <!-- HUBS growth 21% x~520 PER high y~80 -->
+      <circle cx="510" cy="78" r="9" fill="#5DBd80"/>
+      <text x="510" y="65" font-family="IBM Plex Sans KR" font-size="10" font-weight="600" fill="#2C6E45" text-anchor="middle">HUBS</text>
+      <!-- MSFT growth 15% x~365 PER 35 y~120 -->
+      <circle cx="365" cy="120" r="12" fill="#6B7E8F"/>
+      <text x="365" y="104" font-family="IBM Plex Sans KR" font-size="11" font-weight="600" fill="#536678" text-anchor="middle">MSFT</text>
+      <!-- ORCL growth high x~590 PER 62 y~60 -->
+      <circle cx="600" cy="58" r="11" fill="#BE5430"/>
+      <text x="600" y="44" font-family="IBM Plex Sans KR" font-size="11" font-weight="600" fill="#A6431F" text-anchor="middle">ORCL</text>
+      <!-- ADBE growth 8.5% x~190 PER 20 y~178 -->
+      <circle cx="185" cy="180" r="9" fill="#B5743C"/>
+      <text x="185" y="167" font-family="IBM Plex Sans KR" font-size="10" font-weight="600" fill="#8a5a2e" text-anchor="middle">ADBE</text>
+      <!-- annotation -->
+      <rect x="120" y="212" width="270" height="30" rx="6" fill="#FBEFD8" stroke="#E6C88E"/>
+      <text x="132" y="231" font-family="IBM Plex Sans KR" font-size="11" fill="#5C4410">CRM·ADBE: 낮은 성장+낮은 밸류 (의구심 진영)</text>
+    </svg>
+    <figcaption>위치는 개략적 시각화. CRM은 '저성장·저평가' 사분면 — 시장의 의구심이 가격에 반영된 상태.</figcaption>
+  </figure>
+
+  <div class="callout co-amber">
+    <div class="ttl">◈ 자본 로테이션: 앱형 SaaS → AI 인프라</div>
+    같은 'AI 시대'인데 평가가 갈립니다. <strong>오라클(+82%)</strong>은 AI를 굴릴 데이터센터·인프라 공급자로 각광받는 반면,
+    <strong>CRM·Adobe·ServiceNow</strong> 같은 앱형 SaaS는 "AI가 우리 좌석을 없앨 것"이라는 의구심에 눌렸습니다.
+    자금은 'AI를 파는 곳(곡괭이)'으로 몰리고, 'AI에 위협받을 수 있는 곳(채굴자)'에서 빠졌습니다. 핵심 질문은
+    <strong>이 구분이 옳은가</strong>입니다 — 세일즈포스가 '위협받는 채굴자'가 아니라 'AI로 더 강해지는 데이터 보유자'라면
+    이 로테이션은 과도한 것이 됩니다.
+  </div>
+</div>
+</section>
+
+<!-- ============ 10. 시장 내러티브 & 자금 선호도 ============ -->
+<section id="narrative" class="sec-dark">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">10 / MARKET NARRATIVE</span>
+    <h2 class="sec-title">시장 내러티브와 자금 선호도 — 자본은 지금 무엇을 좋아하는가</h2>
+    <p class="sec-lead">밸류에이션은 결국 '이야기'가 움직입니다. 세일즈포스 주가를 −56% 끌어내린 것은 실적 붕괴가 아니라
+    <strong style="color:#fff">하나의 강력한 서사</strong>였습니다. 그 서사와 반대 서사를 같은 무게로 펼칩니다.</p>
+  </div>
+
+  <div class="grid g2" style="margin-bottom:26px">
+    <div class="card" style="background:linear-gradient(180deg,#2A1812,#1A0F0B);border:1px solid #6E3A24;color:var(--tx-light)">
+      <div class="eyebrow" style="color:#E8956B;margin-bottom:12px">▼ 지배적 약세 서사</div>
+      <h3 style="font-size:1.2rem;margin-bottom:12px;color:#fff">"SaaS 종말론" — AI가 좌석을 없앤다</h3>
+      <p style="font-size:.93rem;color:#D6C4BC;margin-bottom:12px">전통 SaaS는 <strong style="color:#fff">사용자 1명당 월 구독료</strong>를 받습니다.
+      그런데 AI 에이전트가 사람의 업무를 대신하면, 기업은 직원(=좌석)을 줄일 수 있습니다. 좌석이 줄면 구독 매출이 줄고,
+      SaaS 사업 모델의 근간이 흔들린다는 공포입니다.</p>
+      <ul class="clean" style="font-size:.88rem">
+        <li>2026년 1~2월 소프트웨어 섹터 시총 <strong style="color:#fff">약 $2조</strong> 증발</li>
+        <li>ServiceNow −62%, Adobe 등 앱형 SaaS 동반 폭락</li>
+        <li>세일즈포스 사상 최장 <strong style="color:#fff">14거래일 연속 하락</strong> 기록</li>
+        <li>신규 순고객 증가세 둔화, 마케팅·커머스 약세가 서사에 연료 공급</li>
+        <li>"존재론적 적합성(existential relevance)" 의문 제기</li>
+      </ul>
+    </div>
+    <div class="card" style="background:linear-gradient(180deg,#0E2A1C,#091A12);border:1px solid #235C3F;color:var(--tx-light)">
+      <div class="eyebrow" style="color:#6FD89A;margin-bottom:12px">▲ 반대 강세 서사</div>
+      <h3 style="font-size:1.2rem;margin-bottom:12px;color:#fff">"AI는 증폭기" — 데이터 보유자가 이긴다</h3>
+      <p style="font-size:.93rem;color:#BCD6C8;margin-bottom:12px">AI가 진짜 가치를 내려면 <strong style="color:#fff">양질의 데이터와 업무 맥락</strong>이 필요합니다.
+      그 데이터를 20여 년간 가장 많이 쌓아둔 곳이 세일즈포스입니다. AI는 기존 강자를 대체하는 게 아니라
+      <strong style="color:#fff">데이터·고객관계·유통망 위에서 더 강하게</strong> 만들 수 있습니다.</p>
+      <ul class="clean" style="font-size:.88rem">
+        <li>Agentforce ARR <strong style="color:#fff">$1.2B(+205%)</strong> — 좌석이 줄어도 '소비량 기반' 과금으로 전환</li>
+        <li>m3ter 인수로 <strong style="color:#fff">사용량 과금 체계</strong> 구축 (좌석 모델 대체 대비)</li>
+        <li>Data 360이 흩어진 데이터를 묶어 에이전트에 맥락 제공</li>
+        <li>여전히 두 자릿수 성장 + FCF 수익률 11%</li>
+        <li>가치투자 기관(Vulcan Value, Oakmark/Nygren) 저가 매집 정황</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider-label"><span class="tx">자본이 지금 '사고 싶어 하는' 조건</span><span class="ln"></span></div>
+  <div class="grid g3" style="margin-bottom:26px">
+    <div class="card" style="background:var(--ink-3);border-color:var(--line-d);color:var(--tx-light)">
+      <div class="num" style="font-size:1.6rem;color:var(--amber);font-weight:600;margin-bottom:6px">01</div>
+      <h4 style="font-size:1rem;margin-bottom:8px;color:#fff">AI 수익화 증거</h4>
+      <p style="font-size:.88rem;color:var(--tx-lmut)">"AI로 돈을 번다"는 구호가 아니라 ARR·소비량 같은 <strong style="color:#fff">숫자</strong>를
+      요구합니다. Agentforce ARR 궤적이 이 갈증을 채울지가 관건.</p>
+    </div>
+    <div class="card" style="background:var(--ink-3);border-color:var(--line-d);color:var(--tx-light)">
+      <div class="num" style="font-size:1.6rem;color:var(--amber);font-weight:600;margin-bottom:6px">02</div>
+      <h4 style="font-size:1rem;margin-bottom:8px;color:#fff">유기적 성장 재가속</h4>
+      <p style="font-size:.88rem;color:var(--tx-lmut)">인수(Informatica 등)를 뺀 <strong style="color:#fff">순수 자체 성장률</strong>이
+      다시 오르는지. 이것이 '좌석 잠식이 현실이 아니다'를 증명하는 핵심 신호.</p>
+    </div>
+    <div class="card" style="background:var(--ink-3);border-color:var(--line-d);color:var(--tx-light)">
+      <div class="num" style="font-size:1.6rem;color:var(--amber);font-weight:600;margin-bottom:6px">03</div>
+      <h4 style="font-size:1rem;margin-bottom:8px;color:#fff">예측가능한 현금 + 자본환원</h4>
+      <p style="font-size:.88rem;color:var(--tx-lmut)">불확실성의 시기에 자본은 <strong style="color:#fff">현금 창출과 자사주 매입·배당</strong>을
+      좋아합니다. 세일즈포스는 $50B 자사주 권한·배당으로 이를 충족.</p>
+    </div>
+  </div>
+
+  <div class="callout co-onink">
+    <div class="ttl">◈ 핵심 촉매(Catalyst): 다음 분기 실적 (2026년 9월 초 예정)</div>
+    이 주식 서사의 분수령은 <strong>FY27 2분기 실적</strong>입니다. 시장은 단 한 줄을 봅니다 —
+    <strong>"인수를 제외한 유기적 성장률이 가속되는가, 둔화되는가."</strong> 가속되면 '좌석 잠식' 서사가
+    약해지며 재평가(re-rating) 방아쇠가 당겨질 수 있고, 둔화되면 약세 서사가 굳어집니다. 그 외 cRPO 성장률,
+    Agentforce ARR, 마케팅·커머스 안정화 여부가 함께 읽힐 핵심 계기입니다.
+  </div>
+
+  <div class="callout co-onink" style="margin-top:18px">
+    <div class="ttl">◈ 서사를 뒤집을 신호 (베이지안 갱신 트리거)</div>
+    <strong>강세로:</strong> 유기적 성장 재가속 · Agentforce ARR 분기 2배 지속 · 순고객 증가 반등 ·
+    마케팅/커머스 턴어라운드. <strong>약세로:</strong> cRPO 성장률 한 자릿수 추락 · 좌석 수 절대 감소 확인 ·
+    대형 고객 이탈 · 마진 둔화 + SBC 부담 가중. 이 신호들이 나타나면 본 분석의 확률 배분을 즉시 갱신해야 합니다.
+  </div>
+</div>
+</section>
+
+<!-- ============ 11. 투자 논거 & 리스크 ============ -->
+<section id="risks" class="sec-white">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">11 / BULL · BEAR · SWOT</span>
+    <h2 class="sec-title">투자 논거와 리스크 — 양쪽을 같은 무게로</h2>
+    <p class="sec-lead">시장 분위기가 워낙 비관적이라, 균형을 위해 <strong>강세론을 먼저 충실히</strong> 정리한 뒤
+    약세론을 정직하게 마주합니다. 어느 쪽도 과장하지 않는 것이 목표입니다.</p>
+  </div>
+
+  <div class="divider-label"><span class="tx" style="color:var(--green)">▲ 강세론 (Bull Case)</span><span class="ln"></span></div>
+  <div class="grid g2" style="margin-bottom:30px">
+    <div class="card" style="border-left:4px solid var(--green)">
+      <h4 style="font-size:1.05rem;margin-bottom:8px">① 비합리적으로 낮은 내재 CAP</h4>
+      <p style="font-size:.92rem;color:var(--tx-mut)">점유율 1위·견고한 전환비용을 가진 기업에 시장은 단 3.3년의
+      경쟁우위만 부여. 보통 수준(10년)만 인정해도 +51%, 강세 시 +120%+의 잠재력. <strong>위험 대비 보상의 비대칭.</strong></p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--green)">
+      <h4 style="font-size:1.05rem;margin-bottom:8px">② AI가 해자를 더 깊게</h4>
+      <p style="font-size:.92rem;color:var(--tx-mut)">20여 년 축적 데이터 + Data 360이 AI 에이전트의 연료.
+      데이터 없는 AI는 무력하므로, 가장 많이 가진 자가 유리. <strong>AI는 위협이 아니라 증폭기</strong>라는 논리.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--green)">
+      <h4 style="font-size:1.05rem;margin-bottom:8px">③ 좌석 모델 전환 대비 완료</h4>
+      <p style="font-size:.92rem;color:var(--tx-mut)">Agentforce ARR +205% 폭증, m3ter 인수로 <strong>사용량 기반 과금</strong> 체계 구축.
+      좌석이 줄어도 '소비량'으로 매출을 잡는 구조로 이동 중. 종말론의 핵심 가정에 대한 직접 대응.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--green)">
+      <h4 style="font-size:1.05rem;margin-bottom:8px">④ 마진 확대 + 강력한 현금</h4>
+      <p style="font-size:.92rem;color:var(--tx-mut)">거대 설치 기반 위에서 영업레버리지로 마진 30%+ 목표. FCF 수익률
+      <strong>11%</strong>는 대형 우량주로 이례적. $50B 자사주 매입으로 주식 수가 줄어 주당가치 누적.</p>
+    </div>
+  </div>
+
+  <div class="divider-label"><span class="tx" style="color:var(--brick)">▼ 약세론 (Bear Case)</span><span class="ln"></span></div>
+  <div class="grid g2" style="margin-bottom:24px">
+    <div class="card" style="border-left:4px solid var(--brick)">
+      <h4 style="font-size:1.05rem;margin-bottom:8px">① 좌석 잠식이 구조적이라면</h4>
+      <p style="font-size:.92rem;color:var(--tx-mut)">AI 에이전트가 정말 인력을 대체해 좌석 수가 절대 감소하면, 소비 과금 전환이
+      그 속도를 못 따라갈 수 있음. 이 경우 성장 모델 자체가 훼손 — 약세 시나리오의 핵심.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--brick)">
+      <h4 style="font-size:1.05rem;margin-bottom:8px">② 성장 정점 신호 가능성</h4>
+      <p style="font-size:.92rem;color:var(--tx-mut)">순신규 고객 증가 둔화 + 마케팅·커머스 약세. 유기적 성장 둔화를 인수(Informatica 등)로
+      메우는 모습은 <strong>성장의 질</strong>에 대한 의문을 남김.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--brick)">
+      <h4 style="font-size:1.05rem;margin-bottom:8px">③ 부채와 이자 부담</h4>
+      <p style="font-size:.92rem;color:var(--tx-mut)">총부채 <strong>$39.3B</strong>, 분기 이자비용 $317M 신규 발생. 자사주 매입으로 자기자본이
+      장부상 크게 축소돼 재무 레버리지 상승. 고금리 환경에서 FCF를 잠식.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--brick)">
+      <h4 style="font-size:1.05rem;margin-bottom:8px">④ 경쟁·평판 리스크</h4>
+      <p style="font-size:.92rem;color:var(--tx-mut)">마이크로소프트의 번들링(Office·Teams에 CRM 끼워팔기) 위협. 2026년 데이터 유출 사건(Klue·ShinyHunters)으로
+      평판 부담 — <strong>다만 제품 취약점이 아닌 제3자 통합·고객 설정·피싱 기반</strong>이라는 점은 구분 필요.</p>
+    </div>
+  </div>
+
+  <div class="callout co-cyan">
+    <div class="ttl">◈ 데이터 유출 사건의 정확한 성격 (오해 방지)</div>
+    2026년 보도된 일련의 침해는 <strong>세일즈포스 제품 자체의 보안 결함이 아닙니다.</strong> 공격자(ShinyHunters 등)는
+    피싱·소셜엔지니어링으로 직원·제3자 통합(OAuth 토큰)을 노렸거나, 고객의 설정 오류(게스트 접근 권한)를 악용했습니다.
+    즉 '세일즈포스가 거대 플랫폼이라 표적이 된' 측면이 크며, 핵심 제품의 구조적 결함과는 구분됩니다.
+    평판 리스크는 실재하나, 사업 모델을 훼손하는 종류는 아니라는 것이 합리적 해석입니다(신뢰도 중상 ~70%).
+  </div>
+
+  <div class="divider-label"><span class="tx">SWOT 종합</span><span class="ln"></span></div>
+  <div class="grid g2">
+    <div class="card" style="background:var(--green-soft);border-color:#A8D2B7;color:#1E4C30">
+      <div class="eyebrow" style="color:#2C6E45;margin-bottom:10px">강점 · Strengths</div>
+      <ul class="clean" style="font-size:.9rem">
+        <li>CRM 점유율 1위 (20.7%, 2~5위 합 초과)</li>
+        <li>높은 전환비용 + AppExchange 생태계</li>
+        <li>20여 년 축적 고객 데이터 (AI 연료)</li>
+        <li>반복 매출 95% · FCF 수익률 11%</li>
+      </ul>
+    </div>
+    <div class="card" style="background:var(--brick-soft);border-color:#E2B19D;color:#5E2A14">
+      <div class="eyebrow" style="color:#A6431F;margin-bottom:10px">약점 · Weaknesses</div>
+      <ul class="clean" style="font-size:.9rem">
+        <li>둔화되는 유기적 성장, 마케팅·커머스 약세</li>
+        <li>$39.3B 부채 · 장부 자기자본 축소</li>
+        <li>대규모 주식보상비용(SBC $3.5B)</li>
+        <li>다수 인수 제품군의 통합 복잡성</li>
+      </ul>
+    </div>
+    <div class="card" style="background:var(--cyan-soft);border-color:#A9D2DF;color:#11414F">
+      <div class="eyebrow" style="color:#1B6E89;margin-bottom:10px">기회 · Opportunities</div>
+      <ul class="clean" style="font-size:.9rem">
+        <li>Agentforce·AI 에이전트 수익화 (+205%)</li>
+        <li>좌석 → 사용량 기반 과금 전환 (m3ter)</li>
+        <li>데이터 해자 심화 · 마진 30%+ 확대</li>
+        <li>국제·산업별 수직 시장 확장</li>
+      </ul>
+    </div>
+    <div class="card" style="background:var(--amber-soft);border-color:#E6C88E;color:#5C4410">
+      <div class="eyebrow" style="color:#C57E15;margin-bottom:10px">위협 · Threats</div>
+      <ul class="clean" style="font-size:.9rem">
+        <li>AI 좌석 잠식 (SaaS 종말론)</li>
+        <li>마이크로소프트 번들링 · AI 네이티브 신규 진입</li>
+        <li>경기 둔화 시 기업 IT 지출 위축</li>
+        <li>데이터 보안 평판 리스크</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 12. 종합 판단 & 체크포인트 ============ -->
+<section id="verdict" class="sec-dark">
+<div class="wrap">
+  <div class="sec-head">
+    <span class="sec-num">12 / SYNTHESIS</span>
+    <h2 class="sec-title">종합 판단 — 무엇을 알게 되었나</h2>
+    <p class="sec-lead">이 분석은 매수·매도를 권하지 않습니다. 대신 시장이 가격에 새겨 둔 가정을 드러내고,
+    그 가정이 합리적인지 판단할 도구를 제공합니다. 핵심을 다시 압축합니다.</p>
+  </div>
+
+  <div class="card" style="background:linear-gradient(180deg,#102439,#0A1722);border:1px solid var(--amber);color:var(--tx-light);margin-bottom:26px">
+    <div class="eyebrow" style="color:var(--amber);margin-bottom:14px">핵심 명제</div>
+    <p style="font-size:1.12rem;line-height:1.7;color:#fff;margin-bottom:16px">현재 주가 $158은
+    <strong style="color:var(--amber)">"세일즈포스의 경쟁우위가 3~4년 뒤 평범한 수준으로 수렴한다"</strong>는
+    극단적 비관을 담고 있습니다. 점유율 1위·견고한 전환비용·20여 년 데이터를 가진 기업에 매겨진 이 기간은,
+    같은 잣대의 마이크로소프트(~17.5년) 대비 1/5에 불과합니다.</p>
+    <p style="font-size:.96rem;color:var(--tx-lmut)">이 비관이 <strong style="color:#fff">정당한가</strong>가 모든 것을 가릅니다.
+    'AI가 좌석을 잠식한다'가 구조적 진실이면 현재가도 비싸고, 'AI가 데이터 보유자를 증폭한다'가 진실이면
+    터무니없는 저평가입니다. 민감도 분석상 비관의 정도(3~4년)는 견고하지만, <strong style="color:#fff">비관의
+    정당성</strong>은 미결입니다.</p>
+  </div>
+
+  <div class="grid g3" style="margin-bottom:26px">
+    <div class="card" style="background:var(--ink-3);border-color:var(--line-d);color:var(--tx-light);text-align:center">
+      <div class="eyebrow" style="color:var(--tx-lmut);margin-bottom:8px">측정된 것</div>
+      <p style="font-size:.92rem;color:var(--tx-lmut)">내재 CAP <strong style="color:var(--amber)">3.3년</strong>,
+      견고성 2.3~5.8년. <span class="conf"><span class="bar"><i style="width:85%"></i></span>~85%</span></p>
+    </div>
+    <div class="card" style="background:var(--ink-3);border-color:var(--line-d);color:var(--tx-light);text-align:center">
+      <div class="eyebrow" style="color:var(--tx-lmut);margin-bottom:8px">비대칭</div>
+      <p style="font-size:.92rem;color:var(--tx-lmut)">상승 여지(+$80~290) &gt; 하락 여지(−$45),
+      해자 유지 가정 시. <span class="conf"><span class="bar"><i style="width:60%"></i></span>~60%</span></p>
+    </div>
+    <div class="card" style="background:var(--ink-3);border-color:var(--line-d);color:var(--tx-light);text-align:center">
+      <div class="eyebrow" style="color:var(--tx-lmut);margin-bottom:8px">미결 쟁점</div>
+      <p style="font-size:.92rem;color:var(--tx-lmut)">AI = 대체 vs 증폭.
+      증거 양분, 분기 실적이 가를 것. <span class="conf"><span class="bar"><i style="width:50%"></i></span>~50%</span></p>
+    </div>
+  </div>
+
+  <div class="callout co-onink">
+    <div class="ttl">◈ 균형 잡힌 결론</div>
+    가장 비관적인 서사가 가격을 지배하는 동안, <strong>강세 논거는 가격에 거의 반영되지 않았습니다.</strong>
+    데이터 해자가 AI 시대에 더 깊어진다는 논리, Agentforce의 폭발적 성장, 소비 기반 과금으로의 전환은
+    모두 실재하는 강점입니다. 그러나 좌석 잠식이 구조적 현실로 판명될 위험 또한 가볍지 않습니다. 따라서 합리적
+    태도는 <strong>"한쪽을 확신하는 것"이 아니라 "어느 쪽 증거가 쌓이는지 핵심 지표를 추적하는 것"</strong>입니다.
+  </div>
+
+  <div class="divider-label"><span class="tx">모니터링 체크포인트</span><span class="ln"></span></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>추적 지표</th>
+        <th>강세 신호</th>
+        <th>약세 신호</th>
+        <th>중요도</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>유기적(인수제외) 성장률</td><td style="text-align:left">재가속</td><td style="text-align:left">추가 둔화</td><td><span class="pill p-intro">최상</span></td></tr>
+        <tr><td>Agentforce·AI ARR</td><td style="text-align:left">분기 2배 지속</td><td style="text-align:left">증가율 급감</td><td><span class="pill p-intro">최상</span></td></tr>
+        <tr><td>cRPO 성장률</td><td style="text-align:left">두 자릿수 유지</td><td style="text-align:left">한 자릿수 추락</td><td><span class="pill p-grow">높음</span></td></tr>
+        <tr><td>순신규 고객 증가</td><td style="text-align:left">반등</td><td style="text-align:left">감소 지속</td><td><span class="pill p-grow">높음</span></td></tr>
+        <tr><td>마케팅·커머스</td><td style="text-align:left">안정화·반등</td><td style="text-align:left">약세 지속</td><td><span class="pill p-mat">중간</span></td></tr>
+        <tr><td>영업마진 vs SBC</td><td style="text-align:left">마진 확대</td><td style="text-align:left">SBC 부담 가중</td><td><span class="pill p-mat">중간</span></td></tr>
+        <tr><td>FCF 전환율 vs 이자</td><td style="text-align:left">FCF 견조</td><td style="text-align:left">이자가 FCF 잠식</td><td><span class="pill p-mat">중간</span></td></tr>
+      </tbody>
+    </table>
+    <div class="tbl-cap" style="color:var(--tx-lmut)">최우선 분수령: FY27 2분기 실적(2026년 9월 초 예정)의 유기적 성장 라인.</div>
+  </div>
+</div>
+</section>
+
+<!-- ============ 13. 한계와 가정 ============ -->
+<section id="limits" class="sec-paper">
+<div class="wrap narrow">
+  <div class="sec-head">
+    <span class="sec-num">13 / LIMITATIONS</span>
+    <h2 class="sec-title">한계와 가정 — 이 분석이 말할 수 없는 것</h2>
+    <p class="sec-lead">정직한 분석은 자신의 한계를 분명히 합니다. 아래 전제와 제약을 염두에 두고 위 결론을 읽어야 합니다.</p>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h4 style="font-size:1.02rem;margin-bottom:8px">① 예측이 아니라 '역산'이다</h4>
+      <p style="font-size:.91rem;color:var(--tx-mut)">이 분석은 미래를 예측하지 않습니다. "현재가가 사실이라면 시장은
+      이런 가정을 하고 있다"를 드러낼 뿐입니다. 내재 CAP 3.3년은 '정답'이 아니라 '시장의 현재 기대치'입니다.</p>
+    </div>
+    <div class="card">
+      <h4 style="font-size:1.02rem;margin-bottom:8px">② WACC 의존성</h4>
+      <p style="font-size:.91rem;color:var(--tx-mut)">결과는 자본비용(WACC)에 가장 민감합니다. WACC는 무위험금리·베타·위험프리미엄
+      추정에 의존하며, 이들이 바뀌면 내재 CAP도 이동합니다(§07 참조). 8.25%는 합리적 추정이나 유일한 정답은 아닙니다.</p>
+    </div>
+    <div class="card">
+      <h4 style="font-size:1.02rem;margin-bottom:8px">③ 구조적 변화는 모델링 불가</h4>
+      <p style="font-size:.91rem;color:var(--tx-mut)">'AI가 좌석 모델을 붕괴시키는가'와 같은 패러다임 전환은 과거 데이터로
+      추정할 수 없는 <strong>근본적 불확실성</strong>입니다. 어떤 DCF도 이 질문에 답하지 못하며, 시나리오로만 다룰 수 있습니다.</p>
+    </div>
+    <div class="card">
+      <h4 style="font-size:1.02rem;margin-bottom:8px">④ 입력값은 추정치</h4>
+      <p style="font-size:.91rem;color:var(--tx-mut)">매출 성장·마진·재투자율·소멸률은 모두 가정입니다. 일부 세그먼트 매출 배분과
+      AI 매출 비중도 공개 정보 기반의 추정입니다. 실제 수치는 다를 수 있습니다.</p>
+    </div>
+    <div class="card">
+      <h4 style="font-size:1.02rem;margin-bottom:8px">⑤ 시점 스냅샷</h4>
+      <p style="font-size:.91rem;color:var(--tx-mut)">모든 데이터는 <strong>2026-06-26</strong> 기준입니다. 주가·금리·실적 전망은 빠르게
+      변하며, 새로운 분기 실적이 나오면 핵심 결론(특히 성장 가정)을 갱신해야 합니다.</p>
+    </div>
+    <div class="card">
+      <h4 style="font-size:1.02rem;margin-bottom:8px">⑥ 단일 방법론</h4>
+      <p style="font-size:.91rem;color:var(--tx-mut)">CAP 역방향 DCF는 하나의 렌즈입니다. 상대가치(배수)·자산가치·실물옵션 등 다른
+      방법론과 교차검증할 때 더 견고한 그림이 됩니다. 해석 기준표(5년·10년 등)도 상대적·정성적 가이드입니다.</p>
+    </div>
+  </div>
+
+  <div class="callout co-amber" style="margin-top:26px">
+    <div class="ttl">◈ 베이지안 태도의 핵심</div>
+    위 모든 확신도(~85%, ~60%, ~50% 등)는 <strong>고정된 진리가 아니라 현재 증거에 기반한 확률</strong>입니다.
+    새 실적, 금리 변화, AI 수익화 증거가 나타나면 이 확률은 갱신되어야 합니다. 특히 '미결(~50%)'로 표시한
+    AI 대체/증폭 쟁점은, 다음 분기 유기적 성장 데이터 하나로 크게 움직일 수 있습니다. 이 보고서는 그 갱신을
+    위한 <strong>출발 좌표</strong>이지 종착점이 아닙니다.
+  </div>
+</div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <h4>데이터 출처 및 기준</h4>
+    <p style="margin-bottom:16px">본 분석은 <strong style="color:#fff">2026년 6월 26일 종가</strong> 기준입니다.
+    주가·밸류에이션: Yahoo Finance, CNBC, StockAnalysis.com, Investing.com. 재무·실적: 세일즈포스 IR
+    (FY2026 연간 및 FY2027 1분기 실적 발표). 거시: 미 국채금리·인플레이션 지표·시장 위험프리미엄 추정.
+    경쟁사: 각사 공개 실적. 산업 점유율: IDC.</p>
+    <p style="margin-bottom:16px">방법론: 경쟁우위 기간(CAP) 역방향 DCF. EBITA는 GAAP 영업이익에 인수무형자산 상각을
+    더하되 주식보상비용은 비용으로 유지. 최종가치는 초과수익이 점진 소멸하는 페이드(fade) 모델 적용, 연중할인 사용.
+    내재 CAP은 현재 주가를 정당화하는 명시적 예측 기간을 역산해 도출.</p>
+    <p style="font-family:var(--mono);font-size:.74rem;color:#5C7186;letter-spacing:.03em;border-top:1px solid rgba(232,239,244,.12);padding-top:16px">
+    Salesforce, Inc. (NYSE: CRM) · 경쟁우위 기간 분석 · 생성일 2026-06-28 · 단위 표기: B=십억 달러, M=백만 달러, ARR=연간반복매출, cRPO=현재잔여이행의무
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
