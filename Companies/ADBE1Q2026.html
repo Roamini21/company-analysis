@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adobe (ADBE) — 기업·산업 완전 분석 · CAP 프레임워크</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFAF7;
+  --paper-2:#F4F2EC;
+  --ink:#17181C;
+  --ink-soft:#4B4D55;
+  --ink-faint:#74757D;
+  --rule:#E2DFD6;
+  --rule-strong:#CFCBBF;
+  --adobe:#E2231A;
+  --adobe-deep:#A8160F;
+  --adobe-wash:#FBE9E7;
+  --violet:#5B3FD6;
+  --blue:#2E63D6;
+  --teal:#0E8C86;
+  --green:#5C8A12;
+  --amber:#C97E00;
+  --market-grey:#9A968C;
+  --ink-bg:#15161B;
+  --ink-bg-2:#1D1F27;
+  --ink-bg-3:#262932;
+  --on-dark:#F2F1EB;
+  --on-dark-soft:#B6B4AC;
+  --on-dark-faint:#86857E;
+  --pos:#1F7A4D;
+  --pos-wash:#E6F3EC;
+  --neg:#B0341F;
+  --neg-wash:#FBEBE6;
+  --warn:#9A6A00;
+  --warn-wash:#FBF1DC;
+  --maxw:1080px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Pretendard',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:-0.003em;
+}
+.mono{font-family:'JetBrains Mono',monospace;font-feature-settings:"tnum" 1}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+/* ---------- generic typography ---------- */
+h2,h3,h4{letter-spacing:-0.02em;line-height:1.22}
+p{margin:0 0 1.05em}
+p:last-child{margin-bottom:0}
+strong{font-weight:700;color:var(--ink)}
+em{font-style:normal;background:linear-gradient(transparent 62%, #F6D9A8 62%);padding:0 .05em;font-weight:600}
+a{color:var(--adobe-deep)}
+.lead{font-size:1.18rem;line-height:1.7;color:var(--ink-soft)}
+
+/* ---------- masthead ---------- */
+.masthead{border-bottom:1px solid var(--rule);background:var(--paper)}
+.masthead .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+.brandmark{display:flex;align-items:center;gap:11px;font-weight:800;font-size:.95rem;letter-spacing:-0.01em}
+.brandmark .tri{width:22px;height:20px;display:block}
+.masthead .meta{font-size:.72rem;color:var(--ink-faint);letter-spacing:.02em;text-align:right;line-height:1.4}
+
+/* ---------- hero ---------- */
+.hero{background:var(--ink-bg);color:var(--on-dark);padding:74px 0 64px;position:relative;overflow:hidden}
+.hero .eyebrow{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.34em;color:var(--on-dark-soft);text-transform:uppercase;margin-bottom:26px}
+.hero h1{font-size:clamp(2.1rem,5.2vw,3.5rem);font-weight:800;line-height:1.08;letter-spacing:-0.035em;color:var(--on-dark);margin-bottom:18px}
+.hero h1 .red{color:#FF6F61}
+.hero .tagline{font-family:'Newsreader',serif;font-size:clamp(1.15rem,2.4vw,1.5rem);font-weight:400;color:var(--on-dark-soft);max-width:680px;line-height:1.5;font-style:italic}
+.tickerstrip{display:flex;flex-wrap:wrap;gap:0;margin-top:40px;border:1px solid var(--ink-bg-3);border-radius:10px;overflow:hidden;background:var(--ink-bg-2)}
+.tickerstrip .cell{flex:1 1 150px;padding:15px 18px;border-right:1px solid var(--ink-bg-3);border-bottom:1px solid var(--ink-bg-3)}
+.tickerstrip .cell .k{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.12em;color:var(--on-dark-faint);text-transform:uppercase;margin-bottom:6px}
+.tickerstrip .cell .v{font-family:'JetBrains Mono',monospace;font-size:1.32rem;font-weight:700;color:var(--on-dark);letter-spacing:-0.01em}
+.tickerstrip .cell .v small{font-size:.72rem;font-weight:500;color:var(--on-dark-soft)}
+.tickerstrip .cell .v.dn{color:#FF8A7A}
+
+/* ---------- nav (sticky TOC) ---------- */
+nav.toc{position:sticky;top:0;z-index:40;background:rgba(251,250,247,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+nav.toc .row{display:flex;flex-wrap:wrap;gap:7px 6px;padding:11px 0;align-items:center}
+nav.toc a{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.01em;color:var(--ink-soft);text-decoration:none;white-space:nowrap;padding:5px 9px;border:1px solid var(--rule-strong);border-radius:6px;background:var(--paper);transition:.15s;line-height:1.1}
+nav.toc a:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+nav.toc a .n{color:var(--adobe);font-weight:700;margin-right:3px}
+nav.toc a:hover .n{color:#FF8A7A}
+
+/* ---------- section frame ---------- */
+section{padding:64px 0;border-bottom:1px solid var(--rule);scroll-margin-top:54px}
+section.dark{background:var(--ink-bg);color:var(--on-dark);border-bottom:1px solid var(--ink-bg-3)}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:30px}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;color:var(--adobe);letter-spacing:.04em;flex-shrink:0;padding-top:.35em}
+section.dark .sec-num{color:#FF8A7A}
+.sec-title{font-size:clamp(1.55rem,3.4vw,2.15rem);font-weight:800;letter-spacing:-0.03em;line-height:1.12}
+.sec-kicker{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:9px}
+section.dark .sec-kicker{color:var(--on-dark-faint)}
+.sec-body{max-width:780px}
+.sec-body.wide{max-width:100%}
+.sec-body h3{font-size:1.32rem;font-weight:700;margin:38px 0 13px;letter-spacing:-0.02em}
+.sec-body h3:first-child{margin-top:0}
+.sec-body h4{font-size:1.05rem;font-weight:700;margin:24px 0 8px;color:var(--ink)}
+section.dark .sec-body h3,section.dark .sec-body h4{color:var(--on-dark)}
+:where(section.dark) p{color:var(--on-dark-soft)}
+:where(section.dark) strong{color:var(--on-dark)}
+:where(section.dark) em{background:linear-gradient(transparent 62%, rgba(255,138,122,.32) 62%);color:var(--on-dark)}
+
+/* ---------- callouts (self-contained colors) ---------- */
+.callout{border-radius:12px;padding:20px 22px;margin:22px 0;border:1px solid;font-size:.97rem;line-height:1.62}
+.callout .label{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;margin-bottom:8px;display:block}
+.callout p{margin-bottom:.7em}
+.co-key{background:#11121A;border-color:#2C2E3A;color:#EDEAF6}
+.co-key .label{color:#A99BF0}
+.co-key strong{color:#fff}
+.co-bull{background:var(--pos-wash);border-color:#BFE0CC;color:#163E2A}
+.co-bull .label{color:var(--pos)}
+.co-bull strong{color:#0E3320}
+.co-bear{background:var(--neg-wash);border-color:#EDC9BD;color:#5A2417}
+.co-bear .label{color:var(--neg)}
+.co-bear strong{color:#451A11}
+.co-warn{background:var(--warn-wash);border-color:#E8D2A0;color:#5A4410}
+.co-warn .label{color:var(--warn)}
+.co-warn strong{color:#3F2F08}
+.co-note{background:var(--paper-2);border-color:var(--rule-strong);color:var(--ink-soft)}
+.co-note .label{color:var(--ink-faint)}
+
+/* confidence pill */
+.conf{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;letter-spacing:.02em;padding:3px 9px;border-radius:5px;border:1px solid;vertical-align:middle}
+.conf.hi{background:var(--pos-wash);color:#135733;border-color:#BFE0CC}
+.conf.mid{background:var(--warn-wash);color:#7A5400;border-color:#E8D2A0}
+.conf.lo{background:var(--paper-2);color:var(--ink-soft);border-color:var(--rule-strong)}
+section.dark .conf.hi{background:rgba(31,122,77,.22);color:#7FD8A2;border-color:rgba(127,216,162,.35)}
+section.dark .conf.mid{background:rgba(154,106,0,.24);color:#E8C26A;border-color:rgba(232,194,106,.35)}
+section.dark .conf.lo{background:var(--ink-bg-3);color:var(--on-dark-soft);border-color:var(--ink-bg-3)}
+
+/* ---------- tables ---------- */
+.tbl-wrap{margin:24px 0;border:1px solid var(--rule-strong);border-radius:12px;overflow-x:auto;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:.86rem;min-width:560px}
+caption{caption-side:top;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);padding:14px 16px 0}
+thead th{background:var(--ink);color:var(--on-dark);font-weight:600;font-size:.74rem;letter-spacing:.02em;text-align:right;padding:11px 14px;border-bottom:1px solid var(--ink-bg-3);white-space:nowrap}
+thead th:first-child{text-align:left}
+tbody td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--rule);color:var(--ink-soft);white-space:nowrap}
+tbody td:first-child{text-align:left;color:var(--ink);font-weight:500}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:nth-child(even) td{background:#FAF8F3}
+tbody tr.hl td{background:var(--adobe-wash);color:var(--adobe-deep);font-weight:600}
+tbody tr.hl td:first-child{color:var(--adobe-deep)}
+tbody tr.tot td{background:var(--ink-bg-2);color:var(--on-dark);font-weight:700;border-bottom:none}
+tbody tr.tot td:first-child{color:var(--on-dark)}
+.num-pos{color:var(--pos);font-weight:600}
+.num-neg{color:var(--neg);font-weight:600}
+td .mono,th .mono{font-family:'JetBrains Mono',monospace}
+
+/* ---------- stat grid ---------- */
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:24px 0}
+.stat{border:1px solid var(--rule-strong);border-radius:11px;padding:17px 18px;background:#fff}
+.stat .k{font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:7px;line-height:1.3}
+.stat .v{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;color:var(--ink);letter-spacing:-0.02em;line-height:1}
+.stat .v small{font-size:.66rem;color:var(--ink-soft);font-weight:500}
+.stat .sub{font-size:.72rem;color:var(--ink-faint);margin-top:6px;line-height:1.35}
+
+/* ---------- CAP spectrum signature ---------- */
+.spectrum-block{background:var(--ink-bg-2);border:1px solid var(--ink-bg-3);border-radius:16px;padding:30px 28px 26px;margin:26px 0;color:var(--on-dark)}
+.spectrum-block .cap-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--on-dark-faint);margin-bottom:22px}
+.ruler{position:relative;height:34px;border-radius:8px;background:linear-gradient(90deg,#3A3D47 0%,#3A3D47 6%,#3F4C6B 24%,#0E6E78 44%,#3F6E1E 60%,#9A6A12 78%,#C7311F 100%);margin:38px 0 10px}
+.ruler .zonelab{position:absolute;top:-26px;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.04em;color:var(--on-dark-faint);white-space:nowrap}
+.ruler .tick{position:absolute;bottom:-22px;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:.64rem;color:var(--on-dark-soft)}
+.ruler .tick::before{content:"";position:absolute;top:-26px;left:50%;width:1px;height:8px;background:rgba(255,255,255,.3)}
+.marker{position:absolute;top:50%;transform:translate(-50%,-50%);z-index:3}
+.marker .dot{width:15px;height:15px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.35)}
+.marker .flag{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:700;padding:3px 7px;border-radius:5px;letter-spacing:.01em}
+.marker.market .dot{background:#E8E6DF}
+.marker.market .flag{bottom:24px;background:#E8E6DF;color:#1A1A1A}
+.marker.bear .dot{background:#E0995F}
+.marker.bear .flag{top:24px;background:#5A3414;color:#F2C79A;border:1px solid #8A5424}
+.marker.bench .dot{background:#FF6F61}
+.marker.bench .flag{bottom:24px;background:#5A1810;color:#FFB3A8;border:1px solid #8A2A1E}
+.spectrum-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:34px;padding-top:18px;border-top:1px solid var(--ink-bg-3);font-size:.78rem;color:var(--on-dark-soft)}
+.spectrum-legend .li{display:flex;align-items:center;gap:7px}
+.spectrum-legend .sw{width:11px;height:11px;border-radius:50%;flex-shrink:0;border:1.5px solid #fff}
+
+/* ---------- flow / diagram bits ---------- */
+.revflow{margin:26px 0;border:1px solid var(--rule-strong);border-radius:14px;overflow:hidden;background:#fff}
+.revflow .src{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--rule)}
+.revflow .src:last-child{border-bottom:none}
+.revflow .bar{height:30px;border-radius:6px;display:flex;align-items:center;padding:0 11px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:.74rem;font-weight:700;min-width:54px;flex-shrink:0}
+.revflow .desc{flex:1;font-size:.86rem;line-height:1.45;color:var(--ink-soft)}
+.revflow .desc b{color:var(--ink);font-weight:700}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.chip{font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:5px 11px;border-radius:20px;border:1px solid var(--rule-strong);background:#fff;color:var(--ink-soft)}
+.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* five forces */
+.forces{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:24px 0}
+.force{border:1px solid var(--rule-strong);border-radius:12px;padding:17px 18px;background:#fff}
+.force .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.force .nm{font-weight:700;font-size:.95rem}
+.force .rate{font-family:'JetBrains Mono',monospace;font-size:.64rem;font-weight:700;padding:3px 8px;border-radius:5px;letter-spacing:.04em}
+.r-lo{background:var(--pos-wash);color:#135733;border:1px solid #BFE0CC}
+.r-md{background:var(--warn-wash);color:#7A5400;border:1px solid #E8D2A0}
+.r-hi{background:var(--neg-wash);color:#8A291A;border:1px solid #EDC9BD}
+.force p{font-size:.82rem;line-height:1.5;color:var(--ink-soft);margin:0}
+
+/* SWOT */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0}
+.swot .q{border-radius:12px;padding:18px 19px;border:1px solid}
+.swot .q h4{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 11px;font-weight:700}
+.swot .q ul{margin:0;padding-left:17px}
+.swot .q li{font-size:.84rem;line-height:1.5;margin-bottom:7px}
+.swot .s{background:var(--pos-wash);border-color:#BFE0CC;color:#163E2A}
+.swot .s h4{color:var(--pos)}
+.swot .w{background:var(--neg-wash);border-color:#EDC9BD;color:#5A2417}
+.swot .w h4{color:var(--neg)}
+.swot .o{background:#EAF1FB;border-color:#C4D6F0;color:#1A3454}
+.swot .o h4{color:var(--blue)}
+.swot .t{background:var(--warn-wash);border-color:#E8D2A0;color:#5A4410}
+.swot .t h4{color:var(--warn)}
+
+/* scenario cards */
+.scen{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:24px 0}
+.scn{border-radius:13px;padding:20px;border:1px solid;background:#fff}
+.scn .tag{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:12px}
+.scn .big{font-family:'JetBrains Mono',monospace;font-size:1.9rem;font-weight:700;letter-spacing:-0.02em;line-height:1;margin-bottom:4px}
+.scn .cap-l{font-size:.78rem;color:var(--ink-faint);margin-bottom:13px}
+.scn ul{margin:0;padding-left:16px}
+.scn li{font-size:.8rem;line-height:1.45;color:var(--ink-soft);margin-bottom:5px}
+.scn.bull{border-color:#BFE0CC}.scn.bull .tag{color:var(--pos)}.scn.bull .big{color:var(--pos)}
+.scn.base{border-color:var(--rule-strong)}.scn.base .tag{color:var(--ink-soft)}.scn.base .big{color:var(--ink)}
+.scn.bear{border-color:#EDC9BD}.scn.bear .tag{color:var(--neg)}.scn.bear .big{color:var(--neg)}
+
+/* value chain */
+.vchain{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:24px 0;border:1px solid var(--rule-strong);border-radius:13px;overflow:hidden}
+.vchain .node{flex:1 1 140px;padding:16px 15px;border-right:1px solid var(--rule);background:#fff;position:relative}
+.vchain .node:last-child{border-right:none}
+.vchain .node.adobe{background:var(--ink-bg-2)}
+.vchain .node .stg{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:7px}
+.vchain .node.adobe .stg{color:#FF8A7A}
+.vchain .node .nm2{font-weight:700;font-size:.9rem;margin-bottom:5px;color:var(--ink)}
+.vchain .node.adobe .nm2{color:var(--on-dark)}
+.vchain .node .ds{font-size:.74rem;line-height:1.4;color:var(--ink-soft)}
+.vchain .node.adobe .ds{color:var(--on-dark-soft)}
+
+/* pull quote */
+.pull{font-family:'Newsreader',serif;font-size:clamp(1.4rem,3vw,1.95rem);line-height:1.4;font-weight:400;color:var(--ink);margin:38px 0;padding-left:22px;border-left:3px solid var(--adobe);font-style:italic}
+section.dark .pull{color:var(--on-dark);border-left-color:#FF6F61}
+
+/* mini bar viz */
+.barlist{margin:20px 0}
+.barrow{display:flex;align-items:center;gap:12px;margin-bottom:11px}
+.barrow .lbl{width:130px;flex-shrink:0;font-size:.82rem;color:var(--ink-soft);text-align:right;line-height:1.2}
+.barrow .track{flex:1;height:24px;background:var(--paper-2);border-radius:5px;overflow:hidden;position:relative}
+.barrow .fill{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:9px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700}
+
+.divider-note{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-faint);letter-spacing:.02em;margin-top:12px;padding-top:12px;border-top:1px dashed var(--rule-strong)}
+section.dark .divider-note{color:var(--on-dark-faint);border-top-color:var(--ink-bg-3)}
+
+/* footer */
+footer{background:var(--ink-bg);color:var(--on-dark-soft);padding:40px 0 48px;font-size:.82rem;line-height:1.6}
+footer .wrap{max-width:var(--maxw)}
+footer b{color:var(--on-dark)}
+footer .ftnote{font-size:.74rem;color:var(--on-dark-faint);margin-top:14px;line-height:1.55}
+
+@media(max-width:720px){
+  body{font-size:16px}
+  .swot{grid-template-columns:1fr}
+  .sec-body{max-width:100%}
+  .barrow .lbl{width:92px;font-size:.74rem}
+  .hero{padding:54px 0 48px}
+  .tickerstrip .cell{flex:1 1 50%}
+}
+
+/* ============================================================
+   DARK-SECTION CONTAINMENT FIX
+   The three dark-section text rules above are wrapped in :where()
+   (specificity 0). Every light-background component nested inside
+   section.dark must therefore re-assert its OWN colors below so a
+   light box can never inherit the section's light text.
+   ============================================================ */
+/* section intro lead stays light on the dark background */
+section.dark .lead{color:var(--on-dark-soft)}
+
+/* callouts: inner text follows the callout's own color in ANY section */
+.callout p,.callout li{color:inherit}
+.callout em{color:inherit;background:linear-gradient(transparent 62%, rgba(120,90,20,.22) 62%)}
+.co-key em{background:linear-gradient(transparent 62%, rgba(169,155,240,.40) 62%)}
+
+/* force cards are always white-bg: pin dark text regardless of section */
+.force .nm{color:var(--ink)}
+
+/* tables inside dark sections: dark-themed rows, light text */
+section.dark .tbl-wrap{background:var(--ink-bg-2);border-color:var(--ink-bg-3)}
+section.dark caption{color:var(--on-dark-faint)}
+section.dark thead th{background:var(--ink-bg-3);color:var(--on-dark);border-bottom-color:#0c0d10}
+section.dark tbody td{color:var(--on-dark-soft);border-bottom-color:var(--ink-bg-3)}
+section.dark tbody td:first-child{color:var(--on-dark)}
+section.dark tbody tr:nth-child(even) td{background:rgba(255,255,255,.035)}
+section.dark tbody tr.hl td{background:rgba(255,138,122,.13);color:#FFD9D2}
+section.dark tbody tr.hl td:first-child{color:#FFB3A8}
+section.dark tbody tr.tot td{background:var(--ink-bg-3);color:var(--on-dark)}
+section.dark .num-pos{color:#7FD8A2}
+section.dark .num-neg{color:#FF9A8A}
+
+/* stats inside dark sections */
+section.dark .stat{background:var(--ink-bg-2);border-color:var(--ink-bg-3)}
+section.dark .stat .k{color:var(--on-dark-faint)}
+section.dark .stat .v{color:var(--on-dark)}
+section.dark .stat .v small{color:var(--on-dark-soft)}
+section.dark .stat .sub{color:var(--on-dark-faint)}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="wrap">
+    <div class="brandmark">
+      <svg class="tri" viewBox="0 0 30 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.7 0H30L18 26h-6.6L18.7 0Z" fill="#E2231A"/><path d="M11.3 0H0l12 26h6.6L11.3 0Z" fill="#17181C" opacity=".82"/><path d="M15 9.4 19.2 19h-2.9l-1.3-3.1h-3L15 9.4Z" fill="#FBFAF7"/></svg>
+      <span>EQUITY DOSSIER · ADBE</span>
+    </div>
+    <div class="meta">CAP 프레임워크 심층 분석<br>기준일 2026-06-26 · 종가 $202.73</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Adobe Inc. · NASDAQ: ADBE · 응용 소프트웨어</div>
+    <h1>창의성을 파는 제국,<br>시장은 <span class="red">'멈춘 회사'</span>로 값을 매겼다</h1>
+    <p class="tagline">매출총이익률 89%, 연 11% 성장, 자본이 거의 들지 않는 구독 프랜차이즈. 그런데 현재 주가가 회사에 부여하는 '경쟁우위 지속 기간'은 사실상 0년에 가깝다 — 마치 더 이상 성장하지도, 우위를 지키지도 못할 회사처럼.</p>
+
+    <div class="tickerstrip">
+      <div class="cell"><div class="k">종가 (6/26)</div><div class="v">$202.73</div></div>
+      <div class="cell"><div class="k">52주 고점 대비</div><div class="v dn">−48%</div></div>
+      <div class="cell"><div class="k">시가총액</div><div class="v">$80.6<small>B</small></div></div>
+      <div class="cell"><div class="k">선행 P/E</div><div class="v">~8<small>x</small></div></div>
+      <div class="cell"><div class="k">FY25 매출</div><div class="v">$23.8<small>B</small></div></div>
+      <div class="cell"><div class="k">영업현금흐름</div><div class="v">$10.5<small>B</small></div></div>
+      <div class="cell"><div class="k">ROIC</div><div class="v">37–60<small>%</small></div></div>
+      <div class="cell"><div class="k">시장내재 CAP</div><div class="v dn">~0<small>년</small></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="toc">
+  <div class="wrap">
+    <div class="row">
+      <a href="#s1"><span class="n">01</span>핵심요약</a>
+      <a href="#s2"><span class="n">02</span>기업개요</a>
+      <a href="#s3"><span class="n">03</span>수익구조</a>
+      <a href="#s4"><span class="n">04</span>제품·기술력</a>
+      <a href="#s5"><span class="n">05</span>산업분석</a>
+      <a href="#s6"><span class="n">06</span>경제적해자</a>
+      <a href="#s7"><span class="n">07</span>피어비교</a>
+      <a href="#s8"><span class="n">08</span>시장내러티브</a>
+      <a href="#s9"><span class="n">09</span>재무·DCF</a>
+      <a href="#s10"><span class="n">10</span>내재CAP</a>
+      <a href="#s11"><span class="n">11</span>BullCase</a>
+      <a href="#s12"><span class="n">12</span>BearCase</a>
+      <a href="#s13"><span class="n">13</span>SWOT</a>
+      <a href="#s14"><span class="n">14</span>경영진</a>
+      <a href="#s15"><span class="n">15</span>종합판단</a>
+      <a href="#lim"><span class="n">+</span>한계와가정</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== 1. EXECUTIVE SUMMARY ===================== -->
+<section id="s1">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">01</div>
+      <div>
+        <div class="sec-kicker">Executive Summary</div>
+        <h2 class="sec-title">핵심 요약</h2>
+      </div>
+    </div>
+    <div class="sec-body">
+      <p class="lead">어도비는 포토샵·일러스트레이터·PDF로 대표되는, 전 세계 창작자와 기업이 매달 구독료를 내고 쓰는 '창의성·문서 작업의 표준 인프라'다. 사업은 여전히 건강하지만, 주가는 AI가 이 회사의 존재 이유를 무너뜨릴 것이라는 공포에 짓눌려 — 회사의 미래 경쟁우위를 거의 0으로 가정하는 수준까지 떨어졌다.</p>
+
+      <div class="callout co-key">
+        <span class="label">한 문장 요약</span>
+        <p><strong>어도비(ADBE)는 매출총이익률 89%·영업현금흐름 100억 달러·ROIC 37~60%를 내는 소프트웨어 프랜차이즈이지만, 2026년 6월 현재 시장은 이 회사를 '성장이 멈추고 경쟁우위도 곧 사라질 회사'로 가격 책정하고 있다.</strong> CAP 프레임워크로 역산하면, 현재 주가 $202.73에 내재된 시장 기대 경쟁우위 기간(CAP)은 <strong>사실상 0~1년</strong>이다.</p>
+      </div>
+
+      <h3>이 보고서가 답하는 질문</h3>
+      <p>비전공자도 이 한 편으로 다음을 전부 이해하도록 구성했다 — (1) 어도비가 정확히 무엇을 하고 어떻게 돈을 버는지, (2) 어떤 기술과 제품이 해자를 만드는지, (3) 산업에서 어디에 위치하는지, (4) 왜 시장 자금이 이 회사를 둘러싸고 격렬하게 충돌하는지, (5) 그리고 현재 가격이 회사에 거는 기대가 합리적인지.</p>
+
+      <h3>왜 지금 이 회사가 흥미로운가 — 균형 잡힌 시각</h3>
+      <p>사용자가 기업을 볼 때 부정적으로 기우는 경향을 보정하기 위해, 이 보고서는 <em>시장이 놓치고 있을 수 있는 긍정 요인의 균형을 의도적으로 복원</em>한다. 단, 근거 없는 낙관은 배제하고 모든 주장을 데이터에 묶었다. 핵심은 이렇다 — 약세론(AI 상품화, 구독 성장 둔화, 리더십 공백, 캔바·피그마)은 <strong>진짜이고 정직하게 다뤄야 한다.</strong> 하지만 강세론(IP가 안전한 파이어플라이, 모델 오케스트레이션 전략, 포맷·기업 락인 해자) <strong>또한 실체가 있다.</strong> 그리고 프레임워크가 드러내는 사실은 분명하다 — 시장의 기대치가 비정상적으로 낮게 설정되어 있다.</p>
+
+      <div class="callout co-key">
+        <span class="label">시장내재 CAP 결론 (미리보기)</span>
+        <p>마이크로소프트 같은 우량 소프트웨어 기업에 시장이 부여하는 CAP는 보통 <strong>17~18년</strong>이다. 프레임워크 기준상 CAP 5년 미만은 "극도로 비관적 = 매수 후보" 구간이다. <strong>어도비의 시장내재 CAP는 약 0~1년으로, 이 비관 구간의 바닥보다도 아래에 있다.</strong></p>
+        <p style="margin-bottom:0">바꿔 말하면 — 어도비의 해자가 단 <strong>5~8년</strong>만 지속된다고 보아도 내재가치는 $273~$304로, 현재가 대비 <strong>+34~50%</strong>의 괴리가 발생한다. 시장은 "해자가 거의 없다"에 베팅하고 있고, 그 베팅이 옳은지가 이 투자의 전부다.</p>
+      </div>
+
+      <div class="statgrid">
+        <div class="stat"><div class="k">시장내재 CAP</div><div class="v">~0–1<small>년</small></div><div class="sub">MS 벤치마크 17–18년 대비 극단적</div></div>
+        <div class="stat"><div class="k">무성장 가치</div><div class="v">~$195</div><div class="sub">현재가가 거의 무성장 영구가치</div></div>
+        <div class="stat"><div class="k">CAP 8년 가정 시</div><div class="v">$304</div><div class="sub">현재가 대비 +50%</div></div>
+        <div class="stat"><div class="k">밸류에이션 신뢰도</div><div class="v" style="font-size:1.05rem;line-height:1.3"><span class="conf hi">높음 ~80%</span></div><div class="sub">방향성 결론에 대한 확신</div></div>
+      </div>
+
+      <p>아래 본문은 이 결론에 이르는 모든 근거를 — 사업·기술·산업·경쟁·재무·심리의 순서로 — 비전공자 눈높이에서 깊게 풀어낸다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 2. COMPANY OVERVIEW ===================== -->
+<section id="s2">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">02</div>
+      <div>
+        <div class="sec-kicker">Company Overview</div>
+        <h2 class="sec-title">기업 개요</h2>
+      </div>
+    </div>
+    <div class="sec-body">
+      <h3>한 줄로: 어도비는 무엇을 하는 회사인가</h3>
+      <p>어도비는 <strong>"무언가를 만들고(create), 다듬고(edit), 문서로 주고받고(document), 그 결과를 고객에게 전달(deliver)하는" 디지털 작업의 도구를 파는 회사</strong>다. 비유하자면, 목수에게 망치와 톱과 작업대를 파는 회사가 아니라, <em>전 세계의 모든 디자이너·영상편집자·마케터·사무직이 매일 손에 쥐는 '디지털 연장통' 자체를 독점에 가깝게 공급하는 회사</em>다. 그리고 그 연장을 한 번 사고 마는 게 아니라, 매달 구독료를 내고 빌려 쓰게 만들었다는 점이 핵심이다.</p>
+
+      <h3>설립 배경과 역사 — 40년의 세 번의 변신</h3>
+      <p>어도비는 1982년, 제록스 팰로앨토 연구소(PARC) 출신 엔지니어 <strong>존 워녹(John Warnock)</strong>과 <strong>찰스 게쉬케(Charles Geschke)</strong>가 세웠다. 회사 이름은 게쉬케 집 뒤를 흐르던 '어도비 크리크(Adobe Creek)'라는 개울에서 따왔다. 두 사람은 PARC에서 '화면에 보이는 것을 그대로 종이에 인쇄하는' 기술을 연구하다가, 회사가 이를 상품화하지 않자 직접 창업했다.</p>
+      <p>어도비의 40년은 <strong>세 번의 큰 변신</strong>으로 요약된다. 이 역사를 이해하면 "지금 어도비가 또 한 번의 변신 앞에 서 있다"는 현재 상황의 의미가 또렷해진다.</p>
+
+      <div class="revflow">
+        <div class="src"><div class="bar mono" style="background:#5B3FD6">1기</div><div class="desc"><b>인쇄 혁명 (1982~1990년대):</b> 포스트스크립트(PostScript)라는 '프린터가 알아듣는 언어'와 폰트 기술로 데스크톱 출판(DTP) 시대를 열었다. 1993년 <b>PDF</b>를 발명해 "어떤 컴퓨터에서 열어도 똑같이 보이는 문서"라는 전 세계 표준을 만들었다.</div></div>
+        <div class="src"><div class="bar mono" style="background:#2E63D6">2기</div><div class="desc"><b>창작 도구 제국 (1990~2010년대):</b> 포토샵(1990)·일러스트레이터·프리미어 등을 묶어 'Creative Suite'라는 패키지 소프트웨어로 팔며 창작 산업의 표준이 됐다. "포토샵하다(to photoshop)"가 동사가 될 정도의 문화적 지배력.</div></div>
+        <div class="src"><div class="bar mono" style="background:#0E8C86">3기</div><div class="desc"><b>구독 전환 (2013~):</b> 현 CEO 샨타누 나라옌이 주도해, 한 번 파는 패키지를 <b>매달 돈을 받는 클라우드 구독(Creative Cloud)</b>으로 전면 전환. 주가를 25배로 키운 소프트웨어 역사상 가장 성공한 비즈니스 모델 전환 사례로 꼽힌다.</div></div>
+        <div class="src"><div class="bar mono" style="background:#E2231A">4기?</div><div class="desc"><b>AI 전환 (2023~, 진행 중):</b> 생성형 AI '파이어플라이(Firefly)'를 출시하며 네 번째 변신을 시도. <b>바로 이 전환의 성패에 대한 의심이 현재 주가 폭락의 핵심</b>이다.</div></div>
+      </div>
+
+      <h3>현재의 규모와 위상</h3>
+      <p>어도비는 오늘날 매출 기준 세계 최대 소프트웨어 기업 중 하나다. 2025 회계연도(2025년 11월 종료) 매출은 <strong>237.7억 달러(약 33조 원)</strong>, 직원 수는 약 3만 명, 본사는 캘리포니아 새너제이에 있다. 무엇보다 인상적인 것은 <em>돈을 버는 효율</em>이다 — 매출의 89%가 원가를 떼고 남는 매출총이익이고, 영업이익률은 회계기준으로 37%, 일회성 비용을 제외한 조정 기준으로는 44%를 넘는다.</p>
+
+      <div class="statgrid">
+        <div class="stat"><div class="k">설립</div><div class="v" style="font-size:1.3rem">1982</div><div class="sub">새너제이, 캘리포니아</div></div>
+        <div class="stat"><div class="k">FY25 매출</div><div class="v">$23.8<small>B</small></div><div class="sub">전년 대비 +10.5%</div></div>
+        <div class="stat"><div class="k">매출총이익률</div><div class="v">89.3<small>%</small></div><div class="sub">소프트웨어 특유의 초고마진</div></div>
+        <div class="stat"><div class="k">구독 매출 비중</div><div class="v">94<small>%+</small></div><div class="sub">예측 가능한 반복 매출</div></div>
+        <div class="stat"><div class="k">총 ARR</div><div class="v">$27.1<small>B</small></div><div class="sub">연간반복매출, +12.5%</div></div>
+        <div class="stat"><div class="k">전체 월 사용자</div><div class="v">850<small>M+</small></div><div class="sub">무료 포함, +17%</div></div>
+      </div>
+
+      <div class="callout co-note">
+        <span class="label">비전공자를 위한 용어 — ARR이란?</span>
+        <p style="margin-bottom:0"><strong>ARR(Annual Recurring Revenue, 연간반복매출)</strong>은 "지금 이 순간의 구독 고객들이 1년간 꼬박꼬박 낼 돈을 연 단위로 환산한 값"이다. 넷플릭스가 "지금 구독자 × 연 구독료"를 계산하는 것과 같다. 한 번 팔고 끝나는 매출과 달리, ARR은 <em>이미 확보된 미래 매출</em>이라 예측 가능성이 높고, 그래서 투자자들이 소프트웨어 기업을 볼 때 가장 중시하는 지표다. 어도비의 ARR이 '성장 둔화'를 보이기 시작한 것이 바로 주가 폭락의 방아쇠였다(8장에서 상술).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 3. REVENUE STRUCTURE ===================== -->
+<section id="s3" class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">03</div>
+      <div>
+        <div class="sec-kicker">Revenue Architecture</div>
+        <h2 class="sec-title">수익 구조 — 어떻게 돈을 버는가</h2>
+      </div>
+    </div>
+    <div class="sec-body wide">
+      <p class="lead" style="max-width:780px;color:var(--on-dark-soft)">어도비의 수익 모델은 한마디로 <em>"전 세계가 매달 내는 구독료"</em>다. 거의 모든 매출(94%+)이 한 번 파는 게 아니라 매달·매년 반복되는 구독에서 나온다. 이것이 어도비를 그토록 '예측 가능하고 현금 잘 버는' 회사로 만드는 비결이다.</p>
+
+      <h3 style="max-width:780px">돈이 흘러 들어오는 세 갈래</h3>
+      <p style="max-width:780px">2026 회계연도부터 어도비는 회계 보고 단위를 단일 사업부로 통합했지만, 사업의 실체는 여전히 크게 <strong>세 개의 매출 엔진</strong>으로 나뉜다. 비전공자를 위해 각 엔진이 "누구에게 무엇을 팔아 돈을 받는지"로 풀어보면 다음과 같다.</p>
+
+      <div class="revflow" style="background:var(--ink-bg-2);border-color:var(--ink-bg-3)">
+        <div class="src" style="border-color:var(--ink-bg-3)">
+          <div class="bar mono" style="background:#5B3FD6;width:74%">Digital Media ~74%</div>
+          <div class="desc" style="color:var(--on-dark-soft)"><b style="color:var(--on-dark)">크리에이티브 클라우드 + 도큐먼트 클라우드.</b> 디자이너·영상편집자가 쓰는 포토샵·일러스트레이터·프리미어(Creative Cloud)와, 모든 사무직이 쓰는 PDF·전자서명 도구 아크로뱃(Document Cloud). 개인·기업이 매달 구독료를 낸다. 회사의 심장.</div>
+        </div>
+        <div class="src" style="border-color:var(--ink-bg-3)">
+          <div class="bar mono" style="background:#0E8C86;width:25%">Digital Exp. ~25%</div>
+          <div class="desc" style="color:var(--on-dark-soft)"><b style="color:var(--on-dark)">익스피리언스 클라우드.</b> 대기업의 마케팅 부서가 고객 데이터를 모으고, 웹사이트·광고·이메일을 관리하고, 누구에게 무엇을 보여줄지 결정하는 'B2B 마케팅 운영 시스템'. FY25 매출 약 58.6억 달러. 세일즈포스·SAP와 경쟁.</div>
+        </div>
+        <div class="src" style="border-color:var(--ink-bg-3)">
+          <div class="bar mono" style="background:#9A968C;width:8%;color:#1A1A1A">기타 ~1%</div>
+          <div class="desc" style="color:var(--on-dark-soft)"><b style="color:var(--on-dark)">퍼블리싱·광고 등.</b> 비중은 작지만 레거시 사업. 2026년 2분기 이 부문에서 소액의 영업권 손상(goodwill impairment)이 발생하기도 했다.</div>
+        </div>
+      </div>
+
+      <div class="callout co-key" style="max-width:780px">
+        <span class="label">왜 '구독 모델'이 중요한가 — 수익의 질</span>
+        <p style="margin-bottom:0">예전처럼 포토샵을 60만 원에 한 번 팔면, 그 고객이 3년 뒤 새 버전을 살지는 알 수 없다(불확실·들쭉날쭉). 구독으로 바꾸면 같은 고객이 <strong>매달 꼬박꼬박</strong> 내므로, 매출이 (1) 예측 가능하고 (2) 끊기지 않으며 (3) 가격 인상·상위 요금제 유도로 1인당 매출을 꾸준히 키울 수 있다. 어도비의 영업현금흐름이 100억 달러를 넘고 매년 자사주를 대규모로 사들일 수 있는 근본 이유가 바로 이 구독 모델의 '수익의 질'이다.</p>
+      </div>
+
+      <h3 style="max-width:780px">고객은 누구인가 — 두 개의 고객군</h3>
+      <p style="max-width:780px">2026년부터 어도비는 고객을 <strong>두 그룹</strong>으로 나눠 성과를 공개한다. 흥미로운 것은 <em>덜 전문적인 쪽이 더 빠르게 성장</em>한다는 점이다.</p>
+
+      <div class="barlist" style="max-width:780px">
+        <div class="barrow"><div class="lbl" style="color:var(--on-dark-soft)">크리에이티브·<br>마케팅 전문가</div><div class="track" style="background:var(--ink-bg-3)"><div class="fill" style="width:71%;background:#5B3FD6">분기 $4.54B · +13%</div></div></div>
+        <div class="barrow"><div class="lbl" style="color:var(--on-dark-soft)">비즈니스 전문가·<br>일반 소비자</div><div class="track" style="background:var(--ink-bg-3)"><div class="fill" style="width:82%;background:#0E8C86">분기 $1.85B · +15% (더 빠름)</div></div></div>
+      </div>
+      <p style="max-width:780px;font-size:.92rem;color:var(--on-dark-soft)">'비즈니스 전문가·소비자' 그룹은 아크로뱃(PDF), 어도비 익스프레스(간편 디자인) 등을 쓰는, 디자인을 전업으로 하지 않는 수억 명의 일반 사무직·개인이다. 이 대중 시장이 더 빠르게 크고 있다는 것은 <strong>어도비가 전문가를 넘어 '모두의 도구'로 확장 중</strong>이라는 긍정 신호다.</p>
+
+      <h3 style="max-width:780px">지역 분포</h3>
+      <p style="max-width:780px">어도비는 미주(Americas)에서 매출의 약 절반 이상을, 나머지를 EMEA(유럽·중동·아프리카)와 APAC(아시아·태평양)에서 균형 있게 거둔다. 전 세계 디지털화·생산성 향상이라는 거대한 흐름에 폭넓게 노출돼 있어, 특정 지역 경기에 대한 의존도가 낮은 편이다.</p>
+
+      <div class="divider-note">매출 구성 비율은 통합 회계 보고 이전(FY25 기준) 사업부 구조를 바탕으로 추정. 출처: 어도비 FY2025 연간보고서·실적발표.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 4. PRODUCTS & TECHNOLOGY ===================== -->
+<section id="s4">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">04</div>
+      <div>
+        <div class="sec-kicker">Products & Technology</div>
+        <h2 class="sec-title">제품·서비스 및 기술력</h2>
+      </div>
+    </div>
+    <div class="sec-body">
+      <p class="lead">어도비의 진짜 자산은 소프트웨어 코드가 아니라 <em>표준</em>이다. PDF·PSD 같은 파일 형식, 포토샵·일러스트레이터 같은 작업 흐름이 전 세계 산업의 '기본 문법'이 되어버렸다는 것 — 이것이 경쟁사가 따라잡기 가장 어려운 부분이다.</p>
+
+      <h3>핵심 제품, 비전공자를 위한 지도</h3>
+      <p>어도비 제품은 수십 개에 달하지만, 투자 관점에서 중요한 것은 몇 개의 기둥이다.</p>
+
+      <h4>① 크리에이티브 클라우드 — 창작의 표준</h4>
+      <p><strong>포토샵</strong>(사진·이미지 편집), <strong>일러스트레이터</strong>(로고·벡터 그래픽), <strong>프리미어 프로</strong>(영상 편집), <strong>애프터 이펙트</strong>(영상 특수효과), <strong>인디자인</strong>(편집·출판), <strong>라이트룸</strong>(사진 보정) 등의 묶음이다. 핵심은 이것들이 <em>서로 매끄럽게 연결</em>된다는 점 — 포토샵에서 만든 이미지를 일러스트레이터로, 다시 프리미어로 끊김 없이 가져다 쓴다. 전문 창작자에게는 이 통합 작업 흐름을 떠나는 것 자체가 큰 비용이다.</p>
+
+      <h4>② 도큐먼트 클라우드 — PDF라는 전 세계 표준</h4>
+      <p>아크로뱃과 PDF가 여기 속한다. <strong>PDF는 어도비가 발명했지만 1993년 이후 사실상 전 인류의 공용 문서 형식이 됐다.</strong> 운영체제와 웹 브라우저에 PDF 열람 기능이 기본 내장돼 있고, 수억 명이 매일 아크로뱃으로 PDF를 만들고 읽고 서명한다. 이 보편성은 돈으로 살 수 없는 자산이다.</p>
+
+      <h4>③ 익스피리언스 클라우드 — 기업 마케팅의 두뇌</h4>
+      <p>대기업이 "수많은 고객 데이터를 한데 모아, 각 고객에게 딱 맞는 메시지를 적시에 보내는" 일을 자동화하는 시스템이다. 어도비 익스피리언스 플랫폼(AEP)이 핵심으로, 하루 <strong>700억 건</strong>의 고객 프로필 활성화를 처리할 만큼 거대하다.</p>
+
+      <h3 style="margin-top:42px">기술의 핵심 — 파이어플라이와 'AI 역설'</h3>
+      <p>지금 어도비의 운명을 가르는 기술은 단연 <strong>생성형 AI '파이어플라이(Firefly)'</strong>다. 글이나 그림을 입력하면 AI가 새로운 이미지·영상·디자인을 만들어준다. 미드저니나 챗GPT의 이미지 생성과 같은 종류의 기술이다.</p>
+
+      <div class="callout co-bull">
+        <span class="label">파이어플라이의 결정적 차별점 — '안전한 AI'</span>
+        <p>대부분의 생성형 AI는 인터넷에서 긁어모은 — 즉 <strong>저작권이 불분명한</strong> — 이미지로 학습했다. 기업이 이런 AI로 광고를 만들면 나중에 저작권 소송을 당할 위험이 있다. 반면 <strong>파이어플라이는 어도비가 권리를 가졌거나 정식 라이선스한 데이터로만 학습</strong>했고, 어도비는 한발 더 나아가 <em>"우리 AI로 만든 결과물 때문에 소송당하면 우리가 책임진다"는 법적 면책(IP indemnification)</em>까지 제공한다.</p>
+        <p style="margin-bottom:0">이것은 미드저니·스테이블디퓨전이 쉽게 따라 할 수 없는 차별점이다. <strong>대기업·브랜드 입장에서 '상업적으로 안전하게 쓸 수 있는 거의 유일한 생성형 AI'가 파이어플라이</strong>라는 뜻이기 때문이다. <span class="conf hi">높음 ~80%</span></p>
+      </div>
+
+      <div class="callout co-bear">
+        <span class="label">하지만 — 'AI 역설'이라는 약세 논리</span>
+        <p style="margin-bottom:0">반대편 논리도 강력하다. AI가 강력해질수록 <em>"전문 도구로 몇 시간 걸려 하던 일을 누구나 몇 초 만에 공짜로 할 수 있게"</em> 된다. 그러면 포토샵 같은 비싼 전문 도구의 가치와, 그것을 다루는 전문성의 프리미엄이 줄어든다. 즉 <strong>어도비가 AI를 잘 만들수록, 역설적으로 자기 핵심 사업의 해자를 스스로 녹일 수 있다</strong>는 것이 약세론의 핵심이다. 이 긴장은 8·12장에서 깊이 다룬다.</p>
+      </div>
+
+      <h3 style="margin-top:42px">어도비의 진짜 AI 전략 — '심판'이 되려는 시도</h3>
+      <p>여기서 가장 중요한 통찰이 나온다. 어도비는 "우리 AI 모델이 미드저니·구글보다 그림을 더 잘 그린다"는 <em>모델 경쟁</em>을 하지 않는다. 대신 <strong>파이어플라이 안에서 구글 제미나이·이매진, 오픈AI, 런웨이 등 경쟁사의 최고 모델까지 골라 쓸 수 있게</strong> 만들었다.</p>
+
+      <div class="pull">어떤 AI 모델이 최후의 승자가 되든, 창작자가 그 모델을 '불러 쓰는 작업대'는 어도비가 되겠다는 전략. 모델 전쟁의 승패와 무관하게 어도비는 오케스트레이션(지휘) 계층을 차지한다.</div>
+
+      <p>이 전략이 성공하면 어도비는 'AI 모델 경쟁'이라는 피 튀기는 싸움에서 한 발 물러나, <em>모든 모델이 거쳐 가는 길목에서 통행료를 받는</em> 위치에 선다. 실제로 어도비는 런웨이의 Gen-4.5 모델을 독점 제공하고, 파이어플라이 AI 어시스턴트를 챗GPT와 클로드 안에서도 쓸 수 있게 배포하며 이 '편재(ubiquity)' 전략을 밀고 있다. <span class="conf mid">중간 ~65%</span> — 전략의 방향은 명확하나 실행 성패는 아직 진행 중.</p>
+
+      <h3 style="margin-top:42px">생산·제공 방식과 자본 효율</h3>
+      <p>어도비는 공장이 필요 없다. 소프트웨어를 한 번 개발하면 추가 고객에게 파는 한계비용이 거의 0이다. 이 '자본 경량(capital-light)' 특성은 숫자로 극명하다 — FY25 매출 237.7억 달러를 버는 데 설비투자(capex)는 단 <strong>1.79억 달러</strong>, 매출의 1%도 안 된다. 번 돈의 대부분이 고스란히 현금흐름으로 남는 구조다.</p>
+
+      <div class="statgrid">
+        <div class="stat"><div class="k">R&D 방향</div><div class="v" style="font-size:1.05rem;line-height:1.3">AI 우선</div><div class="sub">AI-first ARR &gt;$5억, 1년 새 3배</div></div>
+        <div class="stat"><div class="k">파이어플라이 생성</div><div class="v">18<small>B+</small></div><div class="sub">누적 생성 횟수</div></div>
+        <div class="stat"><div class="k">설비투자/매출</div><div class="v">&lt;1<small>%</small></div><div class="sub">자본이 거의 안 드는 사업</div></div>
+        <div class="stat"><div class="k">NVIDIA 협업</div><div class="v" style="font-size:1.05rem;line-height:1.3">온디바이스</div><div class="sub">RTX 기반 포토샵·프리미어 재설계</div></div>
+      </div>
+
+      <div class="callout co-note">
+        <span class="label">기술 해자의 깊이 — 모방 난이도 평가</span>
+        <p style="margin-bottom:0">어도비의 해자는 단일하지 않고 <strong>겹겹이 쌓여</strong> 있다 — (1) 수십 년간 다듬어진 전문 도구의 기능 깊이, (2) PDF·PSD 같은 파일 형식 표준, (3) 제품 간 통합 작업 흐름, (4) 수억 명의 학습된 사용 습관, (5) 기업 데이터·시스템 락인, (6) IP가 안전한 AI 데이터셋. 개별 기능은 모방 가능하지만, <em>이 여섯 겹을 동시에 복제하는 것은 사실상 불가능</em>하다. 다만 AI가 '작업 흐름' 자체를 재정의하면 (1)~(3)의 가치가 부분적으로 무력화될 수 있다는 것이 유일한, 그러나 치명적일 수 있는 위협이다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 5. INDUSTRY ANALYSIS ===================== -->
+<section id="s5">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">05</div>
+      <div>
+        <div class="sec-kicker">Industry Analysis</div>
+        <h2 class="sec-title">산업 분석</h2>
+      </div>
+    </div>
+    <div class="sec-body">
+      <p class="lead">어도비가 속한 산업은 '창작 소프트웨어'와 '디지털 마케팅 소프트웨어'다. 두 산업 모두 거대하고 성장하지만, 지금 <em>생성형 AI라는 지각변동</em>으로 가치사슬 전체가 재편되는 중이다 — 어도비에게는 동시에 가장 큰 기회이자 가장 큰 위협이다.</p>
+
+      <h3>시장 규모(TAM)와 성장성</h3>
+      <p>어도비가 직접 제시한 침투 가능 시장(TAM)은 2021년 기준 약 <strong>2,050억 달러</strong>였고, AI와 에이전트(자동 실행 AI)의 등장으로 그 경계가 더 넓어지고 있다. 창작·문서·마케팅이라는, 디지털 경제의 가장 본질적인 활동을 다루므로 산업 자체의 성장성은 견조하다. 문제는 '시장이 크냐'가 아니라 '그 시장에서 어도비가 계속 통행료를 받을 수 있느냐'다.</p>
+
+      <h3>가치사슬 — 어도비는 어디에 서 있나</h3>
+      <p>창작 콘텐츠가 만들어져 소비자에게 닿기까지의 흐름을 단순화하면 다음과 같다. 어도비의 전략적 위치는 <strong>'AI 모델(원자재)'과 '최종 콘텐츠(완성품)' 사이에서 창작자가 실제로 손을 움직이는 작업대</strong>를 차지하는 것이다.</p>
+
+      <div class="vchain">
+        <div class="node"><div class="stg">상류 (원자재)</div><div class="nm2">AI 기반 모델</div><div class="ds">제미나이·오픈AI·런웨이 등. '그림 그리는 엔진' 그 자체. 경쟁이 가장 치열하고 상품화 위험이 큰 영역.</div></div>
+        <div class="node adobe"><div class="stg">핵심 (작업대)</div><div class="nm2">어도비 ★</div><div class="ds">창작자가 모델을 불러 쓰고, 다듬고, 협업하고, 납품하는 '작업 흐름의 중심'. 어떤 모델이 이기든 여기를 거친다.</div></div>
+        <div class="node"><div class="stg">하류 (배포)</div><div class="nm2">기업·마케팅</div><div class="ds">완성된 콘텐츠를 고객에게 전달·측정·최적화. 어도비 익스피리언스 클라우드가 일부 장악.</div></div>
+        <div class="node"><div class="stg">최종</div><div class="nm2">소비자</div><div class="ds">광고·영상·웹·문서를 소비하는 수십억 명.</div></div>
+      </div>
+
+      <h3>산업의 미래 방향 — 세 가지 흐름</h3>
+      <p>이 산업의 향방을 결정할 거대 트렌드는 셋이다. 각각이 어도비에 양날의 검이라는 점이 핵심이다.</p>
+
+      <h4>흐름 1 · 창작의 민주화</h4>
+      <p>AI가 "누구나 디자이너가 될 수 있게" 만들고 있다. 캔바(Canva) 같은 회사가 비전문가용 간편 도구로 수억 명을 끌어모은 것이 대표 사례. <em>기회</em>: 전체 창작 시장 자체가 폭발적으로 커진다(어도비도 무료 사용자 8천만 명 확보). <em>위협</em>: 전문가용 고가 도구의 필요성이 약해질 수 있다.</p>
+
+      <h4>흐름 2 · 콘텐츠 폭증과 '안전성'의 가치</h4>
+      <p>AI로 콘텐츠가 무한히 쏟아지면서, 역설적으로 <strong>'법적으로 안전하고, 브랜드에 일관되며, 신뢰할 수 있는' 콘텐츠의 가치</strong>가 올라간다. 이것이 어도비의 IP 안전 AI와 기업용 브랜드 관리 도구가 노리는 지점이다.</p>
+
+      <h4>흐름 3 · 검색에서 'AI 답변'으로 (GEO)</h4>
+      <p>사람들이 구글 검색 대신 챗GPT·제미나이에게 직접 물어보기 시작하면서, 기업은 <em>"AI가 답변할 때 우리 브랜드가 언급되게 하는"</em> 새로운 마케팅이 필요해졌다. 이를 '생성 엔진 최적화(GEO)'라 부른다. 어도비는 LLM 옵티마이저·세마라쉬(Semrush, ARR 4.8억 달러 규모, 2026년 4월 인수) 등으로 이 새 시장에 선제적으로 베팅하고 있다. <span class="conf mid">중간 ~60%</span> — 신생 시장이라 성과 입증은 이제 시작.</p>
+
+      <div class="callout co-key">
+        <span class="label">산업 관점 핵심</span>
+        <p style="margin-bottom:0">어도비가 속한 산업은 <strong>죽어가는 산업이 아니라 격렬하게 재편되는 산업</strong>이다. AI는 파이를 키우는 동시에 그 파이를 나누는 규칙을 바꾸고 있다. 투자 판단의 본질은 "이 산업이 망하느냐"가 아니라 <em>"재편된 산업에서도 어도비가 길목을 지킬 수 있느냐"</em>이며, 시장은 현재 '못 지킨다'에 강하게 베팅하고 있다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 6. ECONOMIC MOAT ===================== -->
+<section id="s6" class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">06</div>
+      <div>
+        <div class="sec-kicker">Economic Moat</div>
+        <h2 class="sec-title">경쟁 우위 분석 — 경제적 해자</h2>
+      </div>
+    </div>
+    <div class="sec-body wide">
+      <p class="lead" style="max-width:780px;color:var(--on-dark-soft)">'해자(moat)'란 성을 둘러싼 못처럼, 경쟁자가 쉽게 넘어오지 못하게 막는 구조적 방어막을 뜻한다. 어도비의 해자는 깊고 여러 겹이지만, 지금 AI가 그 못의 물을 빼고 있는지가 논쟁의 핵심이다.</p>
+
+      <h3 style="max-width:780px">포터의 5가지 경쟁 요인</h3>
+      <p style="max-width:780px">산업 경쟁 강도를 분석하는 고전적 틀로 어도비를 평가하면 다음과 같다. 색이 초록일수록 어도비에 유리, 빨강일수록 불리하다.</p>
+
+      <div class="forces">
+        <div class="force"><div class="top"><span class="nm">기존 경쟁</span><span class="rate r-md">중간↑</span></div><p>창작 도구에서 어도비의 지배력은 압도적이나, 캔바·피그마가 인접 영역에서 빠르게 침투. 마케팅 SW에서는 세일즈포스·SAP와 정면 경쟁.</p></div>
+        <div class="force"><div class="top"><span class="nm">신규 진입</span><span class="rate r-lo">낮음</span></div><p>전문 도구의 기능 깊이·표준·통합 작업흐름은 수십 년 축적의 산물. 다만 AI가 진입장벽을 부분적으로 낮추는 새 변수.</p></div>
+        <div class="force"><div class="top"><span class="nm">대체재 위협</span><span class="rate r-hi">높음</span></div><p>가장 큰 위협. 생성형 AI·무료 도구가 "충분히 좋은(good enough)" 대안을 제공. 90% 사용 사례를 공짜로 커버할 수 있다는 공포.</p></div>
+        <div class="force"><div class="top"><span class="nm">구매자 교섭력</span><span class="rate r-md">중간</span></div><p>개인은 전환비용 탓에 교섭력 약함. 대기업은 협상력이 있으나, 표준화·락인으로 어도비가 우위 유지.</p></div>
+        <div class="force"><div class="top"><span class="nm">공급자 교섭력</span><span class="rate r-md">중간</span></div><p>AI 모델·클라우드 인프라에 대한 의존이 새 변수. AI 추론 비용이 구독 원가를 밀어올릴 수 있음(2분기 원가 +13% vs 매출 +11%).</p></div>
+      </div>
+
+      <h3 style="max-width:780px;margin-top:42px">어도비만의 해자 — 무엇이, 왜 지속되는가</h3>
+      <p style="max-width:780px">강점을 단순 나열하지 않고, 각각이 <em>왜 지속 가능하며 경쟁사가 왜 못 따라잡는지</em>를 함께 본다.</p>
+
+      <div class="tbl-wrap" style="background:var(--ink-bg-2);border-color:var(--ink-bg-3)">
+        <table>
+          <caption style="color:var(--on-dark-faint)">어도비의 해자 원천과 지속 가능성</caption>
+          <thead><tr><th>해자 유형</th><th style="text-align:left">왜 강하고, 왜 지속되는가</th></tr></thead>
+          <tbody>
+            <tr><td>전환비용</td><td style="text-align:left">전문가가 수년간 익힌 작업흐름·단축키·파일 호환을 버리는 비용이 막대. 팀 전체가 같은 도구를 써야 협업 가능 → 개인이 이탈하기 어려움.</td></tr>
+            <tr><td>표준·네트워크</td><td style="text-align:left">PDF·PSD가 산업 공용어. OS·브라우저에 내장. 학교·기업이 어도비로 가르치고 채용 → 새 세대가 자동으로 어도비를 배움(자기강화 순환).</td></tr>
+            <tr><td>규모·데이터</td><td style="text-align:left">8.5억+ 월 사용자, 파이어플라이 180억+ 생성. IP가 안전한 학습 데이터는 후발주자가 합법적으로 복제 불가.</td></tr>
+            <tr><td>기업 락인</td><td style="text-align:left">$1천만+ ARR 대형 고객 +20~25%. 마케팅 데이터·시스템이 어도비에 깊이 통합되면 교체가 사실상 불가능.</td></tr>
+            <tr><td>IP 면책 (신규)</td><td style="text-align:left">생성형 AI 결과물의 법적 책임을 어도비가 짐 → 대기업이 안심하고 쓸 수 있는 거의 유일한 옵션. 경쟁사가 모방하려면 데이터셋을 처음부터 합법적으로 구축해야 함.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout co-warn" style="max-width:780px">
+        <span class="label">해자의 지속 가능성 — 정직한 평가</span>
+        <p style="margin-bottom:0">위 다섯 해자 중 <strong>전환비용·표준·작업흐름(상위 3개)은 AI가 작업 방식 자체를 재정의하면 약화될 수 있다.</strong> "포토샵을 능숙히 다루는 능력"의 가치가, "AI에게 말로 시키는" 방식이 보편화되면 줄기 때문이다. 반면 <strong>규모·기업 락인·IP 면책(하위 3개)은 오히려 AI 시대에 더 강해진다.</strong> 따라서 해자가 '사라진다'기보다 <em>'무게중심이 전문가 도구에서 기업 인프라·신뢰로 이동한다'</em>고 보는 것이 정확하다. 시장은 전자(약화)에만 주목하고 후자(강화)를 무시하는 중이다. <span class="conf mid">중간 ~65%</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 7. PEER COMPARISON ===================== -->
+<section id="s7">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">07</div>
+      <div>
+        <div class="sec-kicker">Peer Comparison</div>
+        <h2 class="sec-title">피어그룹 비교</h2>
+      </div>
+    </div>
+    <div class="sec-body">
+      <p class="lead">같은 대형 소프트웨어 기업들과 나란히 놓으면 어도비의 역설이 선명해진다 — <em>수익성은 가장 높은데, 시장이 매기는 값(멀티플)은 가장 낮다.</em> 마치 가장 좋은 물건에 가장 싼 가격표가 붙은 형국이다.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <caption>대형 소프트웨어 피어 비교 (2026년 6월 전후, 추정치 혼재)</caption>
+          <thead><tr><th>지표</th><th>어도비 ADBE</th><th>세일즈포스 CRM</th><th>서비스나우 NOW</th><th>마이크로소프트 MSFT</th></tr></thead>
+          <tbody>
+            <tr><td>연매출 규모</td><td>$23.8B</td><td>$41.5B</td><td>고성장</td><td>초대형</td></tr>
+            <tr><td>매출 성장률</td><td>~11%</td><td>~10%</td><td class="num-pos">~22%</td><td>~14%</td></tr>
+            <tr class="hl"><td>매출총이익률</td><td>89%</td><td>~77%</td><td>~79%</td><td>~70%</td></tr>
+            <tr class="hl"><td>영업이익률(조정)</td><td>~44%</td><td>~34%</td><td>~15%</td><td>~45%</td></tr>
+            <tr><td>선행 P/E</td><td>~8x</td><td>~10x</td><td>~21x</td><td>~30x</td></tr>
+            <tr><td>EV/EBITDA</td><td>~8x</td><td>—</td><td>높음</td><td>높음</td></tr>
+            <tr class="tot"><td>시장의 평가</td><td>녹는 얼음?</td><td>안정 성숙</td><td>고성장 프리미엄</td><td>해자 17–18년</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout co-key">
+        <span class="label">핵심 관찰 — '녹는 얼음(melting ice cube)' 가격</span>
+        <p>어도비는 <strong>매출총이익률(89%)과 영업이익률(44%)이 피어 중 최고 수준</strong>이고 성장률도 두 자릿수인데, 멀티플은 <strong>가장 낮은 약 8배</strong>다. 마이크로소프트가 30배, 서비스나우가 21배를 받는 것과 극명히 대비된다.</p>
+        <p style="margin-bottom:0">8배라는 멀티플은 시장이 어도비를 <em>"수익성은 좋지만 곧 쇠퇴할, 녹아 없어지는 얼음덩어리"</em>로 본다는 뜻이다. 같은 프레임워크 벤치마크에서 MS의 시장내재 CAP가 17~18년인 반면, 어도비는 0~1년 — 동일 산업·동일 우량 프로필인데 시장이 부여하는 '미래 수명'이 정반대다. 이 격차가 합리적인지가 9·10장의 핵심 질문이다.</p>
+      </div>
+
+      <h3>경쟁 구도에서 어도비의 위치</h3>
+      <p>위협 세력을 영역별로 정리하면, 어도비는 사방에서 도전받지만 어느 한 곳에서도 아직 자리를 내주지 않았다.</p>
+
+      <div class="barlist">
+        <div class="barrow"><div class="lbl">캔바<br>(소비자·SMB)</div><div class="track"><div class="fill" style="width:62%;background:#0E8C86">180–200M MAU · 무료화 공세</div></div></div>
+        <div class="barrow"><div class="lbl">피그마<br>(UI/UX 디자인)</div><div class="track"><div class="fill" style="width:48%;background:#2E63D6">상장 FIG · UI 표준 · AI 확장</div></div></div>
+        <div class="barrow"><div class="lbl">생성형 AI<br>(이미지·영상)</div><div class="track"><div class="fill" style="width:72%;background:#E2231A">미드저니·오픈AI·구글 — 상품화 압력</div></div></div>
+        <div class="barrow"><div class="lbl">세일즈포스/SAP<br>(마케팅)</div><div class="track"><div class="fill" style="width:40%;background:#C97E00">익스피리언스 클라우드와 경쟁</div></div></div>
+      </div>
+      <p style="font-size:.92rem;color:var(--ink-soft)"><strong>피그마(FIG)</strong>는 어도비가 2022년 200억 달러에 인수하려다 규제로 무산된 회사로, UI/UX 디자인의 사실상 표준이 됐고 이제 AI 코딩·사이트빌더로 확장 중이다. 어도비의 경쟁 도구 XD가 사실상 실패한 영역이라, 피그마는 어도비가 '놓친 시장'을 상징한다. <strong>캔바</strong>는 어피니티(Affinity)를 인수해 무료로 풀며 어도비의 저변을 공략하고, 2026년 IPO가 거론된다.</p>
+
+      <div class="divider-note">멀티플·성장률은 발표 시점에 따라 변동. 서비스나우·MS의 정확한 매출 규모는 회계기간 차이로 직접 비교에 주의. 출처: 각사 실적발표·시장 데이터(2026년 상반기).</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 8. MARKET NARRATIVE ===================== -->
+<section id="s8" class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">08</div>
+      <div>
+        <div class="sec-kicker">Market Narrative & Capital Flows</div>
+        <h2 class="sec-title">시장 내러티브 및 자금 선호도</h2>
+      </div>
+    </div>
+    <div class="sec-body wide">
+      <p class="lead" style="max-width:780px;color:var(--on-dark-soft)">주가는 펀더멘털만으로 움직이지 않는다. <em>시장이 이 회사에 어떤 '이야기'를 붙이느냐</em>가 자금의 향방을 가른다. 어도비를 둘러싼 내러티브는 지난 1년간 극적으로 뒤집혔다 — 'AI 수혜주'에서 'AI 피해주'로.</p>
+
+      <h3 style="max-width:780px">현재 시장이 어도비에 붙인 '이야기'</h3>
+      <p style="max-width:780px">2023년 초만 해도 어도비는 대표적인 <strong>'AI 수혜주'</strong>였다. 파이어플라이 발표 직후 주가는 사상 최고가 $688(2021년 11월)에 근접하기도 했다. 그러나 2024~2026년을 거치며 내러티브는 정반대로 뒤집혔다. 지금 시장이 어도비에 붙인 이야기는 <strong>"AI에게 잡아먹힐 첫 번째 소프트웨어 대기업"</strong>이다.</p>
+
+      <div class="pull" style="max-width:820px">주가는 사상 최고가 대비 약 70% 하락했고, 52주 고점($392) 대비로도 48% 빠졌다. 실적은 매 분기 사상 최대치를 경신하는데 — 주가만 7년 만의 최저로 추락했다.</div>
+
+      <h3 style="max-width:780px">주가를 무너뜨린 네 가지 방아쇠</h3>
+      <p style="max-width:780px">왜 '비트 앤 레이즈(실적·가이던스 동시 상회)'를 해도 주가가 급락했는지, 그 촉매를 정직하게 짚는다.</p>
+
+      <h4 style="max-width:780px">방아쇠 1 · '프리미엄 무료화' 전략 전환의 충격</h4>
+      <p style="max-width:780px">2026년 어도비는 AI 기능을 <strong>무료로 풀어 사용자 저변을 먼저 키우는</strong> 전략으로 선회하면서, 예정됐던 크리에이티브 클라우드 가격 인상을 미뤘다. 이 결정으로 <em>유기적 ARR 가이던스를 약 2%포인트(약 4.8억 달러) 낮췄고</em>, ARR 성장률이 11.5%→10.9%로 둔화됐다. 시장은 이를 "성장 엔진이 식기 시작했다"는 신호로 받아들였다.</p>
+
+      <h4 style="max-width:780px">방아쇠 2 · 리더십의 이중 공백</h4>
+      <p style="max-width:780px">투자자가 가장 싫어하는 것이 불확실성인데, 어도비는 지금 <strong>CEO와 CFO가 동시에 교체되는 국면</strong>이다. 18년간 회사를 이끌며 매출을 25배로 키운 전설적 CEO <strong>샨타누 나라옌</strong>이 2026년 3월 후임이 정해지면 물러나겠다고 발표했다(이사회 의장으로는 잔류). 6월에는 CFO 댄 던이 마벨로 이직했다. 후임 CEO 후보로는 내부의 데이비드 와드와니·아닐 차크라바르티와 외부 AI 전문가가 거론되며, FY27 사업계획 수립 전 CEO를 앉히는 것이 목표다. <span class="conf hi">높음 ~85%</span> — 사실관계 확인됨.</p>
+
+      <h4 style="max-width:780px">방아쇠 3 · 'AI 역설'에 대한 월가의 항복</h4>
+      <p style="max-width:780px">골드만삭스가 이례적으로 <strong>매도(Sell)</strong> 의견을 냈고, 오펜하이머도 투자의견을 하향했다. 논리는 4장의 'AI 역설' — AI가 강력해질수록 전문 도구의 가치가 상품화된다는 것. 한국 애널리스트들도 같은 '상품화 테제'를 공유한다. 이 비관론이 기관 자금의 이탈을 가속했다.</p>
+
+      <h4 style="max-width:780px">방아쇠 4 · 캔바·피그마의 인접 침투</h4>
+      <p style="max-width:780px">앞서 본 대로, 저변(캔바)과 인접 영역(피그마) 양쪽에서 동시에 압박받는다는 서사가 "포위당한 어도비" 이미지를 강화했다.</p>
+
+      <h3 style="max-width:780px;margin-top:42px">그런데 — 자금이 '여전히 주목하는' 긍정 촉매</h3>
+      <p style="max-width:780px">균형을 위해, 약세 내러티브에 가려졌지만 기관과 애널리스트가 여전히 주시하는 <em>재평가(re-rating) 트리거</em>를 짚는다. 이들이 현실화되면 내러티브가 다시 뒤집힐 수 있다.</p>
+
+      <div class="tbl-wrap" style="background:var(--ink-bg-2);border-color:var(--ink-bg-3)">
+        <table>
+          <caption style="color:var(--on-dark-faint)">잠재적 재평가 트리거와 펀더멘털 뒷받침 여부</caption>
+          <thead><tr><th>긍정 촉매</th><th style="text-align:left">내용과 데이터</th><th>뒷받침</th></tr></thead>
+          <tbody>
+            <tr><td>AI 매출 가속</td><td style="text-align:left">AI-우선 ARR &gt;5억 달러로 1년 새 3배. 파이어플라이 ARR 약 3억(분기 +50%). 아크로뱃 AI 어시스턴트 ARR 약 3배.</td><td><span class="conf hi">강함</span></td></tr>
+            <tr><td>기업 부문 성장</td><td style="text-align:left">GenStudio ARR +25%, AEP+앱 +30%, $1천만+ 고객 +20~25%. 대형 광고대행사(WPP·퍼블리시스 등) 표준 채택.</td><td><span class="conf hi">강함</span></td></tr>
+            <tr><td>GEO 선점</td><td style="text-align:left">LLM 옵티마이저·세마라쉬로 '생성 엔진 최적화' 신시장 베팅. 약 1,500건 에이전트 웹 시범.</td><td><span class="conf mid">초기</span></td></tr>
+            <tr><td>NVIDIA 협업</td><td style="text-align:left">RTX 온디바이스 AI로 포토샵·프리미어 재설계. 일부에서 어도비의 '생명줄'로 평가.</td><td><span class="conf mid">진행</span></td></tr>
+            <tr><td>대규모 자사주</td><td style="text-align:left">250억 달러 신규 자사주 매입 승인(4월), 약 270억 잔여. 주식 수가 매년 약 6%씩 감소 → EPS 자동 상승.</td><td><span class="conf hi">강함</span></td></tr>
+            <tr><td>내부자 매수</td><td style="text-align:left">주가 급락 중 이사가 190만 달러+ 자사주 매수. 경영진의 자기 확신 신호.</td><td><span class="conf mid">신호</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout co-key" style="max-width:780px">
+        <span class="label">내러티브 종합 — 무엇이 이 주식을 '사고 싶게' 만드는가</span>
+        <p>모멘텀 관점에서 어도비를 사고 싶게 만드는 요인은 <strong>'역발상(contrarian) 가치'</strong>다 — 사상 최대 실적을 내는 우량 기업이 공포에 짓눌려 8배에 거래되고, 회사는 그 가격에 매년 막대한 자사주를 사들이며, 내부자까지 매수에 동참한다. <em>"시장이 과도하게 비관했다"가 증명되는 순간(=AI 매출 가속 또는 새 CEO의 명확한 비전 제시) 강한 재평가가 일어날 수 있는 구조.</em></p>
+        <p style="margin-bottom:0">단, 이 내러티브가 성립하려면 <strong>펀더멘털이 약세 서사를 반증</strong>해야 한다. 현재 데이터(ARR +12.5%, AI ARR 3배, 영업이익률 44.5% 유지)는 '붕괴'보다 '둔화 속 견조'에 가깝다. 즉 약세 내러티브는 <em>현실보다 앞서 있을 가능성</em>이 있으며, 바로 그 간극이 기회의 원천이다. <span class="conf mid">중간 ~65%</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 9. FINANCIALS & DCF ===================== -->
+<section id="s9">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">09</div>
+      <div>
+        <div class="sec-kicker">Financials & DCF Model</div>
+        <h2 class="sec-title">재무 분석 및 DCF 모델</h2>
+      </div>
+    </div>
+    <div class="sec-body wide">
+      <p class="lead" style="max-width:780px">어도비의 재무는 한마디로 <em>'현금 제조기'</em>다. 이제 이 현금흐름을 미래로 투영해 회사의 내재가치를 추정하고(DCF), 그것을 현재 주가와 비교한다.</p>
+
+      <h3 style="max-width:780px">최근 재무 추이 — 꾸준한 성장과 초고수익성</h3>
+      <div class="tbl-wrap">
+        <table>
+          <caption>어도비 매출·수익성 추이 (회계연도, 11월 종료, $M)</caption>
+          <thead><tr><th>지표</th><th>FY2021</th><th>FY2022</th><th>FY2023</th><th>FY2024</th><th>FY2025</th><th>FY26(E)</th></tr></thead>
+          <tbody>
+            <tr><td>매출</td><td>15,785</td><td>17,606</td><td>19,409</td><td>21,505</td><td>23,770</td><td>~26,550</td></tr>
+            <tr><td>매출 성장률</td><td>23%</td><td>12%</td><td>10%</td><td>11%</td><td>10.5%</td><td>~11.7%</td></tr>
+            <tr class="hl"><td>매출총이익률</td><td>88%</td><td>88%</td><td>88%</td><td>89%</td><td>89.3%</td><td>~89%</td></tr>
+            <tr><td>영업현금흐름</td><td>—</td><td>—</td><td>~7.3B</td><td>~8.1B</td><td>10,030</td><td>증가</td></tr>
+            <tr><td>설비투자</td><td>—</td><td>—</td><td>—</td><td>—</td><td>179</td><td>~200</td></tr>
+            <tr class="tot"><td>특징</td><td colspan="6" style="text-align:left">2021년 고성장 → 성숙기 두 자릿수 안정 성장. 마진은 업계 최고 수준 유지. 자본은 거의 들지 않음.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="max-width:780px;font-size:.93rem;color:var(--ink-soft)">참고: FY24 순이익은 피그마 인수 무산 위약금 10억 달러로 일시 훼손됐다가 FY25에 순이익 71.3억 달러(+28%)로 회복. 영업현금흐름(TTM)은 약 104.8억 달러에 이른다.</p>
+
+      <h3 style="max-width:780px;margin-top:42px">WACC — 미래 현금을 현재로 당기는 '할인율'</h3>
+      <p style="max-width:780px">DCF의 핵심 재료는 WACC(가중평균자본비용)다. 쉽게 말해 <em>"미래의 1달러가 지금의 몇 달러 가치인가"를 정하는 할인율</em>이자, 투자자가 이 위험을 감수하는 대가로 요구하는 최소 수익률이다. CAPM 방식으로 산출했다.</p>
+
+      <div class="statgrid" style="max-width:820px">
+        <div class="stat"><div class="k">무위험 이자율 (Rf)</div><div class="v">4.38<small>%</small></div><div class="sub">미 10년 국채 (6/26)</div></div>
+        <div class="stat"><div class="k">베타 (β)</div><div class="v">1.15</div><div class="sub">최근 0.74~5년 1.40 절충</div></div>
+        <div class="stat"><div class="k">시장위험프리미엄</div><div class="v">4.75<small>%</small></div><div class="sub">다모다란 기준 ERP</div></div>
+        <div class="stat"><div class="k">자기자본비용</div><div class="v">9.84<small>%</small></div><div class="sub">Rf + β×ERP</div></div>
+        <div class="stat"><div class="k">세후 부채비용</div><div class="v">3.84<small>%</small></div><div class="sub">부채 비중 8.1%로 작음</div></div>
+        <div class="stat"><div class="k">최종 WACC</div><div class="v">9.36<small>%</small></div><div class="sub">기준 할인율</div></div>
+      </div>
+
+      <h3 style="max-width:780px;margin-top:42px">DCF 본 모델 — 연도별 현금흐름 (전시 23 형식)</h3>
+      <p style="max-width:780px">아래는 기본 시나리오의 10년 명시적 추정이다. 매출이 11%에서 점차 둔화하고, 이익률 38%(EBITA 기준)를 유지하며, 번 돈에서 성장에 필요한 재투자를 뺀 잉여현금흐름(FCF)을 매년 산출해 현재가치로 할인했다.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <caption>기본 시나리오 DCF — 연도별 ($M, FY26=1년차)</caption>
+          <thead><tr><th>연차</th><th>매출</th><th>성장률</th><th>EBITA</th><th>NOPAT</th><th>재투자</th><th>FCF</th><th>현가계수</th><th>FCF 현재가치</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>26,385</td><td>11.0%</td><td>10,026</td><td>8,021</td><td>2,941</td><td>5,080</td><td>1.05</td><td>4,858</td></tr>
+            <tr><td>2</td><td>29,023</td><td>10.0%</td><td>11,029</td><td>8,823</td><td>2,941</td><td>5,882</td><td>1.14</td><td>5,143</td></tr>
+            <tr><td>3</td><td>31,780</td><td>9.5%</td><td>12,077</td><td>9,661</td><td>3,059</td><td>6,602</td><td>1.25</td><td>5,279</td></tr>
+            <tr><td>4</td><td>34,641</td><td>9.0%</td><td>13,163</td><td>10,531</td><td>3,159</td><td>7,372</td><td>1.37</td><td>5,390</td></tr>
+            <tr><td>5</td><td>37,585</td><td>8.5%</td><td>14,282</td><td>11,426</td><td>3,237</td><td>8,189</td><td>1.50</td><td>5,474</td></tr>
+            <tr><td>6</td><td>40,592</td><td>8.0%</td><td>15,425</td><td>12,340</td><td>3,291</td><td>9,049</td><td>1.64</td><td>5,532</td></tr>
+            <tr><td>7</td><td>43,636</td><td>7.5%</td><td>16,582</td><td>13,265</td><td>3,316</td><td>9,949</td><td>1.79</td><td>5,562</td></tr>
+            <tr><td>8</td><td>46,691</td><td>7.0%</td><td>17,742</td><td>14,194</td><td>3,312</td><td>10,882</td><td>1.96</td><td>5,563</td></tr>
+            <tr><td>9</td><td>49,726</td><td>6.5%</td><td>18,896</td><td>15,117</td><td>3,275</td><td>11,841</td><td>2.14</td><td>5,535</td></tr>
+            <tr><td>10</td><td>52,709</td><td>6.0%</td><td>20,030</td><td>16,024</td><td>3,205</td><td>12,819</td><td>2.34</td><td>5,479</td></tr>
+            <tr class="hl"><td colspan="8">명시적 10년 FCF 현재가치 합계</td><td>53,814</td></tr>
+            <tr class="hl"><td colspan="8">잔여가치(페이드 모델) 현재가치</td><td>76,868</td></tr>
+            <tr class="tot"><td colspan="8">기업가치(EV) = 영업가치 합계</td><td>130,682</td></tr>
+            <tr><td colspan="8" style="text-align:left">(−) 순부채</td><td>1,450</td></tr>
+            <tr class="tot"><td colspan="8">주주가치(Equity Value)</td><td>129,232</td></tr>
+            <tr class="hl"><td colspan="8">주당 내재가치 (÷ 3.975억 주)</td><td>$325</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout co-key" style="max-width:820px">
+        <span class="label">DCF 1차 결론</span>
+        <p style="margin-bottom:0">합리적인 기본 가정(성숙기 두 자릿수 성장의 점진적 둔화, 마진 유지, 섹터 페이드 비율 0.22, 약 10년의 명시적 경쟁우위)으로 산출한 주당 내재가치는 <strong>약 $325</strong>로, 현재가 $202.73 대비 <strong>+60%</strong>다. 기업가치의 59%가 잔여가치에서 나오는데, 이는 우량 소프트웨어로서 정상 범위다. <strong>중요한 것은 절대 숫자가 아니라, "현재 주가가 성립하려면 가정이 얼마나 비관적이어야 하는가"이며, 그것을 다음 장에서 역산한다.</strong></p>
+      </div>
+
+      <div class="divider-note">NOPAT=EBITA×(1−세율 20%). 재투자=NOPAT×(성장률/명시적 ROIIC 30%). 연중(mid-year) 할인 적용. 잔여가치는 Counterpoint 페이드 모델(터미널 ROIIC 15%, g 2.5%) 사용. 모든 수치는 본 분석의 가정에 기반한 추정이며 회사 공식 전망이 아님.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 10. MARKET-IMPLIED CAP ===================== -->
+<section id="s10" class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">10</div>
+      <div>
+        <div class="sec-kicker">Market-Implied CAP · The Core Finding</div>
+        <h2 class="sec-title">시장 내재 CAP 역산 및 해석</h2>
+      </div>
+    </div>
+    <div class="sec-body wide">
+      <p class="lead" style="max-width:820px;color:var(--on-dark-soft)">이 보고서의 심장이다. "적정 가치는 얼마인가"를 단정하는 대신, <em>현재 주가가 성립하려면 시장이 어떤 가정을 하고 있어야 하는지</em>를 거꾸로 푼다. 핵심 변수는 CAP — 경쟁우위 지속 기간이다.</p>
+
+      <h3 style="max-width:820px">CAP이란 무엇인가 — 비전공자를 위한 핵심 개념</h3>
+      <p style="max-width:820px"><strong>CAP(Competitive Advantage Period, 경쟁우위 지속 기간)</strong>은 <em>"이 회사가 자본비용을 초과하는 수익(초과이익)을 앞으로 몇 년이나 더 낼 수 있다고 시장이 가정하는가"</em>를 뜻한다. 모든 기업은 결국 경쟁에 의해 초과이익이 깎여 평범해진다. 그 '평범해지기까지의 시간'이 길다고 시장이 믿을수록 주가는 높아진다. 즉 주가에는 시장이 가정한 CAP가 숨어 있고, 우리는 그것을 역산할 수 있다.</p>
+
+      <div class="spectrum-block">
+        <div class="cap-title">시장내재 CAP 스펙트럼 — 어도비는 '얼어붙은' 끝에 있다</div>
+        <div style="display:flex;gap:0;margin-bottom:6px;font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.04em;text-transform:uppercase;color:var(--on-dark-faint)">
+          <div style="flex:0 0 22.7%;border-top:2px solid #C7311F;padding-top:6px;color:#E0995F">극도 비관 · 매수후보<br>&lt;5년</div>
+          <div style="flex:0 0 22.7%;border-top:2px solid #9A6A12;padding-top:6px;margin-left:2px">약간 비관<br>5–10년</div>
+          <div style="flex:0 0 22.7%;border-top:2px solid #3F6E1E;padding-top:6px;margin-left:2px">합리 · 중립<br>10–15년</div>
+          <div style="flex:1;border-top:2px solid #3F4C6B;padding-top:6px;margin-left:2px">약간 낙관 →<br>15–20년+</div>
+        </div>
+
+        <div class="ruler">
+          <span class="tick" style="left:0%">0</span>
+          <span class="tick" style="left:22.7%">5</span>
+          <span class="tick" style="left:45.5%">10</span>
+          <span class="tick" style="left:68.2%">15</span>
+          <span class="tick" style="left:90.9%">20</span>
+
+          <div class="marker market" style="left:1.5%">
+            <div class="dot"></div>
+            <div class="flag" style="left:0;transform:none;bottom:26px">▼ 어도비 현재 시장가 ≈ 0–1년</div>
+          </div>
+          <div class="marker bear" style="left:16.8%">
+            <div class="dot"></div>
+            <div class="flag">약세 시나리오 3.7년</div>
+          </div>
+          <div class="marker bench" style="left:79.5%">
+            <div class="dot"></div>
+            <div class="flag" style="bottom:26px">▼ MS 등 우량 SW 17–18년</div>
+          </div>
+        </div>
+
+        <div class="spectrum-legend">
+          <div class="li"><span class="sw" style="background:#E8E6DF"></span>시장이 현재 어도비에 부여한 CAP (역산값)</div>
+          <div class="li"><span class="sw" style="background:#E0995F"></span>가장 비관적인 약세 가정에서의 CAP</div>
+          <div class="li"><span class="sw" style="background:#FF6F61"></span>동급 우량 소프트웨어의 통상 CAP</div>
+        </div>
+      </div>
+
+      <p style="max-width:820px">스펙트럼이 한눈에 말해준다 — 시장은 어도비를 <strong>가장 왼쪽 '얼어붙은' 끝</strong>에 놓았다. 동급 우량 소프트웨어(마이크로소프트)가 17~18년의 경쟁우위를 인정받는 자리(오른쪽)와 정반대다. 어도비의 위치는 프레임워크가 정의한 "극도 비관 = 매수 후보" 구간의 <em>바닥보다도 아래</em>다.</p>
+
+      <h3 style="max-width:820px;margin-top:38px">역산의 결과 — 두 가지 방식, 같은 결론</h3>
+      <p style="max-width:820px">두 가지 독립적인 방법으로 내재 CAP를 풀었고, 둘 다 충격적으로 낮은 값을 가리킨다.</p>
+
+      <div class="tbl-wrap" style="background:var(--ink-bg-2);border-color:var(--ink-bg-3)">
+        <table>
+          <caption style="color:var(--on-dark-faint)">현재 주가 $202.73에 내재된 CAP 역산</caption>
+          <thead><tr><th>방식</th><th style="text-align:left">설명</th><th>내재 CAP</th></tr></thead>
+          <tbody>
+            <tr><td>방식 A · 페이드</td><td style="text-align:left">초과이익이 서서히 소멸(터미널 ROIIC 15%)한다고 볼 때, 명시적 초과 구간이 몇 년이어야 현재가가 나오는가</td><td>≈ 0.1년</td></tr>
+            <tr><td>방식 B · 경쟁균형</td><td style="text-align:left">초과이익이 완전히 0이 되는(ROIIC=WACC) 순수 '가치창출 연수'로 환산</td><td>≈ 0.3년</td></tr>
+            <tr class="hl" style="background:rgba(255,138,122,.14)"><td style="color:#FFB3A8">무성장 가치 검증</td><td style="text-align:left;color:#FFD9D2">성장·초과수익을 0으로 둔 무성장 영구가치 = NOPAT ÷ WACC ≈ $78.8B EV ≈ 주당 약 $195</td><td style="color:#FFB3A8">≈ 현재가</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout co-key" style="max-width:820px;background:#2A1512;border-color:#5A2A20;color:#FBE4DF">
+        <span class="label" style="color:#FF9A8A">핵심 발견 — 무엇을 의미하는가</span>
+        <p style="color:#FBE4DF"><strong style="color:#fff">현재 주가 $202.73은 어도비를 '성장도 0, 초과수익도 0'인 무성장 영구채처럼 가격 책정하고 있다.</strong> 무성장 가치(NOPAT÷WACC)가 약 $195로 현재가와 거의 일치한다는 것은 — <em>시장이 어도비의 10%+ 매출 성장과 37~60%의 자본수익률에 사실상 아무런 가치도 부여하지 않는다</em>는 뜻이다.</p>
+        <p style="margin-bottom:0;color:#FBE4DF">이것은 단순히 '비관적'인 정도가 아니라, 프레임워크 척도상 <strong style="color:#fff">'극도 비관(매수후보)' 구간의 5년 하한선마저 뚫고 내려간 극단</strong>이다. 동일 프레임워크에서 마이크로소프트가 17~18년을 부여받는 것과 비교하면 그 괴리가 얼마나 큰지 분명하다. <span class="conf hi">높음 ~80%</span> — 방향성 결론에 대한 신뢰도.</p>
+      </div>
+
+      <h3 style="max-width:820px;margin-top:38px">"해자가 X년만 지속된다면" — 내재가치 표</h3>
+      <p style="max-width:820px">반대로 물어보자. 어도비의 경쟁우위가 시장의 가정(0년)이 아니라 실제로 몇 년 지속된다면, 주당 가치는 얼마가 되는가? 보수적인 가정만으로도 큰 상승 여력이 드러난다.</p>
+
+      <div class="tbl-wrap" style="background:var(--ink-bg-2);border-color:var(--ink-bg-3)">
+        <table>
+          <caption style="color:var(--on-dark-faint)">실제 CAP 가정별 내재가치 (기본 동인, 경쟁균형 방식)</caption>
+          <thead><tr><th>실제 CAP 가정</th><th>주당 내재가치</th><th>현재가 대비</th><th style="text-align:left">해석</th></tr></thead>
+          <tbody>
+            <tr><td>3년</td><td>$248</td><td class="num-pos">+22%</td><td style="text-align:left;color:var(--on-dark-soft)">아주 짧은 우위만 인정해도 상승</td></tr>
+            <tr><td>5년</td><td>$273</td><td class="num-pos">+34%</td><td style="text-align:left;color:var(--on-dark-soft)">프레임워크 '비관' 구간 하단</td></tr>
+            <tr class="hl" style="background:rgba(127,216,162,.12)"><td style="color:#9FE8BC">8년</td><td style="color:#9FE8BC">$304</td><td style="color:#9FE8BC">+50%</td><td style="text-align:left;color:#C8EDD6">현실적 중간 가정</td></tr>
+            <tr><td>10년</td><td>$321</td><td class="num-pos">+58%</td><td style="text-align:left;color:var(--on-dark-soft)">'합리·중립' 구간 진입</td></tr>
+            <tr><td>15년</td><td>$347</td><td class="num-pos">+71%</td><td style="text-align:left;color:var(--on-dark-soft)">우량 SW 정상 수준</td></tr>
+            <tr><td>18년</td><td>$354</td><td class="num-pos">+75%</td><td style="text-align:left;color:var(--on-dark-soft)">MS 벤치마크 수준</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout co-warn" style="max-width:820px">
+        <span class="label">합리성 판단 — 이 비관은 정당한가?</span>
+        <p style="margin-bottom:0">시장이 CAP를 0으로 매긴 것이 '틀렸다'고 단정할 수는 없다. AI 상품화가 정말로 어도비의 해자를 5년 내 무너뜨린다면, 현재가가 옳을 수 있다. <strong>그러나 그것이 성립하려면, 89% 매출총이익률·8.5억 사용자·PDF 표준·기업 락인·IP 안전 AI를 가진 회사가 거의 즉시 경쟁우위를 전부 상실해야 한다.</strong> 이는 가능하지만 <em>극단적인 가정</em>이다. 프레임워크의 결론은 명확하다 — 시장 기대치가 비정상적으로 낮게 설정되어 있으며, 해자가 단 몇 년만 버텨도 큰 괴리가 존재한다. 이 괴리를 어떻게 볼지는 11·12장의 강세·약세 논거에 달렸다. <span class="conf mid">중간 ~70%</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SCENARIO & SENSITIVITY ===================== -->
+<section id="scen">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">10b</div>
+      <div>
+        <div class="sec-kicker">Scenario & Sensitivity</div>
+        <h2 class="sec-title">시나리오 및 민감도 분석</h2>
+      </div>
+    </div>
+    <div class="sec-body wide">
+      <p class="lead" style="max-width:780px">하나의 숫자에 의존하지 않기 위해, 가정을 강세·기본·약세로 흔들어 본다. 흥미로운 결과 — <em>가장 비관적인 약세 가정에서조차 내재 CAP는 3.7년에 그쳐, 시장의 0년보다 높다.</em></p>
+
+      <div class="scen">
+        <div class="scn bull">
+          <div class="tag">강세 Bull</div>
+          <div class="big">CAP 바닥<br>아래</div>
+          <div class="cap-l">마진 40% · ROIIC 35% · WACC 8.4%</div>
+          <ul>
+            <li>무성장 가치만으로도 현재가를 이미 상회</li>
+            <li>= 시장은 약세보다 더 비관 중</li>
+            <li>AI 매출 가속·기업 락인 강화 가정</li>
+          </ul>
+        </div>
+        <div class="scn base">
+          <div class="tag">기본 Base</div>
+          <div class="big">≈ 0.3년</div>
+          <div class="cap-l">마진 38% · ROIIC 30% · WACC 9.4%</div>
+          <ul>
+            <li>현재 펀더멘털의 점진적 둔화 가정</li>
+            <li>시장이 거의 우위 0을 가격에 반영</li>
+            <li>CAP 8년 현실화 시 $304 (+50%)</li>
+          </ul>
+        </div>
+        <div class="scn bear">
+          <div class="tag">약세 Bear</div>
+          <div class="big">≈ 3.7년</div>
+          <div class="cap-l">마진 35% · ROIIC 22% · WACC 10.4%</div>
+          <ul>
+            <li>AI 상품화로 마진·수익률 압박</li>
+            <li>할인율 상승(금리·위험 반영)</li>
+            <li>그래도 시장의 0년보다는 높음</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout co-key" style="max-width:820px">
+        <span class="label">시나리오의 함의</span>
+        <p style="margin-bottom:0">세 시나리오의 메시지는 일관된다 — <strong>마진을 35%로 깎고, 자본수익률을 22%로 낮추고, 할인율을 10.4%로 올리는 '삼중 약세' 가정에서도 내재 CAP는 3.7년</strong>으로, 현재 주가가 함의하는 0~1년보다 높다. 바꿔 말해 <em>시장은 가장 비관적인 합리적 시나리오보다도 더 비관적인 가격</em>을 매기고 있다. 강세 가정에서는 현재가가 무성장 가치에도 못 미쳐, 안전마진이 매우 두텁다.</p>
+      </div>
+
+      <h3 style="max-width:780px;margin-top:38px">민감도 — 무엇이 가치를 좌우하나 (CAP 10년 기준)</h3>
+      <p style="max-width:780px">기본 시나리오(CAP 10년, 내재가치 약 $321)에서 핵심 변수를 흔들었을 때의 가치 변화다. 할인율(WACC)이 가장 민감하고, 장기성장률은 거의 영향이 없다.</p>
+
+      <div class="tbl-wrap" style="max-width:780px">
+        <table>
+          <caption>민감도 분석 — 주당 내재가치 ($)</caption>
+          <thead><tr><th>변수</th><th>약세 →</th><th>기본</th><th>← 강세</th></tr></thead>
+          <tbody>
+            <tr><td>WACC (할인율)</td><td>10.4% → $281</td><td>9.4% → $319</td><td>8.4% → $367</td></tr>
+            <tr><td>EBITA 마진</td><td>35% → $295</td><td>38% → $321</td><td>40% → $338</td></tr>
+            <tr><td>장기 성장률 g</td><td>2.0% → $320</td><td>2.5% → $321</td><td>3.0% → $321</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="max-width:780px;font-size:.93rem;color:var(--ink-soft)">가장 비관적인 민감도 셀(WACC 10.4%, 마진 35%)을 동시에 적용해도 가치는 현재가 $202.73을 상회한다. <strong>장기성장률에 거의 둔감</strong>한 것은, 어도비 가치의 대부분이 '먼 미래의 성장'이 아니라 '이미 벌고 있는 막대한 현금'에서 나오기 때문이다 — 역설적으로 이는 약세론('미래 성장 붕괴')의 타격이 생각보다 작다는 의미이기도 하다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 11. BULL CASE ===================== -->
+<section id="s11">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">11</div>
+      <div>
+        <div class="sec-kicker">Investment Thesis · Bull Case</div>
+        <h2 class="sec-title">투자 논거 — Bull Case</h2>
+      </div>
+    </div>
+    <div class="sec-body">
+      <p class="lead">강세론의 핵심은 단순하다 — <em>"녹는 얼음"이라는 시장의 진단이 틀렸고, 어도비의 해자는 AI 시대에도(혹은 AI 덕분에 더) 지속된다</em>는 것. 그리고 그 가능성에 비해 가격이 비정상적으로 싸다는 것.</p>
+
+      <h3>가치 창출의 핵심 동력 — 무엇이 어도비를 다시 띄울 수 있나</h3>
+
+      <h4>동력 1 · IP가 안전한 AI = 기업 시장의 독점적 위치</h4>
+      <p>4장에서 본 파이어플라이의 법적 안전성은 <em>대체 불가능한 차별점</em>이다. 미드저니가 그림을 더 잘 그려도, 소송 위험 때문에 대기업은 마케팅 소재에 쓰기 어렵다. 어도비는 IP 면책으로 이 시장을 사실상 독점한다. <strong>왜 지속되는가</strong>: 경쟁사가 따라잡으려면 저작권이 깨끗한 방대한 데이터셋을 처음부터 합법적으로 구축해야 하는데, 이는 수년과 막대한 비용이 든다. <span class="conf hi">높음 ~80%</span></p>
+
+      <h4>동력 2 · 모델 전쟁의 '심판' 위치</h4>
+      <p>어도비는 특정 AI 모델에 베팅하지 않고 모든 모델을 품는 오케스트레이션 계층을 차지하려 한다. <strong>왜 경쟁사가 못 따라잡는가</strong>: 창작자가 매일 머무는 작업대(포토샵·프리미어)를 이미 장악했기에, 어떤 모델이든 어도비 안에서 호출하는 것이 자연스럽다. 신생 AI 회사는 이 '작업 흐름의 종착지'를 갖고 있지 않다.</p>
+
+      <h4>동력 3 · 포맷·표준이라는 시간이 만든 해자</h4>
+      <p>PDF·PSD, 그리고 "어도비로 배우고 채용하는" 교육·고용 생태계는 돈이나 기술로 단기간에 복제할 수 없다. <strong>지속성</strong>: 표준은 한번 굳으면 관성이 극도로 강하다. PDF가 30년간 자리를 지킨 것이 그 증거다.</p>
+
+      <h4>동력 4 · 기업·대중 양방향 확장</h4>
+      <p>대형 고객($1천만+ ARR) +20~25%, 동시에 무료 사용자 8천만 명(+50%) 확보. <em>위(기업 락인)와 아래(대중 저변)에서 동시에 성장</em>하는 보기 드문 구조. 무료 사용자는 미래의 유료 전환 깔때기다.</p>
+
+      <h4>동력 5 · 가격이 만드는 안전마진과 자사주 복리</h4>
+      <p>회사가 8배에 거래되는 동안 어도비는 <strong>250억 달러 자사주 매입</strong>을 승인하고 주식 수를 매년 약 6% 줄이고 있다. 같은 이익을 더 적은 주식이 나눠 가지니 EPS가 자동 상승한다. <em>주가가 쌀수록 자사주 매입의 효과는 더 커진다</em> — 비관론이 길어질수록 장기 주주에게 유리한 역설.</p>
+
+      <div class="callout co-bull">
+        <span class="label">Bull Case 한 줄 요약</span>
+        <p style="margin-bottom:0"><strong>어도비는 사상 최대 실적을 내는 89% 마진·100억 달러 현금흐름의 프랜차이즈인데, 시장은 그 미래 경쟁우위를 0으로 가격 책정했다.</strong> 해자가 단 5~8년만 버텨도 +34~50%의 괴리가 있고, AI는 어도비의 기업·신뢰 해자를 오히려 강화할 수 있다. AI 매출(이미 +200%대 성장)이 계속 가속하거나 새 CEO가 명확한 비전을 제시하면, 강한 재평가의 방아쇠가 당겨질 수 있다. <span class="conf mid">중간 ~70%</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 12. BEAR CASE ===================== -->
+<section id="s12" class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">12</div>
+      <div>
+        <div class="sec-kicker">Risks · Bear Case</div>
+        <h2 class="sec-title">리스크 — Bear Case</h2>
+      </div>
+    </div>
+    <div class="sec-body">
+      <p class="lead" style="color:var(--on-dark-soft)">균형을 위해, 약세론을 <em>가장 강력한 형태로</em> 제시한다(steel-man). 시장이 어도비를 0년으로 매긴 데에는 진짜 이유가 있으며, 이를 가볍게 봐서는 안 된다. 그리고 각 리스크가 이미 주가에 반영됐는지도 함께 따진다.</p>
+
+      <h3 style="color:var(--on-dark)">리스크 1 · AI 상품화 — 가장 근본적인 위협</h3>
+      <p style="color:var(--on-dark-soft)">'AI 역설'이 현실이 되면, "포토샵으로 몇 시간"이 "AI에게 한마디로 몇 초"가 되어 전문 도구의 가치가 구조적으로 하락한다. 90% 사용 사례를 무료·저가 AI가 "충분히 좋게" 커버하면, 어도비의 가격결정력과 구독 유지율이 동시에 침식될 수 있다. <strong style="color:var(--on-dark)">반영 여부</strong>: 상당 부분 주가에 반영됨(8배 멀티플, 0년 CAP). 다만 <em>이 시나리오가 '완전히' 실현된다는 가정</em>은 아직 데이터로 입증되지 않았다(ARR·마진은 견조 유지 중). <span class="conf mid">중간 ~60%</span></p>
+
+      <h3 style="color:var(--on-dark)">리스크 2 · 자기잠식 딜레마 — '프리미엄 무료화'</h3>
+      <p style="color:var(--on-dark-soft)">AI를 무료로 풀어 저변을 키우는 전략은 <em>단기 매출(ARR)을 스스로 깎는다.</em> 실제로 가이던스를 2%p 낮췄고 ARR 성장률이 둔화됐다. 무료 사용자가 충분히 유료로 전환되지 않으면, '저변 확대'는 '매출 희생'으로만 끝날 수 있다. <strong style="color:var(--on-dark)">반영 여부</strong>: 부분 반영. 전환율 데이터가 아직 충분치 않아 불확실성이 큼.</p>
+
+      <h3 style="color:var(--on-dark)">리스크 3 · 리더십 이중 공백</h3>
+      <p style="color:var(--on-dark-soft)">18년 명 CEO와 CFO가 동시에 교체되는 전환기. 후임이 검증되기 전까지 전략 실행의 불확실성이 크고, 특히 AI 전환이라는 가장 중요한 국면에 키를 잡을 사람이 정해지지 않았다. <strong style="color:var(--on-dark)">반영 여부</strong>: 반영되었으나, 새 CEO 선임 자체가 불확실성 해소(=상방) 또는 우려 증폭(=하방) 어느 쪽으로도 작용할 수 있는 양방향 촉매.</p>
+
+      <h3 style="color:var(--on-dark)">리스크 4 · 경쟁 침식 — 캔바·피그마</h3>
+      <p style="color:var(--on-dark-soft)">캔바가 저변에서, 피그마가 인접 영역에서 잠식 중이다. 특히 피그마는 어도비가 200억 달러에 사려다 실패한 '놓친 시장'이며, UI/UX 디자인의 표준을 가져갔다. 차세대 디자이너가 어도비가 아닌 도구로 자라면, 장기 표준 지배력이 약해질 수 있다. <strong style="color:var(--on-dark)">반영 여부</strong>: 일부 반영. 다만 어도비의 핵심(이미지·영상·문서)을 직접 대체하지는 못함.</p>
+
+      <h3 style="color:var(--on-dark)">리스크 5 · AI 추론 비용과 마진 압박</h3>
+      <p style="color:var(--on-dark-soft)">AI 기능을 제공할수록 연산 비용이 든다. 2026년 2분기에 구독 매출 원가가 매출(+11%)보다 빠른 +13%로 증가했다. AI 사용이 늘수록 원가가 마진을 갉아먹을 수 있다. <strong style="color:var(--on-dark)">반영 여부</strong>: 초기 신호 단계. 다만 2분기 영업이익률은 44.5%로 여전히 견조해, 아직은 통제 범위.</p>
+
+      <div class="callout co-bear">
+        <span class="label">Bear Case 한 줄 요약 — 그리고 정직한 균형</span>
+        <p style="margin-bottom:0"><strong>약세론은 실체가 있다 — AI가 어도비의 핵심 해자(전문 도구의 가치)를 구조적으로 위협하고, 회사 스스로 무료화로 매출을 깎으며, 리더십 공백까지 겹쳤다.</strong> 그러나 핵심 질문은 "이 위협이 진짜인가"가 아니라 <em>"이 위협이 CAP 0년(즉 거의 즉각적이고 완전한 우위 상실)을 정당화할 만큼 극단적인가"</em>이다. 현재 데이터(ARR +12.5%, AI ARR 3배, 마진 44.5% 유지)는 '붕괴'가 아닌 '둔화 속 견조'를 보여준다. 시장의 비관이 펀더멘털보다 앞서 있을 가능성이 — 이 투자 논쟁의 핵심이다. <span class="conf mid">중간 ~65%</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 13. SWOT ===================== -->
+<section id="s13">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">13</div>
+      <div>
+        <div class="sec-kicker">SWOT Synthesis</div>
+        <h2 class="sec-title">SWOT 분석</h2>
+      </div>
+    </div>
+    <div class="sec-body wide">
+      <p class="lead" style="max-width:780px">앞선 모든 분석을 강점·약점·기회·위협의 네 칸으로 압축한다.</p>
+      <div class="swot">
+        <div class="q s">
+          <h4>Strengths 강점</h4>
+          <ul>
+            <li>매출총이익률 89%·영업이익률 44%의 업계 최고 수익성</li>
+            <li>PDF·PSD 등 산업 표준 장악, 30년 축적된 락인</li>
+            <li>영업현금흐름 100억 달러, 설비투자 1% 미만의 자본 경량</li>
+            <li>IP가 안전한 유일에 가까운 기업용 생성형 AI</li>
+            <li>8.5억+ 월 사용자, 기업·대중 양방향 성장</li>
+          </ul>
+        </div>
+        <div class="q w">
+          <h4>Weaknesses 약점</h4>
+          <ul>
+            <li>핵심 사업(전문 도구)이 AI 상품화에 직접 노출</li>
+            <li>'무료화' 전략이 단기 매출(ARR)을 스스로 잠식</li>
+            <li>CEO·CFO 동시 교체로 인한 실행 불확실성</li>
+            <li>UI/UX(피그마)·간편 디자인(캔바) 시장 일부 상실</li>
+            <li>AI 추론 비용의 마진 압박 초기 신호</li>
+          </ul>
+        </div>
+        <div class="q o">
+          <h4>Opportunities 기회</h4>
+          <ul>
+            <li>AI 매출 폭증(AI-우선 ARR 1년 새 3배)</li>
+            <li>'생성 엔진 최적화(GEO)' 신시장 선점</li>
+            <li>모델 오케스트레이션 계층 장악 시 통행료 수취</li>
+            <li>대중 무료 사용자의 유료 전환 깔때기</li>
+            <li>역대급 저평가 + 대규모 자사주 매입의 복리 효과</li>
+          </ul>
+        </div>
+        <div class="q t">
+          <h4>Threats 위협</h4>
+          <ul>
+            <li>생성형 AI의 "충분히 좋은" 무료 대체(가장 근본적)</li>
+            <li>캔바·피그마의 저변·인접 잠식 가속</li>
+            <li>월가 비관(골드만 매도 등)의 자금 이탈 지속</li>
+            <li>AI가 작업 흐름 자체를 재정의해 전문 도구 무력화</li>
+            <li>금리·할인율 상승 환경(밸류에이션 역풍)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout co-key" style="max-width:780px">
+        <span class="label">SWOT 종합</span>
+        <p style="margin-bottom:0">강점과 위협이 <strong>같은 뿌리(AI)</strong>에서 갈라진다는 점이 어도비의 본질이다. AI는 어도비의 전문 도구 해자를 위협하는 동시에, 기업·신뢰·표준 해자를 강화한다. 투자 판단은 결국 <em>"이 줄다리기에서 어느 쪽이 이기는가"</em>로 수렴하며, 현재 가격은 '위협 완승'을 가정하고 있다 — 그 가정이 과도한지가 핵심이다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 14. MANAGEMENT ===================== -->
+<section id="s14" class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">14</div>
+      <div>
+        <div class="sec-kicker">Management & Capital Allocation</div>
+        <h2 class="sec-title">경영진 분석</h2>
+      </div>
+    </div>
+    <div class="sec-body wide">
+      <p class="lead" style="max-width:780px;color:var(--on-dark-soft)">경영진은 지금 어도비 스토리에서 <em>리스크이자 동시에 잠재적 촉매</em>다. 18년을 이끈 명장이 떠나는 전환기이지만, 그 명장의 트랙 레코드와 경영진의 자본 배분 규율은 강세론의 중요한 축이다.</p>
+
+      <h3 style="max-width:780px">샨타누 나라옌 — 떠나는 전설의 트랙 레코드</h3>
+      <p style="max-width:780px">2007년부터 18년간 CEO를 맡은 <strong>샨타누 나라옌(Shantanu Narayen)</strong>은 소프트웨어 업계에서 가장 성공적인 경영자 중 한 명으로 꼽힌다. 그의 재임 기간 어도비 매출은 약 <strong>25배</strong> 성장했고, 무엇보다 2013년 <em>패키지 판매에서 클라우드 구독으로의 전면 전환</em>이라는, 당시엔 도박처럼 보였던 결정을 성공시켜 회사를 완전히 재창조했다. 이 '구독 전환'은 오늘날 MBA 교과서에 실리는 비즈니스 모델 전환의 정석이 됐다.</p>
+      <p style="max-width:780px">2026년 3월 12일, 나라옌은 후임이 정해지면 CEO에서 물러나겠다고 발표했다. 다만 <strong>이사회 의장(Chair)으로는 잔류</strong>해 전략적 연속성을 유지한다. 한 번의 거대한 전환(클라우드)을 성공시킨 경영진이 또 다른 전환(AI)의 초입에서 바통을 넘기는 모양새다.</p>
+
+      <div class="callout co-warn" style="max-width:780px">
+        <span class="label">승계 — 불확실성이자 양방향 촉매</span>
+        <p style="margin-bottom:0">후임 CEO 후보로는 내부의 <strong>데이비드 와드와니(David Wadhwani, 디지털 미디어 총괄)</strong>와 <strong>아닐 차크라바르티(Anil Chakravarthy)</strong>, 그리고 외부 AI 전문가가 거론된다. 회사는 FY27 사업계획 수립 전에 새 CEO를 앉히는 것을 목표로 하고 있다. <em>승계 발표 자체가 불확실성 해소(상방)로 작용할 수도, AI 비전이 미흡하면 우려 증폭(하방)으로 작용할 수도 있는 양방향 촉매</em>다. 이것이 향후 가장 주시해야 할 단일 이벤트다. <span class="conf hi">높음 ~85%</span> — 사실관계 확인됨.</p>
+      </div>
+
+      <h3 style="max-width:780px">CFO 교체 — 두 번째 공백</h3>
+      <p style="max-width:780px">설상가상으로 CFO <strong>댄 던(Dan Durn)</strong>이 2026년 6월 15일 반도체 기업 마벨(Marvell)로 이직했다. 현재는 <strong>스티브 데이(Steve Day)</strong>가 임시 CFO를 맡고 있다. CEO·CFO가 동시에 교체되는 것은 투자자가 가장 꺼리는 '리더십 진공' 상태로, 8장에서 본 주가 약세의 직접적 방아쇠 중 하나였다. 다만 임시 CFO 체제가 안정적으로 운영되고 있고, 재무 실적 자체는 흔들림 없이 사상 최대치를 경신 중이라는 점은 완충 요인이다.</p>
+
+      <h3 style="max-width:780px">자본 배분 — 규율 있는 주주 환원</h3>
+      <p style="max-width:780px">경영진의 자본 배분은 강세론의 단단한 축이다. 어도비는 배당을 주지 않는 대신, 막대한 현금흐름을 <strong>자사주 매입</strong>에 집중한다.</p>
+
+      <div class="statgrid" style="max-width:820px">
+        <div class="stat" style="background:var(--ink-bg-2);border-color:var(--ink-bg-3)"><div class="k" style="color:var(--on-dark-faint)">신규 자사주 승인</div><div class="v" style="color:var(--on-dark)">$25<small>B</small></div><div class="sub" style="color:var(--on-dark-faint)">2026년 신규, 약 $27B 잔여</div></div>
+        <div class="stat" style="background:var(--ink-bg-2);border-color:var(--ink-bg-3)"><div class="k" style="color:var(--on-dark-faint)">연간 주식수 감소</div><div class="v" style="color:var(--on-dark)">~6<small>%</small></div><div class="sub" style="color:var(--on-dark-faint)">EPS 자동 상승 효과</div></div>
+        <div class="stat" style="background:var(--ink-bg-2);border-color:var(--ink-bg-3)"><div class="k" style="color:var(--on-dark-faint)">배당</div><div class="v" style="color:var(--on-dark);font-size:1.3rem">없음</div><div class="sub" style="color:var(--on-dark-faint)">전액 자사주·재투자</div></div>
+        <div class="stat" style="background:var(--ink-bg-2);border-color:var(--ink-bg-3)"><div class="k" style="color:var(--on-dark-faint)">내부자 매수</div><div class="v" style="color:var(--on-dark)">$1.9<small>M+</small></div><div class="sub" style="color:var(--on-dark-faint)">급락 중 이사 자사주 매입</div></div>
+      </div>
+
+      <div class="callout co-bull">
+        <span class="label">자본 배분의 의미 — 주가가 쌀수록 강력해지는 복리</span>
+        <p style="margin-bottom:0">주가가 선행 P/E 8배까지 떨어진 상황에서 연 6%씩 주식을 소각하는 것은, <strong>장기 주주에게 매우 유리한 자본 배분</strong>이다. 같은 이익을 매년 더 적은 주식이 나눠 가지므로 주당 가치가 자동으로 올라간다. <em>"싼 가격에 자기 주식을 대량으로 되사는" 것은 경영진이 회사를 저평가로 본다는 가장 강력한 신호</em>이며, 급락 중 이사의 190만 달러 자사주 매수도 같은 메시지다. 비관론이 길어질수록 이 복리 효과의 누적 이득은 커진다. <span class="conf mid">중간 ~70%</span></p>
+      </div>
+
+      <div class="divider-note">경영진 관련 사실(승계 발표일, CFO 이직, 자사주 규모)은 2026년 상반기 공시·보도 기준. 후보군은 시장 거론 수준으로 회사 공식 확정이 아님.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 15. SYNTHESIS ===================== -->
+<section id="s15">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">15</div>
+      <div>
+        <div class="sec-kicker">Overall Synthesis</div>
+        <h2 class="sec-title">종합 판단</h2>
+      </div>
+    </div>
+    <div class="sec-body">
+      <p class="lead">모든 분석이 하나의 질문으로 수렴한다 — <em>시장이 어도비에 매긴 '경쟁우위 0년'이라는 가격은 정당한가, 아니면 공포가 만든 과도한 비관인가?</em></p>
+
+      <h3>핵심 발견의 재확인</h3>
+      <p>이 보고서가 던지는 단 하나의 가장 중요한 사실은 이것이다 — <strong>2026년 6월 현재, 시장은 어도비라는 89% 마진·100억 달러 현금흐름·37~60% 자본수익률의 우량 프랜차이즈를, 성장도 초과수익도 없는 무성장 영구채처럼 가격 책정하고 있다.</strong> CAP 프레임워크로 역산한 시장내재 경쟁우위 기간은 약 0~1년으로, 동급 우량 소프트웨어(마이크로소프트 17~18년)의 자리와 정반대이며, 프레임워크가 정의한 "극도 비관 = 매수 후보"의 5년 하한선마저 뚫고 내려간 극단이다.</p>
+
+      <div class="pull">시장은 "해자가 거의 없다"에 베팅하고 있다. 이 투자의 전부는, 그 베팅이 옳은지에 달려 있다.</div>
+
+      <h3>두 시각의 균형 — 무엇이 진실에 가까운가</h3>
+      <p>약세론과 강세론을 같은 무게로 저울에 올렸을 때의 결론은 이렇다.</p>
+      <p><strong>약세론은 가볍지 않다.</strong> AI 상품화는 어도비의 핵심 해자(전문 도구의 가치)를 구조적으로 위협하고, 회사 스스로 '무료화'로 단기 매출을 깎고 있으며, CEO·CFO 동시 공백까지 겹쳤다. 이 셋 모두 실재하는 리스크이고, 시장이 비관하는 데에는 분명한 근거가 있다.</p>
+      <p><strong>그러나 강세론 또한 실체가 있다.</strong> IP가 안전한 파이어플라이는 기업 시장에서 대체 불가능한 위치이고, 모델 오케스트레이션 전략은 AI 모델 전쟁의 승패와 무관하게 어도비를 길목에 세운다. 포맷·표준·기업 락인 해자는 AI 시대에 오히려 강해질 수 있다. 그리고 무엇보다 — <em>현재 데이터는 '붕괴'가 아니라 '둔화 속 견조'를 보여준다</em>(ARR +12.5%, AI-우선 ARR 1년 새 3배, 영업이익률 44.5% 유지).</p>
+
+      <div class="callout co-key">
+        <span class="label">종합 판단 — 정보로서의 결론 (투자 권유 아님)</span>
+        <p>저울의 추는 이렇게 정리된다 — <strong>시장의 비관이 펀더멘털의 실제 훼손 속도보다 앞서 있을 가능성이 높다.</strong> 어도비의 해자가 시장 가정(0년)이 아니라 단 5~8년만 지속되어도 내재가치는 $273~$304로 현재가 대비 +34~50%의 괴리가 발생하며, 가장 비관적인 합리적 약세 시나리오에서조차 내재 CAP는 3.7년으로 시장의 0년을 웃돈다.</p>
+        <p style="margin-bottom:0">동시에, 이 결론은 <strong>"AI가 어도비의 해자를 즉각·완전히 무너뜨리지는 않는다"</strong>는 핵심 전제에 의존하며, 그 전제가 틀리면(상품화가 예상보다 빠르고 철저하면) 현재가가 옳을 수 있다는 점을 명확히 한다. 즉 이것은 '확실한 저평가'가 아니라 <em>'비대칭적으로 보상이 큰, 그러나 핵심 가정에 의존하는 논쟁적 상황'</em>이다. <span class="conf hi">높음 ~80%</span> — 방향성(시장 기대치가 비정상적으로 낮다)에 대한 신뢰도. <span class="conf mid">중간 ~60%</span> — 해자 지속에 대한 신뢰도.</p>
+      </div>
+
+      <h3>앞으로 지켜봐야 할 체크포인트</h3>
+      <p>이 논쟁의 향방을 가를 관찰 지표들이다. 베이지안 관점에서, 이들 증거가 들어올 때마다 위 판단을 갱신해야 한다.</p>
+
+      <div class="tbl-wrap">
+        <table>
+          <caption>판단 갱신을 위한 핵심 모니터링 지표</caption>
+          <thead><tr><th>체크포인트</th><th style="text-align:left">무엇을 보는가</th><th>방향</th></tr></thead>
+          <tbody>
+            <tr><td>AI 매출 가속</td><td style="text-align:left">AI-우선 ARR이 5억 달러에서 계속 가속하는가, 둔화하는가</td><td>강세 ↔ 약세</td></tr>
+            <tr><td>새 CEO 비전</td><td style="text-align:left">승계 발표 시점과, AI 전략의 명확성·신뢰도</td><td>양방향</td></tr>
+            <tr><td>ARR 재가속</td><td style="text-align:left">무료화 → 유료 전환이 실제로 일어나 ARR 성장률이 반등하는가</td><td>강세 신호</td></tr>
+            <tr><td>마진 지속성</td><td style="text-align:left">AI 추론 비용 증가에도 영업이익률 44%대를 지키는가</td><td>약세 조기경보</td></tr>
+            <tr><td>캔바·피그마 점유</td><td style="text-align:left">핵심 영역(이미지·영상·문서)까지 잠식이 번지는가</td><td>약세 확대</td></tr>
+            <tr><td>유료 유지율</td><td style="text-align:left">기존 유료 구독자의 이탈(churn)이 늘어나는가</td><td>해자 훼손 핵심</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-top:24px"><strong>요약하자면</strong> — 어도비는 시장이 '죽었다'고 선언한, 그러나 아직 사상 최대 실적을 내며 살아 있는 우량 기업이다. 프레임워크가 보여주는 것은 명확한 '사라'는 신호가 아니라, <em>기대치가 극단적으로 낮게 설정되어 비대칭적 보상 구조가 형성된 논쟁적 국면</em>이다. 최종 판단은 "AI가 이 해자를 얼마나 빨리, 얼마나 철저히 녹이는가"라는 단 하나의 질문에 대한 각자의 견해에 달려 있다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LIMITATIONS ===================== -->
+<section id="lim">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-num">+</div>
+      <div>
+        <div class="sec-kicker">Limitations & Assumptions</div>
+        <h2 class="sec-title">한계와 가정</h2>
+      </div>
+    </div>
+    <div class="sec-body">
+      <p class="lead">정직한 분석은 자신의 한계를 명시하는 데서 출발한다. 이 보고서의 결론은 아래 가정과 제약 위에 서 있으며, 이들이 흔들리면 결론도 흔들린다.</p>
+
+      <h3>모델 가정의 한계</h3>
+      <p>DCF와 CAP 역산은 다수의 입력값에 의존하며, 각각은 합리적 추정일 뿐 사실이 아니다.</p>
+      <div class="callout co-note">
+        <span class="label">핵심 가정과 민감도</span>
+        <p style="margin-bottom:.6em"><strong>WACC 9.36%</strong>: 베타를 1.15로 절충했으나 어도비의 베타는 측정 기간에 따라 0.74~1.40으로 크게 변동한다. 베타·무위험이자율 가정이 바뀌면 내재가치가 민감하게 변한다(WACC가 가장 민감한 변수).</p>
+        <p style="margin-bottom:.6em"><strong>페이드 비율 0.22·터미널 ROIIC 15%</strong>: 소프트웨어 섹터 벤치마크를 적용했으나, 이는 과거 데이터 기반이며 AI 시대의 산업 동학을 완전히 반영하지 못할 수 있다.</p>
+        <p style="margin-bottom:.6em"><strong>세율 20%·매출 성장 경로</strong>: 성숙기 두 자릿수 성장의 점진적 둔화를 가정했으나, 실제 경로는 AI 전환의 성패에 따라 크게 달라질 수 있다.</p>
+        <p style="margin-bottom:0"><strong>ROIIC 30%</strong>: 명시적 기간의 신규투자 수익률 가정으로, 실제 재투자 효율과 다를 수 있다.</p>
+      </div>
+
+      <h3>'적정가'가 아니라 '역산'이라는 점</h3>
+      <p>이 보고서는 <strong>"어도비의 적정 주가는 $X다"라고 단언하지 않는다.</strong> CAP 프레임워크의 본질은 목표주가 제시가 아니라, <em>현재 가격에 시장이 어떤 기대(CAP 0~1년)를 심어놓았는지를 드러내고, 그 기대가 합리적인지 판단하도록 돕는 것</em>이다. 본문의 $248~$354 같은 수치는 "해자가 X년 지속된다면"이라는 조건부 시나리오 값이지 예측이 아니다.</p>
+
+      <h3>주식기반보상(SBC)을 실제 비용으로 처리</h3>
+      <p>어도비는 매년 약 20억 달러 규모의 주식기반보상(SBC)을 지급한다. 회사가 발표하는 잉여현금흐름(FCF)은 이 SBC를 비용으로 다시 빼지 않아 본 분석의 NOPAT보다 커 보인다. 본 보고서는 <strong>SBC를 실질적 주주 희석 비용으로 간주</strong>해 보수적으로 접근했다. 이 처리 방식에 따라 가치 평가가 달라질 수 있으며, SBC를 비용으로 보지 않으면 가치는 더 높게 산출된다.</p>
+
+      <h3>데이터의 시점과 출처 제약</h3>
+      <div class="callout co-warn">
+        <span class="label">데이터 신선도 경고</span>
+        <p style="margin-bottom:0">모든 수치는 <strong>2026년 6월 26일 종가($202.73)와 그 시점까지 공개된 정보</strong>를 기준으로 한다. 주가·금리·실적 전망은 빠르게 변하므로, 이 보고서를 읽는 시점에는 핵심 입력값이 이미 달라졌을 수 있다. 특히 다음 실적 발표(2026년 9월 10일 예정)나 새 CEO 선임 같은 이벤트는 분석 전제를 크게 바꿀 수 있다. 또한 일부 피어 비교 수치(멀티플·성장률)는 회계기간 차이로 직접 비교에 주의가 필요하다.</p>
+      </div>
+
+      <h3>분석의 구조적 한계</h3>
+      <p>이 분석은 <strong>공개 정보에만 기반</strong>한다. 경영진의 내부 계획, 미공개 제품 로드맵, 실제 고객 이탈률 상세, AI 추론 비용의 정확한 구조 등 비공개 정보에 접근할 수 없다. 또한 애널리스트 목표주가($282 평균)나 일부 ARR 세부치는 제한된 출처에 의존하므로 단일 출처 편향의 위험이 있다. ROIC 추정치도 출처에 따라 37%(TipRanks)~60%(stockanalysis)로 편차가 크다.</p>
+
+      <h3>프레임워크 자체의 한계</h3>
+      <p>CAP 프레임워크는 <em>"AI가 어도비의 해자를 얼마나 빨리 녹이는가"</em>라는 가장 중요한 질문에 직접 답하지 못한다. 프레임워크는 시장의 기대를 정량화해 보여줄 뿐, 그 기대가 옳은지에 대한 최종 판단은 — AI 기술 발전 속도, 소비자·기업 행동 변화 같은 — 모델 바깥의 정성적 통찰에 의존한다. 따라서 이 보고서의 정량적 결론(시장 기대치가 극단적으로 낮다)은 신뢰도가 높지만, 그로부터 도출되는 투자 함의(저평가일 가능성)는 핵심 정성 가정에 의존하는 더 낮은 신뢰도의 영역임을 분명히 한다.</p>
+
+      <div class="callout co-key">
+        <span class="label">한계 종합</span>
+        <p style="margin-bottom:0">이 보고서가 높은 신뢰도로 말할 수 있는 것은 <strong>"시장이 어도비에 부여한 경쟁우위 기간이 동급 기업 대비 비정상적으로 낮다"</strong>는 사실(관찰)이다. 반면 <strong>"따라서 저평가다"</strong>는 결론(추론)은 "해자가 즉각 붕괴되지 않는다"는 가정에 의존하므로 더 신중히 받아들여야 한다. 독자는 이 둘을 구분해 자신의 견해를 형성하기를 권한다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="wrap">
+    <p><b>Adobe Inc. (NASDAQ: ADBE) — 기업·산업 완전 분석</b><br>Counterpoint Global / Mauboussin CAP(경쟁우위 지속 기간) 프레임워크 적용 · 기준일 2026년 6월 26일 · 종가 $202.73</p>
+    <p class="ftnote">본 보고서는 <b>정보 제공 및 교육 목적</b>으로 작성되었으며, 특정 증권의 매수·매도·보유를 권유하는 투자 자문이 아닙니다. 어떠한 목표주가나 투자 등급도 제시하지 않으며, 본문의 모든 가치 추정치는 명시된 가정에 기반한 조건부 시나리오일 뿐 예측이나 보장이 아닙니다. 모든 수치는 작성 시점의 공개 정보에 근거하며 오류나 시차를 포함할 수 있고, 주가·금리·실적 전망은 수시로 변동합니다. 과거의 성과나 추정은 미래 결과를 보장하지 않습니다. 투자 결정은 반드시 독자 본인의 독립적 판단과 자격 있는 전문가의 자문을 거쳐 내려야 하며, 본 분석의 이용에 따른 어떠한 결과에 대해서도 작성자는 책임을 지지 않습니다. 베이지안 신뢰도 표기(예: 높음 ~80%)는 분석 시점의 주관적 확신 수준이며 객관적 확률이 아닙니다.</p>
+  </div>
+</footer>
+
+</body>
+</html>
