@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microsoft (MSFT) 심층 기업분석 — CAP 프레임워크</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1628;        /* 가장 어두운 배경: 한밤의 클라우드 */
+  --navy2:#13233d;       /* 보조 어두운 배경 */
+  --navy3:#1c3354;       /* 카드 위 어두운 톤 */
+  --paper:#f6f8fc;       /* 밝은 본문 배경 */
+  --card:#ffffff;        /* 흰 카드 */
+  --ink:#0f1b2d;         /* 본문 진한 글자 */
+  --ink2:#3d4f68;        /* 본문 보조 글자 (밝은 배경용, 4.5:1 충족) */
+  --line:#dde4ef;        /* 경계선 (밝은 배경) */
+  --line-d:#2a3f5f;      /* 경계선 (어두운 배경) */
+  --azure:#0a6fc2;       /* Microsoft 블루 */
+  --azure-soft:#e7f1fb;
+  --green:#0f7a17;       /* 성장 그린 */
+  --green-soft:#e6f4e8;
+  --red:#c4314b;         /* 경고/약세 */
+  --red-soft:#fbe9ec;
+  --gold:#9a7400;        /* 골드 (밝은 배경용 진한 톤) */
+  --gold-soft:#fff3d4;
+  --violet:#5a3a9e;
+  --violet-soft:#efe9fb;
+  --mist:#eef2f8;        /* 옅은 회청 박스 */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Pretendard',-apple-system,'Segoe UI','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  background:var(--paper);color:var(--ink);line-height:1.72;
+  font-size:16.5px;-webkit-font-smoothing:antialiased;letter-spacing:-0.01em;
+}
+.tabnum{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+/* ===== 레이아웃 ===== */
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+p{margin:0 0 16px}
+p.lead{font-size:18px;color:var(--ink)}
+a{color:var(--azure);text-decoration:none}
+
+/* ===== 헤더 / 네비게이션 ===== */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(10,22,40,.97);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line-d)}
+.topbar-inner{max-width:1080px;margin:0 auto;padding:10px 22px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.brandmark{display:flex;align-items:center;gap:9px;color:#fff;font-weight:800;
+  font-size:15px;letter-spacing:-.02em;white-space:nowrap}
+.logo-grid{display:grid;grid-template-columns:11px 11px;grid-template-rows:11px 11px;gap:2px;flex:none}
+.logo-grid span{display:block;border-radius:1px}
+.lg-r{background:#f25022}.lg-g{background:#7fba00}.lg-b{background:#00a4ef}.lg-y{background:#ffb900}
+.nav-scroll{display:flex;gap:5px;flex-wrap:wrap;flex:1;min-width:0}
+.nav-scroll a{color:#aebfd6;font-size:12.5px;font-weight:600;padding:5px 9px;
+  border-radius:7px;white-space:nowrap;transition:.15s}
+.nav-scroll a:hover{background:var(--navy3);color:#fff}
+
+/* ===== 히어로 ===== */
+.hero{background:
+   radial-gradient(1100px 460px at 78% -8%,rgba(0,164,239,.22),transparent 60%),
+   radial-gradient(800px 420px at 8% 12%,rgba(127,186,0,.10),transparent 55%),
+   var(--navy);
+  color:#eaf1fb;border-bottom:1px solid var(--line-d);padding:74px 0 64px}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;
+  font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7fd1ff;
+  border:1px solid #2f5a82;background:rgba(0,164,239,.08);padding:6px 13px;border-radius:999px;margin-bottom:22px}
+.hero h1{font-size:46px;line-height:1.1;font-weight:800;letter-spacing:-.025em;color:#fff;margin-bottom:8px}
+.hero h1 .ticker{color:#5fbdf6}
+.hero .sub{font-size:18.5px;color:#b9cbe4;max-width:760px;margin-bottom:30px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:10px}
+.hstat{background:rgba(255,255,255,.04);border:1px solid var(--line-d);border-radius:13px;padding:16px 16px 14px}
+.hstat .k{font-size:12px;color:#9fb4d2;font-weight:600;letter-spacing:.02em;margin-bottom:6px}
+.hstat .v{font-size:25px;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1}
+.hstat .d{font-size:11.5px;margin-top:6px;font-weight:600}
+.up{color:#6fe09a}.down{color:#ff8aa0}.flat{color:#a9bdd8}
+.asof{margin-top:26px;font-size:12.5px;color:#7e93b3}
+
+/* ===== 섹션 헤더 ===== */
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:10px}
+.sec-num{font-size:15px;font-weight:800;color:var(--azure);letter-spacing:.04em;
+  font-variant-numeric:tabular-nums;flex:none;padding-top:4px}
+.sec-head h2{font-size:31px;font-weight:800;letter-spacing:-.025em;color:var(--ink);line-height:1.18}
+.sec-intro{color:var(--ink2);font-size:16.5px;max-width:780px;margin-bottom:30px}
+h3{font-size:21px;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin:34px 0 13px}
+h4{font-size:16.5px;font-weight:800;color:var(--ink);margin:22px 0 9px}
+.section-alt{background:var(--navy);color:#e7eefa}
+.section-alt .sec-head h2{color:#fff}
+.section-alt .sec-intro{color:#aec2dd}
+.section-alt h3{color:#fff}
+.section-alt h4{color:#dbe6f4}
+.section-alt p{color:#c4d3e8}
+
+/* ===== 콜아웃 박스 (자체 완결적 색상) ===== */
+.callout{border-radius:13px;padding:18px 20px;margin:22px 0;border:1px solid;font-size:15.5px}
+.callout .ttl{font-weight:800;font-size:14.5px;letter-spacing:.01em;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.co-key{background:var(--azure-soft);border-color:#bcdcf6;color:#0b2c49}
+.co-key .ttl{color:#0a5394}
+.co-bull{background:var(--green-soft);border-color:#bfe3c4;color:#123a17}
+.co-bull .ttl{color:#0f7a17}
+.co-bear{background:var(--red-soft);border-color:#f2c6cf;color:#4a1622}
+.co-bear .ttl{color:#b3293f}
+.co-warn{background:var(--gold-soft);border-color:#ecd79a;color:#4d3a00}
+.co-warn .ttl{color:#8a6700}
+.co-think{background:#eef0f6;border-color:#d3d9e6;color:#2b3346}
+.co-think .ttl{color:#4a3f7a}
+.co-quote{background:var(--mist);border-left:4px solid var(--azure);border-radius:0 10px 10px 0;
+  border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  color:var(--ink);font-style:normal}
+
+/* 어두운 섹션 안에서 쓰는 밝은 박스 — 글자색 명시 */
+.section-alt .card{background:#fff;color:var(--ink)}
+.section-alt .card p{color:var(--ink2)}
+.section-alt .card h4{color:var(--ink)}
+
+/* ===== 카드 ===== */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin:18px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.minicard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
+.minicard .lab{font-size:12px;color:var(--ink2);font-weight:600;margin-bottom:5px}
+.minicard .big{font-size:23px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.05}
+.minicard .note{font-size:11.5px;color:var(--ink2);margin-top:5px}
+
+/* ===== 배지 ===== */
+.badge{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid;letter-spacing:.01em}
+.b-blue{background:var(--azure-soft);color:#0a5394;border-color:#bcdcf6}
+.b-green{background:var(--green-soft);color:#0f7a17;border-color:#bfe3c4}
+.b-red{background:var(--red-soft);color:#b3293f;border-color:#f2c6cf}
+.b-gold{background:var(--gold-soft);color:#8a6700;border-color:#ecd79a}
+.b-gray{background:#eef1f6;color:#3d4f68;border-color:#d6dded}
+.conf{font-size:11.5px;font-weight:700;color:#0a5394;background:var(--azure-soft);
+  border:1px solid #bcdcf6;border-radius:6px;padding:2px 7px;white-space:nowrap}
+
+/* ===== 표 ===== */
+.tbl-wrap{overflow-x:auto;margin:20px 0;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:14px;background:#fff;min-width:560px}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line)}
+thead th{background:var(--navy2);color:#eaf1fb;font-weight:700;font-size:12.5px;
+  letter-spacing:.01em;border-bottom:none;position:sticky;top:0}
+tbody tr:nth-child(even){background:#f8fafd}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.row-hl{background:#fff7e6 !important}
+.row-hl td{font-weight:700;color:#4d3a00}
+tfoot td{background:var(--navy2);color:#eaf1fb;font-weight:700;border-bottom:none}
+
+/* ===== 바 차트 (CSS) ===== */
+.barrow{display:grid;grid-template-columns:128px 1fr 74px;align-items:center;gap:12px;margin:9px 0}
+.barrow .nm{font-size:13.5px;font-weight:600;color:var(--ink)}
+.bartrack{background:#e9eef6;border-radius:7px;height:26px;overflow:hidden;position:relative}
+.barfill{height:100%;border-radius:7px;display:flex;align-items:center;justify-content:flex-end;
+  padding-right:8px;color:#fff;font-size:11.5px;font-weight:700;min-width:30px}
+.barrow .vv{font-size:13px;font-weight:700;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+
+/* ===== CAP 스펙트럼 ===== */
+.cap-spectrum{position:relative;margin:30px 0 8px;padding-top:42px}
+.cap-bar{height:30px;border-radius:8px;background:linear-gradient(90deg,
+  #1a9850 0%,#66bd63 18%,#a6d96a 33%,#fee08b 52%,#fdae61 72%,#d73027 100%);position:relative}
+.cap-seg{position:absolute;top:-2px;height:34px;border-radius:7px;border:2.5px solid var(--navy);
+  background:rgba(10,22,40,.12)}
+.cap-marker{position:absolute;top:-40px;transform:translateX(-50%);text-align:center}
+.cap-marker .lab{font-size:11.5px;font-weight:800;color:var(--navy);white-space:nowrap;background:#fff;
+  border:1.5px solid var(--navy);border-radius:6px;padding:2px 7px}
+.cap-marker .pin{width:2px;height:14px;background:var(--navy);margin:3px auto 0}
+.cap-ticks{display:flex;justify-content:space-between;margin-top:9px;font-size:11px;color:var(--ink2);font-weight:600}
+.cap-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--ink2)}
+.cap-legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+/* ===== 수익 흐름 / 다이어그램 ===== */
+.flow{display:grid;grid-template-columns:1fr;gap:0;margin:22px 0}
+.flow-svg{width:100%;height:auto;display:block}
+.diag-cap{font-size:12px;color:var(--ink2);text-align:center;margin-top:8px}
+
+/* ===== SWOT ===== */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:22px 0}
+.swot-box{border-radius:13px;padding:18px;border:1px solid}
+.swot-box h4{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}
+.swot-box ul{margin:0;padding-left:18px}
+.swot-box li{font-size:13.5px;margin-bottom:7px;line-height:1.5}
+.sw-s{background:var(--green-soft);border-color:#bfe3c4;color:#123a17}.sw-s h4{color:#0f7a17}
+.sw-w{background:var(--red-soft);border-color:#f2c6cf;color:#4a1622}.sw-w h4{color:#b3293f}
+.sw-o{background:var(--azure-soft);border-color:#bcdcf6;color:#0b2c49}.sw-o h4{color:#0a5394}
+.sw-t{background:var(--gold-soft);border-color:#ecd79a;color:#4d3a00}.sw-t h4{color:#8a6700}
+
+/* ===== 불/베어 저울 ===== */
+.bullbear{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:22px 0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.bb-col{padding:22px}
+.bb-bull{background:var(--green-soft);color:#123a17;border-right:1px solid #bfe3c4}
+.bb-bear{background:var(--red-soft);color:#4a1622}
+.bb-col h4{font-size:16px;margin:0 0 14px}
+.bb-bull h4{color:#0f7a17}.bb-bear h4{color:#b3293f}
+.bb-item{margin-bottom:14px}
+.bb-item .t{font-weight:800;font-size:14px;margin-bottom:3px}
+.bb-item .d{font-size:13px;line-height:1.55}
+
+/* ===== 인용/주석 ===== */
+.src{font-size:11px;color:#7e8ba0;margin-top:4px;font-style:normal}
+.kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line);
+  border-radius:13px;overflow:hidden;margin:22px 0;background:#fff}
+.kpi-strip .cell{padding:18px 16px;border-right:1px solid var(--line)}
+.kpi-strip .cell:last-child{border-right:none}
+.kpi-strip .lab{font-size:11.5px;color:var(--ink2);font-weight:600;margin-bottom:6px}
+.kpi-strip .val{font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1}
+.kpi-strip .sub{font-size:11px;color:var(--ink2);margin-top:5px}
+
+/* ===== 푸터 ===== */
+.footer{background:var(--navy);color:#9fb4d2;padding:40px 0;border-top:1px solid var(--line-d)}
+.footer .wrap{font-size:13px}
+.footer strong{color:#dbe6f4}
+
+/* ===== 목차 카드 ===== */
+.toc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;margin:26px 0;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.toc a{display:flex;gap:9px;padding:10px 12px;border-radius:9px;color:var(--ink);font-size:13.5px;font-weight:600;align-items:baseline}
+.toc a:hover{background:var(--mist)}
+.toc a .n{color:var(--azure);font-weight:800;font-size:12px;flex:none;font-variant-numeric:tabular-nums}
+
+/* ===== 반응형 ===== */
+@media(max-width:860px){
+  .hero h1{font-size:34px}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .grid2,.grid3,.grid4,.swot,.bullbear,.toc{grid-template-columns:1fr}
+  .kpi-strip{grid-template-columns:1fr 1fr}
+  .kpi-strip .cell:nth-child(2){border-right:none}
+  .kpi-strip .cell{border-bottom:1px solid var(--line)}
+  .bb-bull{border-right:none;border-bottom:1px solid #bfe3c4}
+  .sec-head h2{font-size:25px}
+  .barrow{grid-template-columns:96px 1fr 60px}
+  section{padding:48px 0}
+  body{font-size:16px}
+}
+@media(max-width:520px){
+  .hero-stats,.kpi-strip{grid-template-columns:1fr}
+  .kpi-strip .cell{border-right:none}
+  .hstat .v{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 헤더 ============ -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brandmark">
+      <span class="logo-grid"><span class="lg-r"></span><span class="lg-g"></span><span class="lg-b"></span><span class="lg-y"></span></span>
+      MSFT 심층분석
+    </div>
+    <nav class="nav-scroll">
+      <a href="#summary">핵심요약</a>
+      <a href="#overview">기업개요</a>
+      <a href="#revenue">수익구조</a>
+      <a href="#tech">제품·기술</a>
+      <a href="#industry">산업분석</a>
+      <a href="#moat">경제적 해자</a>
+      <a href="#peers">피어비교</a>
+      <a href="#narrative">시장내러티브</a>
+      <a href="#dcf">재무·DCF</a>
+      <a href="#cap">내재 CAP</a>
+      <a href="#bull">Bull Case</a>
+      <a href="#bear">Bear Case</a>
+      <a href="#swot">SWOT</a>
+      <a href="#mgmt">경영진</a>
+      <a href="#verdict">종합판단</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ============ 히어로 ============ -->
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">장기 주식투자 관점 · CAP 가치평가 프레임워크</span>
+    <h1>Microsoft <span class="ticker">(MSFT)</span></h1>
+    <p class="sub">소프트웨어 회사에서 <strong style="color:#fff">"AI 시대의 인프라 제국"</strong>으로. 클라우드·생산성·AI를 한 몸에 묶은 세계 최대급 기업의 사업·기술·산업·가치를 한 편으로 완전히 이해하기.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="k">주가 (6/28)</div><div class="v tabnum">$372.73</div><div class="d down">52주 고점 대비 −33%</div></div>
+      <div class="hstat"><div class="k">시가총액</div><div class="v tabnum">$2.76T</div><div class="d flat">세계 2~3위권</div></div>
+      <div class="hstat"><div class="k">FY25 매출</div><div class="v tabnum">$281.7B</div><div class="d up">전년비 +15%</div></div>
+      <div class="hstat"><div class="k">시장 내재 CAP</div><div class="v tabnum">≈15년</div><div class="d flat">"합리적" 구간</div></div>
+    </div>
+    <div class="asof">기준 시점: 2026년 6월 29일 · 회계연도(FY)는 6월 30일 종료 · 본 분석은 의사결정 참고자료이며 매매 권유가 아닙니다.</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="toc">
+    <a href="#summary"><span class="n">01</span> 핵심 요약</a>
+    <a href="#overview"><span class="n">02</span> 기업 개요</a>
+    <a href="#revenue"><span class="n">03</span> 수익 구조</a>
+    <a href="#tech"><span class="n">04</span> 제품·기술력</a>
+    <a href="#industry"><span class="n">05</span> 산업 분석</a>
+    <a href="#moat"><span class="n">06</span> 경제적 해자</a>
+    <a href="#peers"><span class="n">07</span> 피어그룹 비교</a>
+    <a href="#narrative"><span class="n">08</span> 시장 내러티브</a>
+    <a href="#dcf"><span class="n">09</span> 재무·DCF 모델</a>
+    <a href="#cap"><span class="n">10</span> 시장 내재 CAP</a>
+    <a href="#bull"><span class="n">11</span> Bull Case</a>
+    <a href="#bear"><span class="n">12</span> Bear Case</a>
+    <a href="#swot"><span class="n">13</span> SWOT 종합</a>
+    <a href="#mgmt"><span class="n">14</span> 경영진·자본배분</a>
+    <a href="#verdict"><span class="n">15</span> 종합 판단</a>
+  </div>
+</div>
+<!-- ============ 1. 핵심 요약 ============ -->
+<section id="summary">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><h2>핵심 요약</h2></div>
+    <p class="sec-intro">결론부터: Microsoft는 "마이크로소프트 오피스를 만드는 회사"가 아니라, <strong>전 세계 기업의 디지털 활동이 돌아가는 토대(클라우드+생산성 소프트웨어+AI)를 동시에 장악한 인프라 기업</strong>입니다. 현재 주가는 AI 투자비 급증 우려로 고점 대비 33% 하락했으나, 그 사이 실제 사업 지표(Azure 성장률, 계약 잔고, AI 매출)는 오히려 가속됐습니다.</p>
+
+    <div class="callout co-key">
+      <div class="ttl">한 문장 정의</div>
+      Microsoft는 <strong>윈도우·오피스라는 30년 된 현금창출기</strong> 위에, <strong>Azure 클라우드라는 고성장 엔진</strong>을 얹고, 다시 그 위에 <strong>자체 칩→자체 AI 모델→앱까지 수직 통합한 AI 플랫폼</strong>을 쌓아 올린, 전 세계에서 가장 자금력이 탄탄한(신용등급 AAA) AI 인프라 사업자입니다.
+    </div>
+
+    <h3>본질과 투자 매력의 핵심</h3>
+    <p>이 회사를 이해하는 가장 중요한 한 가지는 <strong>"세 겹 구조"</strong>입니다. ① 맨 아래에는 윈도우와 오피스처럼 거의 모든 기업이 이미 쓰고 있어 바꾸기 어려운 <strong>고착(lock-in) 자산</strong>이 깔려 있습니다. ② 그 위에 Azure 클라우드가 연 40% 성장하며 아마존(AWS)의 점유율을 빼앗고 있습니다. ③ 다시 그 위에 AI(Copilot, 자체 MAI 모델, Maia 칩)가 얹히는데, 핵심은 <strong>이미 깔려 있는 수억 개의 오피스·윈도우 계정에 AI를 "추가 판매"하면 된다</strong>는 점입니다. 새 고객을 찾을 필요 없이 기존 고객에게 더 비싼 상품을 파는 구조라, 경쟁사가 따라잡기 매우 어렵습니다.</p>
+
+    <div class="kpi-strip">
+      <div class="cell"><div class="lab">Azure 성장률 (FY26 Q3)</div><div class="val up">+40%</div><div class="sub">5개 분기 연속 가속, AWS(+19%) 압도</div></div>
+      <div class="cell"><div class="lab">계약 잔고 (RPO)</div><div class="val tabnum">$627B</div><div class="sub">전년비 +99% — 1년 만에 2배</div></div>
+      <div class="cell"><div class="lab">Copilot 유료 좌석</div><div class="val tabnum">2,000만</div><div class="sub">한 분기 만에 +33% (1,500만→2,000만)</div></div>
+      <div class="cell"><div class="lab">AI 연환산 매출</div><div class="val tabnum">$37B</div><div class="sub">전년비 +123%</div></div>
+    </div>
+
+    <h3>시장 내재 CAP 결론 (미리 제시)</h3>
+    <p>본 보고서는 "적정주가가 얼마"라고 단정하지 않습니다. 대신 <strong>현재 주가가 암묵적으로 가정하고 있는 '경쟁우위 지속기간(CAP)'을 역산</strong>해 그것이 합리적인지 따집니다. 결과는 다음과 같습니다.</p>
+
+    <div class="callout co-key">
+      <div class="ttl">시장 내재 CAP ≈ 14~17년 (기본값 약 15년) <span class="conf">확신도 중간~높음 ~70%</span></div>
+      현재 주가($372)는 Microsoft가 <strong>앞으로 약 15년간 자본비용을 초과하는 수익</strong>을 낼 것이라는 기대를 반영합니다. 동일 방법론의 3월 말 기준 분석에서는 17~18년이었는데, 그 사이 주가는 제자리인 반면 실적은 성장해 <strong>내재 기대치가 오히려 다소 낮아졌습니다</strong>. 와이드 모트(넓은 해자)·AAA·풀스택 AI 통합을 갖춘 슈퍼스타 기업에게 14~17년은 <strong>"과도한 낙관"이 아니라 "합리적~약간 낙관"</strong> 구간입니다. 즉, 시장은 영웅적 가정을 하고 있지 않습니다.
+    </div>
+
+    <p>핵심 긴장은 단 하나의 숫자, <strong>2026년 자본지출 약 $1,900억(전년비 +61%)</strong>에 집중됩니다. 이것이 강세론과 약세론의 동시 근거입니다. 강세론: 이 투자가 Azure·Copilot 성장을 만들어내는 엔진이고, 연 $1,000억대 순이익과 AAA 신용으로 감당 가능하며, $627B 계약 잔고가 수요를 뒷받침합니다. 약세론: 단기적으로 잉여현금흐름을 압박하고(FY26 Q3 FCF $203억→$158억), 그중 $250억은 메모리값 폭등 탓이며, 계약 잔고의 45%가 OpenAI 한 곳에 쏠려 있습니다. 본 보고서는 이 둘을 모두 정직하게 다룹니다.</p>
+
+    <div class="callout co-think">
+      <div class="ttl">읽는 분께 — 이 보고서의 균형 원칙</div>
+      사용자가 기업을 볼 때 부정적으로 기우는 경향을 보정하기 위해, 이 보고서는 <strong>놓치기 쉬운 긍정 동인을 적극 환기</strong>하되, 약점과 리스크도 <strong>축소 없이 가장 강한 형태로</strong> 함께 제시합니다. 모든 주장은 검색으로 확인한 사실·데이터에 근거하며, 추측과 사실을 구분하고, 불확실한 지점은 확신도(%)로 표기합니다. 근거 없는 낙관도, 습관적 비관도 배제합니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. 기업 개요 ============ -->
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><h2>기업 개요</h2></div>
+    <p class="sec-intro">Microsoft가 어떤 회사인지, 어떻게 지금의 자리에 왔는지를 비전공자도 이해할 수 있게 풀어봅니다. 핵심은 "한 번의 성공"이 아니라 <strong>"세 번의 변신"</strong>입니다.</p>
+
+    <h3>설립 배경과 세 번의 변신</h3>
+    <p>Microsoft는 1975년 빌 게이츠(Bill Gates)와 폴 앨런(Paul Allen)이 설립했습니다. 시작은 개인용 컴퓨터(PC)용 소프트웨어였고, 1980년 IBM PC에 운영체제(MS-DOS, 이후 Windows)를 공급하면서 <strong>"전 세계 PC에는 윈도우가 깔린다"</strong>는 1차 제국을 세웠습니다. 여기에 워드·엑셀·파워포인트를 묶은 오피스(Office)가 더해지며, 한 세대 동안 "컴퓨터를 쓴다 = 윈도우와 오피스를 쓴다"는 공식이 만들어졌습니다. 이것이 <strong>1차 변신: PC 운영체제·생산성 소프트웨어의 지배</strong>입니다.</p>
+
+    <p>2000년대 중반, PC 성장이 둔화하고 모바일·인터넷으로 무게중심이 옮겨가자 Microsoft는 한때 "낡은 공룡" 취급을 받았습니다. 전환점은 2014년 <strong>사티아 나델라(Satya Nadella)의 CEO 취임</strong>입니다. 그는 회사의 방향을 <strong>"클라우드 우선(Cloud First)"</strong>으로 틀었습니다. 기업들이 자기 서버를 직접 운영하는 대신, Microsoft의 데이터센터(Azure)를 빌려 쓰게 만든 것입니다. 동시에 오피스를 한 번 사는 패키지에서 <strong>매달 구독료를 받는 Microsoft 365</strong>로 바꿨습니다. 이것이 <strong>2차 변신: 클라우드·구독 기업</strong>이며, 이 변신으로 회사 가치는 수 년 만에 몇 배로 뛰었습니다.</p>
+
+    <p>그리고 지금, <strong>3차 변신: AI 인프라 기업</strong>이 진행 중입니다. 2019년부터 ChatGPT를 만든 OpenAI에 누적 130억 달러 이상을 투자해 AI 시대 초입에 가장 유리한 고지를 선점했고, 이제는 자체 AI 칩(Maia)과 자체 AI 모델(MAI)까지 만들며 <strong>AI의 모든 층(반도체→모델→플랫폼→앱)을 직접 소유</strong>하려 합니다.</p>
+
+    <div class="callout co-quote">
+      <strong>비유로 이해하기.</strong> Microsoft를 "고속도로 휴게소 사업자"로 생각해 보세요. 1차 변신에서 모든 차(PC)가 지나는 도로변에 휴게소(윈도우·오피스)를 세웠고, 2차 변신에서 휴게소를 "월 회원제 멤버십"(구독)으로 바꿔 안정적 통행료를 받게 됐으며, 3차 변신에서는 휴게소 안에 가장 인기 있는 새 매장(AI)을 들이는 중입니다. 이미 모든 운전자가 들르는 곳이라, 새 매장을 추가로 파는 일이 남보다 훨씬 쉽습니다.
+    </div>
+
+    <h3>핵심 사업과 주요 제품 — 비전공자용 지도</h3>
+    <p>Microsoft는 실적을 <strong>3개 사업부(세그먼트)</strong>로 보고합니다. 각각이 무엇이고 왜 중요한지 쉬운 말로 정리합니다.</p>
+
+    <div class="grid3">
+      <div class="minicard" style="border-top:3px solid var(--azure)">
+        <span class="badge b-blue">생산성·비즈니스 프로세스</span>
+        <div class="big" style="margin-top:10px">$120.8B</div>
+        <div class="note">FY25 매출 · 전체의 약 43%</div>
+        <p style="font-size:13px;margin:10px 0 0;color:var(--ink2)">기업과 개인이 일하는 도구. <strong>Microsoft 365</strong>(워드·엑셀·팀즈·아웃룩), <strong>LinkedIn</strong>(세계 최대 비즈니스 인맥 네트워크), <strong>Dynamics</strong>(기업용 회계·고객관리 소프트웨어).</p>
+      </div>
+      <div class="minicard" style="border-top:3px solid var(--green)">
+        <span class="badge b-green">인텔리전트 클라우드</span>
+        <div class="big" style="margin-top:10px">$106.3B</div>
+        <div class="note">FY25 매출 · 전체의 약 38%</div>
+        <p style="font-size:13px;margin:10px 0 0;color:var(--ink2)">성장의 심장. <strong>Azure</strong>(기업이 빌려 쓰는 데이터센터·컴퓨팅), 서버 소프트웨어, <strong>GitHub</strong>(전 세계 개발자 코드 저장소). AI 수요가 폭발하는 바로 그 사업부.</p>
+      </div>
+      <div class="minicard" style="border-top:3px solid var(--gold)">
+        <span class="badge b-gold">모어 퍼스널 컴퓨팅</span>
+        <div class="big" style="margin-top:10px">$54.6B</div>
+        <div class="note">FY25 매출 · 전체의 약 19%</div>
+        <p style="font-size:13px;margin:10px 0 0;color:var(--ink2)">소비자 접점. <strong>Windows</strong> 라이선스, <strong>Surface</strong> 기기, <strong>Xbox·게임</strong>(액티비전 블리자드 포함), <strong>Bing</strong> 검색광고. 가장 성장이 느린 부문.</p>
+      </div>
+    </div>
+
+    <h3>현재 규모와 위상 — 주요 지표</h3>
+    <div class="grid4">
+      <div class="minicard"><div class="lab">연 매출 (TTM)</div><div class="big tabnum">$318B</div><div class="note">최근 12개월</div></div>
+      <div class="minicard"><div class="lab">순이익 (FY25)</div><div class="big tabnum">$101.8B</div><div class="note">순이익률 36%</div></div>
+      <div class="minicard"><div class="lab">영업이익률 (FY25)</div><div class="big tabnum">45.6%</div><div class="note">초우량 수익성</div></div>
+      <div class="minicard"><div class="lab">직원 수</div><div class="big tabnum">22.8만</div><div class="note">미국 12.5만 / 해외 10.3만</div></div>
+      <div class="minicard"><div class="lab">자기자본이익률(ROE)</div><div class="big tabnum">~30%</div><div class="note">자본 효율 매우 높음</div></div>
+      <div class="minicard"><div class="lab">투하자본이익률(ROIC)</div><div class="big tabnum">~26%</div><div class="note">자본비용(~9%) 크게 상회</div></div>
+      <div class="minicard"><div class="lab">신용등급</div><div class="big">AAA</div><div class="note">세계에 몇 개 안 됨</div></div>
+      <div class="minicard"><div class="lab">Microsoft 365 사용자</div><div class="big tabnum">~3.45억</div><div class="note">유료 구독 기준</div></div>
+    </div>
+    <div class="src">출처: Microsoft FY2025 10-K 및 FY2026 분기 실적(8-K), 시장 데이터(2026년 6월).</div>
+
+    <div class="callout co-warn">
+      <div class="ttl">규모 감각 — 이 회사가 얼마나 큰가</div>
+      Microsoft의 연 순이익(약 $1,018억)은 웬만한 중견국의 국가 예산과 맞먹습니다. 2026년 한 해 투자 예정액 $1,900억은 <strong>많은 나라의 1년 GDP보다 큽니다.</strong> 동시에, 전 세계 포춘 500대 기업의 약 85%가 Azure 고객이고, 윈도우는 세계 데스크톱 운영체제의 약 64%를 점유합니다. 이 압도적 규모 자체가 경쟁우위의 원천이자, 동시에 "더 빠르게 성장하기 어렵다"는 한계의 원천입니다.
+    </div>
+  </div>
+</section>
+<!-- ============ 3. 수익 구조 ============ -->
+<section id="revenue">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><h2>수익 구조 — 돈이 어디서, 어떻게 들어오는가</h2></div>
+    <p class="sec-intro">한 회사를 이해하려면 "무엇을 파는가"보다 <strong>"어떻게 반복적으로 돈이 들어오는가"</strong>를 봐야 합니다. Microsoft의 수익은 대부분 <strong>한 번 팔고 끝나는 게 아니라 매달·매년 자동으로 갱신되는 구독</strong>이라는 점이 핵심입니다.</p>
+
+    <h3>세 개의 사업 부문 — 매출 구성</h3>
+    <p>Microsoft는 실적을 <strong>세 부문</strong>으로 보고합니다. 비유하면 ① <strong>생산성·비즈니스 프로세스</strong>는 "일하는 도구"(오피스·팀즈·링크드인), ② <strong>인텔리전트 클라우드</strong>는 "빌려주는 컴퓨터 인프라"(Azure·서버), ③ <strong>모어 퍼스널 컴퓨팅</strong>은 "소비자 접점"(윈도우·게임·검색)입니다.</p>
+
+    <div class="card">
+      <h4 style="margin-top:0">FY2025 부문별 매출 (총 $281.7B)</h4>
+      <div class="barrow"><div class="nm">생산성·비즈니스</div><div class="bartrack"><div class="barfill" style="width:90%;background:var(--azure)">$120.8B · 43%</div></div><div class="vv">+14%</div></div>
+      <div class="barrow"><div class="nm">인텔리전트 클라우드</div><div class="bartrack"><div class="barfill" style="width:79%;background:var(--green)">$106.3B · 38%</div></div><div class="vv">+20%</div></div>
+      <div class="barrow"><div class="nm">모어 퍼스널 컴퓨팅</div><div class="bartrack"><div class="barfill" style="width:41%;background:var(--gold)">$54.6B · 19%</div></div><div class="vv">+10%</div></div>
+      <div class="src">출처: Microsoft FY2025 연차보고서(10-K). 증가율은 전년 대비. 막대 길이는 최대 부문 기준 상대 비율.</div>
+    </div>
+
+    <p>주목할 점은 <strong>성장 속도의 차이</strong>입니다. 가장 빠르게 크는 부문은 클라우드이고, 그 안의 <strong>Azure는 별도로 연 40% 안팎</strong>으로 성장합니다. 반면 소비자 부문(윈도우·게임 기기)은 한 자릿수 성장이거나 정체입니다. 즉 회사 전체의 성장 엔진은 점점 더 <strong>"기업에 클라우드와 AI를 파는 쪽"</strong>으로 이동하고 있습니다.</p>
+
+    <h3>제품별로 더 쪼개 보기</h3>
+    <p>부문은 회계 분류일 뿐이고, 실제 "돈을 버는 제품"으로 다시 보면 그림이 선명해집니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>제품군</th><th class="num">FY25 매출(추정)</th><th>무엇인가 (쉽게)</th><th>수익 성격</th></tr></thead>
+        <tbody>
+          <tr><td><strong>서버 제품·클라우드 서비스</strong></td><td class="num">~$98.4B</td><td>Azure를 포함한 기업용 클라우드·서버 소프트웨어</td><td><span class="badge b-green">고성장 구독</span></td></tr>
+          <tr><td><strong>Microsoft 365 (기업용)</strong></td><td class="num">~$87.8B</td><td>오피스+팀즈+보안을 월 구독으로 묶은 기업 상품</td><td><span class="badge b-blue">안정 구독</span></td></tr>
+          <tr><td><strong>게임 (Xbox·액티비전)</strong></td><td class="num">~$23.5B</td><td>콘솔·게임패스 구독·게임 판매</td><td><span class="badge b-gold">혼합·정체</span></td></tr>
+          <tr><td><strong>LinkedIn</strong></td><td class="num">~$17.8B</td><td>비즈니스 SNS·채용·광고</td><td><span class="badge b-blue">구독+광고</span></td></tr>
+          <tr><td><strong>기기 (Surface 등)</strong></td><td class="num">~$17.3B</td><td>노트북·태블릿 하드웨어</td><td><span class="badge b-gray">저마진 일회성</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="src">출처: Microsoft FY2025 10-K 제품·서비스별 매출 주석. 일부는 부문 합산에서 추정한 근사치이며 반올림되었습니다. <span class="conf">수치 정확도 높음 ~85%</span></div>
+
+    <h3>지역 분포 — 미국이 절반</h3>
+    <p>매출의 약 <strong>절반(미국 $145B)</strong>은 미국에서, 나머지 절반($137B)은 해외에서 나옵니다. 이는 환율 변동에 노출되는 동시에, 미국 외 시장(특히 유럽·아시아)에서 추가 성장 여지가 있다는 뜻이기도 합니다. 다만 유럽은 규제(반독점·디지털세) 리스크가 더 큰 지역이라는 점도 함께 봐야 합니다.</p>
+
+    <div class="callout co-key">
+      <div class="ttl">수익 구조의 핵심 — "구독 + 추가 판매"</div>
+      Microsoft 매출의 큰 비중이 <strong>매년 자동 갱신되는 구독</strong>입니다. 한 번 도입한 기업은 직원 교육·데이터·업무 흐름이 모두 그 위에 얹혀 있어 쉽게 바꾸지 못합니다(<strong>전환비용</strong>). 여기에 AI(Copilot)를 <strong>기존 구독 위에 좌석당 추가 요금</strong>으로 얹으면, 새 고객을 찾지 않고도 1인당 매출을 올릴 수 있습니다. 이 "이미 깔린 기반에 더 비싼 상품을 더하는" 구조가 Microsoft 수익 모델의 가장 강력한 부분입니다.
+    </div>
+
+    <div class="callout co-bear">
+      <div class="ttl">균형을 위해 — 이 구조의 약한 고리</div>
+      구독 모델이 강력하지만 무적은 아닙니다. ① Copilot은 <strong>추가 요금</strong>이라 경기 둔화 시 기업이 "있으면 좋지만 필수는 아닌" 항목으로 보고 도입을 미룰 수 있습니다. ② 실제로 초기 Copilot <strong>전환율(기존 오피스 사용자 중 유료 전환 비율)이 약 5% 수준</strong>으로 추정되어, 잠재력 대비 침투는 아직 초기입니다. ③ 소비자 부문(게임·기기)은 구독의 힘이 약하고 경쟁이 치열합니다. <span class="conf">전환율 추정치 신뢰도 중간 ~55%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. 제품·기술력 ============ -->
+<section id="tech" class="section-alt">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><h2>제품·기술력 — "AI의 모든 층을 직접 소유한다"</h2></div>
+    <p class="sec-intro">2026년 Microsoft를 이해하는 가장 중요한 키워드는 <strong>"풀스택(full-stack) 수직 통합"</strong>입니다. 반도체 칩부터 AI 모델, 개발 플랫폼, 최종 앱까지 <strong>AI를 구성하는 모든 단계를 스스로 만든다</strong>는 전략인데, 이 그림을 이해하면 회사의 미래가 보입니다.</p>
+
+    <h3>수직 통합 — 5개 층을 모두 쌓다</h3>
+    <p>AI 서비스는 5층 건물에 비유할 수 있습니다. 대부분의 회사는 한두 층만 가지고 나머지는 남의 것을 빌립니다. Microsoft는 <strong>다섯 층을 모두 직접 지으려</strong> 합니다.</p>
+
+    <div class="card">
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="background:var(--azure-soft);border:1px solid #bcdcf6;border-radius:10px;padding:13px 16px;color:#0b2c49"><strong>5층 · 앱/에이전트</strong> — Copilot(오피스 AI 비서), GitHub Copilot(코딩 AI), Scout(자율 에이전트). 사용자가 실제로 만지는 부분.</div>
+        <div style="text-align:center;color:#7fd1ff;font-size:18px">▲</div>
+        <div style="background:var(--violet-soft);border:1px solid #cdbef0;border-radius:10px;padding:13px 16px;color:#2c1a52"><strong>4층 · 컨텍스트/데이터</strong> — Microsoft IQ(회사 문서·이메일·웹 지식을 AI에 연결). AI가 "우리 회사 사정"을 알게 하는 층.</div>
+        <div style="text-align:center;color:#7fd1ff;font-size:18px">▲</div>
+        <div style="background:var(--green-soft);border:1px solid #bfe3c4;border-radius:10px;padding:13px 16px;color:#123a17"><strong>3층 · 플랫폼</strong> — Azure AI Foundry(11,000개 이상의 AI 모델을 골라 쓰는 장터). 개발자가 AI를 조립하는 작업대.</div>
+        <div style="text-align:center;color:#7fd1ff;font-size:18px">▲</div>
+        <div style="background:var(--gold-soft);border:1px solid #ecd79a;border-radius:10px;padding:13px 16px;color:#4d3a00"><strong>2층 · AI 모델</strong> — OpenAI(GPT 계열) + <strong>자체 MAI 모델 7종</strong>(MAI-Thinking-1 추론, MAI-Code-1 코딩, MAI-Image 이미지). 머리에 해당.</div>
+        <div style="text-align:center;color:#7fd1ff;font-size:18px">▲</div>
+        <div style="background:var(--red-soft);border:1px solid #f2c6cf;border-radius:10px;padding:13px 16px;color:#4a1622"><strong>1층 · 반도체/인프라</strong> — <strong>자체 AI 칩 Maia 200</strong>(애리조나 가동) + 자체 CPU Cobalt 200 + 전 세계 데이터센터. 토대.</div>
+      </div>
+      <div class="diag-cap">아래층을 직접 소유할수록 비용·성능·공급을 스스로 통제할 수 있습니다. 단, 다섯 층을 동시에 짓는 데는 막대한 자본(2026년 ~$1,900억)이 듭니다.</div>
+    </div>
+
+    <h3>핵심 제품의 경쟁력 — 하나씩</h3>
+    <div class="grid2">
+      <div class="card">
+        <span class="badge b-green">성장 엔진</span>
+        <h4>Azure (클라우드)</h4>
+        <p style="font-size:14.5px;margin-bottom:0">기업이 자기 서버 대신 빌려 쓰는 컴퓨터 인프라. FY26 Q3 기준 <strong>+40% 성장(5분기 연속 가속)</strong>으로, 1위 AWS(+19%)보다 두 배 빠릅니다. AI 학습·추론 수요가 직접 매출로 잡히는 통로입니다.</p>
+      </div>
+      <div class="card">
+        <span class="badge b-blue">현금창출+AI 추가판매</span>
+        <h4>Microsoft 365 + Copilot</h4>
+        <p style="font-size:14.5px;margin-bottom:0">오피스 구독에 AI 비서를 좌석당 추가 요금으로 얹는 상품. 유료 좌석이 <strong>한 분기에 1,500만→2,000만(+33%)</strong>으로 늘었습니다. 침투율은 아직 낮아(초기 ~5%) 성장 여지가 큽니다.</p>
+      </div>
+      <div class="card">
+        <span class="badge b-gold">독립성 확보</span>
+        <h4>자체 MAI 모델</h4>
+        <p style="font-size:14.5px;margin-bottom:0">무스타파 술레이만이 이끄는 Microsoft AI 조직이 만든 7종 모델. <strong>OpenAI 의존도를 낮추려는</strong> 전략. 단, 일부 벤치마크에서 최상위 모델 대비 성능 열위 지적도 있어 검증이 진행 중입니다.</p>
+      </div>
+      <div class="card">
+        <span class="badge b-red">비용 통제</span>
+        <h4>Maia 200 자체 칩</h4>
+        <p style="font-size:14.5px;margin-bottom:0">엔비디아 GPU 의존을 줄이기 위한 자체 AI 가속기. 회사는 <strong>토큰당 약 30% 효율 개선</strong>을 주장합니다. 성공 시 AI 운영비를 구조적으로 낮출 수 있으나, 외부 검증 자료는 아직 제한적입니다.</p>
+      </div>
+    </div>
+
+    <div class="callout co-think">
+      <div class="ttl">왜 "수직 통합"이 중요한가 — 그리고 무엇이 불확실한가</div>
+      <strong>주장</strong>: 모든 층을 소유하면 ① 비용을 낮추고(자체 칩) ② 공급을 통제하며(GPU 부족에 덜 휘둘림) ③ 데이터·앱·모델을 묶어 경쟁사가 흉내 내기 어려운 경험을 만들 수 있습니다.<br>
+      <strong>반대 측 근거(약하게 보지 않기)</strong>: 자체 칩·자체 모델은 <strong>아직 성능이 업계 최고를 따라잡았다는 독립 증거가 부족</strong>합니다. Maia 효율, MAI 품질 모두 회사 발표에 의존하는 부분이 큽니다. 또 Microsoft조차 용량이 부족해 경쟁사에서 컴퓨팅을 빌리는 상황이라, "통제"가 아직 완전하지 않습니다. <span class="conf">자체 칩·모델 경쟁력 확신도 중간 ~50%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. 산업 분석 ============ -->
+<section id="industry">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">05</span><h2>산업 분석 — 어떤 시장에서, 누구와 싸우는가</h2></div>
+    <p class="sec-intro">Microsoft가 속한 핵심 전장은 <strong>클라우드 인프라</strong>와 <strong>기업용 AI</strong>입니다. 이 시장이 얼마나 크고 빠르게 자라는지, 그리고 경쟁 구도가 Microsoft에 유리한지 불리한지를 봅니다.</p>
+
+    <h3>시장 규모와 성장 — "아직 초기"</h3>
+    <p>전 세계 기업이 자체 서버에서 클라우드로 옮겨가는 흐름은 여전히 진행 중이고, 여기에 <strong>AI라는 새 수요</strong>가 겹쳤습니다. 클라우드 인프라 시장은 연 20%를 넘는 속도로 커지고 있으며, AI 관련 인프라 투자는 그보다 더 빠릅니다. 즉 Microsoft는 <strong>"커지는 시장에서 점유율도 늘리는"</strong> 이중으로 유리한 위치에 있습니다 — 적어도 현재까지는.</p>
+
+    <h3>클라우드 3강 구도 (2026년 1분기)</h3>
+    <div class="card">
+      <h4 style="margin-top:0">세계 클라우드 인프라 시장 점유율</h4>
+      <div class="barrow"><div class="nm">AWS (아마존)</div><div class="bartrack"><div class="barfill" style="width:100%;background:#ff9900">28%</div></div><div class="vv">+19%</div></div>
+      <div class="barrow"><div class="nm">Azure (MS)</div><div class="bartrack"><div class="barfill" style="width:75%;background:var(--azure)">21%</div></div><div class="vv">+40%</div></div>
+      <div class="barrow"><div class="nm">Google Cloud</div><div class="bartrack"><div class="barfill" style="width:50%;background:#ea4335">14%</div></div><div class="vv">+63%</div></div>
+      <div class="src">출처: Synergy Research Group, 2026년 1분기. 오른쪽 수치는 전년 대비 성장률. 막대는 점유율 비례.</div>
+    </div>
+    <p>해석: AWS가 여전히 1위지만 <strong>성장은 가장 느립니다(+19%)</strong>. Azure는 2위면서도 <strong>점유율을 빼앗으며 +40%</strong>로 성장 중입니다. Google은 가장 빠르지만(+63%) 절대 규모가 작습니다. 시장이 "성숙해 멈춘" 게 아니라 <strong>여전히 재편 중</strong>이고, 그 재편의 수혜를 Azure가 가장 크게 보고 있다는 점이 핵심입니다.</p>
+
+    <h3>경쟁 강도 — 다섯 가지 힘으로 보기</h3>
+    <p>산업의 매력도를 보는 고전적 틀(다섯 가지 경쟁 압력)로 Microsoft의 환경을 점검합니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>경쟁 압력</th><th>강도</th><th>Microsoft에게 의미</th></tr></thead>
+        <tbody>
+          <tr><td><strong>기존 경쟁사 간 경쟁</strong></td><td><span class="badge b-red">높음</span></td><td>AWS·Google과 클라우드·AI에서 정면 충돌. 가격·성능 경쟁 치열.</td></tr>
+          <tr><td><strong>신규 진입 위협</strong></td><td><span class="badge b-green">낮음</span></td><td>데이터센터·칩에 수백억 달러가 필요해 사실상 빅테크만 진입 가능.</td></tr>
+          <tr><td><strong>대체재 위협</strong></td><td><span class="badge b-gold">중간</span></td><td>오픈소스 AI 모델·자체 구축 등이 일부 대체. 단 통합 편의가 방어막.</td></tr>
+          <tr><td><strong>구매자(고객) 협상력</strong></td><td><span class="badge b-gold">중간</span></td><td>대형 고객은 협상력 있으나, 전환비용이 높아 묶여 있음.</td></tr>
+          <tr><td><strong>공급자 협상력</strong></td><td><span class="badge b-red">높음→완화 시도</span></td><td>엔비디아(GPU)·메모리 업체의 힘이 큼. 자체 칩으로 줄이려는 중.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="src">분석 틀: 산업 구조 분석(5 Forces). 강도 평가는 본 보고서의 정성 판단. <span class="conf">정성 평가 확신도 중간~높음 ~65%</span></div>
+
+    <div class="callout co-warn">
+      <div class="ttl">산업 차원의 핵심 긴장 — "AI 군비경쟁"</div>
+      현재 빅5 클라우드 사업자(MS·아마존·구글·메타·오라클 등)의 <strong>2026년 합산 설비투자가 $6,000억~8,000억</strong>에 이를 전망입니다. 이는 <strong>역사상 최대 규모의 인프라 투자 경쟁</strong>입니다. 강세 시각: 진짜 수요가 있어 모두가 짓는다. 약세 시각: 모두가 동시에 과잉 투자하면 <strong>수익이 안 나는 "공급 과잉"</strong>이 올 수 있다(2000년 통신망 버블과의 비교). 어느 쪽이 맞는지는 향후 1~2년 매출 전환 속도가 결정할 것입니다. <span class="conf">과잉투자 여부 불확실 — 확신도 낮음 ~40%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. 경제적 해자 ============ -->
+<section id="moat">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">06</span><h2>경제적 해자 — 왜 경쟁사가 쉽게 못 따라오는가</h2></div>
+    <p class="sec-intro">"해자(moat)"는 성을 둘러싼 물웅덩이처럼 <strong>경쟁사의 침입을 막는 구조적 방어막</strong>을 뜻합니다. 장기 투자에서 가장 중요한 질문은 "이 회사가 높은 수익을 <strong>얼마나 오래</strong> 지킬 수 있는가"이고, 그 답이 곧 다음 장의 CAP(경쟁우위 지속기간)로 이어집니다.</p>
+
+    <h3>Microsoft의 해자 — 세 겹</h3>
+    <div class="grid3">
+      <div class="card">
+        <h4 style="margin-top:0">① 전환비용</h4>
+        <p style="font-size:14px;margin-bottom:0">기업이 오피스·윈도우·Azure를 한 번 도입하면, 직원 교육·데이터·업무 프로세스가 모두 그 위에 얹힙니다. 다른 것으로 바꾸려면 막대한 비용·혼란이 생겨 <strong>사실상 갈아타기 어렵습니다</strong>.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-top:0">② 네트워크 효과</h4>
+        <p style="font-size:14px;margin-bottom:0">팀즈·오피스는 <strong>남들이 쓰니까 나도 써야</strong> 하는 구조입니다. 상대방도 같은 포맷·도구를 써야 협업이 되므로, 사용자가 많을수록 가치가 커지고 이탈이 어려워집니다.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-top:0">③ 규모의 경제</h4>
+        <p style="font-size:14px;margin-bottom:0">전 세계 데이터센터를 깔 자금력(AAA 신용)은 소수만 가집니다. 규모가 클수록 칩·전력·운영을 <strong>더 싸게</strong> 확보해 경쟁사보다 유리한 원가 구조를 만듭니다.</p>
+      </div>
+    </div>
+
+    <h3>해자의 증거 — 숫자로 확인</h3>
+    <p>해자가 있는지 없는지는 말이 아니라 <strong>수익성 숫자</strong>로 드러납니다. 핵심 지표는 <strong>투하자본이익률(ROIC)</strong>과 <strong>자본비용(WACC)</strong>의 차이입니다. 쉽게 말해 "빌린 돈의 이자율보다 얼마나 더 벌어오는가"입니다.</p>
+
+    <div class="kpi-strip">
+      <div class="cell"><div class="lab">투하자본이익률 (ROIC)</div><div class="val tabnum">~26%</div><div class="sub">투자한 자본 대비 수익</div></div>
+      <div class="cell"><div class="lab">자본비용 (WACC)</div><div class="val tabnum">~9%</div><div class="sub">자금 조달 비용</div></div>
+      <div class="cell"><div class="lab">초과수익 스프레드</div><div class="val up tabnum">+17%p</div><div class="sub">크고 지속적인 양(+)의 격차</div></div>
+      <div class="cell"><div class="lab">영업이익률</div><div class="val tabnum">~46%</div><div class="sub">IT 업계 평균의 2배 이상</div></div>
+    </div>
+    <div class="src">출처: FY2025~FY2026 재무제표 기반 추정. ROIC·WACC는 계산 가정에 따라 다소 달라질 수 있음. <span class="conf">스프레드 방향성 확신도 높음 ~85%</span></div>
+
+    <div class="callout co-key">
+      <div class="ttl">해자의 "종류"를 판별하기 — 차별화 우위</div>
+      Microsoft의 영업이익률(약 46%)은 IT 업계 평균의 <strong>두 배가 넘습니다</strong>. 이렇게 높은 수익성이 나오는 이유는 <strong>"남보다 싸게 만들어서"가 아니라 "남이 못 주는 가치를 줘서"</strong>입니다(원가우위가 아닌 <strong>차별화 우위</strong>). 바꾸기 힘든 통합 생태계, 압도적 신뢰·보안, 풀스택 AI가 그 원천입니다. 차별화 우위는 일반적으로 <strong>원가우위보다 오래 지속</strong>되는 경향이 있어, 긴 경쟁우위 기간(CAP)을 정당화하는 근거가 됩니다.
+    </div>
+
+    <div class="callout co-bear">
+      <div class="ttl">해자도 영원하지 않다 — 침식 가능성</div>
+      독립적 평가기관들은 Microsoft를 <strong>"넓은 해자(wide moat)"</strong>로 분류하지만, AI 시대에는 해자가 빠르게 바뀔 수 있습니다. ① <strong>AI가 전환비용을 낮출</strong> 가능성 — AI 도구로 데이터·업무를 쉽게 이전하게 되면 "갈아타기 어려움"이 약해집니다. ② <strong>오픈소스 모델</strong>이 무료로 비슷한 성능을 제공하면 차별화가 줄어듭니다. ③ 규제가 번들링(끼워팔기)을 제한하면 생태계 결합력이 약해집니다. 해자는 <strong>현재 매우 강하지만, 점검을 멈추면 안 되는</strong> 대상입니다. <span class="conf">해자 지속성 확신도 중간~높음 ~65%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. 피어그룹 비교 ============ -->
+<section id="peers">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">07</span><h2>피어그룹 비교 — 빅테크 5형제 속에서</h2></div>
+    <p class="sec-intro">Microsoft를 제대로 평가하려면 비슷한 체급의 거인들(애플·아마존·알파벳·엔비디아·메타)과 나란히 놓고 봐야 합니다. 핵심 질문은 <strong>"같은 빅테크 중에서 Microsoft의 상대적 강점과 약점, 그리고 밸류에이션 매력은 어디에 있는가"</strong>입니다.</p>
+
+    <h3>빅테크 6사 한눈에 보기</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>회사</th><th class="num">연 매출</th><th class="num">순이익</th><th class="num">P/E(추정)</th><th>핵심 사업</th><th>AI 자본지출(CY26)</th></tr></thead>
+        <tbody>
+          <tr class="row-hl"><td><strong>Microsoft</strong></td><td class="num">$281.7B</td><td class="num">~$101.8B</td><td class="num">~22배</td><td>클라우드·생산성·AI</td><td>~$190B</td></tr>
+          <tr><td>Apple</td><td class="num">$416.2B</td><td class="num">~$112B</td><td class="num">~30배</td><td>하드웨어·서비스</td><td>~$13B (불참)</td></tr>
+          <tr><td>Alphabet</td><td class="num">$402.8B</td><td class="num">~$132.2B</td><td class="num">~23배</td><td>검색광고·클라우드</td><td>~$180–190B</td></tr>
+          <tr><td>Amazon</td><td class="num">$716.9B</td><td class="num">중간*</td><td class="num">~22–35배</td><td>전자상거래·AWS</td><td>~$200B</td></tr>
+          <tr><td>Meta</td><td class="num">$201.0B</td><td class="num">고수익</td><td class="num">~24배</td><td>광고(SNS)·AI</td><td>~$125–145B</td></tr>
+          <tr><td>NVIDIA</td><td class="num">$130.5B+</td><td class="num">초고마진</td><td class="num">높음</td><td>AI 반도체(공급자)</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="src">매출은 각 사 최근 회계연도 기준(아마존·알파벳·메타·엔비디아는 역년). *아마존 순이익은 박한 소매 마진 탓에 빅테크 중 중간 수준. 출처: 각 사 실적, 시장 집계(2026년 3~6월). 시점·집계처마다 차이가 있어 P/E는 근사 범위로 표기.</div>
+
+    <div class="callout co-warn">
+      <div class="ttl">데이터 주의 — 시가총액 수치는 출처별로 엇갈림</div>
+      여러 집계처가 같은 날에도 다른 시가총액을 제시합니다(일부는 갱신 지연). 본 분석은 Microsoft를 주가 $372.73 × 발행주식 약 74.3억 = <strong>약 $2.76조</strong>로 일관 계산합니다. 일부 외부 리스트가 MS를 $3.1조로 표기하는 것은 주가가 더 높았던 시점(고점 $555)의 잔존 수치로 보입니다. 빅테크 시총 순위는 엔비디아·애플·알파벳이 $4조 이상 상단, Microsoft·아마존이 그 아래 군으로 형성돼 있습니다. <span class="conf">시총 절대값 확신도 중간 ~55% (출처 불일치)</span>
+    </div>
+
+    <h3>클라우드 성장률 — Microsoft가 빠르다</h3>
+    <div class="card">
+      <h4 style="margin-top:0">주요 클라우드 부문 전년비 성장률 (2026년 1분기 전후)</h4>
+      <div class="barrow"><div class="nm">Google Cloud</div><div class="bartrack"><div class="barfill" style="width:100%;background:#ea4335">+63%</div></div><div class="vv">소규모</div></div>
+      <div class="barrow"><div class="nm">Azure (MS)</div><div class="bartrack"><div class="barfill" style="width:63%;background:var(--azure)">+40%</div></div><div class="vv">2위 점유</div></div>
+      <div class="barrow"><div class="nm">AWS (아마존)</div><div class="bartrack"><div class="barfill" style="width:30%;background:#ff9900">+19%</div></div><div class="vv">1위 점유</div></div>
+      <div class="src">출처: 각 사 분기 실적 및 Synergy Research. 막대는 성장률 비례(점유율 아님).</div>
+    </div>
+    <p>해석: Google Cloud가 성장률은 가장 높지만 절대 규모가 작아 "따라잡는 중"입니다. <strong>Azure는 2위 규모이면서도 +40%로 성장</strong>해, 규모와 속도를 겸비한 유일한 사업자에 가깝습니다. 이것이 "왜 시장 자금이 Microsoft의 클라우드 스토리를 좋아하는가"의 핵심입니다.</p>
+
+    <h3>상대 포지셔닝 — 무엇이 다른가</h3>
+    <div class="grid2">
+      <div class="callout co-bull" style="margin:0">
+        <div class="ttl">Microsoft의 상대적 강점</div>
+        ① <strong>가장 낮은 밸류에이션(P/E ~22배)</strong> — 애플(~30배)보다 싸면서 성장은 더 빠름.<br>
+        ② <strong>기업 시장 지배</strong> — 포춘500의 85%가 Azure 고객, 오피스 생태계 고착.<br>
+        ③ <strong>유일한 풀스택</strong> — 칩·모델·플랫폼·앱·클라우드를 모두 보유.<br>
+        ④ <strong>AAA 신용</strong> — 빅테크 중에서도 최상위 재무 건전성.
+      </div>
+      <div class="callout co-bear" style="margin:0">
+        <div class="ttl">상대적 약점·우려</div>
+        ① <strong>AI 자본지출 최상위권($190B)</strong> — 애플은 군비경쟁을 피해 마진·현금흐름이 더 깨끗.<br>
+        ② <strong>소비자 접점 약함</strong> — 애플의 기기·생태계, 구글의 검색 같은 소비자 해자는 상대적으로 약함.<br>
+        ③ <strong>순이익은 알파벳에 밀림</strong> — 알파벳 순이익($132B)이 MS($102B)보다 큼.<br>
+        ④ <strong>성장률은 구글 클라우드에 밀림</strong> — 절대 규모는 크나 성장 속도 1위는 아님.
+      </div>
+    </div>
+
+    <div class="callout co-think">
+      <div class="ttl">피어 비교의 결론 — "가장 싸고 가장 균형 잡힌 빅테크"</div>
+      빅테크 6사를 놓고 보면 Microsoft는 <strong>"극단이 없는" 회사</strong>입니다. 엔비디아처럼 폭발적이지도, 애플처럼 자본지출이 가볍지도 않지만, <strong>성장(Azure +40%)·수익성(마진 46%)·재무(AAA)·밸류에이션(P/E ~22배)이 모두 상위권</strong>입니다. 특히 같은 AI 군비경쟁에 참여한 회사들(아마존·구글·메타) 중 <strong>밸류에이션이 가장 낮은 축</strong>이라는 점이, 하락 후 현재 가격의 상대적 매력으로 자주 거론됩니다. <span class="conf">상대 매력도 판단 확신도 중간~높음 ~65%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. 시장 내러티브 ============ -->
+<section id="narrative" class="section-alt">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">08</span><h2>시장 내러티브 — 왜 주가가 빠졌고, 무엇이 다시 올릴까</h2></div>
+    <p class="sec-intro">주가는 실적만이 아니라 <strong>"시장이 이 회사에 부여한 이야기(narrative)"</strong>로 움직입니다. Microsoft 주가는 1년 전 고점($555) 대비 33% 하락했는데, 실적은 오히려 좋아졌습니다. 이 괴리를 만든 네 가지 이야기와, 반대로 주가를 다시 끌어올릴 잠재 방아쇠를 정리합니다.</p>
+
+    <h3>주가를 끌어내린 네 가지 이야기</h3>
+    <div class="grid2">
+      <div class="card">
+        <span class="badge b-red">서사 1</span>
+        <h4>"AI 자본지출 공포"</h4>
+        <p style="font-size:14px;margin-bottom:0">2026년 투자비가 $190B로 급증(+61%)하자, 시장은 "돈을 쏟아붓는데 수익으로 돌아올까"를 의심하기 시작했습니다. 분기마다 자본지출이 컨센서스를 초과하면서, 단기 잉여현금흐름 압박 우려가 주가를 눌렀습니다.</p>
+      </div>
+      <div class="card">
+        <span class="badge b-red">서사 2</span>
+        <h4>"AI 버블론"</h4>
+        <p style="font-size:14px;margin-bottom:0">2000년 닷컴·통신망 버블과의 비교가 확산됐습니다. 빅5 합산 $6,000억+ 투자가 "동시 과잉 공급"으로 끝날 수 있다는 두려움입니다. AI 관련주 전반의 차익 실현 매물이 Microsoft에도 영향을 줬습니다.</p>
+      </div>
+      <div class="card">
+        <span class="badge b-red">서사 3</span>
+        <h4>"증권 집단소송"</h4>
+        <p style="font-size:14px;margin-bottom:0">2026년 6월 시애틀 연방법원에 집단소송이 제기됐습니다. 혐의는 Copilot 채택·Azure AI 용량을 과장·오도했다는 것. 집단기간(2025/5~2026/1)은 실망스러운 분기 실적이 드러난 시점에 맞춰져 있습니다.</p>
+      </div>
+      <div class="card">
+        <span class="badge b-red">서사 4</span>
+        <h4>"규제 압박"</h4>
+        <p style="font-size:14px;margin-bottom:0">미국 FTC가 "1990년대 이후 최광범위" 반독점 조사를 진행 중이고, 독일·EU도 압박을 더하고 있습니다. AI·클라우드·번들링·OpenAI 관계가 모두 조사 대상입니다.</p>
+      </div>
+    </div>
+
+    <div class="callout co-quote">
+      <div class="ttl" style="color:#0a5394">핵심 사건 — 1월의 실적 실망</div>
+      이 하락의 방아쇠는 <strong>2025년 12월 분기(FY26 Q2, 1월 말 발표)</strong>였습니다. 클라우드 성장 둔화 신호와 막대한 자본지출 가이던스가 겹치며, 발표 직후 주가가 하루 만에 약 $48 급락해 $380 부근까지 밀렸습니다. 이 "실망의 순간"이 위 네 서사를 하나로 묶어 약세 분위기를 굳혔습니다.
+    </div>
+
+    <h3>중요한 반전 — 그다음 분기에 일부 반박됐다</h3>
+    <p>여기서 균형이 중요합니다. 약세 서사의 출발점이 된 1월 실적 직후, <strong>바로 다음 분기(FY26 Q3, 4월 발표)에서 핵심 우려가 상당 부분 반박</strong>됐습니다. Azure 성장률이 둔화는커녕 <strong>+40%로 재가속(5분기 연속 가속)</strong>했고, Copilot 유료 좌석이 1,500만→2,000만으로 한 분기에 33% 늘었으며, AI 연환산 매출이 $37B(+123%)에 도달했습니다. 즉 <strong>"수요가 식는다"는 서사는 데이터로 뒷받침되지 않았습니다</strong>.</p>
+
+    <div class="callout co-bull">
+      <div class="ttl">주가를 다시 올릴 수 있는 잠재 방아쇠(catalyst)</div>
+      ① <strong>자본지출의 정점 통과</strong> — 투자비 증가율이 꺾이고 잉여현금흐름이 반등하는 신호가 보이면, "공포 서사"가 무너집니다.<br>
+      ② <strong>Copilot 전환율 상승</strong> — 침투율(현재 ~5%)이 두 자릿수로 올라서면 "AI 수익화 증명"으로 재평가됩니다.<br>
+      ③ <strong>Azure 성장 유지</strong> — +35% 이상이 몇 분기 더 지속되면 점유율 역전 기대가 강화됩니다.<br>
+      ④ <strong>소송·규제 불확실성 해소</strong> — 리스크가 걷히면 눌렸던 밸류에이션이 회복될 수 있습니다.<br>
+      ⑤ <strong>금리 인하 전환</strong> — 고배수 기술주에 우호적인 거시 환경으로 바뀌면 멀티플이 확장됩니다.
+    </div>
+
+    <div class="callout co-think">
+      <div class="ttl">내러티브 vs 펀더멘털 — 이 괴리를 어떻게 읽을까</div>
+      현재 상황의 본질은 <strong>"이야기는 나빠졌는데 숫자는 좋아진"</strong> 괴리입니다. 강세 해석: 시장이 공포에 과민 반응해 좋은 회사를 싸게 만들었다(매수 기회). 약세 해석: 시장이 미래의 자본지출 후폭풍·전환율 정체를 선제적으로 반영 중이다(아직 이르다). <strong>진실은 자본지출이 매출로 전환되는 속도가 결정</strong>합니다. 본 보고서의 가치평가(다음 장)는 이 괴리가 가격에 어떻게 반영됐는지를 수치로 풀어냅니다. <span class="conf">괴리 해소 방향 확신도 낮음~중간 ~45%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. 재무·DCF 모델 ============ -->
+<section id="dcf">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">09</span><h2>재무 분석 및 DCF 모델 — 숫자로 가치를 쌓아보기</h2></div>
+    <p class="sec-intro">이제 핵심입니다. 미래에 벌어들일 현금을 추정해 현재 가치로 환산하는 <strong>현금흐름 할인법(DCF)</strong>으로 Microsoft의 가치를 직접 쌓아봅니다. 어려워 보이지만 원리는 단순합니다: <strong>"앞으로 매년 벌 현금 ÷ 적절한 할인율"</strong>. 모든 가정을 투명하게 공개하니, 어디를 바꾸면 결과가 어떻게 변하는지 직접 확인할 수 있습니다.</p>
+
+    <h3>생애주기 단계 판별 — "성장 후기 / 성숙 진입"</h3>
+    <p>가치평가 전에 회사가 생애주기의 어디에 있는지 봐야 합니다. 현금흐름의 부호로 판별하면, Microsoft는 <strong>영업현금흐름이 매우 크고(+) 플러스, 투자현금흐름이 대규모 마이너스(−, AI 투자), 재무현금흐름도 마이너스(−, 배당·자사주)</strong>입니다. 이는 <strong>"성숙기에 접어든 우량 기업이지만, AI라는 새 성장 동력에 공격적으로 재투자하는"</strong> 혼합 단계입니다. 부문별로는 클라우드·AI는 <strong>성장기</strong>, 윈도우·오피스는 <strong>성숙기</strong>, 게임은 <strong>성숙·정체기</strong>로 갈립니다.</p>
+
+    <h3>가치평가 핵심 가정</h3>
+    <div class="grid4">
+      <div class="minicard"><div class="lab">자본비용 (WACC)</div><div class="big tabnum">9.1%</div><div class="note">아래 산출 근거 참조</div></div>
+      <div class="minicard"><div class="lab">장기 성장률 (g)</div><div class="big tabnum">2.5%</div><div class="note">기대 인플레이션 수준</div></div>
+      <div class="minicard"><div class="lab">NOPAT 마진</div><div class="big tabnum">~37.7%</div><div class="note">영업이익률 46%×(1−세율 18%)</div></div>
+      <div class="minicard"><div class="lab">예측 기간</div><div class="big tabnum">15년</div><div class="note">+ 이후 페이드·영구가치</div></div>
+    </div>
+
+    <div class="callout co-key">
+      <div class="ttl">WACC(자본비용) 9.1% — 어떻게 나왔나</div>
+      자본비용은 "이 회사에 투자할 때 최소한 기대해야 할 수익률"입니다. 자기자본비용 = <strong>무위험이자율 4.37%(미 10년 국채) + 베타 1.05 × 주식위험프리미엄 4.75% = 9.36%</strong>. 여기에 부채비용(세후 ~3.9%)을 자본구조(부채 약 4%)로 가중평균하면 <strong>WACC ≈ 9.1%</strong>가 됩니다. Microsoft는 부채가 거의 없어(D/E 0.12) 자기자본비용이 곧 전체 자본비용에 가깝습니다.
+    </div>
+
+    <h3>연도별 현금흐름 추정 (DCF 테이블)</h3>
+    <p>아래는 향후 15년간 매출·NOPAT(세후영업이익)·재투자·잉여현금흐름(FCF)·현재가치를 쌓은 표입니다. 매출 성장률은 17%에서 시작해 점진적으로 둔화하고, 재투자율(AI 투자 부담)은 초기 높았다가 차차 정상화한다고 가정했습니다. 할인은 <strong>연중(mid-year)</strong> 방식을 적용했습니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>회계연도</th><th class="num">매출($B)</th><th class="num">성장률</th><th class="num">NOPAT($B)</th><th class="num">재투자율</th><th class="num">FCF($B)</th><th class="num">현재가치($B)</th></tr></thead>
+        <tbody>
+          <tr><td>FY2026</td><td class="num">329.6</td><td class="num">17%</td><td class="num">124.3</td><td class="num">50%</td><td class="num">62.2</td><td class="num">59.5</td></tr>
+          <tr><td>FY2027</td><td class="num">379.0</td><td class="num">15%</td><td class="num">143.0</td><td class="num">46%</td><td class="num">77.2</td><td class="num">67.7</td></tr>
+          <tr><td>FY2028</td><td class="num">432.1</td><td class="num">14%</td><td class="num">163.0</td><td class="num">42%</td><td class="num">94.5</td><td class="num">76.0</td></tr>
+          <tr><td>FY2029</td><td class="num">488.3</td><td class="num">13%</td><td class="num">184.2</td><td class="num">38%</td><td class="num">114.2</td><td class="num">84.2</td></tr>
+          <tr><td>FY2030</td><td class="num">546.9</td><td class="num">12%</td><td class="num">206.3</td><td class="num">35%</td><td class="num">134.1</td><td class="num">90.6</td></tr>
+          <tr><td>FY2031</td><td class="num">607.0</td><td class="num">11%</td><td class="num">229.0</td><td class="num">32%</td><td class="num">155.7</td><td class="num">96.4</td></tr>
+          <tr><td>FY2032</td><td class="num">667.7</td><td class="num">10%</td><td class="num">251.9</td><td class="num">30%</td><td class="num">176.3</td><td class="num">100.1</td></tr>
+          <tr><td>FY2033</td><td class="num">727.8</td><td class="num">9%</td><td class="num">274.5</td><td class="num">28%</td><td class="num">197.7</td><td class="num">102.9</td></tr>
+          <tr><td>FY2034</td><td class="num">786.0</td><td class="num">8%</td><td class="num">296.5</td><td class="num">26%</td><td class="num">219.4</td><td class="num">104.6</td></tr>
+          <tr><td>FY2035</td><td class="num">841.0</td><td class="num">7%</td><td class="num">317.2</td><td class="num">25%</td><td class="num">237.9</td><td class="num">104.0</td></tr>
+          <tr><td>FY2036</td><td class="num">891.5</td><td class="num">6%</td><td class="num">336.3</td><td class="num">24%</td><td class="num">255.6</td><td class="num">102.4</td></tr>
+          <tr><td>FY2037</td><td class="num">936.1</td><td class="num">5%</td><td class="num">353.1</td><td class="num">23%</td><td class="num">271.9</td><td class="num">99.9</td></tr>
+          <tr><td>FY2038</td><td class="num">978.2</td><td class="num">4.5%</td><td class="num">369.0</td><td class="num">22%</td><td class="num">287.8</td><td class="num">96.9</td></tr>
+          <tr><td>FY2039</td><td class="num">1,017</td><td class="num">4%</td><td class="num">383.7</td><td class="num">21%</td><td class="num">303.2</td><td class="num">93.5</td></tr>
+          <tr><td>FY2040</td><td class="num">1,053</td><td class="num">3.5%</td><td class="num">397.2</td><td class="num">20%</td><td class="num">317.7</td><td class="num">89.9</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="6">15년 FCF 현재가치 합계</td><td class="num">1,369</td></tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="src">본 표는 가정에 기반한 예시 모델입니다. 매출·NOPAT·재투자율은 컨센서스(FY26 ~$329B, FY27 EPS $18.61 등)와 정합적으로 설정했으나, 미래 추정치이므로 실제와 다를 수 있습니다. <span class="conf">예시 모델 — 절대값보다 구조 이해용</span></div>
+
+    <h3>최종 가치(터미널 밸류)와 주당 가치</h3>
+    <p>15년 이후의 가치는 <strong>페이드(fade) 모델</strong>로 처리합니다. 경쟁우위가 점차 약해져 초과수익이 사라지고, 회사가 인플레이션 수준(2.5%)으로만 성장한다고 가정합니다. 이를 현재가치로 환산해 더하면 기업가치가 나오고, 순현금을 더해 주식 수로 나누면 주당 가치가 나옵니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>구성 요소</th><th class="num">금액</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>15년 FCF 현재가치 합계</td><td class="num">$1,369B</td><td>위 표의 합계</td></tr>
+          <tr><td>최종 가치(터미널)의 현재가치</td><td class="num">$1,211B</td><td>16년차 이후, 페이드 후 영구가치</td></tr>
+          <tr><td><strong>기업가치(EV)</strong></td><td class="num"><strong>$2,580B</strong></td><td>위 둘의 합</td></tr>
+          <tr><td>(+) 순현금</td><td class="num">~$30B</td><td>현금·투자 − 부채</td></tr>
+          <tr class="row-hl"><td><strong>주식가치 ÷ 74.3억 주 = 주당</strong></td><td class="num"><strong>~$351</strong></td><td>현재가 $372.73과 비교</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout co-think">
+      <div class="ttl">이 DCF가 말해주는 것 — "기본 가정에선 거의 적정가, 약간 비쌈"</div>
+      위 기본 가정(WACC 9.1%, 15년 성장, 마진 46%)에서 주당 가치는 <strong>약 $351</strong>로, 현재가 $372.73보다 <strong>약 6% 낮습니다</strong>. 즉 현재 주가는 본 보고서의 보수적 기본 가정보다 <strong>아주 약간 더 낙관적인 미래</strong>를 반영하고 있습니다. 흥미로운 점: 애널리스트 평균 목표가($560 안팎)는 이보다 훨씬 낙관적이어서, <strong>시장 가격($372)은 "월가 컨센서스보다는 보수적, 본 보고서 기본 가정보다는 약간 낙관적"</strong>인 중간 지점에 있습니다. 다음 장에서 이를 "시장이 가정하는 경쟁우위 기간(CAP)"으로 번역합니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. 시장 내재 CAP ============ -->
+<section id="cap">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">10</span><h2>시장 내재 CAP 역산 — 시장은 몇 년의 우위를 가정하는가</h2></div>
+    <p class="sec-intro">이 보고서의 가장 중요한 결론입니다. "적정주가가 얼마"라고 단정하는 대신, <strong>현재 주가를 거꾸로 풀어 "시장이 Microsoft에게 몇 년간의 초과수익(경쟁우위)을 가정하고 있는지"</strong>를 도출합니다. 이를 <strong>CAP(Competitive Advantage Period, 경쟁우위 지속기간)</strong>라 부릅니다. 길수록 시장이 낙관적이라는 뜻입니다.</p>
+
+    <h3>먼저 직관 — "주가의 절반 이상이 미래 성장 기대"</h3>
+    <p>Microsoft가 <strong>지금 수준에서 전혀 성장하지 않는다</strong>고 가정하면(현재 이익을 자본비용으로 나눈 무성장 가치), 주당 가치는 약 <strong>$161</strong>입니다. 그런데 현재 주가는 $372.73입니다. 차액인 <strong>약 $212(주가의 57%)</strong>가 바로 <strong>"앞으로 성장하고 초과수익을 낼 것"이라는 기대</strong>의 가치입니다. 이 성장 기대가 "몇 년이나 지속된다고 보는가"를 풀어낸 것이 CAP입니다.</p>
+
+    <div class="cap-spectrum">
+      <div class="cap-bar">
+        <div class="cap-seg" style="left:62%;width:18%"></div>
+        <div class="cap-marker" style="left:71%"><div class="lab">MSFT 현재 ≈ 15~16년</div><div class="pin"></div></div>
+      </div>
+      <div class="cap-ticks"><span>5년</span><span>10년</span><span>15년</span><span>20년</span><span>25년</span></div>
+      <div class="cap-legend">
+        <span><span class="dot" style="background:#1a9850"></span>5년 미만 = 매우 비관(저평가 후보)</span>
+        <span><span class="dot" style="background:#a6d96a"></span>10~15년 = 합리적</span>
+        <span><span class="dot" style="background:#fdae61"></span>15~20년 = 약간 낙관</span>
+        <span><span class="dot" style="background:#d73027"></span>20년 초과 = 과도</span>
+      </div>
+    </div>
+
+    <div class="callout co-key">
+      <div class="ttl">시장 내재 CAP ≈ 14~17년 (기본값 약 15~16년) <span class="conf">확신도 중간~높음 ~70%</span></div>
+      현재 주가($372.73)는 Microsoft가 <strong>앞으로 약 15~16년간 자본비용을 초과하는 수익을 낼 것</strong>이라는 기대를 반영합니다. 자본비용 가정에 따라 다소 움직입니다: 현재의 더 낮은 위험프리미엄(ERP 4.3%)을 쓰면 WACC ~8.7%로 내려가 <strong>내재 CAP ~15년</strong>, 보고서 표준인 ERP 4.75%(WACC 9.1%)를 쓰면 <strong>~16~17년</strong>으로 계산됩니다. 동일 방법론의 <strong>3월 말 분석에서는 17~18년</strong>이었는데, 그 사이 주가는 제자리인 반면 실적은 성장해 <strong>내재 기대치가 오히려 다소 낮아졌습니다</strong>.
+    </div>
+
+    <h3>이 숫자가 합리적인가 — 섹터·해자와 대조</h3>
+    <p>14~17년이라는 기간이 "과한가, 적당한가"를 판단하려면 <strong>회사의 해자 강도</strong>와 대조해야 합니다. 일반적인 IT 기업의 경쟁우위는 기술 변화로 빠르게 침식되지만, Microsoft는 <strong>전환비용·네트워크 효과·규모·AAA 재무·풀스택 통합</strong>을 모두 갖춘 "넓은 해자" 기업입니다. 이런 슈퍼스타 기업에게 15년 안팎의 경쟁우위 가정은 <strong>"영웅적 낙관"이 아니라 "합리적~약간 낙관"</strong> 구간입니다.</p>
+
+    <h3>민감도 분석 — 가정이 바뀌면 가치가 얼마나 변하나</h3>
+    <p>DCF의 결론은 가정에 민감합니다. 특히 <strong>자본비용(WACC) 1%포인트 변화가 가장 큰 영향</strong>을 줍니다. 이는 "이 주식의 가치는 금리·위험인식에 크게 좌우된다"는 뜻이기도 합니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>시나리오</th><th class="num">주당 가치(15년)</th><th class="num">현재가 대비</th><th>핵심 가정</th></tr></thead>
+        <tbody>
+          <tr><td>자본비용 8.1% (낮음)</td><td class="num">~$413</td><td class="num up">+11%</td><td>금리 하락·위험선호 회복</td></tr>
+          <tr class="row-hl"><td><strong>자본비용 9.1% (기본)</strong></td><td class="num"><strong>~$351</strong></td><td class="num"><strong>−6%</strong></td><td>현 표준 가정</td></tr>
+          <tr><td>자본비용 10.1% (높음)</td><td class="num">~$304</td><td class="num down">−18%</td><td>금리 상승·위험회피</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="src">자본비용 외 변수(성장률 ±2%p, 마진, 페이드 비율)는 아래 시나리오에 반영. 모두 예시 모델 기반.</div>
+
+    <h3>강세·기본·약세 3대 시나리오</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>시나리오</th><th class="num">주당 가치</th><th>가정 요지</th><th class="num">내재 CAP</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge b-green">강세(Bull)</span></td><td class="num">~$470+</td><td>마진 47%, 성장 +2%p, 자본비용 8.7%, FCF 인플렉션</td><td class="num">~20년</td></tr>
+          <tr class="row-hl"><td><span class="badge b-gray">기본(Base)</span></td><td class="num">~$350–370</td><td>현 표준 가정, Azure 성장 점진 둔화</td><td class="num">~15–16년</td></tr>
+          <tr><td><span class="badge b-red">약세(Bear)</span></td><td class="num">~$240–300</td><td>마진 44%, 성장 −2%p, 자본비용 10.1%, 자본지출 후폭풍</td><td class="num">~10–12년</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout co-think">
+      <div class="ttl">CAP 결론의 종합 해석</div>
+      <strong>핵심 메시지</strong>: 현재 주가는 Microsoft에 대해 <strong>"넓은 해자를 가진 슈퍼스타가 약 15년간 초과수익을 유지한다"</strong>는, 합리적 범위의 기대를 반영하고 있습니다. 시장은 영웅적 가정을 하지 않습니다 — 오히려 3월 대비 기대치가 낮아졌습니다.<br>
+      <strong>강세 측</strong>: 해자가 워낙 강하고 AI라는 새 성장축이 더해져, 15년은 보수적일 수 있습니다(강세 시 20년도 정당화 가능).<br>
+      <strong>약세 측(약하게 보지 않기)</strong>: 자본지출이 끝내 매출로 충분히 전환되지 않거나 금리가 높게 유지되면, 합리적 CAP는 10~12년으로 줄고 가치는 $300 아래로 내려갈 수 있습니다. <strong>WACC 1%p가 가치의 ±15%를 좌우</strong>하므로, 거시(금리) 환경이 이 주식의 단기 운명에 큰 영향을 줍니다. <span class="conf">시나리오 분포 확신도 중간 ~55%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11. Bull Case ============ -->
+<section id="bull">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">11</span><h2>투자 논거 — Bull Case (왜 가치 창출이 지속될까)</h2></div>
+    <p class="sec-intro">이 장은 <strong>"무엇이 Microsoft의 가치를 만들어내는 핵심 동력이며, 왜 경쟁사가 쉽게 따라잡지 못하는가"</strong>를 집중적으로 짚습니다. 사용자가 놓치기 쉬운 긍정 요인을 적극 환기하되, 모든 주장은 앞서 확인한 사실·데이터에 근거합니다.</p>
+
+    <h3>가치 창출의 5대 핵심 동력</h3>
+    <div class="grid2">
+      <div class="card">
+        <span class="badge b-green">동력 1</span>
+        <h4>Azure 재가속 — 규모와 속도를 겸비</h4>
+        <p style="font-size:14.5px;margin-bottom:8px">Azure는 2위 규모이면서도 <strong>+40% 성장(5분기 연속 가속)</strong>으로, 1위 AWS(+19%)보다 두 배 빠릅니다. 클라우드 시장이 여전히 재편 중이고 그 수혜를 Azure가 가장 크게 봅니다.</p>
+        <p style="font-size:13.5px;color:var(--ink2);margin-bottom:0"><strong>왜 지속 가능한가:</strong> 기업의 자체 서버→클라우드 전환은 다년간 진행될 구조적 흐름이고, 한 번 Azure를 택한 기업은 전환비용 때문에 잘 떠나지 않습니다.</p>
+      </div>
+      <div class="card">
+        <span class="badge b-green">동력 2</span>
+        <h4>거대한 계약 잔고(RPO) $627B</h4>
+        <p style="font-size:14.5px;margin-bottom:8px">아직 매출로 인식되지 않은 <strong>계약 잔고가 $627B(전년비 +99%)</strong>입니다. 이는 "앞으로 들어올 돈이 이미 계약서로 잡혀 있다"는 뜻으로, 향후 수년간 매출의 강력한 가시성을 제공합니다.</p>
+        <p style="font-size:13.5px;color:var(--ink2);margin-bottom:0"><strong>왜 중요한가:</strong> 자본지출 우려의 가장 강한 반박 근거입니다. 수요가 계약으로 확정돼 있어 "투기적 과잉투자"라는 비판을 일부 무력화합니다.</p>
+      </div>
+      <div class="card">
+        <span class="badge b-green">동력 3</span>
+        <h4>AI 추가 판매 — 침투 초기</h4>
+        <p style="font-size:14.5px;margin-bottom:8px">Copilot 유료 좌석이 <strong>한 분기에 1,500만→2,000만(+33%)</strong>, AI 연환산 매출 <strong>$37B(+123%)</strong>. 그런데 침투율은 아직 ~5%로 <strong>성장 활주로가 길게 남았습니다</strong>.</p>
+        <p style="font-size:13.5px;color:var(--ink2);margin-bottom:0"><strong>왜 경쟁사가 못 따라오나:</strong> 이미 깔린 수억 개 오피스 계정에 AI를 얹기만 하면 됩니다. 새 고객 확보 없이 1인당 매출을 올리는 이 구조는 신생 AI 기업이 복제할 수 없습니다.</p>
+      </div>
+      <div class="card">
+        <span class="badge b-green">동력 4</span>
+        <h4>풀스택 수직 통합 — 비용·통제력</h4>
+        <p style="font-size:14.5px;margin-bottom:8px">자체 칩(Maia)·자체 모델(MAI)·플랫폼·앱·클라우드를 <strong>모두 소유</strong>. 성공 시 AI 운영비를 구조적으로 낮추고, GPU·공급 부족에 덜 휘둘립니다.</p>
+        <p style="font-size:13.5px;color:var(--ink2);margin-bottom:0"><strong>왜 해자인가:</strong> 다섯 층을 동시에 지을 자금·인력·시간을 가진 회사는 세계에 손에 꼽습니다. 이 통합 자체가 진입장벽입니다.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <span class="badge b-green">동력 5</span>
+      <h4>요새 같은 재무 + 낮아진 밸류에이션</h4>
+      <p style="font-size:14.5px;margin-bottom:8px">전 세계 몇 안 되는 <strong>AAA 신용등급</strong>, 연 $1,000억대 순이익, 강력한 잉여현금흐름. 이 재무 체력이 "$190B 자본지출을 감당할 수 있는가"라는 질문에 답합니다 — <strong>감당 가능</strong>합니다. 동시에 주가가 33% 하락하며 <strong>P/E가 2025년 AI 피크의 38배에서 ~22배로 압축</strong>됐습니다. 같은 AI 군비경쟁 참여 빅테크 중 밸류에이션이 가장 낮은 축입니다.</p>
+      <p style="font-size:13.5px;color:var(--ink2);margin-bottom:0"><strong>종합 의미:</strong> "최고 품질의 AI 인프라 기업"을 "역사적으로 낮아진 배수"에 살 수 있는 드문 국면이라는 것이 강세론의 핵심입니다.</p>
+    </div>
+
+    <div class="callout co-bull">
+      <div class="ttl">Bull Case 한 줄 요약</div>
+      Microsoft는 <strong>이미 깔린 압도적 기반(오피스·윈도우·Azure) 위에 AI를 추가 판매</strong>하는, 세계에서 가장 자금력이 탄탄한 풀스택 AI 인프라 기업입니다. 핵심 지표(Azure 성장·계약 잔고·AI 매출)는 우려와 반대로 <strong>가속 중</strong>이고, 그 사이 밸류에이션은 <strong>낮아졌습니다</strong>. 이것이 "이야기는 나쁜데 숫자는 좋은" 현 국면을 기회로 보는 근거입니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 12. Bear Case ============ -->
+<section id="bear" class="section-alt">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">12</span><h2>리스크 — Bear Case (가장 강한 형태로)</h2></div>
+    <p class="sec-intro">균형을 위해, 약세론을 <strong>축소 없이 가장 설득력 있는 형태로</strong> 복원합니다. 좋은 의사결정은 강점만 보는 게 아니라 "내가 틀렸다면 왜일까"를 정면으로 마주하는 데서 나옵니다. 각 리스크마다 <strong>"이미 주가에 반영됐는가"</strong>도 함께 점검합니다.</p>
+
+    <h3>핵심 리스크 — 무게순</h3>
+    <div class="card">
+      <h4 style="margin-top:0;color:var(--ink)">① 자본지출의 잉여현금흐름 압박 — 가장 큰 단기 위험</h4>
+      <p style="font-size:14.5px;margin-bottom:8px;color:var(--ink2)">2026년 투자비 $190B(+61%)는 컨센서스($154.6B)를 $35B 초과했고, 분기마다 초과가 반복됩니다. 실제로 FY26 Q3 잉여현금흐름이 전년 $203억→$158억으로 줄었습니다. 그중 $25B는 메모리값 폭등 탓이라 <strong>통제 밖 비용</strong>입니다. 막대한 감가상각이 향후 마진을 누릅니다(총이익률이 2022년 이후 최저인 67.6%로 하락).</p>
+      <p style="font-size:13px;color:var(--ink2);margin-bottom:0"><strong>주가 반영 여부:</strong> 상당 부분 반영됐다고 봄(33% 하락의 주된 이유). 단, 자본지출이 추가로 더 늘면 추가 하락 여지. <span class="conf">반영도 중간~높음 ~65%</span></p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0;color:var(--ink)">② OpenAI 집중·의존 리스크</h4>
+      <p style="font-size:14.5px;margin-bottom:8px;color:var(--ink2)">계약 잔고($627B)의 <strong>약 45%(~$282B)가 OpenAI 한 곳</strong>에 쏠려 있습니다. 그런데 2026년 4월 OpenAI는 멀티클라우드를 허용받아 <strong>독점성이 약화</strong>됐고, 경쟁사 아마존이 OpenAI에 최대 $500억 투자를 발표하는 등 <strong>이탈 가능성</strong>이 생겼습니다. 또 Microsoft는 OpenAI 손실을 지분법으로 분담해(Q1 FY26 −$31억, 증가 중) 순이익이 깎입니다.</p>
+      <p style="font-size:13px;color:var(--ink2);margin-bottom:0"><strong>주가 반영 여부:</strong> 부분 반영. 시장은 OpenAI 지분 가치($135B+)는 호재로, 집중 리스크는 다소 과소평가하는 경향. <span class="conf">반영도 중간 ~50%</span></p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0;color:var(--ink)">③ Copilot 전환율 정체 가능성</h4>
+      <p style="font-size:14.5px;margin-bottom:8px;color:var(--ink2)">좌석 수는 빠르게 늘지만, <strong>기존 오피스 사용자 중 유료 전환율은 ~5%</strong>로 추정됩니다. AI 비서가 "있으면 좋지만 필수는 아닌" 추가 요금 상품으로 인식되면, 경기 둔화 시 도입이 지연될 수 있습니다. 집단소송도 "M365→Copilot 전환 실패"를 핵심 혐의로 지목합니다.</p>
+      <p style="font-size:13px;color:var(--ink2);margin-bottom:0"><strong>주가 반영 여부:</strong> 약하게 반영. 강세 시나리오는 전환율 상승을 전제하므로, 정체가 확인되면 재평가 하락 위험. <span class="conf">반영도 낮음~중간 ~45%</span></p>
+    </div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="card">
+        <h4 style="margin-top:0;color:var(--ink)">④ 규제·소송</h4>
+        <p style="font-size:13.5px;color:var(--ink2);margin-bottom:0">FTC "1990년대 이후 최광범위" 반독점 조사, 독일·EU 압박, 6월 증권 집단소송. 번들링 제한 시 생태계 결합력 약화 우려.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-top:0;color:var(--ink)">⑤ 게이밍 정체</h4>
+        <p style="font-size:13.5px;color:var(--ink2);margin-bottom:0">$68.7B 들인 액티비전 인수 후에도 콘솔 하드웨어 감소, Xbox 콘텐츠 매출 −5%(Q3). 게이밍 부문이 "고전 중".</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-top:0;color:var(--ink)">⑥ 자체 AI 경쟁력 미검증</h4>
+        <p style="font-size:13.5px;color:var(--ink2);margin-bottom:0">Maia 칩 효율·MAI 모델 품질이 <strong>회사 발표에 의존</strong>. 일부 벤치마크에서 최상위 모델 대비 열위 지적. 독립 검증 자료 부족.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-top:0;color:var(--ink)">⑦ 밸류에이션·금리 민감도</h4>
+        <p style="font-size:13.5px;color:var(--ink2);margin-bottom:0">근원 인플레이션 3.4%로 높고 연준이 매파적. 자본비용 1%p 상승이 가치의 −15%를 좌우. 고배수 기술주에 역풍.</p>
+      </div>
+    </div>
+
+    <div class="callout co-bear">
+      <div class="ttl">Bear Case 한 줄 요약</div>
+      Microsoft의 가장 큰 위험은 단 하나의 숫자, <strong>$190B 자본지출이 끝내 충분한 매출로 전환되지 못할 가능성</strong>입니다. 여기에 OpenAI 집중, Copilot 전환율 정체, 규제, 높은 금리가 겹치면, 합리적 경쟁우위 기간(CAP)은 10~12년으로 줄고 주당 가치는 $300 아래로 내려갈 수 있습니다. <strong>"AI 군비경쟁의 승자가 되리라"는 전제가 흔들리면 현재 가격도 비싸 보일 수 있습니다.</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 13. SWOT ============ -->
+<section id="swot">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">13</span><h2>SWOT 종합 — 한 화면에 정리</h2></div>
+    <p class="sec-intro">앞선 모든 분석을 강점(S)·약점(W)·기회(O)·위협(T)의 네 칸으로 압축합니다. 왼쪽 위에서 시계 방향으로 "내부 긍정 → 외부 긍정 → 외부 부정 → 내부 부정"입니다.</p>
+
+    <div class="swot">
+      <div class="swot-box sw-s">
+        <h4>강점 (Strengths)</h4>
+        <ul>
+          <li><strong>세 겹 고착 생태계</strong> — 윈도우·오피스·Azure의 높은 전환비용</li>
+          <li><strong>Azure 규모+속도</strong> — 2위면서 +40% 성장, 점유율 확대 중</li>
+          <li><strong>유일한 풀스택 AI</strong> — 칩→모델→플랫폼→앱→클라우드 수직 통합</li>
+          <li><strong>AAA 재무</strong> — 연 $1,000억대 순이익, 자본지출 감당력</li>
+          <li><strong>초우량 수익성</strong> — 영업이익률 46%, ROIC 26%로 자본비용 크게 상회</li>
+        </ul>
+      </div>
+      <div class="swot-box sw-o">
+        <h4>기회 (Opportunities)</h4>
+        <ul>
+          <li><strong>AI 추가 판매 활주로</strong> — Copilot 침투율 ~5%, 성장 여지 큼</li>
+          <li><strong>클라우드 전환 지속</strong> — 기업 IT의 구조적 클라우드 이동 진행 중</li>
+          <li><strong>$627B 계약 잔고</strong> — 미래 매출 가시성, 추가 전환 여력</li>
+          <li><strong>자체 칩 비용 절감</strong> — Maia 성공 시 AI 운영비 구조적 하락</li>
+          <li><strong>밸류에이션 매력</strong> — 33% 하락으로 P/E ~22배, 재평가 여지</li>
+        </ul>
+      </div>
+      <div class="swot-box sw-w">
+        <h4>약점 (Weaknesses)</h4>
+        <ul>
+          <li><strong>잉여현금흐름 압박</strong> — 자본지출 급증, 감가상각이 마진 잠식</li>
+          <li><strong>OpenAI 집중</strong> — 잔고의 45%가 한 고객, 독점성 약화</li>
+          <li><strong>Copilot 전환율 ~5%</strong> — 좌석은 늘지만 침투는 초기</li>
+          <li><strong>소비자 접점 약함</strong> — 게임 정체, 기기는 저마진</li>
+          <li><strong>자체 AI 미검증</strong> — Maia·MAI 경쟁력이 외부 검증 부족</li>
+        </ul>
+      </div>
+      <div class="swot-box sw-t">
+        <h4>위협 (Threats)</h4>
+        <ul>
+          <li><strong>AI 과잉투자 우려</strong> — 빅5 $6,000억+ 동시 투자, 공급과잉 가능성</li>
+          <li><strong>규제·반독점</strong> — FTC·EU·독일의 광범위 조사, 번들링 제한 위험</li>
+          <li><strong>증권 집단소송</strong> — Copilot·Azure 과장 혐의</li>
+          <li><strong>높은 금리</strong> — 자본비용 상승이 가치·멀티플 압박</li>
+          <li><strong>오픈소스 AI</strong> — 무료 모델이 차별화·가격 잠식 가능</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout co-think">
+      <div class="ttl">SWOT의 핵심 통찰 — 강점과 위협이 같은 뿌리</div>
+      흥미롭게도 Microsoft의 가장 큰 <strong>기회(AI)</strong>와 가장 큰 <strong>위협(AI 과잉투자)</strong>이 같은 뿌리에서 나옵니다. $190B 자본지출은 "성장 엔진"이자 "현금흐름 위험"입니다. 따라서 투자 판단의 핵심은 단순합니다: <strong>"이 거대한 투자가 매출로 전환되는 속도를 믿는가"</strong>. 강점(재무·생태계·계약 잔고)은 이 전환이 일어날 시간을 벌어주고, 위협(금리·규제·전환율)은 그 시간을 단축시킵니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 14. 경영진·자본배분 ============ -->
+<section id="mgmt">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">14</span><h2>경영진 및 자본 배분 — 누가, 어떻게 돈을 굴리는가</h2></div>
+    <p class="sec-intro">장기 투자에서 경영진의 질은 결정적입니다. "번 돈을 어디에 쓰는가(자본 배분)"가 곧 주주 가치를 좌우하기 때문입니다. Microsoft의 경영진은 <strong>업계에서 가장 높은 평가</strong>를 받는 축에 속합니다.</p>
+
+    <h3>핵심 경영진</h3>
+    <div class="grid2">
+      <div class="card">
+        <h4 style="margin-top:0">사티아 나델라 (회장 겸 CEO)</h4>
+        <p style="font-size:14px;margin-bottom:0">2014년 취임 후 Microsoft를 "낡은 공룡"에서 클라우드·AI 제국으로 탈바꿈시킨 인물. <strong>회사 가치를 10배 이상 키운 트랙 레코드</strong>로, 현존 빅테크 CEO 중 최고 평가를 받습니다. AI를 "전력망·인터넷 백본급 세대적 인프라 기회"로 규정하며 공격적 투자를 주도합니다.</p>
+      </div>
+      <div class="card">
+        <h4 style="margin-top:0">에이미 후드 (CFO)</h4>
+        <p style="font-size:14px;margin-bottom:0">2013년부터 재무를 총괄. <strong>자본 배분 규율</strong>로 정평이 나 있으며, 공격적 투자와 주주환원 사이의 균형을 관리합니다. 어닝콜에서 자본지출의 "수요 연동" 원칙을 일관되게 강조해, 투자가 무분별하지 않음을 설득하려 합니다.</p>
+      </div>
+    </div>
+    <p style="margin-top:14px">그 외 <strong>브래드 스미스(부회장, 대외·규제 총괄)</strong>, <strong>무스타파 술레이만(Microsoft AI CEO, 자체 MAI 모델 주도)</strong> 등이 핵심 리더입니다. 다만 게이밍을 이끌던 <strong>필 스펜서가 2026년 2월 은퇴</strong>해, 부진한 게임 부문의 리더십 공백은 지켜볼 점입니다.</p>
+
+    <h3>자본 배분 — 네 갈래의 균형</h3>
+    <p>Microsoft는 벌어들인 현금을 <strong>① 성장 투자(자본지출·R&D), ② 배당, ③ 자사주 매입, ④ M&A</strong>로 나눠 씁니다. 현재는 AI 투자에 무게가 실려 있지만, 주주환원도 꾸준합니다.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>자본 배분 항목</th><th>규모·정책</th><th>평가</th></tr></thead>
+        <tbody>
+          <tr><td><strong>성장 투자(자본지출)</strong></td><td>CY2026 ~$190B (+61%)</td><td><span class="badge b-gold">공격적 — 핵심 긴장</span></td></tr>
+          <tr><td><strong>배당</strong></td><td>분기 $0.91 (+10% 인상), 배당성향 ~21%</td><td><span class="badge b-green">여력 충분·증액 여지</span></td></tr>
+          <tr><td><strong>자사주 매입</strong></td><td>$60B 프로그램($57.3B 잔여)</td><td><span class="badge b-green">대규모 진행 중</span></td></tr>
+          <tr><td><strong>M&A</strong></td><td>액티비전 $68.7B(2023) 등</td><td><span class="badge b-gold">대형·통합 진행</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="src">출처: Microsoft 배당 공시·자사주 프로그램 공시, FY2025~26 실적. FY25 총 주주환원 ~$42.5B. <span class="conf">수치 정확도 높음 ~85%</span></div>
+
+    <div class="callout co-key">
+      <div class="ttl">자본 배분의 핵심 — "배당성향 21%"가 말해주는 것</div>
+      배당성향이 <strong>21%</strong>에 불과하다는 것은 <strong>번 돈의 79%를 성장 투자·자사주·유보에 쓸 여력</strong>이 있다는 뜻입니다. 즉 Microsoft는 막대한 자본지출을 하면서도 <strong>배당을 매년 올릴 수 있고</strong>, 자사주도 대규모로 사들일 수 있습니다. 이 "동시에 다 할 수 있는" 재무 여력이 AAA 신용의 실체이며, 자본지출 우려에 대한 가장 강한 방어막입니다.
+    </div>
+
+    <div class="callout co-bear">
+      <div class="ttl">균형 — 자본 배분의 점검 포인트</div>
+      자본 배분이 우수하지만 무비판적으로 볼 일은 아닙니다. ① <strong>액티비전 인수($68.7B)의 성과</strong>가 아직 부진(게임 매출 −5%)해, 대형 M&A의 자본 효율이 검증되지 않았습니다. ② AI 자본지출의 <strong>투자수익률(ROI)이 입증되기 전</strong>이라, "규율 있는 투자"인지 "군비경쟁에 떠밀린 투자"인지는 향후 2~3년 매출 전환이 판가름합니다. 인사이더는 지난 12개월 약 $119M 순매도했으나, 이는 통상적 보상 행사 수준으로 특별한 부정 신호로 보기 어렵습니다. <span class="conf">자본 배분 규율 확신도 중간~높음 ~65%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 15. 종합 판단 ============ -->
+<section id="verdict">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">15</span><h2>종합 판단 및 체크포인트</h2></div>
+    <p class="sec-intro">모든 분석을 종합합니다. 이는 매매 추천이 아니라, <strong>스스로 판단하기 위한 의사결정 자료</strong>입니다. 강세와 약세를 같은 무게로 올린 저울, 모니터링할 핵심 지표, 그리고 이 분석의 한계를 정직하게 정리합니다.</p>
+
+    <h3>강세 vs 약세 — 저울에 올리기</h3>
+    <div class="bullbear">
+      <div class="bb-col bb-bull">
+        <h4>강세론의 무게추</h4>
+        <div class="bb-item"><div class="t">핵심 지표가 가속 중</div><div class="d">Azure +40%(5분기 연속), Copilot 좌석 +33%, AI 매출 +123%. 우려와 반대 방향.</div></div>
+        <div class="bb-item"><div class="t">계약 잔고 $627B</div><div class="d">미래 매출이 계약으로 확정. 자본지출 우려의 강한 반박.</div></div>
+        <div class="bb-item"><div class="t">유일한 풀스택 + AAA</div><div class="d">복제 불가능한 수직 통합, 투자 감당할 재무 체력.</div></div>
+        <div class="bb-item"><div class="t">낮아진 밸류에이션</div><div class="d">P/E 38배→22배. AI 빅테크 중 가장 싼 축.</div></div>
+        <div class="bb-item"><div class="t">내재 CAP가 합리적</div><div class="d">시장이 ~15년만 가정 — 영웅적 낙관 아님.</div></div>
+      </div>
+      <div class="bb-col bb-bear">
+        <h4>약세론의 무게추</h4>
+        <div class="bb-item"><div class="t">자본지출 후폭풍</div><div class="d">$190B(+61%), FCF 감소, 감가상각이 마진 잠식. 전환 속도 미검증.</div></div>
+        <div class="bb-item"><div class="t">OpenAI 집중·이탈</div><div class="d">잔고 45%가 한 고객, 멀티클라우드 허용으로 독점성 약화.</div></div>
+        <div class="bb-item"><div class="t">전환율 ~5% 정체 위험</div><div class="d">Copilot이 "필수 아닌 추가 요금"으로 인식될 위험.</div></div>
+        <div class="bb-item"><div class="t">규제·소송·금리</div><div class="d">FTC 광범위 조사, 집단소송, 매파 연준. 고배수에 역풍.</div></div>
+        <div class="bb-item"><div class="t">WACC 1%p = 가치 ±15%</div><div class="d">금리 환경이 단기 운명을 크게 좌우.</div></div>
+      </div>
+    </div>
+
+    <div class="callout co-key">
+      <div class="ttl">종합 결론 — 균형 잡힌 한 문단</div>
+      Microsoft는 <strong>세계에서 가장 자금력이 탄탄한 풀스택 AI 인프라 기업</strong>으로, 이미 깔린 압도적 기반 위에 AI를 추가 판매하는 구조적 강점을 가졌습니다. 현재 주가($372.73)에 내재된 <strong>경쟁우위 기간(CAP)은 약 15~16년으로, 넓은 해자 기업에게 "합리적~약간 낙관" 구간</strong>입니다 — 시장은 영웅적 가정을 하지 않으며, 3월 대비 기대치가 오히려 낮아졌습니다. 모든 것은 <strong>$190B 자본지출이 매출로 전환되는 속도</strong> 하나로 수렴합니다. 핵심 지표(Azure·계약 잔고·AI 매출)는 전환이 일어나고 있음을 시사하지만, 자본지출 후폭풍·전환율 정체·높은 금리는 그 속도를 위협합니다. <strong>강점은 충분히 실재하고, 리스크도 충분히 실재합니다.</strong>
+    </div>
+
+    <h3>모니터링할 핵심 지표 — 분기마다 확인</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>지표</th><th>무엇을 말해주나</th><th>강세 신호 / 약세 신호</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Azure 성장률</strong></td><td>클라우드 경쟁 우위의 핵심</td><td>+35% 이상 유지(강세) / 30% 미만 둔화(약세)</td></tr>
+          <tr><td><strong>잉여현금흐름(FCF)</strong></td><td>자본지출이 감당 가능한지</td><td>반등·증가(강세) / 지속 감소(약세)</td></tr>
+          <tr><td><strong>자본지출 증가율</strong></td><td>투자 사이클 정점 통과 여부</td><td>증가율 둔화(강세) / 추가 상향(약세)</td></tr>
+          <tr><td><strong>Copilot 전환율·좌석</strong></td><td>AI 수익화 증명</td><td>침투율 두 자릿수(강세) / ~5% 정체(약세)</td></tr>
+          <tr><td><strong>계약 잔고(RPO)</strong></td><td>미래 매출 가시성</td><td>증가 지속(강세) / 둔화·OpenAI 편중 심화(약세)</td></tr>
+          <tr><td><strong>영업이익률</strong></td><td>감가상각의 마진 잠식 정도</td><td>40%대 중반 유지(강세) / 추세적 하락(약세)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout co-think">
+      <div class="ttl">이 분석의 한계와 핵심 가정 (반드시 함께 읽어야 할 부분)</div>
+      좋은 분석은 자신의 한계를 숨기지 않습니다. 본 보고서의 결론은 다음 가정에 의존하며, 가정이 틀리면 결론도 달라집니다.<br><br>
+      ① <strong>DCF는 예시 모델입니다.</strong> 매출 성장률·재투자율·마진은 컨센서스와 정합적으로 설정했으나 미래 추정치이며, 특히 <strong>재투자율 가정(AI 투자 부담)이 결과를 크게 좌우</strong>합니다. 절대 주당 가치($351)보다 "시장이 ~15년의 우위를 가정한다"는 <strong>방향성·구조</strong>에 무게를 두십시오.<br>
+      ② <strong>자본비용(WACC)에 극도로 민감합니다.</strong> 1%포인트 변화가 가치의 ±15%를 좌우합니다. 본 보고서는 ERP 4.75%(WACC 9.1%)를 표준으로 썼으나, 현재 시장 ERP(~4.3%)를 쓰면 가치가 더 높고 내재 CAP는 더 낮아집니다.<br>
+      ③ <strong>일부 핵심 사실은 회사 발표에 의존합니다.</strong> Maia 칩 효율(+30%), MAI 모델 품질, Copilot 전환율(~5% 추정) 등은 독립 검증 자료가 제한적입니다.<br>
+      ④ <strong>데이터 출처가 일부 상충합니다.</strong> 시가총액 등은 집계처·시점마다 달라, 본 보고서는 주가×주식수로 일관 계산했습니다.<br>
+      ⑤ <strong>거시 환경은 빠르게 변합니다.</strong> 금리·인플레이션·AI 내러티브는 분기 단위로 바뀔 수 있어, 본 분석은 2026년 6월 시점의 스냅숏입니다.<br><br>
+      <strong>가장 중요한 단일 가정</strong>: "$190B 자본지출이 향후 수년간 매출로 충분히 전환된다." 이것이 참이면 강세론이, 거짓이면 약세론이 옳습니다. 현재 데이터는 전자를 시사하나, 결론은 아직 열려 있습니다. <span class="conf">전체 결론 확신도 중간~높음 ~65%</span>
+    </div>
+
+    <div class="callout co-warn">
+      <div class="ttl">분기별·연간 체크포인트</div>
+      <strong>다음 실적 발표(FY26 Q4, 2026년 7월 말 예정)</strong>에서 특히 확인할 것: ① Azure 성장률이 +39~40% 가이던스를 지키는가, ② 자본지출 증가율이 꺾이기 시작하는가, ③ 영업마진이 ~44%로 하락한다는 가이던스대로인가, ④ Copilot 좌석·전환율 진전. <strong>연간으로는</strong> 잉여현금흐름의 인플렉션(반등) 여부, OpenAI 관계 변화, 규제·소송 진행 상황을 추적하십시오. 이 지표들이 위 "강세 신호" 쪽으로 움직이면 내재 CAP가 정당화되고, "약세 신호" 쪽이면 재평가 하락 압력이 커집니다.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 푸터 ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <p style="margin-bottom:10px"><strong>Microsoft (MSFT) 심층 기업분석</strong> · 기준 시점 2026년 6월 29일 · 회계연도(FY)는 매년 6월 30일 종료</p>
+    <p style="margin-bottom:10px">본 보고서는 장기 주식투자 관점에서 기업·산업·기술·가치를 종합적으로 이해하기 위한 <strong>의사결정 참고자료</strong>입니다. 특정 종목의 매수·매도를 권유하지 않으며, 개인의 투자 목표·위험 성향·포트폴리오 맥락을 반영하지 않습니다. 모든 수치는 공개된 실적 발표·증권신고서 및 시장 데이터에 기반하나, 출처·시점에 따라 차이가 있을 수 있고 미래 추정치는 실제와 다를 수 있습니다.</p>
+    <p style="margin-bottom:0;color:#7e93b3;font-size:12px">데이터 출처: Microsoft FY2025 연차보고서(10-K) 및 FY2026 분기 실적(8-K), Synergy Research(클라우드 점유율), 시장 컨센서스·애널리스트 추정, 거시 지표(미 국채 수익률·기대 인플레이션·주식위험프리미엄). 가치평가는 시장 내재 경쟁우위기간(CAP) 역산 방법론에 따름.</p>
+  </div>
+</footer>
+
+</body>
+</html>
