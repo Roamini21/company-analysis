@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aeva Technologies (AEVA) — 심층 기업·산업 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F5F1; --surface:#FFFFFF; --surface-2:#FBFAF7;
+  --ink:#14181F; --ink-soft:#3B434F; --ink-mute:#697080;
+  --line:#E4E2DB; --line-strong:#CFCCC2;
+  --navy:#0B1220; --navy-2:#111C31; --navy-3:#16233D; --navy-line:#26344F;
+  --on-navy:#EBF1F8; --on-navy-soft:#A6B7CE; --on-navy-mute:#7C8DA6;
+  --blue:#2E6BE6; --blue-deep:#1B4FB8; --blue-soft:#DCE7FB;
+  --cyan:#159DB8; --teal:#0E9E86; --teal-soft:#D6F0EA;
+  --amber:#DB8613; --amber-soft:#F7E9CF; --gold:#B98900;
+  --coral:#D6493D; --coral-soft:#F7DCD8;
+  --violet:#6A54C9; --violet-soft:#E6E1F7;
+  --green:#2E9E63; --green-soft:#D8EFE1;
+  --shadow:0 1px 2px rgba(16,22,34,.06),0 8px 26px rgba(16,22,34,.07);
+  --shadow-lg:0 2px 6px rgba(16,22,34,.08),0 18px 50px rgba(16,22,34,.12);
+  --maxw:1080px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Inter",system-ui,-apple-system,sans-serif;font-size:16.5px;line-height:1.68;letter-spacing:-.006em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+img{max-width:100%}
+h1,h2,h3,h4{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em;line-height:1.15;color:var(--ink);font-weight:600}
+a{color:var(--blue-deep);text-decoration:none}
+a:hover{text-decoration:underline}
+.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+section.band{padding:64px 0;border-bottom:1px solid var(--line);scroll-margin-top:56px}
+section.band:last-of-type{border-bottom:none}
+.sec--tint{background:var(--surface-2)}
+.sec--dark{background:var(--navy);border-bottom:1px solid #05090f}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-deep);margin:0 0 10px}
+.sec--dark .eyebrow{color:#6FA0F0}
+h2.sec-title{font-size:clamp(25px,3.6vw,36px);margin:0 0 8px;font-weight:700}
+.sec--dark h2.sec-title{color:var(--on-navy)}
+.sec-lead{font-size:17.5px;color:var(--ink-soft);max-width:72ch;margin:0 0 26px}
+:where(.sec--dark) .sec-lead{color:var(--on-navy-soft)}
+.sec-num{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-mute);border:1px solid var(--line-strong);border-radius:20px;padding:3px 11px;display:inline-block;margin-bottom:14px;background:var(--surface)}
+.sec--dark .sec-num{color:var(--on-navy-soft);border-color:var(--navy-line);background:var(--navy-2)}
+:where(.sec--dark) p,:where(.sec--dark) li{color:var(--on-navy-soft)}
+:where(.sec--dark) strong{color:var(--on-navy)}
+:where(.sec--dark) h3,:where(.sec--dark) h4{color:var(--on-navy)}
+p{margin:0 0 15px}
+.prose p{max-width:74ch}
+.prose h3{font-size:20px;margin:30px 0 10px}
+.prose h4{font-size:16.5px;margin:22px 0 8px;font-family:"Space Grotesk";font-weight:600}
+.topbar{position:sticky;top:0;z-index:60;background:rgba(11,18,32,.94);backdrop-filter:blur(10px);border-bottom:1px solid #05090f}
+.topbar-inner{max-width:var(--maxw);margin:0 auto;padding:10px 22px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.brand .tk{font-family:"Space Grotesk";font-weight:700;color:#fff;font-size:16px;letter-spacing:-.01em}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue),var(--amber));box-shadow:0 0 0 3px rgba(46,107,230,.18)}
+.brand .sub{font-family:"IBM Plex Mono";font-size:11px;color:var(--on-navy-mute);letter-spacing:.04em}
+.navscroll{margin-left:auto;overflow-x:auto;-webkit-overflow-scrolling:touch;position:relative;mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent)}
+.navscroll ul{display:flex;gap:2px;list-style:none;margin:0;padding:0;white-space:nowrap}
+.navscroll a{font-family:"IBM Plex Mono";font-size:12px;color:var(--on-navy-soft);padding:6px 9px;border-radius:7px;display:block;white-space:nowrap;letter-spacing:.01em}
+.navscroll a:hover{background:var(--navy-3);color:#fff;text-decoration:none}
+@media(max-width:820px){.brand .sub{display:none}}
+.hero{background:radial-gradient(1200px 520px at 78% -8%,#16294d 0%,transparent 60%),radial-gradient(900px 500px at 8% 12%,#12203a 0%,transparent 55%),var(--navy);color:var(--on-navy);padding:60px 0 54px;position:relative;overflow:hidden;border-bottom:1px solid #05090f}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
+.hero-inner{position:relative;z-index:2}
+.hero .kicker{font-family:"IBM Plex Mono";font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:#7FB0FF;margin-bottom:16px}
+.hero h1{font-size:clamp(33px,6vw,60px);font-weight:700;color:#fff;margin:0 0 8px;line-height:1.04}
+.hero h1 .grad{background:linear-gradient(100deg,#38C6DF,#5A8CFF 44%,#B583FF 72%,#F0A93A);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero .tag{font-size:19px;color:var(--on-navy-soft);max-width:62ch;margin:14px 0 26px}
+.hero .tag b{color:#fff;font-weight:600}
+.velbar{height:6px;border-radius:6px;background:linear-gradient(90deg,#20B7D6,#3B7BF6 35%,#7A5BEA 62%,#DB8613 85%,#D6493D);margin:0 0 26px;max-width:560px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:820px}
+.hstat{background:rgba(19,30,51,.72);border:1px solid var(--navy-line);border-radius:13px;padding:14px 15px}
+.hstat .l{font-family:"IBM Plex Mono";font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--on-navy-mute);margin-bottom:5px}
+.hstat .v{font-family:"Space Grotesk";font-size:23px;font-weight:700;color:#fff;line-height:1}
+.hstat .d{font-size:11.5px;color:var(--on-navy-soft);margin-top:5px}
+.hstat .v.pos{color:#48D19B}.hstat .v.neg{color:#FF7C6E}
+@media(max-width:720px){.hero-stats{grid-template-columns:repeat(2,1fr)}}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:800px){.g2,.g3,.g4{grid-template-columns:1fr}.g4.keep2,.g3.keep2{grid-template-columns:1fr 1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:22px;box-shadow:var(--shadow);color:var(--ink)}
+.card h3,.card h4{color:var(--ink)}
+.card p,.card li{color:var(--ink-soft)}
+.sec--dark .card{background:var(--navy-2);border-color:var(--navy-line);color:var(--on-navy);box-shadow:none}
+.sec--dark .card h3,.sec--dark .card h4{color:var(--on-navy)}
+.sec--dark .card p,.sec--dark .card li{color:var(--on-navy-soft)}
+.sec--dark .card strong{color:#fff}
+.statgrid{display:grid;gap:12px;grid-template-columns:repeat(4,1fr)}
+@media(max-width:800px){.statgrid{grid-template-columns:1fr 1fr}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:16px 17px;box-shadow:var(--shadow)}
+.stat .k{font-family:"IBM Plex Mono";font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:6px}
+.stat .val{font-family:"Space Grotesk";font-size:26px;font-weight:700;color:var(--ink);line-height:1.02}
+.stat .val.blue{color:var(--blue-deep)}.stat .val.teal{color:var(--teal)}.stat .val.amber{color:var(--gold)}.stat .val.coral{color:var(--coral)}.stat .val.violet{color:var(--violet)}
+.stat .foot{font-size:11.5px;color:var(--ink-mute);margin-top:6px}
+.callout{border-radius:13px;padding:17px 19px;margin:20px 0;border:1px solid}
+.callout .ct{font-family:"Space Grotesk";font-weight:600;font-size:15px;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.callout p{margin:0}
+.co-blue{background:var(--blue-soft);border-color:#B9CFF6;color:#12336E}
+.co-blue .ct,.co-blue strong{color:#0E2A5C}
+.co-teal{background:var(--teal-soft);border-color:#AEDDD2;color:#0C4A3E}
+.co-teal .ct,.co-teal strong{color:#0A3B31}
+.co-amber{background:var(--amber-soft);border-color:#EAD3A6;color:#6A4A08}
+.co-amber .ct,.co-amber strong{color:#553B06}
+.co-coral{background:var(--coral-soft);border-color:#EEBDB6;color:#7E241B}
+.co-coral .ct,.co-coral strong{color:#6A1E16}
+.co-violet{background:var(--violet-soft);border-color:#C9BEEE;color:#3B2C78}
+.co-violet .ct,.co-violet strong{color:#31245F}
+.co-ink{background:#14181F;border-color:#2A303C;color:#D9DEE7}
+.co-ink .ct{color:#fff}.co-ink strong{color:#fff}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono";font-size:11.5px;font-weight:500;padding:4px 10px;border-radius:20px;border:1px solid;letter-spacing:.01em}
+.pill-blue{background:var(--blue-soft);color:#173B77;border-color:#BCD1F7}
+.pill-teal{background:var(--teal-soft);color:#0C463A;border-color:#B0DDD2}
+.pill-amber{background:var(--amber-soft);color:#5C3F06;border-color:#E7D0A2}
+.pill-coral{background:var(--coral-soft);color:#761F17;border-color:#EDBBB4}
+.pill-violet{background:var(--violet-soft);color:#332561;border-color:#C7BCEC}
+.pill-grey{background:#EEEDE7;color:#4A505C;border-color:#DAD8CF}
+.conf{font-family:"IBM Plex Mono";font-size:11px;padding:2px 8px;border-radius:5px;font-weight:500;white-space:nowrap;border:1px solid}
+.conf-hi{background:var(--green-soft);color:#1C5E38;border-color:#B4DBC3}
+.conf-md{background:var(--amber-soft);color:#6A4A08;border-color:#E7D0A2}
+.conf-lo{background:var(--coral-soft);color:#761F17;border-color:#EDBBB4}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);background:var(--surface);margin:18px 0}
+table.data{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+table.data caption{text-align:left;font-family:"IBM Plex Mono";font-size:11.5px;color:var(--ink-mute);padding:12px 15px 0;caption-side:top}
+table.data th,table.data td{padding:10px 13px;text-align:right;border-bottom:1px solid var(--line)}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data thead th{background:#101725;color:#EAF0F8;font-family:"IBM Plex Mono";font-weight:500;font-size:11.5px;letter-spacing:.03em;text-transform:uppercase;border-bottom:none}
+table.data tbody tr:nth-child(odd){background:var(--surface)}
+table.data tbody tr:nth-child(even){background:var(--surface-2)}
+table.data tbody td{color:var(--ink-soft)}
+table.data tbody td:first-child{color:var(--ink);font-weight:500}
+table.data tr.hl{background:var(--blue-soft)!important}
+table.data tr.hl td{color:#12336E;font-weight:600}
+table.data tr.total{background:#EEEDE7!important;border-top:2px solid var(--line-strong)}
+table.data tr.total td{color:var(--ink);font-weight:700}
+.num-pos{color:var(--teal)!important;font-weight:600}
+.num-neg{color:var(--coral)!important;font-weight:600}
+.fig{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:20px 20px 16px;box-shadow:var(--shadow);margin:22px 0}
+.fig--dark{background:var(--navy-2);border-color:var(--navy-line);box-shadow:none}
+.fig .ftitle{font-family:"Space Grotesk";font-weight:600;font-size:16px;color:var(--ink);margin:0 0 3px;line-height:1.25}
+.fig--dark .ftitle{color:var(--on-navy)}
+.fig .fsub{font-size:13px;color:var(--ink-mute);margin:0 0 14px}
+.fig--dark .fsub{color:var(--on-navy-soft)}
+.fig .fcap{font-family:"IBM Plex Mono";font-size:11px;color:var(--ink-mute);margin-top:12px;border-top:1px dashed var(--line);padding-top:9px;line-height:1.5}
+.fig--dark .fcap{color:var(--on-navy-mute);border-top-color:var(--navy-line)}
+.fig svg{display:block;width:100%;height:auto;overflow:visible}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:8px 0 2px;font-size:12.5px;color:var(--ink-soft)}
+.fig--dark .legend{color:var(--on-navy-soft)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.split{display:grid;grid-template-columns:1.5fr 1fr;gap:26px;align-items:start}
+@media(max-width:860px){.split{grid-template-columns:1fr}}
+.tl{position:relative;margin:20px 0;padding-left:26px}
+.tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--cyan),var(--blue),var(--violet),var(--amber))}
+.tl-item{position:relative;margin-bottom:18px}
+.tl-item::before{content:"";position:absolute;left:-23px;top:5px;width:11px;height:11px;border-radius:50%;background:var(--blue);border:2px solid var(--surface);box-shadow:0 0 0 2px var(--blue-soft)}
+.sec--dark .tl-item::before{border-color:var(--navy-2);box-shadow:0 0 0 2px var(--navy-3)}
+.tl-date{font-family:"IBM Plex Mono";font-size:12px;color:var(--blue-deep);font-weight:500}
+.sec--dark .tl-date{color:#6FA0F0}
+.tl-item h4{margin:2px 0 3px;font-size:15.5px}
+.tl-item p{margin:0;font-size:14px}
+.hr-lite{border:none;border-top:1px solid var(--line);margin:26px 0}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv:last-child{border-bottom:none}
+.kv .kk{color:var(--ink-mute)}.kv .vv{font-family:"IBM Plex Mono";color:var(--ink);font-weight:500;text-align:right}
+.sec--dark .kv{border-color:var(--navy-line)}.sec--dark .kv .kk{color:var(--on-navy-soft)}.sec--dark .kv .vv{color:var(--on-navy)}
+ul.clean{list-style:none;padding:0;margin:12px 0}
+ul.clean li{padding-left:22px;position:relative;margin-bottom:9px}
+ul.clean li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;border-radius:2px;background:var(--blue)}
+ul.clean.teal li::before{background:var(--teal)}
+ul.clean.coral li::before{background:var(--coral)}
+ul.clean.amber li::before{background:var(--amber)}
+ul.clean.violet li::before{background:var(--violet)}
+.footnote{font-size:13px;color:var(--ink-mute)}
+footer.rpt{background:var(--navy);color:var(--on-navy-soft);padding:40px 0 46px;font-size:13.5px}
+footer.rpt h4{color:#fff;font-size:15px;margin:0 0 10px}
+footer.rpt a{color:#8FB4EE}
+.src-list{columns:2;column-gap:26px;font-size:12.5px;line-height:1.7;color:var(--on-navy-mute)}
+@media(max-width:700px){.src-list{columns:1}}
+.big-quote{font-family:"Space Grotesk";font-weight:500;font-size:clamp(19px,2.5vw,24px);line-height:1.4;color:var(--ink);border-left:4px solid var(--blue);padding:4px 0 4px 20px;margin:22px 0}
+.sec--dark .big-quote{color:var(--on-navy);border-color:var(--cyan)}
+.big-quote .qby{display:block;font-family:"IBM Plex Mono";font-size:12.5px;color:var(--ink-mute);margin-top:10px;font-weight:400}
+.sec--dark .big-quote .qby{color:var(--on-navy-soft)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="dot"></span>
+      <span class="tk">AEVA</span>
+      <span class="sub">Aeva Technologies · Nasdaq</span>
+    </div>
+    <nav class="navscroll" aria-label="목차">
+      <ul>
+        <li><a href="#s1">요약</a></li>
+        <li><a href="#s2">기업개요</a></li>
+        <li><a href="#s3">수익구조</a></li>
+        <li><a href="#s4">기술력</a></li>
+        <li><a href="#s5">산업분석</a></li>
+        <li><a href="#s6">경제적해자</a></li>
+        <li><a href="#s7">피어비교</a></li>
+        <li><a href="#s8">시장내러티브</a></li>
+        <li><a href="#s9">재무·DCF</a></li>
+        <li><a href="#s10">내재기대</a></li>
+        <li><a href="#s11">Bull</a></li>
+        <li><a href="#s12">Bear</a></li>
+        <li><a href="#s13">SWOT</a></li>
+        <li><a href="#s14">경영진</a></li>
+        <li><a href="#s15">종합판단</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <canvas id="pcloud"></canvas>
+  <div class="wrap hero-inner">
+    <div class="kicker">심층 기업·산업 분석 · 장기 투자 관점 · 2026년 7월 1일 기준</div>
+    <h1>Aeva Technologies<br><span class="grad">빛으로 속도를 읽는 회사</span></h1>
+    <p class="tag">라이다(LiDAR) 산업의 이단아. <b>FMCW 4D 라이다</b>로 거리뿐 아니라 물체의 <b>속도까지 한 번에</b> 측정하고, 그 기반이 되는 <b>실리콘 포토닉스 플랫폼</b>을 자동차를 넘어 <b>AI 데이터센터 광학</b>으로 확장 중인 초기 단계 성장 기업. 매출은 아직 작지만 시장은 그 &lsquo;플랫폼 옵션가치&rsquo;에 큰 값을 매기고 있다.</p>
+    <div class="velbar"></div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="l">최근 주가(대략)</div><div class="v">≈ $22</div><div class="d">52주 $8.83&ndash;$38.79 · 베타 ≈2.4</div></div>
+      <div class="hstat"><div class="l">시가총액</div><div class="v">≈ $1.5B</div><div class="d">소형주 · 발행주식 ≈6,800만</div></div>
+      <div class="hstat"><div class="l">TTM 매출</div><div class="v pos">$21.0M</div><div class="d">FY25 $18.1M(+99%)</div></div>
+      <div class="hstat"><div class="l">EV / 매출(TTM)</div><div class="v neg">≈72&times;</div><div class="d">피어 대비 &sim;6&ndash;15배 프리미엄</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="band" id="s1">
+  <div class="wrap">
+    <span class="sec-num">01 / 15</span>
+    <p class="eyebrow">Executive Summary</p>
+    <h2 class="sec-title">핵심 요약 &mdash; 한눈에 보는 Aeva</h2>
+    <p class="sec-lead">Aeva를 한 문장으로: <strong>&ldquo;애플 출신 엔지니어들이 세운, 라이다를 반도체 칩 하나로 압축해 &lsquo;거리+속도&rsquo;를 동시에 재는 기술로 자동차&middot;산업&middot;AI 데이터센터 시장을 노리는 초기 단계 실리콘 포토닉스 기업&rdquo;</strong>이다.</p>
+
+    <div class="split">
+      <div class="prose">
+        <p>Aeva(에이바)는 2016년 애플의 감지(sensing) 팀 출신인 소로쉬 살레히안(CEO)과 미나 레즈크(CTO)가 창업해 2021년 스팩(SPAC) 합병으로 상장한 회사다. 대다수 라이다 업체가 쓰는 &lsquo;빛을 쏘고 돌아오는 시간을 재는&rsquo; 방식(ToF)과 달리, Aeva는 <strong>레이저 주파수를 미세하게 흔들어 되돌아온 빛의 주파수 변화를 읽는 FMCW 방식</strong>을 쓴다. 그 결과 물체까지의 거리(3D)에 더해 <strong>물체가 다가오는지 멀어지는지의 속도(4번째 차원)를 점 하나하나마다 즉시</strong> 알 수 있다. 이 모든 부품을 <strong>실리콘 포토닉스 칩</strong> 위에 집적한 것이 Aeva의 핵심 자산이다.</p>
+        <p>투자 관점에서 Aeva의 매력은 세 겹의 &lsquo;스토리&rsquo;가 겹쳐 있다는 점이다. 첫째, <strong>다임러트럭</strong>의 자율주행 대형트럭용 장거리 라이다 <strong>독점 공급사</strong>이자, 2025년 12월 <strong>중국을 제외한 글로벌 시장에서 유럽 톱10 승용차 브랜드의 독점 Tier-1 라이다 공급사</strong>로 선정됐다. 둘째, 같은 실리콘 포토닉스 기술로 <strong>산업 자동화(SICK&middot;Nikon)&middot;국방(Forterra)&middot;스마트 인프라(CityOS)</strong>로 매출원을 넓히고 있다. 셋째, 2026년 1월 <strong>AI 데이터센터&middot;광학 연결(CPO)용 고출력 광증폭기(SOA)</strong>를 발표하며, 엔비디아&middot;코히런트가 뛰어든 뜨거운 실리콘 포토닉스 테마에 편승했다.</p>
+        <p>바로 이 세 겹의 옵션가치 때문에 주가는 2024년 저점 대비 한때 <strong>1,000% 이상 폭등</strong>했다. 그러나 냉정히 보면 회사는 여전히 <strong>연 매출 약 2,000만 달러, 연간 순손실 약 1억 4,500만 달러</strong>의 적자 기업이며, <strong>EV/매출 배수가 약 70배</strong>로 흑자를 내는 1위 업체 헤사이(약 5배)의 10배가 넘는다. 시장은 &lsquo;아직 오지 않은 미래&rsquo;를 지금 가격에 반영하고 있다.</p>
+      </div>
+      <aside>
+        <div class="card">
+          <p class="eyebrow" style="margin-bottom:12px">한 줄 결론</p>
+          <p style="font-family:'Space Grotesk';font-size:17px;font-weight:500;color:var(--ink);line-height:1.4;margin-bottom:14px">기술 차별화는 진짜지만, 밸류에이션은 &lsquo;완벽한 실행&rsquo;을 이미 가정하고 있다.</p>
+          <div class="kv"><span class="kk">생애주기 단계</span><span class="vv">도입(Introduction)</span></div>
+          <div class="kv"><span class="kk">밸류 접근법</span><span class="vv">실물옵션·TAM</span></div>
+          <div class="kv"><span class="kk">애널리스트</span><span class="vv">매수 4·보유 1·매도 0</span></div>
+          <div class="kv"><span class="kk">중앙 목표주가</span><span class="vv">$24 ($18.55&ndash;$33)</span></div>
+          <div class="kv"><span class="kk">공매도 잔고</span><span class="vv">발행주식 ≈11.6%</span></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="callout co-ink">
+      <div class="ct">&#9654; 시장 내재 기대치(CAP) 결론 &mdash; 먼저 제시</div>
+      <p style="margin-bottom:10px">Aeva는 영업이익(NOPAT)이 <strong>깊은 마이너스</strong>여서, 모부신식 표준 &lsquo;내재 CAP 역산&rsquo;(양(+)의 NOPAT을 전제로 초과수익 지속기간을 역산)을 <strong>그대로 적용할 수 없다.</strong> 대신 CAP 프레임워크가 도입 단계 기업에 권고하는 <strong>실물옵션&middot;TAM 접근</strong>과 <strong>&lsquo;시장 내재 기대치 역산&rsquo;</strong>을 사용했다. 결론은 다음과 같다:</p>
+      <p style="margin-bottom:0">현재 약 <strong>15억 달러의 기업가치(EV)</strong>가 정당화되려면, Aeva는 대략 <strong>2032&ndash;2033년까지 매출을 지금의 40&ndash;60배인 8억&ndash;12억 달러 규모로 키우고</strong> 동시에 <strong>20% 안팎의 견고한 영업마진에 도달</strong>해야 한다(연 60%+ 성장을 8년 지속). 이는 &lsquo;3개 프로그램(다임러트럭&middot;유럽 OEM&middot;AI 광학)이 모두 성공&rsquo;하는 강세 시나리오이며 <strong>확신도: 중간(≈55%)</strong>. 시장은 회사에 사실상 &lsquo;20년+에 준하는 매우 긴 경쟁우위&rsquo;를 가정하고 있고, 이는 해자가 진짜라는 확신 없이는 정당화하기 어려운 낙관 구간이다.</p>
+    </div>
+
+    <div class="grid g2" style="margin-top:8px">
+      <div class="callout co-teal" style="margin:0">
+        <div class="ct">&#9650; 왜 시장 자금이 이 회사를 선호하는가 (놓치기 쉬운 강점)</div>
+        <ul class="clean teal" style="margin:8px 0 0">
+          <li><strong>진짜 기술 차별화:</strong> FMCW 4D + 칩 집적은 경쟁사가 5&ndash;7년 뒤처져 있다고 평가받는 어려운 기술.</li>
+          <li><strong>희소한 서구 프리미엄 수주:</strong> 소형 업체가 다임러트럭 + 유럽 톱10 OEM 독점 양산 프로그램을 &lsquo;동시에&rsquo; 확보한 사례는 드물다.</li>
+          <li><strong>플랫폼의 2막&middot;3막:</strong> 같은 포토닉스로 산업&middot;국방&middot;AI 데이터센터까지 확장 &mdash; 라이다 단일 시장의 가격전쟁을 우회.</li>
+          <li><strong>강한 뒷배:</strong> 엔비디아 통합, LG이노텍($50M 투자), Point72&middot;Duquesne 등 스마트머니 보유.</li>
+        </ul>
+      </div>
+      <div class="callout co-coral" style="margin:0">
+        <div class="ct">&#9660; 정직하게 봐야 할 리스크</div>
+        <ul class="clean coral" style="margin:8px 0 0">
+          <li><strong>극단적 밸류에이션:</strong> EV/매출 ≈70배. 실적이 조금만 어긋나도 배수가 붕괴.</li>
+          <li><strong>실행&middot;타이밍 위험:</strong> 대형 매출은 2027(트럭)&middot;2028(승용) 양산부터 &mdash; 그 사이 매출은 개발 마일스톤에 좌우.</li>
+          <li><strong>희석:</strong> 연 10&ndash;15% 주식 증가, 흑자 전 지속적 증자 필요.</li>
+          <li><strong>AI 광학은 아직 &lsquo;내러티브&rsquo;:</strong> SOA는 발표 단계로 매출&middot;수주 없음. 코히런트&middot;루멘텀 등 거대 경쟁사 대비 극소.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="band sec--tint" id="s2">
+  <div class="wrap">
+    <span class="sec-num">02 / 15</span>
+    <p class="eyebrow">Company Overview</p>
+    <h2 class="sec-title">기업 개요 &mdash; 애플의 감지팀에서 나온 라이다 스타트업</h2>
+    <p class="sec-lead">Aeva의 DNA는 &lsquo;정밀 감지(precision sensing)&rsquo;다. 창업자 두 명 모두 애플에서 소비자용 센싱 시스템을 개발하던 엔지니어였고, 이 배경이 &lsquo;라이다를 반도체처럼 칩에 집적한다&rsquo;는 회사의 근본 전략을 만들었다.</p>
+
+    <div class="split">
+      <div class="prose">
+        <h3>설립과 역사 &mdash; &lsquo;Aeon Imaging&rsquo;에서 &lsquo;Aeva&rsquo;로</h3>
+        <p>회사는 <strong>2016년 12월</strong> 캘리포니아 마운틴뷰에서 &lsquo;Aeon Imaging&rsquo;이라는 이름으로 출발해 2019년 &lsquo;Aeva&rsquo;로 사명을 바꿨다. 공동 창업자 <strong>소로쉬 살레히안 다르다슈티</strong>(CEO)는 애플에서 제품 개발 매니저로 소비자 제품&middot;센싱 시스템 팀을 이끌었고(스탠퍼드 기계공학 학사), <strong>미나 레즈크</strong>(사장&middot;CTO&middot;이사회 의장)는 애플의 특수 프로젝트 그룹에서 감지 엔지니어링 매니저를, 그 전에는 <strong>Nikon Metrology</strong>에서 11년간 하드웨어 개발을 맡으며 자동차&middot;항공용 센서 융합 시스템에서 17년 경력을 쌓았다(조지메이슨대 전기공학 학&middot;석사).</p>
+        <p>두 사람이 애플에서 다룬 &lsquo;정밀 광학 센싱&rsquo; 노하우가 Aeva의 핵심 베팅으로 이어졌다: 라이다의 광학&middot;전자 부품을 <strong>통신 산업에서 검증된 실리콘 포토닉스</strong> 위에 통합해, 손톱만 한 칩 모듈로 만들겠다는 것. 2021년 3월 스팩(InterPrivate Acquisition)과 합병해 나스닥에 상장했고, 당시 &lsquo;신흥 성장기업&rsquo;으로 분류됐다. 2024년 3월에는 상장 유지 기준(주당 최저가)을 맞추기 위해 <strong>약 1:5 주식 병합(reverse split)</strong>을 단행했다 &mdash; 이 때문에 2024년 이전과 이후의 주당 수치는 직접 비교되지 않으니 주의가 필요하다.</p>
+        <h3>지금의 Aeva &mdash; 규모와 위상</h3>
+        <p>2026년 중반 기준 Aeva는 임직원 약 <strong>239명</strong>의 소형주다. 연 매출은 약 2,000만 달러 수준으로 &lsquo;라이다 순수 기업&rsquo; 중에서는 매출 규모가 가장 작은 축에 속하지만, 시가총액은 약 15억 달러로 매출 대비 시장의 기대가 가장 큰 회사이기도 하다. 사업은 크게 <strong>자동차(승용&middot;상용 자율주행), 산업 자동화, 스마트 인프라, 국방, 그리고 신규 AI 데이터센터 광학</strong> 다섯 갈래로 뻗어 있다.</p>
+      </div>
+      <aside>
+        <div class="card" style="margin-bottom:16px">
+          <p class="eyebrow" style="margin-bottom:12px">기본 정보</p>
+          <div class="kv"><span class="kk">티커 / 거래소</span><span class="vv">AEVA / Nasdaq</span></div>
+          <div class="kv"><span class="kk">설립</span><span class="vv">2016.12 (마운틴뷰)</span></div>
+          <div class="kv"><span class="kk">상장</span><span class="vv">2021.3 (SPAC)</span></div>
+          <div class="kv"><span class="kk">임직원</span><span class="vv">≈ 239명</span></div>
+          <div class="kv"><span class="kk">섹터</span><span class="vv">정보기술 / 전자장비</span></div>
+          <div class="kv"><span class="kk">주식 병합</span><span class="vv">2024.3 (≈1:5)</span></div>
+          <div class="kv"><span class="kk">배당</span><span class="vv">없음</span></div>
+        </div>
+        <div class="card">
+          <p class="eyebrow" style="margin-bottom:10px">핵심 인물</p>
+          <p style="font-size:14px;margin-bottom:8px"><strong>Soroush Salehian</strong> &mdash; 공동창업&middot;CEO<br><span class="footnote">前 Apple 제품개발 · Stanford ME</span></p>
+          <p style="font-size:14px;margin-bottom:8px"><strong>Mina Rezk</strong> &mdash; 공동창업&middot;사장&middot;CTO&middot;의장<br><span class="footnote">前 Apple 감지 / Nikon Metrology · GMU EE</span></p>
+          <p style="font-size:14px;margin:0"><strong>Saurabh Sinha</strong> &mdash; CFO</p>
+        </div>
+      </aside>
+    </div>
+
+    <h3 style="font-family:'Space Grotesk';font-size:20px;margin:34px 0 6px">5개 사업 갈래와 대표 제품</h3>
+    <p class="footnote" style="margin-bottom:16px">모든 제품은 동일한 &lsquo;FMCW 4D 라이다-온-칩&rsquo; 플랫폼에서 파생된다. 하나의 핵심 기술이 여러 시장으로 뻗는 구조가 Aeva 전략의 요체다.</p>
+    <div class="grid g3 keep2">
+      <div class="card">
+        <span class="pill pill-blue">자동차 · 승용</span>
+        <h4 style="margin:10px 0 4px">Atlas / Atlas Ultra</h4>
+        <p style="font-size:13.5px;margin:0">양산용 FMCW 4D 라이다. <strong>Atlas Ultra</strong>는 해상도 3배&middot;두께 35% 슬림으로 SAE 레벨3&middot;4 승용차 통합에 최적화. 유럽 OEM&middot;NVIDIA Hyperion의 레퍼런스 센서.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-blue">자동차 · 상용</span>
+        <h4 style="margin:10px 0 4px">Atlas (트럭)</h4>
+        <p style="font-size:13.5px;margin:0">다임러트럭 자율주행 Class 8 트럭의 <strong>독점 장거리&middot;주(主)탐지 센서</strong>. 500m 장거리+속도 동시 측정으로 고속 화물 운행에 적합. 2026년 C-샘플, 2027년 출시 목표.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-teal">산업 자동화</span>
+        <h4 style="margin:10px 0 4px">Eve 1</h4>
+        <p style="font-size:13.5px;margin:0">서브마이크론(㎛ 이하) 정밀 레이저 변위 센서. SICK&middot;LMI에 공급, <strong>Nikon APDIS MV5X</strong> 검사 시스템에 탑재(다년 계약). $10B+ 산업 자동화 시장 타깃.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-violet">인프라 · 스마트시티</span>
+        <h4 style="margin:10px 0 4px">Atlas Orion + CityOS</h4>
+        <p style="font-size:13.5px;margin:0">이더넷 전원&middot;데이터 장거리 라이다 <strong>Orion</strong>과 AI 교통 관제 SW <strong>CityOS</strong>. 조지아(애틀랜타 30개 교차로)&middot;노스다코타 파고 등에 도입 &mdash; 하드웨어+SW 결합.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-amber">단거리 · 로보틱스</span>
+        <h4 style="margin:10px 0 4px">Omni</h4>
+        <p style="font-size:13.5px;margin:0">광시야 단거리 FMCW 라이다. 로봇&middot;물류 등 &lsquo;피지컬 AI(Physical AI)&rsquo; 응용을 겨냥한 소형 컴팩트 모델.</p>
+      </div>
+      <div class="card" style="border:1px solid #C9BEEE;background:linear-gradient(180deg,#fff,#F5F2FD)">
+        <span class="pill pill-violet">신규 · AI 데이터센터</span>
+        <h4 style="margin:10px 0 4px">High-Power SOA</h4>
+        <p style="font-size:13.5px;margin:0">2026.1 발표. AI 데이터센터 <strong>Co-Packaged Optics(CPO)</strong>용 고출력 반도체 광증폭기. 라이다를 넘어선 &lsquo;플랫폼 3막&rsquo; &mdash; 아직 매출 전 단계.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="band" id="s3">
+  <div class="wrap">
+    <span class="sec-num">03 / 15</span>
+    <p class="eyebrow">Revenue Structure</p>
+    <h2 class="sec-title">수익 구조 &mdash; 아직은 &lsquo;개발비&rsquo;가 &lsquo;제품 판매&rsquo;를 앞선다</h2>
+    <p class="sec-lead">Aeva의 매출은 두 갈래다: (1) 라이다&middot;센싱 시스템의 <strong>제품 판매</strong>, (2) OEM 개발 프로그램에서 받는 <strong>비반복 엔지니어링(NRE) 서비스 매출</strong>. 현재 성장의 상당 부분은 후자 &mdash; 즉 실제 대량 판매가 아니라 &lsquo;양산 준비를 위한 개발 용역&rsquo;에서 나온다. 이것이 &lsquo;선(先)수주, 후(後)매출&rsquo; 구조의 핵심이며, 밸류에이션을 이해하는 열쇠다.</p>
+
+    <div class="fig">
+      <p class="ftitle">Aeva의 돈이 흐르는 길 &mdash; 5개 시장 → 2개 매출 유형</p>
+      <p class="fsub">동일한 FMCW 라이다-온-칩 플랫폼이 5개 최종 시장으로 확산되고, 각 시장은 &lsquo;제품 판매&rsquo;와 &lsquo;개발(NRE) 매출&rsquo; 두 형태로 수익화된다.</p>
+      <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" style="width:100%;height:auto">
+        <defs>
+          <marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#8794A6"/></marker>
+        </defs>
+        <!-- core -->
+        <rect x="300" y="120" width="160" height="60" rx="12" fill="#111C31"/>
+        <text x="380" y="146" font-family="Space Grotesk" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">FMCW 4D</text>
+        <text x="380" y="164" font-family="Space Grotesk" font-size="14" font-weight="700" fill="#38C6DF" text-anchor="middle">LiDAR-on-Chip</text>
+        <!-- markets left -->
+        <g font-family="Inter" font-size="12" font-weight="600">
+          <rect x="20" y="30" width="150" height="34" rx="8" fill="#DCE7FB" stroke="#BCD1F7"/><text x="95" y="52" fill="#173B77" text-anchor="middle">자동차 · 승용(L3/L4)</text>
+          <rect x="20" y="78" width="150" height="34" rx="8" fill="#DCE7FB" stroke="#BCD1F7"/><text x="95" y="100" fill="#173B77" text-anchor="middle">자동차 · 상용트럭</text>
+          <rect x="20" y="126" width="150" height="34" rx="8" fill="#D6F0EA" stroke="#B0DDD2"/><text x="95" y="148" fill="#0C463A" text-anchor="middle">산업 자동화</text>
+          <rect x="20" y="174" width="150" height="34" rx="8" fill="#E6E1F7" stroke="#C7BCEC"/><text x="95" y="196" fill="#332561" text-anchor="middle">스마트 인프라</text>
+          <rect x="20" y="222" width="150" height="34" rx="8" fill="#F7E9CF" stroke="#E7D0A2"/><text x="95" y="244" fill="#5C3F06" text-anchor="middle">국방 · AI 데이터센터</text>
+        </g>
+        <g stroke="#8794A6" stroke-width="1.4" fill="none" marker-end="url(#ar)">
+          <path d="M170 47 C 250 60, 270 120, 300 135"/>
+          <path d="M170 95 C 250 105, 275 125, 300 143"/>
+          <path d="M170 143 L 300 150"/>
+          <path d="M170 191 C 250 185, 275 165, 300 158"/>
+          <path d="M170 239 C 250 210, 275 175, 300 166"/>
+        </g>
+        <!-- outputs right -->
+        <g stroke="#8794A6" stroke-width="1.6" fill="none" marker-end="url(#ar)">
+          <path d="M460 138 C 520 120, 540 90, 580 88"/>
+          <path d="M460 162 C 520 180, 540 205, 580 208"/>
+        </g>
+        <rect x="580" y="62" width="160" height="52" rx="10" fill="#fff" stroke="#2E6BE6" stroke-width="1.6"/>
+        <text x="660" y="84" font-family="Space Grotesk" font-size="13" font-weight="700" fill="#1B4FB8" text-anchor="middle">제품 판매</text>
+        <text x="660" y="102" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="middle">센서·시스템 · 미래 대량</text>
+        <rect x="580" y="184" width="160" height="52" rx="10" fill="#fff" stroke="#DB8613" stroke-width="1.6"/>
+        <text x="660" y="206" font-family="Space Grotesk" font-size="13" font-weight="700" fill="#B98900" text-anchor="middle">NRE 개발 매출</text>
+        <text x="660" y="224" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="middle">현재 성장의 주력</text>
+      </svg>
+      <p class="fcap">그림 3-1. Aeva 수익 구조 도식. 출처: Aeva 10-K/10-Q, 실적발표 자료 기반 재구성.</p>
+    </div>
+
+    <div class="split">
+      <div class="prose">
+        <h3>&lsquo;제품 판매&rsquo;보다 &lsquo;개발 매출&rsquo;이 빠르게 큰다</h3>
+        <p>2026년 1분기 매출 $6.3M는 전년 대비 약 90% 늘었지만, 그 증가의 대부분은 <strong>NRE 서비스가 4배 이상 급증</strong>한 데서 나왔고 <strong>제품 매출은 사실상 정체</strong>였다. 이는 나쁜 신호가 아니라 &lsquo;양산 전 개발 단계&rsquo;의 자연스러운 모습이다: 다임러트럭&middot;유럽 OEM이 양산을 준비하며 Aeva에 개발비를 지급하고 있고, 실제 대량 매출은 <strong>2027년(트럭)&middot;2028년(승용) 양산 개시 이후</strong> 본격화된다. 즉 지금의 매출 성장률(연 ~99%)은 &lsquo;개발 마일스톤&rsquo;에 좌우되며, 양산 매출과는 성격이 다르다.</p>
+        <p>지역별로는 매출의 대부분을 <strong>북미</strong>에서 얻는다(다임러트럭 북미, CityOS 미국 도시들). 유럽 OEM 양산이 시작되면 유럽 비중이 커지고, 산업(SICK 독일, Nikon)&middot;AI 광학이 붙으면 다변화가 진행될 구조다.</p>
+        <h3>수익 모델의 질(質) &mdash; 아직 검증 전</h3>
+        <p>라이다는 본질적으로 <strong>하드웨어 비즈니스</strong>다. 장기적으로 Aeva의 마진이 좋아지려면 (1) 실리콘 포토닉스 칩 집적으로 부품 수를 줄여 <strong>규모의 경제</strong>를 확보하고(LG이노텍&middot;Jabil&middot;Tower Semiconductor 활용), (2) CityOS 같은 <strong>소프트웨어&middot;서비스</strong> 매출을 얹으며, (3) 라이다에 그치지 않고 <strong>AI 광학 부품</strong>이라는 고마진 인접시장으로 확장해야 한다. 현재 총이익률은 사실상 의미 있는 규모가 아니어서, 마진의 질은 &lsquo;약속&rsquo; 단계로 봐야 한다.</p>
+      </div>
+      <aside>
+        <div class="card" style="margin-bottom:16px">
+          <p class="eyebrow" style="margin-bottom:10px">최근 분기 스냅샷 · Q1 2026</p>
+          <div class="kv"><span class="kk">매출</span><span class="vv">$6.3M (+90% YoY)</span></div>
+          <div class="kv"><span class="kk">제품 매출</span><span class="vv">거의 정체</span></div>
+          <div class="kv"><span class="kk">NRE 서비스</span><span class="vv">4배+ 급증</span></div>
+          <div class="kv"><span class="kk">주요 지역</span><span class="vv">북미 중심</span></div>
+          <div class="kv"><span class="kk">양산 개시</span><span class="vv">트럭 27 · 승용 28</span></div>
+        </div>
+        <div class="callout co-amber" style="margin:0">
+          <div class="ct">투자 함의</div>
+          <p>&ldquo;매출 +99%&rdquo;라는 헤드라인에 현혹되지 말 것. 절대 규모($21M)가 작고 개발 매출 비중이 커, <strong>진짜 검증은 2027&ndash;2028년 양산 매출의 &lsquo;램프 기울기&rsquo;</strong>에서 나온다.</p>
+        </div>
+      </aside>
+    </div>
+
+    <div class="fig">
+      <p class="ftitle">매출은 빠르게, 손실은 &lsquo;제자리&rsquo; &mdash; 운영 레버리지가 서서히 작동</p>
+      <p class="fsub">막대: 연간 매출($M) · 점선: 비GAAP 영업손실($M, 절대값). 매출이 커지는 동안 손실은 2022년 정점 이후 오히려 줄었다.</p>
+      <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img">
+<line x1="52" y1="348.0" x2="706" y2="348.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="44" y="351.5" font-family="IBM Plex Mono" font-size="9.5" fill="#0E9E86" text-anchor="end" font-weight="400" letter-spacing="0">$0M</text>
+<line x1="52" y1="275.5" x2="706" y2="275.5" stroke="#E4E2DB" stroke-width="1"/>
+<text x="44" y="279.0" font-family="IBM Plex Mono" font-size="9.5" fill="#0E9E86" text-anchor="end" font-weight="400" letter-spacing="0">$9M</text>
+<line x1="52" y1="203.0" x2="706" y2="203.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="44" y="206.5" font-family="IBM Plex Mono" font-size="9.5" fill="#0E9E86" text-anchor="end" font-weight="400" letter-spacing="0">$18M</text>
+<line x1="52" y1="130.5" x2="706" y2="130.5" stroke="#E4E2DB" stroke-width="1"/>
+<text x="44" y="134.0" font-family="IBM Plex Mono" font-size="9.5" fill="#0E9E86" text-anchor="end" font-weight="400" letter-spacing="0">$27M</text>
+<line x1="52" y1="58.0" x2="706" y2="58.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="44" y="61.5" font-family="IBM Plex Mono" font-size="9.5" fill="#0E9E86" text-anchor="end" font-weight="400" letter-spacing="0">$36M</text>
+<text x="714" y="351.5" font-family="IBM Plex Mono" font-size="9.5" fill="#D6493D" text-anchor="start" font-weight="400" letter-spacing="0">$0M</text>
+<text x="714" y="206.5" font-family="IBM Plex Mono" font-size="9.5" fill="#D6493D" text-anchor="start" font-weight="400" letter-spacing="0">$70M</text>
+<text x="714" y="61.5" font-family="IBM Plex Mono" font-size="9.5" fill="#D6493D" text-anchor="start" font-weight="400" letter-spacing="0">$140M</text>
+<rect x="81.4" y="273.1" width="50.1" height="74.9" rx="3" fill="#2E6BE6" opacity="1"/>
+<text x="106.5" y="267.08333333333337" font-family="IBM Plex Mono" font-size="10.5" fill="#1B4FB8" text-anchor="middle" font-weight="700" letter-spacing="0">9.3</text>
+<text x="106.5" y="366" font-family="IBM Plex Mono" font-size="10.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2021</text>
+<rect x="190.4" y="314.2" width="50.1" height="33.8" rx="3" fill="#2E6BE6" opacity="1"/>
+<text x="215.5" y="308.1666666666667" font-family="IBM Plex Mono" font-size="10.5" fill="#1B4FB8" text-anchor="middle" font-weight="700" letter-spacing="0">4.2</text>
+<text x="215.5" y="366" font-family="IBM Plex Mono" font-size="10.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2022</text>
+<rect x="299.4" y="311.8" width="50.1" height="36.2" rx="3" fill="#2E6BE6" opacity="1"/>
+<text x="324.5" y="305.75" font-family="IBM Plex Mono" font-size="10.5" fill="#1B4FB8" text-anchor="middle" font-weight="700" letter-spacing="0">4.5</text>
+<text x="324.5" y="366" font-family="IBM Plex Mono" font-size="10.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2023</text>
+<rect x="408.4" y="274.9" width="50.1" height="73.1" rx="3" fill="#2E6BE6" opacity="1"/>
+<text x="433.5" y="268.9361111111111" font-family="IBM Plex Mono" font-size="10.5" fill="#1B4FB8" text-anchor="middle" font-weight="700" letter-spacing="0">9.1</text>
+<text x="433.5" y="366" font-family="IBM Plex Mono" font-size="10.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2024</text>
+<rect x="517.4" y="202.4" width="50.1" height="145.6" rx="3" fill="#2E6BE6" opacity="1"/>
+<text x="542.5" y="196.35555555555558" font-family="IBM Plex Mono" font-size="10.5" fill="#1B4FB8" text-anchor="middle" font-weight="700" letter-spacing="0">18.1</text>
+<text x="542.5" y="366" font-family="IBM Plex Mono" font-size="10.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2025</text>
+<rect x="626.4" y="82.2" width="50.1" height="265.8" rx="3" fill="#159DB8" opacity="0.55"/>
+<text x="651.5" y="76.16666666666669" font-family="IBM Plex Mono" font-size="10.5" fill="#1B4FB8" text-anchor="middle" font-weight="700" letter-spacing="0">33.0</text>
+<text x="651.5" y="366" font-family="IBM Plex Mono" font-size="10.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2026E</text>
+<path d="M 106.5 178.3 L 215.5 83.5 L 324.5 89.1 L 433.5 120.1 L 542.5 134.6" fill="none" stroke="#D6493D" stroke-width="2.2" stroke-dasharray="5 3"/>
+<circle cx="106.5" cy="178.3" r="3.6" fill="#D6493D" stroke="#fff" stroke-width="1.4"/>
+<circle cx="215.5" cy="83.5" r="3.6" fill="#D6493D" stroke="#fff" stroke-width="1.4"/>
+<circle cx="324.5" cy="89.1" r="3.6" fill="#D6493D" stroke="#fff" stroke-width="1.4"/>
+<circle cx="433.5" cy="120.1" r="3.6" fill="#D6493D" stroke="#fff" stroke-width="1.4"/>
+<circle cx="542.5" cy="134.6" r="3.6" fill="#D6493D" stroke="#fff" stroke-width="1.4"/>
+<text x="215.5" y="74.47857142857143" font-family="Inter" font-size="10" fill="#D6493D" text-anchor="middle" font-weight="600" letter-spacing="0">-$127.7M</text>
+<text x="544.5" y="125.64285714285711" font-family="Inter" font-size="10" fill="#D6493D" text-anchor="middle" font-weight="600" letter-spacing="0">-$103M</text>
+</svg>
+      <div class="legend"><span><i style="background:#2E6BE6"></i>매출(실적)</span><span><i style="background:#159DB8"></i>2026E 가이던스 중간값</span><span><i style="background:#D6493D"></i>비GAAP 영업손실(우축)</span></div>
+      <p class="fcap">그림 3-2. 매출 및 비GAAP 영업손실 추이. 2022년 매출은 $3.9M 계약수정 반영 순액(총액 $8.1M). 출처: Aeva 실적발표(2021&ndash;2025), 2026 가이던스 $30&ndash;36M.</p>
+    </div>
+
+    <div class="callout co-teal">
+      <div class="ct">&#9650; 놓치기 쉬운 긍정 포인트 &mdash; &lsquo;비용 규율&rsquo;</div>
+      <p>많은 적자 성장주가 매출과 함께 손실도 키우는 반면, Aeva의 비GAAP 영업손실은 <strong>2022년 $127.7M에서 2025년 ~$103M로 감소</strong>했다. 매출이 4배 넘게 느는 동안 비용은 오히려 줄인 것 &mdash; 경영진이 &lsquo;성장&rsquo;과 &lsquo;현금 규율&rsquo;을 동시에 관리하고 있다는 신호다. <span class="conf conf-md">확신도: 중간</span> 다만 이는 아직 흑자 전환을 담보하지 않으며, 양산 투자(CapEx)가 늘면 총현금소진은 다시 커질 수 있다.</p>
+    </div>
+  </div>
+</section>
+<section class="band sec--dark" id="s4">
+  <div class="wrap">
+    <span class="sec-num">04 / 15</span>
+    <p class="eyebrow">Products &amp; Technology</p>
+    <h2 class="sec-title">기술력 &mdash; &lsquo;빛의 시간&rsquo; 대신 &lsquo;빛의 색(주파수)&rsquo;을 읽다</h2>
+    <p class="sec-lead">Aeva의 모든 것은 하나의 기술적 선택에서 나온다. 대다수 라이다가 &lsquo;빛이 갔다 오는 시간&rsquo;을 재는데, Aeva는 &lsquo;되돌아온 빛의 주파수가 얼마나 변했는가&rsquo;를 잰다. 이 차이가 &lsquo;속도까지 즉시 측정&rsquo;이라는 능력과 &lsquo;칩 하나로 집적&rsquo;이라는 확장성을 낳는다. 하지만 그 대가로 &lsquo;더 어려운 기술&rsquo;이라는 리스크도 따른다.</p>
+
+    <div class="card" style="margin-bottom:22px">
+      <h4 style="margin-top:0">📡 먼저, 라이다(LiDAR)란 무엇인가? (비전공자용)</h4>
+      <p style="margin-bottom:0">라이다는 <strong>&lsquo;빛으로 거리를 재는 레이더&rsquo;</strong>다. 눈에 보이지 않는 레이저를 사방으로 쏘아, 사물에 반사돼 돌아온 빛을 분석해 주변을 <strong>정밀한 3차원 점(點) 구름</strong>으로 그린다. 자율주행차가 &lsquo;앞에 무엇이, 얼마나 떨어져 있는지&rsquo;를 카메라&middot;레이더와 함께 파악하는 핵심 눈(眼)이다. 문제는 &lsquo;그 점이 얼마나 빨리 움직이는지(속도)&rsquo;는 보통 <strong>여러 장의 사진을 비교해야</strong> 알 수 있다는 것. Aeva는 바로 이 지점을 다르게 푼다.</p>
+    </div>
+
+    <div class="fig fig--dark">
+      <p class="ftitle" style="color:#EBF1F8">두 가지 라이다 원리 &mdash; ToF vs. Aeva의 FMCW</p>
+      <p class="fsub">왼쪽(ToF): 빛 펄스를 쏘고 &lsquo;왕복 시간&rsquo;으로 거리 계산. 오른쪽(FMCW): 주파수를 흔든 빛을 &lsquo;연속으로&rsquo; 쏘고, 되돌아온 빛과 섞어 &lsquo;주파수 차이&rsquo;로 거리와 속도를 동시에 계산.</p>
+      <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" style="width:100%;height:auto">
+        <!-- divider -->
+        <line x1="380" y1="20" x2="380" y2="300" stroke="#26344F" stroke-width="1" stroke-dasharray="4 4"/>
+        <!-- LEFT: ToF -->
+        <text x="30" y="34" font-family="Space Grotesk" font-size="15" font-weight="700" fill="#A6B7CE">기존 방식 · ToF (Time-of-Flight)</text>
+        <circle cx="60" cy="120" r="16" fill="#16233D" stroke="#26344F"/><text x="60" y="125" font-size="10" fill="#A6B7CE" text-anchor="middle" font-family="IBM Plex Mono">센서</text>
+        <rect x="300" y="100" width="18" height="40" rx="3" fill="#3B434F"/><text x="309" y="160" font-size="9" fill="#7C8DA6" text-anchor="middle" font-family="IBM Plex Mono">물체</text>
+        <!-- pulses -->
+        <g fill="#5A8CFF"><circle cx="120" cy="120" r="3"/><circle cx="160" cy="120" r="3" opacity="0.8"/><circle cx="200" cy="120" r="3" opacity="0.6"/><circle cx="240" cy="120" r="3" opacity="0.45"/></g>
+        <text x="180" y="106" font-size="10" fill="#7FB0FF" text-anchor="middle" font-family="IBM Plex Mono">→ 펄스 발사</text>
+        <text x="180" y="150" font-size="10" fill="#7FB0FF" text-anchor="middle" font-family="IBM Plex Mono">← 반사 (시간 측정)</text>
+        <text x="60" y="200" font-size="11.5" fill="#EBF1F8" font-family="Inter">거리 = 빛속도 × 왕복시간 ÷ 2</text>
+        <text x="60" y="224" font-size="11.5" fill="#FF8A7A" font-family="Inter">속도 = 여러 장 비교 필요 (지연)</text>
+        <text x="60" y="252" font-size="10.5" fill="#A6B7CE" font-family="IBM Plex Mono">장점: 단순·저가·성숙</text>
+        <text x="60" y="270" font-size="10.5" fill="#A6B7CE" font-family="IBM Plex Mono">채택: 헤사이·이노비즈·대다수</text>
+        <!-- RIGHT: FMCW -->
+        <text x="410" y="34" font-family="Space Grotesk" font-size="15" font-weight="700" fill="#38C6DF">Aeva 방식 · FMCW (주파수변조 연속파)</text>
+        <circle cx="440" cy="120" r="16" fill="#0e2a44" stroke="#159DB8"/><text x="440" y="125" font-size="10" fill="#38C6DF" text-anchor="middle" font-family="IBM Plex Mono">칩</text>
+        <rect x="680" y="100" width="18" height="40" rx="3" fill="#3B434F"/><text x="689" y="160" font-size="9" fill="#7C8DA6" text-anchor="middle" font-family="IBM Plex Mono">물체</text>
+        <!-- chirp wave -->
+        <path d="M460 120 Q 475 108 490 120 T 520 120 T 550 120 T 580 120 T 610 120 T 640 120 T 670 120" fill="none" stroke="#38C6DF" stroke-width="2"/>
+        <text x="560" y="104" font-size="10" fill="#38C6DF" text-anchor="middle" font-family="IBM Plex Mono">→ 연속 주파수 처프(chirp)</text>
+        <path d="M460 138 Q 475 150 490 138 T 520 138 T 550 138 T 580 138 T 610 138 T 640 138 T 670 138" fill="none" stroke="#B583FF" stroke-width="2" opacity="0.85"/>
+        <text x="560" y="156" font-size="10" fill="#B583FF" text-anchor="middle" font-family="IBM Plex Mono">← 반사 (주파수 편이)</text>
+        <text x="410" y="200" font-size="11.5" fill="#EBF1F8" font-family="Inter">거리 = 주파수 차이로 계산</text>
+        <text x="410" y="224" font-size="11.5" fill="#48D19B" font-family="Inter">속도 = 도플러 편이로 &lsquo;즉시&rsquo; 측정 (4D)</text>
+        <text x="410" y="252" font-size="10.5" fill="#A6B7CE" font-family="IBM Plex Mono">장점: 속도동시·간섭면역·칩집적</text>
+        <text x="410" y="270" font-size="10.5" fill="#A6B7CE" font-family="IBM Plex Mono">채택: Aeva (거의 유일)</text>
+      </svg>
+      <p class="fcap">그림 4-1. ToF와 FMCW 원리 비교. 출처: arXiv 2008.02411, Laser Focus World, Blickfeld 기술자료 기반 재구성.</p>
+    </div>
+
+    <div class="split">
+      <div class="prose">
+        <h3>&lsquo;4D&rsquo;의 의미 &mdash; 네 번째 차원은 &lsquo;속도&rsquo;</h3>
+        <p>일반 라이다가 만드는 점 구름은 3차원(x, y, z 위치)이다. Aeva는 여기에 <strong>각 점의 순간 속도</strong>를 더한다. 되돌아온 빛의 주파수가 미세하게 높아졌으면 물체가 다가오는 것, 낮아졌으면 멀어지는 것(도플러 효과 &mdash; 구급차 사이렌이 다가올 때 높고 멀어질 때 낮게 들리는 것과 같은 원리). 그래서 <strong>단 한 번의 측정으로 &lsquo;저 물체가 초당 몇 m로 다가온다&rsquo;</strong>를 안다. 자율주행에서 마주 오는 차, 끼어드는 차를 빨리 판단하는 데 유리하다.</p>
+        <p>추가로 FMCW는 <strong>햇빛이나 다른 라이다의 빛에 거의 교란되지 않고</strong>(자기 레이저와 주파수가 맞는 빛만 골라 검출), <strong>최대 500m</strong>까지 &mdash; 기존 ToF의 약 2배 &mdash; 멀리 있는 반사율 낮은 물체(도로 위 타이어 조각 등)도 잡아낸다. 국방에서는 <strong>야간투시 장비에 잘 탐지되지 않는</strong> 저(低)피크출력 특성이 실제 이점으로 평가된다.</p>
+
+        <h3 style="color:#EBF1F8">진짜 해자: &lsquo;라이다-온-칩&rsquo;</h3>
+        <p>Aeva의 더 깊은 자산은 FMCW 그 자체보다, 이 복잡한 광학&middot;전자 부품을 <strong>통신용으로 검증된 실리콘 포토닉스 칩 하나에 집적</strong>했다는 점이다. 라이다의 심장(광원&middot;검출기&middot;신호처리)을 반도체 공정(Tower Semiconductor 등 팹)으로 찍어내므로, 규모가 커질수록 <strong>반도체식 원가 하락 곡선</strong>을 탈 수 있다. 그리고 바로 이 &lsquo;포토닉스 플랫폼&rsquo;이 뒤에서 볼 AI 데이터센터 확장의 기반이 된다.</p>
+      </div>
+      <aside>
+        <div class="card" style="margin-bottom:16px">
+          <p class="eyebrow" style="margin-bottom:12px">FMCW 4D의 핵심 스펙</p>
+          <div class="kv"><span class="kk">측정 차원</span><span class="vv">위치 3D + 속도</span></div>
+          <div class="kv"><span class="kk">탐지 거리</span><span class="vv">최대 ~500m</span></div>
+          <div class="kv"><span class="kk">햇빛/타라이다 간섭</span><span class="vv">거의 면역</span></div>
+          <div class="kv"><span class="kk">깊이 정밀도</span><span class="vv">mm급</span></div>
+          <div class="kv"><span class="kk">집적</span><span class="vv">실리콘 포토닉스 칩</span></div>
+          <div class="kv"><span class="kk">국방 특성</span><span class="vv">야간투시 저탐지</span></div>
+        </div>
+        <div class="card">
+          <p class="eyebrow" style="margin-bottom:10px">제품 로드맵</p>
+          <p style="font-size:13.5px;margin-bottom:7px"><strong style="color:#fff">Atlas Ultra</strong> &mdash; 승용 L3/L4, 해상도 3배·35% 슬림</p>
+          <p style="font-size:13.5px;margin-bottom:7px"><strong style="color:#fff">Omni</strong> &mdash; 단거리·로보틱스(신규)</p>
+          <p style="font-size:13.5px;margin-bottom:7px"><strong style="color:#fff">Eve 1</strong> &mdash; 산업 정밀 변위(Nikon 탑재)</p>
+          <p style="font-size:13.5px;margin:0"><strong style="color:#fff">High-Power SOA</strong> &mdash; AI 데이터센터(2026 신규)</p>
+        </div>
+      </aside>
+    </div>
+
+    <div class="callout co-coral">
+      <div class="ct">⚖️ 균형 잡기 &mdash; 경쟁사의 반론을 정직하게 (Steel-manning)</div>
+      <p style="margin-bottom:9px">FMCW가 만능은 아니다. ToF를 고수하는 경쟁사(이노비즈&middot;AEye 등)와 일부 중립 자료는 실제 데이터로 다음을 지적한다:</p>
+      <ul class="clean coral" style="margin:0">
+        <li><strong>측면 속도는 못 잰다:</strong> FMCW의 도플러는 빛이 나아가는 &lsquo;방사 방향&rsquo; 속도만 측정. 그런데 보행자가 갑자기 옆에서 튀어나오는 등 <strong>가장 위험한 상황의 90%는 &lsquo;측면&rsquo; 움직임</strong>이라, 결국 FMCW도 프레임 비교가 필요 &mdash; 속도 이점이 과장됐다는 반론.</li>
+        <li><strong>느린 화소율·긴 체류시간:</strong> FMCW는 한 점을 오래 &lsquo;붙잡아&rsquo; 재야 하고 보통 상&middot;하향 2회 스윕이 필요해, 같은 시간에 뿌리는 점 밀도가 ToF보다 낮을 수 있음.</li>
+        <li><strong>스페클 노이즈·제조 난이도:</strong> 좁은 광 대역폭이 스페클(간섭 얼룩)을 유발, 신호 균일성 저하. 무엇보다 <strong>제조가 훨씬 복잡하고 비쌀 수 있음.</strong></li>
+        <li><strong>타이밍:</strong> 시장조사기관 Yole은 FMCW의 자동차 영향이 2028년 전까지 제한적이라고 봄.</li>
+      </ul>
+      <p style="margin:10px 0 0"><strong>정리:</strong> FMCW는 &lsquo;명백한 승자&rsquo;가 아니라 &lsquo;아직 검증 중인 유력한 대안&rsquo;이다. Aeva의 베팅이 옳다면 강력한 차별화 해자가 되지만, ToF가 &lsquo;충분히 좋고 훨씬 싼&rsquo; 상태로 굳어지면 Aeva의 기술 프리미엄은 좁아진다. <span class="conf conf-md" style="background:#1c2740;color:#F7B7AE;border-color:#5a3733">확신도: 중간 &mdash; 기술 우열은 응용별로 갈릴 것</span></p>
+    </div>
+
+    <div class="grid g3 keep2" style="margin-top:6px">
+      <div class="card"><h4 style="margin-top:0">🧬 모방 난이도</h4><p style="font-size:13.5px;margin:0">FMCW + 실리콘 포토닉스 통합은 광학&middot;반도체&middot;신호처리가 결합된 고난도 영역. 창업자의 애플&middot;Nikon 배경과 수년간의 칩 개발이 진입장벽. 다만 헤사이 등도 FMCW를 연구 중이라 <strong>영구적 독점은 아님.</strong></p></div>
+      <div class="card"><h4 style="margin-top:0">🔗 공급망 성숙</h4><p style="font-size:13.5px;margin:0">Tower Semiconductor(칩 팹), Jabil(시스템 조립), LG이노텍(Atlas Ultra 양산·투자), AGC(윈드실드 유리). 양산 파트너를 이미 확보해 &lsquo;연 20만 대&rsquo; 생산능력을 겨냥.</p></div>
+      <div class="card"><h4 style="margin-top:0">💡 파괴 vs 피파괴</h4><p style="font-size:13.5px;margin:0">Aeva는 ToF를 파괴하려는 &lsquo;도전자&rsquo;. 반대로 카메라 전용(테슬라식) 진영이 &lsquo;라이다 없이도 된다&rsquo;고 주장하면 <strong>라이다 산업 전체가 위협</strong>받을 수 있는 양면성.</p></div>
+    </div>
+  </div>
+</section>
+<section class="band" id="s5">
+  <div class="wrap">
+    <span class="sec-num">05 / 15</span>
+    <p class="eyebrow">Industry Analysis</p>
+    <h2 class="sec-title">산업 분석 &mdash; 커지는 시장, 잔인한 가격 전쟁, 그리고 새 문(門)</h2>
+    <p class="sec-lead">Aeva가 서 있는 라이다 산업은 &lsquo;고성장이지만 지독하게 치열한&rsquo; 시장이다. 전체 파이는 연 30%대로 커지지만, 중국 업체들의 대량생산이 가격을 끌어내려 서구 업체들의 채산성을 위협한다. Aeva는 이 전쟁을 두 가지로 우회한다 &mdash; &lsquo;프리미엄 차별화&rsquo;와 &lsquo;인접 시장(AI 광학) 진출&rsquo;.</p>
+
+    <div class="fig">
+      <p class="ftitle">Aeva가 노리는 세 개의 시장 &mdash; 모두 &lsquo;구조적 성장&rsquo;</p>
+      <p class="fsub">자동차 라이다에 더해, 같은 포토닉스 기술로 실리콘 포토닉스&middot;AI 광학(CPO)까지 &mdash; 세 시장 모두 2030년대 중반까지 큰 폭 성장이 전망된다.</p>
+      <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img">
+<line x1="60" y1="306.0" x2="730" y2="306.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="52" y="309.5" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$0B</text>
+<line x1="60" y1="253.6" x2="730" y2="253.6" stroke="#E4E2DB" stroke-width="1"/>
+<text x="52" y="257.05555555555554" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$2B</text>
+<line x1="60" y1="201.1" x2="730" y2="201.1" stroke="#E4E2DB" stroke-width="1"/>
+<text x="52" y="204.61111111111111" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$4B</text>
+<line x1="60" y1="148.7" x2="730" y2="148.7" stroke="#E4E2DB" stroke-width="1"/>
+<text x="52" y="152.16666666666669" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$6B</text>
+<line x1="60" y1="96.2" x2="730" y2="96.2" stroke="#E4E2DB" stroke-width="1"/>
+<text x="52" y="99.72222222222223" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$8B</text>
+<rect x="103.1" y="270.6" width="62.5" height="35.4" rx="3" fill="#2E6BE6" opacity="0.35"/>
+<text x="134.40000000000003" y="265.6" font-family="IBM Plex Mono" font-size="9" fill="#2E6BE6" text-anchor="middle" font-weight="400" letter-spacing="0">$1.35B</text>
+<rect x="177.7" y="83.1" width="62.5" height="222.9" rx="3" fill="#2E6BE6"/>
+<text x="208.93333333333337" y="78.11111111111111" font-family="IBM Plex Mono" font-size="9.5" fill="#2E6BE6" text-anchor="middle" font-weight="400" letter-spacing="0">$8.5B</text>
+<path d="M134.4 254.6 Q 171.7 53.1 208.9 67.1" fill="none" stroke="#2E6BE6" stroke-width="1.3" stroke-dasharray="3 2" opacity="0.6"/>
+<text x="171.66666666666669" y="61.111111111111114" font-family="Inter" font-size="9.5" fill="#2E6BE6" text-anchor="middle" font-weight="700" letter-spacing="0">CAGR 31%</text>
+<text x="171.66666666666669" y="324" font-family="Inter" font-size="11" fill="#3B434F" text-anchor="middle" font-weight="600" letter-spacing="0">자동차 라이다</text>
+<text x="171.66666666666669" y="339" font-family="IBM Plex Mono" font-size="9" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">'26 → 2033</text>
+<rect x="326.5" y="245.7" width="62.5" height="60.3" rx="3" fill="#6A54C9" opacity="0.35"/>
+<text x="357.73333333333335" y="240.6888888888889" font-family="IBM Plex Mono" font-size="9" fill="#6A54C9" text-anchor="middle" font-weight="400" letter-spacing="0">$2.3B</text>
+<rect x="401.0" y="122.4" width="62.5" height="183.6" rx="3" fill="#6A54C9"/>
+<text x="432.2666666666667" y="117.44444444444444" font-family="IBM Plex Mono" font-size="9.5" fill="#6A54C9" text-anchor="middle" font-weight="400" letter-spacing="0">$7B</text>
+<path d="M357.7 229.7 Q 395.0 92.4 432.3 106.4" fill="none" stroke="#6A54C9" stroke-width="1.3" stroke-dasharray="3 2" opacity="0.6"/>
+<text x="395.00000000000006" y="100.44444444444444" font-family="Inter" font-size="9.5" fill="#6A54C9" text-anchor="middle" font-weight="700" letter-spacing="0">CAGR 25%</text>
+<text x="395.00000000000006" y="324" font-family="Inter" font-size="11" fill="#3B434F" text-anchor="middle" font-weight="600" letter-spacing="0">실리콘 포토닉스</text>
+<text x="395.00000000000006" y="339" font-family="IBM Plex Mono" font-size="9" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">'26 → 2031</text>
+<rect x="549.8" y="302.1" width="62.5" height="3.9" rx="3" fill="#0E9E86" opacity="0.35"/>
+<text x="581.0666666666667" y="297.06666666666666" font-family="IBM Plex Mono" font-size="9" fill="#0E9E86" text-anchor="middle" font-weight="400" letter-spacing="0">$0.15B</text>
+<rect x="624.3" y="278.5" width="62.5" height="27.5" rx="3" fill="#0E9E86"/>
+<text x="655.6" y="273.4666666666667" font-family="IBM Plex Mono" font-size="9.5" fill="#0E9E86" text-anchor="middle" font-weight="400" letter-spacing="0">$1.05B</text>
+<path d="M581.1 286.1 Q 618.3 248.5 655.6 262.5" fill="none" stroke="#0E9E86" stroke-width="1.3" stroke-dasharray="3 2" opacity="0.6"/>
+<text x="618.3333333333334" y="256.4666666666667" font-family="Inter" font-size="9.5" fill="#0E9E86" text-anchor="middle" font-weight="700" letter-spacing="0">CAGR 31%</text>
+<text x="618.3333333333334" y="324" font-family="Inter" font-size="11" fill="#3B434F" text-anchor="middle" font-weight="600" letter-spacing="0">CPO(AI광학)</text>
+<text x="618.3333333333334" y="339" font-family="IBM Plex Mono" font-size="9" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">'26 → 2034</text>
+<text x="60" y="28" font-family="IBM Plex Mono" font-size="12" fill="#3B434F" text-anchor="start" font-weight="600" letter-spacing="0">Aeva가 진입한 3대 시장의 규모와 성장</text>
+<text x="60" y="44" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="start" font-weight="400" letter-spacing="0">옅은 막대=2026, 진한 막대=미래</text>
+</svg>
+      <p class="fcap">그림 5-1. Aeva 관련 3대 시장 규모. 출처: 자동차 라이다(Persistence·MarketsandMarkets, $1.0&ndash;1.7B→$6.5&ndash;11.3B), 실리콘 포토닉스(GMInsights·$2.3B→$7B), CPO(Precedence·$95M→$1.05B). 기관별 추정치 상이.</p>
+    </div>
+
+    <div class="split">
+      <div class="prose">
+        <h3>라이다 산업의 세 가지 진실</h3>
+        <p><strong>① 시장은 빠르게 큰다.</strong> 자율주행&middot;ADAS 채택 확대로 자동차 라이다 시장은 2026년 약 10&ndash;17억 달러에서 2033년경 <strong>65&ndash;113억 달러</strong>(연 ~31%)로 성장이 전망된다. 레벨3 자율주행 인증 경쟁, 상용차 자동긴급제동 규제가 수요를 민다.</p>
+        <p><strong>② 그러나 중국이 볼륨을 장악하고 가격을 내린다.</strong> 자동차 라이다 매출의 약 <strong>60%를 중국 업체</strong>가 차지한다. 특히 <strong>헤사이(Hesai)</strong>는 글로벌 점유율 33&ndash;37%로 압도적 1위이자 유일한 흑자 순수기업(2025년 100만 대+ 출하). 규모의 경제&middot;자국 부품&middot;세제 혜택으로 <strong>가격 기준선을 리셋</strong>해, 루미나&middot;이노비즈 같은 서구 업체를 채산성 위기로 몬다(루미나는 대출 디폴트&middot;구조조정).</p>
+        <p><strong>③ 그래서 서구 업체는 &lsquo;차별화&rsquo;로 도망친다.</strong> 볼륨 경쟁이 무의미한 곳에서, 루미나는 1550nm 장거리+SW로, 우스터는 산업&middot;국방으로, 그리고 <strong>Aeva는 FMCW 4D + 중국 밖 프리미엄 OEM + AI 광학</strong>으로 승부한다.</p>
+
+        <h3>Aeva는 가치사슬 어디에 있나</h3>
+        <p>Aeva는 부품(레이저&middot;칩)부터 완성 센서, 나아가 인식 소프트웨어(CityOS)까지 <strong>수직 통합</strong>된 &lsquo;Tier-1&rsquo; 공급사다. 남들이 여러 부품사에서 사와 조립할 때, Aeva는 핵심 광학을 자체 칩으로 만들어 <strong>원가&middot;성능&middot;확장성을 스스로 통제</strong>한다. 이 수직 통합이 &lsquo;라이다 → AI 광학&rsquo;으로의 확장을 가능케 한 구조적 이유다.</p>
+      </div>
+      <aside>
+        <div class="card">
+          <p class="eyebrow" style="margin-bottom:12px">라이다 시장 점유(자동차, 2024&ndash;25)</p>
+          <div class="kv"><span class="kk">Hesai (중국)</span><span class="vv">33&ndash;37% · 흑자</span></div>
+          <div class="kv"><span class="kk">RoboSense (중국)</span><span class="vv">~22%</span></div>
+          <div class="kv"><span class="kk">Huawei (중국)</span><span class="vv">주요</span></div>
+          <div class="kv"><span class="kk">Valeo (프랑스)</span><span class="vv">6&ndash;8%</span></div>
+          <div class="kv"><span class="kk">Luminar·Innoviz</span><span class="vv">서구 프리미엄</span></div>
+          <div class="kv"><span class="kk">Aeva</span><span class="vv">니치·FMCW</span></div>
+          <p class="footnote" style="margin:10px 0 0">중국 업체 합산 ≈60%. Aeva는 볼륨 기준 소형 니치 플레이어.</p>
+        </div>
+      </aside>
+    </div>
+
+    <div class="fig">
+      <p class="ftitle">라이다 가치사슬과 Aeva의 위치 &mdash; &lsquo;칩부터 소프트웨어까지&rsquo;</p>
+      <svg viewBox="0 0 760 210" xmlns="http://www.w3.org/2000/svg" role="img" style="width:100%;height:auto">
+        <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#B0B7C2"/></marker></defs>
+        <!-- chain boxes -->
+        <g font-family="Inter" font-size="12">
+          <rect x="10" y="70" width="120" height="60" rx="10" fill="#F1F0EA" stroke="#DAD8CF"/><text x="70" y="95" text-anchor="middle" font-weight="600" fill="#3B434F">광학·반도체</text><text x="70" y="112" text-anchor="middle" font-size="10" fill="#697080" font-family="IBM Plex Mono">레이저·칩·팹</text>
+          <rect x="160" y="70" width="120" height="60" rx="10" fill="#F1F0EA" stroke="#DAD8CF"/><text x="220" y="95" text-anchor="middle" font-weight="600" fill="#3B434F">라이다 센서</text><text x="220" y="112" text-anchor="middle" font-size="10" fill="#697080" font-family="IBM Plex Mono">완성 모듈</text>
+          <rect x="310" y="70" width="120" height="60" rx="10" fill="#F1F0EA" stroke="#DAD8CF"/><text x="370" y="95" text-anchor="middle" font-weight="600" fill="#3B434F">인식 SW</text><text x="370" y="112" text-anchor="middle" font-size="10" fill="#697080" font-family="IBM Plex Mono">퍼셉션·SoC</text>
+          <rect x="460" y="70" width="120" height="60" rx="10" fill="#F1F0EA" stroke="#DAD8CF"/><text x="520" y="95" text-anchor="middle" font-weight="600" fill="#3B434F">Tier-1 통합</text><text x="520" y="112" text-anchor="middle" font-size="10" fill="#697080" font-family="IBM Plex Mono">차량 통합</text>
+          <rect x="610" y="70" width="130" height="60" rx="10" fill="#F1F0EA" stroke="#DAD8CF"/><text x="675" y="95" text-anchor="middle" font-weight="600" fill="#3B434F">OEM·최종고객</text><text x="675" y="112" text-anchor="middle" font-size="10" fill="#697080" font-family="IBM Plex Mono">완성차·도시·팹</text>
+        </g>
+        <g stroke="#B0B7C2" stroke-width="1.4" marker-end="url(#ar2)" fill="none"><path d="M130 100 L158 100"/><path d="M280 100 L308 100"/><path d="M430 100 L458 100"/><path d="M580 100 L608 100"/></g>
+        <!-- Aeva coverage bracket -->
+        <rect x="8" y="40" width="574" height="6" rx="3" fill="#2E6BE6" opacity="0.85"/>
+        <text x="295" y="30" text-anchor="middle" font-family="Space Grotesk" font-size="13" font-weight="700" fill="#1B4FB8">Aeva의 수직 통합 범위 (칩 → 센서 → SW → Tier-1)</text>
+        <text x="675" y="160" text-anchor="middle" font-size="10.5" fill="#697080" font-family="IBM Plex Mono">다임러트럭 · 유럽OEM · 도시 · 공장</text>
+      </svg>
+      <p class="fcap">그림 5-2. 라이다 가치사슬과 Aeva의 수직 통합 범위. 남들이 조립하는 부분을 Aeva는 자체 칩으로 통제한다.</p>
+    </div>
+
+    <div class="callout co-violet">
+      <div class="ct">🚪 새로 열린 문 &mdash; AI 데이터센터 광학이라는 인접 시장</div>
+      <p>Aeva 산업 스토리의 반전은, 이 회사가 <strong>더 이상 라이다 시장에만 갇혀 있지 않다</strong>는 점이다. AI 붐으로 데이터센터는 GPU 간 데이터를 &lsquo;빛&rsquo;으로 나르는 <strong>실리콘 포토닉스&middot;광학 연결(CPO)</strong> 수요가 폭증 중이고(엔비디아가 코히런트&middot;루멘텀에 수십억 달러 투자), Aeva의 포토닉스 칩 기술이 이 시장의 부품(고출력 광증폭기)으로 쓰일 수 있다. 라이다 단일 시장의 &lsquo;가격 전쟁&rsquo;을 벗어나 <strong>고성장&middot;고마진 인접시장</strong>으로 나갈 문이 열린 셈이다. <span class="conf conf-md">확신도: 중간</span> &mdash; 단, 이 문을 통과했다는 증거(매출&middot;수주)는 아직 없다(섹션 8&middot;12 참조).</p>
+    </div>
+  </div>
+</section>
+<section class="band sec--tint" id="s6">
+  <div class="wrap">
+    <span class="sec-num">06 / 15</span>
+    <p class="eyebrow">Economic Moat</p>
+    <h2 class="sec-title">경쟁 우위 분석 &mdash; &lsquo;차별화&rsquo; 해자, 그러나 아직 &lsquo;수익&rsquo;으로 증명 전</h2>
+    <p class="sec-lead">CAP 프레임워크는 초과수익의 <strong>지속 기간(CAP)</strong>이 기업가치의 핵심 동인이라고 본다. 그러려면 &lsquo;해자&rsquo;가 있어야 한다. Aeva의 해자는 <strong>원가 우위가 아니라 기술 차별화</strong>에서 나온다 &mdash; 이는 역사적으로 &lsquo;더 오래가는&rsquo; 우위의 원천이지만, Aeva의 경우 아직 &lsquo;높은 마진&rsquo;이라는 증거로 확인되지 않았다는 게 핵심 한계다.</p>
+
+    <div class="fig">
+      <p class="ftitle">포터의 5가지 경쟁 요인 &mdash; Aeva의 산업 매력도</p>
+      <p class="fsub">색이 진할수록 Aeva에게 &lsquo;위협&rsquo;이 큰 요인. 신규 진입장벽은 높지만, 기존 경쟁(중국 가격전쟁)과 대체재(카메라 전용) 위협이 크다.</p>
+      <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" role="img" style="width:100%;height:auto">
+        <!-- center -->
+        <rect x="300" y="140" width="160" height="60" rx="12" fill="#111C31"/>
+        <text x="380" y="165" font-family="Space Grotesk" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">Aeva의</text>
+        <text x="380" y="184" font-family="Space Grotesk" font-size="13" font-weight="600" fill="#A6B7CE" text-anchor="middle">산업 경쟁 강도</text>
+        <!-- 5 forces -->
+        <!-- top: new entrants (low threat = green) -->
+        <rect x="290" y="20" width="180" height="62" rx="10" fill="#D8EFE1" stroke="#B4DBC3"/>
+        <text x="380" y="42" text-anchor="middle" font-family="Inter" font-size="12.5" font-weight="700" fill="#1C5E38">신규 진입 위협 · 낮음</text>
+        <text x="380" y="60" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#2E6B48">FMCW+칩 통합은 고난도 진입장벽</text>
+        <text x="380" y="74" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#2E6B48">애플·Nikon 배경, 수년 R&amp;D</text>
+        <!-- bottom: substitutes (high = coral) -->
+        <rect x="290" y="258" width="180" height="62" rx="10" fill="#F7DCD8" stroke="#EEBDB6"/>
+        <text x="380" y="280" text-anchor="middle" font-family="Inter" font-size="12.5" font-weight="700" fill="#7E241B">대체재 위협 · 높음</text>
+        <text x="380" y="298" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#8A2A20">카메라 전용(테슬라식), ToF, 4D 이미징 레이더</text>
+        <text x="380" y="312" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#8A2A20">&lsquo;라이다 무용론&rsquo;은 산업 전체 위협</text>
+        <!-- left: rivalry (high) -->
+        <rect x="20" y="140" width="180" height="62" rx="10" fill="#F7DCD8" stroke="#EEBDB6"/>
+        <text x="110" y="162" text-anchor="middle" font-family="Inter" font-size="12.5" font-weight="700" fill="#7E241B">기존 경쟁 · 높음</text>
+        <text x="110" y="180" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#8A2A20">중국(헤사이 등) 가격전쟁</text>
+        <text x="110" y="194" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#8A2A20">루미나·이노비즈·우스터</text>
+        <!-- right: buyers (medium-high) -->
+        <rect x="560" y="140" width="180" height="62" rx="10" fill="#F7E9CF" stroke="#E7D0A2"/>
+        <text x="650" y="162" text-anchor="middle" font-family="Inter" font-size="12.5" font-weight="700" fill="#6A4A08">구매자 교섭력 · 중~높음</text>
+        <text x="650" y="180" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#553B06">OEM은 대형·소수, 가격압박</text>
+        <text x="650" y="194" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#553B06">단, 독점 수주 시 전환비용↑</text>
+        <!-- suppliers (medium) mid-lower left -->
+        <rect x="20" y="60" width="180" height="52" rx="10" fill="#F7E9CF" stroke="#E7D0A2"/>
+        <text x="110" y="80" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#6A4A08">공급자 교섭력 · 중간</text>
+        <text x="110" y="97" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#553B06">팹·부품 의존(Tower 등)</text>
+        <!-- connectors -->
+        <g stroke="#B0B7C2" stroke-width="1.3" fill="none">
+          <path d="M380 82 L380 138"/><path d="M380 258 L380 202"/>
+          <path d="M200 171 L298 171"/><path d="M560 171 L462 171"/>
+          <path d="M200 86 C 250 100, 280 130, 300 150"/>
+        </g>
+      </svg>
+      <p class="fcap">그림 6-1. 포터 5 Forces 평가. 진입장벽은 높으나 기존 경쟁&middot;대체재 위협이 산업 매력도를 낮춘다.</p>
+    </div>
+
+    <div class="split">
+      <div class="prose">
+        <h3>차별화 vs 원가 우위 &mdash; Aeva는 어느 쪽인가</h3>
+        <p>CAP 프레임워크는 지속 우위의 원천을 둘로 나눈다: <strong>차별화</strong>(높은 NOPAT 마진)와 <strong>원가 우위</strong>(높은 투자자본 회전율). 실증적으로 <strong>차별화가 더 오래가는</strong> 우위다(10년 상위 20% ROIC 기업의 마진은 평균의 2.8배). Aeva의 전략은 명백히 <strong>차별화</strong>다: 남들이 못 하는 &lsquo;4D+칩&rsquo;로 프리미엄 포지션을 노린다.</p>
+        <p><strong>핵심 한계:</strong> 그런데 Aeva는 아직 <strong>NOPAT이 깊은 마이너스</strong>다. 즉 &lsquo;차별화가 마진으로 전환됐다&rsquo;는 증거가 없다. 헤사이는 낮은 마진&middot;낮은 배수지만 <strong>실제로 흑자</strong>인 반면, Aeva는 높은 기대&middot;높은 배수지만 <strong>수익 증명 전</strong>이다. 해자가 진짜라면 양산 후 마진이 확인될 것이고, 그렇지 않다면 &lsquo;차별화 프리미엄&rsquo;은 신기루가 된다.</p>
+        <h3>해자의 지속 가능성 &mdash; 얼마나 오래갈까</h3>
+        <p>Aeva 해자의 지속성은 세 가지에 달렸다: (1) <strong>기술 리드</strong> &mdash; FMCW+포토닉스 통합이 경쟁사보다 몇 년 앞서 있으나 헤사이 등도 추격 중, (2) <strong>수주의 잠금(lock-in)</strong> &mdash; OEM 양산 프로그램은 차량 수명주기(2030년대 중반까지) 동안 교체가 어려워 <strong>장기 매출 가시성</strong> 제공, (3) <strong>플랫폼 확장</strong> &mdash; 라이다에 산업&middot;AI광학을 더해 단일 시장 리스크 분산.</p>
+      </div>
+      <aside>
+        <div class="card" style="margin-bottom:14px">
+          <p class="eyebrow" style="margin-bottom:12px">해자 요소 점검</p>
+          <div class="kv"><span class="kk">기술 차별화</span><span class="vv">강 (FMCW 4D)</span></div>
+          <div class="kv"><span class="kk">특허·노하우</span><span class="vv">중~강</span></div>
+          <div class="kv"><span class="kk">수주 전환비용</span><span class="vv">강 (양산 lock-in)</span></div>
+          <div class="kv"><span class="kk">규모의 경제</span><span class="vv">약 (아직 소량)</span></div>
+          <div class="kv"><span class="kk">네트워크 효과</span><span class="vv">약~중 (데이터·SW)</span></div>
+          <div class="kv"><span class="kk">브랜드</span><span class="vv">중 (B2B 신뢰)</span></div>
+        </div>
+        <div class="callout co-blue" style="margin:0">
+          <div class="ct">CAP 관점 한 줄</div>
+          <p>Aeva의 해자는 &lsquo;오래갈 종류(차별화)&rsquo;지만, <strong>아직 마진으로 증명되지 않은 해자</strong>다. 시장은 이 해자가 &lsquo;증명될 것&rsquo;이라는 데 큰 값을 미리 지불하고 있다.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+<section class="band" id="s7">
+  <div class="wrap">
+    <span class="sec-num">07 / 15</span>
+    <p class="eyebrow">Peer Comparison</p>
+    <h2 class="sec-title">피어 그룹 비교 &mdash; 가장 작은 매출, 가장 높은 밸류에이션</h2>
+    <p class="sec-lead">Aeva를 라이다 순수기업 5곳과 나란히 놓으면 그림이 선명해진다. Aeva는 <strong>매출은 가장 작지만 시장가치는 최상위권</strong>이고, <strong>EV/매출 배수는 흑자 1위 헤사이의 10배 이상</strong>이다. 이것이 &lsquo;스토리 프리미엄&rsquo;의 실체다 &mdash; 시장은 Aeva를 &lsquo;라이다 업체&rsquo;가 아니라 &lsquo;플랫폼 옵션&rsquo;으로 값을 매긴다.</p>
+
+    <div class="tbl-wrap">
+      <table class="data">
+        <caption>표 7-1. 라이다 순수기업 비교 (2024&ndash;2025 기준, 시점 상이). 단위: 시총 $B, 매출 $M.</caption>
+        <thead>
+          <tr><th>기업 (티커)</th><th>시가총액</th><th>매출</th><th>매출성장</th><th>EV/매출</th><th>영업마진</th><th>흑자</th><th>포지셔닝</th></tr>
+        </thead>
+        <tbody>
+          <tr class="hl"><td>Aeva (AEVA)</td><td>≈$1.5B</td><td>$18&ndash;21M</td><td>+99%</td><td class="num-neg">≈72×</td><td class="num-neg">-926%</td><td>❌</td><td>FMCW 프리미엄</td></tr>
+          <tr><td>Hesai (HSAI)</td><td>$2.97B</td><td>$285M+</td><td>+50%</td><td>5.3×</td><td class="num-pos">흑자</td><td>✅</td><td>중국 볼륨 1위</td></tr>
+          <tr><td>Ouster (OUST)</td><td>$1.3B</td><td>$67M</td><td>+30%</td><td>8.6×</td><td>-61%</td><td>❌</td><td>산업·국방</td></tr>
+          <tr><td>Luminar (LAZR)</td><td>~$0.4B</td><td>~$75M</td><td>+10%</td><td>5.8×</td><td>-340%</td><td>❌</td><td>1550nm·구조조정</td></tr>
+          <tr><td>Innoviz (INVZ)</td><td>~$0.35B</td><td>$50&ndash;60M</td><td>+80%</td><td>4.7×</td><td>-103%</td><td>❌</td><td>BMW·VW</td></tr>
+          <tr><td>전자업종 평균</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>2.6×</td><td>&mdash;</td><td>&mdash;</td><td>참조선</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid g2">
+      <div class="fig" style="margin:0">
+        <p class="ftitle">2D 포지셔닝 &mdash; &lsquo;싸고 좋은&rsquo; 자리 vs. &lsquo;비싸고 기대 큰&rsquo; 자리</p>
+        <p class="fsub">가로=EV/매출(비쌈), 세로=매출성장(빠름), 버블=시총. Aeva는 오른쪽 위 &mdash; 성장은 빠르지만 밸류에이션도 극단.</p>
+        <svg viewBox="0 0 760 430" xmlns="http://www.w3.org/2000/svg" role="img">
+<line x1="58.0" y1="40" x2="58.0" y2="372" stroke="#E4E2DB" stroke-width="1"/>
+<text x="58.0" y="390" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">0×</text>
+<line x1="227.5" y1="40" x2="227.5" y2="372" stroke="#E4E2DB" stroke-width="1"/>
+<text x="227.5" y="390" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">20×</text>
+<line x1="397.0" y1="40" x2="397.0" y2="372" stroke="#E4E2DB" stroke-width="1"/>
+<text x="397.0" y="390" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">40×</text>
+<line x1="566.5" y1="40" x2="566.5" y2="372" stroke="#E4E2DB" stroke-width="1"/>
+<text x="566.5" y="390" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">60×</text>
+<line x1="736.0" y1="40" x2="736.0" y2="372" stroke="#E4E2DB" stroke-width="1"/>
+<text x="736.0" y="390" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">80×</text>
+<line x1="58" y1="357.6" x2="736" y2="357.6" stroke="#E4E2DB" stroke-width="1"/>
+<text x="50" y="361.0652173913044" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">0%</text>
+<line x1="58" y1="285.4" x2="736" y2="285.4" stroke="#E4E2DB" stroke-width="1"/>
+<text x="50" y="288.89130434782606" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">25%</text>
+<line x1="58" y1="213.2" x2="736" y2="213.2" stroke="#E4E2DB" stroke-width="1"/>
+<text x="50" y="216.7173913043478" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">50%</text>
+<line x1="58" y1="141.0" x2="736" y2="141.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="50" y="144.54347826086956" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">75%</text>
+<line x1="58" y1="68.9" x2="736" y2="68.9" stroke="#E4E2DB" stroke-width="1"/>
+<text x="50" y="72.36956521739133" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">100%</text>
+<text x="736" y="412" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="end" font-weight="500" letter-spacing="0">EV / 매출(TTM) →  비쌈</text>
+<text x="14" y="206.0" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="middle" transform="rotate(-90 14 206)">매출성장률 →  빠름</text>
+<circle cx="668.2" cy="71.8" r="28.4" fill="#D6493D" opacity="0.16" stroke="#D6493D" stroke-width="1.6"/>
+<text x="668.2" y="69.75652173913043" font-family="Inter" font-size="12.5" fill="#D6493D" text-anchor="middle" font-weight="700" letter-spacing="0">Aeva</text>
+<text x="668.2" y="84.75652173913043" font-family="IBM Plex Mono" font-size="9.5" fill="#D6493D" text-anchor="middle" font-weight="400" letter-spacing="0">72× · +99%</text>
+<circle cx="102.9" cy="184.3" r="35.9" fill="#0E9E86" opacity="0.16" stroke="#0E9E86" stroke-width="1.6"/>
+<text x="102.9175" y="182.34782608695653" font-family="Inter" font-size="12.5" fill="#0E9E86" text-anchor="middle" font-weight="700" letter-spacing="0">Hesai</text>
+<text x="102.9175" y="197.34782608695653" font-family="IBM Plex Mono" font-size="9.5" fill="#0E9E86" text-anchor="middle" font-weight="400" letter-spacing="0">5.3× · +60%</text>
+<circle cx="130.9" cy="271.0" r="27.1" fill="#2E6BE6" opacity="0.16" stroke="#2E6BE6" stroke-width="1.6"/>
+<text x="130.885" y="268.95652173913044" font-family="Inter" font-size="12.5" fill="#2E6BE6" text-anchor="middle" font-weight="700" letter-spacing="0">Ouster</text>
+<text x="130.885" y="283.95652173913044" font-family="IBM Plex Mono" font-size="9.5" fill="#2E6BE6" text-anchor="middle" font-weight="400" letter-spacing="0">8.6× · +30%</text>
+<circle cx="107.2" cy="328.7" r="19.5" fill="#2E6BE6" opacity="0.16" stroke="#2E6BE6" stroke-width="1.6"/>
+<text x="107.155" y="326.69565217391306" font-family="Inter" font-size="12.5" fill="#2E6BE6" text-anchor="middle" font-weight="700" letter-spacing="0">Luminar</text>
+<text x="107.155" y="341.69565217391306" font-family="IBM Plex Mono" font-size="9.5" fill="#2E6BE6" text-anchor="middle" font-weight="400" letter-spacing="0">5.8× · +10%</text>
+<circle cx="97.8" cy="126.6" r="18.9" fill="#2E6BE6" opacity="0.16" stroke="#2E6BE6" stroke-width="1.6"/>
+<text x="97.83250000000001" y="124.60869565217394" font-family="Inter" font-size="12.5" fill="#2E6BE6" text-anchor="middle" font-weight="700" letter-spacing="0">Innoviz</text>
+<text x="97.83250000000001" y="139.60869565217394" font-family="IBM Plex Mono" font-size="9.5" fill="#2E6BE6" text-anchor="middle" font-weight="400" letter-spacing="0">4.7× · +80%</text>
+<circle cx="66" cy="52" r="5" fill="#0E9E86" opacity="0.6"/><text x="76" y="56" font-family="Inter" font-size="10" fill="#3B434F" text-anchor="start" font-weight="400" letter-spacing="0">흑자</text>
+<circle cx="136" cy="52" r="5" fill="#2E6BE6" opacity="0.6"/><text x="146" y="56" font-family="Inter" font-size="10" fill="#3B434F" text-anchor="start" font-weight="400" letter-spacing="0">적자</text>
+<circle cx="206" cy="52" r="5" fill="#D6493D" opacity="0.6"/><text x="216" y="56" font-family="Inter" font-size="10" fill="#3B434F" text-anchor="start" font-weight="400" letter-spacing="0">Aeva</text>
+<text x="278" y="56" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="start" font-weight="400" letter-spacing="0">버블=시가총액</text>
+</svg>
+        <p class="fcap">그림 7-1. 라이다 피어 2D 포지셔닝. 출처: 각사 실적·시장 데이터(2025). Aeva 성장률은 개발매출 포함.</p>
+      </div>
+      <div class="fig" style="margin:0">
+        <p class="ftitle">EV/매출 배수 &mdash; 피어 대비 8~15배</p>
+        <p class="fsub">Aeva의 자체 배수 이력은 병합·SPAC 현금으로 왜곡되므로, 피어와의 상대 비교가 더 명확하다.</p>
+        <svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" role="img">
+<line x1="54.0" y1="30" x2="54.0" y2="294" stroke="#E4E2DB" stroke-width="1"/>
+<text x="54.0" y="312" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">0×</text>
+<line x1="200.5" y1="30" x2="200.5" y2="294" stroke="#E4E2DB" stroke-width="1"/>
+<text x="200.5" y="312" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">20×</text>
+<line x1="347.0" y1="30" x2="347.0" y2="294" stroke="#E4E2DB" stroke-width="1"/>
+<text x="347.0" y="312" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">40×</text>
+<line x1="493.5" y1="30" x2="493.5" y2="294" stroke="#E4E2DB" stroke-width="1"/>
+<text x="493.5" y="312" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">60×</text>
+<line x1="640.0" y1="30" x2="640.0" y2="294" stroke="#E4E2DB" stroke-width="1"/>
+<text x="640.0" y="312" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">80×</text>
+<rect x="54" y="41.0" width="527.4" height="22.0" rx="3" fill="#D6493D" opacity="0.9"/>
+<text x="46" y="56.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">Aeva</text>
+<text x="588.4" y="56.0" font-family="IBM Plex Mono" font-size="11" fill="#D6493D" text-anchor="start" font-weight="700" letter-spacing="0">72×</text>
+<rect x="54" y="85.0" width="63.0" height="22.0" rx="3" fill="#2E6BE6" opacity="0.5"/>
+<text x="46" y="100.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">Ouster</text>
+<text x="123.995" y="100.0" font-family="IBM Plex Mono" font-size="11" fill="#2E6BE6" text-anchor="start" font-weight="700" letter-spacing="0">8.6×</text>
+<rect x="54" y="129.0" width="42.5" height="22.0" rx="3" fill="#2E6BE6" opacity="0.5"/>
+<text x="46" y="144.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">Luminar</text>
+<text x="103.485" y="144.0" font-family="IBM Plex Mono" font-size="11" fill="#2E6BE6" text-anchor="start" font-weight="700" letter-spacing="0">5.8×</text>
+<rect x="54" y="173.0" width="38.8" height="22.0" rx="3" fill="#0E9E86" opacity="0.5"/>
+<text x="46" y="188.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">Hesai</text>
+<text x="99.8225" y="188.0" font-family="IBM Plex Mono" font-size="11" fill="#0E9E86" text-anchor="start" font-weight="700" letter-spacing="0">5.3×</text>
+<rect x="54" y="217.0" width="34.4" height="22.0" rx="3" fill="#2E6BE6" opacity="0.5"/>
+<text x="46" y="232.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">Innoviz</text>
+<text x="95.42750000000001" y="232.0" font-family="IBM Plex Mono" font-size="11" fill="#2E6BE6" text-anchor="start" font-weight="700" letter-spacing="0">4.7×</text>
+<rect x="54" y="261.0" width="19.0" height="22.0" rx="3" fill="#697080" opacity="0.5"/>
+<text x="46" y="276.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">전자업종 평균</text>
+<text x="80.045" y="276.0" font-family="IBM Plex Mono" font-size="11" fill="#697080" text-anchor="start" font-weight="700" letter-spacing="0">2.6×</text>
+<text x="581.4" y="26" font-family="Inter" font-size="10" fill="#D6493D" text-anchor="start" font-weight="600" letter-spacing="0">← 피어 대비 8~15배</text>
+</svg>
+        <p class="fcap">그림 7-2. EV/매출(TTM) 비교. Aeva ≈72×는 흑자 1위 헤사이(5.3×)의 13배 수준.</p>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top:24px">
+      <div class="prose">
+        <h3>이 비교가 말해주는 것</h3>
+        <p><strong>헤사이의 역설:</strong> 세계 1위이자 유일한 흑자 라이다 기업인 헤사이가 EV/매출 <strong>고작 5.3배</strong>에 거래된다. 왜? 시장이 라이다를 &lsquo;가격 경쟁이 심한 하드웨어 사업&rsquo;으로 보기 때문이다. 즉 라이다 &lsquo;볼륨&rsquo;만으로는 높은 배수를 못 받는다. Aeva가 <strong>72배</strong>를 받는 이유는 라이다 볼륨이 아니라 <strong>(a) FMCW 차별화, (b) 두 개의 서구 독점 수주, (c) AI 광학 옵션</strong>이라는 &lsquo;다른 이야기&rsquo; 때문이다.</p>
+        <p><strong>우스터와의 대조:</strong> 우스터는 Aeva와 시총이 비슷($1.3B vs $1.5B)한데 <strong>매출은 3배 이상</strong>($67M vs $21M)이고 흑자 전환도 더 가깝다. 순수 &lsquo;라이다 사업&rsquo;만 보면 우스터가 더 &lsquo;싸고 앞서&rsquo; 있다. Aeva의 프리미엄은 전적으로 &lsquo;미래 옵션&rsquo;에 대한 베팅이다.</p>
+      </div>
+      <aside>
+        <div class="callout co-coral" style="margin:0 0 14px">
+          <div class="ct">⚠️ 배수 함정 (CAP 프레임워크 경고)</div>
+          <p>EV/매출 같은 배수는 성장&middot;마진&middot;위험&middot;CAP가 뒤섞인 &lsquo;혼합물&rsquo;이다. Aeva의 72배는 &lsquo;시장이 매우 긴 CAP와 큰 마진을 암묵적으로 가정&rsquo;한다는 뜻 &mdash; 그 가정이 맞는지는 섹션 10에서 역산한다.</p>
+        </div>
+        <div class="callout co-teal" style="margin:0">
+          <div class="ct">▲ 공정하게 볼 점</div>
+          <p>Aeva의 매출은 &lsquo;양산 전&rsquo; 단계라 작다. 2027&ndash;28년 양산이 시작되면 매출이 급증하며 배수가 빠르게 &lsquo;정상화&rsquo;될 수 있다. 지금의 72배는 &lsquo;미래 매출을 당겨 본&rsquo; 숫자다.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+<section class="band sec--dark" id="s8">
+  <div class="wrap">
+    <span class="sec-num">08 / 15</span>
+    <p class="eyebrow">Market Narrative</p>
+    <h2 class="sec-title">시장 내러티브 &mdash; 1년 만에 10배, 그리고 롤러코스터</h2>
+    <p class="sec-lead">Aeva의 주가는 2024년 저점에서 한때 <strong>1,000% 이상</strong> 치솟았다가 급락과 급등을 반복했다. 이 극단적 변동은 &lsquo;펀더멘털&rsquo;과 &lsquo;내러티브&rsquo;와 &lsquo;수급&rsquo;이 뒤엉킨 결과다. 무엇이 주가를 움직였는지 하나씩 뜯어보면, 이 주식을 사는 사람이 실제로 무엇에 베팅하는지가 드러난다.</p>
+
+    <div class="fig fig--dark">
+      <p class="ftitle" style="color:#EBF1F8">주가 경로와 이벤트 &mdash; 뉴스가 만든 봉우리와 골짜기</p>
+      <p class="fsub">각 봉우리&middot;골짜기는 문서화된 이벤트와 연결된다. 밸류에이션이 스토리에 얼마나 민감한지 보여준다.</p>
+      <svg viewBox="0 0 760 430" xmlns="http://www.w3.org/2000/svg" role="img">
+<line x1="48" y1="356.0" x2="740" y2="356.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="40" y="359.5" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$0</text>
+<line x1="48" y1="282.0" x2="740" y2="282.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="40" y="285.5" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$10</text>
+<line x1="48" y1="208.0" x2="740" y2="208.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="40" y="211.5" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$20</text>
+<line x1="48" y1="134.0" x2="740" y2="134.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="40" y="137.5" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$30</text>
+<line x1="48" y1="60.0" x2="740" y2="60.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="40" y="63.5" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$40</text>
+<rect x="48" y="69.0" width="692" height="221.7" fill="#2E6BE6" opacity="0.05"/>
+<text x="738" y="64.95400000000001" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">52주 최고 $38.79</text>
+<text x="738" y="303.658" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">52주 최저 $8.83</text>
+<defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E6BE6" stop-opacity="0.22"/><stop offset="1" stop-color="#2E6BE6" stop-opacity="0.02"/></linearGradient></defs>
+<path d="M 48.0 335.4 L 144.9 232.8 L 200.2 107.7 L 241.8 208.0 L 324.8 290.7 L 428.6 230.2 L 463.2 259.8 L 484.0 193.2 L 532.4 252.4 L 622.4 254.6 L 657.0 147.8 L 740.0 193.2 L 740.0 356.0 L 48.0 356.0 Z" fill="url(#pg)"/>
+<path d="M 48.0 335.4 L 144.9 232.8 L 200.2 107.7 L 241.8 208.0 L 324.8 290.7 L 428.6 230.2 L 463.2 259.8 L 484.0 193.2 L 532.4 252.4 L 622.4 254.6 L 657.0 147.8 L 740.0 193.2" fill="none" stroke="#2E6BE6" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="48.0" cy="335.4" r="4.5" fill="#697080" stroke="#fff" stroke-width="1.6"/>
+<text x="48.0" y="372" font-family="Inter" font-size="10.5" fill="#697080" text-anchor="middle" font-weight="600" letter-spacing="0">$2.79</text>
+<line x1="48.0" y1="342.4" x2="48.0" y2="362.0" stroke="#697080" stroke-width="1" stroke-dasharray="2 2" opacity="0.6"/>
+<circle cx="200.2" cy="107.7" r="4.5" fill="#0E9E86" stroke="#fff" stroke-width="1.6"/>
+<text x="200.24" y="18" font-family="Inter" font-size="10.5" fill="#0E9E86" text-anchor="middle" font-weight="600" letter-spacing="0">①급등 피크</text>
+<text x="200.24" y="30" font-family="Inter" font-size="10.5" fill="#0E9E86" text-anchor="middle" font-weight="600" letter-spacing="0">~$33</text>
+<line x1="200.2" y1="100.7" x2="200.2" y2="40.0" stroke="#0E9E86" stroke-width="1" stroke-dasharray="2 2" opacity="0.6"/>
+<circle cx="324.8" cy="290.7" r="4.5" fill="#D6493D" stroke="#fff" stroke-width="1.6"/>
+<text x="324.8" y="372" font-family="Inter" font-size="10.5" fill="#D6493D" text-anchor="middle" font-weight="600" letter-spacing="0">②저점 $8.83</text>
+<line x1="324.8" y1="297.7" x2="324.8" y2="362.0" stroke="#D6493D" stroke-width="1" stroke-dasharray="2 2" opacity="0.6"/>
+<circle cx="428.6" cy="230.2" r="4.5" fill="#6A54C9" stroke="#fff" stroke-width="1.6"/>
+<text x="428.6" y="18" font-family="Inter" font-size="10.5" fill="#6A54C9" text-anchor="middle" font-weight="600" letter-spacing="0">③유럽OEM</text>
+<text x="428.6" y="30" font-family="Inter" font-size="10.5" fill="#6A54C9" text-anchor="middle" font-weight="600" letter-spacing="0">독점수주</text>
+<line x1="428.6" y1="223.2" x2="428.6" y2="40.0" stroke="#6A54C9" stroke-width="1" stroke-dasharray="2 2" opacity="0.6"/>
+<circle cx="484.0" cy="193.2" r="4.5" fill="#2E6BE6" stroke="#fff" stroke-width="1.6"/>
+<text x="483.96" y="18" font-family="Inter" font-size="10.5" fill="#2E6BE6" text-anchor="middle" font-weight="600" letter-spacing="0">④NVIDIA+</text>
+<text x="483.96" y="30" font-family="Inter" font-size="10.5" fill="#2E6BE6" text-anchor="middle" font-weight="600" letter-spacing="0">CPO 발표</text>
+<line x1="484.0" y1="186.2" x2="484.0" y2="40.0" stroke="#2E6BE6" stroke-width="1" stroke-dasharray="2 2" opacity="0.6"/>
+<circle cx="532.4" cy="252.4" r="4.5" fill="#D6493D" stroke="#fff" stroke-width="1.6"/>
+<text x="532.4" y="372" font-family="Inter" font-size="10.5" fill="#D6493D" text-anchor="middle" font-weight="600" letter-spacing="0">⑤Q4후</text>
+<text x="532.4" y="384" font-family="Inter" font-size="10.5" fill="#D6493D" text-anchor="middle" font-weight="600" letter-spacing="0">조정</text>
+<line x1="532.4" y1="259.4" x2="532.4" y2="362.0" stroke="#D6493D" stroke-width="1" stroke-dasharray="2 2" opacity="0.6"/>
+<circle cx="657.0" cy="147.8" r="4.5" fill="#0E9E86" stroke="#fff" stroke-width="1.6"/>
+<text x="656.96" y="18" font-family="Inter" font-size="10.5" fill="#0E9E86" text-anchor="middle" font-weight="600" letter-spacing="0">⑥Q1 어닝</text>
+<text x="656.96" y="30" font-family="Inter" font-size="10.5" fill="#0E9E86" text-anchor="middle" font-weight="600" letter-spacing="0">서프라이즈</text>
+<line x1="657.0" y1="140.8" x2="657.0" y2="40.0" stroke="#0E9E86" stroke-width="1" stroke-dasharray="2 2" opacity="0.6"/>
+<circle cx="740.0" cy="193.2" r="4.5" fill="#DB8613" stroke="#fff" stroke-width="1.6"/>
+<text x="740.0" y="372" font-family="Inter" font-size="10.5" fill="#DB8613" text-anchor="middle" font-weight="600" letter-spacing="0">⑦증자</text>
+<text x="740.0" y="384" font-family="Inter" font-size="10.5" fill="#DB8613" text-anchor="middle" font-weight="600" letter-spacing="0">~$22</text>
+<line x1="740.0" y1="200.2" x2="740.0" y2="362.0" stroke="#DB8613" stroke-width="1" stroke-dasharray="2 2" opacity="0.6"/>
+</svg>
+      <p class="fcap">그림 8-1. AEVA 주가 마일스톤 경로(2025.3&ndash;2026.6). 가격은 문서화된 앵커의 근사치. 출처: 각 시점 실적발표&middot;보도자료&middot;시장데이터.</p>
+    </div>
+
+    <div class="split">
+      <div class="prose">
+        <h3 style="color:#EBF1F8">주가를 움직인 다섯 번의 순간</h3>
+        <p>2025년 3월 약 $2.79에 불과하던 주가는 봄부터 <strong>①실적 개선 + FMCW 서사</strong>가 부각되며 6월 약 $33까지 폭등했다. 이후 <strong>②차익실현&middot;희석 우려</strong>로 9월 $8.83까지 되밀렸다. 반전은 연말이었다. <strong>③2025년 12월 유럽 톱10 OEM의 독점 수주</strong> 발표가 &lsquo;서구 프리미엄 OEM이 FMCW를 택했다&rsquo;는 강력한 증거로 받아들여졌다.</p>
+        <p>2026년 1월엔 <strong>④엔비디아 DRIVE Hyperion 통합 + AI 데이터센터용 고출력 SOA 발표</strong>가 겹치며 다시 폭등, &lsquo;라이다 회사&rsquo;에서 &lsquo;AI 광학 플랫폼&rsquo;으로 서사가 격상됐다. 2월 4분기 실적 후 조정을 거쳐, <strong>⑤5월 1분기 어닝 서프라이즈</strong>(매출 +90%)로 다시 $28대까지 올랐고, 6월 증자 후 $22 안팎으로 안착했다. 요컨대 주가는 <strong>&lsquo;수주 → AI 서사 → 실적&rsquo;이라는 촉매에 계단식으로 반응</strong>해 왔다.</p>
+        <h3 style="color:#EBF1F8">왜 시장 &lsquo;자금&rsquo;이 이 주식에 몰리나</h3>
+        <p>냉정한 밸류에이션에도 자금이 몰리는 데는 이유가 있다. (1) <strong>희소성</strong> &mdash; 서구에서 FMCW 4D + 중국 밖 프리미엄 OEM 독점 수주를 &lsquo;동시에&rsquo; 가진 상장사는 사실상 Aeva뿐. (2) <strong>테마 정합성</strong> &mdash; AI&middot;자율주행&middot;피지컬 AI&middot;실리콘 포토닉스라는 2026년 가장 뜨거운 서사에 모두 걸쳐 있음. (3) <strong>스마트머니 동행</strong> &mdash; 엔비디아 통합, LG이노텍 투자, Point72&middot;Duquesne 보유가 &lsquo;검증 신호&rsquo;로 작동.</p>
+      </div>
+      <aside>
+        <div class="card" style="margin-bottom:16px">
+          <p class="eyebrow" style="margin-bottom:10px">급등 타임라인 요약</p>
+          <div class="tl" style="margin:6px 0 0">
+            <div class="tl-item"><div class="tl-date">2025.03</div><h4>≈ $2.79</h4><p>저점 · 병합 후 기저</p></div>
+            <div class="tl-item"><div class="tl-date">2025.06</div><h4>≈ $33 (피크)</h4><p>실적+FMCW 서사 폭등</p></div>
+            <div class="tl-item"><div class="tl-date">2025.09</div><h4>≈ $8.83 (저점)</h4><p>차익실현·희석 우려</p></div>
+            <div class="tl-item"><div class="tl-date">2025.12</div><h4>유럽 OEM 독점수주</h4><p>서구 프리미엄 검증</p></div>
+            <div class="tl-item"><div class="tl-date">2026.01</div><h4>NVIDIA + CPO</h4><p>&lsquo;AI 광학&rsquo;으로 격상</p></div>
+            <div class="tl-item"><div class="tl-date">2026.05</div><h4>≈ $28</h4><p>Q1 어닝 서프라이즈</p></div>
+            <div class="tl-item"><div class="tl-date">2026.06</div><h4>≈ $22</h4><p>$115M 증자 후 안착</p></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="callout co-amber">
+      <div class="ct">🩹 긍정 편향 교정 &mdash; &lsquo;서사&rsquo;와 &lsquo;수급&rsquo;이 가격을 부풀렸을 가능성</div>
+      <p style="margin-bottom:9px">위의 강세 요인은 진짜지만, 냉정히 다음도 함께 봐야 한다:</p>
+      <ul class="clean amber" style="margin:0">
+        <li><strong>저유동성 증폭:</strong> 발행주식 ~6,800만 주의 소형주라, 상대적으로 적은 자금 유입에도 주가가 크게 출렁인다. 상승도 하락도 과장되기 쉽다.</li>
+        <li><strong>높은 공매도 + 스퀴즈:</strong> 유동주식의 <strong>~11.6%가 공매도</strong>. 좋은 뉴스가 나오면 공매도 환매수(숏 스퀴즈)가 상승을 증폭 &mdash; 펀더멘털 이상으로 급등할 수 있다.</li>
+        <li><strong>테마 민감도:</strong> &lsquo;엔비디아&middot;AI 광학&rsquo; 연관은 주가엔 강력하지만 <strong>Aeva의 실제 AI 매출은 아직 0</strong>. 서사가 식으면 배수도 식는다.</li>
+        <li><strong>베타 2.0&ndash;3.5:</strong> 시장 대비 2&ndash;3배 이상 변동. 하락장에서 특히 취약하다.</li>
+      </ul>
+      <p style="margin:10px 0 0"><strong>함의:</strong> 현재 주가는 &lsquo;펀더멘털 가치&rsquo;에 &lsquo;서사 프리미엄&rsquo;과 &lsquo;수급 프리미엄&rsquo;이 얹혀 있다. 좋은 뉴스가 이미 상당 부분 가격에 반영됐을 수 있다. <span class="conf conf-md" style="background:#3a2f1a;color:#F0C888;border-color:#5c4a22">확신도: 중간</span></p>
+    </div>
+  </div>
+</section>
+<section class="band" id="s9">
+  <div class="wrap">
+    <span class="sec-num">09 / 15</span>
+    <p class="eyebrow">Financials &amp; Valuation</p>
+    <h2 class="sec-title">재무 상태와 밸류에이션 &mdash; 표준 DCF가 안 통하는 회사</h2>
+    <p class="sec-lead">Aeva는 <strong>영업이익이 깊은 마이너스</strong>여서, 미래 현금흐름을 할인하는 표준 DCF를 그대로 쓸 수 없다(할인할 &lsquo;양(+)의 현금흐름&rsquo;이 없음). CAP 프레임워크가 도입 단계 기업에 권고하는 대로, 여기서는 <strong>WACC 산정 → 시나리오별 미래 매출&middot;마진 가정 → 역산 밸류에이션</strong>으로 접근한다.</p>
+
+    <div class="tbl-wrap">
+      <table class="data">
+        <caption>표 9-1. 연간 재무 추이 (단위: $M, GAAP 순손실 기준). 2024.3 약 1:5 병합으로 주당 수치 주의.</caption>
+        <thead>
+          <tr><th>지표</th><th>2021</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>TTM</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>매출</td><td>9.3</td><td>4.2</td><td>4.5</td><td>9.07</td><td>18.08</td><td>21.0</td></tr>
+          <tr><td>매출성장률</td><td>&mdash;</td><td class="num-neg">-55%</td><td>+7%</td><td class="num-pos">+99%</td><td class="num-pos">+99%</td><td class="num-pos">고성장</td></tr>
+          <tr><td>비GAAP 영업손실</td><td>-81.9</td><td>-127.7</td><td>-125</td><td>-110</td><td>-103</td><td>&mdash;</td></tr>
+          <tr><td>GAAP 순손실</td><td>&mdash;</td><td>&mdash;</td><td>-149.3</td><td>-152.3</td><td>-145.4</td><td>&mdash;</td></tr>
+          <tr class="hl"><td>현금+유가증권(기말)</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>~112</td><td>~122</td><td>~185*</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="footnote" style="margin:-6px 0 22px">* 2026.6 $115M 증자($22.25/주, 5.17M주) 반영 추정치. 별도로 $125M 신용시설, Apollo 전환사채 $100M(4.375%, 2032 만기) 보유.</p>
+
+    <div class="split">
+      <div class="prose">
+        <h3>재무 건전성 &mdash; &lsquo;시간을 산&rsquo; 상태</h3>
+        <p>Aeva는 연간 약 <strong>1억 달러의 현금을 태우는</strong> 회사다(비GAAP 영업손실 기준). 2026년 1분기 말 현금&middot;유가증권 약 $99.5M에 6월 증자 $115M을 더하면 <strong>당면 런웨이는 확보</strong>했고, $125M 신용시설이 추가 완충 역할을 한다. 다만 <strong>1분기 말 자기자본이 -$12.4M로 이미 마이너스</strong>였고, 주식보상비용(SBC)이 분기 $9.4M에 달해 <strong>지속적 희석</strong>이 불가피하다. 흑자 전환 전까지는 &lsquo;성장 자금 조달 → 희석 → 다시 조달&rsquo;의 사이클이 이어진다.</p>
+        <p>수익성 지표는 초기 기업답게 극단적이다: ROIC 약 -103%, ROE 약 -516%, 영업마진 약 -926%. 이 숫자들은 &lsquo;나쁘다&rsquo;기보다 &lsquo;아직 매출이 비용 기반을 못 덮은 도입 단계&rsquo;라는 사실의 반영이다. 관건은 <strong>양산 매출이 언제 비용 곡선을 추월하느냐</strong>다.</p>
+        <h3>WACC 산정 &mdash; 왜 할인율이 높은가</h3>
+        <p>도입 단계 고베타 기업의 자본비용은 높다. 무위험이자율(10년 국채) <strong>4.45%</strong>, Aeva 베타 약 <strong>2.2</strong>, 시장위험프리미엄(Damodaran 2026 내재 ERP) 약 <strong>4.5%</strong>를 CAPM에 넣으면 자기자본비용 ≈ 4.45% + 2.2×4.5% ≈ <strong>14.3%</strong>. Aeva는 사실상 자기자본 중심 자본구조이므로 WACC도 <strong>약 14%</strong>. 다만 벤처&middot;프리클리니컬 기업에는 <strong>15&ndash;18%</strong>의 더 높은 할인율을 적용하는 것이 보수적으로 타당하다.</p>
+      </div>
+      <aside>
+        <div class="card" style="margin-bottom:14px">
+          <p class="eyebrow" style="margin-bottom:12px">WACC 구성요소</p>
+          <div class="kv"><span class="kk">무위험(10Y 국채)</span><span class="vv">4.45%</span></div>
+          <div class="kv"><span class="kk">베타(β)</span><span class="vv">≈ 2.2</span></div>
+          <div class="kv"><span class="kk">ERP(2026 내재)</span><span class="vv">≈ 4.5%</span></div>
+          <div class="kv"><span class="kk">자기자본비용</span><span class="vv">≈ 14.3%</span></div>
+          <div class="kv"><span class="kk">기본 WACC</span><span class="vv">≈ 14%</span></div>
+          <div class="kv"><span class="kk">보수적 범위</span><span class="vv">15&ndash;18%</span></div>
+        </div>
+        <div class="card">
+          <p class="eyebrow" style="margin-bottom:12px">현금소진·런웨이</p>
+          <div class="kv"><span class="kk">분기 영업현금소진</span><span class="vv">~$25.8M</span></div>
+          <div class="kv"><span class="kk">연 소진</span><span class="vv">~$103M</span></div>
+          <div class="kv"><span class="kk">분기 SBC</span><span class="vv">$9.4M</span></div>
+          <div class="kv"><span class="kk">자기자본(Q1'26)</span><span class="vv">-$12.4M</span></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="fig">
+      <p class="ftitle">현금과 런웨이 &mdash; 증자로 시간을 벌었다</p>
+      <p class="fsub">진한 막대=현금+유가증권, 옅은 막대=신용시설 포함 총 유동성. 2025년 저점 이후 증자로 회복.</p>
+      <svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" role="img">
+<line x1="54" y1="330.0" x2="706" y2="330.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="46" y="333.5" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$0M</text>
+<line x1="54" y1="260.5" x2="706" y2="260.5" stroke="#E4E2DB" stroke-width="1"/>
+<text x="46" y="264.0" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$85M</text>
+<line x1="54" y1="191.0" x2="706" y2="191.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="46" y="194.5" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$170M</text>
+<line x1="54" y1="121.5" x2="706" y2="121.5" stroke="#E4E2DB" stroke-width="1"/>
+<text x="46" y="125.0" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$255M</text>
+<line x1="54" y1="52.0" x2="706" y2="52.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="46" y="55.5" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$340M</text>
+<rect x="86.6" y="175.2" width="65.2" height="154.8" rx="3" fill="#0E9E86"/>
+<rect x="86.6" y="73.0" width="65.2" height="102.2" rx="3" fill="#0E9E86" opacity="0.28"/>
+<text x="119.2" y="169.21941176470588" font-family="IBM Plex Mono" font-size="10" fill="#0E9E86" text-anchor="middle" font-weight="700" letter-spacing="0">189</text>
+<text x="119.2" y="67.0135294117647" font-family="IBM Plex Mono" font-size="9" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">314</text>
+<text x="119.2" y="348" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">24.03</text>
+<rect x="217.0" y="238.4" width="65.2" height="91.6" rx="3" fill="#0E9E86"/>
+<rect x="217.0" y="136.2" width="65.2" height="102.2" rx="3" fill="#0E9E86" opacity="0.28"/>
+<text x="249.60000000000002" y="232.42352941176472" font-family="IBM Plex Mono" font-size="10" fill="#0E9E86" text-anchor="middle" font-weight="700" letter-spacing="0">112</text>
+<text x="249.60000000000002" y="130.21764705882356" font-family="IBM Plex Mono" font-size="9" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">237</text>
+<text x="249.60000000000002" y="348" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">24.12</text>
+<rect x="347.4" y="263.8" width="65.2" height="66.2" rx="3" fill="#0E9E86"/>
+<rect x="347.4" y="161.6" width="65.2" height="102.2" rx="3" fill="#0E9E86" opacity="0.28"/>
+<text x="380.0" y="257.7705882352941" font-family="IBM Plex Mono" font-size="10" fill="#0E9E86" text-anchor="middle" font-weight="700" letter-spacing="0">81</text>
+<text x="380.0" y="155.56470588235294" font-family="IBM Plex Mono" font-size="9" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">206</text>
+<text x="380.0" y="348" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">25.03</text>
+<rect x="477.8" y="248.6" width="65.2" height="81.4" rx="3" fill="#0E9E86"/>
+<rect x="477.8" y="146.4" width="65.2" height="102.2" rx="3" fill="#0E9E86" opacity="0.28"/>
+<text x="510.40000000000003" y="242.6441176470588" font-family="IBM Plex Mono" font-size="10" fill="#0E9E86" text-anchor="middle" font-weight="700" letter-spacing="0">100</text>
+<text x="510.40000000000003" y="140.43823529411765" font-family="IBM Plex Mono" font-size="9" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">224</text>
+<text x="510.40000000000003" y="348" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">26.03</text>
+<rect x="608.2" y="178.7" width="65.2" height="151.3" rx="3" fill="#0E9E86"/>
+<rect x="608.2" y="76.5" width="65.2" height="102.2" rx="3" fill="#0E9E86" opacity="0.28"/>
+<text x="640.8000000000001" y="172.73529411764707" font-family="IBM Plex Mono" font-size="10" fill="#0E9E86" text-anchor="middle" font-weight="700" letter-spacing="0">185</text>
+<text x="640.8000000000001" y="70.52941176470588" font-family="IBM Plex Mono" font-size="9" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">310</text>
+<text x="640.8000000000001" y="348" font-family="IBM Plex Mono" font-size="10" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">26.06E</text>
+<rect x="60" y="58" width="210" height="46" rx="8" fill="#F7DCD8" stroke="#EEBDB6"/>
+<text x="70" y="76" font-family="Inter" font-size="11" fill="#7E241B" text-anchor="start" font-weight="600" letter-spacing="0">분기 영업현금소진 ≈ $25.8M</text>
+<text x="70" y="92" font-family="Inter" font-size="10" fill="#7E241B" text-anchor="start" font-weight="400" letter-spacing="0">→ 연 ~$103M · 6월 증자 후 런웨이 확보</text>
+</svg>
+      <p class="fcap">그림 9-1. 유동성 추이. 26.06E는 6월 증자 반영 추정. 출처: Aeva 분기보고서, 증자 공시.</p>
+    </div>
+
+    <h3 style="font-family:'Space Grotesk';font-size:20px;margin:30px 0 6px">시나리오 밸류에이션 &mdash; &lsquo;미래 매출&times;배수&rsquo; 역산</h3>
+    <p class="footnote" style="margin-bottom:14px">표준 DCF 대신, 2033년 시점의 매출&middot;마진&middot;배수를 가정해 미래 기업가치를 구하고 이를 WACC로 현재로 할인하는 &lsquo;시나리오&rsquo; 방식. 모든 값은 예시적 가정이며 정밀 예측이 아니다.</p>
+    <div class="tbl-wrap">
+      <table class="data">
+        <caption>표 9-2. 시나리오별 밸류에이션 스케치 (2033 목표연도, 할인율 15% 가정). 단위: 매출 $M, EV $B.</caption>
+        <thead>
+          <tr><th>시나리오</th><th>2033 매출</th><th>영업마진</th><th>적용 EV/매출</th><th>2033 EV</th><th>현재가치(15%할인)</th><th>함의</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>🐻 약세</td><td>$150M</td><td>흑자 전 근처</td><td>3×</td><td>$0.45B</td><td class="num-neg">~$0.15B</td><td>수주 지연·경쟁 심화</td></tr>
+          <tr class="hl"><td>🎯 기본</td><td>$450M</td><td>~12%</td><td>5×</td><td>$2.25B</td><td>~$0.74B</td><td>2개 프로그램 성공</td></tr>
+          <tr><td>🚀 강세</td><td>$760M+</td><td>~20%</td><td>7×</td><td>$5.3B+</td><td class="num-pos">~$1.7B+</td><td>3막(AI광학) 성공</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout co-ink">
+      <div class="ct">🧮 핵심 통찰 &mdash; 현재 주가는 &lsquo;강세와 기본의 사이&rsquo;</div>
+      <p>현재 기업가치(EV) 약 <strong>15억 달러</strong>는 위 표에서 <strong>기본 시나리오(현재가치 ~$7.4억)를 크게 웃돌고, 강세 시나리오(~$17억)에 가깝다.</strong> 즉 시장은 이미 <strong>&lsquo;기본&rsquo;을 넘어 &lsquo;강세에 가까운 성공&rsquo;을 가격에 반영</strong>하고 있다. 다임러트럭&middot;유럽 OEM 양산이 예정대로 이뤄지고 AI 광학까지 일부 성공해야 정당화되는 수준이다. 바꿔 말하면, <strong>&lsquo;기본&rsquo;만 실현돼도 현재가는 비싸고, &lsquo;약세&rsquo;가 현실화되면 큰 하락 위험</strong>이 있다. <span class="conf conf-md">확신도: 중간(≈55%) &mdash; 가정에 민감</span></p>
+    </div>
+  </div>
+</section>
+<section class="band sec--tint" id="s10">
+  <div class="wrap">
+    <span class="sec-num">10 / 15</span>
+    <p class="eyebrow">Market-Implied Expectations · CAP</p>
+    <h2 class="sec-title">시장 내재 기대치 &mdash; 지금 가격은 무엇을 &lsquo;약속&rsquo;하는가</h2>
+    <p class="sec-lead">모부신 CAP 분석의 핵심 질문은 &ldquo;주가가 <strong>이미 반영하고 있는 미래 기대치</strong>는 무엇이며, 그것이 <strong>합리적으로 달성 가능한가</strong>&rdquo;다. Aeva는 흑자 전이라 표준 &lsquo;내재 CAP 연수&rsquo; 역산이 불가능하므로, 대신 <strong>&lsquo;현재 EV를 정당화하는 데 필요한 미래 매출&middot;마진 경로&rsquo;</strong>를 역으로 계산했다.</p>
+
+    <div class="fig">
+      <p class="ftitle">시장이 암묵적으로 요구하는 매출 경로</p>
+      <p class="fsub">현재 약 15억 달러 EV가 정당화되려면, Aeva는 대략 붉은 선(강세, ~$760M by 2033)에 준하는 궤적 &mdash; 연 60%+ 성장을 8년 &mdash; 을 그려야 한다.</p>
+      <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" role="img">
+<line x1="56" y1="350.0" x2="730" y2="350.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="48" y="353.5" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$0M</text>
+<line x1="56" y1="276.0" x2="730" y2="276.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="48" y="279.5" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$200M</text>
+<line x1="56" y1="202.0" x2="730" y2="202.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="48" y="205.5" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$400M</text>
+<line x1="56" y1="128.0" x2="730" y2="128.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="48" y="131.5" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$600M</text>
+<line x1="56" y1="54.0" x2="730" y2="54.0" stroke="#E4E2DB" stroke-width="1"/>
+<text x="48" y="57.5" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="end" font-weight="400" letter-spacing="0">$800M</text>
+<text x="93.44444444444444" y="368" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2025</text>
+<text x="168.33333333333331" y="368" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2026</text>
+<text x="243.22222222222223" y="368" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2027</text>
+<text x="318.1111111111111" y="368" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2028</text>
+<text x="393.0" y="368" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2029</text>
+<text x="467.88888888888886" y="368" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2030</text>
+<text x="542.7777777777778" y="368" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2031</text>
+<text x="617.6666666666666" y="368" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2032</text>
+<text x="692.5555555555555" y="368" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">2033</text>
+<path d="M 93.4 343.3 L 168.3 337.8 L 243.2 322.2 L 318.1 298.2 L 393.0 264.9 L 467.9 220.5 L 542.8 172.4 L 617.7 120.6 L 692.6 68.8" fill="none" stroke="#D6493D" stroke-width="2.4" />
+<circle cx="93.4" cy="343.3" r="3.2" fill="#D6493D"/>
+<circle cx="168.3" cy="337.8" r="3.2" fill="#D6493D"/>
+<circle cx="243.2" cy="322.2" r="3.2" fill="#D6493D"/>
+<circle cx="318.1" cy="298.2" r="3.2" fill="#D6493D"/>
+<circle cx="393.0" cy="264.9" r="3.2" fill="#D6493D"/>
+<circle cx="467.9" cy="220.5" r="3.2" fill="#D6493D"/>
+<circle cx="542.8" cy="172.4" r="3.2" fill="#D6493D"/>
+<circle cx="617.7" cy="120.6" r="3.2" fill="#D6493D"/>
+<circle cx="692.6" cy="68.8" r="3.2" fill="#D6493D"/>
+<path d="M 93.4 343.3 L 168.3 337.8 L 243.2 327.8 L 318.1 314.8 L 393.0 294.5 L 467.9 270.4 L 542.8 242.7 L 617.7 213.1 L 692.6 183.5" fill="none" stroke="#DB8613" stroke-width="2.4" stroke-dasharray="5 3"/>
+<circle cx="93.4" cy="343.3" r="3.2" fill="#DB8613"/>
+<circle cx="168.3" cy="337.8" r="3.2" fill="#DB8613"/>
+<circle cx="243.2" cy="327.8" r="3.2" fill="#DB8613"/>
+<circle cx="318.1" cy="314.8" r="3.2" fill="#DB8613"/>
+<circle cx="393.0" cy="294.5" r="3.2" fill="#DB8613"/>
+<circle cx="467.9" cy="270.4" r="3.2" fill="#DB8613"/>
+<circle cx="542.8" cy="242.7" r="3.2" fill="#DB8613"/>
+<circle cx="617.7" cy="213.1" r="3.2" fill="#DB8613"/>
+<circle cx="692.6" cy="183.5" r="3.2" fill="#DB8613"/>
+<path d="M 93.4 343.3 L 168.3 337.8" fill="none" stroke="#2E6BE6" stroke-width="2.4" />
+<circle cx="93.4" cy="343.3" r="3.2" fill="#2E6BE6"/>
+<circle cx="168.3" cy="337.8" r="3.2" fill="#2E6BE6"/>
+<text x="688.5555555555555" y="60.80000000000001" font-family="Inter" font-size="10.5" fill="#D6493D" text-anchor="end" font-weight="600" letter-spacing="0">내재 정당화(강세) ~$760M</text>
+<text x="688.5555555555555" y="197.5" font-family="Inter" font-size="10.5" fill="#B98900" text-anchor="end" font-weight="600" letter-spacing="0">기본 ~$450M</text>
+<text x="176.33333333333331" y="339.79" font-family="Inter" font-size="10.5" fill="#2E6BE6" text-anchor="start" font-weight="600" letter-spacing="0">실적/가이던스</text>
+</svg>
+      <p class="fcap">그림 10-1. 시장 내재 매출궤적 시나리오. 파란선=실적/가이던스, 주황=기본, 빨강=현재 EV 정당화(강세). 예시적 가정.</p>
+    </div>
+
+    <div class="split">
+      <div class="prose">
+        <h3>역산의 결론 &mdash; &lsquo;완벽에 가까운 실행&rsquo;이 전제</h3>
+        <p>현재 EV ~$15억을 정당화하려면(2033년 EV/매출 5&ndash;7배, 15% 할인 가정), Aeva는 <strong>2033년까지 매출을 약 8억&ndash;12억 달러 &mdash; 지금의 40&ndash;60배 &mdash; 로 키우고, 동시에 20% 안팎의 견고한 영업마진</strong>에 도달해야 한다. 이는 다음이 <strong>동시에</strong> 성립해야 가능하다:</p>
+        <ul class="clean">
+          <li><strong>다임러트럭 프로그램</strong>이 2027년 양산에 진입해 연 20만 대 규모로 램프업.</li>
+          <li><strong>유럽 톱10 OEM</strong>이 2028년 SOP 후 2030년대 중반까지 대량 채택.</li>
+          <li><strong>산업&middot;국방&middot;인프라</strong>가 안정적 반복 매출로 자리 잡음.</li>
+          <li><strong>AI 데이터센터 광학(SOA)</strong>이 발표를 넘어 실제 매출&middot;수주로 전환 &mdash; 이것이 &lsquo;강세&rsquo;와 &lsquo;기본&rsquo;을 가르는 결정적 변수.</li>
+        </ul>
+        <p>CAP 언어로 말하면, 시장은 Aeva에 <strong>사실상 &lsquo;20년+에 준하는 매우 긴 경쟁우위 지속기간&rsquo;</strong>을 부여하고 있다. 섹터 평균 페이드(IT ~0.20, 반도체 ~0.25)를 감안하면 이는 <strong>극단적으로 낙관적인 CAP 가정</strong>이다. 이런 CAP는 &lsquo;구조적 독점&rsquo;에 가까운 해자가 확인될 때만 정당화된다.</p>
+      </div>
+      <aside>
+        <div class="card" style="margin-bottom:14px">
+          <p class="eyebrow" style="margin-bottom:12px">현재가 정당화 조건 (역산)</p>
+          <div class="kv"><span class="kk">2033 목표 매출</span><span class="vv">$0.8&ndash;1.2B</span></div>
+          <div class="kv"><span class="kk">현재 대비 배수</span><span class="vv">40&ndash;60×</span></div>
+          <div class="kv"><span class="kk">필요 연평균성장</span><span class="vv">~60%+ (8년)</span></div>
+          <div class="kv"><span class="kk">필요 영업마진</span><span class="vv">~20%</span></div>
+          <div class="kv"><span class="kk">내재 CAP</span><span class="vv">사실상 20년+</span></div>
+          <div class="kv"><span class="kk">달성 확신도</span><span class="vv">중간(≈55%)</span></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="fig">
+      <p class="ftitle">밸류에이션 레인지 &mdash; 현재가는 어디쯤인가</p>
+      <p class="fsub">시나리오별 내재 주당가치와 애널리스트 목표, 52주 범위를 한 눈에. 점선=현재가 ≈$22.</p>
+      <svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" role="img">
+<line x1="150.0" y1="30" x2="150.0" y2="290" stroke="#E4E2DB" stroke-width="1"/>
+<text x="150.0" y="308" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">$0</text>
+<line x1="266.0" y1="30" x2="266.0" y2="290" stroke="#E4E2DB" stroke-width="1"/>
+<text x="266.0" y="308" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">$10</text>
+<line x1="382.0" y1="30" x2="382.0" y2="290" stroke="#E4E2DB" stroke-width="1"/>
+<text x="382.0" y="308" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">$20</text>
+<line x1="498.0" y1="30" x2="498.0" y2="290" stroke="#E4E2DB" stroke-width="1"/>
+<text x="498.0" y="308" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">$30</text>
+<line x1="614.0" y1="30" x2="614.0" y2="290" stroke="#E4E2DB" stroke-width="1"/>
+<text x="614.0" y="308" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">$40</text>
+<line x1="730.0" y1="30" x2="730.0" y2="290" stroke="#E4E2DB" stroke-width="1"/>
+<text x="730.0" y="308" font-family="IBM Plex Mono" font-size="9.5" fill="#697080" text-anchor="middle" font-weight="400" letter-spacing="0">$50</text>
+<line x1="405.2" y1="24" x2="405.2" y2="296" stroke="#14181F" stroke-width="1.6" stroke-dasharray="4 3"/>
+<text x="405.2" y="20" font-family="Inter" font-size="10.5" fill="#14181F" text-anchor="middle" font-weight="700" letter-spacing="0">현재 ≈$22</text>
+<rect x="252.4" y="47.0" width="347.5" height="18" rx="9" fill="#CFCCC2" opacity="0.28" stroke="#CFCCC2" stroke-width="1.4"/>
+<text x="138" y="60.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">52주 저–고</text>
+<text x="248.428" y="59.5" font-family="IBM Plex Mono" font-size="9.5" fill="#CFCCC2" text-anchor="end" font-weight="400" letter-spacing="0">$8.83</text>
+<text x="603.9639999999999" y="59.5" font-family="IBM Plex Mono" font-size="9.5" fill="#CFCCC2" text-anchor="start" font-weight="400" letter-spacing="0">$38.79</text>
+<rect x="208.0" y="99.0" width="81.2" height="18" rx="9" fill="#D6493D" opacity="0.28" stroke="#D6493D" stroke-width="1.4"/>
+<text x="138" y="112.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">약세 시나리오</text>
+<text x="204.0" y="111.5" font-family="IBM Plex Mono" font-size="9.5" fill="#D6493D" text-anchor="end" font-weight="400" letter-spacing="0">$5</text>
+<text x="293.2" y="111.5" font-family="IBM Plex Mono" font-size="9.5" fill="#D6493D" text-anchor="start" font-weight="400" letter-spacing="0">$12</text>
+<rect x="312.4" y="151.0" width="139.2" height="18" rx="9" fill="#DB8613" opacity="0.28" stroke="#DB8613" stroke-width="1.4"/>
+<text x="138" y="164.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">기본(내재 정당화)</text>
+<text x="308.4" y="163.5" font-family="IBM Plex Mono" font-size="9.5" fill="#DB8613" text-anchor="end" font-weight="400" letter-spacing="0">$14</text>
+<text x="455.6" y="163.5" font-family="IBM Plex Mono" font-size="9.5" fill="#DB8613" text-anchor="start" font-weight="400" letter-spacing="0">$26</text>
+<rect x="498.0" y="203.0" width="290.0" height="18" rx="9" fill="#0E9E86" opacity="0.28" stroke="#0E9E86" stroke-width="1.4"/>
+<text x="138" y="216.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">강세 시나리오</text>
+<text x="494.0" y="215.5" font-family="IBM Plex Mono" font-size="9.5" fill="#0E9E86" text-anchor="end" font-weight="400" letter-spacing="0">$30</text>
+<text x="792.0" y="215.5" font-family="IBM Plex Mono" font-size="9.5" fill="#0E9E86" text-anchor="start" font-weight="400" letter-spacing="0">$55</text>
+<rect x="365.2" y="255.0" width="167.6" height="18" rx="9" fill="#2E6BE6" opacity="0.28" stroke="#2E6BE6" stroke-width="1.4"/>
+<text x="138" y="268.0" font-family="Inter" font-size="11.5" fill="#3B434F" text-anchor="end" font-weight="500" letter-spacing="0">애널리스트 목표</text>
+<text x="361.18" y="267.5" font-family="IBM Plex Mono" font-size="9.5" fill="#2E6BE6" text-anchor="end" font-weight="400" letter-spacing="0">$18.55</text>
+<text x="536.8" y="267.5" font-family="IBM Plex Mono" font-size="9.5" fill="#2E6BE6" text-anchor="start" font-weight="400" letter-spacing="0">$33</text>
+<circle cx="428.4" cy="264.0" r="4" fill="#2E6BE6"/>
+</svg>
+      <p class="fcap">그림 10-2. 밸류에이션 풋볼필드. 시나리오 값은 섹션 9 표 기반 예시. 애널리스트 중앙값 $24(9인).</p>
+    </div>
+
+    <div class="callout co-blue">
+      <div class="ct">🧭 CAP 종합 판정</div>
+      <p style="margin-bottom:9px"><strong>논리 게이트(추론이 타당한가):</strong> 흑자 전 기업에 실물옵션&middot;TAM&middot;역산 접근을 쓴 것은 CAP 프레임워크 지침에 부합. <span class="conf conf-hi">PASS</span></p>
+      <p style="margin-bottom:9px"><strong>사실 게이트(전제가 참인가):</strong> 매출&middot;수주&middot;마진&middot;WACC 입력은 공시&middot;시장 데이터 기반이나, 2033 매출&middot;마진&middot;배수 가정은 <strong>추정치이며 불확실성이 큼.</strong> 특히 AI 광학 매출은 &lsquo;0에서 출발&rsquo;. <span class="conf conf-md">WARN</span></p>
+      <p style="margin:0"><strong>결론:</strong> 현재 밸류에이션은 &lsquo;기본&rsquo;을 넘어 &lsquo;강세에 가까운&rsquo; 시나리오를 반영. 실행이 완벽에 가까워야 정당화되며, <strong>실망의 하방 여지가 상방보다 클 수 있는</strong> 비대칭 구간. 이는 투자 &lsquo;불가&rsquo;를 뜻하지 않으며, &lsquo;고위험&middot;고기대&rsquo; 자산의 전형임을 뜻한다.</p>
+    </div>
+  </div>
+</section>
+<section class="band" id="s11">
+  <div class="wrap">
+    <span class="sec-num">11 / 15</span>
+    <p class="eyebrow">Bull Case</p>
+    <h2 class="sec-title">강세론 &mdash; &lsquo;서구의 FMCW 챔피언&rsquo;이 세 시장을 먹는다면</h2>
+    <p class="sec-lead">강세 시나리오의 핵심 논리는 이것이다: Aeva는 단순한 라이다 부품사가 아니라, <strong>독보적 감지 기술을 가진 &lsquo;서구 유일의 FMCW 플랫폼&rsquo;</strong>이며, 자동차&middot;산업&middot;AI 광학이라는 세 개의 대형 시장에서 동시에 승리할 옵션을 쥐고 있다는 것이다.</p>
+
+    <div class="grid g2">
+      <div class="card">
+        <span class="pill pill-teal">기둥 1</span>
+        <h4 style="margin:10px 0 6px">두 개의 서구 독점 수주 = 검증된 &lsquo;양산 트랙&rsquo;</h4>
+        <p style="font-size:14px;margin:0">다임러트럭(2027)과 유럽 톱10 OEM(2028)의 <strong>독점 양산 프로그램</strong>은 차량 수명주기 동안 교체가 어려운 &lsquo;장기 lock-in 매출&rsquo;이다. 양산이 시작되면 매출이 계단식으로 뛰며, 소량 개발 매출에서 <strong>수억 달러 규모 양산 매출</strong>로의 전환이 가시화된다.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-teal">기둥 2</span>
+        <h4 style="margin:10px 0 6px">기술 리드가 &lsquo;진짜&rsquo;로 판명될 때</h4>
+        <p style="font-size:14px;margin:0">레벨3/4 자율주행이 확산되면 &lsquo;속도 동시 측정&middot;500m 장거리&middot;간섭 면역&rsquo;이라는 FMCW의 강점이 <strong>안전 필수 기능</strong>으로 부각될 수 있다. 경쟁사가 5&ndash;7년 뒤처졌다면, Aeva는 프리미엄 세그먼트를 선점한다.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-teal">기둥 3</span>
+        <h4 style="margin:10px 0 6px">플랫폼 3막: AI 데이터센터 광학</h4>
+        <p style="font-size:14px;margin:0">동일 포토닉스로 CPO용 고출력 SOA 시장에 진입하면, <strong>라이다 가격전쟁을 우회한 고마진 성장축</strong>이 생긴다. 엔비디아가 이 분야에 수십억 달러를 쏟는 상황에서, Aeva가 부품 공급 한 자리만 잡아도 밸류에이션 서사가 바뀐다.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-teal">기둥 4</span>
+        <h4 style="margin:10px 0 6px">스마트머니와 전략적 뒷배</h4>
+        <p style="font-size:14px;margin:0">엔비디아 통합, LG이노텍 $50M 투자(양산 파트너), Point72&middot;Duquesne 등 유명 헤지펀드 보유. 이들의 참여는 <strong>기술&middot;양산 실현 가능성에 대한 외부 검증</strong>으로 읽힌다. 인수 대상으로서의 매력도 잠재적 상방.</p>
+      </div>
+    </div>
+
+    <div class="callout co-teal" style="margin-top:20px">
+      <div class="ct">🐂 강세론 요약</div>
+      <p>&ldquo;세 시장 중 <strong>하나만 크게 터져도</strong> 현재 밸류에이션이 정당화되고, <strong>둘 이상 터지면</strong> 큰 상방이 열린다. Aeva는 서구에서 이 조합을 가진 <strong>거의 유일한 상장 옵션</strong>이다.&rdquo; 강세론이 맞다면 현재가는 &lsquo;장기 복리 성장의 초입&rsquo;이다. <span class="conf conf-md">확신도: 중간 &mdash; 실행에 전적으로 의존</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="band sec--dark" id="s12">
+  <div class="wrap">
+    <span class="sec-num">12 / 15</span>
+    <p class="eyebrow">Bear Case</p>
+    <h2 class="sec-title">약세론 &mdash; &lsquo;좋은 기술&rsquo;이 &lsquo;좋은 투자&rsquo;가 아닐 때</h2>
+    <p class="sec-lead">약세 시나리오의 핵심은 &lsquo;기술을 부정&rsquo;하는 게 아니다. <strong>기술은 훌륭할 수 있어도, 지금 가격이 이미 그 훌륭함을 &mdash; 그리고 아직 오지 않은 성공까지 &mdash; 다 반영했다면 투자 수익은 실망스러울 수 있다</strong>는 것이다.</p>
+
+    <div class="grid g2">
+      <div class="card">
+        <span class="pill pill-coral">위험 1</span>
+        <h4 style="margin:10px 0 6px">밸류에이션이 &lsquo;완벽&rsquo;을 가정</h4>
+        <p style="font-size:14px;margin:0">EV/매출 ~72배는 피어의 8&ndash;15배. 섹션 10에서 봤듯 현재가는 <strong>&lsquo;강세에 가까운&rsquo; 실행</strong>을 이미 반영. 실적이 기대에 살짝만 못 미쳐도 배수가 &lsquo;정상&rsquo;(5&ndash;10배)으로 수렴하면 <strong>주가 50&ndash;80% 조정</strong>도 가능.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-coral">위험 2</span>
+        <h4 style="margin:10px 0 6px">양산 램프의 타이밍&middot;실행 위험</h4>
+        <p style="font-size:14px;margin:0">자동차 양산 프로그램은 <strong>지연&middot;사양변경&middot;취소가 흔하다.</strong> 대형 매출은 2027&ndash;28년에야 시작되며, 그 사이 2년간 매출은 개발 마일스톤에 좌우돼 &lsquo;성장 실망&rsquo; 구간이 올 수 있다. 자율주행 상용화 자체가 늦어지면 전체 일정이 밀린다.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-coral">위험 3</span>
+        <h4 style="margin:10px 0 6px">지속적 희석과 현금 소진</h4>
+        <p style="font-size:14px;margin:0">연 ~$1억 소진, 분기 SBC $9.4M, <strong>이미 마이너스 자기자본.</strong> 흑자 전까지 반복 증자가 불가피해 <strong>주당가치가 계속 희석</strong>된다. 자본시장이 경색되면(고금리&middot;위험회피) 불리한 조건의 조달을 강요당할 수 있다.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-coral">위험 4</span>
+        <h4 style="margin:10px 0 6px">중국 가격전쟁 + 대체 기술</h4>
+        <p style="font-size:14px;margin:0">헤사이 등 중국 업체가 &lsquo;충분히 좋고 훨씬 싼&rsquo; ToF로 시장을 굳히면 FMCW 프리미엄이 좁아진다. 동시에 <strong>카메라 전용(테슬라식)</strong>이 확산되면 라이다 수요 자체가 위협받는다. FMCW의 &lsquo;측면 속도 미측정&rsquo; 등 기술적 약점도 상존.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-coral">위험 5</span>
+        <h4 style="margin:10px 0 6px">AI 광학은 아직 &lsquo;슬라이드&rsquo;</h4>
+        <p style="font-size:14px;margin:0">고출력 SOA는 <strong>발표 단계로 매출&middot;수주가 없다.</strong> 코히런트&middot;루멘텀&middot;마벨 등 거대 기존 강자 대비 Aeva의 존재감은 극소. 이 &lsquo;3막&rsquo;이 서사에 그치면, 그 부분에 얹힌 밸류에이션 프리미엄이 사라진다.</p>
+      </div>
+      <div class="card">
+        <span class="pill pill-coral">위험 6</span>
+        <h4 style="margin:10px 0 6px">수급&middot;변동성 리스크</h4>
+        <p style="font-size:14px;margin:0">공매도 ~11.6%, 베타 2&ndash;3.5, 저유동성. 위험회피 국면에서 <strong>펀더멘털과 무관하게 급락</strong>할 수 있고, 스퀴즈로 급등한 가격은 되돌림도 빠르다. 내부자는 6개월간 <strong>15회 매도&middot;0회 매수</strong>.</p>
+      </div>
+    </div>
+
+    <div class="callout co-coral" style="margin-top:20px">
+      <div class="ct">🐻 약세론 요약</div>
+      <p>&ldquo;Aeva의 기술이 이길 수도 있다. 하지만 <strong>현재 가격은 그 승리를 이미 &lsquo;거의 확정&rsquo;으로 계산</strong>해 놓았다. 좋은 회사와 좋은 주식은 다르다 &mdash; 실행이 완벽하지 않으면, 훌륭한 기술도 실망스러운 수익으로 이어질 수 있다.&rdquo; <span class="conf conf-md" style="background:#3a1f1c;color:#F0A79E;border-color:#5c2a24">확신도: 중간 &mdash; 밸류에이션 비대칭성이 핵심</span></p>
+    </div>
+  </div>
+</section>
+<section class="band" id="s13">
+  <div class="wrap">
+    <span class="sec-num">13 / 15</span>
+    <p class="eyebrow">SWOT</p>
+    <h2 class="sec-title">SWOT 종합 &mdash; 강점과 기회는 크지만, 약점과 위협도 그만큼 크다</h2>
+    <p class="sec-lead">Aeva의 프로파일은 &lsquo;고위험&middot;고잠재&rsquo;의 전형이다. 내부 역량(강점)과 외부 판(기회)은 매력적이지만, 재무 구조(약점)와 경쟁&middot;밸류에이션(위협)이 그 매력을 상쇄한다.</p>
+
+    <div class="grid g2 keep2">
+      <div class="card" style="border-top:3px solid var(--teal)">
+        <h4 style="margin-top:0;color:var(--teal)">💪 강점 (Strengths)</h4>
+        <ul class="clean teal" style="margin:8px 0 0;font-size:14px">
+          <li><strong>FMCW 4D 기술 차별화</strong> &mdash; 속도 동시 측정, 500m, 간섭 면역, 경쟁사 대비 수년 리드.</li>
+          <li><strong>라이다-온-칩</strong> &mdash; 실리콘 포토닉스 집적으로 반도체식 원가 하락&middot;확장성.</li>
+          <li><strong>두 개의 서구 독점 수주</strong> &mdash; 다임러트럭 + 유럽 톱10 OEM(중국 밖).</li>
+          <li><strong>애플&middot;Nikon 출신 창업팀</strong>과 강한 IP.</li>
+          <li><strong>비용 규율</strong> &mdash; 매출 4배 성장 중 손실은 오히려 감소.</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:3px solid var(--coral)">
+        <h4 style="margin-top:0;color:var(--coral)">⚠️ 약점 (Weaknesses)</h4>
+        <ul class="clean coral" style="margin:8px 0 0;font-size:14px">
+          <li><strong>깊은 적자&middot;현금 소진</strong> &mdash; 연 ~$1억, 마이너스 자기자본.</li>
+          <li><strong>지속적 희석</strong> &mdash; 반복 증자 불가피, 분기 SBC $9.4M.</li>
+          <li><strong>작은 매출 규모</strong> &mdash; 피어 중 최소, 제품 매출은 정체.</li>
+          <li><strong>양산 매출까지 2&ndash;3년</strong> &mdash; 당분간 개발 매출 의존.</li>
+          <li><strong>고객 집중</strong> &mdash; 소수 대형 프로그램 의존.</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:3px solid var(--blue)">
+        <h4 style="margin-top:0;color:var(--blue-deep)">🚀 기회 (Opportunities)</h4>
+        <ul class="clean" style="margin:8px 0 0;font-size:14px">
+          <li><strong>자동차 라이다 시장 ~31% 성장</strong>(2033년 $65&ndash;113억).</li>
+          <li><strong>AI 데이터센터 광학(CPO)</strong> &mdash; 고성장&middot;고마진 인접시장 진입.</li>
+          <li><strong>레벨3/4 자율주행 확산</strong>으로 프리미엄 센서 수요 증가.</li>
+          <li><strong>산업&middot;국방&middot;인프라</strong> 다각화로 자동차 사이클 의존 완화.</li>
+          <li><strong>M&amp;A 대상</strong>으로서의 전략적 가치.</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top:3px solid var(--amber)">
+        <h4 style="margin-top:0;color:var(--gold)">🌩️ 위협 (Threats)</h4>
+        <ul class="clean amber" style="margin:8px 0 0;font-size:14px">
+          <li><strong>중국 가격전쟁</strong> &mdash; 헤사이 등 볼륨&middot;저가 공세.</li>
+          <li><strong>극단적 밸류에이션</strong> &mdash; 실망 시 배수 붕괴 위험.</li>
+          <li><strong>대체 기술</strong> &mdash; 카메라 전용(테슬라식), 성숙한 ToF, 4D 이미징 레이더.</li>
+          <li><strong>자율주행 상용화 지연</strong> &mdash; 전체 수요 타이밍 리스크.</li>
+          <li><strong>거시&middot;수급</strong> &mdash; 고금리&middot;위험회피&middot;고베타&middot;공매도.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout co-ink" style="margin-top:20px">
+      <div class="ct">SWOT 한 줄 해석</div>
+      <p>Aeva의 <strong>강점&times;기회(SO)</strong>는 &lsquo;세 시장을 먹는 플랫폼&rsquo; 서사를 만들고, <strong>약점&times;위협(WT)</strong>은 &lsquo;돈이 마르기 전에 실행할 수 있느냐&rsquo;는 질문을 만든다. 결국 투자 판단은 <strong>&lsquo;SO 서사의 실현 확률&rsquo; 대 &lsquo;현재 가격에 반영된 기대치&rsquo;</strong>의 비교로 귀결된다.</p>
+    </div>
+  </div>
+</section>
+<section class="band sec--tint" id="s14">
+  <div class="wrap">
+    <span class="sec-num">14 / 15</span>
+    <p class="eyebrow">Management &amp; Ownership</p>
+    <h2 class="sec-title">경영진&middot;자본 배분&middot;지분 구조 &mdash; 창업자 주도, 스마트머니 동행</h2>
+    <p class="sec-lead">Aeva는 여전히 <strong>창업자 두 명이 강하게 통제</strong>하는 회사다. 이는 장기 비전의 일관성이라는 장점과, 견제 약화&middot;희석 결정의 재량이라는 위험을 동시에 낳는다. 지분 구조엔 유명 헤지펀드와 전략적 투자자가 두텁게 포진해 있다.</p>
+
+    <div class="split">
+      <div class="prose">
+        <h3>경영진 &mdash; &lsquo;정밀 감지&rsquo; 전문성의 집약</h3>
+        <p>CEO <strong>소로쉬 살레히안</strong>과 사장&middot;CTO&middot;이사회 의장 <strong>미나 레즈크</strong>는 모두 애플의 감지팀 출신으로, 창업 이래 회사를 이끌고 있다. 레즈크는 Nikon Metrology 11년을 포함해 센서 하드웨어에서 17년 경력을 쌓은 기술 리더다. 두 사람이 <strong>CEO와 CTO/의장을 함께 쥔</strong> 구조는 기술 비전의 일관성을 주지만, <strong>이사회 독립성&middot;견제</strong> 측면에선 점검이 필요한 지점이다. CFO는 <strong>사우라브 신하</strong>가 맡아 자본 조달&middot;재무를 담당한다.</p>
+        <h3>자본 배분 &mdash; &lsquo;R&amp;D 투자 + 생존 자금 조달&rsquo;</h3>
+        <p>도입 단계 기업답게 자본 배분의 초점은 <strong>R&amp;D와 양산 준비</strong>에 있다. 배당&middot;자사주 매입은 없으며(당연히), 대신 <strong>주식&middot;전환사채 발행으로 현금을 조달</strong>해 성장에 투입한다. 2026년 6월 $115M 증자, Apollo 전환사채 $100M, $125M 신용시설 확보가 대표적이다. 자본 배분의 질(質)은 &lsquo;이 자금이 얼마나 효율적으로 매출&middot;마진으로 전환되는가&rsquo;로 훗날 평가될 것이다. 현재로선 <strong>&lsquo;시간을 벌기 위한 조달&rsquo;</strong> 성격이 강하다.</p>
+        <h3>지분 구조 &mdash; 기관 66.75%, 스마트머니 동행</h3>
+        <p>기관 보유 비중이 약 <strong>66.75%</strong>로 높다. 최대주주는 홍콩계 헤지펀드 <strong>Sylebra Capital</strong>(약 1,623만 주, 10%+)이며, <strong>LG이노텍</strong>(약 351만 주, 전략적 투자자&middot;양산 파트너), 공동창업자 <strong>레즈크</strong>(약 353만 주)&middot;<strong>살레히안</strong>(약 190&ndash;245만 주)이 뒤를 잇는다. BlackRock, <strong>Point72(스티브 코언)</strong>, <strong>Duquesne(스탠리 드러켄밀러)</strong>, Lux Capital, Canaan 등 유명 투자자도 이름을 올려, &lsquo;스마트머니의 관심&rsquo;을 보여준다.</p>
+      </div>
+      <aside>
+        <div class="card" style="margin-bottom:14px">
+          <p class="eyebrow" style="margin-bottom:12px">주요 주주</p>
+          <div class="kv"><span class="kk">기관 합계</span><span class="vv">66.75%</span></div>
+          <div class="kv"><span class="kk">Sylebra Capital</span><span class="vv">10%+ (최대)</span></div>
+          <div class="kv"><span class="kk">M. Rezk (창업)</span><span class="vv">~3.53M주</span></div>
+          <div class="kv"><span class="kk">LG이노텍</span><span class="vv">~3.51M주 · $50M</span></div>
+          <div class="kv"><span class="kk">S. Salehian (창업)</span><span class="vv">~1.9&ndash;2.45M주</span></div>
+          <div class="kv"><span class="kk">기타</span><span class="vv">BlackRock·Point72·Duquesne</span></div>
+        </div>
+        <div class="callout co-amber" style="margin:0">
+          <div class="ct">🔍 내부자 거래 신호</div>
+          <p>최근 6개월간 내부자 <strong>매도 15회 · 매수 0회</strong>. 상당수는 RSU 세금 납부용 자동 매도로 보이나, <strong>공개시장 매수가 전무</strong>하다는 점은 &lsquo;현재가에서 내부자가 적극 매집하지 않는다&rsquo;는 완만한 부정 신호로 읽을 수 있다. <span class="conf conf-lo">확신도: 낮음 &mdash; RSU 매도는 중립적일 수 있음</span></p>
+        </div>
+      </aside>
+    </div>
+
+    <div class="callout co-blue">
+      <div class="ct">거버넌스 균형 판정</div>
+      <p><strong>긍정:</strong> 창업자 주도로 장기 비전이 일관되고, 전략적 투자자(LG이노텍)&middot;유명 헤지펀드의 동행이 외부 검증 역할. <strong>주의:</strong> CEO&ndash;CTO/의장의 창업자 이중 통제로 이사회 견제가 약할 수 있고, 흑자 전 지속 희석의 재량이 크다. 스마트머니 보유는 &lsquo;보증&rsquo;이 아니라 &lsquo;고위험 베팅에 대한 그들의 참여&rsquo;일 뿐임을 유념. <span class="conf conf-md">확신도: 중간</span></p>
+    </div>
+  </div>
+</section>
+<section class="band sec--dark" id="s15">
+  <div class="wrap">
+    <span class="sec-num">15 / 15</span>
+    <p class="eyebrow">Synthesis &amp; Verdict</p>
+    <h2 class="sec-title">종합 판단 &mdash; &lsquo;위대한 기술&rsquo;과 &lsquo;가격표&rsquo; 사이</h2>
+    <p class="sec-lead">모든 분석을 종합하면, Aeva는 <strong>&lsquo;진짜 기술 차별화를 가진 초기 단계 플랫폼 기업&rsquo;</strong>이자 동시에 <strong>&lsquo;그 미래 성공을 이미 상당 부분 가격에 반영한 고밸류 자산&rsquo;</strong>이다. 이 두 문장이 모두 참이라는 것이 Aeva 투자의 본질적 긴장이다.</p>
+
+    <div class="big-quote">
+      Aeva의 기술은 &lsquo;믿을 만한&rsquo; 차별화다. 그러나 현재 주가는 그 차별화가 &lsquo;세 개의 큰 시장에서 모두 승리로 전환될 것&rsquo;이라는, 실행이 거의 완벽해야 성립하는 미래를 이미 계산해 두었다.
+      <span class="qby">— 본 보고서 CAP 분석 종합</span>
+    </div>
+
+    <div class="grid g3 keep2">
+      <div class="card"><h4 style="margin-top:0;color:#48D19B">✔ 확실한 것</h4><ul class="clean teal" style="margin:6px 0 0;font-size:13.5px"><li>FMCW 4D 기술 차별화는 실재한다.</li><li>다임러트럭·유럽 OEM 독점 수주는 사실이다.</li><li>매출은 고성장(개발 매출 주도)이다.</li><li>비용 규율이 작동하고 있다.</li></ul></div>
+      <div class="card"><h4 style="margin-top:0;color:#F0C888">❓ 불확실한 것</h4><ul class="clean amber" style="margin:6px 0 0;font-size:13.5px"><li>2027&ndash;28 양산 램프의 기울기.</li><li>FMCW의 실제 마진 전환 여부.</li><li>AI 광학(SOA)의 매출화 여부.</li><li>중국·카메라 전용의 위협 강도.</li></ul></div>
+      <div class="card"><h4 style="margin-top:0;color:#FF8A7A">✖ 우려되는 것</h4><ul class="clean coral" style="margin:6px 0 0;font-size:13.5px"><li>EV/매출 ~72배의 하방 비대칭성.</li><li>흑자 전 지속 희석.</li><li>고베타·저유동성·높은 공매도.</li><li>현재가는 &lsquo;강세에 가까운&rsquo; 시나리오 반영.</li></ul></div>
+    </div>
+
+    <h3 style="font-family:'Space Grotesk';font-size:21px;margin:32px 0 6px;color:#EBF1F8">분기별 체크포인트 &mdash; 무엇을 지켜봐야 하는가</h3>
+    <p class="fsub" style="margin-bottom:16px">투자 &lsquo;추천&rsquo;이 아니라, 논리가 맞는지 &lsquo;검증&rsquo;하기 위해 추적할 신호들. 이 지표들의 변화가 판단을 바꾼다.</p>
+    <div class="tbl-wrap">
+      <table class="data">
+        <caption>표 15-1. 핵심 추적 지표 &mdash; 강세/약세 논리의 검증 포인트</caption>
+        <thead><tr><th>영역</th><th>지켜볼 지표</th><th>강세 신호</th><th>약세 신호</th></tr></thead>
+        <tbody>
+          <tr><td>양산 진척</td><td>다임러트럭 C-샘플·SOP 일정</td><td class="num-pos">일정 준수·확대</td><td class="num-neg">지연·축소</td></tr>
+          <tr><td>수주 확장</td><td>신규 OEM·프로그램 발표</td><td class="num-pos">추가 독점 수주</td><td class="num-neg">기존 수주 침묵</td></tr>
+          <tr><td>제품 매출</td><td>제품 vs NRE 매출 비중</td><td class="num-pos">제품 매출 가속</td><td class="num-neg">NRE 편중 지속</td></tr>
+          <tr><td>AI 광학</td><td>SOA 실제 수주·매출</td><td class="num-pos">첫 매출·고객 발표</td><td class="num-neg">발표만 반복</td></tr>
+          <tr><td>현금·마진</td><td>분기 소진·총이익률 추이</td><td class="num-pos">소진 축소·마진 개선</td><td class="num-neg">소진 확대·대규모 증자</td></tr>
+          <tr><td>수급</td><td>공매도·내부자 거래</td><td class="num-pos">내부자 매수·숏 감소</td><td class="num-neg">내부자 매도·숏 급증</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="background:#0f1a2e;border:1px solid #26344F;margin-top:24px">
+      <div class="ct" style="color:#8FB4EE">🧾 한계와 가정 (Limitations &amp; Assumptions) &mdash; 반드시 함께 읽을 것</div>
+      <p style="margin-bottom:9px;color:#A6B7CE">이 보고서의 결론은 다음 <strong style="color:#fff">가정과 한계</strong> 위에 서 있다. 하나라도 틀리면 결론이 달라질 수 있다:</p>
+      <ul class="clean" style="margin:0;color:#A6B7CE">
+        <li style="color:#A6B7CE"><strong style="color:#fff">데이터 시점&middot;정확성:</strong> 주가&middot;재무 수치는 2026년 중반 시점의 근사치이며, 일부는 추정&middot;조정치다. 특히 주가&middot;현금&middot;배수는 빠르게 변한다 &mdash; 최신 공시로 재확인 필요.</li>
+        <li style="color:#A6B7CE"><strong style="color:#fff">시나리오는 예측이 아님:</strong> 섹션 9&middot;10의 2033 매출&middot;마진&middot;배수&middot;할인율은 <strong style="color:#fff">설명을 위한 예시적 가정</strong>이지 정밀 예측이 아니다. 실제 결과는 크게 다를 수 있다.</li>
+        <li style="color:#A6B7CE"><strong style="color:#fff">미공개 정보 의존:</strong> 유럽 OEM의 정체&middot;물량&middot;단가는 미공개다. 본 보고서는 이를 추측하지 않았으며, 그만큼 불확실성이 존재한다.</li>
+        <li style="color:#A6B7CE"><strong style="color:#fff">CAP 프레임워크의 한계:</strong> 흑자 전 기업에 CAP&middot;DCF를 적용하는 것은 본질적으로 어렵다. 여기서는 대안적 역산을 썼으나, 입력값 민감도가 매우 높다.</li>
+        <li style="color:#A6B7CE"><strong style="color:#fff">확증 편향 경계:</strong> &lsquo;급등주&rsquo;는 긍정 서사가 넘치기 쉽다. 본 보고서는 강세 요인을 인정하되 약세&middot;수급 요인을 의도적으로 균형 배치했다. 그럼에도 공개 정보 자체가 회사에 우호적으로 편향됐을 가능성이 있다.</li>
+      </ul>
+    </div>
+
+    <div class="callout" style="background:#14181F;border:1px solid #2A303C;margin-top:16px">
+      <div class="ct" style="color:#fff">⚖️ 최종 정리 (투자 권유 아님)</div>
+      <p style="margin:0;color:#D9DEE7">본 보고서는 <strong style="color:#fff">정보 제공&middot;교육 목적</strong>이며 특정 매매를 권유하지 않는다. Aeva는 <strong style="color:#fff">기술적으로 매력적이나 밸류에이션 위험이 큰 &lsquo;고위험&middot;고잠재&rsquo; 자산</strong>으로 요약된다. 강세론(플랫폼 성공)과 약세론(밸류에이션 비대칭)은 <strong style="color:#fff">둘 다 논리적으로 성립</strong>하며, 실제 결과는 &lsquo;2027&ndash;28년 양산 실행&rsquo;과 &lsquo;AI 광학의 매출화&rsquo;라는 두 변수에 크게 좌우될 것이다. 투자 판단은 개인의 위험 감내도&middot;투자 기간&middot;포트폴리오 맥락에 따라 달라야 하며, 반드시 <strong style="color:#fff">최신 공시 확인과 독립적 실사</strong>를 거쳐야 한다. Claude는 재무 자문가가 아니다.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="rpt">
+  <div class="wrap">
+    <div class="grid g2" style="gap:26px">
+      <div>
+        <h4>Aeva Technologies (AEVA) 심층 분석 보고서</h4>
+        <p style="color:#A6B7CE;margin-bottom:8px">방법론: 모부신(Mauboussin) CAP 밸류에이션 프레임워크 + 비판적 사고 프로토콜(논리&middot;사실 이중 게이트, 지적 겸손, Steel-manning) 적용. 이중언어(한&middot;영) 교차 리서치.</p>
+        <p style="color:#7C8DA6;font-size:12px;margin:0">작성 기준일: 2026년 7월 1일 · 정보 제공 목적, 투자 권유 아님 · 수치는 근사치이며 최신 공시로 재확인 요망.</p>
+      </div>
+      <div>
+        <h4>주요 출처 (요약)</h4>
+        <div class="src-list">
+          Aeva 10-K / 10-Q / 실적발표(2021&ndash;2026 Q1) · Aeva 보도자료(다임러트럭·유럽 OEM·NVIDIA·SOA) · SEC EDGAR · Nasdaq/시장 데이터 · 애널리스트 리포트(Oppenheimer 등 9인) · Yole Group 라이다 시장 · Persistence/MarketsandMarkets/GMInsights/Precedence(시장 규모) · Damodaran(ERP·WACC) · 미 재무부(국채금리) · Hesai/Ouster/Luminar/Innoviz 공시 · 기술자료(arXiv, Laser Focus World, Blickfeld) · CES 2026 · SPIE Photonics West.
+        </div>
+      </div>
+    </div>
+    <p style="color:#5f6b80;font-size:11.5px;margin:24px 0 0;border-top:1px solid #26344F;padding-top:16px">면책: 본 문서는 AI(Claude)가 공개 정보를 바탕으로 작성한 분석 자료로, 정확성&middot;완전성을 보증하지 않으며 투자 손실에 대한 책임을 지지 않습니다. 투자 결정과 그 결과는 전적으로 투자자 본인에게 있습니다.</p>
+  </div>
+</footer>
+
+<script>
+// 히어로 배경: FMCW 라이다 점 구름 애니메이션 (속도=색)
+(function(){
+  var c=document.getElementById('pcloud'); if(!c) return;
+  var x=c.getContext('2d'), W,H,DPR=Math.min(window.devicePixelRatio||1,2);
+  function size(){W=c.clientWidth;H=c.clientHeight;c.width=W*DPR;c.height=H*DPR;x.setTransform(DPR,0,0,DPR,0,0);}
+  size(); window.addEventListener('resize',size);
+  var N=90, pts=[];
+  for(var i=0;i<N;i++){pts.push({a:Math.random()*Math.PI*2,r:40+Math.random()*Math.min(W,H)*0.45,s:0.2+Math.random()*0.8,ph:Math.random()*Math.PI*2,v:Math.random()});}
+  var cols=['#38C6DF','#5A8CFF','#8E7BF0','#DB8613','#E06A57'];
+  function draw(t){
+    x.clearRect(0,0,W,H);
+    var cx=W*0.78, cy=H*0.42;
+    for(var i=0;i<N;i++){var p=pts[i];
+      var ang=p.a+Math.sin(t*0.0002*p.s+p.ph)*0.25;
+      var rr=p.r+Math.sin(t*0.0004*p.s+p.ph)*18;
+      var px=cx+Math.cos(ang)*rr*1.3, py=cy+Math.sin(ang)*rr;
+      var col=cols[Math.floor(p.v*cols.length)%cols.length];
+      var sz=1.2+p.v*2.2;
+      x.beginPath();x.arc(px,py,sz,0,Math.PI*2);x.fillStyle=col;x.globalAlpha=0.35+p.v*0.4;x.fill();
+      if(i%5===0){x.beginPath();x.moveTo(cx,cy);x.lineTo(px,py);x.strokeStyle=col;x.globalAlpha=0.05;x.lineWidth=0.6;x.stroke();}
+    }
+    x.globalAlpha=1;
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
