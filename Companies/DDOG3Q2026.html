@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datadog (DDOG) · 시장 기대 내재 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* canvas / ink */
+  --canvas:#f6f6fb; --panel:#ffffff; --ink:#1a1523; --ink-soft:#4a4458; --ink-faint:#7a7488;
+  /* brand */
+  --purple:#6b2fb5; --purple-deep:#4c1d95; --violet:#8b5cf6; --violet-soft:#ede9fe;
+  /* signal */
+  --green:#0f9d58; --green-soft:#e6f4ea; --amber:#d97706; --amber-soft:#fef3e2;
+  --red:#dc2626; --red-soft:#fdecec; --blue:#2563eb; --blue-soft:#e7effd;
+  /* structure */
+  --line:#e7e3f0; --line-strong:#d4cde2; --shadow:0 1px 3px rgba(26,18,48,.06),0 8px 24px rgba(26,18,48,.05);
+  /* dark feature surface */
+  --dark1:#1a1230; --dark2:#2a1a4a; --dark-ink:#e9e4f5; --dark-faint:#a99fc4;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --disp:'Space Grotesk',sans-serif; --body:'Inter',-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--canvas);color:var(--ink);line-height:1.65;
+  font-size:16.5px;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum","cv05"}
+.wrap{max-width:920px;margin:0 auto;padding:0 26px}
+
+/* ---------- top ticker nav ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(26,18,48,.92);
+  backdrop-filter:blur(10px);border-bottom:1px solid rgba(139,92,246,.25)}
+.topbar-in{max-width:920px;margin:0 auto;padding:9px 26px;display:flex;align-items:center;
+  justify-content:space-between;gap:16px}
+.tk{font-family:var(--mono);color:var(--dark-ink);font-weight:700;font-size:14px;letter-spacing:.5px;
+  display:flex;align-items:center;gap:9px}
+.tk .dot{width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 0 3px rgba(15,157,88,.25);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.tk .px{color:var(--violet);font-weight:500}
+.tk .up{color:#34d399;font-size:12px}
+.navlinks{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{font-family:var(--mono);font-size:11px;color:var(--dark-faint);text-decoration:none;
+  padding:5px 8px;border-radius:6px;white-space:nowrap;transition:.15s}
+.navlinks a:hover{color:var(--dark-ink);background:rgba(139,92,246,.18)}
+
+/* ---------- hero ---------- */
+.hero{background:
+   radial-gradient(1100px 480px at 78% -8%,rgba(139,92,246,.30),transparent 60%),
+   radial-gradient(800px 400px at 8% 110%,rgba(107,47,181,.28),transparent 55%),
+   linear-gradient(165deg,var(--dark1),var(--dark2));
+  color:var(--dark-ink);padding:64px 0 30px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(139,92,246,.05) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(139,92,246,.05) 1px,transparent 1px);
+  background-size:34px 34px;mask:radial-gradient(700px 380px at 70% 12%,#000,transparent 75%)}
+.hero .wrap{position:relative}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--violet);font-weight:500;margin-bottom:18px}
+.eyebrow b{color:var(--dark-faint);font-weight:400}
+h1.title{font-family:var(--disp);font-weight:700;font-size:clamp(32px,5.4vw,52px);line-height:1.05;
+  letter-spacing:-1.2px;margin-bottom:8px;color:#fff}
+h1.title .sub{display:block;font-size:clamp(17px,2.4vw,22px);font-weight:500;color:var(--violet);
+  margin-top:14px;letter-spacing:-.3px}
+.lede{max-width:660px;color:var(--dark-faint);font-size:16px;margin:20px 0 30px;line-height:1.7}
+.lede b{color:var(--dark-ink);font-weight:600}
+
+/* hero stat strip */
+.statstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(139,92,246,.22);
+  border:1px solid rgba(139,92,246,.30);border-radius:12px;overflow:hidden;margin-top:8px}
+.statstrip .c{background:rgba(20,12,40,.6);padding:15px 16px}
+.statstrip .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.6px;color:var(--dark-faint);
+  text-transform:uppercase;margin-bottom:6px}
+.statstrip .v{font-family:var(--disp);font-size:23px;font-weight:600;color:#fff;letter-spacing:-.5px}
+.statstrip .v small{font-size:13px;color:var(--dark-faint);font-weight:400}
+.statstrip .v.g{color:#34d399}.statstrip .v.r{color:#f87171}.statstrip .v.a{color:#fbbf24}
+
+/* ---------- section scaffolding ---------- */
+section.sec{padding:52px 0 8px}
+.sec-tag{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.sec-num{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;background:var(--purple);
+  width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:none}
+.sec-kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--purple);font-weight:600}
+h2{font-family:var(--disp);font-weight:600;font-size:clamp(23px,3.4vw,31px);letter-spacing:-.7px;
+  line-height:1.15;margin-bottom:16px;color:var(--ink)}
+h3{font-family:var(--disp);font-weight:600;font-size:19px;letter-spacing:-.3px;margin:26px 0 10px;color:var(--ink)}
+p{margin-bottom:14px;color:var(--ink-soft)}
+p.lead{font-size:18px;color:var(--ink);line-height:1.6}
+strong{color:var(--ink);font-weight:600}
+a.ref{color:var(--purple);text-decoration:none;border-bottom:1px solid var(--line-strong)}
+ul.clean{list-style:none;margin:8px 0 16px}
+ul.clean li{position:relative;padding-left:22px;margin-bottom:9px;color:var(--ink-soft)}
+ul.clean li::before{content:"";position:absolute;left:4px;top:10px;width:6px;height:6px;border-radius:2px;
+  background:var(--violet)}
+
+/* ---------- callout cards ---------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;
+  box-shadow:var(--shadow);margin:18px 0}
+.callout{border-left:4px solid var(--violet);border-radius:0 12px 12px 0;padding:16px 20px;margin:18px 0;
+  background:var(--violet-soft)}
+.callout.g{border-color:var(--green);background:var(--green-soft)}
+.callout.a{border-color:var(--amber);background:var(--amber-soft)}
+.callout.r{border-color:var(--red);background:var(--red-soft)}
+.callout .h{font-family:var(--mono);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;
+  font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:7px}
+.callout.g .h{color:#0a7d44}.callout.a .h{color:#b45309}.callout.r .h{color:#b91c1c}
+.callout:not(.g):not(.a):not(.r) .h{color:var(--purple)}
+.callout p{margin-bottom:0;color:var(--ink-soft);font-size:15px}
+.callout p+p{margin-top:9px}
+
+/* confidence chip */
+.conf{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;font-weight:700;
+  padding:3px 9px;border-radius:20px;letter-spacing:.4px;vertical-align:middle}
+.conf.hi{background:var(--green-soft);color:#0a7d44;border:1px solid #b6e0c4}
+.conf.mid{background:var(--amber-soft);color:#b45309;border:1px solid #f4d6a3}
+.conf.lo{background:var(--red-soft);color:#b91c1c;border:1px solid #f3c0c0}
+.conf::before{content:"◆";font-size:8px}
+
+/* ---------- tables ---------- */
+.tbl-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--panel)}
+thead th{background:#f3f0fa;font-family:var(--mono);font-size:11px;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--purple);font-weight:700;text-align:right;padding:12px 14px;border-bottom:2px solid var(--line-strong)}
+thead th:first-child{text-align:left}
+tbody td{padding:10px 14px;text-align:right;border-bottom:1px solid var(--line);color:var(--ink-soft);
+  font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px}
+tbody td:first-child{text-align:left;font-family:var(--body);color:var(--ink);font-weight:500}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#faf8fe}
+tr.hl td{background:var(--violet-soft)!important;font-weight:700;color:var(--ink)}
+td.g{color:var(--green)!important;font-weight:700}td.r{color:var(--red)!important;font-weight:700}
+td.a{color:var(--amber)!important;font-weight:700}
+.cap{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);margin-top:9px;line-height:1.5}
+
+/* ---------- charts ---------- */
+.chart{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 20px 14px;
+  box-shadow:var(--shadow);margin:20px 0}
+.chart.dark{background:linear-gradient(160deg,var(--dark1),var(--dark2));border-color:rgba(139,92,246,.25)}
+.chart-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;flex-wrap:wrap;gap:6px}
+.chart-t{font-family:var(--disp);font-weight:600;font-size:15.5px;color:var(--ink)}
+.chart.dark .chart-t{color:#fff}
+.chart-s{font-family:var(--mono);font-size:11px;color:var(--ink-faint)}
+.chart.dark .chart-s{color:var(--dark-faint)}
+svg{display:block;width:100%;height:auto;overflow:visible}
+.lg{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft)}
+.lg span{display:inline-flex;align-items:center;gap:6px}
+.lg i{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+/* two-col */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.grid2.v{align-items:start}
+@media(max-width:680px){.grid2{grid-template-columns:1fr}.statstrip{grid-template-columns:repeat(2,1fr)}}
+
+/* bull/bear columns */
+.bb{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:14px;overflow:hidden;
+  border:1px solid var(--line);margin:18px 0;box-shadow:var(--shadow)}
+.bb .col{padding:20px 22px}
+.bb .bull{background:linear-gradient(180deg,#effaf3,#fff)}
+.bb .bear{background:linear-gradient(180deg,#fdeeee,#fff);border-left:1px solid var(--line)}
+.bb h4{font-family:var(--disp);font-size:16px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.bb .bull h4{color:#0a7d44}.bb .bear h4{color:#b91c1c}
+.bb ul{list-style:none}
+.bb li{position:relative;padding-left:20px;margin-bottom:11px;font-size:14px;color:var(--ink-soft);line-height:1.55}
+.bb .bull li::before{content:"▲";position:absolute;left:0;top:1px;font-size:8px;color:var(--green)}
+.bb .bear li::before{content:"▼";position:absolute;left:0;top:1px;font-size:8px;color:var(--red)}
+@media(max-width:680px){.bb{grid-template-columns:1fr}.bb .bear{border-left:none;border-top:1px solid var(--line)}}
+
+/* footer */
+footer{background:linear-gradient(160deg,var(--dark1),var(--dark2));color:var(--dark-faint);
+  padding:40px 0 50px;margin-top:50px;font-size:13px;line-height:1.7}
+footer .wrap{max-width:920px}
+footer h4{font-family:var(--disp);color:#fff;font-size:16px;margin-bottom:12px}
+footer a{color:var(--violet)}
+.disc{font-size:12px;color:var(--dark-faint);border-top:1px solid rgba(139,92,246,.2);padding-top:18px;margin-top:22px}
+
+/* misc inline */
+.pill{font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;
+  background:var(--violet-soft);color:var(--purple);white-space:nowrap}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:18px 0}
+.kpi-row .k{background:var(--panel);padding:15px 16px}
+.kpi-row .kl{font-family:var(--mono);font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--ink-faint);margin-bottom:5px}
+.kpi-row .kv{font-family:var(--disp);font-size:21px;font-weight:600;color:var(--ink);letter-spacing:-.4px}
+.kpi-row .kv small{font-size:12px;color:var(--ink-faint);font-weight:400}
+.kpi-row .kv.g{color:var(--green)}.kpi-row .kv.r{color:var(--red)}.kpi-row .kv.p{color:var(--purple)}
+.note{font-size:13.5px;color:var(--ink-faint);font-style:italic;margin:10px 0}
+hr.soft{border:none;border-top:1px solid var(--line);margin:30px 0}
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="tk"><span class="dot"></span>NASDAQ&nbsp;:&nbsp;DDOG <span class="px">$255</span><span class="up">▲ YTD +85%</span></div>
+    <nav class="navlinks">
+      <a href="#s1">01 결론</a><a href="#s2">02 회사</a><a href="#s3">03 매출</a>
+      <a href="#s5">05 산업</a><a href="#s6">06 해자</a><a href="#s7">07 경쟁</a>
+      <a href="#s9">09 DCF</a><a href="#s10">10 내재CAP</a><a href="#s11">11 강세</a>
+      <a href="#s12">12 약세</a><a href="#s15">15 종합</a><a href="#limits">한계</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">시장 기대 내재 분석 <b>· Counterpoint CAP 프레임워크 · 2026년 7월</b></div>
+    <h1 class="title">Datadog
+      <span class="sub">시장은 이 주식에 "얼마나 긴 우위"를 가격으로 매겨두었나</span>
+    </h1>
+    <p class="lede">이 보고서는 데이터독의 "적정가"를 맞히려는 시도가 <b>아닙니다</b>. 현재 주가 <b>$255</b>에 시장이 이미 반영해 둔 기대 — 성장 지속 기간, 마진 확장 폭, 그리고 무엇보다 <b>경쟁우위기간(CAP)</b> — 을 거꾸로 풀어내는 것이 목적입니다. 핵심 긴장은 하나입니다: <b>주식보상비용(SBC)을 실제 비용으로 보느냐</b>, 그리고 <b>고성장을 얼마나 오래 믿느냐</b>.</p>
+
+    <div class="statstrip">
+      <div class="c"><div class="l">참조 주가</div><div class="v">$255<small>/주</small></div></div>
+      <div class="c"><div class="l">시가총액</div><div class="v">$92.6<small>B</small></div></div>
+      <div class="c"><div class="l">매출성장 (Q1·26)</div><div class="v g">+32%</div></div>
+      <div class="c"><div class="l">P/S (TTM)</div><div class="v a">25.2×</div></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============ S1 · CONCLUSION ============ -->
+<section class="sec" id="s1"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">01</span><span class="sec-kicker">핵심 결론 · The Reading</span></div>
+  <h2>주가 $255는 "예외적으로 긴 우위"를 가정한다</h2>
+  <p class="lead">데이터독은 클라우드 관찰가능성(Observability) 시장의 독립 1위 플랫폼입니다. 사업의 질은 의심의 여지가 적습니다 — 80% 총마진, 29% 잉여현금흐름(FCF) 마진, 120% 순매출유지율, 재가속 중인 30%대 성장. 논쟁은 <strong>사업</strong>이 아니라 <strong>가격</strong>에 있습니다.</p>
+
+  <p>아래는 동일한 현금흐름할인(DCF) 엔진을 <strong>두 가지 렌즈</strong>로 돌린 결과입니다. 같은 회사, 같은 성장 가정 — 차이는 단 하나, <strong>SBC(주식보상)를 실제 비용으로 보느냐</strong>입니다. 어느 렌즈로 봐도 11년 명시예측 가치는 현재가 $255에 한참 못 미칩니다. 그 격차를 메우는 것이 바로 시장이 가정하는 <strong>경쟁우위기간(CAP)의 길이</strong>입니다.</p>
+
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">밸류에이션 텔레메트리 — 두 렌즈 vs 시장가격</span><span class="chart-s">$/주 · 2026.07 기준</span></div>
+    <svg viewBox="0 0 860 270" role="img" aria-label="밸류에이션 비교 차트">
+      <defs>
+        <linearGradient id="zone" x1="0" x2="1">
+          <stop offset="0" stop-color="#0f9d58"/><stop offset="0.42" stop-color="#d97706"/>
+          <stop offset="1" stop-color="#dc2626"/>
+        </linearGradient>
+        <linearGradient id="barF" x1="0" x2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#6b2fb5"/></linearGradient>
+        <linearGradient id="barM" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#2563eb"/></linearGradient>
+      </defs>
+      <!-- scale -->
+      <text x="20" y="26" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#7a7488">SCALE  $0</text>
+      <text x="690" y="26" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#7a7488">$300/주</text>
+      <!-- axis line -->
+      <line x1="20" y1="40" x2="700" y2="40" stroke="#d4cde2" stroke-width="1"/>
+      <!-- gridticks: $0,50,100,150,200,250,300 over width 680 -->
+      <!-- x = 20 + (v/300)*680 -->
+      <g font-family="JetBrains Mono" font-size="9.5" fill="#a99fc4">
+        <line x1="20"  y1="40" x2="20"  y2="232" stroke="#efecf6"/><text x="20"  y="248" text-anchor="middle">0</text>
+        <line x1="133" y1="40" x2="133" y2="232" stroke="#efecf6"/><text x="133" y="248" text-anchor="middle">50</text>
+        <line x1="247" y1="40" x2="247" y2="232" stroke="#efecf6"/><text x="247" y="248" text-anchor="middle">100</text>
+        <line x1="360" y1="40" x2="360" y2="232" stroke="#efecf6"/><text x="360" y="248" text-anchor="middle">150</text>
+        <line x1="473" y1="40" x2="473" y2="232" stroke="#efecf6"/><text x="473" y="248" text-anchor="middle">200</text>
+        <line x1="587" y1="40" x2="587" y2="232" stroke="#efecf6"/><text x="587" y="248" text-anchor="middle">250</text>
+        <line x1="700" y1="40" x2="700" y2="232" stroke="#efecf6"/><text x="700" y="248" text-anchor="middle">300</text>
+      </g>
+      <!-- Lens A: framework (SBC real) -->
+      <text x="20" y="72" font-family="Inter" font-size="13" font-weight="600" fill="#1a1523">렌즈 A · SBC를 실제 비용으로</text>
+      <text x="20" y="88" font-family="JetBrains Mono" font-size="10" fill="#7a7488">프레임워크 충실 (Pitfall #3)</text>
+      <!-- range bar 26 -> 79, base 44 marker -->
+      <rect x="79" y="98" width="120" height="16" rx="4" fill="url(#barF)" opacity="0.30"/>
+      <rect x="119.7" y="96" width="4" height="20" rx="2" fill="#6b2fb5"/>
+      <text x="208" y="111" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#6b2fb5">기본 $44</text>
+      <text x="60"  y="128" font-family="JetBrains Mono" font-size="9.5" fill="#a99fc4">약세 $26</text>
+      <text x="190" y="128" font-family="JetBrains Mono" font-size="9.5" fill="#a99fc4">강세 $79</text>
+      <!-- Lens B: market (reported FCF) -->
+      <text x="20" y="160" font-family="Inter" font-size="13" font-weight="600" fill="#1a1523">렌즈 B · 보고 기준 FCF (SBC 가산)</text>
+      <text x="20" y="176" font-family="JetBrains Mono" font-size="10" fill="#7a7488">시장 관행 (11년 명시예측)</text>
+      <rect x="20" y="186" width="227" height="16" rx="4" fill="url(#barM)" opacity="0.28"/>
+      <rect x="245" y="184" width="4" height="20" rx="2" fill="#2563eb"/>
+      <text x="258" y="199" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#2563eb">$109</text>
+      <!-- PRICE needle at 255 -> x=20+(255/300)*680 = 598 -->
+      <line x1="598" y1="40" x2="598" y2="232" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 3"/>
+      <polygon points="598,36 592,26 604,26" fill="#dc2626"/>
+      <rect x="556" y="8" width="86" height="22" rx="5" fill="#dc2626"/>
+      <text x="599" y="23" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">시장가 $255</text>
+      <!-- gap brace annotation -->
+      <text x="730" y="110" font-family="Inter" font-size="11.5" font-weight="600" fill="#6b2fb5">← SBC 효과</text>
+      <text x="730" y="126" font-family="JetBrains Mono" font-size="10" fill="#7a7488">  ~$65/주</text>
+      <text x="730" y="196" font-family="Inter" font-size="11.5" font-weight="600" fill="#dc2626">← CAP 기간</text>
+      <text x="730" y="212" font-family="JetBrains Mono" font-size="10" fill="#7a7488">  ~$146/주</text>
+    </svg>
+    <div class="cap">두 렌즈 모두 동일한 WACC 10.9%, 매출 성장 26%→4.5% 페이드(11년), 터미널 성장 2.5% 사용. 차이는 SBC 처리뿐. 렌즈 A는 SBC(매출의 22%)를 영업마진에 반영, 렌즈 B는 보고 기준 FCF($915M)를 자본화. $255와 $109의 추가 격차는 11년을 넘어서는 <b>장기 CAP</b>가 메움 — 시장 내재 CAP ≈ 15~25년+(렌즈에 따라).</div>
+  </div>
+
+  <div class="callout">
+    <div class="h">◆ 한 문장 요약</div>
+    <p>전통적 가치평가 척도로 보면 데이터독은 <strong>어떤 합리적 가정으로도 $255를 정당화하기 어렵습니다</strong>. 그 가격은 (1) SBC가 시간이 지나면 희석 부담으로 정상화된다는 믿음과 (2) 15~25년에 달하는 <strong>역사적으로 매우 긴 경쟁우위 지속</strong>을 동시에 요구합니다. 둘 다 불가능하진 않지만, <strong>안전마진은 사실상 없습니다</strong>.</p>
+  </div>
+
+  <h3>그래서 강세론과 약세론은 무엇을 두고 싸우는가</h3>
+  <div class="kpi-row">
+    <div class="k"><div class="kl">강세 핵심</div><div class="kv g">AI 재가속</div></div>
+    <div class="k"><div class="kl">약세 핵심</div><div class="kv r">SBC + 멀티플</div></div>
+    <div class="k"><div class="kl">내재 CAP</div><div class="kv p">15~25년+</div></div>
+    <div class="k"><div class="kl">평균 목표가</div><div class="kv">$242</div></div>
+  </div>
+  <p>흥미롭게도 월가 애널리스트 평균 목표가($242)는 <strong>현재가보다 낮습니다</strong>. 'Strong Buy' 컨센서스임에도 그렇습니다 — 사업은 좋아하지만 밸류에이션이 앞서갔다는, 본 보고서와 같은 결론을 시장 일부도 공유한다는 신호입니다. <span class="conf hi">신뢰도 높음 ~85%</span></p>
+
+  <div class="callout a">
+    <div class="h">⚠ 균형을 위한 주의 — 흔한 약세 함정</div>
+    <p>"적자 기업인데 P/E 680배"라는 표현은 오해를 부릅니다. 데이터독의 GAAP 적자는 거의 전적으로 <strong>SBC 회계</strong> 때문이며, 회사는 이미 연 $900M+의 실제 현금을 창출합니다. 반대로 "비GAAP 영업마진 22%니까 싸다"도 함정입니다 — 그 숫자는 매출의 22%에 달하는 SBC를 <strong>제외</strong>한 것이기 때문입니다. 진실은 양극단 사이에 있으며, 본 보고서는 그 지점을 찾는 데 집중합니다.</p>
+  </div>
+</div></section>
+<!-- ============ S2 · COMPANY ============ -->
+<section class="sec" id="s2"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">02</span><span class="sec-kicker">이 회사가 하는 일 · 회사 개요</span></div>
+  <h2>먼저, 이 회사가 정확히 무엇을 하는가</h2>
+  <p class="lead">한 문장으로: 데이터독은 <strong>기업의 소프트웨어가 지금 이 순간 제대로 돌아가고 있는지를 한 화면에서 감시해 주는 회사</strong>입니다. 병원의 중환자실 모니터, 혹은 우주 발사 관제실(미션 컨트롤)을 떠올리면 됩니다 — 수백 개의 계기판이 시스템의 모든 활력 징후를 실시간으로 보여주다가, 어딘가 빨간불이 켜지면 "무엇이, 어디서, 왜" 잘못됐는지 즉시 짚어 줍니다. 데이터독은 그 관제실을 <strong>소프트웨어를 위해</strong> 만들어 파는 회사입니다.</p>
+
+  <h3>왜 이런 회사가 필요해졌나 — "소프트웨어가 너무 복잡해졌다"</h3>
+  <p>10여 년 전만 해도 회사의 프로그램은 <strong>한 대의 컴퓨터에서 도는 하나의 큰 덩어리</strong>였습니다. 문제가 생기면 그 컴퓨터 한 대만 열어 보면 됐습니다. 그러나 오늘날 우리가 쓰는 앱(은행 앱, 배달 앱, 쿠팡, 넷플릭스)은 그렇지 않습니다. 하나의 앱이 실제로는 <strong>수백~수천 개의 작은 프로그램</strong>('마이크로서비스')으로 쪼개져, 클라우드의 <strong>수천 대 서버</strong>에 흩어진 채 서로 쉴 새 없이 대화하며 돌아갑니다.</p>
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">소프트웨어는 왜 감시하기 어려워졌나</span><span class="chart-s">과거 → 현재</span></div>
+    <svg viewBox="0 0 860 260" role="img" aria-label="모놀리스 대 마이크로서비스 비교">
+      <!-- LEFT: monolith -->
+      <text x="150" y="34" text-anchor="middle" font-family="Space Grotesk" font-size="15" font-weight="600" fill="#0a7d44">과거 · 단일 프로그램</text>
+      <rect x="90" y="60" width="120" height="120" rx="10" fill="#e6f4ea" stroke="#0f9d58" stroke-width="2"/>
+      <text x="150" y="115" text-anchor="middle" font-family="Inter" font-size="13" font-weight="600" fill="#0a7d44">하나의</text>
+      <text x="150" y="134" text-anchor="middle" font-family="Inter" font-size="13" font-weight="600" fill="#0a7d44">덩어리</text>
+      <text x="150" y="205" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#0a7d44">문제 발생 시</text>
+      <text x="150" y="222" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#0a7d44">→ 여기 한 곳만 보면 됨</text>
+      <!-- divider -->
+      <line x1="360" y1="50" x2="360" y2="230" stroke="#e7e3f0" stroke-width="1.5"/>
+      <!-- RIGHT: microservices web -->
+      <text x="620" y="34" text-anchor="middle" font-family="Space Grotesk" font-size="15" font-weight="600" fill="#b91c1c">현재 · 수백 개로 쪼개짐</text>
+      <!-- nodes scattered -->
+      <g fill="#fdecec" stroke="#dc2626" stroke-width="1.5">
+        <circle cx="470" cy="80" r="15"/><circle cx="540" cy="70" r="15"/><circle cx="610" cy="90" r="15"/>
+        <circle cx="680" cy="72" r="15"/><circle cx="750" cy="88" r="15"/>
+        <circle cx="500" cy="140" r="15"/><circle cx="575" cy="150" r="15"/><circle cx="650" cy="135" r="15"/>
+        <circle cx="720" cy="150" r="15"/><circle cx="460" cy="195" r="15"/><circle cx="540" cy="200" r="15"/>
+        <circle cx="620" cy="195" r="15"/><circle cx="700" cy="200" r="15"/><circle cx="765" cy="180" r="15"/>
+      </g>
+      <!-- connections -->
+      <g stroke="#f4a3a3" stroke-width="1" opacity="0.7">
+        <line x1="470" y1="80" x2="540" y2="70"/><line x1="540" y1="70" x2="610" y2="90"/><line x1="610" y1="90" x2="680" y2="72"/>
+        <line x1="680" y1="72" x2="750" y2="88"/><line x1="500" y1="140" x2="575" y2="150"/><line x1="575" y1="150" x2="650" y2="135"/>
+        <line x1="470" y1="80" x2="500" y2="140"/><line x1="610" y1="90" x2="575" y2="150"/><line x1="680" y1="72" x2="650" y2="135"/>
+        <line x1="500" y1="140" x2="460" y2="195"/><line x1="575" y1="150" x2="540" y2="200"/><line x1="650" y1="135" x2="620" y2="195"/>
+        <line x1="720" y1="150" x2="700" y2="200"/><line x1="650" y1="135" x2="720" y2="150"/><line x1="620" y1="195" x2="700" y2="200"/>
+      </g>
+      <text x="620" y="245" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#b91c1c">문제 발생 시 → 수천 개 중 어디가 원인인지 알 수 없음(깜깜)</text>
+    </svg>
+    <div class="cap">앱이 느려지거나 결제가 실패했을 때, 예전엔 컴퓨터 한 대만 열어 보면 됐지만 지금은 <b>수천 개의 부품 중 어느 것이 범인인지</b>를 찾아야 합니다. 이 "깜깜함"을 없애 주는 것이 데이터독의 존재 이유입니다.</div>
+  </div>
+
+  <div class="callout g">
+    <div class="h">◆ 쉬운 비유 — 거대한 병원</div>
+    <p>환자 한 명(사용자의 클릭 한 번)이 병원에 들어와 접수 → 진료 → 검사실 → 약국 등 수십 개 부서(서비스)를 거칩니다. 평소 30분이면 끝날 방문이 3시간 걸렸다면, <strong>어느 부서가 지체시켰을까요?</strong> 모든 환자에게 위치 추적기를 달고 모든 방에 센서를 두지 않으면 알 방법이 없습니다. 데이터독이 바로 그 <strong>추적기와 센서, 그리고 그것을 한눈에 보는 관제 화면</strong>입니다. "검사실 기계가 고장 나 2시간을 잡아먹었다"를 즉시 보여 줍니다.</p>
+  </div>
+
+  <p>이 문제를 풀지 못하면 기업은 큰 손실을 봅니다. 쿠팡이 30분 멈추면 매출이 날아가고, 은행 앱이 결제를 놓치면 신뢰가 무너집니다. 그래서 기업들은 "장애를 빨리 찾아 고치는 능력"에 <strong>기꺼이 돈을 씁니다</strong> — 이것이 데이터독이 80% 총마진, 120% 지출 확대라는 우량한 사업 지표를 갖는 근본 이유입니다. 이 "감시·진단" 산업의 전문 용어가 바로 <strong>관찰가능성(Observability)</strong>이며, 데이터독은 그 분야의 독립 1위입니다. 관찰가능성이 <strong>구체적으로 어떻게 작동하는지</strong>는 섹션 4에서 그림으로 자세히 풉니다.</p>
+
+  <hr class="soft">
+  <h3>창업 이야기 — "개발과 운영 사이의 벽"을 허물다</h3>
+  <p>데이터독은 2010년 뉴욕에서 <strong>올리비에 포멜(CEO)</strong>과 <strong>알렉시 레-쿽(CTO)</strong>이 창업했습니다. 두 사람은 파리 에콜 상트랄 동문으로, 이전 직장에서 개발팀과 운영팀이 서로를 탓하며 협업하지 못하는 "혼란의 벽(wall of confusion)"을 직접 겪었습니다. 데이터독은 양쪽이 같은 데이터를 보게 만들어 그 벽을 허무는 것을 목표로 삼았습니다. 회사 이름은 엔지니어들이 데이터베이스 서버를 "개(dog)"라 부르던 관습에서 나왔고, 보라색 강아지 마스코트로 이어졌습니다.</p>
+  <p class="note">참고로 포멜 CEO는 전 세계 수십억 회 내려받은 VLC 미디어 플레이어의 초기 핵심 개발자이기도 합니다.</p>
+
+  <h3>제품 진화 — 단일 기능에서 통합 플랫폼으로</h3>
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">제품 타임라인 · 관찰가능성 3축의 통합</span><span class="chart-s">2012 → 2024</span></div>
+    <svg viewBox="0 0 860 200" role="img" aria-label="제품 타임라인">
+      <line x1="30" y1="110" x2="830" y2="110" stroke="#d4cde2" stroke-width="2"/>
+      <!-- nodes -->
+      <!-- 2012, 2014, 2017, 2018, 2019, 2020, 2023, 2024 across 30..830 -->
+      <g font-family="JetBrains Mono" font-size="11" font-weight="700">
+        <circle cx="55"  cy="110" r="7" fill="#6b2fb5"/><text x="55"  y="138" text-anchor="middle" fill="#7a7488">2012</text>
+        <circle cx="160" cy="110" r="7" fill="#6b2fb5"/><text x="160" y="138" text-anchor="middle" fill="#7a7488">2014</text>
+        <circle cx="290" cy="110" r="7" fill="#7c3aed"/><text x="290" y="138" text-anchor="middle" fill="#7a7488">2017</text>
+        <circle cx="410" cy="110" r="9" fill="#0f9d58"/><text x="410" y="138" text-anchor="middle" fill="#0a7d44">2018★</text>
+        <circle cx="525" cy="110" r="7" fill="#8b5cf6"/><text x="525" y="138" text-anchor="middle" fill="#7a7488">2019</text>
+        <circle cx="630" cy="110" r="7" fill="#8b5cf6"/><text x="630" y="138" text-anchor="middle" fill="#7a7488">2020</text>
+        <circle cx="730" cy="110" r="7" fill="#a855f7"/><text x="730" y="138" text-anchor="middle" fill="#7a7488">2023</text>
+        <circle cx="810" cy="110" r="9" fill="#0f9d58"/><text x="810" y="138" text-anchor="middle" fill="#0a7d44">2024★</text>
+      </g>
+      <!-- labels above -->
+      <g font-family="Inter" font-size="11" fill="#4a4458" text-anchor="middle">
+        <text x="55"  y="92">인프라</text><text x="55"  y="80" font-size="9.5" fill="#a99fc4">모니터링</text>
+        <text x="160" y="92">컨테이너</text><text x="160" y="80" font-size="9.5" fill="#a99fc4">Docker 선점</text>
+        <text x="290" y="92">APM</text><text x="290" y="80" font-size="9.5" fill="#a99fc4">앱 성능</text>
+        <text x="410" y="92" font-weight="600" fill="#0a7d44">로그 통합</text><text x="410" y="68" font-size="9.5" fill="#0a7d44">3축 최초 결합</text>
+        <text x="525" y="92">RUM·신세틱</text>
+        <text x="630" y="92">보안</text>
+        <text x="730" y="92">Bits AI</text>
+        <text x="810" y="92" font-weight="600" fill="#0a7d44">LLM 관찰</text><text x="810" y="68" font-size="9.5" fill="#0a7d44">AI 모니터링</text>
+      </g>
+      <text x="30" y="175" font-family="JetBrains Mono" font-size="10.5" fill="#a99fc4">★ = 플랫폼 변곡점. 2018년 인프라·APM·로그를 한 곳에 묶으며 "통합 관찰가능성" 카테고리를 사실상 정의.</text>
+    </svg>
+  </div>
+
+  <h3>생애주기 위치 — "성장기 후반"의 역설</h3>
+  <p>디킨슨(Dickinson) 현금흐름 생애주기 모델로 보면 데이터독은 영업현금흐름(+), 투자현금흐름(−), 재무현금흐름(−)의 조합으로 표면상 <strong>성숙기</strong> 신호를 냅니다. 그러나 이는 착시입니다 — 투자현금흐름의 대부분은 보유 현금($4.8B)을 단기 채권에 굴린 것($-1,081M)이고, 재무현금흐름의 음수는 전환사채 상환($-197M) 같은 일회성입니다. 실제 사업은 <strong>30%대 매출 성장에 FCF 흑자가 동반되는 성장기 후반</strong>으로, 자본을 거의 쓰지 않고도 현금을 만들어내는 보기 드문 구간에 있습니다. <span class="conf hi">신뢰도 높음 ~80%</span></p>
+
+  <div class="grid2">
+    <div class="card">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--purple);font-weight:700;letter-spacing:1px;margin-bottom:8px">설립 · 상장</div>
+      <ul class="clean" style="font-size:14px">
+        <li>2010년 6월 4일 뉴욕 설립, 직원 약 <strong>8,100명</strong></li>
+        <li>2019년 9월 IPO, 공모가 $27 → 첫날 +37%, 약 $8.7B 가치</li>
+        <li>2025년 7월 <strong>S&P 500 편입</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--amber);font-weight:700;letter-spacing:1px;margin-bottom:8px">놓친 인수, 거절한 행운</div>
+      <p style="font-size:14px;margin-bottom:0">IPO 직전 시스코가 약 <strong>$70억</strong>에 인수를 제안했으나 창업자들은 거절했습니다. 현재 시가총액은 <strong>$920억</strong> — 약 13배입니다. 시스코는 이후 경쟁사 스플렁크를 $280억에 인수했습니다.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ S3 · REVENUE ============ -->
+<section class="sec" id="s3"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">03</span><span class="sec-kicker">돈 버는 방식 · 매출 구조</span></div>
+  <h2>돈을 어떻게 버는가 — 쓴 만큼 내는 "수도요금" 모델</h2>
+  <p class="lead">데이터독의 과금 방식은 넷플릭스 같은 <strong>정액 구독이 아닙니다</strong>. 사용자 수(좌석)만큼 내는 것도 아닙니다. <strong>얼마나 많이 감시하느냐</strong>에 따라 요금이 매겨지는, 마치 <strong>여러 개의 계량기가 동시에 돌아가는 수도·전기 요금</strong>에 가깝습니다. 감시할 서버가 늘고, 로그가 늘고, AI 워크로드가 늘수록 요금이 자동으로 올라갑니다. 이 구조가 데이터독 사업의 <strong>가장 중요한 특징</strong>이자 강점의 원천입니다.</p>
+
+  <h3>계량기별 요금표 (2026년 기준)</h3>
+  <p>26개 제품이 각각 <strong>독립된 계량기</strong>를 갖습니다. 주요 몇 개만 보면:</p>
+  <div class="kpi-row">
+    <div class="k"><div class="kl">인프라 (서버당·월)</div><div class="kv p">$15~23</div></div>
+    <div class="k"><div class="kl">APM 앱추적 (서버당·월)</div><div class="kv p">$31~40</div></div>
+    <div class="k"><div class="kl">로그 수집 (GB당)</div><div class="kv p">$0.10</div></div>
+    <div class="k"><div class="kl">로그 색인 (백만건당)</div><div class="kv p">$1.70</div></div>
+  </div>
+  <p class="cap">이 밖에 보안, 사용자경험(RUM), 신세틱, DB 모니터링 등 각 제품이 별도 요금. 출처: Datadog 공식 가격표(2026). 서버(host)의 정의는 넓어 VM·컨테이너·쿠버네티스 노드 등이 모두 포함됩니다.</p>
+
+  <h3>실제 청구서는 어떻게 쌓이나 — 예시</h3>
+  <p>중견 SaaS 기업(서버 약 200대, 그중 150대에 앱 추적, 하루 60GB 로그)이라면 월 청구서는 대략 이렇게 조립됩니다.</p>
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">월 청구서 조립 예시 — 여러 계량기의 합</span><span class="chart-s">$/월 (설명용 추정)</span></div>
+    <svg viewBox="0 0 860 220" role="img" aria-label="청구서 조립 예시">
+      <!-- horizontal stacked bar. total ~8985. scale: x 40..820 (780px) = 9000 => 0.0867px/$ -->
+      <!-- segments: infra 3000, apm 4650, logs 435, others 900 -->
+      <!-- infra: w=260 -->
+      <rect x="40" y="60" width="260" height="52" fill="#6b2fb5"/>
+      <text x="170" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">인프라 $3,000</text>
+      <!-- apm: w=403 -->
+      <rect x="300" y="60" width="403" height="52" fill="#8b5cf6"/>
+      <text x="501" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">APM $4,650</text>
+      <!-- logs: w=38 -->
+      <rect x="703" y="60" width="38" height="52" fill="#c4b5fd"/>
+      <!-- others: w=78 -->
+      <rect x="741" y="60" width="78" height="52" fill="#a78bfa"/>
+      <!-- labels below for small segments -->
+      <line x1="722" y1="112" x2="722" y2="135" stroke="#a99fc4"/><text x="700" y="150" font-family="JetBrains Mono" font-size="10" fill="#7a7488">로그 $435</text>
+      <line x1="780" y1="112" x2="780" y2="135" stroke="#a99fc4"/><text x="770" y="168" font-family="JetBrains Mono" font-size="10" fill="#7a7488">보안·RUM 등 $900</text>
+      <!-- total -->
+      <text x="40" y="45" font-family="Inter" font-size="13" font-weight="600" fill="#1a1523">합계 ≈ $8,985 / 월  →  연 약 $108,000</text>
+      <text x="40" y="200" font-family="JetBrains Mono" font-size="10.5" fill="#a99fc4">막대 길이 = 각 계량기가 차지하는 금액. 이 기업이 내년에 서버를 2배로 늘리고 AI 워크로드를 추가하면, 청구서는 계약 재협상 없이 자동으로 ~2배가 됩니다.</text>
+    </svg>
+  </div>
+
+  <div class="callout g">
+    <div class="h">◆ 이 모델이 왜 강력한가 — "심고, 자동으로 키운다"</div>
+    <p>고객은 처음에 서버 몇 대로 <strong>작게 시작</strong>합니다(심기·land). 그런데 그 고객 회사가 성장해 서버가 늘고, 트래픽이 늘고, 새 앱을 배포할 때마다 <strong>데이터독이 아무것도 하지 않아도 청구액이 저절로 커집니다</strong>(키우기·expand). 여기에 고객이 제품까지 추가로 붙이면 성장은 배가됩니다. 이것이 <strong>순매출유지율(NRR) 120%</strong>의 정체입니다 — 기존 고객이 이탈 없이 매년 지출을 20%씩 늘린다는 뜻이죠.</p>
+  </div>
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">랜드 앤 익스팬드 플라이휠</span><span class="chart-s">고객 성장 = 데이터독 매출 성장</span></div>
+    <svg viewBox="0 0 860 210" role="img" aria-label="랜드 앤 익스팬드 순환">
+      <!-- 4 stages in a cycle -->
+      <g font-family="Inter" font-size="12.5" font-weight="600">
+        <rect x="40" y="80" width="150" height="54" rx="10" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+        <text x="115" y="103" text-anchor="middle" fill="#4c1d95">① 작게 시작</text>
+        <text x="115" y="121" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#6b2fb5">서버 몇 대</text>
+        <rect x="250" y="80" width="150" height="54" rx="10" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+        <text x="325" y="103" text-anchor="middle" fill="#4c1d95">② 고객이 성장</text>
+        <text x="325" y="121" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#6b2fb5">서버·트래픽 증가</text>
+        <rect x="460" y="80" width="150" height="54" rx="10" fill="#ede9fe" stroke="#8b5cf6" stroke-width="1.5"/>
+        <text x="535" y="103" text-anchor="middle" fill="#4c1d95">③ 사용량 자동 증가</text>
+        <text x="535" y="121" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#6b2fb5">청구액 ↑ (자동)</text>
+        <rect x="670" y="80" width="150" height="54" rx="10" fill="#e6f4ea" stroke="#0f9d58" stroke-width="1.5"/>
+        <text x="745" y="103" text-anchor="middle" fill="#0a7d44">④ 제품 추가</text>
+        <text x="745" y="121" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#0a7d44">지출 더 확대</text>
+      </g>
+      <!-- arrows -->
+      <g stroke="#a78bfa" stroke-width="2" fill="none">
+        <line x1="190" y1="107" x2="248" y2="107"/><polygon points="248,107 238,101 238,113" fill="#a78bfa" stroke="none"/>
+        <line x1="400" y1="107" x2="458" y2="107"/><polygon points="458,107 448,101 448,113" fill="#a78bfa" stroke="none"/>
+        <line x1="610" y1="107" x2="668" y2="107"/><polygon points="668,107 658,101 658,113" fill="#a78bfa" stroke="none"/>
+      </g>
+      <!-- loop back arrow -->
+      <path d="M745 134 Q745 175 430 175 Q115 175 115 134" fill="none" stroke="#0f9d58" stroke-width="2" stroke-dasharray="5 3"/>
+      <polygon points="115,134 109,144 121,144" fill="#0f9d58"/>
+      <text x="430" y="170" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#0a7d44">→ 더 큰 규모로 순환 반복 (매출 눈덩이)</text>
+    </svg>
+  </div>
+
+  <div class="grid2">
+    <div class="callout g" style="margin:8px 0">
+      <div class="h">▲ 특히 AI 시대의 강점</div>
+      <p>시장은 "AI가 좌석형 SaaS를 죽인다"고 우려합니다. 사람이 하던 일을 AI가 대신하면 '사용자 수' 기반 소프트웨어는 매출이 줄죠. 그러나 데이터독은 <strong>사용량 기반</strong>이라 정반대입니다 — AI 워크로드는 컴퓨팅·로그를 폭발적으로 늘려 <strong>계량기를 더 빨리 돌립니다</strong>. AI 확산이 곧 데이터독 매출입니다.</p>
+    </div>
+    <div class="callout r" style="margin:8px 0">
+      <div class="h">▼ 정직한 약점 — "청구서 쇼크"</div>
+      <p>같은 이유로 <strong>비용이 예측 불가</strong>합니다. 오토스케일링이나 로그 폭증으로 사용량이 갑자기 뛰면 청구액이 예상의 2~3배가 되기도 합니다. "bill shock"라 불리는 이 불만은 고객이 비용 절감·경쟁사 검토에 나서게 만드는 <strong>실질적 리스크</strong>입니다.</p>
+    </div>
+  </div>
+
+  <hr class="soft">
+  <h2 style="margin-top:8px">그렇게 번 매출은 지금 다시 가속하고 있다</h2>
+  <p>2021년 70%대였던 성장률은 코로나 특수 소멸과 거시 역풍으로 2024~2025년 26~28%까지 내려왔습니다. 그런데 2025년 하반기부터 <strong>재가속</strong>이 시작됐고, 2026년 1분기에는 <strong>+32%</strong>로 튀어 올랐습니다. 첫 분기 매출 <strong>10억 달러</strong>를 돌파한 분기이기도 합니다. 둔화 추세가 꺾였다는 사실 자체가 강세론의 출발점입니다.</p>
+
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">연간 매출 & 성장률</span><span class="chart-s">$M · FY2021–TTM</span></div>
+    <svg viewBox="0 0 860 320" role="img" aria-label="매출 추이">
+      <!-- bars: rev scaled, max ~3672 -> height. plot area x 60..820, y 30..250 -->
+      <!-- baseline y=250 -->
+      <line x1="55" y1="250" x2="825" y2="250" stroke="#d4cde2"/>
+      <g font-family="JetBrains Mono" font-size="9.5" fill="#a99fc4" text-anchor="end">
+        <text x="48" y="254">0</text><text x="48" y="195">1.0B</text><text x="48" y="140">2.0B</text>
+        <text x="48" y="85">3.0B</text><line x1="55" y1="195" x2="825" y2="195" stroke="#f0edf7"/>
+        <line x1="55" y1="140" x2="825" y2="140" stroke="#f0edf7"/><line x1="55" y1="85" x2="825" y2="85" stroke="#f0edf7"/>
+      </g>
+      <!-- 6 bars at x: 100,220,340,460,580,700 ; widths 70 ; rev 1029,1675,2128,2684,3427,3672 -> scale 165px=1000 => h=rev*0.055 -->
+      <g>
+        <rect x="90"  y="193.4" width="74" height="56.6"  rx="3" fill="#c4b5e8"/><text x="127" y="184" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#6b2fb5">1,029</text>
+        <rect x="210" y="157.9" width="74" height="92.1"  rx="3" fill="#a98ce0"/><text x="247" y="148" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#6b2fb5">1,675</text>
+        <rect x="330" y="133.0" width="74" height="117.0" rx="3" fill="#9575d6"/><text x="367" y="123" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#6b2fb5">2,128</text>
+        <rect x="450" y="102.4" width="74" height="147.6" rx="3" fill="#8259cc"/><text x="487" y="93" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#6b2fb5">2,684</text>
+        <rect x="570" y="61.5"  width="74" height="188.5" rx="3" fill="#6b2fb5"/><text x="607" y="52" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#6b2fb5">3,427</text>
+        <rect x="690" y="48.0"  width="74" height="202.0" rx="3" fill="#5a23a0"/><text x="727" y="39" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#4c1d95">3,672</text>
+      </g>
+      <!-- growth line overlaid (secondary). growth: 70.5,62.8,27.1,26.1,27.7,29.5 -> map 0..75% to y 250..30 => y=250-(g/75)*150 -->
+      <polyline points="127,109 247,124 367,196 487,198 607,195 727,191" fill="none" stroke="#0f9d58" stroke-width="2.5"/>
+      <g fill="#0f9d58" font-family="JetBrains Mono" font-size="10" font-weight="700">
+        <circle cx="127" cy="109" r="3.5"/><text x="127" y="100" text-anchor="middle">70%</text>
+        <circle cx="247" cy="124" r="3.5"/><text x="247" y="138" text-anchor="middle" fill="#0a7d44">63%</text>
+        <circle cx="367" cy="196" r="3.5"/><circle cx="487" cy="198" r="3.5"/>
+        <circle cx="607" cy="195" r="3.5"/><text x="607" y="210" text-anchor="middle">28%</text>
+        <circle cx="727" cy="191" r="4.5" stroke="#fff" stroke-width="1.5"/><text x="755" y="186" fill="#0a7d44">29.5%↑</text>
+      </g>
+      <g font-family="Inter" font-size="11.5" fill="#4a4458" text-anchor="middle" font-weight="500">
+        <text x="127" y="272">FY21</text><text x="247" y="272">FY22</text><text x="367" y="272">FY23</text>
+        <text x="487" y="272">FY24</text><text x="607" y="272">FY25</text><text x="727" y="272">TTM</text>
+      </g>
+      <text x="440" y="300" text-anchor="middle" font-family="JetBrains Mono" font-size="10.5" fill="#a99fc4">막대 = 매출($M) · 초록선 = YoY 성장률(%). TTM은 2026년 3월 기준 최근 12개월.</text>
+    </svg>
+  </div>
+
+  <div class="chart dark">
+    <div class="chart-h"><span class="chart-t">분기 매출 — 가속의 증거</span><span class="chart-s" style="color:#a99fc4">YoY 성장률, %</span></div>
+    <svg viewBox="0 0 860 220" role="img" aria-label="분기 성장률">
+      <line x1="55" y1="170" x2="820" y2="170" stroke="rgba(139,92,246,.3)"/>
+      <!-- 6 quarters: Q4'24 25, Q1'25 25, Q2'25 28, Q3'25 28, Q4'25 29, Q1'26 32 -->
+      <!-- y: map 24..33 -> 165..40 -->
+      <defs><linearGradient id="qg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#0f9d58"/></linearGradient></defs>
+      <g>
+        <rect x="80"  y="151.9" width="86" height="18.1" rx="3" fill="rgba(139,92,246,.45)"/><text x="123" y="143" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#c4b5fd">25%</text>
+        <rect x="200" y="151.9" width="86" height="18.1" rx="3" fill="rgba(139,92,246,.5)"/><text x="243" y="143" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#c4b5fd">25%</text>
+        <rect x="320" y="110.3" width="86" height="59.7" rx="3" fill="rgba(139,92,246,.6)"/><text x="363" y="101" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#ddd6fe">28%</text>
+        <rect x="440" y="110.3" width="86" height="59.7" rx="3" fill="rgba(139,92,246,.7)"/><text x="483" y="101" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#ddd6fe">28%</text>
+        <rect x="560" y="96.4"  width="86" height="73.6" rx="3" fill="rgba(139,92,246,.85)"/><text x="603" y="87" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#ede9fe">29%</text>
+        <rect x="680" y="54.7"  width="86" height="115.3" rx="3" fill="url(#qg)"/><text x="723" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#6ee7b7">32%</text>
+      </g>
+      <g font-family="Inter" font-size="11" fill="#a99fc4" text-anchor="middle">
+        <text x="123" y="190">Q4·24</text><text x="243" y="190">Q1·25</text><text x="363" y="190">Q2·25</text>
+        <text x="483" y="190">Q3·25</text><text x="603" y="190">Q4·25</text><text x="723" y="190" fill="#6ee7b7" font-weight="600">Q1·26</text>
+      </g>
+      <text x="437" y="212" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#8b7fb0">5개 분기 연속 가속. Q1·26 첫 $10억 분기, 신규 로고 부킹 사상 최대(전년 2배).</text>
+    </svg>
+  </div>
+
+  <h3>매출의 질 — 사용량 기반 모델의 힘</h3>
+  <p>데이터독은 좌석(seat) 단위가 아니라 <strong>사용량 기반</strong>으로 과금합니다(로그 GB당, 호스트당 등). 고객이 더 많은 서버·로그·AI 워크로드를 돌릴수록 청구액이 자동으로 늘어납니다. 이는 "AI가 좌석형 SaaS를 잠식한다"는 시장 공포에 대한 직접적 반박입니다 — 데이터독에게 AI 확산은 곧 사용량 증가, 즉 매출 증가이기 때문입니다.</p>
+  <div class="kpi-row">
+    <div class="k"><div class="kl">순매출유지율(NRR)</div><div class="kv g">~120%</div></div>
+    <div class="k"><div class="kl">$100k+ ARR 고객</div><div class="kv">~4,550</div></div>
+    <div class="k"><div class="kl">$1M+ ARR 고객</div><div class="kv">603<small> (+31%)</small></div></div>
+    <div class="k"><div class="kl">총 고객</div><div class="kv">~33,200</div></div>
+  </div>
+  <p class="cap">NRR 120%는 기존 고객이 이탈 없이 매년 지출을 20%씩 늘린다는 뜻입니다. 최적화 국면에 110%대 후반까지 내려갔다가 다시 120%대로 회복한 점이 긍정적 변곡 신호입니다. $100k+ 고객이 전체 ARR의 약 90%를 차지합니다.</p>
+</div></section>
+<!-- ============ S4 · PRODUCT ============ -->
+<section class="sec" id="s4"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">04</span><span class="sec-kicker">제품 · 기술 해자</span></div>
+  <h2>26개 제품, 그리고 "데이터 중력"</h2>
+  <p>데이터독은 단일 제품 회사가 아닙니다. 인프라 모니터링에서 시작해 현재 <strong>26개 제품</strong> 라인을 갖춘 통합 플랫폼입니다. 이 중 5개는 각각 연 $100M 이상 ARR을 내고, 핵심 3축(인프라+APM+로그)만으로 ARR이 $2.5B를 넘습니다. 진짜 해자는 제품 개수가 아니라 <strong>제품 간 결합</strong>에서 나옵니다. 먼저 이 제품이 <strong>실제로 어떻게 작동하는지</strong>부터 그림으로 풀어 보겠습니다.</p>
+
+  <h3>① 제품의 핵심 — "3개의 신호"로 장애를 진단한다</h3>
+  <p>관찰가능성은 세 종류의 데이터로 이뤄집니다. 이 셋을 <strong>의사가 환자를 진단하는 3단계</strong>로 생각하면 쉽습니다.</p>
+  <ul class="clean">
+    <li><strong>지표(Metrics) — "무언가 잘못됐다"를 알려줌.</strong> 시간에 따른 숫자입니다. 자동차 계기판처럼요("속도, 연료, 엔진 온도"). "응답 속도 200ms", "CPU 사용률 90%" 같은 것. <strong>이상 징후를 감지</strong>하는 역할.</li>
+    <li><strong>추적(Traces) — "어디서 잘못됐다"를 알려줌.</strong> 사용자 요청 하나가 수백 개 서비스를 거치는 <strong>여정 전체를 따라가는 송장(택배 추적번호)</strong>입니다. 각 구간에 얼마나 시간이 걸렸는지 보여줘 <strong>병목 지점을 특정</strong>.</li>
+    <li><strong>로그(Logs) — "왜 잘못됐다"를 알려줌.</strong> 각 프로그램이 남기는 <strong>상세한 일지(블랙박스)</strong>입니다. "데이터베이스 연결 시간 초과" 같은 정확한 오류 메시지가 들어 있어 <strong>근본 원인을 확인</strong>.</li>
+  </ul>
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">실제 장애 진단 흐름 — 결제가 느려졌을 때</span><span class="chart-s">지표 → 추적 → 로그</span></div>
+    <svg viewBox="0 0 860 300" role="img" aria-label="세 신호 진단 흐름">
+      <!-- 3 stacked stages as a funnel -->
+      <defs>
+        <linearGradient id="st1" x1="0" x2="1"><stop offset="0" stop-color="#fef3e2"/><stop offset="1" stop-color="#fde4c0"/></linearGradient>
+      </defs>
+      <!-- Stage 1: Metric -->
+      <rect x="40" y="30" width="780" height="66" rx="12" fill="#fef3e2" stroke="#d97706" stroke-width="1.5"/>
+      <circle cx="82" cy="63" r="20" fill="#d97706"/><text x="82" y="69" text-anchor="middle" font-family="Space Grotesk" font-size="17" font-weight="700" fill="#fff">1</text>
+      <text x="120" y="55" font-family="Space Grotesk" font-size="15" font-weight="600" fill="#b45309">지표: "무언가 잘못됐다"</text>
+      <text x="120" y="78" font-family="Inter" font-size="13" fill="#7a4a12">🔔 결제 서비스 응답 속도가 200ms → 2,300ms로 급등. 알림 발생.</text>
+      <!-- arrow -->
+      <polygon points="430,98 420,112 440,112" fill="#a99fc4"/>
+      <!-- Stage 2: Trace -->
+      <rect x="40" y="118" width="780" height="66" rx="12" fill="#e7effd" stroke="#2563eb" stroke-width="1.5"/>
+      <circle cx="82" cy="151" r="20" fill="#2563eb"/><text x="82" y="157" text-anchor="middle" font-family="Space Grotesk" font-size="17" font-weight="700" fill="#fff">2</text>
+      <text x="120" y="143" font-family="Space Grotesk" font-size="15" font-weight="600" fill="#1d4ed8">추적: "어디서 잘못됐다"</text>
+      <text x="120" y="166" font-family="Inter" font-size="13" fill="#1e3a8a">🔎 요청 여정을 따라가니 지연은 전부 '결제 서비스'의 DB 호출 구간에서 발생.</text>
+      <polygon points="430,186 420,200 440,200" fill="#a99fc4"/>
+      <!-- Stage 3: Log -->
+      <rect x="40" y="206" width="780" height="66" rx="12" fill="#e6f4ea" stroke="#0f9d58" stroke-width="1.5"/>
+      <circle cx="82" cy="239" r="20" fill="#0f9d58"/><text x="82" y="245" text-anchor="middle" font-family="Space Grotesk" font-size="17" font-weight="700" fill="#fff">3</text>
+      <text x="120" y="231" font-family="Space Grotesk" font-size="15" font-weight="600" fill="#0a7d44">로그: "왜 잘못됐다"</text>
+      <text x="120" y="254" font-family="Inter" font-size="13" fill="#0a5c33">📄 해당 시각 로그에 "DB 시간 초과 — 인덱스 누락". 원인 확정 → 수정 완료.</text>
+    </svg>
+    <div class="cap">지표가 없으면 <b>장애를 빨리 감지</b>하지 못하고, 추적이 없으면 <b>어느 서비스</b>가 범인인지 모르며, 로그가 없으면 <b>왜</b> 그런지 알 수 없습니다. 세 신호가 모두 있어야 "깜깜함"이 사라집니다. 이 예시처럼 몇 분 만에 원인에 도달하는 것이 데이터독이 파는 가치입니다. (예시는 설명용 시나리오)</div>
+  </div>
+
+  <h3>② 데이터를 어떻게 모으나 — "에이전트"라는 작은 감시병</h3>
+  <p>고객은 자기 서버마다 <strong>에이전트(Agent)</strong>라는 데이터독의 작은 소프트웨어를 설치합니다(오픈소스라 내부를 열어볼 수 있어 보안팀도 안심). 이 감시병이 각 서버에서 지표·추적·로그를 조용히 수집해 데이터독의 클라우드로 안전하게(HTTPS 아웃바운드) 실어 나릅니다. 고객은 그냥 웹 대시보드에 로그인해 <strong>모든 것을 한 화면</strong>에서 봅니다. 건물 모든 방에 스마트 센서를 달아 중앙 관제실로 보고하게 만드는 것과 같습니다.</p>
+  <div class="chart dark">
+    <div class="chart-h"><span class="chart-t">데이터의 흐름 — 내 서버에서 관제 화면까지</span><span class="chart-s" style="color:#a99fc4">Agent → Cloud → Dashboard</span></div>
+    <svg viewBox="0 0 860 200" role="img" aria-label="에이전트 데이터 흐름">
+      <!-- 4 stages left to right -->
+      <!-- 1 customer servers -->
+      <rect x="30" y="60" width="150" height="80" rx="10" fill="rgba(139,92,246,.15)" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="105" y="92" text-anchor="middle" font-family="Inter" font-size="12.5" font-weight="600" fill="#ede9fe">고객의 서버들</text>
+      <text x="105" y="111" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#a99fc4">+ Agent 설치</text>
+      <text x="105" y="126" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8b7fb0">지표·추적·로그 생성</text>
+      <!-- arrow -->
+      <line x1="180" y1="100" x2="250" y2="100" stroke="#8b5cf6" stroke-width="2"/><polygon points="250,100 240,94 240,106" fill="#8b5cf6"/>
+      <text x="215" y="90" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#a99fc4">HTTPS</text>
+      <!-- 2 datadog intake/processing -->
+      <rect x="250" y="50" width="180" height="100" rx="10" fill="rgba(107,47,181,.35)" stroke="#a78bfa" stroke-width="2"/>
+      <text x="340" y="86" text-anchor="middle" font-family="Inter" font-size="12.5" font-weight="600" fill="#fff">데이터독 클라우드</text>
+      <text x="340" y="105" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#ddd6fe">저장 · 처리 · 연결</text>
+      <text x="340" y="120" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#c4b5fd">(3 신호에 공통 태그 부착)</text>
+      <line x1="430" y1="100" x2="500" y2="100" stroke="#8b5cf6" stroke-width="2"/><polygon points="500,100 490,94 490,106" fill="#8b5cf6"/>
+      <!-- 3 dashboard -->
+      <rect x="500" y="55" width="150" height="90" rx="10" fill="rgba(52,211,153,.2)" stroke="#34d399" stroke-width="1.5"/>
+      <text x="575" y="92" text-anchor="middle" font-family="Inter" font-size="12.5" font-weight="600" fill="#d1fae5">대시보드</text>
+      <text x="575" y="111" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#a7f3d0">한 화면에서 감시</text>
+      <line x1="650" y1="100" x2="710" y2="100" stroke="#34d399" stroke-width="2"/><polygon points="710,100 700,94 700,106" fill="#34d399"/>
+      <!-- 4 alert -->
+      <rect x="710" y="60" width="120" height="80" rx="10" fill="rgba(220,38,38,.2)" stroke="#f87171" stroke-width="1.5"/>
+      <text x="770" y="96" text-anchor="middle" font-family="Inter" font-size="12.5" font-weight="600" fill="#fecaca">알림</text>
+      <text x="770" y="114" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#fca5a5">이상 시 담당자 호출</text>
+    </svg>
+    <div class="cap" style="color:#a99fc4">핵심은 에이전트가 데이터를 보낼 때 <b>공통 꼬리표(태그: 서비스명·환경·버전 등)</b>를 붙인다는 것입니다. 이 태그 덕분에 데이터독 클라우드에서 지표·추적·로그가 <b>자동으로 연결</b>됩니다 — 아래 ③이 바로 그 힘입니다.</div>
+  </div>
+
+  <h3>③ 진짜 차별점 — 세 신호의 "연결(Correlation)"</h3>
+  <p>여기가 데이터독이 경쟁사를 이기는 지점입니다. 예전엔 지표·추적·로그가 <strong>서로 다른 회사의 3개 도구</strong>에 흩어져 있어, 엔지니어가 장애 때마다 창을 옮겨 다니며 수동으로 대조해야 했습니다. 데이터독은 셋을 <strong>한 곳에 모아 자동으로 연결</strong>했습니다: 대시보드에서 이상한 지표 급등을 클릭 → 그 순간의 정확한 추적으로 점프 → 다시 그 순간의 로그로 점프. <strong>클릭 몇 번으로 감지→위치→원인</strong>에 도달합니다. 이 "하나의 유리창(single pane of glass)"이 장애 해결 시간(MTTR)을 크게 줄여, 고객이 데이터독을 떠나기 어렵게 만드는 첫 번째 이유입니다. <span class="conf hi">신뢰도 높음 ~85%</span></p>
+
+  <hr class="soft">
+  <h3>제품 폭 — 26개 모듈, 그리고 "데이터 중력"</h3>
+  <p>이렇게 3축(인프라·APM·로그)에서 시작한 데이터독은 같은 데이터 위에 보안, 사용자 경험 모니터링(RUM), 신세틱, 데이터베이스 모니터링, LLM 관찰가능성 등 <strong>26개 제품</strong>을 얹었습니다. 고객이 더 많은 제품을 쓸수록 더 많은 데이터가 한 곳에 모이고, 데이터가 모일수록 <strong>교차 분석의 가치가 커져 떠나기 어려워집니다</strong>. 이 현상을 "데이터 중력"이라 부릅니다.</p>
+
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">멀티프로덕트 채택 — 락인의 실체</span><span class="chart-s">2+ 제품 사용 고객 비중, %</span></div>
+    <svg viewBox="0 0 860 250" role="img" aria-label="멀티프로덕트 채택률">
+      <!-- horizontal bars: 2+ 84, 4+ 54, 6+ 31, 8+ 16 ; x start 230, width scale: 84%->560px => 6.67px/% -->
+      <g font-family="Inter" font-size="13" fill="#1a1523" font-weight="600">
+        <text x="20" y="50">2개 이상 제품</text>
+        <text x="20" y="100">4개 이상 제품</text>
+        <text x="20" y="150">6개 이상 제품</text>
+        <text x="20" y="200">8개 이상 제품</text>
+      </g>
+      <defs><linearGradient id="mpg" x1="0" x2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#6b2fb5"/></linearGradient></defs>
+      <rect x="200" y="36" width="560" height="22" rx="5" fill="#f0edf7"/><rect x="200" y="36" width="560" height="22" rx="5" fill="url(#mpg)"/>
+      <text x="772" y="52" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#4c1d95">84%</text>
+      <rect x="200" y="86" width="560" height="22" rx="5" fill="#f0edf7"/><rect x="200" y="86" width="360" height="22" rx="5" fill="url(#mpg)"/>
+      <text x="572" y="102" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#6b2fb5">54%</text>
+      <rect x="200" y="136" width="560" height="22" rx="5" fill="#f0edf7"/><rect x="200" y="136" width="207" height="22" rx="5" fill="url(#mpg)"/>
+      <text x="419" y="152" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#6b2fb5">31%</text>
+      <rect x="200" y="186" width="560" height="22" rx="5" fill="#f0edf7"/><rect x="200" y="186" width="107" height="22" rx="5" fill="url(#mpg)"/>
+      <text x="319" y="202" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#6b2fb5">16%</text>
+      <text x="20" y="238" font-family="JetBrains Mono" font-size="10.5" fill="#a99fc4">8개+ 제품 사용 고객군은 전년比 +33% 성장 — 가장 많이 쓰는 고객이 가장 빨리 더 쓴다. 핵심 3축 동시 사용 시 평균 매출이 단일 제품 대비 약 15배.</text>
+    </svg>
+  </div>
+
+  <div class="callout">
+    <div class="h">◆ 데이터 중력(Data Gravity)이란</div>
+    <p>고객이 인프라·앱·로그 데이터를 한 곳에 모을수록, 그 데이터들을 <strong>교차 분석</strong>할 수 있게 됩니다 — 앱이 느려지면 어느 서버의 어느 로그가 원인인지 한 화면에서 추적합니다. 데이터가 쌓일수록 떠나기 어려워지고(전환비용↑), 더 많은 제품을 붙이게 됩니다. 이것이 사용량 기반 과금과 결합해 NRR 120%를 만드는 엔진입니다. <span class="conf hi">신뢰도 높음 ~85%</span></p>
+  </div>
+
+  <h3>AI 노출 — 공포가 아니라 동력</h3>
+  <p>시장은 "AI가 SaaS를 죽인다"고 우려하지만, 데이터독에서는 정반대 신호가 나옵니다. AI 네이티브 고객군이 매출의 약 <strong>12%</strong>를 차지하며 전년比 <strong>+253%</strong> 폭증했습니다. LLM 관찰가능성 제품은 1,000개 이상 고객을 확보했고, 6개월 만에 추적 데이터량이 10배로 늘었습니다. 과거 GPU 모니터링을 자체 구축하던 하이퍼스케일러들조차 데이터독을 채택하기 시작했습니다.</p>
+  <div class="kpi-row">
+    <div class="k"><div class="kl">AI 코호트 매출 비중</div><div class="kv p">~12%</div></div>
+    <div class="k"><div class="kl">AI 코호트 성장</div><div class="kv g">+253%</div></div>
+    <div class="k"><div class="kl">LLM 관찰 고객</div><div class="kv">1,000+</div></div>
+    <div class="k"><div class="kl">과금 방식</div><div class="kv" style="font-size:16px">사용량 기반</div></div>
+  </div>
+
+  <hr class="soft">
+  <h3>기술 우위·열위 — 대체 방법과 비교하면</h3>
+  <p>고객이 관찰가능성을 확보하는 길은 데이터독 말고도 여럿입니다. 각 대안의 장단점을 비교하면 데이터독의 자리가 분명해집니다.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>선택지</th><th>대표</th><th>장점</th><th>데이터독 대비 약점</th></tr></thead>
+      <tbody>
+        <tr><td>오픈소스 직접 구축</td><td>Prometheus·Grafana·Jaeger</td><td style="font-family:var(--body);text-align:left;font-size:13px" class="g">무료, 완전한 통제</td><td style="font-family:var(--body);text-align:left;font-size:13px">직접 구축·운영 부담 큼, 통합·상관분석 약함, 엔지니어 시간 소모</td></tr>
+        <tr><td>클라우드 기본 도구</td><td>AWS CloudWatch·Azure Monitor</td><td style="font-family:var(--body);text-align:left;font-size:13px" class="g">저렴, 이미 내장</td><td style="font-family:var(--body);text-align:left;font-size:13px">한 클라우드에 갇힘(멀티클라우드 불가), UX·기능 얕음</td></tr>
+        <tr><td>전문 경쟁사</td><td>Dynatrace</td><td style="font-family:var(--body);text-align:left;font-size:13px" class="g">AI 자동화(Davis) 강함, 대기업·운영 특화</td><td style="font-family:var(--body);text-align:left;font-size:13px">개발자 경험·사용 편의는 데이터독이 우위, 성장 둔화 중</td></tr>
+        <tr class="hl"><td>데이터독</td><td>Datadog</td><td style="font-family:var(--body);text-align:left;font-size:13px">26개 제품 통합, 800+ 연동, 뛰어난 UX, 멀티클라우드, 강력한 상관분석</td><td style="font-family:var(--body);text-align:left;font-size:13px">고비용(bill shock), 사용량 급증 시 청구 예측 어려움</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cap">데이터독의 기술적 강점은 <b>"개별 기능이 세계 최고"라서가 아니라</b>(경쟁사도 지표·추적·로그는 다 함) <b>"26개를 하나로 매끄럽게 엮고, 800개 이상의 외부 도구와 즉시 연동되며, 엔지니어가 쓰기 편하다"</b>는 통합·경험에 있습니다. 그래서 모방 난이도가 핵심입니다 — 기능은 베낄 수 있어도, 통합된 데이터 모델·축적된 고객 데이터·개발자 사이의 입소문은 몇 년 안에 복제하기 어렵습니다.</p>
+
+  <div class="callout a">
+    <div class="h">⚠ 정직한 짚기 — 특허 해자는 얕다</div>
+    <p>제약·하드웨어와 달리 소프트웨어 관찰가능성은 <strong>특허로 보호되는 영역이 아닙니다</strong>. 데이터독의 해자는 특허가 아니라 <strong>실행력 + 통합 + 데이터 + 개발자 신뢰</strong>에서 나옵니다. 대신 R&D에 매출의 <strong>45%($1.6B/년)</strong>를 쏟아부어 경쟁사보다 빠르게 신제품을 출시하는 "속도의 해자"를 유지합니다. 이는 강점이자, 동시에 SBC(주식보상) 부담의 주된 원인(엔지니어에게 주식으로 보상)이라는 양면이 있습니다.</p>
+  </div>
+</div></section>
+
+<!-- ============ S5 · INDUSTRY ============ -->
+<section class="sec" id="s5"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">05</span><span class="sec-kicker">산업 분석 · TAM</span></div>
+  <h2>큰 시장, 그러나 추정치는 제각각</h2>
+  <p>관찰가능성/모니터링 시장 규모 추정은 출처마다 크게 다릅니다 — 정의(순수 관찰가능성이냐 IT 운영 전체냐)에 따라 갈리기 때문입니다. 정직하게 <strong>범위</strong>로 봐야 합니다.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>출처 / 정의</th><th>기준 규모</th><th>목표 규모</th><th>CAGR</th></tr></thead>
+      <tbody>
+        <tr><td>엔터프라이즈 모니터링 (M&M)</td><td>$35B<br><span style="font-size:10px;color:#a99fc4">2024</span></td><td>$80B<br><span style="font-size:10px;color:#a99fc4">2029</span></td><td class="g">~18%</td></tr>
+        <tr><td>관찰가능성 (ResearchNester)</td><td>$28.5B<br><span style="font-size:10px;color:#a99fc4">2025</span></td><td>$172B<br><span style="font-size:10px;color:#a99fc4">2035</span></td><td class="g">~19.7%</td></tr>
+        <tr class="hl"><td>데이터독 자체 주장 (TAM)</td><td>—</td><td>$100B+<br><span style="font-size:10px;color:#7a7488">by 2027</span></td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cap">서로 다른 정의를 한 표에 둔 이유는 비교가 아니라 <b>불확실성의 폭</b>을 드러내기 위함입니다. 공통점은 분명합니다: 시장은 크고(수백억 달러), 두 자릿수 중후반으로 성장하며, 데이터독의 현재 매출($3.7B)은 그 안에서 여전히 작은 점이라는 것. 침투 여지는 충분합니다. 다만 "TAM이 크다"가 곧 "데이터독이 그만큼 가져간다"는 보장은 아닙니다. <span class="conf mid">신뢰도 중간 ~60%</span></p>
+
+  <h3>구조적 순풍과 역풍</h3>
+  <div class="bb">
+    <div class="col bull">
+      <h4>▲ 순풍</h4>
+      <ul>
+        <li>클라우드/마이크로서비스 전환 → 모니터링 대상 폭증</li>
+        <li>AI 워크로드 확산 → 사용량 기반 과금에 직접 수혜</li>
+        <li>"통합 플랫폼" 선호 → 도구 난립에 지친 기업이 단일 벤더로</li>
+      </ul>
+    </div>
+    <div class="col bear">
+      <h4>▼ 역풍</h4>
+      <ul>
+        <li>OpenTelemetry(OTel) 표준화 → 계측 락인 약화</li>
+        <li>비용 최적화 압력 → "bill shock" 후 사용량 절감</li>
+        <li>하이퍼스케일러 번들(CloudWatch 등) → 가격 디플레이션</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ S6 · MOAT ============ -->
+<section class="sec" id="s6"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">06</span><span class="sec-kicker">경쟁우위 · Porter 5 Forces</span></div>
+  <h2>해자는 깊지만, 한쪽 벽이 낮아지고 있다</h2>
+  <p>포터의 5가지 경쟁요인으로 데이터독의 구조적 위치를 점검합니다. 종합적으로 해자는 <strong>견고</strong>하나, 신규 진입(대체 표준)과 공급자 측에서 미세한 균열이 보입니다. 먼저 <strong>왜 이 해자가 쉽게 무너지지 않는지</strong>를 세 가지로 쪼개 보겠습니다.</p>
+
+  <h3>이 회사의 해자를 3가지로 쪼개면</h3>
+  <div class="grid2" style="gap:14px">
+    <div class="card" style="border-top:3px solid var(--purple)">
+      <div class="h" style="font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--purple);font-weight:700;margin-bottom:8px">① 전환비용 · 데이터 중력</div>
+      <p style="font-size:14px;margin-bottom:0">한 번 수백 개 서비스의 데이터를 데이터독에 흘려보내고, 팀이 그 위에 대시보드·알림·대응절차를 쌓고, 장애 대응 체계까지 엮이면 — 빼내는 것은 <strong>사람이 살고 있는 건물의 전기 배선을 통째로 바꾸는 일</strong>과 같습니다. 모든 것을 다시 계측하고, 대시보드를 다시 짓고, 팀을 재교육해야 하죠. 제품을 많이 쓸수록 배선은 깊어집니다.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--violet)">
+      <div class="h" style="font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--violet);font-weight:700;margin-bottom:8px">② 폭(breadth) 자체가 해자</div>
+      <p style="font-size:14px;margin-bottom:0">26개 제품을 하나로 쓰면 <strong>여러 도구를 하나의 청구서·하나의 로그인·하나의 데이터 모델로 통합</strong>할 수 있습니다. 핵심은 <strong>교차 분석(상관관계)은 모든 데이터가 데이터독 안에 있을 때만 작동</strong>한다는 것 — 제품 하나만 잘하는 경쟁사는 이 "연결"을 제공할 수 없습니다.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--green)">
+      <div class="h" style="font-family:var(--mono);font-size:12px;letter-spacing:1px;color:#0a7d44;font-weight:700;margin-bottom:8px">③ 개발자가 먼저 사랑함</div>
+      <p style="font-size:14px;margin-bottom:0">데이터독은 쓰기 쉽고 편해서 <strong>엔지니어들이 스스로 선택</strong>합니다. 구매 부서가 검토하기도 전에 조직 내부에서 <strong>입소문으로 자연스럽게 퍼지는(bottoms-up)</strong> 채택 경로를 가집니다. 이 "개발자 신뢰"는 마케팅비로 사기 어려운 자산입니다.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--amber)">
+      <div class="h" style="font-family:var(--mono);font-size:12px;letter-spacing:1px;color:#b45309;font-weight:700;margin-bottom:8px">④ 속도 · 규모의 R&D</div>
+      <p style="font-size:14px;margin-bottom:0">매출의 45%($1.6B/년)를 R&D에 쏟아 <strong>경쟁사보다 빠르게 신제품을 출시</strong>합니다. LLM 관찰가능성처럼 새 시장이 열릴 때 가장 먼저 제품을 내놓아 폭을 계속 넓힙니다.</p>
+    </div>
+  </div>
+  <div class="callout">
+    <div class="h">◆ 모방 난이도 — 무엇이 복제 가능하고 무엇이 아닌가</div>
+    <p><strong>복제 가능:</strong> 개별 기능(지표·추적·로그는 경쟁사도 다 함). <strong>몇 년 안에 복제 어려움:</strong> 26개 제품의 통합된 데이터 모델, 800개 이상의 외부 연동, 축적된 고객 데이터와 업무 흐름, 개발자 사이의 입소문. 데이터독 해자의 <strong>지속 가능한 부분은 후자</strong>이며, 이것이 15~25년 CAP를 논할 수 있는 근거입니다. 다만 아래 포터 분석이 보여주듯 이 해자에도 낮아지는 벽(오픈 표준)이 있습니다. <span class="conf mid">신뢰도 중간 ~70%</span></p>
+  </div>
+
+  <hr class="soft">
+  <h3>포터의 5 Forces — 구조적 위치 점검</h3>
+
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">Porter 5 Forces — 위협 강도</span><span class="chart-s">낮을수록 데이터독에 유리</span></div>
+    <svg viewBox="0 0 860 270" role="img" aria-label="포터 5 포스">
+      <!-- 5 horizontal threat bars, 0..5 scale, x 230..760 (530px=5) -->
+      <g font-family="Inter" font-size="13" fill="#1a1523" font-weight="600">
+        <text x="20" y="42">기존 경쟁 강도</text>
+        <text x="20" y="90">신규 진입 위협</text>
+        <text x="20" y="138">대체재 위협</text>
+        <text x="20" y="186">구매자 교섭력</text>
+        <text x="20" y="234">공급자 교섭력</text>
+      </g>
+      <!-- bar bg + fill. levels: 기존경쟁 3.5(amber), 신규진입 2.5(amber), 대체재 3(amber), 구매자 3.5(amber), 공급자 1.5(green) -->
+      <!-- helper: x=230, fullw=530, per unit 106 -->
+      <g>
+        <rect x="230" y="30" width="530" height="20" rx="4" fill="#f0edf7"/><rect x="230" y="30" width="371" height="20" rx="4" fill="#d97706"/><text x="615" y="45" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#b45309">3.5 / 중상</text>
+        <rect x="230" y="78" width="530" height="20" rx="4" fill="#f0edf7"/><rect x="230" y="78" width="265" height="20" rx="4" fill="#d97706"/><text x="509" y="93" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#b45309">2.5 / 중</text>
+        <rect x="230" y="126" width="530" height="20" rx="4" fill="#f0edf7"/><rect x="230" y="126" width="318" height="20" rx="4" fill="#d97706"/><text x="562" y="141" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#b45309">3.0 / 중</text>
+        <rect x="230" y="174" width="530" height="20" rx="4" fill="#f0edf7"/><rect x="230" y="174" width="371" height="20" rx="4" fill="#d97706"/><text x="615" y="189" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#b45309">3.5 / 중상</text>
+        <rect x="230" y="222" width="530" height="20" rx="4" fill="#f0edf7"/><rect x="230" y="222" width="159" height="20" rx="4" fill="#0f9d58"/><text x="403" y="237" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#0a7d44">1.5 / 낮음</text>
+      </g>
+    </svg>
+  </div>
+
+  <ul class="clean">
+    <li><strong>기존 경쟁(중상):</strong> Dynatrace·Splunk·Grafana 등과 치열. 다만 데이터독은 통합성·개발자 경험에서 차별화.</li>
+    <li><strong>신규 진입(중):</strong> 진입장벽은 높지만 <strong>OpenTelemetry</strong>라는 오픈 표준이 "계측 락인"을 중화시킬 잠재 위협.</li>
+    <li><strong>대체재(중):</strong> 하이퍼스케일러 기본 도구(CloudWatch 등)가 "충분히 괜찮은" 무료 대안으로 하단을 잠식.</li>
+    <li><strong>구매자 교섭력(중상):</strong> 사용량 과금의 "bill shock"가 누적되면 고객이 비용 절감·멀티벤더로 압박.</li>
+    <li><strong>공급자 교섭력(낮음):</strong> 핵심 자원이 엔지니어 인재뿐 — 클라우드 인프라는 대체 가능. 해자의 가장 튼튼한 벽.</li>
+  </ul>
+
+  <div class="callout a">
+    <div class="h">⚠ 가장 미묘한 위협 — OpenTelemetry</div>
+    <p>OTel은 데이터 수집 방식을 표준화하는 오픈소스 프로젝트(CNCF 2위)입니다. 좋은 면은 데이터독도 OTel 데이터를 받아 분석 가치를 더할 수 있다는 것. 나쁜 면은 고객이 "데이터독 전용 계측"에 묶이지 않게 되어 <strong>전환이 쉬워진다</strong>는 것입니다. 골드만삭스는 이를 "디플레이션적 전환"으로 우려합니다 — 일부 경쟁사(Grafana)가 OTel 데이터를 추가 요금 없이 처리하면서 가격 압력이 생긴다는 논리입니다. 양날의 검입니다. <span class="conf mid">신뢰도 중간 ~55%</span></p>
+  </div>
+</div></section>
+<!-- ============ S7 · PEERS ============ -->
+<section class="sec" id="s7"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">07</span><span class="sec-kicker">피어그룹 비교</span></div>
+  <h2>동종 대비 5배 프리미엄 — 정당한가</h2>
+  <p>데이터독은 독립 관찰가능성 업체 중 성장률·마진·유지율 모두에서 선두입니다. 문제는 그 우위가 <strong>P/S 5배 프리미엄</strong>으로 이미 가격에 반영됐다는 점입니다. 아래 표와 버블 차트가 그 긴장을 보여줍니다.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>지표</th><th>Datadog</th><th>Dynatrace</th><th>Elastic</th></tr></thead>
+      <tbody>
+        <tr><td>매출 (TTM)</td><td>$3.67B</td><td>$2.02B</td><td>$1.73B</td></tr>
+        <tr><td>매출 성장</td><td class="g">+30% (가속)</td><td class="a">+19% → 둔화</td><td class="a">+17% → 둔화</td></tr>
+        <tr><td>시가총액</td><td>~$92B</td><td>~$10B</td><td>~$7B</td></tr>
+        <tr class="hl"><td>P/S (매출 배수)</td><td>25.2×</td><td>~5×</td><td>~4×</td></tr>
+        <tr><td>FCF 마진</td><td class="g">~29%</td><td>~높음</td><td>~중간</td></tr>
+        <tr><td>순매출유지율</td><td>~120%</td><td>~110%대</td><td>~110%대</td></tr>
+        <tr><td>비GAAP 영업마진</td><td>~22%</td><td>~28%</td><td>~중간</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cap">Dynatrace와 Elastic은 최근 가이던스 둔화(각 +14~15%, +12% 예상)로 주가가 각각 두 자릿수 급락했습니다. 두 회사 모두 "소비 기반 모델이 AI 리스크를 완충한다"는, 데이터독과 동일한 논리를 폅니다. 즉 데이터독의 프리미엄은 <b>더 높은 성장·유지율</b>에 대한 대가지만, 성장이 꺾이면 멀티플이 동종 수준으로 수렴할 위험을 동시에 안고 있습니다.</p>
+
+  <div class="chart dark">
+    <div class="chart-h"><span class="chart-t">피어 포지셔닝 — 성장 vs 밸류에이션</span><span class="chart-s" style="color:#a99fc4">버블 크기 = 시가총액</span></div>
+    <svg viewBox="0 0 860 400" role="img" aria-label="피어 버블 차트">
+      <!-- axes: x=growth 0..35%, y=P/S 0..28 -->
+      <!-- plot area x 90..800, y 40..330 -->
+      <line x1="90" y1="330" x2="800" y2="330" stroke="rgba(139,92,246,.35)"/>
+      <line x1="90" y1="40" x2="90" y2="330" stroke="rgba(139,92,246,.35)"/>
+      <!-- y gridlines P/S 5,10,15,20,25 -> y=330-(ps/28)*290 -->
+      <g font-family="JetBrains Mono" font-size="10" fill="#8b7fb0" text-anchor="end">
+        <line x1="90" y1="278.2" x2="800" y2="278.2" stroke="rgba(139,92,246,.12)"/><text x="82" y="282">5×</text>
+        <line x1="90" y1="226.4" x2="800" y2="226.4" stroke="rgba(139,92,246,.12)"/><text x="82" y="230">10×</text>
+        <line x1="90" y1="174.6" x2="800" y2="174.6" stroke="rgba(139,92,246,.12)"/><text x="82" y="178">15×</text>
+        <line x1="90" y1="122.8" x2="800" y2="122.8" stroke="rgba(139,92,246,.12)"/><text x="82" y="126">20×</text>
+        <line x1="90" y1="71.0" x2="800" y2="71.0" stroke="rgba(139,92,246,.12)"/><text x="82" y="75">25×</text>
+      </g>
+      <!-- x labels growth 10,15,20,25,30,35 -> x=90+(g/35)*710 -->
+      <g font-family="JetBrains Mono" font-size="10" fill="#8b7fb0" text-anchor="middle">
+        <text x="293" y="350">15%</text><text x="395" y="350">20%</text><text x="496" y="350">25%</text>
+        <text x="598" y="350">30%</text><text x="699" y="350">35%</text>
+        <text x="445" y="378" fill="#a99fc4" font-size="11">매출 성장률 (YoY) →</text>
+      </g>
+      <text x="30" y="185" font-family="JetBrains Mono" font-size="11" fill="#a99fc4" transform="rotate(-90 30 185)">P/S 배수 ↑</text>
+      <!-- Elastic: growth 17, P/S 4 -> x=90+(17/35)*710=435, y=330-(4/28)*290=288.6 -->
+      <circle cx="435" cy="288.6" r="26" fill="rgba(96,165,250,.35)" stroke="#60a5fa" stroke-width="1.5"/>
+      <text x="435" y="292" text-anchor="middle" font-family="Space Grotesk" font-size="12" font-weight="600" fill="#dbeafe">ESTC</text>
+      <!-- Dynatrace: growth 19, P/S 5 -> x=90+(19/35)*710=475, y=278.2 -->
+      <circle cx="475" cy="278.2" r="30" fill="rgba(52,211,153,.32)" stroke="#34d399" stroke-width="1.5"/>
+      <text x="475" y="282" text-anchor="middle" font-family="Space Grotesk" font-size="12" font-weight="600" fill="#d1fae5">DT</text>
+      <!-- Datadog: growth 30, P/S 25.2 -> x=90+(30/35)*710=698.6, y=330-(25.2/28)*290=68.9 -->
+      <circle cx="698.6" cy="68.9" r="46" fill="rgba(139,92,246,.4)" stroke="#a78bfa" stroke-width="2.5"/>
+      <text x="698.6" y="66" text-anchor="middle" font-family="Space Grotesk" font-size="15" font-weight="700" fill="#fff">DDOG</text>
+      <text x="698.6" y="83" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#ddd6fe">$92B</text>
+      <!-- annotation arrow -->
+      <path d="M640 90 Q560 140 500 250" fill="none" stroke="rgba(248,113,113,.5)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="520" y="150" font-family="Inter" font-size="11.5" fill="#fca5a5">프리미엄 영역:</text>
+      <text x="520" y="166" font-family="Inter" font-size="11.5" fill="#fca5a5">성장은 2배, 배수는 5배</text>
+    </svg>
+    <div class="lg" style="color:#a99fc4">
+      <span><i style="background:#a78bfa"></i>Datadog</span>
+      <span><i style="background:#34d399"></i>Dynatrace</span>
+      <span><i style="background:#60a5fa"></i>Elastic</span>
+    </div>
+  </div>
+  <p class="cap">데이터독은 "우상단"에 홀로 있습니다 — 가장 빠르게 성장하지만 가장 비쌉니다. 강세론은 "성장·유지율이 프리미엄을 정당화한다"고 보고, 약세론은 "성장이 동종 수준으로 둔화하면 배수도 수렴한다"고 봅니다. 데이터가 뒷받침하는 사실: 데이터독의 성장은 <b>가속</b> 중이고 경쟁사는 <b>둔화</b> 중이라는 방향 차이가 현재는 프리미엄을 지지합니다. <span class="conf mid">신뢰도 중간 ~65%</span></p>
+</div></section>
+
+<!-- ============ S8 · NARRATIVE ============ -->
+<section class="sec" id="s8"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">08</span><span class="sec-kicker">시장 내러티브 · 자금 선호</span></div>
+  <h2>시장이 이 주식에 붙인 "스토리"</h2>
+  <p class="lead">주가는 펀더멘털만으로 움직이지 않습니다. 자금은 <strong>이야기</strong>를 따라 흐릅니다. 데이터독의 2026년 상승(YTD +85%)을 이끈 내러티브가 무엇인지, 그리고 그것이 실적으로 뒷받침되는지 짚습니다.</p>
+
+  <h3>지금 자금을 끌어들이는 세 가지 서사</h3>
+  <div class="grid2">
+    <div class="card">
+      <span class="pill">서사 ①</span>
+      <h3 style="margin-top:10px">"AI 관찰가능성 수혜주"</h3>
+      <p style="font-size:14px;margin-bottom:0">AI가 좌석형 SaaS를 죽인다는 공포 속에서, 데이터독은 <strong>사용량 기반</strong>이라 AI 확산이 곧 매출이라는 반대 포지션. AI 코호트 +253%가 이 서사에 실적 근거를 제공. 가장 강력한 자금 유인.</p>
+    </div>
+    <div class="card">
+      <span class="pill">서사 ②</span>
+      <h3 style="margin-top:10px">"성장 재가속 스토리"</h3>
+      <p style="font-size:14px;margin-bottom:0">26%→32%로 5개 분기 연속 가속. "둔화 우려는 과했다"는 반전 서사. 경쟁사(Dynatrace·Elastic)가 둔화하는 것과 대비되며 <strong>상대적 매력</strong> 부각.</p>
+    </div>
+  </div>
+  <div class="card">
+    <span class="pill">서사 ③</span>
+    <h3 style="margin-top:10px">"OpenAI 리스크 극복" — 가장 흥미로운 반전</h3>
+    <p style="font-size:14px">2025년 7월 구겐하임이 "최대 고객 OpenAI가 모니터링을 내재화하면 2026년 $150M+ 매출 구멍이 생긴다"며 매도 의견(목표가 $105)을 냈고, 주가는 $146까지 밀렸습니다. 이것이 <strong>가장 두려운 약세 논거</strong>였습니다.</p>
+    <p style="font-size:14px;margin-bottom:0">그런데 2026년 1분기 <strong>+32% 가속</strong>이 나오며 이 논거는 정면 반박됐습니다. 회사의 FY26 가이던스(+26%)는 애초에 "최대 고객 제로 성장"을 가정한 것이었고, 비AI 고객군도 20%대 중반으로 재가속했습니다. 이후 트루이스트는 약세→매수로 전환(목표가 $190→$300), 구겐하임조차 "2027년 이후 재가속과 25%+ FCF 마진"을 인정했습니다. <strong>가장 큰 공포를 흡수하고도 가속했다</strong>는 사실이 강세 모멘텀의 핵심입니다.</p>
+  </div>
+
+  <div class="callout g">
+    <div class="h">◆ 사용자가 놓치기 쉬운 균형점</div>
+    <p>부정적 시각은 "OpenAI 집중 리스크"에 오래 머무릅니다. 그러나 데이터가 말하는 것은 다릅니다 — 시장이 가장 두려워한 시나리오(OpenAI 이탈)를 <strong>보수적으로 가정한 가이던스에서도</strong> 회사는 +26%를 제시했고, 실제로는 +32%를 냈습니다. 이는 매출 기반이 한 고객에 생각보다 덜 의존적이며, 재가속이 <strong>구조적</strong>임을 시사합니다. 리스크는 실재하되, 이미 상당 부분 <strong>반박·소화</strong>되었습니다. <span class="conf hi">신뢰도 높음 ~80%</span></p>
+  </div>
+
+  <h3>재평가(re-rating) 트리거 — 무엇이 다음 상승/하락을 부를까</h3>
+  <div class="bb">
+    <div class="col bull">
+      <h4>▲ 상방 트리거</h4>
+      <ul>
+        <li>연속 어닝 서프라이즈 + 가이던스 상향</li>
+        <li>AI 코호트 매출 비중 12% → 20%+ 확대</li>
+        <li>신제품(보안·LLM 관찰)이 각 $100M ARR 돌파</li>
+        <li>NRR 120% → 125%+ 재상승</li>
+      </ul>
+    </div>
+    <div class="col bear">
+      <h4>▼ 하방 트리거</h4>
+      <ul>
+        <li>성장률 20%대 초반으로 재둔화 → 멀티플 수축</li>
+        <li>OpenAI/대형 고객 이탈 현실화</li>
+        <li>SBC·희석 부담이 시장 화두로 재부상</li>
+        <li>거시(고금리 지속) → 장기 성장주 디레이팅</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+<!-- ============ S9 · FINANCIALS & DCF ============ -->
+<section class="sec" id="s9"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">09</span><span class="sec-kicker">재무 분석 · DCF 모델</span></div>
+  <h2>숫자로 본 사업 체질, 그리고 DCF</h2>
+  <p>먼저 재무 체질을 봅니다. 데이터독의 특징은 <strong>매우 높은 총마진(80%)과 자본 경량성</strong>입니다 — 설비투자는 매출의 4%에 불과합니다. 그럼에도 GAAP 영업이익이 0 근처인 이유는 오로지 <strong>SBC(매출의 22%)</strong> 때문이며, 이것이 밸류에이션 논쟁의 핵심입니다.</p>
+
+  <div class="kpi-row">
+    <div class="k"><div class="kl">총마진</div><div class="kv g">80.0%</div></div>
+    <div class="k"><div class="kl">R&D / 매출</div><div class="kv">45%</div></div>
+    <div class="k"><div class="kl">보고 FCF 마진</div><div class="kv g">29%</div></div>
+    <div class="k"><div class="kl">설비투자 / 매출</div><div class="kv">~4%</div></div>
+    <div class="k"><div class="kl">순현금</div><div class="kv p">$3.2B</div></div>
+    <div class="k"><div class="kl">SBC / 매출</div><div class="kv r">22%</div></div>
+  </div>
+  <p class="note">R&D를 매출의 45%나 쓴다는 건 미래 제품에 공격적으로 투자한다는 뜻입니다. 회계상 이것이 이익을 눌러 "적자"로 보이게 하지만, 사업 관점에서는 해자를 넓히는 지출입니다. 다만 그 상당액이 현금이 아닌 <strong>주식</strong>으로 지급된다는 점(SBC)이 주주 희석으로 이어집니다.</p>
+
+  <h3>할인율(WACC) 산출</h3>
+  <div class="card">
+    <div class="tbl-wrap" style="margin:0;box-shadow:none;border:none">
+      <table>
+        <thead><tr><th>구성요소</th><th>값</th><th>근거</th></tr></thead>
+        <tbody>
+          <tr><td>무위험이자율 (RF)</td><td>4.4%</td><td style="font-family:var(--body);text-align:left;font-size:13px">미 10년 국채</td></tr>
+          <tr><td>베타 (조정)</td><td>1.37</td><td style="font-family:var(--body);text-align:left;font-size:13px">원시 1.55 → Blume 조정(1.0으로 회귀)</td></tr>
+          <tr><td>주식위험프리미엄 (ERP)</td><td>4.75%</td><td style="font-family:var(--body);text-align:left;font-size:13px">프레임워크 표준 (Damodaran 내재 4.23%는 민감도)</td></tr>
+          <tr class="hl"><td>자기자본비용 = WACC</td><td>10.91%</td><td style="font-family:var(--body);text-align:left;font-size:13px">4.4% + 1.37 × 4.75% · 부채 ~1.4%로 WACC≈COE</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3>DCF 테이블 — 기본 케이스 (SBC를 실제 비용으로)</h3>
+  <p>프레임워크 원칙(함정 #3)에 따라 SBC를 <strong>실제 비용으로 EBITA 마진에 반영</strong>했습니다. 11년 명시예측 동안 매출 성장은 26%→4.5%로 페이드하고, EBITA 마진은 현 GAAP 수준(~4%)에서 성숙기 22%로 확장한다고 가정합니다.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>연도</th><th>매출</th><th>성장%</th><th>EBITA</th><th>마진%</th><th>NOPAT</th><th>투자</th><th>FCF</th><th>PV(FCF)</th></tr></thead>
+      <tbody>
+        <tr><td>2026E</td><td>4,318</td><td>26.0</td><td>173</td><td>4.0</td><td>136</td><td>188</td><td class="r">-51</td><td>-49</td></tr>
+        <tr><td>2027E</td><td>5,311</td><td>23.0</td><td>372</td><td>7.0</td><td>294</td><td>239</td><td>54</td><td>47</td></tr>
+        <tr><td>2028E</td><td>6,373</td><td>20.0</td><td>637</td><td>10.0</td><td>503</td><td>297</td><td>206</td><td>159</td></tr>
+        <tr><td>2029E</td><td>7,489</td><td>17.5</td><td>974</td><td>13.0</td><td>769</td><td>360</td><td>409</td><td>285</td></tr>
+        <tr><td>2030E</td><td>8,612</td><td>15.0</td><td>1,335</td><td>15.5</td><td>1,055</td><td>427</td><td>628</td><td>394</td></tr>
+        <tr><td>2031E</td><td>9,732</td><td>13.0</td><td>1,703</td><td>17.5</td><td>1,345</td><td>494</td><td>851</td><td>482</td></tr>
+        <tr><td>2032E</td><td>10,802</td><td>11.0</td><td>2,052</td><td>19.0</td><td>1,621</td><td>562</td><td>1,059</td><td>540</td></tr>
+        <tr><td>2033E</td><td>11,774</td><td>9.0</td><td>2,414</td><td>20.5</td><td>1,907</td><td>629</td><td>1,278</td><td>588</td></tr>
+        <tr><td>2034E</td><td>12,657</td><td>7.5</td><td>2,721</td><td>21.5</td><td>2,150</td><td>689</td><td>1,461</td><td>606</td></tr>
+        <tr><td>2035E</td><td>13,417</td><td>6.0</td><td>2,952</td><td>22.0</td><td>2,332</td><td>744</td><td>1,588</td><td>594</td></tr>
+        <tr><td>2036E</td><td>14,021</td><td>4.5</td><td>3,085</td><td>22.0</td><td>2,437</td><td>793</td><td>1,644</td><td>554</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tbl-wrap" style="margin-top:10px">
+    <table>
+      <tbody>
+        <tr><td>PV(명시예측 FCF 2026–36)</td><td>$4,200M</td></tr>
+        <tr><td>PV(터미널 가치) · 페이드모델, 터미널 ROIIC 18%</td><td>$8,627M <span style="color:#a99fc4">(EV의 67%)</span></td></tr>
+        <tr><td>기업가치 (EV)</td><td>$12,826M</td></tr>
+        <tr><td>+ 순현금</td><td>$3,196M</td></tr>
+        <tr class="hl"><td>주당 가치 (기본 케이스)</td><td>$44 <span style="color:#b91c1c">vs 시장가 $255 (−83%)</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cap">이 $44는 "SBC 완전 비용화 + 보수적 마진 경로"의 결과로, 사실상 <b>약세 시나리오의 논리적 하한</b>입니다. 시장가 $255와의 격차는 시장이 (1) SBC를 완전한 비용으로 보지 않거나 (2) 훨씬 긴 우위 기간을 가정함을 뜻합니다 — 다음 섹션에서 역산합니다.</p>
+
+  <h3 style="color:#b91c1c">밸류에이션의 심장 — SBC 브릿지</h3>
+  <p>왜 데이터독은 "P/FCF 100배"이면서 동시에 "P/FCF 560배"일 수 있을까요? 답은 SBC를 어떻게 보느냐에 달렸습니다.</p>
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">보고 FCF → SBC 조정 FCF (FY2025)</span><span class="chart-s">$M</span></div>
+    <svg viewBox="0 0 860 300" role="img" aria-label="SBC 브릿지 폭포 차트">
+      <line x1="60" y1="240" x2="820" y2="240" stroke="#d4cde2"/>
+      <g font-family="JetBrains Mono" font-size="9.5" fill="#a99fc4" text-anchor="end">
+        <text x="52" y="244">0</text><text x="52" y="180">300</text><text x="52" y="116">600</text><text x="52" y="52">900</text>
+        <line x1="60" y1="176" x2="820" y2="176" stroke="#f0edf7"/><line x1="60" y1="112" x2="820" y2="112" stroke="#f0edf7"/><line x1="60" y1="48" x2="820" y2="48" stroke="#f0edf7"/>
+      </g>
+      <!-- scale: 900 = 192px (240-48) => 0.2133px/$. Reported FCF 915 -> h=195.2, top y=44.8 -->
+      <!-- bar1 reported FCF -->
+      <rect x="110" y="44.8" width="150" height="195.2" rx="4" fill="#0f9d58"/>
+      <text x="185" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#0a7d44">$915M</text>
+      <text x="185" y="262" text-anchor="middle" font-family="Inter" font-size="12" fill="#4a4458" font-weight="500">보고 기준 FCF</text>
+      <text x="185" y="278" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#0a7d44">마진 27%</text>
+      <!-- connector -->
+      <line x1="260" y1="44.8" x2="360" y2="44.8" stroke="#a99fc4" stroke-dasharray="3 3"/>
+      <!-- bar2 SBC decrement: from 915 down to 163. top y=44.8, bottom=205.9 (163->h=34.8, top y=205.2) SBC block spans 44.8..205.2 -->
+      <rect x="360" y="44.8" width="150" height="160.4" rx="4" fill="#dc2626" opacity="0.85"/>
+      <text x="435" y="130" text-anchor="middle" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#fff">−$751M</text>
+      <text x="435" y="262" text-anchor="middle" font-family="Inter" font-size="12" fill="#b91c1c" font-weight="500">주식보상(SBC)</text>
+      <text x="435" y="278" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#b91c1c">매출의 22%</text>
+      <!-- connector -->
+      <line x1="510" y1="205.2" x2="610" y2="205.2" stroke="#a99fc4" stroke-dasharray="3 3"/>
+      <!-- bar3 SBC-adj FCF 163 -> h=34.8, top=205.2 -->
+      <rect x="610" y="205.2" width="150" height="34.8" rx="4" fill="#d97706"/>
+      <text x="685" y="196" text-anchor="middle" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#b45309">$163M</text>
+      <text x="685" y="262" text-anchor="middle" font-family="Inter" font-size="12" fill="#4a4458" font-weight="500">SBC 조정 FCF</text>
+      <text x="685" y="278" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#b45309">마진 4.8%</text>
+    </svg>
+  </div>
+  <div class="grid2">
+    <div class="callout g" style="margin:8px 0">
+      <div class="h">▲ 강세 해석</div>
+      <p>SBC 비율은 규모가 커질수록 하락합니다(현재 희석 연 2~3%, 감소 추세). 보고 FCF $915M을 성장에 곱하면 P/FCF ~100배 — 30% 성장주로선 높지만 방어 가능. 시간이 SBC 문제를 희석합니다.</p>
+    </div>
+    <div class="callout r" style="margin:8px 0">
+      <div class="h">▼ 약세 해석</div>
+      <p>SBC는 <strong>오늘</strong> 주주가 부담하는 실질 비용입니다. 이를 차감하면 실제 FCF 마진은 4.8%, P/FCF는 <strong>560배</strong>. 조정 FCF 수익률은 0.2% 미만 — 채권보다 못한 현금흐름 수익률입니다.</p>
+    </div>
+  </div>
+
+  <h3>시나리오 요약</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>시나리오 (SBC 실제비용 렌즈)</th><th>2036 매출</th><th>터미널 마진</th><th>주당가치</th><th>vs $255</th></tr></thead>
+      <tbody>
+        <tr><td>약세 — 완만한 마진, 성장 둔화</td><td>$10.0B</td><td>18%</td><td>$27</td><td class="r">−90%</td></tr>
+        <tr class="hl"><td>기본 — 표준 페이드</td><td>$14.0B</td><td>22%</td><td>$44</td><td class="r">−83%</td></tr>
+        <tr><td>강세 — SBC 정상화, 마진 30%</td><td>$19.6B</td><td>30%</td><td>$79</td><td class="r">−69%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cap">주목할 점: SBC를 실제 비용으로 보는 한, <b>가장 낙관적인 시나리오(강세 $79)조차 현재가의 1/3 수준</b>입니다. 이것이 프레임워크 충실 관점의 냉정한 결론입니다. 그렇다면 시장은 무엇을 보고 있는가? → 섹션 10.</p>
+</div></section>
+<!-- ============ S10 · IMPLIED CAP ============ -->
+<section class="sec" id="s10"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">10</span><span class="sec-kicker">시장 내재 CAP · 역산</span></div>
+  <h2>시장은 15~25년의 우위를 가격에 넣었다</h2>
+  <p class="lead">프레임워크의 핵심 질문은 "적정가가 얼마냐"가 아니라 <strong>"현재가가 성립하려면 시장은 무엇을 믿어야 하나"</strong>입니다. 두 가지를 역산했습니다.</p>
+
+  <h3>역산 ① — 필요한 마진 (기본 성장 가정 하)</h3>
+  <p>SBC를 실제 비용으로 두고 기본 성장 페이드를 유지하면, $255를 정당화하는 데 필요한 <strong>터미널 EBITA 마진은 현실 범위(18~34%)를 벗어납니다</strong>. 즉 성장 페이드가 시장 기대보다 빠르다고 보면, 마진만으로는 현재가를 설명할 수 없습니다. 이는 시장이 <strong>더 긴 고성장 지속</strong>을 가정하고 있음을 뜻합니다.</p>
+
+  <h3>역산 ② — 내재 경쟁우위기간(CAP)</h3>
+  <p>이번엔 관점을 바꿔, "회사가 <strong>몇 년간</strong> 가치 창출적 고성장(ROIIC > WACC)을 지속해야 현재가가 성립하는가"를 풉니다. 보고 기준 FCF 렌즈(시장 관행)로 역산한 결과입니다.</p>
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">가치 창출 지속연수 → 주당가치 (보고 FCF 렌즈)</span><span class="chart-s">$/주</span></div>
+    <svg viewBox="0 0 860 280" role="img" aria-label="내재 CAP 곡선">
+      <line x1="70" y1="220" x2="810" y2="220" stroke="#d4cde2"/>
+      <line x1="70" y1="30" x2="70" y2="220" stroke="#d4cde2"/>
+      <!-- y: value 0..280, y=220-(v/280)*190 -->
+      <g font-family="JetBrains Mono" font-size="9.5" fill="#a99fc4" text-anchor="end">
+        <text x="62" y="224">$0</text><text x="62" y="186">$50</text><text x="62" y="148">$100</text>
+        <text x="62" y="110">$150</text><text x="62" y="72">$200</text><text x="62" y="34">$250</text>
+        <line x1="70" y1="182" x2="810" y2="182" stroke="#f0edf7"/><line x1="70" y1="144" x2="810" y2="144" stroke="#f0edf7"/>
+        <line x1="70" y1="106" x2="810" y2="106" stroke="#f0edf7"/><line x1="70" y1="68" x2="810" y2="68" stroke="#f0edf7"/>
+      </g>
+      <!-- data points: CAP yrs (x) vs value: (9,93)(11,113)(13,134)(15,159)(17,187)(19,218)(~22,255) -->
+      <!-- x: CAP 9..24 -> x=70+((c-9)/15)*740 -->
+      <!-- pts: 9->x70 y=220-93/280*190=156.9; 11->x169 y=143.3; 13->x268 y=129.0; 15->x367 y=112.1; 17->x466 y=93.1; 19->x564 y=72.1; 22->x712 y=46.9 -->
+      <polyline points="70,156.9 169,143.3 268,129.0 367,112.1 466,93.1 564,72.1 712,46.9" fill="none" stroke="#6b2fb5" stroke-width="3"/>
+      <g fill="#6b2fb5"><circle cx="70" cy="156.9" r="4"/><circle cx="169" cy="143.3" r="4"/><circle cx="268" cy="129.0" r="4"/><circle cx="367" cy="112.1" r="4"/><circle cx="466" cy="93.1" r="4"/><circle cx="564" cy="72.1" r="4"/></g>
+      <!-- price line at 255 -> y=220-255/280*190=46.9 -->
+      <line x1="70" y1="46.9" x2="810" y2="46.9" stroke="#dc2626" stroke-width="2" stroke-dasharray="6 3"/>
+      <text x="80" y="42" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#dc2626">시장가 $255</text>
+      <!-- intersection marker at ~22yr -->
+      <circle cx="712" cy="46.9" r="7" fill="#dc2626" stroke="#fff" stroke-width="2"/>
+      <text x="712" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#dc2626">~22년</text>
+      <!-- x labels -->
+      <g font-family="JetBrains Mono" font-size="10" fill="#a99fc4" text-anchor="middle">
+        <text x="70" y="240">9</text><text x="169" y="240">11</text><text x="268" y="240">13</text>
+        <text x="367" y="240">15</text><text x="466" y="240">17</text><text x="564" y="240">19</text><text x="712" y="240">22</text>
+        <text x="440" y="262" fill="#7a7488" font-size="11">가치 창출 지속 연수 (내재 CAP) →</text>
+      </g>
+    </svg>
+    <div class="cap">보고 FCF 렌즈에서도 현재가를 맞추려면 약 <b>22년</b>의 지속적 가치 창출이 필요합니다. SBC를 실제 비용으로 보는 렌즈에서는 이보다 더 깁니다(25년 초과). <b>내재 CAP ≈ 15~25년+</b>로 수렴 — 마우보신이 지목한 "최상위 프랜차이즈"급 지속성을 시장이 가정한다는 의미입니다.</div>
+  </div>
+
+  <div class="callout">
+    <div class="h">◆ 이 숫자를 어떻게 읽을 것인가</div>
+    <p>15~25년 CAP는 <strong>불가능하지 않습니다</strong> — 마이크로소프트, 비자 같은 카테고리 지배 기업은 20년 넘게 초과수익을 지속했습니다. 데이터독의 데이터 중력·멀티프로덕트 락인·AI 순풍은 이런 장수 해자의 후보 조건을 갖췄습니다. 그러나 동시에 이는 <strong>완벽에 가까운 실행을 20년간 요구</strong>하는 가격이기도 합니다. 안전마진이 없다는 뜻입니다. 강세와 약세는 바로 이 지속성 확률을 두고 갈립니다. <span class="conf mid">신뢰도 중간 ~70%</span></p>
+  </div>
+
+  <h3>민감도 — 주당가치 (WACC × 터미널 마진)</h3>
+  <p>프레임워크 렌즈(SBC 실제비용) 기준. 자본비용과 마진 가정에 따라 결과가 어떻게 움직이는지 봅니다. <strong>어떤 조합도 $255 근처에 닿지 못합니다</strong> — 이 렌즈의 구조적 결론입니다.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>WACC ＼ 터미널마진</th><th>18%</th><th>22%</th><th>26%</th><th>30%</th><th>34%</th></tr></thead>
+      <tbody>
+        <tr><td>9.9%</td><td>$39</td><td>$47</td><td>$55</td><td>$63</td><td class="a">$72</td></tr>
+        <tr class="hl"><td>10.9% (기본)</td><td>$34</td><td>$41</td><td>$48</td><td>$54</td><td>$61</td></tr>
+        <tr><td>11.9%</td><td>$30</td><td>$36</td><td>$42</td><td>$48</td><td>$53</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cap">가장 낙관적 셀(WACC 9.9%, 마진 34%)조차 $72로, 현재가의 28% 수준. 결과는 마진·WACC보다 <b>고성장 지속 기간</b>에 압도적으로 민감하다는 점이 핵심입니다(그래서 CAP 역산이 본질).</p>
+
+  <h3>밸류에이션 레인지 — "풋볼 필드"</h3>
+  <div class="chart">
+    <div class="chart-h"><span class="chart-t">현재가의 상대적 위치</span><span class="chart-s">$/주</span></div>
+    <svg viewBox="0 0 860 300" role="img" aria-label="풋볼필드 밸류에이션 레인지">
+      <!-- x scale 0..340 -> x=60+(v/340)*760 -->
+      <g font-family="JetBrains Mono" font-size="9.5" fill="#a99fc4" text-anchor="middle">
+        <line x1="60" y1="40" x2="60" y2="250" stroke="#f0edf7"/><text x="60" y="266">$0</text>
+        <line x1="171.8" y1="40" x2="171.8" y2="250" stroke="#f0edf7"/><text x="171.8" y="266">$50</text>
+        <line x1="283.5" y1="40" x2="283.5" y2="250" stroke="#f0edf7"/><text x="283.5" y="266">$100</text>
+        <line x1="395.3" y1="40" x2="395.3" y2="250" stroke="#f0edf7"/><text x="395.3" y="266">$150</text>
+        <line x1="507.1" y1="40" x2="507.1" y2="250" stroke="#f0edf7"/><text x="507.1" y="266">$200</text>
+        <line x1="618.8" y1="40" x2="618.8" y2="250" stroke="#f0edf7"/><text x="618.8" y="266">$250</text>
+        <line x1="730.6" y1="40" x2="730.6" y2="250" stroke="#f0edf7"/><text x="730.6" y="266">$300</text>
+      </g>
+      <!-- rows -->
+      <g font-family="Inter" font-size="12.5" fill="#1a1523" font-weight="500">
+        <text x="20" y="66">DCF · SBC 실제비용</text>
+        <text x="20" y="106">DCF · 보고 FCF</text>
+        <text x="20" y="146">52주 범위</text>
+        <text x="20" y="186">애널리스트 목표가</text>
+      </g>
+      <!-- row1 framework range 26..79, base 44. x26=118.1 x79=236.6 x44=158.4 -->
+      <rect x="118.1" y="54" width="118.5" height="18" rx="4" fill="#8b5cf6" opacity="0.35"/>
+      <rect x="156.4" y="52" width="4" height="22" fill="#6b2fb5"/><text x="158" y="48" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700" fill="#6b2fb5">$44</text>
+      <text x="112" y="67" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#a99fc4">26</text><text x="242" y="67" font-family="JetBrains Mono" font-size="9" fill="#a99fc4">79</text>
+      <!-- row2 market lens single ~109 (band 93..134 from CAP scan) x93=267.9 x134=359.6 x109=303.7 -->
+      <rect x="267.9" y="94" width="91.7" height="18" rx="4" fill="#2563eb" opacity="0.32"/>
+      <rect x="301.7" y="92" width="4" height="22" fill="#2563eb"/><text x="304" y="88" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700" fill="#2563eb">$109</text>
+      <!-- row3 52wk 98..279 x98=279.1 x279=683.7 -->
+      <rect x="279.1" y="134" width="404.6" height="18" rx="4" fill="#94a3b8" opacity="0.4"/>
+      <text x="273" y="147" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#a99fc4">98</text><text x="689" y="147" font-family="JetBrains Mono" font-size="9" fill="#a99fc4">279</text>
+      <!-- row4 analyst 139..320 target 242 x139=370.7 x320=775.4 x242=601.0 -->
+      <rect x="370.7" y="174" width="404.7" height="18" rx="4" fill="#0f9d58" opacity="0.3"/>
+      <rect x="599.0" y="172" width="4" height="22" fill="#0f9d58"/><text x="601" y="168" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700" fill="#0a7d44">평균 $242</text>
+      <text x="365" y="187" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#a99fc4">139</text><text x="781" y="187" font-family="JetBrains Mono" font-size="9" fill="#a99fc4">320</text>
+      <!-- CURRENT PRICE line at 255 -> x=60+255/340*760=630.0 -->
+      <line x1="630.0" y1="44" x2="630.0" y2="235" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="5 3"/>
+      <polygon points="630,40 624,30 636,30" fill="#dc2626"/>
+      <rect x="588" y="10" width="84" height="22" rx="5" fill="#dc2626"/><text x="630" y="25" text-anchor="middle" font-family="JetBrains Mono" font-size="11.5" font-weight="700" fill="#fff">현재 $255</text>
+    </svg>
+    <div class="cap">현재가($255)는 <b>모든 DCF 레인지 위</b>, 52주 최고가 부근, 그리고 <b>애널리스트 평균 목표가($242)보다도 높은</b> 지점에 있습니다. 'Strong Buy' 컨센서스임에도 목표가 평균이 현재가 아래라는 사실은, 시장 참여자 다수도 밸류에이션이 앞서갔다고 본다는 방증입니다. <span class="conf hi">신뢰도 높음 ~80%</span></div>
+  </div>
+</div></section>
+<!-- ============ S11 · BULL ============ -->
+<section class="sec" id="s11"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">11</span><span class="sec-kicker">투자 논거 · Bull Case</span></div>
+  <h2>강세론 — 왜 이 프리미엄이 지속 가능한가</h2>
+  <p class="lead">강세론의 요체는 단순합니다: 데이터독은 <strong>15~25년 CAP를 실제로 채울 자격이 있는 소수의 회사</strong> 중 하나라는 것. 세 개의 기둥이 이를 뒷받침합니다.</p>
+
+  <h3>기둥 ① 구조적 락인 — 쉽게 못 떠난다</h3>
+  <p>데이터 중력은 추상이 아니라 숫자입니다. 8개 이상 제품을 쓰는 고객군이 <strong>전년比 +33%</strong>로 가장 빠르게 성장하고, 핵심 3축을 함께 쓰면 매출이 15배로 뜁니다. 한 번 인프라·앱·로그 데이터를 데이터독에 모은 기업은 교차 분석의 가치 때문에 떠나기 어렵고, 떠날수록 더 많은 도구를 재구축해야 합니다. 이 전환비용이 NRR 120%의 원천이며, 경쟁사가 "기능"을 복제해도 "축적된 데이터와 워크플로 통합"은 복제할 수 없습니다. <span class="conf hi">신뢰도 높음 ~80%</span></p>
+
+  <h3>기둥 ② AI 순풍 — 공포의 반대편에 서다</h3>
+  <p>이것이 가장 저평가된 강점입니다. 시장 전체가 "AI가 SaaS를 죽인다"며 좌석형 소프트웨어를 할인하는데, 데이터독은 <strong>사용량 기반</strong>이라 정확히 반대 수혜를 봅니다. AI 코호트 +253%, LLM 관찰 고객 1,000+, 하이퍼스케일러의 GPU 모니터링 채택 — AI가 확산될수록 모니터링할 워크로드가 늘고, 그것이 곧 매출입니다. AI는 데이터독에게 위협이 아니라 <strong>새로운 성장 S-커브</strong>입니다.</p>
+
+  <h3>기둥 ③ 재가속 + 최대 리스크 소화</h3>
+  <p>가장 두려웠던 약세 논거(OpenAI 내재화)를 <strong>보수적으로 가정한 가이던스에서조차</strong> 회사는 +26%를 냈고 실제 +32%를 기록했습니다. 5개 분기 연속 가속, 비AI 고객군도 재가속. 경쟁사(Dynatrace·Elastic)가 둔화하는 것과 대비되며 상대 매력이 커집니다. "성장이 꺾인다"는 약세 시나리오의 전제 자체가 데이터로 반박되고 있습니다. <span class="conf hi">신뢰도 높음 ~75%</span></p>
+
+  <div class="callout g">
+    <div class="h">◆ 강세론이 옳다면 밸류에이션은</div>
+    <p>만약 데이터독이 (1) 20%+ 성장을 10년 이상 지속하고 (2) SBC가 규모와 함께 정상화되며 (3) 비GAAP 마진이 30%+로 확장한다면, 보고 FCF 렌즈에서 현재가는 "비싸지만 정당화 가능"한 영역에 들어옵니다. 카테고리를 정의한 플랫폼이 20년 CAP를 채운 전례(마이크로소프트·비자·어도비)가 있고, 데이터독은 그 후보 조건을 갖췄습니다.</p>
+  </div>
+</div></section>
+
+<!-- ============ S12 · BEAR ============ -->
+<section class="sec" id="s12"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">12</span><span class="sec-kicker">리스크 · Bear Case</span></div>
+  <h2>약세론 — 정직하게, 빠짐없이</h2>
+  <p class="lead">균형은 강점만 강조하는 게 아니라 리스크도 직시하는 것입니다. 약세론의 핵심은 "사업이 나쁘다"가 아니라 "가격에 <strong>실수의 여지가 전혀 없다</strong>"입니다.</p>
+
+  <h3>리스크 ① SBC와 희석 — 가장 근본적</h3>
+  <p>이 보고서가 반복한 핵심입니다. 매출의 22%를 주식으로 지급하는 구조에서, 이를 실제 비용으로 보면 <strong>진짜 FCF 마진은 4.8%, P/FCF는 560배</strong>입니다. 강세론은 "SBC가 정상화된다"고 하지만, 그 정상화가 <strong>실제로 일어나는 데는 수년이 걸리고</strong>, 그 사이 주주는 매년 2~3% 희석됩니다. 이미 주가에 반영됐는가? <strong>부분적으로만</strong> — 시장이 SBC를 완전히 무시하는 쪽에 가깝다는 게 이 렌즈의 경고입니다. <span class="conf mid">신뢰도 중간 ~65%</span></p>
+
+  <h3>리스크 ② 멀티플 수축 — 성장이 꺾이는 순간</h3>
+  <p>P/S 25배는 30%+ 성장을 전제합니다. 성장이 20%대 초반으로만 내려가도 멀티플이 동종(4~5배) 쪽으로 수렴하기 시작하면, 실적이 좋아도 주가는 하락할 수 있습니다. 실제로 2025년 데이터독은 <strong>28% 성장에도 주가가 하락(−4.8%)</strong>한 해가 있었습니다 — 멀티플 압축 때문입니다. Dynatrace·Elastic이 최근 "실적 비트에도 가이던스 둔화로 두 자릿수 급락"한 것이 이 리스크의 생생한 사례입니다.</p>
+
+  <h3>리스크 ③ 고객 집중 — OpenAI 그림자</h3>
+  <p>최대 고객(OpenAI 추정)이 전체 ARR의 약 5%, AI 코호트의 60%를 차지합니다. 현재는 재가속으로 반박됐지만, 대형 AI 고객들이 규모가 커지면서 모니터링을 내재화할 유인은 <strong>구조적으로 존재</strong>합니다. 지금 반박됐다고 영구히 사라진 리스크는 아닙니다. <span class="conf mid">신뢰도 중간 ~55%</span></p>
+
+  <h3>리스크 ④ OpenTelemetry — 해자의 한쪽 벽</h3>
+  <p>오픈 표준이 확산되면 "데이터독 전용 계측" 락인이 약해지고, 고객 전환이 쉬워지며, 가격 디플레이션 압력이 생깁니다. 골드만삭스가 지목한 이 "디플레이션적 전환"은 <strong>장기적·점진적</strong>이라 당장 실적에 안 보이지만, CAP의 지속성을 갉아먹는 요인입니다.</p>
+
+  <div class="callout r">
+    <div class="h">◆ 약세론의 결론</div>
+    <p>데이터독을 $255에 사는 것은 "훌륭한 회사"를 사는 게 아니라 "훌륭한 회사가 <strong>20년간 완벽하게 실행할 것</strong>"을 사는 것입니다. 회사가 잘해도 — 성장이 25%로만 둔화하거나, SBC 정상화가 시장 기대보다 느리거나, 금리가 높게 유지되면 — 주가는 하락할 수 있습니다. 상방은 "예상대로", 하방은 "조금만 어긋나도"인 비대칭이 약세론의 핵심입니다.</p>
+  </div>
+</div></section>
+<!-- ============ S13 · SWOT ============ -->
+<section class="sec" id="s13"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">13</span><span class="sec-kicker">SWOT 종합</span></div>
+  <h2>한눈에 보는 강점·약점·기회·위협</h2>
+  <div class="grid2" style="gap:14px">
+    <div class="card" style="border-top:3px solid var(--green)">
+      <div class="h" style="font-family:var(--mono);font-size:12px;letter-spacing:1px;color:#0a7d44;font-weight:700;margin-bottom:10px">STRENGTHS · 강점</div>
+      <ul class="clean" style="font-size:14px">
+        <li>80% 총마진 + 29% FCF 마진의 우량 재무 체질</li>
+        <li>데이터 중력·멀티프로덕트 락인 → NRR 120%</li>
+        <li>독립 관찰가능성 1위, 800+ 통합, 개발자 경험 우위</li>
+        <li>순현금 $3.2B, 자본 경량(설비투자 매출 4%)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)">
+      <div class="h" style="font-family:var(--mono);font-size:12px;letter-spacing:1px;color:#b91c1c;font-weight:700;margin-bottom:10px">WEAKNESSES · 약점</div>
+      <ul class="clean" style="font-size:14px">
+        <li>SBC 매출의 22% → 실질 FCF 마진 희석·주주 희석</li>
+        <li>사용량 과금의 "bill shock" → 고객 비용 반발</li>
+        <li>고객 집중(최대 고객 ~ARR 5%)</li>
+        <li>GAAP 이익 미미 → 밸류에이션 방어 어려움</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--violet)">
+      <div class="h" style="font-family:var(--mono);font-size:12px;letter-spacing:1px;color:var(--purple);font-weight:700;margin-bottom:10px">OPPORTUNITIES · 기회</div>
+      <ul class="clean" style="font-size:14px">
+        <li>AI 워크로드 폭증 → 사용량 기반 직접 수혜(+253%)</li>
+        <li>신제품(보안·LLM 관찰) 각 $100M ARR 잠재</li>
+        <li>TAM $100B+ 대비 침투율 여전히 낮음</li>
+        <li>통합 플랫폼 선호 → 도구 통합 수요</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--amber)">
+      <div class="h" style="font-family:var(--mono);font-size:12px;letter-spacing:1px;color:#b45309;font-weight:700;margin-bottom:10px">THREATS · 위협</div>
+      <ul class="clean" style="font-size:14px">
+        <li>OpenTelemetry 표준화 → 락인 약화·가격 압력</li>
+        <li>하이퍼스케일러 번들(CloudWatch 등)의 하단 잠식</li>
+        <li>대형 AI 고객의 모니터링 내재화 유인</li>
+        <li>고금리 지속 → 장기 성장주 멀티플 디레이팅</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <div class="h">◆ SWOT의 핵심 긴장</div>
+    <p>강점과 기회는 <strong>사업의 질</strong>에 관한 것이고, 약점과 위협의 상당수는 <strong>밸류에이션과 회계 구조</strong>에 관한 것입니다. 사업은 A급, 가격은 A+++급을 요구 — 이 간극이 데이터독 투자의 본질입니다.</p>
+  </div>
+</div></section>
+
+<!-- ============ S14 · MANAGEMENT ============ -->
+<section class="sec" id="s14"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">14</span><span class="sec-kicker">경영진 · 자본 배분</span></div>
+  <h2>창업자가 이끄는, 드라마 없는 실행</h2>
+  <p>데이터독은 여전히 <strong>공동 창업자 올리비에 포멜(CEO)과 알렉시 레-쿽(CTO)</strong>이 이끕니다. 15년간 한 비전을 실행해 온 창업자 주도 경영은 장기 CAP를 논할 때 중요한 긍정 요인입니다. 업계에서는 "드라마 없는 문화(no-drama culture)"로 평가받으며, 포멜은 2016년 EY 올해의 기업가로 선정됐습니다.</p>
+
+  <h3>지배구조 — 창업자 통제와 그 함의</h3>
+  <p>듀얼클래스 구조(Class B 10표 vs Class A 1표)로 창업자들이 슈퍼보팅 지분을 보유합니다. 각각 2% 이상의 경제적 지분도 갖고 있어 <strong>이해관계가 주주와 정렬</strong>됩니다. 창업자 통제는 단기 압력에 흔들리지 않고 장기 투자를 밀어붙일 수 있게 하지만, 동시에 소액주주의 견제력이 제한된다는 양면성이 있습니다.</p>
+
+  <h3>자본 배분 — R&D 우선, 절제된 M&A</h3>
+  <ul class="clean">
+    <li><strong>R&D 최우선:</strong> 매출의 45%를 연구개발에 투입 — 해자 확장에 공격적. 이것이 SBC의 상당 원인이기도 함(엔지니어 스톡 보상).</li>
+    <li><strong>볼트온 M&A:</strong> Eppo·Metaplane 등 소규모 기술·팀 인수($118M 규모)로 제품 라인 보강. 대형 인수로 재무를 흔들지 않는 절제.</li>
+    <li><strong>자사주 매입:</strong> 제한적 — 현금을 성장 재투자에 우선. 성장기 기업으로선 합리적이나, SBC 희석을 상쇄하는 매입은 아직 미미.</li>
+    <li><strong>배당:</strong> 없음 — 성장 재투자 단계.</li>
+  </ul>
+  <div class="callout a">
+    <div class="h">⚠ 자본 배분 관전 포인트</div>
+    <p>가장 주목할 지점은 <strong>SBC 희석을 상쇄할 자사주 매입이 언제, 얼마나 시작되는가</strong>입니다. 회사가 "성장 재투자" 단계를 지나 현금을 주주 환원에 쓰기 시작하면, 그것이 곧 "성숙기 전환 + SBC 정상화" 신호가 됩니다. 반대로 계속 희석만 진행되면 약세론의 근거가 강화됩니다. <span class="conf mid">신뢰도 중간 ~60%</span></p>
+  </div>
+</div></section>
+
+<!-- ============ S15 · SYNTHESIS ============ -->
+<section class="sec" id="s15"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num">15</span><span class="sec-kicker">종합 판단 · 체크포인트</span></div>
+  <h2>정리 — 좋은 회사, 완벽을 요구하는 가격</h2>
+  <p class="lead">데이터독은 <strong>사업의 질에 관한 한 논쟁의 여지가 적은 우량 기업</strong>입니다. 문제는 오로지 가격이 그 우량함의 <strong>15~25년 지속</strong>을 이미 반영했다는 데 있습니다.</p>
+
+  <div class="card" style="background:linear-gradient(160deg,#f8f5fe,#fff)">
+    <h3 style="margin-top:0">세 문장 요약</h3>
+    <p style="margin-bottom:10px"><strong>1. 사업:</strong> 데이터 중력 락인 + AI 순풍 + 재가속으로, 카테고리를 정의한 독립 1위 플랫폼. 가장 두려운 리스크(OpenAI)조차 데이터로 상당 부분 반박됨.</p>
+    <p style="margin-bottom:10px"><strong>2. 가격:</strong> SBC를 실제 비용으로 보는 DCF로는 강세 시나리오($79)조차 현재가의 1/3. 현재가는 보고 FCF 렌즈에서도 <strong>~22년 CAP</strong>를 요구 — 역사적으로 최상위 프랜차이즈급 지속성.</p>
+    <p style="margin-bottom:0"><strong>3. 균형:</strong> "적자 P/E 680배"라는 약세 프레임도, "비GAAP 22% 마진이라 싸다"는 강세 프레임도 모두 오해. 진실은 <strong>SBC 정상화 속도 × 고성장 지속 기간</strong>이라는 두 변수에 달려 있으며, 안전마진은 없다.</p>
+  </div>
+
+  <h3>모니터링 체크포인트 — 무엇을 볼 것인가</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>지표</th><th>강세 신호</th><th>약세 신호</th><th>점검 주기</th></tr></thead>
+      <tbody>
+        <tr><td>매출 성장률</td><td class="g">28%+ 유지·가속</td><td class="r">22% 이하 둔화</td><td>분기</td></tr>
+        <tr><td>순매출유지율(NRR)</td><td class="g">120%+ 재상승</td><td class="r">115% 이하 하락</td><td>분기</td></tr>
+        <tr><td>AI 코호트 비중</td><td class="g">12% → 확대</td><td class="r">정체·감소</td><td>분기</td></tr>
+        <tr><td>SBC / 매출</td><td class="g">22% → 하락</td><td class="r">고착·상승</td><td>분기/연간</td></tr>
+        <tr><td>희석 주식수 증가율</td><td class="g">둔화 + 자사주 매입</td><td class="r">지속 희석</td><td>연간</td></tr>
+        <tr><td>대형 고객 동향</td><td class="g">신규 대형 로고</td><td class="r">OpenAI 등 이탈</td><td>수시</td></tr>
+        <tr><td>거시(10년 금리)</td><td class="g">금리 하락</td><td class="r">고금리 지속</td><td>수시</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <div class="h">◆ 의사결정을 위한 마지막 프레임</div>
+    <p>이 보고서는 매수·매도를 권하지 않습니다. 대신 하나의 질문으로 정리합니다: <strong>"데이터독이 향후 15~25년간 지금의 성장·해자를 지속할 확률이, 현재가가 요구하는 수준만큼 높다고 보는가?"</strong> 그렇다고 믿는다면 현재가는 정당화 가능합니다. 확신이 서지 않는다면, 안전마진이 없는 이 가격은 성장 둔화·SBC·금리 어느 하나만 어긋나도 취약합니다. 판단은 각자의 몫이며, 위 체크포인트가 그 판단을 계속 갱신하는 도구가 되기를 바랍니다.</p>
+  </div>
+</div></section>
+
+<!-- ============ LIMITS ============ -->
+<section class="sec" id="limits"><div class="wrap">
+  <div class="sec-tag"><span class="sec-num" style="background:var(--ink-soft)">!</span><span class="sec-kicker" style="color:var(--ink-soft)">한계와 가정 · Intellectual Honesty</span></div>
+  <h2 style="font-size:24px">이 분석이 틀릴 수 있는 지점</h2>
+  <p>지적 정직성을 위해, 본 보고서의 한계와 결론을 뒤집을 수 있는 요인을 명시합니다.</p>
+  <ul class="clean">
+    <li><strong>DCF는 가정의 함수다.</strong> $44(기본)든 $109(시장 렌즈)든, 성장 페이드·마진 경로·터미널 가정을 조금만 바꿔도 크게 움직입니다. 이 숫자들은 "정답"이 아니라 <strong>시장 기대의 방향과 강도를 읽는 도구</strong>로 봐야 합니다.</li>
+    <li><strong>SBC 처리는 논쟁적이다.</strong> "실제 비용"으로 보는 프레임워크 입장을 취했으나, "규모와 함께 정상화되는 일시적 현상"이라는 반론도 근거가 있습니다. 이 한 가정이 $44와 $109를 가릅니다 — 본 보고서의 최대 불확실성입니다. <span class="conf lo">신뢰도 낮음 — 관점에 따라 갈림</span></li>
+    <li><strong>내재 CAP "22년"은 정밀값이 아니다.</strong> 모델 구조(램프·플래토·페이드 구성)에 따라 달라지며, "15~25년+"라는 <strong>차수(order of magnitude)</strong>로만 해석해야 합니다.</li>
+    <li><strong>TAM·시장 규모는 출처별 편차가 크다.</strong> 정의에 따라 $35B~$172B로 갈립니다. 침투 여지가 크다는 방향은 맞지만, 구체적 수치는 신뢰구간이 넓습니다. <span class="conf mid">신뢰도 중간</span></li>
+    <li><strong>경쟁 동학은 빠르게 변한다.</strong> OpenTelemetry의 영향, 하이퍼스케일러 전략, AI 인프라 지형은 몇 분기 만에 바뀔 수 있습니다. 현재의 재가속이 구조적인지 일시적인지는 <strong>추가 분기 데이터로 검증</strong>이 필요합니다.</li>
+    <li><strong>데이터 기준 시점.</strong> 주가·재무는 2026년 6월 말 기준이며, 다음 실적(2026년 8월 6일 예정) 이후 상당수 수치가 갱신됩니다.</li>
+  </ul>
+  <div class="callout a">
+    <div class="h">⚠ 무엇이 결론을 바꾸는가 (베이지안 관점)</div>
+    <p><strong>강세로 기울게 할 증거:</strong> SBC 비율의 실제 하락 + 자사주 매입 개시, 30%+ 성장의 추가 분기 지속, AI 코호트 20%+ 확대. <strong>약세로 기울게 할 증거:</strong> 성장 20%대 초반 둔화, 대형 고객 이탈 현실화, SBC 고착, 고금리 장기화. 새 분기 데이터가 나올 때마다 위 체크포인트로 사후확률을 갱신하는 것이 이 프레임워크의 사용법입니다.</p>
+  </div>
+</div></section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer><div class="wrap">
+  <h4>Datadog (DDOG) · 시장 기대 내재 분석</h4>
+  <p>분석 기준 시점: 2026년 7월 초 · 주가/재무 데이터: 2026년 6월 말 · 다음 실적: 2026년 8월 6일(예정)</p>
+  <p style="margin-top:10px">데이터 출처: 회사 SEC 공시(10-K/10-Q), 분기 실적 발표 및 어닝콜, stockanalysis.com, Macrotrends, 애널리스트 리포트(구겐하임·트루이스트·골드만삭스 등), FRED(금리·기대인플레이션), Damodaran(ERP). 여러 출처가 상충하는 항목(TAM, 지역 매출 비중 등)은 본문에 범위로 명시.</p>
+  <p class="disc">본 문서는 데이터독과 그 산업에 대한 이해를 돕기 위한 <strong>정보 제공 목적의 분석 자료</strong>입니다. 특정 증권의 매수·매도·보유를 권유하지 않으며, 개인의 재무 상황·투자 목표·위험 감내도를 고려하지 않았습니다. 모든 투자 결정과 그 결과는 투자자 본인의 책임이며, 본 자료의 수치·추정은 오류를 포함할 수 있고 시장 상황에 따라 변동됩니다. 투자 전 반드시 최신 공시와 전문가 상담을 통해 독립적으로 검증하시기 바랍니다.</p>
+</div></footer>
+
+</body>
+</html>
