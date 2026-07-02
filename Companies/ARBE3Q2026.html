@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARBE — Arbe Robotics 심층 분석 · 4D 이미징 레이더와 시장 내재 기대치</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;800&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============ 디자인 토큰 ============ */
+:root{
+  --ink:#13293a;          /* 본문 잉크(네이비) */
+  --ink-soft:#41586a;
+  --paper:#f4f7f6;        /* 종이 */
+  --panel:#ffffff;
+  --line:#ccd8da;
+  --scope:#0e7c86;        /* 시그니처: 레이더 티일 */
+  --scope-deep:#0a5a62;
+  --night:#0e2233;        /* 다크 섹션 배경 */
+  --night-ink:#dce8ee;    /* 다크 섹션 본문색 */
+  --pos:#1d7a46; --pos-bg:#e8f4ec; --pos-line:#bcd9c6;
+  --neg:#b3312c; --neg-bg:#faecea; --neg-line:#e4c1be;
+  --warn:#8a5a00; --warn-bg:#fbf3e2; --warn-line:#e6d3a8;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --serif:'Noto Serif KR',serif;
+  --sans:'Noto Sans KR',-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+h1,h2,h3,h4{font-family:var(--serif);line-height:1.35;margin:0 0 .5em}
+p{margin:.55em 0 1.05em}
+strong{font-weight:700}
+.num{font-family:var(--mono)}
+a{color:var(--scope-deep)}
+img,svg{max-width:100%;height:auto}
+
+/* ============ 섹션 공통 ============ */
+section{padding:56px 0 40px;border-top:1px solid var(--line)}
+.sec-eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;color:var(--scope-deep);text-transform:uppercase;margin-bottom:10px}
+.sec-eyebrow::before{content:"";width:26px;height:2px;background:var(--scope)}
+section>.wrap>h2{font-size:clamp(1.5rem,3.4vw,2.05rem)}
+:where(section>.wrap)>h2{color:var(--ink)}
+.lead{font-size:1.07rem;color:var(--ink)}
+/* 다크 섹션: 지침 A — :where()로 우선순위 0 */
+.night{background:var(--night);border-top:1px solid #22384a}
+:where(.night) p, :where(.night) li{color:var(--night-ink)}
+.night .sec-eyebrow{color:#7fd0d8}
+.night .sec-eyebrow::before{background:#7fd0d8}
+section.night>.wrap>h2,.night h2,.night h3{color:#f2f7f9}
+.night .lead{color:#e7f0f4}
+
+/* ============ 자족 컴포넌트 (지침 B: bg+글자+테두리 세트) ============ */
+.card{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0}
+.card *{color:inherit}
+.card h3{color:var(--ink)}
+.card .num{color:var(--ink)}
+.callout{border-radius:12px;padding:16px 18px;margin:18px 0;border:1px solid;font-size:.98rem}
+.callout *{color:inherit}
+.co-pos{background:var(--pos-bg);color:#123f26;border-color:var(--pos-line)}
+.co-neg{background:var(--neg-bg);color:#5c1512;border-color:var(--neg-line)}
+.co-warn{background:var(--warn-bg);color:#4d3300;border-color:var(--warn-line)}
+.co-info{background:#e7f1f2;color:#0b3f45;border-color:#bcd7da}
+.co-ink{background:#13293a;color:#e6eef3;border-color:#31485a}
+.callout b,.callout strong{color:inherit}
+.badge{display:inline-block;font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.06em;padding:3px 10px;border-radius:999px;border:1px solid;vertical-align:middle}
+.bd-pos{background:#e8f4ec;color:#155a34;border-color:#bcd9c6}
+.bd-neg{background:#faecea;color:#8c221e;border-color:#e4c1be}
+.bd-warn{background:#fbf3e2;color:#6e4800;border-color:#e6d3a8}
+.bd-teal{background:#e2f0f1;color:#0a5a62;border-color:#b3d5d8}
+.bd-ink{background:#13293a;color:#dce8ee;border-color:#13293a}
+
+/* 통계 그리드 */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0}
+.stat{background:#ffffff;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat .k{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:#5b6b74;text-transform:uppercase}
+.stat .v{font-family:var(--mono);font-size:1.32rem;font-weight:600;color:var(--ink);margin-top:2px}
+.stat .s{font-size:.8rem;color:#5b6b74;line-height:1.5;margin-top:3px}
+.stat.dark{background:#0e2233;color:#dce8ee;border-color:#2b4356}
+.stat.dark .k{color:#8fb3c4}.stat.dark .v{color:#eaf3f7}.stat.dark .s{color:#9db8c6}
+.stat.teal{background:#0e7c86;color:#ffffff;border-color:#0a5a62}
+.stat.teal .k{color:#cdeef1}.stat.teal .v{color:#ffffff}.stat.teal .s{color:#d7f0f2}
+
+/* ============ 표 (지침 C: 홀·짝·헤더·합계 모두 명시) ============ */
+.tbl{width:100%;border-collapse:collapse;font-size:.9rem;margin:14px 0;background:#ffffff;color:var(--ink)}
+.tbl caption{caption-side:bottom;text-align:left;font-size:.78rem;color:#5b6b74;padding-top:8px;line-height:1.6}
+.tbl th{background:#13293a;color:#e9f1f5;font-weight:600;padding:9px 10px;text-align:left;border:1px solid #2b4356;font-family:var(--sans)}
+.tbl td{padding:8px 10px;border:1px solid #d8e1e3;color:#1c3140;vertical-align:top}
+.tbl tbody tr:nth-child(odd) td{background:#ffffff;color:#1c3140}
+.tbl tbody tr:nth-child(even) td{background:#f0f5f5;color:#1c3140}
+.tbl tr.hl td{background:#e2f0f1;color:#0a4046;font-weight:700}
+.tbl tr.tot td{background:#13293a;color:#eaf3f7;font-weight:700;border-color:#2b4356}
+.tbl .num{font-family:var(--mono);white-space:nowrap}
+.tbl .r{text-align:right}
+.tbl-scroll{overflow-x:auto;border-radius:10px;border:1px solid var(--line)}
+.tbl-scroll .tbl{margin:0;min-width:760px}
+.tbl-scroll{position:relative}
+.scroll-hint{font-family:var(--mono);font-size:.72rem;color:#5b6b74;text-align:right;margin:4px 2px 0}
+
+/* ============ 그림 ============ */
+figure{margin:26px 0;padding:0}
+.fig-box{background:#ffffff;border:1px solid var(--line);border-radius:14px;padding:18px 16px 8px;color:var(--ink)}
+figcaption{font-size:.8rem;color:#4a5c66;line-height:1.65;padding:10px 6px 2px}
+figcaption b{color:#13293a}
+.fig-title{font-family:var(--serif);font-weight:800;font-size:1.02rem;color:#13293a;margin:0 4px 8px}
+.axis{font-family:var(--mono);font-size:10.5px;fill:#5b6b74}
+.axis-strong{font-family:var(--mono);font-size:11px;fill:#2c4150;font-weight:600}
+
+/* ============ 히어로 ============ */
+header.hero{background:radial-gradient(1200px 600px at 78% -10%, #123a4a 0%, #0e2233 55%),#0e2233;color:#dce8ee;padding:52px 0 34px;border-bottom:3px solid var(--scope)}
+.hero-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:26px;align-items:center}
+.hero .kicker{font-family:var(--mono);font-size:.78rem;letter-spacing:.2em;color:#7fd0d8;text-transform:uppercase}
+.hero h1{font-size:clamp(1.7rem,4.2vw,2.7rem);color:#f4f9fa;margin:.35em 0 .3em}
+.hero .sub{color:#b9cdd8;font-size:1.02rem;max-width:60ch}
+.hero .meta{font-family:var(--mono);font-size:.76rem;color:#8fb3c4;margin-top:14px;line-height:1.9}
+.hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:20px}
+@media(max-width:840px){.hero-grid{grid-template-columns:1fr}.hero-scope{max-width:380px;margin:0 auto}}
+
+/* ============ 목차(내비) — 잘림 금지: flex-wrap, 항목 nowrap ============ */
+nav.toc{background:#0b1b29;border-bottom:1px solid #23384a;padding:12px 0}
+nav.toc .wrap{display:flex;flex-wrap:wrap;gap:8px 8px}
+nav.toc a{font-family:var(--mono);font-size:.74rem;color:#cfe2ea;text-decoration:none;background:#14293a;border:1px solid #2b4356;border-radius:999px;padding:5px 12px;white-space:nowrap}
+nav.toc a:hover{background:#0e7c86;color:#ffffff;border-color:#0e7c86}
+
+/* 인용/각주 */
+.src{font-family:var(--mono);font-size:.72rem;color:#5b6b74}
+.night .src{color:#8fa9b8}
+.divider-note{font-size:.85rem;color:#4a5c66;border-left:3px solid var(--scope);padding:2px 0 2px 12px;margin:16px 0}
+footer{background:#0b1b29;color:#9db8c6;padding:30px 0 44px;font-size:.82rem;border-top:3px solid var(--scope)}
+footer *{color:inherit}
+footer .wrap{line-height:1.9}
+@media(max-width:640px){body{font-size:15px}.tbl{font-size:.82rem}}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ 히어로 -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker">Deep-Dive Equity Research · 도입 단계 기업 기대치 분석</div>
+      <h1>Arbe Robotics <span class="num" style="color:#7fd0d8">(NASDAQ·TASE: ARBE)</span><br>“자동차의 눈”을 100배 선명하게 — 4D 이미징 레이더 칩의 생존 게임</h1>
+      <p class="sub">이스라엘 텔아비브의 팹리스 반도체 기업 Arbe는 세계에서 가장 채널이 많은(48×48=2,304) 자율주행용 이미징 레이더 칩셋을 만든다. 기술은 업계가 인정하는 선두급이지만, 매출은 아직 연 100만 달러대이고 매년 4천만 달러 안팎을 태운다. 이 보고서는 “회사가 무엇을 하고, 왜 시장이 주목하며, 현재 주가에 어떤 기대(성공확률·CAP)가 숨어 있는가”를 비전공자 눈높이에서 끝까지 파헤친다.</p>
+      <div class="meta">기준일 2026-07-02(미국장) · 기준주가 $0.83(7/1 종가) / 참고 $0.66(7/2 장중 급락) · 주식수 122.65M · 통화 USD<br>방법론: 생애주기 판별 → 성공 시나리오 DCF(전시 23) → 시장 내재 기대치(성공확률·CAP) 역산 → 민감도·시나리오</div>
+    </div>
+    <div class="hero-scope">
+      <!-- 시그니처: 레이더 스코프 + 핵심 결론 -->
+      <svg viewBox="0 0 360 360" role="img" aria-label="레이더 스코프 그래픽">
+        <defs>
+          <radialGradient id="scopeglow" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stop-color="#123a4a"/><stop offset="100%" stop-color="#0e2233"/>
+          </radialGradient>
+          <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#0e7c86" stop-opacity="0"/><stop offset="100%" stop-color="#63d3dc" stop-opacity=".55"/>
+          </linearGradient>
+        </defs>
+        <circle cx="180" cy="180" r="168" fill="url(#scopeglow)" stroke="#2b4356"/>
+        <g stroke="#27414f" fill="none">
+          <circle cx="180" cy="180" r="126"/><circle cx="180" cy="180" r="84"/><circle cx="180" cy="180" r="42"/>
+          <line x1="12" y1="180" x2="348" y2="180"/><line x1="180" y1="12" x2="180" y2="348"/>
+          <line x1="61" y1="61" x2="299" y2="299"/><line x1="299" y1="61" x2="61" y2="299"/>
+        </g>
+        <path d="M180 180 L180 12 A168 168 0 0 1 325 96 Z" fill="url(#sweep)"/>
+        <g fill="#7fd0d8">
+          <circle cx="236" cy="88" r="3.4"/><circle cx="258" cy="132" r="2.6"/><circle cx="210" cy="60" r="2.2"/>
+          <circle cx="118" cy="132" r="2.6"/><circle cx="96" cy="212" r="2.2"/><circle cx="150" cy="252" r="2.8"/>
+          <circle cx="252" cy="236" r="2.4"/><circle cx="132" cy="86" r="2"/>
+        </g>
+        <g font-family="IBM Plex Mono,monospace">
+          <text x="180" y="150" text-anchor="middle" font-size="12.5" fill="#8fb3c4">현재가에 내재된 성공확률</text>
+          <text x="180" y="188" text-anchor="middle" font-size="34" font-weight="600" fill="#eaf6f7">26~33%</text>
+          <text x="180" y="212" text-anchor="middle" font-size="11" fill="#8fb3c4">성공 시 가치 $2.29 대비 $0.66~0.83</text>
+        </g>
+      </svg>
+      <div class="hero-stats">
+        <div class="stat dark"><div class="k">시가총액</div><div class="v">$81~102M</div><div class="s">$0.66~0.83 × 122.65M주</div></div>
+        <div class="stat dark"><div class="k">현금+예금</div><div class="v">$53.6M</div><div class="s">2026.3.31 · 6말 추정 ≈ $46M</div></div>
+        <div class="stat teal"><div class="k">사업가치(EV)</div><div class="v">$35~56M</div><div class="s">시장이 “기술 옵션”에 매긴 값</div></div>
+        <div class="stat dark"><div class="k">2026 가이던스</div><div class="v">$4~6M</div><div class="s">매출 · 조정EBITDA −$28~31M</div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================ 목차 -->
+<nav class="toc" aria-label="목차">
+  <div class="wrap">
+    <a href="#s1">1 핵심 요약</a><a href="#s2">2 기업 개요</a><a href="#s3">3 수익 구조</a><a href="#s4">4 제품·기술</a><a href="#s5">5 산업 분석</a><a href="#s6">6 경제적 해자</a><a href="#s7">7 피어 비교</a><a href="#s8">8 시장 내러티브</a><a href="#s9">9 재무·DCF</a><a href="#s10">10 내재 기대치</a><a href="#s11">11 Bull Case</a><a href="#s12">12 Bear Case</a><a href="#s13">13 SWOT</a><a href="#s14">14 경영진·자본배분</a><a href="#s15">15 종합·체크포인트</a>
+  </div>
+</nav>
+
+<!-- ============================================================ 1. 핵심 요약 -->
+<section id="s1">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 01 · Executive Summary</div>
+    <h2>핵심 요약 — “기술 선두, 상업화 지각, 시장은 성공확률 4분의 1~3분의 1을 반영”</h2>
+
+    <p class="lead"><strong>한 문장 요약:</strong> Arbe Robotics는 자율주행차가 눈·비·어둠 속에서도 300m 밖 물체를 “사진처럼” 볼 수 있게 하는 초고해상도 4D 이미징 레이더 칩(48×48채널, 2,304 가상채널)을 설계하는 이스라엘 팹리스 반도체 기업으로, 기술 격차는 업계 최상위지만 서구 완성차 채택이 늦어지며 현재 주가는 <span class="num">“회사가 살아남아 성공할 확률 약 26~33%”</span>만을 값으로 매기고 있는, 전형적인 도입(Introduction) 단계 고위험·고보상 종목이다.</p>
+
+    <p>이 회사의 본질은 세 문장으로 정리된다. 첫째, <strong>무엇을 파는가</strong> — 레이더를 “거리 경보기”에서 “저해상도 카메라급 3차원 눈”으로 바꾸는 반도체 칩셋(송신칩 2개+수신칩 4개+전용 프로세서 1개)과, 2026년부터는 그 칩을 넣은 완성 레이더 시스템까지 판다. 둘째, <strong>왜 주목받는가</strong> — 경쟁 제품(가상채널 192개 안팎)보다 12배 많은 채널로 “주차된 차 vs 그림자”를 구분하는 해상도를 내면서도 라이다보다 훨씬 싸고 악천후에 강해, NVIDIA가 자사 자율주행 플랫폼(DRIVE)에 통합했고 중국 국유 완성차가 레벨4 양산(2026년 12월 SOP)에 채택했다. 셋째, <strong>무엇이 문제인가</strong> — 2021년 상장 때 약속한 서구 대형 OEM 양산이 계속 밀리면서(2025년 12월, 추진하던 유럽 OEM 프로그램 수주를 “가까운 시일 내 기대하지 않는다”고 공시) 매출이 아직 연 100만 달러대에 머물고, 연 3,800만 달러의 영업현금이 유출되어 반복적인 유상증자로 연명하고 있다.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="k">2025 매출</div><div class="v">$1.03M</div><div class="s">전년 $0.77M · 2022 고점 $3.52M에서 후퇴 후 재반등 초입</div></div>
+      <div class="stat"><div class="k">2025 순손실</div><div class="v">−$45.2M</div><div class="s">영업현금흐름 −$38.1M · 조정EBITDA −$37.6M</div></div>
+      <div class="stat"><div class="k">생애주기</div><div class="v">도입 단계</div><div class="s">영업(−)·투자(−)·재무(+) — Dickinson 판별</div></div>
+      <div class="stat"><div class="k">성공 시 주당가치</div><div class="v">$2.29</div><div class="s">10년 성공경로 DCF+페이드(0.25) · 희석 반영</div></div>
+      <div class="stat"><div class="k">애널리스트</div><div class="v">$1.50~3.50</div><div class="s">Canaccord $1.50 · Roth ≈$2.00 · WestPark $3.50</div></div>
+      <div class="stat"><div class="k">주가 낙폭</div><div class="v">−94%</div><div class="s">2021.11 고점 $14.79 → 현재 $0.66~0.83</div></div>
+    </div>
+
+    <p><strong>가치평가 결론(시장 내재 기대치 역산):</strong> 이 회사는 아직 이익이 없어 “초과수익이 몇 년 지속되는가(CAP)”를 곧바로 역산할 수 없다. 그래서 방법론이 권고하는 도입 단계 절차대로, ① 실현 가능한 <em>성공 시나리오</em>(중국 L4 양산 + 방산·시스템 매출 + 2029년 서구 OEM 1건, 2030년 흑자전환, 2035년 매출 $350M)를 전시 23 형식 DCF로 계산해 주당 <span class="num">$2.29</span>(미래 희석 51백만 주 반영)를 얻고, ② 실패 시 잔존가치를 주당 <span class="num">$0.10</span>으로 두면, 현재 주가 <span class="num">$0.83</span>은 성공확률 <span class="num">약 33%</span>, 급락한 <span class="num">$0.66</span>은 <span class="num">약 26%</span>를 내재한다. 뒤집어 말하면 시장의 회의는 “해자가 몇 년 가느냐”가 아니라 <strong>“그 전에 살아남아 양산 램프에 올라타느냐”</strong>에 집중돼 있다. 성공 시나리오 안에는 이미 흑자전환 후 약 10년+페이드(반도체 산업 평균 0.25)의 초과수익, 즉 성공 기업의 표준적 CAP가 들어 있는데도 주가가 성공가치의 29~36%에 불과하다는 사실이 그 증거다.</p>
+
+    <div class="callout co-info"><b>이 분석의 프레임:</b> “적정주가”를 단정하는 대신 <b>현재 가격에 어떤 가정이 숨어 있는지</b>를 읽는다. ARBE처럼 이익이 음(−)인 도입 단계 기업은 CAP 역산 대신 <b>성공확률 역산 + TAM/실물옵션 점검</b>이 올바른 도구이며(방법론 원문: 도입·감소 단계엔 실물옵션 분석이 더 적합), 본 보고서 9~10장에서 두 접근을 모두 수행한다.</div>
+
+    <div class="callout co-warn"><b>기준가 관련 고지:</b> 7/1 종가는 $0.83(마감 후 시간외 $0.78)이었고, 7/2 장중에는 특별한 단일 공시 없이 $0.65~0.69 구간까지 밀렸다(TradingView·Investing 실시간 표기 기준). 저유동성 마이크로캡(일평균 거래대금 수백만 달러 미만)의 무뉴스 변동일 가능성이 높아, 본 보고서는 <b>$0.83을 기준</b>으로 하되 모든 핵심 산식에 <b>$0.66 병기</b>로 강건성을 확보했다.</div>
+  </div>
+</section>
+
+<!-- ============================================================ 2. 기업 개요 -->
+<section id="s2" class="night">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 02 · Company Profile</div>
+    <h2>기업 개요 — 광고회사 창업자와 수학자가 만든 “레이더 반도체” 회사</h2>
+
+    <p class="lead">Arbe Robotics는 2015년 11월 4일 텔아비브에서 코비 마렌코(Kobi Marenko, 연쇄창업가·前 광고테크 CEO), 노암 아킨드 박사(Noam Arkind, CTO·수학/알고리즘), 오즈 픽스만(Oz Fixman, COO)이 창업했다. 출발점은 단순한 관찰이었다. 자율주행의 “눈”으로 카메라와 라이다가 각광받지만, 카메라는 어둠·역광·안개에 약하고 라이다는 비싸며 악천후에 취약하다. 반면 모든 차에 이미 달려 있는 레이더는 날씨를 뚫지만 해상도가 너무 낮아 “뭔가 있다”만 알 뿐 “그것이 무엇인지”를 모른다. Arbe의 창업 명제는 <strong>“레이더의 해상도를 100배 끌어올려, 라이다 가격의 몇 분의 1로 라이다급 3차원 인지를 제공한다”</strong>였다.</p>
+
+    <p>회사는 부품(안테나·모듈)이 아니라 <strong>반도체 칩셋</strong>에 집중하는 팹리스 전략을 택했다. 칩은 GlobalFoundries의 22nm FD-SOI(22FDX) 공정으로 위탁생산하고, 레이더 완제품은 티어1(자동차 1차 부품사)이 Arbe 칩을 사서 조립·판매하는 구조다. 2021년 10월 7일, SPAC(Industrial Tech Acquisitions)과의 합병으로 나스닥에 상장했다. 발표 시점 기업가치 7.22억 달러였으나 SPAC 주주 약 76%가 환매를 택해 실제로는 약 5.25억 달러 가치, 총 1.18억 달러(신탁 $18M + M&G·Varana·Eyal Waldman 등 PIPE $100M)를 조달했다. 상장 한 달 뒤인 2021년 11월 주가는 $14.79(종가 기준 사상최고, 장중 $17.27)까지 치솟았지만, 이후 “양산 약속과 현실의 간극”이 드러나며 2026년 3월 30일 사상최저 $0.55까지 96% 하락하는 롤러코스터를 탔다.</p>
+
+    <figure>
+      <div class="card" style="background:#122b3d;border-color:#2b4356;color:#dce8ee">
+        <div class="fig-title" style="color:#eaf3f7">그림 1. 창업(2015)→상장(2021)→전략 전환(2026): 10년 연대기</div>
+        <svg viewBox="0 0 980 330" role="img" aria-label="Arbe 연대기 타임라인">
+          <line x1="40" y1="165" x2="950" y2="165" stroke="#3a5468" stroke-width="2"/>
+          <!-- 노드들 -->
+          <g font-family="IBM Plex Mono,monospace" font-size="11">
+            <!-- 2015 -->
+            <circle cx="70" cy="165" r="6" fill="#7fd0d8"/>
+            <text x="70" y="140" text-anchor="middle" fill="#eaf3f7" font-weight="600">2015.11</text>
+            <text x="70" y="200" text-anchor="middle" fill="#b9cdd8">창업(텔아비브)</text>
+            <text x="70" y="216" text-anchor="middle" fill="#8fb3c4">시드 $3.1M</text>
+            <!-- 2017-19 -->
+            <circle cx="190" cy="165" r="6" fill="#7fd0d8"/>
+            <text x="190" y="140" text-anchor="middle" fill="#eaf3f7" font-weight="600">2017~19</text>
+            <text x="190" y="200" text-anchor="middle" fill="#b9cdd8">첫 4D 레이더 시제품</text>
+            <text x="190" y="216" text-anchor="middle" fill="#8fb3c4">누적 VC $54.5M(5R)</text>
+            <!-- 2020 -->
+            <circle cx="305" cy="165" r="6" fill="#7fd0d8"/>
+            <text x="305" y="140" text-anchor="middle" fill="#eaf3f7" font-weight="600">2020.10</text>
+            <text x="305" y="200" text-anchor="middle" fill="#b9cdd8">2K(2304ch) 개발</text>
+            <text x="305" y="216" text-anchor="middle" fill="#8fb3c4">플랫폼 출하</text>
+            <!-- 2021 -->
+            <circle cx="420" cy="165" r="7" fill="#f4b942"/>
+            <text x="420" y="128" text-anchor="middle" fill="#f4d992" font-weight="600">2021.10</text>
+            <text x="420" y="112" text-anchor="middle" fill="#f4d992">SPAC 상장 · $118M</text>
+            <text x="420" y="200" text-anchor="middle" fill="#b9cdd8">AutoX 로보택시 채택(4월)</text>
+            <text x="420" y="216" text-anchor="middle" fill="#8fb3c4">11월 고점 $14.79</text>
+            <!-- 2022-23 -->
+            <circle cx="530" cy="165" r="6" fill="#7fd0d8"/>
+            <text x="530" y="140" text-anchor="middle" fill="#eaf3f7" font-weight="600">2022~23</text>
+            <text x="530" y="200" text-anchor="middle" fill="#b9cdd8">양산 RF칩 확정('22.5)</text>
+            <text x="530" y="216" text-anchor="middle" fill="#8fb3c4">$23M 증자('23)</text>
+            <!-- 2024 -->
+            <circle cx="650" cy="165" r="7" fill="#f4b942"/>
+            <text x="650" y="128" text-anchor="middle" fill="#f4d992" font-weight="600">2024</text>
+            <text x="650" y="112" text-anchor="middle" fill="#f4d992">Top10 OEM 선정(7월)</text>
+            <text x="650" y="200" text-anchor="middle" fill="#b9cdd8">TASE 상장 · CB $30M(6월)</text>
+            <text x="650" y="216" text-anchor="middle" fill="#8fb3c4">12월 NVIDIA 협력 발표</text>
+            <!-- 2025 -->
+            <circle cx="775" cy="165" r="7" fill="#e57373"/>
+            <text x="775" y="128" text-anchor="middle" fill="#f3b6b3" font-weight="600">2025</text>
+            <text x="775" y="112" text-anchor="middle" fill="#f3b6b3">유럽 OEM 지연 공시(12.8)</text>
+            <text x="775" y="200" text-anchor="middle" fill="#b9cdd8">방산(Forterra)·해상·스마트시티</text>
+            <text x="775" y="216" text-anchor="middle" fill="#8fb3c4">12.29 中국유 OEM L4 채택</text>
+            <!-- 2026 -->
+            <circle cx="900" cy="165" r="7" fill="#7fd0d8"/>
+            <text x="900" y="128" text-anchor="middle" fill="#eaf3f7" font-weight="600">2026</text>
+            <text x="900" y="112" text-anchor="middle" fill="#b9cdd8">CEO 교체(4.1)</text>
+            <text x="900" y="200" text-anchor="middle" fill="#b9cdd8">시스템 판매 개시</text>
+            <text x="900" y="216" text-anchor="middle" fill="#8fb3c4">나스닥 $1 미달 통지(4.13)</text>
+          </g>
+        </svg>
+        <figcaption style="color:#9db8c6">한 줄 결론: <b style="color:#eaf3f7">“칩은 완성됐지만 서구 OEM 양산이 밀리자, 2026년 중국·방산·완성 시스템으로 축을 옮겼다.”</b> 출처: 회사 보도자료(2020.10, 2022.5, 2024.6~7, 2025.12, 2026.2), Globes·Calcalist(SPAC), CNN/StockTitan 뉴스 아카이브.</figcaption>
+      </div>
+    </figure>
+
+    <h3>지금의 회사: 규모와 위상</h3>
+    <p>2026년 중반 기준 임직원은 약 136~145명(집계 기관별 상이), 본사는 텔아비브이고 미국·독일·중국에 사무소를 둔다. 매출 지역 구성은 특이하게도 <strong>스웨덴이 최대</strong>인데, 이는 스웨덴 티어1 Sensrad가 Arbe 칩으로 레이더를 만들어 방산·스마트시티·해상 고객에 파는 구조 때문이다(그 다음이 중국·홍콩, 미국, 독일 순 — Morningstar 프로필). 자본시장에서의 위상은 “업계가 기술상을 주는 회사”(2025년 AutoTech Breakthrough ‘올해의 센서 기술’, Just Auto 인지시스템 부문 수상)이자, 동시에 “나스닥 1달러 요건 미달 통지(2026.4.13, 10월 12일까지 회복 필요)를 받은 페니주식”이라는 극단적 이중성이다. 이 간극 자체가 본 보고서의 분석 대상이다.</p>
+
+    <div class="stats">
+      <div class="stat dark"><div class="k">본사·인력</div><div class="v">텔아비브</div><div class="s">직원 136~145명 · 미·독·중 오피스</div></div>
+      <div class="stat dark"><div class="k">상장</div><div class="v">NASDAQ+TASE</div><div class="s">2021.10 SPAC / 2024.5 TASE 이중상장</div></div>
+      <div class="stat dark"><div class="k">누적 결손금</div><div class="v">$308.8M</div><div class="s">2026.3.31 · 총 조달자금이 여기에 투입됨</div></div>
+      <div class="stat dark"><div class="k">주요 기관</div><div class="v">AWM/SSF</div><div class="s">Special Situations Funds — 3회 이상 라운드 참여 최대 기관주주군</div></div>
+    </div>
+
+    <div class="callout co-ink"><b>비전공자용 30초 비유:</b> 기존 자동차 레이더가 “점자책”이라면 Arbe의 이미징 레이더는 “저해상도 흑백사진”이다. 점자책으로는 앞에 뭔가 있다는 것만 알지만, 흑백사진이면 그것이 정지한 트럭인지, 육교 그림자인지, 도로 위 타이어 조각인지 구분한다. 자율주행 사고의 상당수가 “정지 물체를 무시하도록 튜닝된 저해상도 레이더” 때문이었다는 점이 이 회사의 존재 이유다.</div>
+  </div>
+</section>
+
+<!-- ============================================================ 3. 수익 구조 -->
+<section id="s3">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 03 · Revenue Model</div>
+    <h2>수익 구조 — 어떻게 돈을 버는가(그리고 왜 아직 못 버는가)</h2>
+
+    <p class="lead">Arbe의 돈 버는 방식은 2025년까지 “칩셋 단일 경로”였고, 2026년부터 “칩셋 + 완성 레이더 시스템 + 지원서비스”의 3갈래로 넓어졌다. 아래 흐름도가 전부다: 왼쪽에서 오른쪽으로 갈수록 돈이 Arbe로 들어온다.</p>
+
+    <figure>
+      <div class="fig-box">
+        <div class="fig-title">그림 2. 수익 흐름도 — 칩이 고객에게 도달하는 세 갈래 길 (2026년 체제)</div>
+        <svg viewBox="0 0 980 430" role="img" aria-label="수익 구조 흐름도">
+          <defs><marker id="arw" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#0e7c86"/></marker></defs>
+          <!-- Arbe 박스 -->
+          <rect x="20" y="150" width="190" height="130" rx="12" fill="#0e2233" stroke="#0e7c86" stroke-width="2"/>
+          <text x="115" y="185" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="17" font-weight="800" fill="#ffffff">ARBE</text>
+          <text x="115" y="208" text-anchor="middle" font-size="11.5" fill="#cfe2ea">칩셋 설계(팹리스)</text>
+          <text x="115" y="226" text-anchor="middle" font-size="11.5" fill="#cfe2ea">Tx×2 + Rx×4 + 프로세서</text>
+          <text x="115" y="248" text-anchor="middle" font-size="10.5" fill="#8fb3c4">위탁생산: GlobalFoundries</text>
+          <text x="115" y="264" text-anchor="middle" font-size="10.5" fill="#8fb3c4">22nm FD-SOI(22FDX)</text>
+          <!-- 경로 1: 차량용 칩셋 -->
+          <line x1="210" y1="185" x2="330" y2="90" stroke="#0e7c86" stroke-width="2.5" marker-end="url(#arw)"/>
+          <rect x="335" y="45" width="220" height="90" rx="10" fill="#e2f0f1" stroke="#b3d5d8"/>
+          <text x="445" y="70" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0a4046">① 차량용 칩셋 판매</text>
+          <text x="445" y="90" text-anchor="middle" font-size="11" fill="#155258">티어1: HiRain(中)·Weifu(中)</text>
+          <text x="445" y="107" text-anchor="middle" font-size="11" fill="#155258">→ LRR610/LRR615 레이더 제조</text>
+          <text x="445" y="124" text-anchor="middle" font-size="10.5" fill="#3f6d72">칩 1세트/레이더 · 대당 로열티 성격</text>
+          <line x1="555" y1="90" x2="690" y2="90" stroke="#0e7c86" stroke-width="2.5" marker-end="url(#arw)"/>
+          <rect x="695" y="45" width="265" height="90" rx="10" fill="#13293a" stroke="#2b4356"/>
+          <text x="827" y="72" text-anchor="middle" font-size="12" font-weight="700" fill="#eaf3f7">완성차 OEM</text>
+          <text x="827" y="92" text-anchor="middle" font-size="10.5" fill="#b9cdd8">中 국유 OEM L4: SOP 2026.12, '27 수천 대</text>
+          <text x="827" y="109" text-anchor="middle" font-size="10.5" fill="#b9cdd8">로보택시(글로벌, 360° Phoenix 채택)</text>
+          <text x="827" y="126" text-anchor="middle" font-size="10.5" fill="#8fb3c4">서구 OEM: 데이터수집·선정 절차 진행 중</text>
+          <!-- 경로 2: 비차량 칩셋 -->
+          <line x1="210" y1="215" x2="330" y2="215" stroke="#0e7c86" stroke-width="2.5" marker-end="url(#arw)"/>
+          <rect x="335" y="170" width="220" height="90" rx="10" fill="#e8f4ec" stroke="#bcd9c6"/>
+          <text x="445" y="195" text-anchor="middle" font-size="12.5" font-weight="700" fill="#123f26">② 비차량 칩셋 판매</text>
+          <text x="445" y="215" text-anchor="middle" font-size="11" fill="#1d5a37">티어1: Sensrad(스웨덴)</text>
+          <text x="445" y="232" text-anchor="middle" font-size="11" fill="#1d5a37">Hugin 레이더 시리즈 제조</text>
+          <text x="445" y="249" text-anchor="middle" font-size="10.5" fill="#3f6d4e">+ 지원·유지보수 정기수수료(반복매출)</text>
+          <line x1="555" y1="215" x2="690" y2="215" stroke="#0e7c86" stroke-width="2.5" marker-end="url(#arw)"/>
+          <rect x="695" y="170" width="265" height="90" rx="10" fill="#13293a" stroke="#2b4356"/>
+          <text x="827" y="193" text-anchor="middle" font-size="12" font-weight="700" fill="#eaf3f7">방산·해상·인프라 고객</text>
+          <text x="827" y="212" text-anchor="middle" font-size="10.5" fill="#b9cdd8">Forterra(美 국방부 무인지상차량)</text>
+          <text x="827" y="228" text-anchor="middle" font-size="10.5" fill="#b9cdd8">WATCHIT→Azimut-Benetti(요트 충돌방지)</text>
+          <text x="827" y="245" text-anchor="middle" font-size="10.5" fill="#b9cdd8">Tianyi(中 스마트시티 도로) 반복 발주</text>
+          <!-- 경로 3: 직접 시스템 -->
+          <line x1="210" y1="250" x2="330" y2="340" stroke="#0e7c86" stroke-width="2.5" marker-end="url(#arw)"/>
+          <rect x="335" y="300" width="220" height="90" rx="10" fill="#fbf3e2" stroke="#e6d3a8"/>
+          <text x="445" y="325" text-anchor="middle" font-size="12.5" font-weight="700" fill="#4d3300">③ 완성 레이더 직접 판매</text>
+          <text x="445" y="345" text-anchor="middle" font-size="11" fill="#6e4f10">2026 신설 — 자체 생산라인 구축</text>
+          <text x="445" y="362" text-anchor="middle" font-size="11" fill="#6e4f10">경계보안·Physical AI 고객에 초도 출하</text>
+          <text x="445" y="379" text-anchor="middle" font-size="10.5" fill="#8a6a20">칩 대비 대당 매출↑ / 마진율↓</text>
+          <line x1="555" y1="345" x2="690" y2="345" stroke="#0e7c86" stroke-width="2.5" marker-end="url(#arw)"/>
+          <rect x="695" y="300" width="265" height="90" rx="10" fill="#13293a" stroke="#2b4356"/>
+          <text x="827" y="330" text-anchor="middle" font-size="12" font-weight="700" fill="#eaf3f7">엔드유저 직접</text>
+          <text x="827" y="350" text-anchor="middle" font-size="10.5" fill="#b9cdd8">경계·국경 보안, 로봇/Physical AI,</text>
+          <text x="827" y="367" text-anchor="middle" font-size="10.5" fill="#b9cdd8">농기계·광산·건설(오프하이웨이, '26.3 출시)</text>
+        </svg>
+        <figcaption>한 줄 결론: <b>“티어1을 거치는 칩 장사(고마진·저속)와, 직접 파는 시스템 장사(저마진·고속)를 병행하는 이중 트랙으로 전환.”</b> 회사는 사업부(세그먼트)별 매출을 따로 공시하지 않으며, 위 구조는 2025 연간·2026 1분기 실적발표의 서술을 도식화한 것이다. 출처: Arbe 6-K(2026.2.26, 2026.5.28), 로봇신문(Sensrad 유지보수 계약).</figcaption>
+      </div>
+    </figure>
+
+    <h3>숫자로 본 수익의 현주소</h3>
+    <p>2025년 매출 $1.03M은 상장기업으로선 사실상 “매출 없음”에 가깝다. 더 뼈아픈 건 궤적이다. 매출은 2021년 $2.25M → 2022년 $3.52M(개발키트·NRE 성격)으로 늘었다가 2023년 $1.47M, 2024년 $0.77M으로 오히려 줄었다. 티어1들이 개발 단계를 끝내고 양산 대기 상태에 들어가면서 “개발용 칩 판매”가 마르는데 “양산 칩 판매”는 시작되지 않은, 도입 단계 기업 특유의 <strong>죽음의 계곡 골짜기</strong>다. 2026년 가이던스 $4~6M은 이 골짜기 탈출의 첫 신호로 제시된 숫자이며, 구성은 회사 설명상 ① HiRain의 L4 양산 대비 선행 칩 발주(2026년 납기), ② 방산·경계보안·Physical AI 시스템 초도 매출, ③ 로보택시 후속 주문 등 “비(非)서구-OEM” 매출이 대부분이다.</p>
+
+    <div class="tbl-scroll"><table class="tbl">
+      <tr><th>항목($M)</th><th class="r">2021</th><th class="r">2022</th><th class="r">2023</th><th class="r">2024</th><th class="r">2025</th><th class="r">2026 1Q</th><th class="r">2026E(가이던스)</th></tr>
+      <tr><td>매출</td><td class="num r">2.25</td><td class="num r">3.52</td><td class="num r">1.47</td><td class="num r">0.77</td><td class="num r">1.03</td><td class="num r">0.46</td><td class="num r">4~6</td></tr>
+      <tr><td>매출총이익</td><td class="num r">n/a</td><td class="num r">n/a</td><td class="num r">≈0.0</td><td class="num r">−0.79</td><td class="num r">−0.80</td><td class="num r">−0.13</td><td class="num r">소폭 +전환 목표</td></tr>
+      <tr><td>영업비용</td><td class="num r">—</td><td class="num r">—</td><td class="num r">46.8</td><td class="num r">48.9</td><td class="num r">47.1</td><td class="num r">11.2</td><td class="num r">≈−15% 감축</td></tr>
+      <tr><td>순손실</td><td class="num r">—</td><td class="num r">—</td><td class="num r">−43.5</td><td class="num r">−49.3</td><td class="num r">−45.2</td><td class="num r">−9.4</td><td class="num r">—</td></tr>
+      <tr class="hl"><td>조정 EBITDA</td><td class="num r">—</td><td class="num r">—</td><td class="num r">—</td><td class="num r">−33.3</td><td class="num r">−37.6</td><td class="num r">−9.9</td><td class="num r">−28 ~ −31</td></tr>
+      <tr><td>수주잔고(기말)</td><td class="num r">—</td><td class="num r">—</td><td class="num r">—</td><td class="num r">0.3</td><td class="num r">1.3*</td><td class="num r">1.0</td><td class="num r">—</td></tr>
+      <caption>표 1. 손익 핵심 추이. *2025 잔고는 2026.2.26 발표시점 기준. 매출총이익이 음수인 이유: 매출 규모가 고정 생산·인건비를 못 덮는 초기 단계라서다(제품 자체가 원가 이하 판매라는 뜻이 아님). 출처: SEC 6-K(2025.3.5, 2026.2.26, 2026.5.28), stockanalysis(2021~22 매출).</caption>
+    </table></div>
+    <div class="scroll-hint">← 좁은 화면에서는 표를 좌우로 스크롤 →</div>
+
+    <figure>
+      <div class="fig-box">
+        <div class="fig-title">그림 3. 매출의 “죽음의 계곡”과 2026~27 탈출 시도 (막대: 매출, 점선: 컨센서스 범위)</div>
+        <svg viewBox="0 0 960 360" role="img" aria-label="매출 추이 차트">
+          <!-- y grid: 0~20M -->
+          <g font-family="IBM Plex Mono,monospace" font-size="11" fill="#5b6b74">
+            <line x1="70" y1="300" x2="930" y2="300" stroke="#ccd8da"/><text x="60" y="304" text-anchor="end">0</text>
+            <line x1="70" y1="230" x2="930" y2="230" stroke="#e4ebec"/><text x="60" y="234" text-anchor="end">5</text>
+            <line x1="70" y1="160" x2="930" y2="160" stroke="#e4ebec"/><text x="60" y="164" text-anchor="end">10</text>
+            <line x1="70" y1="90" x2="930" y2="90" stroke="#e4ebec"/><text x="60" y="94" text-anchor="end">15</text>
+            <line x1="70" y1="20" x2="930" y2="20" stroke="#e4ebec"/><text x="60" y="24" text-anchor="end">20</text>
+            <text x="30" y="160" transform="rotate(-90 30 160)" text-anchor="middle">매출 ($M)</text>
+          </g>
+          <!-- bars: 2021 2.25 / 22 3.52 / 23 1.47 / 24 0.77 / 25 1.03 / 26E 5 / 27E 18.4 (scale 14px per $1M) -->
+          <g>
+            <rect x="95"  y="268.5" width="70" height="31.5" fill="#41586a"/>
+            <rect x="215" y="250.7" width="70" height="49.3" fill="#41586a"/>
+            <rect x="335" y="279.4" width="70" height="20.6" fill="#41586a"/>
+            <rect x="455" y="289.2" width="70" height="10.8" fill="#b3312c"/>
+            <rect x="575" y="285.6" width="70" height="14.4" fill="#41586a"/>
+            <rect x="695" y="230"   width="70" height="70"  fill="#0e7c86"/>
+            <rect x="815" y="42.4"  width="70" height="257.6" fill="#0e7c86" opacity=".55"/>
+            <!-- 2026 guidance band 4~6: y=244~216 -->
+            <line x1="695" y1="244" x2="765" y2="244" stroke="#0a5a62" stroke-width="2" stroke-dasharray="4 3"/>
+            <line x1="695" y1="216" x2="765" y2="216" stroke="#0a5a62" stroke-width="2" stroke-dasharray="4 3"/>
+            <!-- 2027 consensus band 9.8~31.6 → y=162.8 ~ ... 31.6→300-442 클램프: 상단 20 초과 표시 -->
+            <line x1="815" y1="162.8" x2="885" y2="162.8" stroke="#0a5a62" stroke-width="2" stroke-dasharray="4 3"/>
+            <line x1="815" y1="20" x2="885" y2="20" stroke="#0a5a62" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="850" y="14" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#0a5a62">최고 추정 $31.6M(축 밖)</text>
+          </g>
+          <g font-family="IBM Plex Mono,monospace" font-size="11.5" fill="#13293a" text-anchor="middle" font-weight="600">
+            <text x="130" y="262">2.25</text><text x="250" y="244">3.52</text><text x="370" y="273">1.47</text>
+            <text x="490" y="283">0.77</text><text x="610" y="279">1.03</text><text x="730" y="223">4~6</text><text x="850" y="36" fill="#0a5a62">18.4E</text>
+          </g>
+          <g font-family="IBM Plex Mono,monospace" font-size="11" fill="#41586a" text-anchor="middle">
+            <text x="130" y="322">2021</text><text x="250" y="322">2022</text><text x="370" y="322">2023</text>
+            <text x="490" y="322">2024</text><text x="610" y="322">2025</text><text x="730" y="322">2026E</text><text x="850" y="322">2027E</text>
+            <text x="490" y="342" fill="#b3312c">← 죽음의 계곡(개발매출 소진, 양산 미개시)</text>
+            <text x="790" y="342" fill="#0a5a62">가이던스·컨센서스 →</text>
+          </g>
+        </svg>
+        <figcaption>한 줄 결론: <b>“매출은 2022년 고점 이후 3년간 후퇴했고, 2026~27년 4~18배 점프가 ‘약속’돼 있다 — 이 약속의 이행 여부가 주가의 전부다.”</b> 2027E $18.4M은 6개 기관 평균(범위 $9.8~31.6M, Finnhub 집계). 참고로 회사는 2025년에도 “$2~5M” 가이던스를 냈다가 $1.03M에 그친 전력이 있다. 출처: 회사 가이던스(2026.2.26), stockanalysis/Finnhub 컨센서스.</figcaption>
+      </div>
+    </figure>
+
+    <h3>수익 모델의 질(質) 평가</h3>
+    <p><strong>모델 자체는 상급이다.</strong> 팹리스 칩 판매는 양산이 시작되면 매출총이익률 50%대 이상, 증분 투자가 거의 없는 구조다(공장은 GlobalFoundries 소유). 게다가 자동차 부품은 한번 채택되면(디자인윈) 그 차종의 수명 5~7년간 교체가 거의 불가능해, 성공 시 매출의 가시성·점착성이 매우 높다. Sensrad와 맺은 “지원·유지보수 정기수수료” 계약처럼 반복매출의 씨앗도 있다. <strong>문제는 모델이 아니라 도달까지의 거리다.</strong> 현 매출의 대부분이 소수 티어1·프로젝트에 집중돼 있고(고객 집중도 극단적으로 높음 — 실제로 2024년엔 대손충당까지 발생), 자동차 인증(AEC-Q100·ASIL-B)·차종 개발 주기 탓에 계약→매출 사이 2~3년의 시차가 구조적으로 존재한다. 2026년의 시스템 직판 전환은 이 시차를 우회하려는 시도로, 매출 인식은 빨라지지만 대당 마진율은 칩보다 낮아지고 재고·생산 리스크를 Arbe가 안게 되는 트레이드오프다.</p>
+
+    <div class="callout co-pos"><b>긍정 동인 체크(놓치기 쉬운 부분):</b> ① 매출 지역 1위가 스웨덴이라는 사실은 “자동차가 아니어도 이 칩을 사서 쓰는 산업 수요가 실재”함을 보여준다. ② 2026년 1분기 매출 $0.46M은 전년 동기($0.04M)의 11배로, 절대액은 작아도 방향은 가이던스와 일치한다. ③ HiRain은 이미 2026년 납기 양산 칩 PO를 냈다 — 이는 희망이 아니라 발주서다.</div>
+    <div class="callout co-neg"><b>정직한 반대편:</b> 수주잔고 $1.0M(2026.3말)은 연 가이던스 $4~6M의 4분의 1에도 못 미쳐, 하반기 실적은 “아직 장부에 없는 주문”에 의존한다. 2025년 가이던스 대폭 미달 전력과 겹쳐 보면, 가이던스 신뢰도에는 할인이 필요하다.</div>
+  </div>
+</section>
+
+<!-- ============================================================ 4. 제품·기술 -->
+<section id="s4" class="night">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 04 · Product &amp; Technology</div>
+    <h2>제품·서비스 및 기술력 — “채널 수가 곧 해상도”라는 물리 법칙 위에 세운 회사</h2>
+
+    <p class="lead">레이더의 원리는 박쥐와 같다. 전파(76~81GHz 밀리미터파)를 쏘고 반사파가 돌아오는 <em>시간</em>으로 거리를, 반사파의 <em>주파수 변화(도플러)</em>로 속도를 잰다. 여기까지는 1970년대 기술이다. 문제는 “각도”다. 반사파가 <em>어느 방향에서</em> 왔는지를 정밀하게 알아야 물체의 모양이 그려지는데, 각도 분해능은 <strong>안테나(채널)를 몇 개나 촘촘히 배열했는가</strong>에 물리적으로 비례한다. 기존 차량 레이더는 채널이 12개 남짓이라 “30m 앞 어딘가에 큰 덩어리”까지만 안다. 업계 고급형(칩 4개를 이어붙인 캐스케이드 방식, 예: 콘티넨탈 ARS540)이 가상채널 192개다. Arbe는 송신 48개 × 수신 48개를 곱한 <strong>2,304개 가상채널</strong>을 단일 레이더에서 구현해, 방위각 1°·고도 1.7° 분해능(IDTechEx 집계)으로 프레임당 2만 개 이상의 점(포인트클라우드)을 초당 수십 회 찍어낸다. “다른 레이더보다 최대 100배 상세하다”는 회사 슬로건의 물리적 근거가 이것이다.</p>
+
+    <figure>
+      <div class="card" style="background:#122b3d;border-color:#2b4356;color:#dce8ee">
+        <div class="fig-title" style="color:#eaf3f7">그림 4. Phoenix 레이더 해부도 — 7개의 칩이 하나의 “눈”이 되기까지 (공식 제품사진 대체 도식)</div>
+        <svg viewBox="0 0 980 400" role="img" aria-label="칩셋 아키텍처 도식">
+          <defs><marker id="arw2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#7fd0d8"/></marker></defs>
+          <!-- 레이더 외형 -->
+          <rect x="30" y="60" width="300" height="280" rx="16" fill="#0e2233" stroke="#3a5468" stroke-width="2"/>
+          <text x="180" y="45" text-anchor="middle" font-size="13" fill="#eaf3f7" font-weight="700" font-family="Noto Sans KR">Phoenix 이미징 레이더 (책 한 권 크기, 차량 그릴 뒤 장착)</text>
+          <!-- 안테나 어레이 -->
+          <g fill="#7fd0d8" opacity=".9">
+            <text x="180" y="90" text-anchor="middle" font-size="11" fill="#8fb3c4">안테나 어레이: 48 Tx × 48 Rx</text>
+          </g>
+          <g fill="#2f6b74">
+            <!-- 미니 그리드 -->
+            <g transform="translate(70,105)">
+              <g fill="#7fd0d8">
+                <rect width="220" height="88" fill="none" stroke="#2f6b74"/>
+                <g>
+                  <circle cx="14" cy="12" r="3"/><circle cx="38" cy="12" r="3"/><circle cx="62" cy="12" r="3"/><circle cx="86" cy="12" r="3"/><circle cx="110" cy="12" r="3"/><circle cx="134" cy="12" r="3"/><circle cx="158" cy="12" r="3"/><circle cx="182" cy="12" r="3"/><circle cx="206" cy="12" r="3"/>
+                  <circle cx="14" cy="34" r="3"/><circle cx="38" cy="34" r="3"/><circle cx="62" cy="34" r="3"/><circle cx="86" cy="34" r="3"/><circle cx="110" cy="34" r="3"/><circle cx="134" cy="34" r="3"/><circle cx="158" cy="34" r="3"/><circle cx="182" cy="34" r="3"/><circle cx="206" cy="34" r="3"/>
+                  <circle cx="14" cy="56" r="3"/><circle cx="38" cy="56" r="3"/><circle cx="62" cy="56" r="3"/><circle cx="86" cy="56" r="3"/><circle cx="110" cy="56" r="3"/><circle cx="134" cy="56" r="3"/><circle cx="158" cy="56" r="3"/><circle cx="182" cy="56" r="3"/><circle cx="206" cy="56" r="3"/>
+                  <circle cx="14" cy="78" r="3"/><circle cx="38" cy="78" r="3"/><circle cx="62" cy="78" r="3"/><circle cx="86" cy="78" r="3"/><circle cx="110" cy="78" r="3"/><circle cx="134" cy="78" r="3"/><circle cx="158" cy="78" r="3"/><circle cx="182" cy="78" r="3"/><circle cx="206" cy="78" r="3"/>
+                </g>
+              </g>
+            </g>
+          </g>
+          <!-- 칩들 -->
+          <g font-family="IBM Plex Mono,monospace" font-size="10.5" text-anchor="middle">
+            <rect x="62" y="215" width="98" height="46" rx="6" fill="#0e7c86"/><text x="111" y="234" fill="#fff" font-weight="600">Tx 칩 × 2</text><text x="111" y="250" fill="#d7f0f2">각 24채널 송신</text>
+            <rect x="200" y="215" width="98" height="46" rx="6" fill="#0e7c86"/><text x="249" y="234" fill="#fff" font-weight="600">Rx 칩 × 4</text><text x="249" y="250" fill="#d7f0f2">각 12채널 수신</text>
+            <rect x="62" y="275" width="236" height="48" rx="6" fill="#f4b942"/><text x="180" y="295" fill="#3a2a00" font-weight="700">전용 프로세서 칩 × 1</text><text x="180" y="312" fill="#5c4400">2,304채널 실시간 신호처리 · 30fps</text>
+          </g>
+          <!-- 성능 스펙 우측 -->
+          <line x1="340" y1="200" x2="420" y2="200" stroke="#7fd0d8" stroke-width="2.5" marker-end="url(#arw2)"/>
+          <g font-family="Noto Sans KR" font-size="12" fill="#dce8ee">
+            <text x="440" y="105" font-weight="700" fill="#eaf3f7" font-size="13.5">출력물: 4D 포인트클라우드</text>
+            <text x="440" y="130">· 거리 + 방위각 + 고도 + 속도 = “4차원”</text>
+            <text x="440" y="154">· 감지거리 300m+ (승용차, 단일 빔 기준)</text>
+            <text x="440" y="178">· 프레임당 20,000+ 검출점 (CES 2026 시연)</text>
+            <text x="440" y="202">· 분해능: 방위각 1° · 고도 1.7°</text>
+            <text x="440" y="226">· 비·눈·안개·역광·완전한 어둠에서 동작</text>
+            <text x="440" y="250">· 정지물체 추적 + 주행가능 공간(free space) 지도</text>
+            <text x="440" y="274" fill="#8fb3c4" font-size="11">Rx 잡음지수 11dB(발표 당시 업계 최고), Tx 12.5dBm/ch,</text>
+            <text x="440" y="292" fill="#8fb3c4" font-size="11">−40~+125°C 자동보정, ASIL-B·AEC-Q100 Grade 2(1-ready)</text>
+          </g>
+          <!-- 채널 비교 바 -->
+          <g font-family="IBM Plex Mono,monospace" font-size="11">
+            <text x="440" y="330" fill="#eaf3f7" font-weight="600" font-size="12">가상채널 수 비교(해상도의 원천)</text>
+            <rect x="440" y="342" width="12" height="12" fill="#5b6b74"/><text x="460" y="352" fill="#b9cdd8">기존 레이더 12</text>
+            <rect x="600" y="342" width="42" height="12" fill="#8fa9b8"/><text x="650" y="352" fill="#b9cdd8">캐스케이드 192</text>
+            <rect x="440" y="365" width="504" height="14" fill="#0e7c86"/><text x="700" y="376" fill="#ffffff" font-weight="700">ARBE 2,304 (12×)</text>
+          </g>
+        </svg>
+        <figcaption style="color:#9db8c6">한 줄 결론: <b style="color:#eaf3f7">“7개 칩(2Tx+4Rx+프로세서 1)이 한 세트 — 이 ‘세트당 판매’가 Arbe의 매출 단위다.”</b> 공식 제품 이미지는 저작권·오프라인 열람 문제로 도식으로 대체(제품 외형·데모 영상은 arberobotics.com/product 참조). 출처: Microwave Journal(2022.7), Arbe 보도자료(2022.5), IDTechEx(2023), CES 2026 발표.</figcaption>
+      </div>
+    </figure>
+
+    <h3>왜 이게 어려운가 — 모방 난이도의 3중벽</h3>
+    <p>“채널을 늘리면 되는데 왜 남들은 못 하나?”가 핵심 질문이다. 첫째 벽은 <strong>연산 폭발</strong>이다. 채널이 12→2,304로 늘면 처리해야 할 신호 조합이 기하급수로 늘어, 범용 칩(FPGA·GPU)으로는 차량용 전력·원가 예산 안에서 실시간 처리가 안 된다. Arbe는 이를 위해 레이더 전용 프로세서 칩을 밑바닥부터 설계했고, 이것이 특허 포트폴리오의 심장이다(초기부터 실시간 4D 처리·간섭 완화·레이더 SLAM 관련 특허를 집중 출원, Knowmade의 2025년 특허 분석에서도 “고밀도 MIMO에 특화된 집중형 IP 보유 기업”으로 분류). 둘째 벽은 <strong>사이드로브(허깨비 신호) 억제</strong>다. 채널이 많아질수록 가짜 반사상이 생기기 쉬운데, Arbe 방식(단일 대형 어레이 + 자체 파형설계)은 칩 4개를 이어붙이는 캐스케이드보다 사이드로브가 근본적으로 낮아 “유령 물체” 오탐이 적다고 회사와 제3자 기술 리뷰가 일관되게 설명한다. 셋째 벽은 <strong>자동차 인증과 원가</strong>다. GlobalFoundries 22FDX(RF 성능과 저전력을 동시 충족하는 FD-SOI 공정) 기반으로 채널당 원가를 업계 최저 수준으로 낮췄고, −40~+125°C 자동 보정, AEC-Q100 등 차량 인증을 이미 통과했다. 스타트업이 이 3중벽을 다시 쌓으려면 수년과 수억 달러가 든다 — Arbe 자신이 그 증거다(누적 결손 $3.1억).</p>
+
+    <h3>제품 라인업과 R&amp;D 로드맵</h3>
+    <div class="tbl-scroll"><table class="tbl">
+      <tr><th>제품/플랫폼</th><th>형태</th><th>채널</th><th>타깃</th><th>상태(2026 중반)</th></tr>
+      <tr><td><b>칩셋(Tx/Rx/프로세서)</b></td><td>반도체 세트</td><td class="num">48×48=2,304</td><td>티어1 레이더 제조용</td><td>양산 구성 확정('22)·생산 테이프아웃('25) 완료, HiRain 양산 PO 납품 개시</td></tr>
+      <tr><td><b>Phoenix</b></td><td>완성 레이더(전방·360°)</td><td class="num">2,304</td><td>로보택시 L4, OEM 평가, 직접판매</td><td>로보택시 후속수주 · '26 자체 생산라인 가동</td></tr>
+      <tr><td>HiRain LRR610</td><td>티어1 제품(Arbe 칩)</td><td class="num">2,304</td><td>중국 L4 전방 레이더</td><td>中 국유 OEM 채택, SOP 2026.12</td></tr>
+      <tr><td>HiRain LRR615</td><td>티어1 제품(Arbe 칩)</td><td class="num">2,304</td><td>중국 L2+/L3 양산형</td><td>'25.4 출시(중국 최초 고밀도 도파관 안테나), OEM 평가 중</td></tr>
+      <tr><td>HiRain 24×12 신플랫폼</td><td>티어1 제품(Arbe 칩)</td><td class="num">288</td><td>중국 대중차 L2+/L3 (저가형)</td><td>'26.5 공개 — 볼륨 시장용 다운스케일</td></tr>
+      <tr><td>Sensrad Hugin 시리즈</td><td>티어1 제품(Arbe 칩)</td><td class="num">2,304급</td><td>방산 UGV·해상·스마트시티</td><td>Forterra(美 국방)·WATCHIT·Tianyi 납품 중</td></tr>
+      <tr><td>오프하이웨이 HD 레이더</td><td>완성 레이더</td><td class="num">2,304급</td><td>농기계·광산·건설(분진·무광 환경)</td><td>'26.3 출시</td></tr>
+      <caption>표 2. 제품 계층. 핵심 포인트 두 가지: ① 같은 칩셋을 “풀스펙(2,304)”과 “다운스케일(288)”로 나눠 프리미엄과 볼륨 시장을 동시 공략하는 플랫폼 전략이 시작됐고, ② 완성 레이더 직판으로 티어1 의존을 부분 우회한다. 출처: Arbe·HiRain 보도자료(2024.1, 2025.4, 2025.12, 2026.5), 회사 제품 페이지.</caption>
+    </table></div>
+
+    <h3>NVIDIA 생태계 — 기술을 “표준 부품”으로 만드는 지렛대</h3>
+    <p>2024년 12월 발표되고 CES 2025~2026에서 시연된 NVIDIA 협력은 단순 제휴가 아니라 <strong>유통 채널</strong>이다. Arbe 레이더의 방대한 포인트클라우드를 NVIDIA DRIVE AGX(차량용 AI 컴퓨터)에서 직접 처리해 AI 기반 점유격자(occupancy grid, “여기는 비어 있고 저기는 막혀 있다”는 확률 지도)를 만들고, 이것이 NVIDIA DRIVE Hyperion(완성차용 자율주행 레퍼런스 플랫폼)의 센서 옵션으로 들어간다. 완성차 입장에선 “NVIDIA 플랫폼을 사면 Arbe 레이더가 검증된 부품 목록에 있다”는 뜻이라 채택 마찰이 급감한다. CES 2026에서는 프레임당 2만+ 검출·300m+ 범위의 자동차 등급 레이더 시스템을 실차 시연했고, 발표 당일 주가는 +7.6% 반응했다. 다만 냉정하게 짚으면, NVIDIA 협력은 비독점이며 매출 보증이 아니다 — “진열대에 오른 것”이지 “팔린 것”이 아니다.</p>
+
+    <div class="callout co-info" style="background:#10303c;color:#cfe9ec;border-color:#2c5560"><b>인재·조직:</b> CTO 노암 아킨드 박사가 이끄는 R&amp;D가 전체 비용의 74%($34.8M/2025)를 차지하는 연구 중심 조직이다. 신임 CEO 램 마흐네스(2026.4~)는 TI에서 12년을 포함해 임베디드·반도체·자동차에서 30년 경력의 “양산 전문가”로, 회사가 연구→양산 국면 전환을 선언한 인사다. 이스라엘 소재 특성상 방산 레이더 인재풀(엘타·라파엘 등 출신)이 두텁다는 점도 기술 조직의 숨은 자산이다.</div>
+  </div>
+</section>
+
+<!-- ============================================================ 5. 산업 분석 -->
+<section id="s5">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 05 · Industry</div>
+    <h2>산업 분석 — “눈이 4개 필요한 시대”: 센서 스택 전쟁의 지형도</h2>
+
+    <p class="lead">자율주행 인지(perception) 산업은 카메라·레이더·라이다·초음파 네 센서가 역할을 나눠 갖는 구조다. 각 센서의 강약점이 뚜렷해 상위 자율주행일수록 “겹쳐 쓰기(중복성)”가 법규·안전 논리상 강제된다. Arbe가 노리는 자리는 이 스택에서 가장 크게 비어 있는 칸 — <strong>“악천후에도 되는 고해상도 3D 눈을, 라이다보다 훨씬 싸게”</strong>다.</p>
+
+    <figure>
+      <div class="fig-box">
+        <div class="fig-title">그림 5. 센서 4종 비교 — 이미징 레이더가 채우는 빈칸</div>
+        <div class="tbl-scroll"><table class="tbl">
+          <tr><th>능력</th><th>카메라</th><th>기존 레이더</th><th>라이다</th><th class="r" style="background:#0e7c86;border-color:#0a5a62">4D 이미징 레이더</th></tr>
+          <tr><td>해상도(물체 형태 인식)</td><td>◎ 최상</td><td>× 덩어리만</td><td>◎ 최상</td><td style="background:#e2f0f1;color:#0a4046"><b>○ 상(저해상 사진급)</b></td></tr>
+          <tr><td>악천후(비·눈·안개)</td><td>× 약함</td><td>◎ 강함</td><td>△ 취약</td><td style="background:#e2f0f1;color:#0a4046"><b>◎ 강함</b></td></tr>
+          <tr><td>야간·역광</td><td>× 약함</td><td>◎ 무관</td><td>◎ 무관</td><td style="background:#e2f0f1;color:#0a4046"><b>◎ 무관</b></td></tr>
+          <tr><td>속도 직접 측정</td><td>× 불가</td><td>◎ 도플러</td><td>△ 간접(FMCW 제외)</td><td style="background:#e2f0f1;color:#0a4046"><b>◎ 도플러</b></td></tr>
+          <tr><td>거리</td><td>△ 간접</td><td>○ 200m+</td><td>○ 250m+</td><td style="background:#e2f0f1;color:#0a4046"><b>○ 300m+</b></td></tr>
+          <tr><td>대당 원가(대략)</td><td class="num">$30~100</td><td class="num">$40~100</td><td class="num">$200~1,000+</td><td style="background:#e2f0f1;color:#0a4046" class="num"><b>$100~200 목표대</b></td></tr>
+          <caption>표 3(그림 5). ◎ 강함 / ○ 양호 / △ 제한 / × 취약. 원가는 업계 통용 범위(라이다 $200은 Hesai ATX 공개가 기준, 이미징 레이더 가격대는 “라이다 대비 수분의 1” 포지셔닝의 업계 서술 기반 추정). 핵심: 이미징 레이더는 라이다의 “형태 인식”과 레이더의 “전천후·속도”를 한 몸에 담는 유일한 조합이다.</caption>
+        </table></div>
+      </div>
+    </figure>
+
+    <h3>가치사슬 — Arbe는 어디에 서 있나</h3>
+    <figure>
+      <div class="fig-box">
+        <div class="fig-title">그림 6. 자동차 레이더 가치사슬과 Arbe의 위치(★)</div>
+        <svg viewBox="0 0 980 250" role="img" aria-label="가치사슬 도식">
+          <defs><marker id="arw3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L8,4.5 L0,9 z" fill="#41586a"/></marker></defs>
+          <g font-family="Noto Sans KR" font-size="12" text-anchor="middle">
+            <rect x="20" y="60" width="150" height="86" rx="10" fill="#ffffff" stroke="#ccd8da"/>
+            <text x="95" y="88" fill="#13293a" font-weight="700">파운드리·소재</text>
+            <text x="95" y="110" fill="#41586a" font-size="11">GlobalFoundries</text>
+            <text x="95" y="128" fill="#41586a" font-size="11">(22FDX 위탁생산)</text>
+            <line x1="170" y1="103" x2="205" y2="103" stroke="#41586a" stroke-width="2" marker-end="url(#arw3)"/>
+            <rect x="210" y="46" width="180" height="114" rx="10" fill="#0e2233" stroke="#0e7c86" stroke-width="2.5"/>
+            <text x="300" y="76" fill="#ffffff" font-weight="800" font-size="13">★ 칩셋 설계</text>
+            <text x="300" y="98" fill="#cfe2ea" font-size="11">ARBE · TI · NXP · 인피니언</text>
+            <text x="300" y="116" fill="#cfe2ea" font-size="11">Uhnder · Calterah(中) ·</text>
+            <text x="300" y="134" fill="#cfe2ea" font-size="11">Mobileye(내재화)</text>
+            <text x="300" y="152" fill="#7fd0d8" font-size="10.5">부가가치·마진 최상 구간</text>
+            <line x1="390" y1="103" x2="425" y2="103" stroke="#41586a" stroke-width="2" marker-end="url(#arw3)"/>
+            <rect x="430" y="46" width="180" height="114" rx="10" fill="#ffffff" stroke="#ccd8da"/>
+            <text x="520" y="76" fill="#13293a" font-weight="700">티어1(레이더 완제품)</text>
+            <text x="520" y="98" fill="#41586a" font-size="11">보쉬·콘티넨탈·ZF·덴소</text>
+            <text x="520" y="116" fill="#41586a" font-size="11">HiRain·Weifu·Desay(中)</text>
+            <text x="520" y="134" fill="#41586a" font-size="11">Sensrad(비차량) 등</text>
+            <text x="520" y="152" fill="#0a5a62" font-size="10.5">☆ Arbe '26 직판으로 부분 진입</text>
+            <line x1="610" y1="103" x2="645" y2="103" stroke="#41586a" stroke-width="2" marker-end="url(#arw3)"/>
+            <rect x="650" y="46" width="150" height="114" rx="10" fill="#ffffff" stroke="#ccd8da"/>
+            <text x="725" y="76" fill="#13293a" font-weight="700">OEM·플랫폼</text>
+            <text x="725" y="98" fill="#41586a" font-size="11">완성차 · 로보택시</text>
+            <text x="725" y="116" fill="#41586a" font-size="11">NVIDIA DRIVE</text>
+            <text x="725" y="134" fill="#41586a" font-size="11">(레퍼런스 플랫폼)</text>
+            <line x1="800" y1="103" x2="835" y2="103" stroke="#41586a" stroke-width="2" marker-end="url(#arw3)"/>
+            <rect x="840" y="60" width="120" height="86" rx="10" fill="#ffffff" stroke="#ccd8da"/>
+            <text x="900" y="92" fill="#13293a" font-weight="700">최종 수요</text>
+            <text x="900" y="114" fill="#41586a" font-size="11">운전자·플릿</text>
+            <text x="900" y="132" fill="#41586a" font-size="11">방산·인프라</text>
+          </g>
+        </svg>
+        <figcaption>한 줄 결론: <b>“Arbe는 마진이 가장 높은 ‘설계’ 칸의 도전자이며, 2026년부터 티어1 칸으로도 한 발을 걸쳤다.”</b> 차별화 지점: 기존 칩 강자(TI·NXP)는 범용 MMIC를 팔고 티어1이 4개를 이어붙여 192채널을 만들지만, Arbe는 처음부터 2,304채널용 전용 세트를 판다 — “부품 vs 완결 아키텍처”의 차이. 출처: 각사 공시·업계 리포트 종합.</figcaption>
+      </div>
+    </figure>
+
+    <h3>시장 규모(TAM) — 층을 나눠서 보기</h3>
+    <p>시장 조사기관마다 “4D 이미징 레이더”의 정의가 달라 숫자가 크게 갈리므로, 층위를 나눠 읽어야 한다. <strong>좁은 정의(자동차 중심 순수 4D 이미징 레이더)</strong>로 MarketsandMarkets는 2025년 $3.9억 → 2030년 $12.1억(연 +25.2%)을 제시한다. <strong>넓은 정의(방산·헬스케어·산업 포함)</strong>로 The Business Research Company 계열 집계는 2025년 $27.5억 → 2030년 $51억(연 +13%)이다. 상위 시장인 <strong>전체 차량용 레이더</strong>는 2033년 $435억까지 성장(연 +25%)이 전망되는 검증된 대형 시장이며, 이미징 레이더는 그 안에서 “고급형이 표준형을 잠식”하는 침투 스토리다. Arbe의 성공 시나리오(2035년 매출 $3.5억)는 좁은 정의 시장의 리더 점유율, 넓은 정의 시장의 한 자릿수 점유율에 해당해 TAM 관점의 무리는 없다 — 문제는 시장 크기가 아니라 <em>도달 시점</em>이다.</p>
+
+    <figure>
+      <div class="fig-box">
+        <div class="fig-title">그림 7. TAM 계층 깔때기 — 연 9천만 대 신차에서 Arbe 매출까지</div>
+        <svg viewBox="0 0 980 300" role="img" aria-label="TAM 깔때기">
+          <g font-family="Noto Sans KR" font-size="12.5">
+            <polygon points="60,30 920,30 860,86 120,86" fill="#dfe9ea" stroke="#ccd8da"/>
+            <text x="490" y="64" text-anchor="middle" fill="#13293a"><tspan font-weight="700">글로벌 신차 판매 연 ~9,000만 대</tspan> · 중국만 3,440만 대(2025)</text>
+            <polygon points="120,92 860,92 800,148 180,148" fill="#c7dee0" stroke="#b3d0d3"/>
+            <text x="490" y="126" text-anchor="middle" fill="#0f3d43"><tspan font-weight="700">차량용 레이더 시장</tspan> · 2033E $435억(연 +25%)</text>
+            <polygon points="180,154 800,154 740,210 240,210" fill="#8ec4c9" stroke="#74b2b8"/>
+            <text x="490" y="188" text-anchor="middle" fill="#083338"><tspan font-weight="700">4D 이미징 레이더(넓은 정의)</tspan> · '25 $27.5억 → '30 $51억</text>
+            <polygon points="240,216 740,216 690,262 290,262" fill="#0e7c86"/>
+            <text x="490" y="245" text-anchor="middle" fill="#ffffff"><tspan font-weight="700">좁은 정의(車 중심)</tspan> · '25 $3.9억 → '30 $12.1억(+25%/년)</text>
+            <rect x="392" y="270" width="196" height="26" rx="13" fill="#13293a"/>
+            <text x="490" y="288" text-anchor="middle" fill="#ffffff" font-family="IBM Plex Mono" font-size="11.5">ARBE '25 매출 $1.0M → 성공시 '35 $350M</text>
+          </g>
+        </svg>
+        <figcaption>한 줄 결론: <b>“시장은 충분히 크고 빠르게 큰다 — 성공 시나리오조차 시장의 소수 지분만 요구한다.”</b> 출처: MarketsandMarkets(2025.7), ResearchAndMarkets/TBRC(2026.1), 시장 통용 레이더 전망치, 회사 공시(중국 판매대수).</figcaption>
+      </div>
+    </figure>
+
+    <h3>산업의 흐름 — 2026년의 네 가지 지각변동</h3>
+    <p><strong>① 서구 L3의 후퇴, 그러나 이유가 중요하다.</strong> 2026년 들어 BMW는 7시리즈의 L3 ‘퍼스널 파일럿’을 단종했고(수요 부족·고가 라이다·60km/h 제한), 메르세데스도 S클래스 부분변경에서 L3 드라이브 파일럿을 내리고 L2++로 갈아탔다 — 라이다 공급사 루미나의 파산(2025.12 챕터11)이 방아쇠 중 하나였다. 표면적으론 Arbe에 악재(서구 OEM 지갑이 닫힘)지만, 후퇴의 <em>원인</em>이 “센서가 너무 비싸고 성능 대비 쓸모가 좁아서”라는 점은 “라이다보다 싸고 전천후인 고해상 레이더”라는 Arbe 명제를 오히려 강화한다. 메르세데스·BMW 모두 “고속도로 속도의 차세대 아이즈오프”로 재도전을 공언했고, 그 차세대 센서 스택 입찰이 Arbe가 노리는 진짜 시장이다. <strong>② 중국의 질주.</strong> 중국은 L3 시범 승인(창안·BAIC 등)과 로보택시 확산이 세계에서 가장 빠르고, HiRain 같은 로컬 티어1이 서구보다 2~3년 짧은 개발 주기로 움직인다. Arbe가 2026년 전략의 축을 중국으로 옮긴 배경이다. <strong>③ 로보택시의 상업화 실증.</strong> Waymo는 누적 1,400만 회 이상 완전무인 운행·1.27억 무인 마일을 넘겼고 바이두 아폴로고는 스위스 L4 허가까지 받았다 — “L4는 온다”는 명제가 가설에서 사실로 바뀌며, 대당 센서 예산이 큰 L4 차량이 이미징 레이더의 첫 볼륨 시장이 되고 있다. <strong>④ Physical AI·방산.</strong> 로봇·무인 중장비·경계보안·군용 무인차량(UGV)이 “GPS가 끊기고 카메라가 안 보이는 환경에서도 작동하는 눈”을 찾으면서, 자동차 인증까지 마친 이미징 레이더가 전용(轉用)되는 흐름이 2025~26년 급부상했다(Forterra 미 국방부 프로그램, Ouster의 대드론·광산 사례 등 업계 공통 현상).</p>
+
+    <div class="callout co-warn"><b>산업 리스크의 정직한 명기:</b> 이미징 레이더가 이긴다는 보장은 없다. 테슬라는 카메라-온리로 로보택시를 밀고, 중국 라이다(Hesai)는 $200 가격으로 “라이다가 충분히 싸지는” 반대 시나리오를 실증 중이며(분기 35만 대 출하·흑자), Mobileye는 이미징 레이더를 내재화해 외부 조달 자체를 없애려 한다. 센서 스택의 최종 구성은 아직 열린 문제다.</div>
+  </div>
+</section>
+
+<!-- ============================================================ 6. 경제적 해자 -->
+<section id="s6" class="night">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 06 · Moat Analysis</div>
+    <h2>경쟁 우위 분석 — 해자는 “있는데 아직 물이 안 찼다”</h2>
+
+    <p class="lead">방법론의 정석대로라면 NOPAT 마진과 투자자본 회전율로 차별화/원가우위를 판별해야 하지만, 매출 $1M·이익 음(−)인 회사엔 그 자가 없다. 대신 <strong>“해자의 설계도”가 존재하는가</strong>와 <strong>“완공 확률”</strong>을 따로 평가한다. 결론부터: 설계도는 차별화형(성능 격차)으로 뚜렷하나, 물(양산 매출)이 차기 전까지는 해자가 방어력을 발휘하지 못한다.</p>
+
+    <h3>포터 5 Forces — 도입 단계 기업의 관점에서</h3>
+    <div class="tbl-scroll"><table class="tbl">
+      <tr><th>힘</th><th>강도</th><th>평가</th></tr>
+      <tr><td><b>기존 경쟁 강도</b></td><td><span class="badge bd-neg">높음</span></td><td>칩 레벨: TI·NXP·인피니언(캐스케이드 진영), Uhnder(디지털 DCM), Mobileye(내재화), Calterah(中 저가). 시스템 레벨: 콘티넨탈 ARS540, 보쉬, ZF, 화웨이. 다만 “단일 레이더 2,304채널”이라는 스펙 자체에서는 경쟁자가 아직 없다 — 경쟁은 “그 스펙이 필요하냐”를 둘러싸고 벌어진다.</td></tr>
+      <tr><td><b>신규 진입 위협</b></td><td><span class="badge bd-warn">중간</span></td><td>진입장벽 자체는 높다(전용 프로세서 설계 수년+수억 달러, 차량 인증 2~3년, 특허). 그러나 자금력 있는 반도체 대기업이 마음먹으면 넘을 수 있는 벽이며, 중국 정부 지원을 받는 로컬 칩사들이 잠재 진입자다.</td></tr>
+      <tr><td><b>구매자 교섭력</b></td><td><span class="badge bd-neg">매우 높음</span></td><td>고객(OEM·티어1)은 거대하고 소수이며, Arbe는 대체 불가능한 매출원이 아직 없다. 가격·조건 협상력이 구조적으로 열위 — 2025년 유럽 OEM 프로그램이 미끄러진 것이 그 실증이다.</td></tr>
+      <tr><td><b>공급자 교섭력</b></td><td><span class="badge bd-warn">중간</span></td><td>GlobalFoundries 단일 파운드리 의존(22FDX는 GF 고유 공정이라 전환비용 큼). 다만 차량 반도체 수급은 2021~22 대란 이후 완화 상태.</td></tr>
+      <tr><td><b>대체재 위협</b></td><td><span class="badge bd-neg">높음</span></td><td>세 방향의 협공: ① 라이다 가격 붕괴(Hesai $200), ② 카메라+AI 진영(테슬라)의 “센서 최소주의”, ③ “192채널이면 충분하다”는 캐스케이드 진영의 충분주의. Arbe의 반박은 “아이즈오프(운전자 무책임) 등급에선 전천후 중복성이 법적으로 필수이며 192채널로는 정지물체·소물체 구분이 부족하다”는 것 — L3 후퇴가 보여주듯 이 논쟁의 승부는 아직 안 났다.</td></tr>
+      <caption style="color:#9db8c6">표 4. 5 Forces 요약. 종합: 산업 매력도는 “미래 크고 현재 가혹”. 도입 단계 기업에게 가장 무거운 힘은 구매자 교섭력이다.</caption>
+    </table></div>
+
+    <h3>해자의 원천 — 무엇이 진짜이고 무엇이 희망인가</h3>
+    <div class="stats">
+      <div class="stat dark"><div class="k">① 기술 격차 (실재)</div><div class="v">12×</div><div class="s">가상채널 2,304 vs 캐스케이드 192. 제3자(IDTechEx·특허분석)도 인정하는 검증된 격차. 사이드로브·오탐 억제는 아키텍처 태생적 이점.</div></div>
+      <div class="stat dark"><div class="k">② 전환비용 (조건부)</div><div class="v">5~7년</div><div class="s">차량 디자인윈은 차종 수명 동안 잠김. 단, “획득 후” 생기는 해자라 현재는 HiRain L4 1건만 잠겼다.</div></div>
+      <div class="stat dark"><div class="k">③ 생태계 (강화 중)</div><div class="v">NVIDIA</div><div class="s">DRIVE Hyperion 통합 = 유통·검증 마찰 급감. 비독점이지만 스타트업에겐 희소한 신뢰 배지.</div></div>
+      <div class="stat dark"><div class="k">④ 특허·노하우 (실재)</div><div class="v">집중형 IP</div><div class="s">고밀도 MIMO·실시간 처리·간섭완화에 특화(Knowmade 2025 분류). 수는 대기업보다 적지만 급소에 밀집.</div></div>
+      <div class="stat dark"><div class="k">⑤ 원가 포지션 (설계상)</div><div class="v">채널당 최저</div><div class="s">22FDX 단일세트 설계로 “채널당 원가 업계 최저 + 경쟁사보다 낮은 가격에 최다 채널”(CEO, 2026.5) 주장. 양산 전이라 재무제표로는 미검증.</div></div>
+      <div class="stat dark"><div class="k">⑥ 규모·브랜드 (부재)</div><div class="v">—</div><div class="s">양산 실적·차량 탑재 이력 없음. 보쉬·콘티가 가진 “수억 대 무사고 납품” 신뢰는 아직 없다 — 최대 약점.</div></div>
+    </div>
+
+    <p><strong>차별화 vs 원가우위 판별:</strong> 전략의 성격은 명백히 <em>차별화 우선</em>(성능 프리미엄)이며, 동시에 “같은 성능을 라이다·캐스케이드보다 싸게”라는 원가 논리를 병행하는 하이브리드다. 방법론의 실증(10년 상위 ROIC 유지 기업의 지배적 원천은 차별화, NOPAT 마진 평균의 2.8배)에 비추면 올바른 방향의 설계다. 성공 시나리오의 정상 마진 가정(매출총이익률 55%, EBITA 마진 ~25~33%)은 이 차별화가 가격결정력으로 실현된다는 가정과 동치이며, 9장의 DCF에 그대로 반영했다.</p>
+
+    <h3>해자 지속성 — 만약 성공한다면 얼마나 갈까</h3>
+    <p>반도체·반도체장비 산업그룹의 역사적 페이드 비율은 0.25로, 초과수익이 매년 25%씩 평균으로 회귀하는(반감기 약 2.4년) 경쟁 격한 동네다. 다만 차량용 반도체는 예외적으로 점착적이다 — 디자인윈 잠김, 안전 인증 재취득 비용, 티어1·OEM의 보수성이 페이드를 늦춘다(Mobileye가 EyeQ로 15년 넘게 지배한 전례). 본 분석은 보수적으로 산업 표준 0.25를 그대로 쓰되, 민감도에서 0.15(차량 점착성 반영)~0.35(중국 저가 경쟁 심화)를 함께 본다 — 결과적으로 이 변수는 가치에 거의 영향이 없었는데(±2% 미만), <strong>이 회사 가치의 지배 변수는 페이드(해자 수명)가 아니라 생존·성공 확률이기 때문</strong>이다. 이것이 6장의 최종 결론이다.</p>
+
+    <div class="callout co-pos" style="background:#123727;color:#cde9d6;border-color:#2c5c42"><b>왜 경쟁사가 못 따라잡는가 — 시간의 비대칭:</b> Arbe가 2,304채널 전용 아키텍처에 도달하는 데 10년·$3억이 들었다. 후발주자가 같은 길을 가면 그 시간 동안 Arbe는 양산 학습·소프트웨어(AI 후처리, 점유격자)·고객 레퍼런스를 쌓는다. 캐스케이드 진영이 채널을 4배로 늘리려면 칩 16개를 이어붙여야 해 원가·발열·동기화가 급격히 악화된다 — 즉 <b>기존 방식의 연장선으로는 Arbe 스펙에 도달하기 어렵고, 도달하려면 Arbe처럼 처음부터 다시 설계해야 한다.</b> 이것이 “기술 해자는 실재한다”고 판단하는 근거다.</div>
+  </div>
+</section>
+
+<!-- ============================================================ 7. 피어 비교 -->
+<section id="s7">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 07 · Peer Group</div>
+    <h2>피어그룹 비교 — 센서 상장사들의 생사부(生死簿)와 Arbe의 좌표</h2>
+
+    <p class="lead">이미징 레이더 순수 상장사는 사실상 Arbe뿐이라(경쟁 칩사는 대기업 사업부이거나 비상장), 투자자 관점의 실질 피어는 “자율주행 센서 상장사군(라이다 포함)”이다. 이 집단은 2025~26년에 극적으로 갈라졌다 — 파산(루미나)부터 흑자(헤사이)까지.</p>
+
+    <div class="tbl-scroll"><table class="tbl">
+      <tr><th>기업</th><th>기술</th><th>최근 매출(연환산·근사)</th><th>성장</th><th>손익/현금</th><th>2026 중반 상태 한 줄</th></tr>
+      <tr><td><b>Hesai</b> <span class="badge bd-teal">HSAI</span></td><td>라이다(中)</td><td class="num">FY25 가이드 $4.2~4.9억</td><td class="num">+50%대</td><td><span class="badge bd-pos">흑자</span></td><td>분기 35만대 출하·$200 ATX로 “라이다 가격파괴” 실증, 도요타 JV 채택 — 업계의 승자</td></tr>
+      <tr><td><b>Ouster</b> <span class="badge bd-teal">OUST</span></td><td>라이다(디지털)</td><td class="num">1Q26 $49M(+49%)</td><td class="num">+40~50%</td><td><span class="badge bd-pos">손익분기 접근 · 현금 $175M 무차입</span></td><td>차량 대신 Physical AI·인프라·방산 다변화로 탈출 — Arbe 신전략의 성공 선례</td></tr>
+      <tr><td><b>Innoviz</b> <span class="badge bd-teal">INVZ</span></td><td>라이다(이스라엘)</td><td class="num">FY26E ~$92M</td><td class="num">NRE 주도</td><td><span class="badge bd-warn">적자·ATM 희석</span></td><td>Mobileye Drive L4 공급망 편입·VW 수주. 선행 EV/매출 ~2.2배</td></tr>
+      <tr><td><b>Aeva</b> <span class="badge bd-teal">AEVA</span></td><td>FMCW 4D 라이다</td><td class="num">FY25 $18.1M → FY26 가이드 $30~36M</td><td class="num">+70~100%</td><td><span class="badge bd-neg">고강도 현금소진</span></td><td>1년 +155% 랠리, 유럽 OEM SOP는 2028 — “기대 선반영” 논쟁 중</td></tr>
+      <tr><td><b>MicroVision</b> <span class="badge bd-teal">MVIS</span></td><td>라이다</td><td class="num">미미</td><td class="num">—</td><td><span class="badge bd-neg">적자</span></td><td>루미나 자산을 $33M에 인수(2026.1), 캐터필러 광산 계약 — 부실자산 통합 플레이</td></tr>
+      <tr><td><b>Luminar</b></td><td>라이다(1550nm)</td><td class="num">—</td><td class="num">—</td><td><span class="badge bd-neg">챕터11(2025.12)</span></td><td>볼보 분쟁·부채로 파산. 한때 시총 $12B였던 SPAC 센서주의 최후 — 이 섹터의 베이스레이트</td></tr>
+      <tr><td><b>Mobileye</b> <span class="badge bd-teal">MBLY</span></td><td>비전+이미징레이더(내재화)</td><td class="num">$1B대 후반</td><td class="num">한 자릿수</td><td><span class="badge bd-pos">흑자(조정)</span></td><td>자체 FMCW 라이다는 2025년 중단, 이미징 레이더에 올인 — Arbe 명제의 최강 검증자이자 경쟁자</td></tr>
+      <tr class="hl"><td><b>Arbe</b> <span class="badge bd-ink">ARBE</span></td><td><b>4D 이미징 레이더 칩</b></td><td class="num">FY25 $1.0M → FY26 가이드 $4~6M</td><td class="num">+4~6×</td><td><span class="badge bd-neg">적자 · 현금 $53.6M(3말)</span></td><td>기술 스펙 최상단 · 매출 최하단 — 갭이 가장 큰 종목</td></tr>
+      <caption>표 5. 센서 상장사 생사부(2026 중반). 매출·손익은 각사 공시·실적발표 기반(피어 시가총액은 변동성이 커 검증 시점 차이로 병기 생략 — 8장 밸류에이션 비교에서 배수만 사용). 출처: 각사 실적발표, optics.org(2025.8), 24/7WallSt(2026.6.30), Zacks(2026.4), im-mining(2026.6), Seeking Alpha(2025.11).</caption>
+    </table></div>
+
+    <figure>
+      <div class="fig-box">
+        <div class="fig-title">그림 8. 기술 스펙 × 상용화 단계 포지셔닝 — Arbe의 “오른쪽 아래 고립”</div>
+        <svg viewBox="0 0 960 430" role="img" aria-label="포지셔닝 산점도">
+          <!-- axes -->
+          <line x1="90" y1="370" x2="920" y2="370" stroke="#41586a" stroke-width="1.5"/>
+          <line x1="90" y1="40" x2="90" y2="370" stroke="#41586a" stroke-width="1.5"/>
+          <g class="axis" font-family="IBM Plex Mono">
+            <text x="505" y="408" text-anchor="middle" fill="#41586a">→ 가상채널 수 (해상도의 원천, 로그축)</text>
+            <text x="40" y="205" transform="rotate(-90 40 205)" text-anchor="middle" fill="#41586a">→ 차량 양산 상용화 단계</text>
+            <text x="150" y="388" text-anchor="middle">12</text><text x="380" y="388" text-anchor="middle">192</text><text x="560" y="388" text-anchor="middle">288</text><text x="820" y="388" text-anchor="middle">2,304</text>
+            <text x="84" y="345" text-anchor="end">개발</text><text x="84" y="245" text-anchor="end">디자인윈</text><text x="84" y="145" text-anchor="end">양산 초기</text><text x="84" y="60" text-anchor="end">대량 양산</text>
+          </g>
+          <g stroke="#e4ebec"><line x1="90" y1="245" x2="920" y2="245"/><line x1="90" y1="145" x2="920" y2="145"/><line x1="90" y1="60" x2="920" y2="60"/></g>
+          <!-- points -->
+          <g font-family="Noto Sans KR" font-size="11.5">
+            <circle cx="150" cy="60" r="13" fill="#8fa9b8"/><text x="150" y="42" text-anchor="middle" fill="#41586a">기존 레이더(보쉬·콘티 표준형) — 연 1억+ 대</text>
+            <circle cx="380" cy="90" r="12" fill="#5b7a8c"/><text x="380" y="118" text-anchor="middle" fill="#41586a">콘티넨탈 ARS540(192ch) — BMW 등 양산</text>
+            <circle cx="380" cy="200" r="10" fill="#5b7a8c"/><text x="380" y="228" text-anchor="middle" fill="#41586a">TI·NXP 캐스케이드 레퍼런스</text>
+            <circle cx="330" cy="300" r="10" fill="#a86d3f"/><text x="330" y="328" text-anchor="middle" fill="#7a4a22">Uhnder S80/S81(디지털 DCM) — HASCO 협력</text>
+            <circle cx="640" cy="330" r="10" fill="#7a5aa0"/><text x="640" y="312" text-anchor="middle" fill="#5b3f80">Mobileye 내재 이미징레이더(채널 비공개)</text>
+            <circle cx="560" cy="255" r="11" fill="#0e7c86" opacity=".65"/><text x="560" y="235" text-anchor="middle" fill="#0a5a62">HiRain 24×12(=288, Arbe 칩) — 中 볼륨용 개발</text>
+            <circle cx="820" cy="160" r="16" fill="#0e7c86"/><text x="820" y="132" text-anchor="middle" fill="#0a5a62" font-weight="700">ARBE·HiRain LRR610 (2,304ch)</text>
+            <text x="820" y="190" text-anchor="middle" fill="#0a5a62" font-size="10.5">中 L4 SOP 2026.12 → 양산 초기 진입</text>
+          </g>
+          <rect x="640" y="46" width="270" height="52" rx="8" fill="#fbf3e2" stroke="#e6d3a8"/>
+          <text x="775" y="68" text-anchor="middle" font-size="11" fill="#4d3300" font-family="Noto Sans KR">비어 있는 우상단 = “2,304채널 대량 양산”</text>
+          <text x="775" y="86" text-anchor="middle" font-size="11" fill="#6e4f10" font-family="Noto Sans KR">여기 먼저 도달하는 자가 표준을 가진다</text>
+        </svg>
+        <figcaption>한 줄 결론: <b>“스펙 축에서 Arbe는 혼자 오른쪽 끝에 있고, 문제는 세로축(상용화)을 얼마나 빨리 오르느냐다.”</b> 채널 수 출처: Microwave Journal·IDTechEx·MarketsandMarkets(Uhnder S81 96 MIMO)·각사 발표. Mobileye는 사양 비공개로 위치 추정. 상용화 단계는 공시된 SOP·납품 기준의 정성 배치.</figcaption>
+      </div>
+    </figure>
+
+    <p><strong>피어에서 배우는 두 개의 교훈:</strong> 첫째, <em>루미나 경로</em>(대형 OEM 한 곳에 올인 → 프로그램 축소·분쟁 → 부채 → 파산)는 Arbe가 2026년 전략 전환으로 피하려는 바로 그 길이다. Arbe는 무차입(전환사채는 에스크로 상계)이라 부채발 파산 경로는 막혀 있지만, 희석발 소멸 경로는 열려 있다. 둘째, <em>아우스터 경로</em>(자동차만 기다리지 않고 인프라·방산·로봇으로 현금을 벌며 버티기)는 Arbe 신전략의 살아 있는 성공 사례다 — 아우스터는 그 길로 분기 매출 $49M·손익분기 근처까지 왔다. Arbe의 2026년은 “루미나가 되느냐, 아우스터가 되느냐”의 갈림길 원년이라고 요약할 수 있다.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 8. 시장 내러티브 -->
+<section id="s8">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 08 · Market Narrative &amp; Flows</div>
+    <h2>시장 내러티브 및 자금 선호도 — 이 주식을 움직여온 “세 개의 이야기”</h2>
+
+    <p class="lead">ARBE의 주가는 실적이 아니라 <strong>이야기의 교체</strong>로 움직여 왔다. ① “서구 OEM이 곧 채택한다”(2021~2024), ② “NVIDIA·AI 인프라의 수혜주다”(2024.12~2025 초), ③ “중국·방산·Physical AI로 먼저 돈을 번다”(2025 말~현재). 아래 차트는 최근 1년의 그 교체 과정을 사건별로 복원한 것이다.</p>
+
+    <figure>
+      <div class="fig-box">
+        <div class="fig-title">그림 9. 최근 1년 주가와 사건 지도 — “유럽의 실망을 중국·NVIDIA가 절반만 메꾼 해”</div>
+        <svg viewBox="0 0 980 500" role="img" aria-label="주가 이벤트 차트">
+          <!-- grid -->
+          <g font-family="IBM Plex Mono" font-size="11" fill="#5b6b74">
+            <line x1="70" y1="400" x2="930" y2="400" stroke="#ccd8da"/><text x="60" y="404" text-anchor="end">$0</text>
+            <line x1="70" y1="280" x2="930" y2="280" stroke="#e4ebec"/><text x="60" y="284" text-anchor="end">$1</text>
+            <line x1="70" y1="160" x2="930" y2="160" stroke="#e4ebec"/><text x="60" y="164" text-anchor="end">$2</text>
+            <line x1="70" y1="40" x2="930" y2="40" stroke="#e4ebec"/><text x="60" y="44" text-anchor="end">$3</text>
+            <text x="70" y="424">'25.7</text><text x="210" y="424">'25.9</text><text x="350" y="424">'25.11</text><text x="490" y="424">'26.1</text><text x="630" y="424">'26.3</text><text x="770" y="424">'26.5</text><text x="898" y="424">'26.7</text>
+          </g>
+          <!-- 52w high band -->
+          <line x1="70" y1="54.4" x2="930" y2="54.4" stroke="#b3312c" stroke-dasharray="6 4"/>
+          <text x="925" y="48" text-anchor="end" font-family="IBM Plex Mono" font-size="10.5" fill="#b3312c">52주 최고 $2.88 ('25 하반기)</text>
+          <line x1="70" y1="333.8" x2="930" y2="333.8" stroke="#8fa9b8" stroke-dasharray="6 4"/>
+          <text x="925" y="348" text-anchor="end" font-family="IBM Plex Mono" font-size="10.5" fill="#5b6b74">사상최저 $0.552 ('26.3.30)</text>
+          <!-- dashed schematic Jul-Dec 2025 -->
+          <path d="M70,203 C 150,120 220,58 265,58 C 330,58 380,180 436,274" fill="none" stroke="#8fa9b8" stroke-width="2.5" stroke-dasharray="7 5"/>
+          <text x="150" y="120" font-family="Noto Sans KR" font-size="10.5" fill="#5b6b74">('25.7~12 구간: 개략 경로 — 문서화된 일별 종가 부족)</text>
+          <!-- solid documented path Dec8 → Jul2 -->
+          <polyline points="436,274 485,276 487,264 508,255 550,232 622,280 696,334 721,322 763,308 845,264 882,302 891,315 910,300 915,321" fill="none" stroke="#0e7c86" stroke-width="3"/>
+          <g fill="#0e7c86"><circle cx="436" cy="274" r="4"/><circle cx="485" cy="276" r="4"/><circle cx="487" cy="264" r="4"/><circle cx="508" cy="255" r="4"/><circle cx="550" cy="232" r="4"/><circle cx="622" cy="280" r="4"/><circle cx="696" cy="334" r="5" fill="#b3312c"/><circle cx="721" cy="322" r="4"/><circle cx="763" cy="308" r="4"/><circle cx="845" cy="264" r="4"/><circle cx="882" cy="302" r="4"/><circle cx="891" cy="315" r="4"/><circle cx="910" cy="300" r="4"/><circle cx="915" cy="321" r="5" fill="#13293a"/></g>
+          <!-- event flags -->
+          <g font-family="IBM Plex Mono" font-size="10.5" font-weight="600">
+            <g><line x1="265" y1="58" x2="265" y2="90" stroke="#41586a"/><rect x="248" y="90" width="34" height="18" rx="9" fill="#13293a"/><text x="265" y="103" text-anchor="middle" fill="#fff">①↑</text></g>
+            <g><line x1="350" y1="200" x2="350" y2="170" stroke="#41586a"/><rect x="333" y="152" width="34" height="18" rx="9" fill="#b3312c"/><text x="350" y="165" text-anchor="middle" fill="#fff">②↓</text></g>
+            <g><line x1="436" y1="274" x2="436" y2="238" stroke="#41586a"/><rect x="419" y="220" width="34" height="18" rx="9" fill="#b3312c"/><text x="436" y="233" text-anchor="middle" fill="#fff">③↓</text></g>
+            <g><line x1="486" y1="270" x2="486" y2="322" stroke="#41586a"/><rect x="469" y="322" width="34" height="18" rx="9" fill="#1d7a46"/><text x="486" y="335" text-anchor="middle" fill="#fff">④↑</text></g>
+            <g><line x1="508" y1="255" x2="508" y2="205" stroke="#41586a"/><rect x="491" y="187" width="34" height="18" rx="9" fill="#1d7a46"/><text x="508" y="200" text-anchor="middle" fill="#fff">⑤↑</text></g>
+            <g><line x1="550" y1="232" x2="550" y2="182" stroke="#41586a"/><rect x="533" y="164" width="34" height="18" rx="9" fill="#8a5a00"/><text x="550" y="177" text-anchor="middle" fill="#fff">⑥$</text></g>
+            <g><line x1="622" y1="280" x2="622" y2="228" stroke="#41586a"/><rect x="605" y="210" width="34" height="18" rx="9" fill="#b3312c"/><text x="622" y="223" text-anchor="middle" fill="#fff">⑦↓</text></g>
+            <g><line x1="721" y1="322" x2="721" y2="368" stroke="#41586a"/><rect x="704" y="368" width="34" height="18" rx="9" fill="#b3312c"/><text x="721" y="381" text-anchor="middle" fill="#fff">⑧!</text></g>
+            <g><line x1="845" y1="264" x2="845" y2="214" stroke="#41586a"/><rect x="828" y="196" width="34" height="18" rx="9" fill="#1d7a46"/><text x="845" y="209" text-anchor="middle" fill="#fff">⑨↑</text></g>
+            <g><line x1="891" y1="315" x2="891" y2="360" stroke="#41586a"/><rect x="874" y="360" width="34" height="18" rx="9" fill="#8a5a00"/><text x="891" y="373" text-anchor="middle" fill="#fff">⑩</text></g>
+          </g>
+          <!-- current label -->
+          <text x="915" y="345" text-anchor="end" font-family="IBM Plex Mono" font-size="11" font-weight="700" fill="#13293a">7/1 $0.83 → 7/2 ~$0.66</text>
+        </svg>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:4px 18px;font-size:.84rem;color:#33475a;padding:6px 8px 2px;line-height:1.7">
+          <div><b>①</b> '25 하반기 방산·수상 랠리(Sensrad 대량공급, 기술상 2건) — 52주고점 $2.88</div>
+          <div><b>②</b> 11.17 3Q 매출 $0.25M, 추정치 60% 미달 ↓</div>
+          <div><b>③</b> 12.8 “유럽 OEM 수주, 가까운 시일 내 기대 안 함” 공시 + CB 조건 연장 ↓</div>
+          <div><b>④</b> 12.29~30 中 국유 OEM L4 채택(SOP '26.12) · CB $15.7M 증액 ↑(+9.7%)</div>
+          <div><b>⑤</b> '26.1.5~8 CES: NVIDIA 결합 플랫폼 시연 ↑(+7.6%)</div>
+          <div><b>⑥</b> 1.26~27 주당 $1.40 · 1,322.5만 주 · $18.5M 증자(희석)</div>
+          <div><b>⑦</b> 2.26 FY25 결산: 가이던스 $4~6M(컨센 $8.5M 하회) + CEO 교체 발표 ↓, Canaccord PT $1.75→$1.25</div>
+          <div><b>⑧</b> 3.30 사상최저 $0.552 → 4.13 나스닥 $1 미달 통지(10.12 시한)</div>
+          <div><b>⑨</b> 5.28 1Q EPS 비트·시스템 판매 개시 → 6.2 $1.13, Canaccord PT $1.25→$1.50 ↑</div>
+          <div><b>⑩</b> 6.22 CFO 교체 예고(8월) · 6월 말~7월 초 무뉴스 되밀림</div>
+        </div>
+        <figcaption>한 줄 결론: <b>“나쁜 소식(유럽·가이던스·상장요건)은 즉각 반영되고, 좋은 소식(중국·NVIDIA·방산)은 반등을 만들지만 유지가 안 된다 — 시장은 ‘증거(매출)’를 요구하는 국면이다.”</b> '25.7~12 구간은 문서화된 일별 종가가 부족해 개략 경로(점선)로 표시했고, 실선 구간의 좌표는 각 뉴스·시세 스냅숏(StockTitan·Investing·Morningstar·Public·stockanalysis)에 기록된 당일 가격이다. 참고 맥락: 2021.11 사상최고 $14.79 → 현재 −94%.</figcaption>
+      </div>
+    </figure>
+
+    <h3>지금 시장이 붙인 “스토리 라벨”과 자금의 성격</h3>
+    <p>기관 커버리지는 3곳(Canaccord·Roth·WestPark)으로 얇고, 목표가는 $1.50/≈2.00/3.50 — 셋 다 매수의견이지만 최저 목표가($1.50)조차 현재가의 2배라는 사실은 “셀사이드조차 확신 없이 옵션으로 본다”는 뜻으로 읽는 게 정확하다. 수급의 주체는 ① 특수상황 펀드 AWM(Special Situations Funds — 2023·2025·2026 라운드에 반복 참여한 최대 기관주주군, 즉 ‘딥밸류+옵션’ 성격의 스마트머니), ② NVIDIA·자율주행 테마를 좇는 개인(2024.12, 2026.1 CES 랠리의 주역, 옵션 시장에서도 간헐적 이상 거래 포착 — TipRanks 2026.4·6), ③ 공매도(2026년 4월 공매도 잔고 +46.8% 급증 — 하락 베팅도 두텁다)다. 촉매 일정은 명확하다: <strong>8월 12일 2분기 실적(가이던스 궤도 확인), 10월 12일 나스닥 $1 회복 시한(미달 시 180일 연장 신청 또는 액면병합), 12월 HiRain SOP, 12월 31일 전환사채 마일스톤 시한.</strong></p>
+
+    <div class="callout co-pos"><b>재평가(리레이팅) 트리거의 우선순위 — 무엇이 이 주식을 “사고 싶게” 만드는가:</b> ① 분기 매출이 $1.5~2M대로 올라서며 FY26 가이던스가 숫자로 증명되는 순간(신뢰 회복의 1차 관문), ② 서구 OEM 데이터수집→선정 절차가 공식 디자인윈으로 전환되는 공시(전환사채 에스크로 $24.8M 해제 조건과 직결 — 단번에 현금+신뢰 동시 회복), ③ 방산 프로그램의 다년 계약화(Forterra 후속·홈랜드시큐리티), ④ NVIDIA Hyperion 채택 OEM의 Arbe 옵션 선택 1호. 이 중 하나만 현실화돼도 “성공확률 26~33%”라는 현재 가격표는 재계산될 것이다.</div>
+    <div class="callout co-neg"><b>내러티브의 약한 고리(펀더멘털 검증):</b> “중국 L4 수천 대(2027)”는 대당 칩셋 매출로 환산하면 수백만 달러 규모의 시작점이지 회사를 구하는 규모가 아니다(수천 대 × 대당 칩 수백 달러 = 한 자릿수 $M). 이 딜의 진짜 가치는 매출이 아니라 <b>“세계 최초 2,304채널 양산 레퍼런스”</b>라는 증명서다 — 즉 내러티브는 맞지만, 숫자 기대는 절제해야 한다.</div>
+  </div>
+</section>
+
+<!-- ============================================================ 9. 재무·DCF -->
+<section id="s9" class="night">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 09 · Financials &amp; DCF</div>
+    <h2>재무 분석 및 DCF 모델 — 도입 단계 판별, 현금 시계, 그리고 “성공 시나리오” 전시 23</h2>
+
+    <h3>생애주기 판별: 교과서적 도입(Introduction) 단계</h3>
+    <p>현금흐름표 부호로 판별하면 명확하다 — 2025년 영업 <span class="num">−$38.1M</span>(유출), 투자 <span class="num">−$24.7M</span>(유출·대부분 예금 이동, 실질 설비투자 $0.3M), 재무 <span class="num">+$53.4M</span>(유입: 증자+CB 전환). <strong>영업(−)·투자(−)·재무(+) = 도입 단계</strong>다. 이 단계의 역사적 기저율(1971~2024, 미국 상장사)은 냉정하다: 평균 ROIC −2.9%, 3년 뒤 성장 단계로 올라서는 비율 29%, 반대로 감소 단계로 떨어지는 비율 32%, 그리고 상장기업 전체로 보면 70%가 초기 주가를 정당화하지 못했다. 즉 <em>아무 정보 없이</em> 도입 단계 기업을 찍으면 성공확률은 30% 안팎 — 뒤에서 보겠지만 현재 주가가 내재한 26~33%는 정확히 이 기저율 근처다.</p>
+
+    <figure>
+      <div class="card" style="background:#122b3d;border-color:#2b4356;color:#dce8ee">
+        <div class="fig-title" style="color:#eaf3f7">그림 10. 현금의 시계 — 태우는 속도(막대) vs 곳간(선) vs 수혈(화살표)</div>
+        <svg viewBox="0 0 960 400" role="img" aria-label="현금흐름과 현금잔고">
+          <g font-family="IBM Plex Mono" font-size="11" fill="#8fb3c4">
+            <line x1="80" y1="330" x2="920" y2="330" stroke="#3a5468"/>
+            <line x1="80" y1="60" x2="920" y2="60" stroke="#22384a"/><text x="70" y="64" text-anchor="end">+$60M</text>
+            <line x1="80" y1="150" x2="920" y2="150" stroke="#22384a"/><text x="70" y="154" text-anchor="end">+$30M</text>
+            <text x="70" y="334" text-anchor="end">0</text>
+            <line x1="80" y1="240" x2="920" y2="240" stroke="#22384a" stroke-dasharray="3 4"/>
+            <line x1="80" y1="286" x2="920" y2="286" stroke="#22384a" stroke-dasharray="3 4"/>
+          </g>
+          <!-- 축 스케일: 1M = 3px 아래(음수) ; 잔고선은 1M=4.5px 위 -->
+          <!-- OCF bars (아래로): 2023 -?, 2024 -32.8→98px, 2025 -38.1→114px, 26E -29→87 -->
+          <g>
+            <rect x="150" y="330" width="70" height="98" fill="#b3532c" opacity="0"/>
+          </g>
+          <g font-family="IBM Plex Mono" font-size="11">
+            <!-- 2024 -->
+            <rect x="180" y="330" width="56" height="66" fill="#c96a4a" transform="translate(0,0)"/>
+            <text x="208" y="352" text-anchor="middle" fill="#ffe" font-size="10">OCF</text>
+            <text x="208" y="368" text-anchor="middle" fill="#fff" font-weight="600">−32.8</text>
+            <rect x="242" y="330" width="56" height="67" fill="#8a5a76"/>
+            <text x="270" y="352" text-anchor="middle" fill="#ffe" font-size="10">AdjEBITDA</text>
+            <text x="270" y="368" text-anchor="middle" fill="#fff" font-weight="600">−33.3</text>
+            <!-- 2025 -->
+            <rect x="420" y="330" width="56" height="76" fill="#c96a4a"/>
+            <text x="448" y="352" text-anchor="middle" fill="#ffe" font-size="10">OCF</text>
+            <text x="448" y="370" text-anchor="middle" fill="#fff" font-weight="600">−38.1</text>
+            <rect x="482" y="330" width="56" height="75" fill="#8a5a76"/>
+            <text x="510" y="352" text-anchor="middle" fill="#ffe" font-size="10">AdjEBITDA</text>
+            <text x="510" y="370" text-anchor="middle" fill="#fff" font-weight="600">−37.6</text>
+            <!-- 2026E -->
+            <rect x="700" y="330" width="56" height="59" fill="#8a5a76" opacity=".85"/>
+            <text x="728" y="352" text-anchor="middle" fill="#ffe" font-size="10">AdjEBITDA</text>
+            <text x="728" y="370" text-anchor="middle" fill="#fff" font-weight="600">−28~31E</text>
+          </g>
+          <!-- cash line: 2023말 44.2 → y=330-44.2*4.5=131 ; 2024말 24.3→221 ; 2025말 44.7→129 ; 26Q1 53.6→89 ; 26말E 32→186 -->
+          <polyline points="160,131 440,221 640,129 730,89 900,186" fill="none" stroke="#7fd0d8" stroke-width="3.5"/>
+          <g fill="#7fd0d8"><circle cx="160" cy="131" r="5"/><circle cx="440" cy="221" r="5"/><circle cx="640" cy="129" r="5"/><circle cx="730" cy="89" r="5"/><circle cx="900" cy="186" r="6" stroke="#0e2233" stroke-width="2"/></g>
+          <g font-family="IBM Plex Mono" font-size="11.5" fill="#d7f0f2" font-weight="600">
+            <text x="160" y="116" text-anchor="middle">44.2</text><text x="440" y="245" text-anchor="middle">24.3</text><text x="640" y="114" text-anchor="middle">44.7</text><text x="742" y="78" text-anchor="middle">53.6</text><text x="900" y="172" text-anchor="middle">≈32E</text>
+          </g>
+          <!-- 수혈 화살표 -->
+          <g font-family="Noto Sans KR" font-size="10.5" fill="#f4d992">
+            <text x="540" y="95">↟ 수혈: '25.1 증자 $30.8M(순)+CB전환 $21.7M → '26.1 증자 $18.5M</text>
+            <text x="540" y="113" fill="#c9b06a">(CB $15.7M 추가분은 트러스티 에스크로 — 회사 현금 아님)</text>
+          </g>
+          <g font-family="IBM Plex Mono" font-size="11" fill="#8fb3c4">
+            <text x="235" y="352" transform="translate(0,68)" text-anchor="middle"> </text>
+            <text x="239" y="422" text-anchor="middle">FY2024</text><text x="479" y="422" text-anchor="middle">FY2025</text><text x="728" y="422" text-anchor="middle">FY2026E</text>
+            <text x="160" y="422" text-anchor="middle">'23말</text><text x="900" y="422" text-anchor="middle">'26말E</text>
+          </g>
+          <text x="90" y="90" font-family="Noto Sans KR" font-size="11.5" fill="#7fd0d8">— 현금+단기예금 잔고</text>
+        </svg>
+        <figcaption style="color:#9db8c6">한 줄 결론: <b style="color:#eaf3f7">“연 $30~38M을 태우고, 12~14개월마다 수혈받는 사이클 — 현재 곳간($53.6M, 3말)은 15% 비용감축 반영 시 대략 2027년 하반기까지의 산소통이다.”</b> 26말E 잔고는 가이던스 중간값 기준 추정. 별도로 에스크로 $24.8M이 있으나 전환사채 상환 담보라 자유현금이 아니다(10장 참조). 출처: 6-K 현금흐름표(2024·2025·26Q1), 가이던스.</figcaption>
+      </div>
+    </figure>
+
+    <h3>WACC와 모델 가정 — 숫자의 족보</h3>
+    <div class="stats">
+      <div class="stat dark"><div class="k">무위험이자율</div><div class="v">4.49%</div><div class="s">美 10년물, 2026-07-02 (FRED/TradingEconomics)</div></div>
+      <div class="stat dark"><div class="k">베타(조정)</div><div class="v">1.60</div><div class="s">공급자별 원시베타 1.07~3.52 산재 → 5년 기준 ≈1.9를 1로 1/3 회귀</div></div>
+      <div class="stat dark"><div class="k">ERP</div><div class="v">4.50%</div><div class="s">다모다란 내재 ERP 4.23%('26.1)~프레임워크 4.75% 절충</div></div>
+      <div class="stat teal"><div class="k">자기자본비용=WACC</div><div class="v">11.7%</div><div class="s">사실상 무차입(CB는 에스크로 상계) · 민감도 ±1%p</div></div>
+      <div class="stat dark"><div class="k">장기성장률 g</div><div class="v">2.3%</div><div class="s">10년 BEI 2.21%('26.6, FRED) 근사</div></div>
+      <div class="stat dark"><div class="k">페이드 f</div><div class="v">0.25</div><div class="s">반도체·반도체장비 산업그룹(1970~2024)</div></div>
+      <div class="stat dark"><div class="k">세율</div><div class="v">15%</div><div class="s">이스라엘 우대기술기업 체계 가정 · 대규모 이월결손 존재</div></div>
+      <div class="stat dark"><div class="k">할인 방식</div><div class="v">연중(mid-year)</div><div class="s">2026년 절반 경과 반영</div></div>
+    </div>
+
+    <h3>성공 시나리오 DCF — 전시 23 형식 (기업잉여현금흐름, $M)</h3>
+    <p>시나리오 정의: HiRain L4 양산(2027~)과 24×12 볼륨 플랫폼이 중국에서 자리 잡고, 방산·경계·오프하이웨이 시스템 매출이 아우스터식으로 성장하며, <strong>2029년 서구 OEM 1건의 SOP</strong>가 더해져 2030년 EBITA 흑자전환, 2035년 매출 $350M(좁은 정의 TAM $12억+α의 리더 점유)에 도달하는 경로다. 이는 “일이 잘 풀렸을 때”의 그림이지 기대값이 아니다 — 기대값 환산은 10장에서 확률을 곱해 수행한다.</p>
+
+    <div class="tbl-scroll"><table class="tbl">
+      <tr><th>연도</th><th class="r">2026</th><th class="r">2027</th><th class="r">2028</th><th class="r">2029</th><th class="r">2030</th><th class="r">2031</th><th class="r">2032</th><th class="r">2033</th><th class="r">2034</th><th class="r">2035</th></tr>
+      <tr><td>매출</td><td class="num r">5</td><td class="num r">18</td><td class="num r">45</td><td class="num r">90</td><td class="num r">140</td><td class="num r">190</td><td class="num r">240</td><td class="num r">285</td><td class="num r">322</td><td class="num r">350</td></tr>
+      <tr><td>매출성장 %</td><td class="num r">386</td><td class="num r">260</td><td class="num r">150</td><td class="num r">100</td><td class="num r">56</td><td class="num r">36</td><td class="num r">26</td><td class="num r">19</td><td class="num r">13</td><td class="num r">9</td></tr>
+      <tr><td>매출총이익률 %</td><td class="num r">5</td><td class="num r">25</td><td class="num r">38</td><td class="num r">45</td><td class="num r">50</td><td class="num r">52</td><td class="num r">54</td><td class="num r">55</td><td class="num r">55</td><td class="num r">55</td></tr>
+      <tr><td>EBITA</td><td class="num r">−33.8</td><td class="num r">−31.5</td><td class="num r">−22.9</td><td class="num r">−5.5</td><td class="num r">18.0</td><td class="num r">41.8</td><td class="num r">67.6</td><td class="num r">89.8</td><td class="num r">106.1</td><td class="num r">117.5</td></tr>
+      <tr><td>세율 %</td><td class="num r">0</td><td class="num r">0</td><td class="num r">0</td><td class="num r">0</td><td class="num r">15</td><td class="num r">15</td><td class="num r">15</td><td class="num r">15</td><td class="num r">15</td><td class="num r">15</td></tr>
+      <tr><td>NOPAT</td><td class="num r">−33.8</td><td class="num r">−31.5</td><td class="num r">−22.9</td><td class="num r">−5.5</td><td class="num r">15.3</td><td class="num r">35.5</td><td class="num r">57.5</td><td class="num r">76.3</td><td class="num r">90.2</td><td class="num r">99.9</td></tr>
+      <tr><td>미래 투자</td><td class="num r">0.6</td><td class="num r">1.8</td><td class="num r">4.0</td><td class="num r">7.2</td><td class="num r">9.2</td><td class="num r">10.7</td><td class="num r">12.2</td><td class="num r">13.0</td><td class="num r">13.4</td><td class="num r">13.3</td></tr>
+      <tr><td>FCF</td><td class="num r">−34.3</td><td class="num r">−33.3</td><td class="num r">−26.9</td><td class="num r">−12.7</td><td class="num r">6.1</td><td class="num r">24.8</td><td class="num r">45.3</td><td class="num r">63.2</td><td class="num r">76.8</td><td class="num r">86.6</td></tr>
+      <tr><td>FCF의 현재가치</td><td class="num r">−32.5</td><td class="num r">−28.2</td><td class="num r">−20.4</td><td class="num r">−8.6</td><td class="num r">3.7</td><td class="num r">13.5</td><td class="num r">22.1</td><td class="num r">27.6</td><td class="num r">30.0</td><td class="num r">30.3</td></tr>
+      <tr class="hl"><td colspan="11">최종가치(페이드 f=0.25, g=2.3%, 최종 ROIIC 30% 상한 적용) = <span class="num">$900M</span> → 현재가치 <span class="num">$315M</span> · 명시기간 FCF 현재가치 합 <span class="num">+$37M</span></td></tr>
+      <tr class="tot"><td colspan="3">기업가치(성공 시) <span class="num">$352M</span></td><td colspan="3">+ 순현금 $46M → 자본가치 <span class="num">$398M</span></td><td colspan="5">÷ 희석 후 173.7M주(신주 51M, @$1.20 조달) = <b class="num">주당 $2.29</b></td></tr>
+      <caption style="color:#9db8c6">표 6(전시 23 형식). 최종가치가 기업가치의 89%로 압도적 — 방법론이 지적하듯 도입 단계 가치는 본질적으로 “먼 미래의 약속”이다. 누적 자금부족 최저점 −$107M 중 현금 $46M을 뺀 $61M을 평균 $1.20에 조달한다고 가정해 희석을 명시 반영했다(성공 경로에선 주가가 회복되며 조달가가 오른다는 가정 — 이 가정 자체가 낙관 요소임을 명기).</caption>
+    </table></div>
+    <div class="scroll-hint">← 좌우 스크롤 →</div>
+
+    <h3>ROIC의 미래형 — ROIIC 점검</h3>
+    <p>흑자전환 이후 증분 투자 대비 증분 NOPAT(ROIIC)은 2031~35년 평균 30%를 상회해 상한 30%로 캡했다. 이 높은 숫자는 팹리스의 본질(공장 없는 성장)에서 나오며, Mobileye 전성기·미국 팹리스 상위권과 정합적이다 — 뒤집으면, <em>성공만 하면</em> 자본 재투자 필요가 작아 초과수익 스프레드(ROIIC 30% − WACC 11.7% ≈ 18%p)가 매우 커진다는 뜻이고, 이것이 “센서 스타트업에 왜 자금이 반복 유입되는가”의 재무적 정답이다.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 10. 내재 기대치 -->
+<section id="s10">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 10 · Market-Implied Expectations</div>
+    <h2>시장 내재 기대치 역산 — CAP 대신 “성공확률”이 가격표에 적혀 있다</h2>
+
+    <p class="lead">이익이 있는 성숙 기업이라면 “주가 = 몇 년의 초과수익(CAP)?”을 역산하면 된다. Arbe는 NOPAT이 음수라 그 등식이 성립하지 않는다. 대신 두 개의 역산이 가능하고, 둘을 겹치면 시장의 속마음이 선명해진다.</p>
+
+    <h3>역산 ① 내재 성공확률 — “시장은 동전 던지기보다 박하게 본다”</h3>
+    <div class="stats">
+      <div class="stat"><div class="k">성공 시 가치 V<sub>S</sub></div><div class="v">$2.29</div><div class="s">9장 DCF · 희석 반영</div></div>
+      <div class="stat"><div class="k">실패 시 잔존 V<sub>F</sub></div><div class="v">$0.10</div><div class="s">잔여현금·IP 헐값 매각 가정</div></div>
+      <div class="stat teal"><div class="k">$0.83이 내재한 성공확률</div><div class="v">33%</div><div class="s">(0.83−0.10)÷(2.29−0.10)</div></div>
+      <div class="stat teal"><div class="k">$0.66이 내재한 성공확률</div><div class="v">26%</div><div class="s">급락가 기준</div></div>
+      <div class="stat"><div class="k">3상태 교차검증</div><div class="v">24~32%</div><div class="s">‘니치 연명’(가치 $0.35) 확률 25% 삽입 시</div></div>
+      <div class="stat"><div class="k">역사적 기저율</div><div class="v">~29~30%</div><div class="s">도입→성장 3년 전환율 29% · 초기가 정당화 성공 ~30%</div></div>
+    </div>
+    <p>해석: 현재 가격은 <strong>“이 회사에 대해 아무 특별한 정보가 없다”고 가정할 때의 역사적 기저율과 거의 일치</strong>한다. 즉 시장은 NVIDIA 통합·중국 L4 디자인윈·업계 최상 스펙 같은 회사 고유의 긍정 정보에 사실상 <em>0의 프리미엄</em>을 주고, 동시에 유럽 OEM 지연·가이던스 미달 전력 같은 부정 정보에도 추가 페널티를 크게 얹지 않은, “판단 보류” 가격이다. 투자자의 일은 이 기저율 대비 자신의 확률 추정이 위인가 아래인가를 정하는 것뿐이다 — 위라고 보면 저평가, 아래라고 보면 여전히 고평가다.</p>
+
+    <h3>역산 ② “성공을 100% 확신한다면” — 내재 지평(T)과 CAP의 위치</h3>
+    <p>만약 성공을 확신한다고 가정하고, 몇 년치 명시예측+페이드까지만 값을 쳐주면 현재가와 같아지는지 계산하면: <span class="num">T=6년(2031년까지)이면 주당 $0.85 ≈ 현재가 $0.83</span>. 즉 현재가는 “성공을 확신하되 2031년 이후의 모든 성장·초과수익을 0으로 치는” 극단적 절단과도 등가다. 성숙기업 기준으로 번역하면 <strong>내재 CAP가 사실상 5~6년 미만 — 방법론 해석표의 “시장이 매우 비관적(매수 후보 신호)” 구간</strong>이다. 단, 이 신호는 “성공 확신” 전제 위에서만 유효하므로, 진짜 논점은 CAP가 아니라 확률이라는 결론이 다시 확인된다.</p>
+
+    <div class="tbl-scroll"><table class="tbl">
+      <tr><th>지평 T(성공 확신 가정)</th><th class="r">~2028(3y)</th><th class="r">~2029(4y)</th><th class="r">~2030(5y)</th><th class="r" >~2031(6y)</th><th class="r">~2032(7y)</th><th class="r">~2033(8y)</th><th class="r">~2035(10y)</th></tr>
+      <tr><td>해당 지평까지의 주당가치</td><td class="num r">&lt;0</td><td class="num r">&lt;0</td><td class="num r">$0.25</td><td class="num r"><b>$0.85</b></td><td class="num r">$1.43</td><td class="num r">$1.86</td><td class="num r">$2.29</td></tr>
+      <caption>표 7. 흑자전환(2030) 전에는 가치가 음(−) — “버티는 것 자체가 가치의 전제”임을 수치로 보여준다. 현재가 $0.83 ↔ T≈6년.</caption>
+    </table></div>
+
+    <h3>민감도 — 무엇이 가치를 흔드는가</h3>
+    <div class="tbl-scroll"><table class="tbl">
+      <tr><th>변수 이동</th><th class="r">성공 시 가치 V<sub>S</sub></th><th class="r">$0.83의 내재 성공확률</th><th>읽는 법</th></tr>
+      <tr><td>기준(WACC 11.7%, f 0.25, g 2.3%)</td><td class="num r">$2.29</td><td class="num r">33%</td><td>—</td></tr>
+      <tr><td>WACC −1%p (10.7%)</td><td class="num r">$2.69</td><td class="num r">28%</td><td>금리 하락은 확률 요구치를 낮춘다</td></tr>
+      <tr><td>WACC +1%p (12.7%)</td><td class="num r">$1.97</td><td class="num r">39%</td><td>금리 인상 국면(연준 연내 인상 관측)은 역풍</td></tr>
+      <tr><td>페이드 0.15 / 0.35</td><td class="num r">$2.33 / $2.28</td><td class="num r">33~34%</td><td><b>해자 수명은 거의 무영향</b> — 확률이 지배</td></tr>
+      <tr><td>장기 g 1.3% / 3.3%</td><td class="num r">$2.25 / $2.34</td><td class="num r">33~34%</td><td>영구성장률도 부차 변수</td></tr>
+      <tr class="hl"><td>성공경로 매출 −30%</td><td class="num r">$0.77</td><td class="num r">&gt;100%</td><td>“성공해도 작게 성공”이면 현재가도 못 지킨다</td></tr>
+      <tr class="hl"><td>성공경로 매출 +30%</td><td class="num r">$3.98</td><td class="num r">19%</td><td>서구 OEM 2건+ 시나리오 — 상방의 크기</td></tr>
+      <caption>표 8. 민감도의 교훈: 이 종목의 가치는 할인율·페이드·영구성장률(정통 DCF 변수)이 아니라 <b>“성공의 크기와 확률”</b> 두 변수가 거의 전부를 결정한다.</caption>
+    </table></div>
+
+    <figure>
+      <div class="fig-box">
+        <div class="fig-title">그림 11. 밸류에이션 풋볼필드 — 현재가는 어디에 서 있나</div>
+        <svg viewBox="0 0 960 380" role="img" aria-label="밸류에이션 레인지">
+          <!-- scale $0~$4 → x=90..930 (210px per $1) -->
+          <g font-family="IBM Plex Mono" font-size="11" fill="#5b6b74">
+            <line x1="90" y1="330" x2="930" y2="330" stroke="#ccd8da"/>
+            <text x="90" y="350" text-anchor="middle">$0</text><text x="300" y="350" text-anchor="middle">$1</text><text x="510" y="350" text-anchor="middle">$2</text><text x="720" y="350" text-anchor="middle">$3</text><text x="930" y="350" text-anchor="middle">$4</text>
+            <line x1="300" y1="40" x2="300" y2="330" stroke="#eef2f3"/><line x1="510" y1="40" x2="510" y2="330" stroke="#eef2f3"/><line x1="720" y1="40" x2="720" y2="330" stroke="#eef2f3"/>
+          </g>
+          <g font-family="Noto Sans KR" font-size="12">
+            <!-- rows -->
+            <rect x="111" y="52" width="0" height="0" fill="none"/>
+            <!-- 실패 잔존 0.10 -->
+            <rect x="90" y="50" width="21" height="18" rx="4" fill="#b3312c"/><text x="120" y="64" fill="#5c1512">실패 시 잔존가치 $0.10</text>
+            <!-- 현금 바닥 0.26~0.375 -->
+            <rect x="145" y="86" width="24" height="18" rx="4" fill="#8a5a00"/><text x="178" y="100" fill="#4d3300">현금가치/주 $0.26('26말E)~$0.375(현재 순현금)</text>
+            <!-- 52주 밴드 -->
+            <rect x="206" y="122" width="489" height="18" rx="4" fill="#dfe9ea" stroke="#c3d2d4"/><text x="380" y="136" fill="#33475a">52주 범위 $0.552 ~ $2.88</text>
+            <!-- 현재가 -->
+            <rect x="229" y="158" width="36" height="18" rx="4" fill="#13293a"/><text x="273" y="172" fill="#13293a" font-weight="700">현재 $0.66~0.83 (7/2·7/1)</text>
+            <!-- 약세 시나리오 -->
+            <rect x="132" y="194" width="42" height="18" rx="4" fill="#c96a4a"/><text x="182" y="208" fill="#7a3a22">약세(니치 연명·지속 희석) $0.2~0.4</text>
+            <!-- Canaccord -->
+            <rect x="405" y="230" width="8" height="18" rx="3" fill="#0a5a62"/><text x="420" y="244" fill="#0a5a62">Canaccord $1.50(5/29, 최신)</text>
+            <!-- 성공가치 -->
+            <rect x="571" y="266" width="10" height="18" rx="3" fill="#0e7c86"/><text x="588" y="280" fill="#0a5a62" font-weight="700">성공 시나리오 DCF $2.29</text>
+            <!-- 컨센 -->
+            <rect x="510" y="266" width="0" height="0"/>
+            <rect x="590" y="302" width="0" height="0"/>
+            <rect x="465" y="302" width="8" height="18" rx="3" fill="#41586a"/><text x="480" y="316" fill="#41586a">컨센서스 평균 $2.38~2.50 · WestPark $3.50 →</text>
+            <rect x="825" y="302" width="8" height="18" rx="3" fill="#41586a"/>
+            <!-- 상방 성공 -->
+            <rect x="920" y="50" width="0" height="0"/>
+          </g>
+          <!-- 상방 마커 -->
+          <g font-family="Noto Sans KR" font-size="12">
+            <rect x="922" y="158" width="8" height="18" rx="3" fill="#1d7a46"/><text x="915" y="150" text-anchor="end" fill="#155a34">성공 상방(매출+30%) $3.98 →</text>
+          </g>
+          <line x1="264" y1="40" x2="264" y2="330" stroke="#13293a" stroke-width="2" stroke-dasharray="5 4"/>
+          <text x="264" y="34" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#13293a" font-weight="700">$0.83</text>
+        </svg>
+        <figcaption>한 줄 결론: <b>“현재가는 ‘현금 바닥’ 바로 위, 모든 낙관적 가치척도의 아래 — 하방은 현금이, 상방은 확률이 결정한다.”</b> 각 값의 산출 근거는 본문·표 6~8. 애널리스트 목표가 출처: stockanalysis/Benzinga(2026.2 갱신)+Canaccord 5/29 상향.</figcaption>
+      </div>
+    </figure>
+
+    <h3>합리성 판단 — 시장 기대는 낮은가, 정당한가</h3>
+    <p>종합하면 시장의 기대 수준은 <strong>“낮지만, 근거 없는 저평가라고 단정할 수는 없는”</strong> 위치다. 낮다고 보는 근거: 기저율 수준의 확률만 반영해 회사 고유의 검증된 강점(스펙 격차·NVIDIA·중국 양산 확정)이 값에 없고, 성공 확신 시 내재 CAP는 6년 미만으로 비관 구간이다. 정당하다고 보는 근거: 2025년 가이던스 대실패·유럽 OEM 이탈·연 2회 희석·나스닥 요건 미달이라는 실적 트랙레코드가 “증거 우선” 태도를 요구하며, 섹터 기저율(루미나 파산)이 생생하다. 결국 이 가격에서의 판단은 <em>“2026~27년의 매출 증거가 나오기 전에 확률을 선반영할 것인가, 증거를 보고 더 비싸게 살 것인가”</em>의 선택 문제로 압축된다.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 11. Bull -->
+<section id="s11">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 11 · Bull Case</div>
+    <h2>투자 논거(Bull) — 무엇이 가치 창출의 엔진이고, 왜 베끼기 어려운가</h2>
+
+    <div class="card" style="border-left:5px solid #1d7a46">
+      <h3 style="margin-top:0">① 스펙의 물리학: 채널 12배는 마케팅이 아니라 안테나 개수다</h3>
+      <p>해상도는 알고리즘으로 우기는 값이 아니라 채널 수라는 하드웨어에서 나온다. 경쟁 진영이 현 방식(칩 4개 캐스케이드)으로 2,304채널에 도달하려면 칩 16개를 동기화해야 해 원가·발열·오탐이 폭증한다 — 즉 <strong>추격하려면 Arbe처럼 백지 재설계가 필요하고, 그 비용이 10년·$3억이라는 사실을 Arbe 자신이 증명했다</strong>. “아이즈오프(운전 책임이 제조사로 넘어가는 단계)에는 전천후 고해상 중복 센서가 필수”라는 명제가 맞다면, 그 요구 스펙에 지금 도달해 있는 양산 가능 칩은 사실상 Arbe뿐이다.</p>
+    </div>
+    <div class="card" style="border-left:5px solid #1d7a46">
+      <h3 style="margin-top:0">② 검증의 삼각대: NVIDIA × 중국 국유 OEM × 미 국방부</h3>
+      <p>서로 이해관계가 다른 세 종류의 깐깐한 검증자가 같은 칩을 골랐다. NVIDIA는 DRIVE Hyperion 레퍼런스에 통합했고(플랫폼 검증), 중국 국유 완성차는 L4 양산 전방 레이더로 확정해 SOP까지 잡았으며(자동차 등급 검증), 미 국방부 프로그램(Forterra UGV)은 GPS 교란·야지 환경에서 채택했다(극한 환경 검증). 스타트업 센서가 이 세 배지를 동시에 가진 경우는 드물며, 이것이 “기술 리스크”와 “채택 리스크”를 분리해 전자를 크게 낮춘다 — 남은 것은 속도의 문제다.</p>
+    </div>
+    <div class="card" style="border-left:5px solid #1d7a46">
+      <h3 style="margin-top:0">③ 아우스터식 다변화가 이미 매출로 찍히기 시작했다</h3>
+      <p>1분기 매출 11배(YoY), 시스템 초도 출하, Sensrad 유지보수 반복수수료, 오프하이웨이 신제품 — “자동차만 기다리다 죽는” 루미나 경로에서 “산업·방산으로 현금 벌며 버티는” 아우스터 경로로의 전환이 서류가 아니라 출하로 확인되고 있다. 아우스터가 이 길로 분기 $49M·손익분기 근처까지 갔다는 사실은, 같은 물리적 강점(전천후 센서)을 가진 Arbe에게 실행 가능한 지도가 있다는 뜻이다. 특히 방산은 자동차보다 단가가 높고 인증 주기가 짧으며, 2026년 세계적 국방예산 팽창의 직접 수혜 구간이다.</p>
+    </div>
+    <div class="card" style="border-left:5px solid #1d7a46">
+      <h3 style="margin-top:0">④ 비대칭 구조: 하방엔 현금, 상방엔 옵션 다발</h3>
+      <p>주당 순현금 $0.375(6말E), 무차입(CB는 에스크로 상계), 15% 비용 감축으로 산소통은 대략 2027년 하반기까지. 그 시간 안에 ⓐ 8월 실적, ⓑ 12월 HiRain SOP, ⓒ 서구 OEM 선정, ⓓ 방산 다년계약, ⓔ NVIDIA 경유 채택이라는 5개의 독립적 복권이 순차 개봉된다. 하나만 맞아도 “확률 26~33%” 가격표는 재인쇄되고, 성공가치 $2.29(상방 $3.98)까지의 거리(3~6배)가 그 보상이다. 시장이 기저율만 쳐주는 지금이, 정의상 정보 우위가 가장 싸게 팔리는 구간이다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 12. Bear -->
+<section id="s12" class="night">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 12 · Bear Case</div>
+    <h2>리스크(Bear) — 정직한 목록과 “이미 가격에 있는가” 점검</h2>
+
+    <div class="tbl-scroll"><table class="tbl">
+      <tr><th>리스크</th><th>내용과 심각도</th><th>주가 반영도 평가</th></tr>
+      <tr><td><b>① 희석의 쳇바퀴</b></td><td>연 $28~31M 소진 vs 시총 $81~102M. 2027년 추가 증자가 사실상 확정적이며, 주가가 낮을수록 같은 돈에 더 많은 주식을 찍는다(악순환). 최근 1년 주식수 +27%.</td><td><span class="badge bd-pos">상당 반영</span> — EV가 $35~56M까지 눌린 주된 이유. 단, 저가 증자 시 성공가치 $2.29도 하향 재계산 필요.</td></tr>
+      <tr><td><b>② 서구 OEM 공백</b></td><td>2024.7 “Top10 OEM 선정” 발표 → 2025.12 “근시일 수주 기대 안 함”으로 후퇴. L3 자체가 서구에서 후퇴(BMW·벤츠) 중이라 차세대 입찰까지 공백 2~3년 가능.</td><td><span class="badge bd-pos">상당 반영</span> — 12월 급락과 CB 조건 연장이 그 흔적. 남은 리스크는 “차세대에서도 탈락”.</td></tr>
+      <tr><td><b>③ 가이던스 신뢰</b></td><td>2025년 $2~5M 제시 → $1.03M 실적(중간값의 3분의 1). 2026년 $4~6M도 잔고 $1.0M뿐인 상태에서 하반기 몰빵 구조 — 재현 위험 실재.</td><td><span class="badge bd-warn">부분 반영</span> — 컨센($8.5M)이 이미 가이던스 위였다가 꺾인 상태. 또 미달하면 “스토리 주식” 지위 자체가 붕괴.</td></tr>
+      <tr><td><b>④ 상장 지위</b></td><td>나스닥 $1 미달, 시한 2026.10.12(+180일 연장 가능). 해법인 액면병합은 통계적으로 추가 하락을 부르는 이벤트.</td><td><span class="badge bd-warn">부분 반영</span> — 병합 공시 시 단기 수급 충격 여지.</td></tr>
+      <tr><td><b>⑤ 대체 기술의 협공</b></td><td>Hesai가 라이다를 $200에 흑자로 파는 세계에선 “라이다보다 싸다”는 프리미엄이 좁아진다. 테슬라 카메라-온리 로보택시, Mobileye 이미징레이더 내재화(외부조달 소멸), 중국 저가 레이더칩(Calterah 등).</td><td><span class="badge bd-neg">불충분 반영</span> — 구조적 리스크라 어느 가격에도 “완전 반영”이 없다. 지속 관찰 필수.</td></tr>
+      <tr><td><b>⑥ 지정학·집중</b></td><td>이스라엘 소재(전쟁·예비군 소집·보이콧 리스크, 6월에도 이란 관련 유가 급등), 매출의 중국 편중 심화(미중 규제 시 급소), GlobalFoundries 단일 파운드리.</td><td><span class="badge bd-warn">부분 반영</span> — 이스라엘 디스카운트는 상시 존재하나 계량 곤란.</td></tr>
+      <tr><td><b>⑦ 경영진 이동</b></td><td>1년 새 CEO(4월)·CFO(8월 예정) 연쇄 교체 + 공동창업 CTO의 20만 주 장내매도(6월). “양산 전문가 전면 배치”라는 공식 설명과 “핵심 인력의 헤지”라는 회의적 독해가 공존.</td><td><span class="badge bd-warn">부분 반영</span> — 6월 하락의 배경 중 하나로 추정.</td></tr>
+      <tr><td><b>⑧ 중국 딜의 실체</b></td><td>“수천 대(2027)”는 매출로 한 자릿수 $M — OEM명 비공개, 물량 확약 아님. 레퍼런스 가치는 크지만 손익 구제 규모는 아니다.</td><td><span class="badge bd-pos">대체로 반영</span> — 발표 당일 주가가 오히려 −2.8%였던 것이 시장의 냉정한 계산을 보여줌.</td></tr>
+      <caption style="color:#9db8c6">표 9. 리스크 대차대조. 요약: ①②⑧은 이미 가격의 큰 부분이고, ③④⑦은 절반쯤, <b style="color:#eaf3f7">⑤(기술 대체)는 어떤 가격도 면역이 아닌 진짜 꼬리 리스크</b>다.</caption>
+    </table></div>
+
+    <div class="callout co-neg" style="background:#3a1715;color:#f3c9c6;border-color:#6e2f2b"><b>파괴 시나리오의 구체형(스틸맨):</b> “아이즈오프에 초고해상 레이더가 필수”라는 전제 자체가 무너지는 경우 — 카메라+AI(테슬라 노선)가 규제 승인을 먼저 뚫거나, $150 라이다+192채널 레이더 조합이 ‘충분히 좋은’ 표준이 되면, Arbe의 스펙 우위는 “필요 없는 과잉 성능”이 된다. 이 경우 중국·방산 니치만 남아 약세 시나리오(주당 $0.2~0.4, 지속 희석)로 수렴한다. 이 가능성을 본 분석은 3상태 모형의 ‘니치 연명 25% + 실패 40%대’로 정량 수용했다.</div>
+  </div>
+</section>
+
+<!-- ============================================================ 13. SWOT -->
+<section id="s13">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 13 · SWOT</div>
+    <h2>SWOT — 앞선 분석의 한 장 요약</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:10px">
+      <div class="card" style="background:#e8f4ec;border-color:#bcd9c6;color:#123f26">
+        <h3 style="color:#123f26;margin-top:0">S · 강점</h3>
+        <p style="margin:0">단일 레이더 2,304채널이라는 검증된 스펙 격차(12×) · 전용 프로세서+특허의 집중형 IP · 채널당 원가 최저 설계(22FDX 팹리스) · NVIDIA DRIVE 통합 · 中 L4 양산 확정(SOP '26.12) · 美 국방(Forterra)·해상·인프라 레퍼런스 · 무차입 · 현금 $53.6M(3말) · 성공 시 ROIIC 30%급의 자본경량 모델</p>
+      </div>
+      <div class="card" style="background:#faecea;border-color:#e4c1be;color:#5c1512">
+        <h3 style="color:#5c1512;margin-top:0">W · 약점</h3>
+        <p style="margin:0">매출 $1M대·총이익 음(−) · 연 $30M+ 현금소진과 반복 희석(1년 주식수 +27%) · 가이던스 미달 전력 · 수주잔고 $1.0M의 얇은 가시성 · 양산 납품 실적 부재(신뢰 자산 없음) · 나스닥 $1 미달 · 고객·파운드리 집중 · 경영진 연쇄 교체</p>
+      </div>
+      <div class="card" style="background:#e7f1f2;border-color:#bcd7da;color:#0b3f45">
+        <h3 style="color:#0b3f45;margin-top:0">O · 기회</h3>
+        <p style="margin:0">中 L2+/L3 볼륨(HiRain 24×12 저가 플랫폼) · 서구 차세대 아이즈오프 재입찰(L3 후퇴의 원인이 곧 기회) · 로보택시 L4 확산(Waymo 1,400만 회 실증) · 방산·경계·Physical AI 예산 팽창 · 오프하이웨이(농기·광산) 신시장 · 좁은 정의 시장 연 +25% 성장 · 낮은 기대치 자체(기저율 가격)가 재평가 여지</p>
+      </div>
+      <div class="card" style="background:#fbf3e2;border-color:#e6d3a8;color:#4d3300">
+        <h3 style="color:#4d3300;margin-top:0">T · 위협</h3>
+        <p style="margin:0">라이다 가격붕괴(Hesai $200 흑자) · 카메라-온리 진영의 규제 돌파 · Mobileye 내재화 및 대기업(TI/NXP/화웨이) 물량전 · 중국 저가 칩 추격 · 미중 규제로 중국 매출 차단 가능성 · 이스라엘 지정학 · 금리 인상 국면(연준 연내 인상 관측)의 성장주 할인율 상승 · 액면병합 수급 충격</p>
+      </div>
+    </div>
+    <p class="divider-note">읽는 순서: 이 회사의 운명은 S(스펙)와 W(현금시계)의 경주다. O가 S를 매출로 바꿔주는 속도가, T와 W가 회사를 갉는 속도보다 빠르면 성공 시나리오, 느리면 약세·실패 시나리오다.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 14. 경영진·자본배분 -->
+<section id="s14">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 14 · Management &amp; Capital Allocation</div>
+    <h2>경영진 및 자본 배분 — 약속의 장부와 실행의 장부</h2>
+
+    <p class="lead">도입 단계 기업의 자본배분은 배당·자사주가 아니라 <strong>“조달의 기술”</strong>이다: 언제, 얼마나, 어떤 조건으로 돈을 끌어와 어디에 태웠는가. Arbe의 장부는 양면적이다 — 조달 실행력은 상급(파산 없이 5년 생존), 약속 이행력은 하급(핵심 마일스톤 반복 지연).</p>
+
+    <div class="tbl-scroll"><table class="tbl">
+      <tr><th>시점</th><th>조달</th><th class="r">규모</th><th>조건·특징</th></tr>
+      <tr><td>2015~20</td><td>VC 5라운드</td><td class="num r">$54.5M</td><td>Canaan·iAngels·360·Catalyst·O.G. Tech·BAIC 등</td></tr>
+      <tr><td>2021.10</td><td>SPAC+PIPE</td><td class="num r">$118M</td><td>가치 $525M · M&amp;G·Waldman 등 PIPE $100M</td></tr>
+      <tr><td>2023</td><td>등록 증자</td><td class="num r">$23M</td><td>Special Situations Funds(AWM)·Catalyst 등</td></tr>
+      <tr><td>2024.6</td><td>전환사채(TASE)</td><td class="num r">$30M</td><td>6.5%·전환가 ~$2.60 · <b>전액 에스크로</b>: “10대 OEM 단독공급 수주+주가 $3.10↑” 충족 시에만 회사로 방출</td></tr>
+      <tr><td>2025.1</td><td>등록 증자</td><td class="num r">≈$33M(순 30.8)</td><td>NVIDIA 랠리 활용 · 동시기 CB $21.5M 전환→에스크로 방출(고가 전환 성공 사례)</td></tr>
+      <tr><td>2025.12</td><td>CB 증액+조건변경</td><td class="num r">$15.7M</td><td>금리 6.5→4.35% 인하·마일스톤 시한 '26.12로 연장 — 채권단의 신뢰 유지 신호이자 “조건 미충족” 자인</td></tr>
+      <tr><td>2026.1</td><td>등록 증자</td><td class="num r">$18.5M</td><td>주당 $1.40 · AWM 재참여 · Canaccord 주관</td></tr>
+      <tr class="tot"><td colspan="2">상장 후 누적(대략)</td><td class="num r">$220M+</td><td>→ 누적 결손 $308.8M로 소진 · 배당·자사주 없음(당연)</td></tr>
+      <caption>표 10. 조달 연대기. 눈여겨볼 설계: 전환사채의 에스크로 구조는 채권자를 지키는 동시에 회사에 “10대 OEM 수주”라는 공개 성적표를 채웠다 — 2026.12.31이 그 마감이다. 출처: 6-K/424B, Globes, 각 보도자료.</caption>
+    </table></div>
+
+    <p><strong>인센티브와 지분:</strong> 창업자 코비 마렌코는 CEO 10년 후 사장(President)으로 물러나 장기전략·방산·<em>“전략적 대안(strategic alternatives)”</em> — 공시 용어로 매각·제휴 탐색을 포함하는 표현 — 을 맡았고, 이사회에 잔류한다. 신임 CEO 램 마흐네스(前 TI 12년·CBO 8년)는 “선단(先端) 연구에서 양산·영업으로” 무게중심 이동을 상징한다. CFO 카린 핀토-플로멘보임은 2026년 8월 발렌스(Valens)로 이직 예정으로, 승계 공백 관리가 단기 과제다. 주식보상(SBC)은 2024년 $14.5M → 2025년 $9.1M → 26년 1분기 $1.2M으로 급감했는데(기존 부여분 베스팅 완료+신규 보상의 절반 현금화), 이는 비용 규율 신호인 동시에 “주식이 보상 화폐로서 힘을 잃었다”는 방증이기도 하다. 내부자 매매로는 공동창업 CTO 아킨드의 20만 주 매도(2026.6)가 확인되며, 반대편에는 AWM의 3라운드 연속 매수가 있다 — 내부 신호는 혼재다.</p>
+
+    <div class="callout co-warn"><b>약속 대비 실행 채점표:</b> ✔ 칩 개발·인증·NVIDIA 통합·중국 디자인윈·조달 생존(이행) / ✘ “2024~25 양산 매출”·“유럽 OEM 프로그램”·2025 가이던스(미이행) / ▶ 진행 중: 2026 가이던스, HiRain SOP, 15% 비용감축, 시스템 사업. 결론: <b>기술 약속은 지키고 상업 약속은 늦는 패턴</b>이 뚜렷하므로, 경영진 발표는 “기술 마일스톤=액면가, 매출 마일스톤=50% 할인”으로 읽는 것이 지난 5년의 데이터에 부합한다.</div>
+  </div>
+</section>
+
+<!-- ============================================================ 15. 종합 -->
+<section id="s15" class="night">
+  <div class="wrap">
+    <div class="sec-eyebrow">Section 15 · Synthesis &amp; Checkpoints</div>
+    <h2>종합 판단 및 체크포인트 — 의사결정을 위한 마지막 한 장</h2>
+
+    <p class="lead">Arbe는 “세계에서 가장 해상도 높은 차량용 레이더 칩”이라는 진짜 기술과, “그 기술로 아직 돈을 못 벌었다”는 진짜 문제를 동시에 가진 회사다. 현재 주가($0.66~0.83)는 성공 시 가치($2.29)의 26~36%로, 도입 단계 기업의 역사적 성공 기저율(약 30%)을 거의 그대로 옮겨 적은 “정보 프리미엄 0의 가격”이다. 따라서 이 종목의 투자 판단은 밸류에이션 논쟁이 아니라 확률 판단이다 — <strong>“NVIDIA·중국 양산·국방 채택이라는 증거들이 기저율 30%를 위로 끌어올리는가?”</strong>에 예라고 답하면 비대칭 매력(하방 −60~−85% vs 상방 +180~+500%)이 있는 옵션이고, 아니오라면 여전히 소각 중인 복권이다. 어느 쪽이든 포지션 규모는 “전액 상실을 감내할 수 있는 위성 비중”이라는 도입 단계의 문법을 벗어날 수 없다.</p>
+
+    <h3>분기·연간 체크포인트 — 무엇을 보면 되는가</h3>
+    <div class="tbl-scroll"><table class="tbl">
+      <tr><th>시점</th><th>확인 항목</th><th>합격선 / 경고선</th></tr>
+      <tr><td><b>'26.8.12 (2Q)</b></td><td>분기 매출·잔고, 시스템 매출 언급, 15% 감축의 OpEx 반영</td><td>합격: 매출 ≥$0.8M &amp; 잔고 증가 / 경고: 매출 &lt;$0.6M 또는 가이던스 하향</td></tr>
+      <tr><td><b>'26.10.12</b></td><td>나스닥 $1 회복 여부</td><td>미회복 시: 180일 연장 확보 여부·액면병합 조건 공시 정독</td></tr>
+      <tr><td><b>'26.11 (3Q)</b></td><td>연 가이던스 달성 경로(누적 ≥$2.5M 필요), 中·방산 후속 PO</td><td>경고: 2년 연속 가이던스 미달 확정 → 신뢰 모델 자체 폐기</td></tr>
+      <tr><td><b>'26.12</b></td><td>① HiRain L4 SOP 개시 ② CB 마일스톤 시한(12.31)</td><td>SOP 지연 시 '27 매출 스토리 훼손 / CB는 미충족 시 에스크로로 상환(현금 영향 제한적이나 상징 타격)</td></tr>
+      <tr><td><b>'27 연중</b></td><td>서구 OEM 선정 절차의 공식 디자인윈 전환, 추가 조달의 시점·단가, 분기 매출 $2M+ 안착, 조정EBITDA 적자 축소율</td><td>합격: '27 매출 ≥$15M(컨센 하단 상회) / 경고: 조달단가 &lt;$0.8 (성공가치 재하향 트리거)</td></tr>
+      <tr><td><b>상시</b></td><td>경쟁 신호: Hesai 라이다 가격, Mobileye 이미징레이더 양산 일정, 캐스케이드 진영 채널 로드맵, 中 규제</td><td>“192채널로 충분” 진영의 아이즈오프 승인 사례 등장 = 핵심 전제 훼손</td></tr>
+      <caption style="color:#9db8c6">표 11. 모니터링 캘린더. 본 프레임워크의 재검토 원칙에 따라 분기마다 내재 확률을 갱신하고, 연 1회 성공 시나리오 자체(매출 궤적·마진)를 재구축할 것.</caption>
+    </table></div>
+
+    <h3>한계와 가정 (Limitations &amp; Assumptions)</h3>
+    <div class="callout co-ink" style="background:#0b1b29;border-color:#31485a">
+      <p style="margin:.2em 0"><b>이 결론이 의존하는 핵심 가정:</b> ① 성공 시나리오의 매출 궤적(2030 $140M·2035 $350M)과 정상 마진(GM 55%)이 실현 가능하다 — 민감도에서 봤듯 이 가정이 가치의 지배 변수다. ② 미래 조달이 평균 $1.20에 가능하다(주가 회복 동반 가정 — 자기실현적 순환 논리 위험 있음). ③ 전환사채 에스크로($24.8M)와 부채($23.8M)가 상계된다(미충족 시 에스크로로 상환되는 구조상 대체로 타당하나 이자·환차 소액 유출 존재). ④ 7/1~2 기준가 $0.66~0.83이 유효하다(실시간 검증 한계).</p>
+      <p style="margin:.2em 0"><b>확신도가 낮은 지점:</b> '25.7~12 주가 경로(개략), 피어 시가총액(변동성으로 병기 생략), Mobileye 내재 레이더의 사양·일정, 중국 OEM 딜의 물량·단가(비공개), 베타(공급자 간 1.07~3.52 산재 — WACC ±1%p 민감도로 흡수).</p>
+      <p style="margin:.2em 0"><b>결론이 뒤집히는 조건:</b> ⓐ '26 가이던스 재미달(→ 확률을 기저율 아래로 하향해야 함), ⓑ 서구권에서 “카메라-온리 또는 192채널” 아이즈오프의 규제 승인(→ 성공 시나리오의 크기 자체 축소), ⓒ $0.8 미만 대규모 증자(→ V_S 기계적 하향), ⓓ 반대로 서구 OEM 디자인윈 공시(→ 확률 대폭 상향, 본 보고서 수치 전면 갱신).</p>
+      <p style="margin:.2em 0"><b>다음 검증 단계:</b> 8/12 실적 콜의 잔고·파이프라인 발언 원문 대조, 20-F(2026.3.27 제출분)의 고객 집중도·특허 수·지분 구조 원문 확인, HiRain 측 발표(중국어 소스) 교차 검증, 액면병합 시나리오의 수급 영향 사전 시뮬레이션.</p>
+    </div>
+
+    <p class="src" style="margin-top:14px">본 자료는 정보 제공 목적의 분석이며 특정 증권의 매수·매도 권유가 아니다. 개별 투자 판단과 그 결과는 투자자 본인에게 귀속된다.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b style="color:#eaf3f7">데이터 출처(기준시점 명기)</b> — 회사 공시: SEC 6-K/424B(2024.6 CB, 2025.3 FY24, 2026.2.26 FY25, 2026.5.28 1Q26), 20-F(2026.3.27 제출), 보도자료(PR Newswire/GlobeNewswire) · 시세: Morningstar·Public(7/1 종가 $0.83), TradingView·Investing(7/2 장중 ~$0.66), stockanalysis(6/18), 52주·사상 최고저(TradingView/Macrotrends) · 매크로: FRED/TradingEconomics 10Y 4.49%(7/2)·10Y BEI 2.21%(6월), 다모다란 내재 ERP 4.23%(2026.1) · 컨센서스: Finnhub/stockanalysis(6개 기관), Benzinga 목표가, Canaccord(5/29 $1.50) · 산업: MarketsandMarkets(2025.7), ResearchAndMarkets/TBRC(2026.1), IDTechEx, Knowmade 특허분석(2025), Microwave Journal(2022.7) · 경쟁·피어: optics.org(2025.8), 24/7WallSt·Yahoo(2026.6.30), Zacks(2026.4), im-mining(2026.6, 루미나→MVIS), Automotive World·electrive(2026.2, BMW/벤츠 L3), Seeking Alpha(2025.11) · 한국어 교차: 로봇신문(2025.8), Investing KR · 방법론: 프로젝트 지식(CAP 프레임워크, 2026.4) — 계산 일체는 본 보고서 자체 수행.<br><br>
+    보고서 작성 기준일: 2026-07-03(KST) · 분석 대상 가격 기준일: 2026-07-01~02(EDT) · 모든 화폐 단위 USD.
+  </div>
+</footer>
+</body>
+</html>
