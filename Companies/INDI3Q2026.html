@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>indie Semiconductor (INDI) — 기업 완전 이해 보고서 · 2026.07</title>
+<style>
+/* ============ 디자인 토큰: 차량 센서 계기(HUD) 세계관 ============ */
+:root{
+  --paper:#F6F8FB; --panel:#FFFFFF; --ink:#0E1B2C; --ink2:#44526B; --ink3:#6B7A94;
+  --line:#D8DFEA; --line2:#C4CEDD;
+  --radar:#0E7C6B; --radar-soft:#E3F2EE; --radar-line:#BCDCD4;
+  --amber:#B4690E; --amber-soft:#FBF0DF; --amber-line:#E7CFA8;
+  --azure:#24549E; --azure-soft:#E7EEF9; --azure-line:#C3D3EC;
+  --red:#B3362C;  --red-soft:#F9E9E7;  --red-line:#E5C0BB;
+  --night:#0E1B2C; --night2:#16263D; --night-line:#2C3E5C;
+  --on-night:#EAF0F8; --on-night2:#9FB0C8; --on-night-dim:#7487A3;
+  --mono:'SFMono-Regular',ui-monospace,'IBM Plex Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);
+  font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',-apple-system,'Segoe UI',Roboto,'Malgun Gothic',sans-serif;
+  font-size:15.5px;line-height:1.74;-webkit-text-size-adjust:100%}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+h1,h2,h3,h4{line-height:1.32;letter-spacing:-.02em;color:var(--ink)}
+p{margin:0 0 14px;color:var(--ink);overflow-wrap:break-word}
+li,figcaption,dd{overflow-wrap:break-word}
+strong{color:inherit;font-weight:700}
+em{font-style:normal;background:linear-gradient(transparent 62%,rgba(14,124,107,.22) 62%);color:inherit}
+small{color:inherit}
+a{color:var(--azure)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.up{color:var(--radar);font-weight:700}.dn{color:var(--red);font-weight:700}
+
+/* ---------- 섹션 공통 ---------- */
+section{padding:58px 0;border-top:1px solid var(--line)}
+section.dark{background:var(--night);border-top:1px solid var(--night-line)}
+/* 지침 A: 섹션 글자색은 :where()로만 — 어떤 컴포넌트도 이길 수 있게 */
+:where(section.dark) p,:where(section.dark) li,:where(section.dark) h2,:where(section.dark) h3,
+:where(section.dark) h4,:where(section.dark) small,:where(section.dark) figcaption{color:var(--on-night)}
+:where(section.dark) .muted{color:var(--on-night2)}
+.muted{color:var(--ink3)}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--radar);display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.eyebrow::before{content:"";width:26px;height:2px;background:var(--radar)}
+section.dark .eyebrow{color:#5ED0BC}section.dark .eyebrow::before{background:#5ED0BC}
+h2.sec{font-size:1.72rem;font-weight:800;margin-bottom:8px}
+.lede{font-size:1.06rem;color:var(--ink2);max-width:60ch;margin-bottom:26px}
+section.dark .lede{color:var(--on-night2)}
+h3{font-size:1.13rem;font-weight:800;margin:30px 0 10px}
+h4{font-size:.98rem;font-weight:700;margin:20px 0 8px}
+
+/* ---------- 카드/콜아웃: 배경+글자+테두리 자족 (지침 B) ---------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;color:var(--ink)}
+.card :is(p,li,small,h3,h4,span,strong,em){color:inherit}
+.callout{border-radius:12px;padding:16px 18px;margin:16px 0;border:1px solid}
+.callout :is(p,li,small,strong,em,span){color:inherit}
+.callout p:last-child{margin-bottom:0}
+.co-key{background:var(--radar-soft);border-color:var(--radar-line);color:#0A4A40}
+.co-info{background:var(--azure-soft);border-color:var(--azure-line);color:#173B70}
+.co-warn{background:var(--amber-soft);border-color:var(--amber-line);color:#6E4109}
+.co-risk{background:var(--red-soft);border-color:var(--red-line);color:#7A241D}
+.co-night{background:var(--night2);border-color:var(--night-line);color:var(--on-night)}
+.tag{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;
+  padding:3px 9px;border-radius:99px;border:1px solid;white-space:nowrap;margin:2px 4px 2px 0}
+.tag-g{background:var(--radar-soft);border-color:var(--radar-line);color:#0A4A40}
+.tag-a{background:var(--amber-soft);border-color:var(--amber-line);color:#6E4109}
+.tag-b{background:var(--azure-soft);border-color:var(--azure-line);color:#173B70}
+.tag-r{background:var(--red-soft);border-color:var(--red-line);color:#7A241D}
+.tag-n{background:var(--night2);border-color:var(--night-line);color:var(--on-night)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.grid2>*,.grid3>*,.grid4>*{min-width:0}
+@media(max-width:820px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+@media(max-width:980px) and (min-width:821px){.grid4{grid-template-columns:1fr 1fr}}
+
+/* ---------- 표: 라이트/다크 모두 홀·짝·헤더 완전 명시 (지침 C) ---------- */
+.tblwrap{overflow-x:auto;margin:14px 0;border-radius:12px;border:1px solid var(--line);
+  background:linear-gradient(90deg,var(--panel) 92%,#EDF1F7)}
+section.dark .tblwrap{border-color:var(--night-line);background:linear-gradient(90deg,var(--night2) 92%,#0B1626)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.86rem}
+table.wide{min-width:900px}
+th,td{padding:9px 12px;text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+/* 라이트 표 */
+.t-light thead th{background:var(--ink);color:#F2F6FC;font-weight:700;font-size:.78rem;letter-spacing:.04em}
+.t-light tbody tr:nth-child(odd) td{background:#FFFFFF;color:var(--ink)}
+.t-light tbody tr:nth-child(even) td{background:#EFF3F9;color:var(--ink)}
+.t-light tbody tr.hl td{background:var(--radar-soft);color:#0A4A40;font-weight:700}
+.t-light tbody tr.tot td{background:#DCE4F0;color:var(--ink);font-weight:700}
+.t-light td small{color:var(--ink3)}
+/* 다크 표 */
+.t-night thead th{background:#0A1422;color:#CFE0F2;font-weight:700;font-size:.78rem;letter-spacing:.04em}
+.t-night tbody tr:nth-child(odd) td{background:var(--night2);color:var(--on-night)}
+.t-night tbody tr:nth-child(even) td{background:#122036;color:var(--on-night)}
+.t-night tbody tr.hl td{background:#123B33;color:#BFE9DD;font-weight:700}
+.t-night tbody tr.tot td{background:#1C2E4A;color:#EAF0F8;font-weight:700}
+.t-night td small{color:var(--on-night2)}
+
+/* ---------- 그림/캡션 ---------- */
+figure{margin:22px 0}
+figure svg{width:100%;height:auto;display:block}
+figcaption{font-size:.8rem;color:var(--ink3);margin-top:8px;line-height:1.55}
+.figtitle{font-weight:800;font-size:.98rem;color:var(--ink);margin-bottom:8px}
+section.dark .figtitle{color:var(--on-night)}
+.figbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 16px 12px;color:var(--ink)}
+section.dark .figbox{background:var(--night2);border-color:var(--night-line);color:var(--on-night)}
+section.dark .figbox .figtitle{color:var(--on-night)}
+section.dark .figbox figcaption{color:var(--on-night2)}
+
+/* ---------- 히어로 ---------- */
+header.hero{background:var(--night);color:var(--on-night);padding:54px 0 40px;position:relative;overflow:hidden}
+header.hero .wrap{position:relative;z-index:2}
+.hero-kicker{font-family:var(--mono);font-size:.72rem;letter-spacing:.26em;color:#5ED0BC;margin-bottom:16px}
+.hero h1{color:#FFFFFF;font-size:clamp(1.7rem,4.4vw,2.7rem);font-weight:850;letter-spacing:-.03em;margin-bottom:8px}
+.hero h1 .tick{color:#5ED0BC}
+.hero .sub{color:var(--on-night2);font-size:1.02rem;max-width:64ch;margin-bottom:24px}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:860px){.hero-stats{grid-template-columns:1fr 1fr}}
+.hstat{background:var(--night2);border:1px solid var(--night-line);border-radius:12px;padding:13px 15px;color:var(--on-night)}
+.hstat .l{font-size:.7rem;letter-spacing:.12em;color:var(--on-night2);font-family:var(--mono);text-transform:uppercase}
+.hstat .v{font-size:1.32rem;font-weight:800;color:#FFFFFF;font-family:var(--mono);letter-spacing:-.02em;margin-top:2px}
+.hstat .d{font-size:.74rem;color:var(--on-night2);margin-top:1px}
+.sweep{position:absolute;inset:auto -140px -230px auto;width:560px;height:560px;opacity:.6;z-index:1}
+
+/* ---------- 목차 내비 (오버플로 규칙: 줄바꿈, 라벨 단위 nowrap) ---------- */
+nav.toc{position:sticky;top:0;z-index:50;background:rgba(246,248,251,.94);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;flex-wrap:wrap;gap:6px 6px;padding-top:9px;padding-bottom:9px}
+nav.toc a{font-family:var(--mono);font-size:.7rem;color:var(--ink2);text-decoration:none;
+  border:1px solid var(--line2);background:#FFFFFF;border-radius:99px;padding:4px 10px;white-space:nowrap}
+nav.toc a:hover{border-color:var(--radar);color:var(--radar)}
+nav.toc a b{color:var(--radar);font-weight:800}
+footer{background:var(--night);border-top:1px solid var(--night-line);padding:30px 0 46px}
+footer p{color:var(--on-night2);font-size:.8rem}
+.src{font-size:.76rem;color:var(--ink3);line-height:1.6}
+section.dark .src{color:var(--on-night-dim)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.76rem;color:var(--ink2);margin:6px 0 2px}
+.legend span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+section.dark .legend{color:var(--on-night2)}
+ul.tight{margin:0 0 14px 18px}ul.tight li{margin:4px 0}
+ol.tight{margin:0 0 14px 20px}ol.tight li{margin:5px 0}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:4px 14px;font-size:.9rem;margin:10px 0}
+.kv dt{color:var(--ink3);font-weight:600}.kv dd{color:var(--ink)}
+@media(max-width:640px){.kv{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <svg class="sweep" viewBox="0 0 560 560" aria-hidden="true">
+    <defs><radialGradient id="sw" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5ED0BC" stop-opacity=".5"/><stop offset="100%" stop-color="#5ED0BC" stop-opacity="0"/>
+    </radialGradient></defs>
+    <g stroke="#2C3E5C" fill="none" stroke-width="1">
+      <circle cx="280" cy="280" r="90"/><circle cx="280" cy="280" r="160"/>
+      <circle cx="280" cy="280" r="230"/><circle cx="280" cy="280" r="278"/>
+      <line x1="280" y1="2" x2="280" y2="558"/><line x1="2" y1="280" x2="558" y2="280"/>
+    </g>
+    <path d="M280 280 L280 10 A270 270 0 0 1 470 90 Z" fill="url(#sw)"/>
+    <circle cx="368" cy="118" r="5" fill="#5ED0BC"/><circle cx="180" cy="352" r="4" fill="#C97A10"/>
+    <circle cx="410" cy="330" r="4" fill="#7FA6E0"/>
+  </svg>
+  <div class="wrap">
+    <div class="hero-kicker">기업 완전 이해 보고서 · CAP(경쟁 우위 기간) 프레임워크 · 2026-07-02</div>
+    <h1>indie Semiconductor <span class="tick">NASDAQ: INDI</span><br>‘충돌하지 않는 차’의 감각기관을 파는 회사</h1>
+    <p class="sub">자동차의 눈·귀(레이더·카메라·라이다·초음파)를 만드는 칩 설계 전문 기업. 지금은 적자이지만, 보쉬로 추정되는
+    Tier&nbsp;1 파트너의 차세대 레이더에 칩이 실리기 시작했고 74억 달러 수주잔고가 매출로 바뀌는 초입에 서 있다.
+    이 보고서는 이 회사가 무엇을 하고, 어떻게 돈을 벌며, 현재 주가 $4.68에 시장이 어떤 미래를 이미 반영했는지를 끝까지 파고든다.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="l">주가 (7/1 종가)</div><div class="v">$4.68</div><div class="d">52주 $2.32–6.05</div></div>
+      <div class="hstat"><div class="l">시가총액</div><div class="v">$1.07B</div><div class="d">228.3M주 완전환산 기준</div></div>
+      <div class="hstat"><div class="l">전략적 수주잔고</div><div class="v">$7.4B</div><div class="d">Wuxi 제외 시 $6.1B</div></div>
+      <div class="hstat"><div class="l">시장 내재 CAP</div><div class="v">≈10년</div><div class="d">단, 매출 5배+ 성장 전제</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#s1"><b>01</b> 핵심 요약</a><a href="#s2"><b>02</b> 기업 개요</a><a href="#s3"><b>03</b> 수익 구조</a>
+  <a href="#s4"><b>04</b> 제품·기술</a><a href="#s5"><b>05</b> 산업 분석</a><a href="#s6"><b>06</b> 경제적 해자</a>
+  <a href="#s7"><b>07</b> 피어 비교</a><a href="#s8"><b>08</b> 시장 내러티브</a><a href="#s9"><b>09</b> 재무·DCF</a>
+  <a href="#s10"><b>10</b> 내재 CAP</a><a href="#s11"><b>11</b> Bull Case</a><a href="#s12"><b>12</b> Bear Case</a>
+  <a href="#s13"><b>13</b> SWOT</a><a href="#s14"><b>14</b> 경영진·자본배분</a><a href="#s15"><b>15</b> 종합·체크포인트</a>
+</div></nav>
+
+<!-- ================= §1 핵심 요약 ================= -->
+<section id="s1">
+<div class="wrap">
+  <div class="eyebrow">Section 01 · Executive Summary</div>
+  <h2 class="sec">핵심 요약 — 30초 안에 이 회사를 이해한다면</h2>
+  <p class="lede">결론부터. 이 회사의 현재 주가에는 "이미 성공한 미래"가 상당 부분 선반영되어 있다. 다만 그 미래가 허황된 것은 아니다 — 계약서(수주잔고)는 이미 존재하고, 첫 양산 출하도 시작됐다.</p>
+
+  <div class="callout co-key">
+    <p><strong>세 줄 요약</strong></p>
+    <p>① indie Semiconductor는 자동차의 <em>감각기관 칩</em>(레이더·카메라·라이다 반도체)을 설계하는 2007년 설립 팹리스 기업으로, 아직 영업적자이지만 $7.4B(약 10조 원)의 전략적 수주잔고를 쌓아둔 상태다.</p>
+    <p>② 역DCF로 현재 주가 $4.68을 분해하면, 시장은 <strong>약 10년의 경쟁우위기간(CAP)</strong>과 <strong>2035년까지 매출 약 5.3배 성장(연 20%+) + 영업마진 -40%→+27%의 극적 반전</strong>을 이미 가격에 반영하고 있다.</p>
+    <p>③ 반면 월가 컨센서스 숫자를 그대로 연장하면 정당화 가능한 주가는 <strong>$1.5~1.7 수준</strong>에 그친다. 즉 현 주가는 "컨센서스보다 훨씬 낙관적인 백로그 실현 시나리오"에 베팅한 가격이며, 향후 4~6개 분기의 레이더·비전 양산 램프가 그 베팅의 성패를 가른다.</p>
+  </div>
+
+  <h3>무엇을 하는 회사인가</h3>
+  <p>자동차가 스스로 보고(카메라), 감지하고(레이더·라이다·초음파), 탑승자를 살피는(인캐빈 센싱) 데 필요한 반도체 칩을 설계한다.
+  직접 공장을 두지 않는 <strong>팹리스</strong>(설계 전문) 모델이며, 글로벌파운드리 등에 생산을 위탁한다. 완성차(OEM)에 직접 팔기보다
+  보쉬 같은 <strong>Tier 1 부품사를 거쳐</strong> 차에 탑재되는 구조다. 2021년 SPAC 합병으로 나스닥에 상장했고, 상장 후 8건 이상의
+  인수합병으로 레이더(Silicon Radar·Symeo), 비전(GEO), 포토닉스(TeraXion·Exalos), 인캐빈 SW(emotion3D) 역량을 붙여왔다.</p>
+
+  <div class="grid4">
+    <div class="card"><h4 style="margin-top:0">FY2025 매출</h4><p class="num" style="font-size:1.3rem;font-weight:800;margin:0">$217.4M</p><p class="muted" style="font-size:.8rem;margin:0">+0.3% YoY · 2년째 정체</p></div>
+    <div class="card"><h4 style="margin-top:0">GAAP 영업손실</h4><p class="num dn" style="font-size:1.3rem;margin:0">-$154.2M</p><p class="muted" style="font-size:.8rem;margin:0">Non-GAAP -$51.0M</p></div>
+    <div class="card"><h4 style="margin-top:0">현금 vs 부채</h4><p class="num" style="font-size:1.3rem;font-weight:800;margin:0">$185M / $415M</p><p class="muted" style="font-size:.8rem;margin:0">3/31/26 · 전환사채 3종</p></div>
+    <div class="card"><h4 style="margin-top:0">연간 현금소진</h4><p class="num dn" style="font-size:1.3rem;margin:0">약 -$57M</p><p class="muted" style="font-size:.8rem;margin:0">FY25 영업현금흐름</p></div>
+  </div>
+
+  <h3>왜 지금이 변곡점인가 — 세 가지 사건</h3>
+  <ol class="tight">
+    <li><strong>레이더 양산 개시.</strong> 유럽 Tier 1(정황상 보쉬로 추정)의 차세대(Gen 8) 레이더에 indie의 77GHz 칩이 채택되어 2025년 4분기 첫 출하, 2026년 1분기 $25M 규모 양산 주문을 받았다. 회사는 2026년 레이더 매출 $30~50M을 제시했다.</li>
+    <li><strong>중국 자회사(Wuxi) 매각.</strong> 연결매출의 43%를 차지하지만 전략과 무관해진 중국 법인 지분을 약 $135M 현금에 매각하는 계약을 2025년 10월 체결했다(2026년 말 클로징 예정). 성사되면 현금이 두터워지고 사업이 "코어"로 단순해진다.</li>
+    <li><strong>코어 매출 반등.</strong> Wuxi를 뺀 코어 매출이 분기 $28.3M(2025Q4) → $34.5M(2026Q1, +20% QoQ) → 약 $37M(2026Q2 가이드)으로 꺾여 올라가기 시작했다.</li>
+  </ol>
+
+  <div class="callout co-warn">
+    <p><strong>그러나 — 판단의 핵심 긴장.</strong> 수주잔고 $7.4B는 "향후 10년+에 걸친 예상 누적 매출"이지 확정 계약금액이 아니다.
+    자동차 프로그램은 지연·감산·취소가 일상이고, indie 자신도 2024~2025년에 이를 뼈아프게 겪었다(2024년 매출 역성장).
+    현 주가는 이 백로그의 상당 부분이 <em>계획대로</em> 매출화된다는 전제 위에 서 있다. 확신도: 이 긴장 구조 자체에 대해서는 높음(~85%),
+    실현 여부에 대해서는 판단 불가(증거 부족 — 향후 분기 실적이 결정적 증거).</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= §2 기업 개요 ================= -->
+<section id="s2">
+<div class="wrap">
+  <div class="eyebrow">Section 02 · Company Overview</div>
+  <h2 class="sec">기업 개요 — 세 번째 창업, 그리고 SPAC</h2>
+  <p class="lede">이 회사를 이해하려면 창업팀의 이력부터 봐야 한다. 이들은 "세계 최초 CMOS 파워앰프를 2.5억 개 판" 팀이며, indie는 그들의 재도전이다.</p>
+
+  <h3>창업 스토리</h3>
+  <p>CEO 도널드 매클라이먼트(Donald McClymont)와 공동창업자들(Ichiro Aoki, Scott Kee, Sam Kang 등)은 캘리포니아공대(Caltech) 연구실 출신으로,
+  앞서 <strong>Axiom Microdevices</strong>를 세워 세계 최초의 CMOS 공정 휴대폰 파워앰프를 상용화해 약 2.5억 개를 출하한 이력이 있다.
+  2007년 2월 이들은 Ay Dee Kay LLC(훗날 indie Semiconductor)를 설립했고, 초기에는 다양한 혼성신호(아날로그+디지털) 칩 수탁 설계를 하다가
+  <strong>자동차 한 우물</strong>로 방향을 좁혔다. "자동차의 감각기관(Autotech: ADAS·사용자경험·전동화)"이라는 테마다.</p>
+
+  <p>2021년 6월 10일, SPAC(기업인수목적회사) <strong>Thunder Bridge Acquisition II</strong>와의 합병으로 나스닥에 상장했다.
+  당시 기업가치 약 $1.4B, 조달액 약 $400M — SPAC 붐의 정점에서 상장한 수백 개 기업 중 하나였다. 이후 SPAC 출신 기업 대부분이
+  공모가를 크게 하회했고 indie도 예외가 아니었다(상장가 $10 부근 → 2025년 4월 사상최저 약 $1.53). 현재 주가 $4.68은
+  상장가 대비 반토막이지만 저점 대비로는 약 3배다.</p>
+
+  <figure class="figbox">
+    <div class="figtitle">연혁·인수 타임라인 — 설계자산을 사 모아 '센서 풀스택'을 조립한 과정</div>
+    <svg viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="indie Semiconductor 연혁 타임라인">
+      <line x1="40" y1="150" x2="930" y2="150" stroke="#C4CEDD" stroke-width="2"/>
+      <!-- ticks -->
+      <g font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#6B7A94" text-anchor="middle">
+        <g><circle cx="70" cy="150" r="5" fill="#24549E"/><text x="70" y="175">2007</text><text x="70" y="120" fill="#0E1B2C" font-weight="700" font-size="11.5">설립</text><text x="70" y="104" font-size="10.5">Ay Dee Kay</text></g>
+        <g><circle cx="205" cy="150" r="5" fill="#0E7C6B"/><text x="205" y="175">2021.6</text><text x="205" y="120" fill="#0E1B2C" font-weight="700" font-size="11.5">SPAC 상장</text><text x="205" y="104" font-size="10.5">약 $400M 조달</text></g>
+        <g><circle cx="330" cy="150" r="5" fill="#B4690E"/><text x="330" y="175">2021</text><text x="330" y="198" font-size="10.5" fill="#44526B">TeraXion $159M</text><text x="330" y="212" font-size="10.5" fill="#44526B">Symeo · ON Design</text><text x="330" y="120" fill="#0E1B2C" font-weight="700" font-size="11.5">포토닉스·레이더</text></g>
+        <g><circle cx="455" cy="150" r="5" fill="#B4690E"/><text x="455" y="175">2023</text><text x="455" y="198" font-size="10.5" fill="#44526B">GEO Semi(비전)</text><text x="455" y="212" font-size="10.5" fill="#44526B">Silicon Radar · Exalos</text><text x="455" y="120" fill="#0E1B2C" font-weight="700" font-size="11.5">비전 SoC 확보</text></g>
+        <g><circle cx="565" cy="150" r="5" fill="#B3362C"/><text x="565" y="175">2024</text><text x="565" y="120" fill="#0E1B2C" font-weight="700" font-size="11.5">매출 역성장</text><text x="565" y="104" font-size="10.5">차 산업 재고조정</text></g>
+        <g><circle cx="675" cy="150" r="5" fill="#B4690E"/><text x="675" y="175">2025.9</text><text x="675" y="198" font-size="10.5" fill="#44526B">emotion3D 인수</text><text x="675" y="120" fill="#0E1B2C" font-weight="700" font-size="11.5">인캐빈 SW</text></g>
+        <g><circle cx="775" cy="150" r="5" fill="#0E7C6B"/><text x="775" y="175">2025.10</text><text x="775" y="120" fill="#0E1B2C" font-weight="700" font-size="11.5">Wuxi 매각계약</text><text x="775" y="104" font-size="10.5">약 $135M 현금화</text></g>
+        <g><circle cx="890" cy="150" r="6" fill="#0E7C6B" stroke="#0A4A40" stroke-width="2"/><text x="890" y="175">2026</text><text x="890" y="120" fill="#0E1B2C" font-weight="700" font-size="11.5">레이더 양산</text><text x="890" y="104" font-size="10.5">+ ams 센서사업 인수</text><text x="890" y="198" font-size="10.5" fill="#44526B">iND881 출시</text></g>
+      </g>
+    </svg>
+    <figcaption>2021~2023년 인수 대상은 모두 "센서 신호사슬의 빈 칸"이었다: 레이더 프론트엔드(Silicon Radar·Symeo), 비전 프로세서(GEO), 광부품(TeraXion·Exalos). 2026년 5월에는 ams OSRAM의 CMOS 이미지센서 사업(€40M)까지 계약, 카메라 칩의 '눈' 자체를 내재화하려 한다.</figcaption>
+  </figure>
+
+  <h3>기업 생애주기 판별 — 교과서적 '도입기' 기업</h3>
+  <p>Dickinson(2011)의 현금흐름 부호 기반 생애주기 분류를 적용하면 판정은 명확하다.</p>
+  <div class="tblwrap"><table class="t-light">
+    <thead><tr><th>현금흐름 (FY2025)</th><th>금액</th><th>부호</th><th>해석</th></tr></thead>
+    <tbody>
+      <tr><td>영업활동 현금흐름</td><td class="num">-$57.1M</td><td class="num dn">(−)</td><td style="white-space:normal;text-align:left">본업에서 아직 현금을 태움</td></tr>
+      <tr><td>투자활동 현금흐름</td><td class="num">약 -$15M+</td><td class="num dn">(−)</td><td style="white-space:normal;text-align:left">capex·인수로 지속 투자</td></tr>
+      <tr><td>재무활동 현금흐름</td><td class="num">(+) 유입</td><td class="num up">(+)</td><td style="white-space:normal;text-align:left">전환사채·ATM 증자로 자금조달</td></tr>
+      <tr class="hl"><td>생애주기 판정</td><td colspan="3" style="text-align:left;white-space:normal"><strong>도입기(Introduction)</strong> — 외부자본으로 성장투자를 감당하는 단계. 이 단계 기업의 가치는 거의 전적으로 "미래 서사"에 달려 있으며, 밸류에이션 오차범위가 구조적으로 크다.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>지배구조·주주 스냅샷</h3>
+  <div class="kv">
+    <dt>CEO</dt><dd>Donald McClymont (공동창업자, 2007~현재)</dd>
+    <dt>CFO</dt><dd>Naixi Wu (2025.11 선임)</dd>
+    <dt>주요 변동</dt><dd>공동창업자·사장 Ichiro Aoki 2026.6.29 사임 — 창업 멤버 이탈은 관찰 필요 신호</dd>
+    <dt>주식 구조</dt><dd>Class A 211.3M + Class V 16.45M + 옵션 0.5M ≈ 완전환산 228.3M주</dd>
+    <dt>기관 보유</dt><dd>약 72% (BlackRock 약 9.8% 등)</dd>
+    <dt>공매도 잔고</dt><dd>60.9M주 = 유동주식의 <strong>약 29%</strong> (2026.6.3) — 시장 내 회의론이 매우 강함</dd>
+    <dt>누적 출하</dt><dd>디바이스 약 5.5억 개 (창사 이래)</dd>
+  </div>
+  <p class="src">출처: 회사 10-K/10-Q·프록시, 실적발표 자료, Nasdaq 공매도 통계. 공매도 비율은 유동주식 산정 방식에 따라 ±수%p 편차 가능.</p>
+</div>
+</section>
+
+<!-- ================= §3 수익 구조 ================= -->
+<section id="s3">
+<div class="wrap">
+  <div class="eyebrow">Section 03 · Revenue Architecture</div>
+  <h2 class="sec">수익 구조 — 지금의 매출과 미래의 매출은 다른 회사다</h2>
+  <p class="lede">2026년의 indie를 읽을 때 가장 흔한 오독은 "매출 $217M짜리 회사"로 보는 것이다. 실제로는 ① 곧 매각될 중국 법인, ② 성숙기 레거시 칩, ③ 이제 막 램프를 시작한 신제품이 한 손익계산서에 섞여 있다.</p>
+
+  <h3>매출의 세 층위</h3>
+  <div class="grid3">
+    <div class="card">
+      <span class="tag tag-r">매각 예정</span>
+      <h4>① Wuxi (중국 자회사)</h4>
+      <p style="font-size:.88rem">FY25 연결매출의 <strong>약 43%(약 $93.5M)</strong>. 중국 로컬 EV향 파워·믹스드시그널. 2025.10 매각계약 — 2026년 말 디컨솔리데이션 예정. 분기 매출은 이미 하향세($29.7M→$21M).</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-b">현금창출 기반</span>
+      <h4>② 코어 레거시</h4>
+      <p style="font-size:.88rem">차량용 무선충전(Ford Qi2.0 등), 조명, USB PD, 텔레매틱스 등. 화려하진 않지만 설계승(design win)이 누적된 '먹고사는' 부문. 2024~25년 재고조정의 직격탄을 맞았던 부분이기도 하다.</p>
+    </div>
+    <div class="card">
+      <span class="tag tag-g">가치의 원천</span>
+      <h4>③ 신성장 (레이더·비전·포토닉스)</h4>
+      <p style="font-size:.88rem">백로그의 72%+가 여기(비전+레이더). 2025Q4 레이더 첫 출하 → 2026 레이더 $30~50M 가이드, 비전(iND880)은 NIO 등에서 램프. 주가의 대부분은 이 층위의 미래가치다.</p>
+    </div>
+  </div>
+
+  <figure class="figbox">
+    <div class="figtitle">분기 매출 분해 — '코어의 반등'이 이 종목의 진짜 지표</div>
+    <svg viewBox="0 0 920 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="코어 대 Wuxi 분기 매출 막대그래프">
+      <g font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#6B7A94">
+        <line x1="70" y1="250" x2="890" y2="250" stroke="#C4CEDD" stroke-width="1.5"/>
+        <line x1="70" y1="250" x2="70" y2="40" stroke="#C4CEDD" stroke-width="1.5"/>
+        <text x="60" y="254" text-anchor="end">0</text>
+        <text x="60" y="188" text-anchor="end">20</text><line x1="66" y1="184" x2="890" y2="184" stroke="#E4E9F1" stroke-width="1"/>
+        <text x="60" y="122" text-anchor="end">40</text><line x1="66" y1="118" x2="890" y2="118" stroke="#E4E9F1" stroke-width="1"/>
+        <text x="60" y="56" text-anchor="end">60</text><line x1="66" y1="52" x2="890" y2="52" stroke="#E4E9F1" stroke-width="1"/>
+        <text x="30" y="150" transform="rotate(-90 30 150)" text-anchor="middle">$M / 분기</text>
+      </g>
+      <!-- Q4'25: core 28.3, wuxi 29.7 (total 58) ; Q1'26: 34.5 + 21 = 55.5 ; Q2'26E: 37 + 25 = 62 -->
+      <!-- scale: 1M = 3.3px -->
+      <g>
+        <rect x="170" y="156.6" width="120" height="93.4" fill="#0E7C6B"/>
+        <rect x="170" y="58.6"  width="120" height="98"   fill="#B4690E" opacity=".78"/>
+        <text x="230" y="208" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700" font-family="ui-monospace,Menlo,monospace">28.3</text>
+        <text x="230" y="112" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700" font-family="ui-monospace,Menlo,monospace">29.7</text>
+        <text x="230" y="272" text-anchor="middle" fill="#44526B" font-size="12.5" font-family="ui-monospace,Menlo,monospace">2025 Q4</text>
+      </g>
+      <g>
+        <rect x="410" y="136.2" width="120" height="113.8" fill="#0E7C6B"/>
+        <rect x="410" y="66.9"  width="120" height="69.3"  fill="#B4690E" opacity=".78"/>
+        <text x="470" y="198" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700" font-family="ui-monospace,Menlo,monospace">34.5</text>
+        <text x="470" y="106" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700" font-family="ui-monospace,Menlo,monospace">21.0</text>
+        <text x="470" y="272" text-anchor="middle" fill="#44526B" font-size="12.5" font-family="ui-monospace,Menlo,monospace">2026 Q1</text>
+        <text x="470" y="290" text-anchor="middle" fill="#0E7C6B" font-size="11.5" font-weight="700">코어 +20% QoQ</text>
+      </g>
+      <g>
+        <rect x="650" y="127.9" width="120" height="122.1" fill="#0E7C6B"/>
+        <rect x="650" y="45.4"  width="120" height="82.5"  fill="#B4690E" opacity=".78"/>
+        <text x="710" y="194" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700" font-family="ui-monospace,Menlo,monospace">약 37</text>
+        <text x="710" y="92"  text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700" font-family="ui-monospace,Menlo,monospace">약 25</text>
+        <text x="710" y="272" text-anchor="middle" fill="#44526B" font-size="12.5" font-family="ui-monospace,Menlo,monospace">2026 Q2 가이드</text>
+        <text x="710" y="290" text-anchor="middle" fill="#0E7C6B" font-size="11.5" font-weight="700">코어 +8% QoQ</text>
+      </g>
+    </svg>
+    <div class="legend"><span><i class="sw" style="background:#0E7C6B"></i>코어 (존속 사업)</span><span><i class="sw" style="background:#B4690E;opacity:.78"></i>Wuxi (매각 예정)</span></div>
+    <figcaption>Wuxi 디컨솔리데이션 이후에는 코어만 남는다. 코어가 분기 $28→$35→$37M로 두 분기 연속 두 자릿수 성장 중인 것이 "램프가 진짜"라는 1차 물증. 단, 두 분기는 추세 확정에 불충분하다(확신도: 반등 자체 높음 ~85%, 지속성 중간 ~55%).</figcaption>
+  </figure>
+
+  <h3>매출 인식 구조와 고객 집중</h3>
+  <ul class="tight">
+    <li><strong>제품 매출 vs 계약(NRE) 매출:</strong> 2026Q1 기준 제품 $51.6M + 개발계약 $3.9M. 개발계약 매출은 미래 양산의 선행지표이자 마진 보조 역할.</li>
+    <li><strong>고객 집중 완화 중:</strong> 최대 고객 Aptiv 비중 37%(2022) → 15%(2023) → 9%(2024). 특정 Tier 1 의존이 빠르게 줄었다 — 리스크 감소이자, 과거 성장 견인차의 퇴장이기도 하다.</li>
+    <li><strong>지역:</strong> 미국 외 매출 약 85%, Greater China 약 47%(FY25 — Wuxi 포함 수치). 매각 후 중국 노출은 크게 줄지만, 비전 램프의 주요 고객이 NIO 등 중국 EV라는 점은 남는다.</li>
+    <li><strong>백로그:</strong> $2.0B(2020) → $2.6B → $4.3B → $6.3B → $7.1B → <strong>$7.4B</strong>(2025Q3). Wuxi 몫 $1.3B 제외 시 코어 백로그 $6.1B. 정의상 "수주 프로그램의 생애 예상매출 합"으로, 연매출 대비 28배라는 숫자 자체보다 <em>매년 순증하고 있다는 방향성</em>이 정보량이 크다.</li>
+  </ul>
+
+  <div class="callout co-info">
+    <p><strong>회계 유의점.</strong> 백로그는 감사 대상 재무제표 항목이 아니라 경영진 추정치다. 프로그램 볼륨 가정(차량 판매대수 × 탑재율 × 단가)이 바뀌면 소리 없이 줄어들 수 있고, 실제로 취소·지연 시 공시 의무도 제한적이다. 이 보고서의 밸류에이션은 백로그를 직접 쓰지 않고 <em>매출 경로 시나리오</em>로 변환해 사용한다.</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= §4 제품·기술 ================= -->
+<section id="s4">
+<div class="wrap">
+  <div class="eyebrow">Section 04 · Products &amp; Technology</div>
+  <h2 class="sec">제품·기술 — 차의 눈·귀·촉각을 칩 하나씩 점령하기</h2>
+  <p class="lede">indie의 기술 전략은 한 문장으로 요약된다: <em>"센서 종류마다 전용 SoC를 만들되, 신호사슬 전체(광부품→프론트엔드→프로세서→SW)를 수직으로 갖춘다."</em></p>
+
+  <figure class="figbox">
+    <div class="figtitle">제품 지도 — 센서 신호사슬 위의 indie 자산 배치</div>
+    <svg viewBox="0 0 960 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="indie 제품 아키텍처 도식">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B7A94"/></marker>
+      </defs>
+      <!-- 4 sensor lanes -->
+      <g font-family="'Pretendard','Apple SD Gothic Neo',sans-serif">
+        <!-- RADAR lane -->
+        <rect x="20" y="20" width="920" height="88" rx="10" fill="#E3F2EE" stroke="#BCDCD4"/>
+        <text x="38" y="48" font-size="14" font-weight="800" fill="#0A4A40">레이더</text>
+        <text x="38" y="68" font-size="11" fill="#0A4A40">77GHz 전방·코너</text>
+        <text x="38" y="84" font-size="11" fill="#0A4A40">120GHz 인캐빈</text>
+        <rect x="200" y="34" width="200" height="60" rx="8" fill="#FFFFFF" stroke="#0E7C6B" stroke-width="1.5"/>
+        <text x="300" y="58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0E1B2C">77GHz 레이더 SoC</text>
+        <text x="300" y="76" text-anchor="middle" font-size="10.5" fill="#44526B">GF 22FDX · Tier1 Gen8 탑재</text>
+        <rect x="430" y="34" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#BCDCD4"/>
+        <text x="520" y="58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0E1B2C">Symeo 알고리즘</text>
+        <text x="520" y="76" text-anchor="middle" font-size="10.5" fill="#44526B">산업·차량 레이더 SW</text>
+        <rect x="640" y="34" width="280" height="60" rx="8" fill="#0E7C6B"/>
+        <text x="780" y="58" text-anchor="middle" font-size="12.5" font-weight="800" fill="#FFFFFF">2025Q4 첫 출하 → 26년 $30–50M</text>
+        <text x="780" y="76" text-anchor="middle" font-size="10.5" fill="#D9EFE9">유럽+아시아 OEM 2곳 · $25M 양산주문</text>
+        <!-- VISION lane -->
+        <rect x="20" y="122" width="920" height="88" rx="10" fill="#E7EEF9" stroke="#C3D3EC"/>
+        <text x="38" y="150" font-size="14" font-weight="800" fill="#173B70">비전</text>
+        <text x="38" y="170" font-size="11" fill="#173B70">CMS·ADAS 카메라</text>
+        <text x="38" y="186" font-size="11" fill="#173B70">스마트카메라·로봇</text>
+        <rect x="200" y="136" width="200" height="60" rx="8" fill="#FFFFFF" stroke="#24549E" stroke-width="1.5"/>
+        <text x="300" y="160" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0E1B2C">iND880 (GEO 기반)</text>
+        <text x="300" y="178" text-anchor="middle" font-size="10.5" fill="#44526B">DRAM-less · NIO eMirror 양산</text>
+        <rect x="430" y="136" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#24549E" stroke-width="1.5"/>
+        <text x="520" y="160" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0E1B2C">iND881 (26.6 출시)</text>
+        <text x="520" y="178" text-anchor="middle" font-size="10.5" fill="#44526B">NPU+DSP · sub-1ms ISP</text>
+        <rect x="640" y="136" width="280" height="60" rx="8" fill="#FFFFFF" stroke="#C3D3EC"/>
+        <text x="780" y="156" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0E1B2C">+ ams OSRAM CMOS 이미지센서 인수</text>
+        <text x="780" y="172" text-anchor="middle" font-size="10.5" fill="#44526B">€40M · 26Q3 클로징 예정 · 즉시 이익기여</text>
+        <text x="780" y="188" text-anchor="middle" font-size="10.5" fill="#44526B">+ emotion3D 인캐빈 SW (Mahindra 수주)</text>
+        <!-- PHOTONICS lane -->
+        <rect x="20" y="224" width="920" height="88" rx="10" fill="#FBF0DF" stroke="#E7CFA8"/>
+        <text x="38" y="252" font-size="14" font-weight="800" fill="#6E4109">포토닉스</text>
+        <text x="38" y="272" font-size="11" fill="#6E4109">라이다·퀀텀·항공우주</text>
+        <rect x="200" y="238" width="200" height="60" rx="8" fill="#FFFFFF" stroke="#E7CFA8"/>
+        <text x="300" y="262" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0E1B2C">TeraXion FBG·레이저</text>
+        <text x="300" y="280" text-anchor="middle" font-size="10.5" fill="#44526B">저잡음 광원 · 방산/우주 공급</text>
+        <rect x="430" y="238" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#E7CFA8"/>
+        <text x="520" y="262" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0E1B2C">Exalos SLED</text>
+        <text x="520" y="280" text-anchor="middle" font-size="10.5" fill="#44526B">광센싱 광원</text>
+        <rect x="640" y="238" width="280" height="60" rx="8" fill="#FFFFFF" stroke="#E7CFA8"/>
+        <text x="780" y="258" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0E1B2C">UV DFB 399nm 레이저 (냉각원자 퀀텀)</text>
+        <text x="780" y="274" text-anchor="middle" font-size="10.5" fill="#44526B">퀀텀 광학 매출 25년 약 $1M → 26년 3배 전망</text>
+        <text x="780" y="290" text-anchor="middle" font-size="10.5" fill="#44526B">라이다 SoC — 물류 AMR 채택</text>
+        <!-- LEGACY lane -->
+        <rect x="20" y="326" width="920" height="84" rx="10" fill="#EFF3F9" stroke="#D8DFEA"/>
+        <text x="38" y="354" font-size="14" font-weight="800" fill="#44526B">전동화·UX</text>
+        <text x="38" y="374" font-size="11" fill="#44526B">레거시 캐시카우</text>
+        <rect x="200" y="340" width="200" height="56" rx="8" fill="#FFFFFF" stroke="#D8DFEA"/>
+        <text x="300" y="363" text-anchor="middle" font-size="12" font-weight="700" fill="#0E1B2C">무선충전 (Ford Qi2.0)</text>
+        <text x="300" y="380" text-anchor="middle" font-size="10.5" fill="#44526B">1H26 양산</text>
+        <rect x="430" y="340" width="180" height="56" rx="8" fill="#FFFFFF" stroke="#D8DFEA"/>
+        <text x="520" y="363" text-anchor="middle" font-size="12" font-weight="700" fill="#0E1B2C">조명·USB PD 등</text>
+        <text x="520" y="380" text-anchor="middle" font-size="10.5" fill="#44526B">누적 5.5억 개 출하 기반</text>
+        <rect x="640" y="340" width="280" height="56" rx="8" fill="#FFFFFF" stroke="#D8DFEA"/>
+        <text x="780" y="363" text-anchor="middle" font-size="12" font-weight="700" fill="#0E1B2C">신시장: 휴머노이드·로보택시</text>
+        <text x="780" y="380" text-anchor="middle" font-size="10.5" fill="#44526B">Figure AI·Unitree 공급 개시 · 로보택시 설계승</text>
+      </g>
+    </svg>
+    <figcaption>색이 진할수록 현재 매출 기여가 확인된 영역. 레이더 레인의 진녹색 박스가 2026년 최대 관전 포인트다. 휴머노이드·로보택시·퀀텀은 아직 매출이 미미한 '옵션 가치' 영역이다.</figcaption>
+  </figure>
+
+  <h3>기술적 차별점 세 가지 — 그리고 각각의 반론</h3>
+  <div class="tblwrap"><table class="t-light">
+    <thead><tr><th style="min-width:180px">주장 (회사 측)</th><th style="min-width:300px">근거</th><th style="min-width:280px">반론·한계</th></tr></thead>
+    <tbody>
+      <tr><td style="white-space:normal;text-align:left"><strong>22nm RF-CMOS 레이더</strong> — 아날로그+디지털 단일칩</td><td style="white-space:normal;text-align:left">GF 22FDX 공정으로 프론트엔드와 프로세싱 통합 → BOM·전력·크기 절감. Tier 1의 차세대 플랫폼 채택이 성능 검증의 방증</td><td style="white-space:normal;text-align:left">TI·NXP·인피니언도 CMOS 레이더 보유. 채택 = 기술 우위의 증거이지만, 단일 플랫폼 채택이 지속적 점유율을 보장하지 않음</td></tr>
+      <tr><td style="white-space:normal;text-align:left"><strong>DRAM-less 비전 SoC</strong> — 외장 메모리 제거</td><td style="white-space:normal;text-align:left">iND880/881은 온칩 처리로 부품수·지연 절감(sub-1ms ISP). CMS(전자미러)처럼 지연에 민감한 응용에 유리. NIO 양산이 레퍼런스</td><td style="white-space:normal;text-align:left">고성능 ADAS 카메라는 Mobileye·TI가 장악. indie의 승부처는 프리미엄이 아니라 '스마트 에지 카메라'라는 틈새</td></tr>
+      <tr><td style="white-space:normal;text-align:left"><strong>'no China no Taiwan' 공급망</strong></td><td style="white-space:normal;text-align:left">지정학 리스크를 피하려는 서방 OEM에게 세컨드소스 매력. GF(미국·독일) 중심 생산</td><td style="white-space:normal;text-align:left">이는 원가 우위가 아니라 조달정책 우위 — 지정학 완화 시 프리미엄 소멸 가능</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">출처: 회사 제품발표(2026.6.10 iND881), 실적 콜(2025Q4·2026Q1), GlobalFoundries 22FDX 자료. Tier 1 파트너명은 회사가 비공개 — '보쉬 추정'은 Gen 8 명명·22nm RF-CMOS 사양 일치 등 정황 기반 추론(확신도 중간 ~65%)이며 확정 사실이 아니다.</p>
+</div>
+</section>
+
+<!-- ================= §5 산업 분석 ================= -->
+<section id="s5">
+<div class="wrap">
+  <div class="eyebrow">Section 05 · Industry</div>
+  <h2 class="sec">산업 분석 — 성장하는 바다, 그러나 고래들의 바다</h2>
+  <p class="lede">차량용 반도체는 구조적 성장 시장이 맞다. 문제는 그 성장의 과실을 누가 가져가느냐다. 이 시장의 승자 대부분은 매출 수십억 달러의 IDM(종합반도체)들이다.</p>
+
+  <h3>시장 규모와 성장률</h3>
+  <div class="tblwrap"><table class="t-light">
+    <thead><tr><th>시장</th><th>2025년 규모</th><th>2030년 전망</th><th>CAGR</th><th>indie 관련성</th></tr></thead>
+    <tbody>
+      <tr><td>차량용 반도체 전체</td><td class="num">$77.4B</td><td class="num">$133B</td><td class="num">11.4%</td><td style="white-space:normal;text-align:left">모수 시장 (MarketsandMarkets 기준)</td></tr>
+      <tr class="hl"><td>ADAS 반도체 세그먼트</td><td class="num">—</td><td class="num">—</td><td class="num">약 15.6%</td><td style="white-space:normal;text-align:left">레이더·비전의 직접 시장 — 전체보다 빠름</td></tr>
+      <tr><td>EV 파워트레인 반도체</td><td class="num">$11B ('23)</td><td class="num">$27B ('30)</td><td class="num">약 13%</td><td style="white-space:normal;text-align:left">Wuxi 매각으로 노출 축소</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">추정기관별 편차 유의: Mordor Intelligence는 전체 시장을 $100B('25)→$143B('30), CAGR 7.3%로 더 보수적으로 본다. "두 자릿수 안팎 성장"이라는 방향은 기관 간 일치, 절대 규모는 ±30% 편차.</p>
+
+  <h3>성장의 물리적 근거 — 차 한 대당 센서 수</h3>
+  <p>구조적 성장의 논리는 단순하다. 자동 긴급제동(AEB) 의무화, 유로 NCAP 별점 요건, 미국 FMVSS 개정 등 <strong>규제가 센서 탑재를 강제</strong>하고,
+  레벨 2+ 주행보조의 대중화가 차 한 대당 레이더를 1개(전방)에서 5개(전방+코너4)로, 카메라를 1~2개에서 8~11개로 늘리고 있다.
+  차 판매대수가 늘지 않아도 <em>대당 반도체 금액(content per vehicle)</em>이 증가하는 시장 — 이것이 ADAS 세그먼트가 전체 시장보다 빠른 이유다.</p>
+
+  <h3>경쟁 지형 — 5 Forces 압축 점검</h3>
+  <div class="grid2">
+    <div class="card">
+      <h4 style="margin-top:0">기존 경쟁 강도 <span class="tag tag-r">매우 높음</span></h4>
+      <p style="font-size:.88rem;margin-bottom:0">레이더: 인피니언·NXP·TI. 비전: Mobileye·TI·암바렐라·온세미. 모두 indie보다 10~100배 큰 매출과 검증된 양산 이력 보유. indie는 '다윗' 포지션.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">구매자 교섭력 <span class="tag tag-r">높음</span></h4>
+      <p style="font-size:.88rem;margin-bottom:0">Tier 1·OEM은 연간 단가인하(LTA)를 관행으로 요구. 단, 일단 설계승에 들어가면 프로그램 기간(5~7년) 동안 교체가 어려워 관계가 역전됨.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">신규 진입 위협 <span class="tag tag-b">중간</span></h4>
+      <p style="font-size:.88rem;margin-bottom:0">차량 인증(AEC-Q100, ISO 26262 기능안전)이 수년 걸리는 진입장벽. 반면 중국 로컬 칩사(재작 지원)가 중국 시장에서 빠르게 성장 — Wuxi 매각의 배경이기도 하다.</p>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">대체재·공급자 <span class="tag tag-b">중간</span></h4>
+      <p style="font-size:.88rem;margin-bottom:0">센서 융합 구조상 레이더↔카메라는 대체가 아닌 보완(테슬라의 비전 단독 노선은 예외적). 파운드리(GF) 의존은 공급자 리스크이자 'no China no Taiwan' 세일즈 포인트.</p>
+    </div>
+  </div>
+
+  <div class="callout co-info">
+    <p><strong>산업 사이클 위치.</strong> 2024~2025년 차량용 반도체는 팬데믹기 과잉주문의 재고조정을 통과했다(indie의 2024년 역성장, Mobileye의 2024년 급감이 같은 원인). 2026년 들어 재고 정상화 + 신차 프로그램 재개로 회복 국면이라는 것이 업계 공통 인식이나, 6월 초 반도체 섹터 급락(관세·매크로)이 보여주듯 수요의 거시 민감도는 여전하다.</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= §6 경제적 해자 ================= -->
+<section id="s6">
+<div class="wrap">
+  <div class="eyebrow">Section 06 · Moat Assessment</div>
+  <h2 class="sec">경제적 해자 — '해자 후보'는 있으나 아직 검증되지 않았다</h2>
+  <p class="lede">모부신 프레임에서 해자의 존재 증명은 단 하나, <em>자본비용을 넘는 투하자본수익률(ROIC &gt; WACC)의 지속</em>이다. indie는 NOPAT 자체가 음수이므로, 엄밀히 말해 해자는 아직 '측정 불가' 상태다.</p>
+
+  <h3>차별화 vs 원가우위 판별</h3>
+  <p>indie가 추구하는 전략은 명백히 <strong>차별화(소비자 우위)</strong> 경로다: 통합도 높은 전용 SoC로 Tier 1의 시스템 원가를 낮춰주고 그 가치의 일부를 가격에 반영받는 모델.
+  규모의 경제로 싸게 파는 원가우위 경로는 인피니언·NXP 같은 IDM의 영역이며 indie가 이길 수 없는 게임이다.</p>
+
+  <h3>해자 '후보' 자산의 목록과 강도 평가</h3>
+  <div class="tblwrap"><table class="t-light">
+    <thead><tr><th style="min-width:170px">해자 후보</th><th style="min-width:330px">내용</th><th>강도 평가</th></tr></thead>
+    <tbody>
+      <tr><td style="white-space:normal;text-align:left"><strong>전환비용 (설계승 락인)</strong></td><td style="white-space:normal;text-align:left">차량 프로그램에 한번 채택되면 5~7년간 교체 곤란. 백로그 $7.4B가 이 락인의 화폐적 표현</td><td><span class="tag tag-g">유망 — 최강 후보</span></td></tr>
+      <tr><td style="white-space:normal;text-align:left"><strong>무형자산 (인증·안전)</strong></td><td style="white-space:normal;text-align:left">AEC-Q100·ISO 26262 인증, 차량 등급 신뢰성 이력(누적 5.5억 개). 신규 진입자 대비 수년의 시간 장벽</td><td><span class="tag tag-b">중간 — 업계 공통재</span></td></tr>
+      <tr><td style="white-space:normal;text-align:left"><strong>지정학 포지셔닝</strong></td><td style="white-space:normal;text-align:left">'no China no Taiwan' 공급망 — 서방 OEM의 이중조달 수요 충족</td><td><span class="tag tag-b">중간 — 정책 의존적</span></td></tr>
+      <tr><td style="white-space:normal;text-align:left"><strong>규모의 경제</strong></td><td style="white-space:normal;text-align:left">매출 $217M — R&amp;D $154M을 상각하기엔 매출 기반이 작음. 경쟁사 대비 규모 열위</td><td><span class="tag tag-r">부재 — 오히려 역해자</span></td></tr>
+      <tr><td style="white-space:normal;text-align:left"><strong>네트워크 효과·브랜드</strong></td><td style="white-space:normal;text-align:left">해당 없음 (B2B 부품업 특성)</td><td><span class="tag tag-r">부재</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout co-warn">
+    <p><strong>판정.</strong> 해자의 원재료(전환비용+인증장벽)는 실재하나, 그것이 <em>초과수익으로 전환됐다는 재무적 증거는 아직 없다</em>(GAAP 영업마진 -71%, Non-GAAP로도 -23%). 
+    모부신의 언어로 말하면 indie의 CAP는 "지금 벌고 있는 초과수익을 얼마나 지키느냐"가 아니라 <strong>"초과수익 창출 능력을 획득할 수 있느냐"</strong>의 문제다. 
+    이 차이가 §10 내재 CAP 해석의 핵심 전제가 된다. 확신도: 해자 미검증 판정 높음(~90%).</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= §7 피어 비교 ================= -->
+<section id="s7">
+<div class="wrap">
+  <div class="eyebrow">Section 07 · Peer Comparison</div>
+  <h2 class="sec">피어 비교 — 누구와 견주어야 공정한가</h2>
+  <p class="lede">"자동차 센싱 반도체"라는 같은 무대 위에 서 있지만 체급과 수익성은 하늘과 땅 차이다. 멀티플을 그대로 비교하면 오독이 생기는 이유다.</p>
+
+  <div class="tblwrap"><table class="t-light wide">
+    <thead><tr><th>기업</th><th>최근 연매출</th><th>성장률</th><th>총이익률</th><th>수익성</th><th>시가총액</th><th>P/S (대략)</th><th style="min-width:220px">한 줄 포지션</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td><strong>indie (INDI)</strong></td><td class="num">$217M (FY25)</td><td class="num">+0.3%<br><small>코어는 QoQ +20%</small></td><td class="num">GAAP 39.9%</td><td class="num dn">영업적자</td><td class="num">$1.07B</td><td class="num">약 4.9x</td><td style="white-space:normal;text-align:left">램프 직전의 도전자 — 멀티플은 미래 성장 선반영</td></tr>
+      <tr><td>Mobileye (MBLY)</td><td class="num">$1,894M</td><td class="num">+15% → 26년 0~5% 가이드</td><td class="num">높음</td><td class="num">NG 흑자</td><td class="num">$7.3B</td><td class="num">약 3.8x</td><td style="white-space:normal;text-align:left">ADAS 비전의 지배자, 그러나 성장 둔화 — $24.5B 파이프라인</td></tr>
+      <tr><td>Ambarella (AMBA)</td><td class="num">$391M (CY25)</td><td class="num">+37%</td><td class="num">약 59%</td><td class="num">NG 흑자전환</td><td class="num">약 $4.5B</td><td class="num">약 11x</td><td style="white-space:normal;text-align:left">엣지 AI 비전 — indie 비전사업의 '성공 시 미래상'에 가장 가까움</td></tr>
+      <tr><td>NXP (NXPI)</td><td class="num">분기 $3.2B</td><td class="num">+12% YoY</td><td class="num">57.1%</td><td class="num up">영업마진 33%</td><td class="num">약 $55B</td><td class="num">P/E 약 17x</td><td style="white-space:normal;text-align:left">차량 반도체 종합 강자 — indie가 침투해야 할 기득권</td></tr>
+    </tbody>
+  </table></div>
+
+  <figure class="figbox">
+    <div class="figtitle">EV/매출 배수 vs 성장률 — indie는 '성장 없는 성장주 밸류에이션' 구간에 있다</div>
+    <svg viewBox="0 0 920 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="피어 밸류에이션 산점도">
+      <g font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#6B7A94">
+        <line x1="90" y1="290" x2="880" y2="290" stroke="#C4CEDD" stroke-width="1.5"/>
+        <line x1="90" y1="290" x2="90" y2="30" stroke="#C4CEDD" stroke-width="1.5"/>
+        <text x="485" y="326" text-anchor="middle">최근 확인된 매출 성장률 (YoY)</text>
+        <text x="36" y="160" transform="rotate(-90 36 160)" text-anchor="middle">P/S 또는 EV/S 배수 (배)</text>
+        <text x="90" y="308" text-anchor="middle">0%</text><text x="288" y="308" text-anchor="middle">+10%</text>
+        <text x="486" y="308" text-anchor="middle">+20%</text><text x="684" y="308" text-anchor="middle">+30%</text><text x="880" y="308" text-anchor="middle">+40%</text>
+        <text x="82" y="294" text-anchor="end">0</text>
+        <line x1="86" y1="225" x2="880" y2="225" stroke="#E4E9F1"/><text x="82" y="229" text-anchor="end">3</text>
+        <line x1="86" y1="160" x2="880" y2="160" stroke="#E4E9F1"/><text x="82" y="164" text-anchor="end">6</text>
+        <line x1="86" y1="95"  x2="880" y2="95"  stroke="#E4E9F1"/><text x="82" y="99" text-anchor="end">9</text>
+        <line x1="86" y1="30"  x2="880" y2="30"  stroke="#E4E9F1"/><text x="82" y="34" text-anchor="end">12</text>
+      </g>
+      <!-- x: 0%->90, 40%->880 => 19.75px per % ; y: 0x->290, 12x->30 => 21.67px per x -->
+      <!-- INDI: growth 0.3%, ps 4.9 -->
+      <circle cx="96" cy="184" r="13" fill="#0E7C6B"/>
+      <text x="118" y="178" font-size="13" font-weight="800" fill="#0A4A40" font-family="'Pretendard',sans-serif">INDI 4.9x · +0.3%</text>
+      <text x="118" y="224" font-size="11" fill="#44526B" font-family="'Pretendard',sans-serif">(연결 기준 — 코어 램프 기대가 배수를 지탱)</text>
+      <!-- MBLY: 15%, 3.8 -->
+      <circle cx="386" cy="208" r="11" fill="#24549E"/>
+      <text x="404" y="213" font-size="13" font-weight="700" fill="#173B70" font-family="'Pretendard',sans-serif">MBLY 3.8x · +15%</text>
+      <!-- AMBA: 37%, 11 -->
+      <circle cx="821" cy="52" r="11" fill="#B4690E"/>
+      <text x="806" y="83" font-size="13" font-weight="700" fill="#6E4109" text-anchor="end" font-family="'Pretendard',sans-serif">AMBA 약 11x · +37%</text>
+      <!-- NXPI: 12%, ~4.4 EV/S approx -->
+      <circle cx="327" cy="195" r="11" fill="#44526B"/>
+      <text x="345" y="188" font-size="13" font-weight="700" fill="#44526B" font-family="'Pretendard',sans-serif">NXPI 약 4.4x EV/S · +12% (흑자)</text>
+      <path d="M118 168 Q 300 60 800 44" stroke="#0E7C6B" stroke-width="1.5" stroke-dasharray="5 5" fill="none"/>
+      <text x="395" y="110" font-size="11.5" fill="#0A4A40" font-family="'Pretendard',sans-serif">시장이 INDI에 기대하는 이동 경로: 성장 재점화 → AMBA형 밸류에이션</text>
+    </svg>
+    <figcaption>배수 산정: INDI P/S = 시총 $1.07B ÷ TTM 매출 $217M ≈ 4.9x (EV/2026E 매출로는 약 4.4x). 흑자기업(NXPI)과 적자기업의 매출배수 직접 비교는 참고용일 뿐이다. 핵심 메시지: indie의 배수는 '현재 실적'이 아니라 'AMBA처럼 될 가능성'의 가격이다.</figcaption>
+  </figure>
+
+  <div class="callout co-info">
+    <p><strong>벤치마킹 시사점.</strong> AMBA는 매출 $391M·GM 59%에서 Non-GAAP 흑자를 만들었다. indie 경영진이 제시해 온 목표 모델(GM 60%, Non-GAAP 영업마진 30%)이 공상이 아니라 <em>동종 업계에서 실존하는 상태</em>임을 보여주는 사례다. 반대로 MBLY는 지배적 점유율로도 성장이 한 자릿수로 꺾일 수 있음을 — 즉 ADAS 시장에서도 CAP는 유한함을 — 보여준다.</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= §8 시장 내러티브 (다크) ================= -->
+<section id="s8" class="dark">
+<div class="wrap">
+  <div class="eyebrow">Section 08 · Market Narrative</div>
+  <h2 class="sec">시장 내러티브 — 지난 18개월, 주가는 무엇에 반응했나</h2>
+  <p class="lede">이 종목의 주가는 실적 그 자체보다 "백로그 서사가 살아있는가"라는 질문에 반응해 왔다. 급락과 급등의 촉매를 시간순으로 복기한다.</p>
+
+  <figure class="figbox">
+    <div class="figtitle">주가 이벤트 지도 (2025.1 – 2026.7.1, 근사 경로)</div>
+    <svg viewBox="0 0 940 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="INDI 주가 이벤트 차트">
+      <g font-family="ui-monospace,Menlo,monospace" font-size="11.5" fill="#9FB0C8">
+        <line x1="60" y1="300" x2="900" y2="300" stroke="#2C3E5C" stroke-width="1.5"/>
+        <line x1="60" y1="300" x2="60" y2="40" stroke="#2C3E5C" stroke-width="1.5"/>
+        <line x1="56" y1="225.7" x2="900" y2="225.7" stroke="#1B2C46"/><text x="50" y="229" text-anchor="end">$2</text>
+        <line x1="56" y1="151.4" x2="900" y2="151.4" stroke="#1B2C46"/><text x="50" y="155" text-anchor="end">$4</text>
+        <line x1="56" y1="77.1"  x2="900" y2="77.1"  stroke="#1B2C46"/><text x="50" y="81" text-anchor="end">$6</text>
+        <text x="60" y="320" text-anchor="middle">25.1</text><text x="242" y="320" text-anchor="middle">25.5</text>
+        <text x="424" y="320" text-anchor="middle">25.9</text><text x="606" y="320" text-anchor="middle">26.1</text>
+        <text x="788" y="320" text-anchor="middle">26.5</text><text x="879" y="320" text-anchor="middle">26.7</text>
+      </g>
+      <polyline points="60,144 128,150 135,152 150,196 175,225 206,243 235,228 259,218 300,205 333,192 380,188 424,185 468,172 500,150 510,140 524,155 552,132 583,114 612,88 629,75 648,105 672,135 700,183 730,164 765,150 797,129 822,121 835,118 848,141 870,151 879,126"
+        fill="none" stroke="#5ED0BC" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- event markers -->
+      <g font-family="'Pretendard','Apple SD Gothic Neo',sans-serif" font-size="11">
+        <circle cx="135" cy="152" r="4.5" fill="#E9896F"/>
+        <text x="118" y="120" fill="#E9896F" font-weight="700">25.2.20</text>
+        <text x="118" y="134" fill="#9FB0C8">Q4 실적+가이던스 쇼크</text>
+        <circle cx="206" cy="243" r="4.5" fill="#E9896F"/>
+        <text x="188" y="272" fill="#E9896F" font-weight="700">25.4 저점 $1.53</text>
+        <text x="188" y="286" fill="#9FB0C8">관세 폭락 + 성장목표 철회 여파</text>
+        <circle cx="259" cy="218" r="4" fill="#7FA6E0"/>
+        <text x="266" y="205" fill="#7FA6E0" font-weight="700">5.12 구조조정</text>
+        <text x="266" y="219" fill="#9FB0C8">연 $32–40M 절감</text>
+        <circle cx="505" cy="146" r="4.5" fill="#5ED0BC"/>
+        <text x="428" y="112" fill="#5ED0BC" font-weight="700">10.28 Wuxi 매각 계약</text>
+        <circle cx="524" cy="155" r="4" fill="#E9896F"/>
+        <text x="536" y="178" fill="#E9896F" font-weight="700">11.6 Q3 미스</text>
+        <text x="536" y="192" fill="#9FB0C8">그러나 백로그 $7.4B 공개</text>
+        <circle cx="629" cy="75" r="4.5" fill="#5ED0BC"/>
+        <text x="600" y="58" fill="#5ED0BC" font-weight="700">26.1 고점 $6.05</text>
+        <circle cx="700" cy="183" r="4.5" fill="#E9896F"/>
+        <text x="668" y="228" fill="#E9896F" font-weight="700">3.3 $3.16</text>
+        <text x="640" y="242" fill="#9FB0C8">전환사채 발행(2031물)·차환</text>
+        <circle cx="797" cy="129" r="4" fill="#7FA6E0"/>
+        <text x="742" y="98" fill="#7FA6E0" font-weight="700">5.7 Q1 실적</text>
+        <text x="742" y="112" fill="#9FB0C8">코어 +20% QoQ</text>
+        <circle cx="848" cy="141" r="4" fill="#E9896F"/>
+        <text x="898" y="248" fill="#E9896F" font-weight="700" text-anchor="end">6.5 섹터 -10%</text>
+        <text x="898" y="263" fill="#9FB0C8" text-anchor="end">6.10 iND881 출시·TD Cowen Hold</text>
+        <circle cx="879" cy="126" r="5.5" fill="#FFFFFF" stroke="#5ED0BC" stroke-width="2.5"/>
+        <text x="880" y="106" fill="#FFFFFF" font-weight="800" text-anchor="end">7.1 $4.68</text>
+      </g>
+    </svg>
+    <figcaption>일별 시세를 이벤트 기준으로 근사 복원한 경로이며 축척은 개략적이다(정밀 차트 아님). 저점 $1.53(2025.4) 대비 약 3배, 52주 고점 $6.05 대비 약 -23% 위치.</figcaption>
+  </figure>
+
+  <h3>내러티브의 구조 — 강세론과 약세론이 같은 사실을 다르게 읽는다</h3>
+  <div class="grid2">
+    <div class="callout co-night" style="margin:0">
+      <p><strong>강세 서사 (매수측).</strong> "백로그 $7.4B는 이미 계약된 미래다. 레이더 첫 출하와 코어 +20% QoQ는 램프의 시작이며, Wuxi 매각으로 현금 $135M이 들어오면 흑자전환까지의 활주로는 충분하다. 2027년 컨센서스 흑자($24.5M)가 보이기 시작했다."</p>
+    </div>
+    <div class="callout co-night" style="margin:0">
+      <p><strong>약세 서사 (공매도 29%의 논리).</strong> "이 회사는 5년째 흑자 약속을 미뤄왔다. 2024년에도 백로그는 늘었지만 매출은 줄었다. SBC 연 $66M, 전환사채 3종(2031물은 전환가 $3.87로 이미 내가격 — 약 44M주 희석 대기), 연 $57M 현금소진. 서사는 화려하나 주주가치는 계속 희석 중이다."</p>
+    </div>
+  </div>
+  <p style="margin-top:16px">두 서사 모두 사실에 기반한다. 차이는 <em>백로그→매출 전환율</em>과 <em>전환 속도</em>에 대한 확률 배정뿐이다. 그래서 이 종목의 밸류에이션은 멀티플 논쟁이 아니라, §9~10처럼 "현 주가가 어떤 전환 경로를 내재하는가"를 역산하는 방식이 가장 정직하다.</p>
+</div>
+</section>
+
+<!-- ================= §9 재무·DCF ================= -->
+<section id="s9">
+<div class="wrap">
+  <div class="eyebrow">Section 09 · Financials &amp; DCF</div>
+  <h2 class="sec">재무 분석과 DCF — 손익의 해부, 그리고 가치의 뼈대</h2>
+  <p class="lede">먼저 지난 6년의 손익을 해부해 "왜 적자인가"를 확인하고, 그 위에 명시적 가정의 DCF를 세운다. 모든 가정은 표로 공개한다 — 틀릴 수 있는 지점을 숨기지 않기 위해서다.</p>
+
+  <h3>6년 요약 — 성장은 멈췄고, 비용은 남았다</h3>
+  <div class="tblwrap"><table class="t-light wide">
+    <thead><tr><th>$M</th><th>2020</th><th>2021</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th></tr></thead>
+    <tbody>
+      <tr><td>매출</td><td class="num">22.6</td><td class="num">48.4</td><td class="num">110.8</td><td class="num">223.2</td><td class="num">216.7</td><td class="num">217.4</td></tr>
+      <tr><td>YoY</td><td class="num">—</td><td class="num up">+114%</td><td class="num up">+129%</td><td class="num up">+101%</td><td class="num dn">-2.9%</td><td class="num">+0.3%</td></tr>
+      <tr><td>GAAP 총이익률</td><td class="num" colspan="3" style="text-align:center"><small>성장기: 규모의 경제 진행</small></td><td class="num">—</td><td class="num">—</td><td class="num">39.9%</td></tr>
+      <tr><td>R&amp;D</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">154.1</td></tr>
+      <tr><td>SG&amp;A</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">77.7</td></tr>
+      <tr><td>GAAP 영업손익</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num dn">-170.1</td><td class="num dn">-154.2</td></tr>
+      <tr><td>Non-GAAP 영업손익</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num dn">-65.4</td><td class="num dn">-51.0</td></tr>
+      <tr><td>주식보상비(SBC)</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">69.0</td><td class="num">66.5</td></tr>
+      <tr class="tot"><td>영업활동 현금흐름</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num dn">-58.6</td><td class="num dn">-57.1</td></tr>
+    </tbody>
+  </table></div>
+  <p>구조는 명확하다. <strong>매출 $217M인 회사가 R&amp;D에 $154M을 쓴다</strong>(매출 대비 71%). 이것은 방만이 아니라 선택이다 — 레이더·비전 SoC 세대 개발을 매출 규모가 갖춰지기 전에 감행한 선행투자다.
+  따라서 흑자전환의 경로도 비용 절감이 아니라 <em>분모(매출)의 성장</em>이어야 하며, 실제로 2025년 구조조정(연 $32–40M 절감)으로 Non-GAAP 손실은 이미 축소 중이다(분기 -$11.1M까지, 2026Q1).</p>
+
+  <h3>DCF 공통 입력 — WACC와 자본 브리지</h3>
+  <div class="grid2">
+    <div class="card">
+      <h4 style="margin-top:0">할인율 (WACC 11.6%)</h4>
+      <div class="kv">
+        <dt>무위험이자율</dt><dd class="num">4.48% (10Y 국채, 7/1)</dd>
+        <dt>ERP</dt><dd class="num">4.23% (다모다란 내재, 26.1)</dd>
+        <dt>베타</dt><dd class="num">원시 2.65 → 조정 2.10</dd>
+        <dt>자기자본비용</dt><dd class="num">13.38%</dd>
+        <dt>세후 부채비용</dt><dd class="num">약 7% · E/V 72%</dd>
+        <dt class="up">WACC</dt><dd class="num up">11.60%</dd>
+      </div>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">주주가치 브리지 (EV → 주당가치)</h4>
+      <div class="kv">
+        <dt>(+) 현금</dt><dd class="num">$184.7M (3/31/26)</dd>
+        <dt>(+) Wuxi 매각대금 PV</dt><dd class="num">$128M (=$135M 반년 할인)</dd>
+        <dt>(−) 총부채</dt><dd class="num">$415.1M (전환사채 3종+리볼버)</dd>
+        <dt>주식수</dt><dd class="num">228.3M주 (완전환산)</dd>
+        <dt>영구성장률 g</dt><dd class="num">2.25% (10Y BEI 기반)</dd>
+        <dt>페이드율</dt><dd class="num">0.25 (반도체 업종 중앙값)</dd>
+      </div>
+    </div>
+  </div>
+
+  <h3>시장 내재 케이스 — 현 주가 $4.68을 만들어내는 경로 (전시 형식)</h3>
+  <p>아래 표가 이 보고서의 심장이다. "현 주가가 정확히 나오려면 어떤 미래여야 하는가"를 연도별로 펼친 것으로, CAP를 10년(2035년까지)으로 두고 페이드 모델 잔존가치를 적용했다.</p>
+  <div class="tblwrap"><table class="t-light wide">
+    <thead><tr><th>연도</th><th>매출 $M</th><th>성장률</th><th>EBITA $M</th><th>마진</th><th>세율</th><th>NOPAT $M</th><th>투자 $M</th><th>FCF $M</th><th>현재가치 $M</th></tr></thead>
+    <tbody>
+      <tr><td>2026E</td><td class="num">266</td><td class="num">+22%</td><td class="num dn">-106</td><td class="num dn">-40%</td><td class="num">0%</td><td class="num dn">-106</td><td class="num">5</td><td class="num dn">-112</td><td class="num dn">-54</td></tr>
+      <tr><td>2027E</td><td class="num">250</td><td class="num dn">-6%<br><small>Wuxi 이탈</small></td><td class="num dn">-60</td><td class="num dn">-24%</td><td class="num">0%</td><td class="num dn">-60</td><td class="num">5</td><td class="num dn">-65</td><td class="num dn">-58</td></tr>
+      <tr><td>2028E</td><td class="num">362</td><td class="num up">+45%</td><td class="num dn">-22</td><td class="num dn">-6%</td><td class="num">0%</td><td class="num dn">-22</td><td class="num">47</td><td class="num dn">-68</td><td class="num dn">-55</td></tr>
+      <tr><td>2029E</td><td class="num">500</td><td class="num up">+38%</td><td class="num">30</td><td class="num">+6%</td><td class="num">5%</td><td class="num">29</td><td class="num">58</td><td class="num dn">-30</td><td class="num dn">-21</td></tr>
+      <tr><td>2030E</td><td class="num">650</td><td class="num up">+30%</td><td class="num">85</td><td class="num">+13%</td><td class="num">5%</td><td class="num">80</td><td class="num">66</td><td class="num">15</td><td class="num">10</td></tr>
+      <tr><td>2031E</td><td class="num">813</td><td class="num up">+25%</td><td class="num">146</td><td class="num">+18%</td><td class="num">5%</td><td class="num">139</td><td class="num">73</td><td class="num">66</td><td class="num">38</td></tr>
+      <tr><td>2032E</td><td class="num">975</td><td class="num up">+20%</td><td class="num">215</td><td class="num">+22%</td><td class="num">12%</td><td class="num">189</td><td class="num">76</td><td class="num">112</td><td class="num">58</td></tr>
+      <tr><td>2033E</td><td class="num">1,132</td><td class="num">+16%</td><td class="num">277</td><td class="num">+24.5%</td><td class="num">12%</td><td class="num">244</td><td class="num">77</td><td class="num">167</td><td class="num">77</td></tr>
+      <tr><td>2034E</td><td class="num">1,279</td><td class="num">+13%</td><td class="num">332</td><td class="num">+26%</td><td class="num">18%</td><td class="num">273</td><td class="num">77</td><td class="num">196</td><td class="num">81</td></tr>
+      <tr><td>2035E</td><td class="num">1,419</td><td class="num">+11%</td><td class="num">383</td><td class="num">+27%</td><td class="num">18%</td><td class="num">314</td><td class="num">78</td><td class="num">237</td><td class="num">88</td></tr>
+      <tr class="tot"><td>잔존가치</td><td colspan="7" style="text-align:left;white-space:normal"><small>페이드 모델(페이드율 0.25, 최종 ROIIC 30%, g=2.25%) — 2035년 명목 $2,853M</small></td><td class="num">—</td><td class="num">1,006</td></tr>
+      <tr class="hl"><td>기업가치 합</td><td colspan="8" style="text-align:left;white-space:normal">명시적 FCF 현가 $164M + 잔존가치 현가 $1,006M</td><td class="num">1,170</td></tr>
+      <tr class="hl"><td>주당가치</td><td colspan="8" style="text-align:left;white-space:normal">(EV + 현금 184.7 + Wuxi 128 − 부채 415.1) ÷ 228.3M주</td><td class="num"><strong>$4.67</strong></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout co-key">
+    <p><strong>이 표를 읽는 법.</strong> 현 주가 $4.68 ≈ 계산치 $4.67. 즉 시장은 대략 <strong>① 2028년부터 +45%로 재점화되는 성장, ② 2026→2035 매출 5.3배(연 20.4%), ③ 영업마진 -40% → +27%로의 67%p 스윙, ④ 그 우위가 10년간 유지</strong>되는 미래를 사고 있다. 
+    투자란 이 각본에 동의하느냐의 문제로 환원된다. 주목할 점: 2029년까지는 FCF가 계속 음수다 — 즉 이 각본대로 가도 <em>추가 자금조달(희석) 없이 통과하기 빠듯한 경로</em>라는 뜻이다.</p>
+  </div>
+  <p class="src">모델 세부: SBC는 비용으로 전액 반영(Non-GAAP 마진 아님), 투자 = 0.35×매출증가분 + 매출의 2%(유지), 세율 0→20% 단계 상승, mid-year 할인. 컨센서스 앵커: 2026E 매출 약 $266M(+22%), 2027E 첫 흑자 $24.5M(애널리스트 7명), 목표주가 $4.00(TD Cowen)~$8.00(Benchmark), 평균 $5.8~6.4.</p>
+</div>
+</section>
+
+<!-- ================= §10 내재 CAP ================= -->
+<section id="s10">
+<div class="wrap">
+  <div class="eyebrow">Section 10 · Market-Implied CAP</div>
+  <h2 class="sec">시장 내재 CAP — 주가에 이미 접혀 들어간 기대를 펼쳐보기</h2>
+  <p class="lede">CAP(Competitive Advantage Period)는 "기업이 자본비용을 넘는 수익을 낼 수 있다고 시장이 믿어주는 기간"이다. 같은 주가라도 어떤 성장 경로를 가정하느냐에 따라 내재 CAP가 달라지므로, 두 경로를 모두 역산했다.</p>
+
+  <h3>경로 A: 월가 컨센서스를 그대로 연장하면 — 충격적인 결과</h3>
+  <p>컨센서스(2027년 $230M 수준에서 완만한 성장, 2035년 $727M, 최종마진 24~25%)를 기계적으로 연장하고 CAP를 늘려가며 주당가치를 계산하면:</p>
+  <div class="tblwrap"><table class="t-light">
+    <thead><tr><th>가정 CAP</th><th>T=6</th><th>T=8</th><th>T=10</th><th>T=12</th><th>T=15</th><th>T=18</th></tr></thead>
+    <tbody>
+      <tr><td>주당가치</td><td class="num">$0.31</td><td class="num">$1.17</td><td class="num">$1.49</td><td class="num">$1.63</td><td class="num">$1.71</td><td class="num">$1.74</td></tr>
+      <tr class="hl"><td>vs 현재가 $4.68</td><td colspan="5" style="text-align:left;white-space:normal"><strong>CAP를 18년까지 늘려도 $1.74가 상한</strong> — 컨센서스 경로로는 현 주가에 절대 도달 불가</td><td class="num dn">-63%</td></tr>
+    </tbody>
+  </table></div>
+  <p>이것이 이 종목의 가장 중요한 발견이다. <strong>현 주가는 컨센서스 대비 약 170% 프리미엄</strong>이며, "CAP를 길게 봐주는" 정도로는 정당화되지 않는다.
+  시장은 컨센서스보다 훨씬 가파른 성장 경로(경로 B)를 가격에 넣고 있다는 뜻이다. 흥미롭게도 애널리스트 목표주가 평균($5.8~6.4)조차 자신들의 추정치 모델과 정합적이지 않다 — 목표가는 사실상 '백로그 시나리오'에 기반하고 있다.</p>
+
+  <h3>경로 B: 그렇다면 어떤 성장이어야 $4.68이 나오는가</h3>
+  <div class="tblwrap"><table class="t-light">
+    <thead><tr><th>2026→2035 매출 CAGR</th><th>2035년 매출</th><th>주당가치</th><th>해석</th></tr></thead>
+    <tbody>
+      <tr><td class="num">10%</td><td class="num">$627M</td><td class="num">$1.25</td><td style="white-space:normal;text-align:left">컨센 연장과 유사 — 현 주가의 1/4</td></tr>
+      <tr><td class="num">15%</td><td class="num">$936M</td><td class="num">$2.31</td><td style="white-space:normal;text-align:left">준수한 성장으로도 절반</td></tr>
+      <tr><td class="num">20%</td><td class="num">$1,373M</td><td class="num">$3.87</td><td style="white-space:normal;text-align:left">근접 — ADAS 세그먼트 성장률(15.6%) 초과 필요</td></tr>
+      <tr class="hl"><td class="num"><strong>약 21~22%</strong></td><td class="num">약 $1.5B</td><td class="num"><strong>$4.68</strong></td><td style="white-space:normal;text-align:left"><strong>현 주가의 내재 요구 성장률</strong> (T=12, 최종마진 25% 가정)</td></tr>
+      <tr><td class="num">25%</td><td class="num">$1,982M</td><td class="num">$6.11</td><td style="white-space:normal;text-align:left">백로그 강세 실현 시</td></tr>
+      <tr><td class="num">30%</td><td class="num">$2,821M</td><td class="num">$9.30</td><td style="white-space:normal;text-align:left">2021~23년식 초고성장 재현 시</td></tr>
+    </tbody>
+  </table></div>
+
+  <figure class="figbox">
+    <div class="figtitle">가치 풋볼필드 — 시나리오별 주당가치와 현재가의 위치</div>
+    <svg viewBox="0 0 940 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="시나리오별 주당가치 풋볼필드 차트">
+      <g font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#6B7A94">
+        <line x1="80" y1="270" x2="900" y2="270" stroke="#C4CEDD" stroke-width="1.5"/>
+        <g text-anchor="middle">
+          <text x="80" y="292">$0</text><text x="187" y="292">$1</text><text x="293" y="292">$2</text>
+          <text x="400" y="292">$3</text><text x="507" y="292">$4</text><text x="613" y="292">$5</text>
+          <text x="720" y="292">$6</text><text x="827" y="292">$7</text>
+        </g>
+        <line x1="187" y1="40" x2="187" y2="270" stroke="#E4E9F1"/><line x1="293" y1="40" x2="293" y2="270" stroke="#E4E9F1"/>
+        <line x1="400" y1="40" x2="400" y2="270" stroke="#E4E9F1"/><line x1="507" y1="40" x2="507" y2="270" stroke="#E4E9F1"/>
+        <line x1="613" y1="40" x2="613" y2="270" stroke="#E4E9F1"/><line x1="720" y1="40" x2="720" y2="270" stroke="#E4E9F1"/>
+        <line x1="827" y1="40" x2="827" y2="270" stroke="#E4E9F1"/>
+      </g>
+      <g font-family="'Pretendard','Apple SD Gothic Neo',sans-serif" font-size="12.5">
+        <!-- Bear -->
+        <rect x="80" y="50" width="14" height="26" rx="4" fill="#B3362C"/>
+        <text x="102" y="68" fill="#7A241D" font-weight="700">약세: 램프 실패 ≈ $0 <tspan fill="#6B7A94" font-weight="400">(부채가 잔여가치 잠식)</tspan></text>
+        <!-- No growth -->
+        <rect x="136" y="100" width="14" height="26" rx="4" fill="#6B7A94"/>
+        <text x="158" y="118" fill="#44526B" font-weight="700">무성장 정체가치 $0.59</text>
+        <!-- Consensus -->
+        <rect x="239" y="150" width="27" height="26" rx="4" fill="#B4690E"/>
+        <text x="274" y="168" fill="#6E4109" font-weight="700">컨센서스 연장 $1.49–1.74 <tspan fill="#6B7A94" font-weight="400">(CAP 10~18년)</tspan></text>
+        <!-- Current = implied -->
+        <line x1="579" y1="42" x2="579" y2="270" stroke="#0E1B2C" stroke-width="2" stroke-dasharray="6 4"/>
+        <rect x="469" y="196" width="220" height="30" rx="6" fill="#0E1B2C"/>
+        <text x="579" y="216" fill="#FFFFFF" font-weight="800" text-anchor="middle">현재가 $4.68 = 내재 CAP 10년</text>
+        <!-- Bull -->
+        <rect x="693" y="58" width="50" height="26" rx="4" fill="#0E7C6B"/>
+        <text x="700" y="48" fill="#0A4A40" font-weight="700">강세: CAP 15년 $5.75</text>
+        <rect x="770" y="108" width="53" height="26" rx="4" fill="#0E7C6B" opacity=".55"/>
+        <text x="766" y="152" fill="#0A4A40" font-weight="700">+ 할인율 -1%p 시 $6.96</text>
+      </g>
+    </svg>
+    <figcaption>모든 값은 동일한 모델·자본 브리지 기준. 분포가 극단적으로 넓다($0~$7) — 도입기 기업 특유의 '바이너리에 가까운' 가치 분포이며, 포지션 크기 결정 시 이 분산 자체가 핵심 정보다.</figcaption>
+  </figure>
+
+  <h3>민감도 — 무엇이 가치를 움직이고, 무엇이 안 움직이나</h3>
+  <div class="grid2">
+    <div class="tblwrap" style="margin:0"><table class="t-light">
+      <thead><tr><th>WACC \ CAP</th><th>T=8</th><th>T=10</th><th>T=12</th><th>T=15</th></tr></thead>
+      <tbody>
+        <tr><td class="num">9.6%</td><td class="num">$5.53</td><td class="num">$6.82</td><td class="num">$7.71</td><td class="num">$8.49</td></tr>
+        <tr><td class="num">10.6%</td><td class="num">$4.56</td><td class="num">$5.63</td><td class="num">$6.34</td><td class="num">$6.96</td></tr>
+        <tr class="hl"><td class="num">11.6%</td><td class="num">$3.78</td><td class="num"><strong>$4.67</strong></td><td class="num">$5.26</td><td class="num">$5.75</td></tr>
+        <tr><td class="num">12.6%</td><td class="num">$3.15</td><td class="num">$3.89</td><td class="num">$4.38</td><td class="num">$4.77</td></tr>
+      </tbody>
+    </table></div>
+    <div>
+      <ul class="tight">
+        <li><strong>가장 민감:</strong> 할인율. WACC ±1%p가 주당 ±$1 안팎을 움직인다. 고베타(2.1) 종목이라 금리·위험선호 변화의 지렛대가 크다 — 2026년 1월 랠리와 3월 급락이 정확히 이 채널이었다.</li>
+        <li><strong>중간 민감:</strong> 초기 궤도. 2027년 코어 매출 ±$15M이 주당 약 ±$0.32. 분기 실적이 궤도의 기울기를 갱신할 때마다 가치가 재계산된다.</li>
+        <li><strong>거의 무감:</strong> 페이드율. 0.15~0.35 범위에서 주당 ±$0.06 — CAP 10년 시점의 이익 규모가 지배하기 때문. 즉 논쟁의 초점은 '얼마나 오래 지키나'보다 <em>'거기까지 가느냐'</em>다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout co-key">
+    <p><strong>내재 CAP 해석.</strong> 프레임워크 기준표로 보면 내재 CAP 10년은 '과열'(20년+)이 아니라 <strong>합리 구간의 하단</strong>이다. 
+    그러나 통상의 해석("10년이면 온건하니 저평가 여지")을 그대로 적용하면 안 된다. 이미 초과수익을 내는 기업의 CAP 10년과, <em>아직 이익이 없는 기업이 "이익 창출 능력을 획득하고 그것을 10년 지킨다"는 CAP 10년</em>은 확률적으로 전혀 다른 명제이기 때문이다. 
+    요컨대: <strong>기간(T)의 가격은 온건하지만, 경로의 가격은 공격적이다.</strong> 확신도: 역산 구조 높음(~85%), 개별 파라미터는 중간.</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= §11 Bull Case ================= -->
+<section id="s11">
+<div class="wrap">
+  <div class="eyebrow">Section 11 · Bull Case</div>
+  <h2 class="sec">Bull Case — $5.75 ~ $6.96, 그리고 그 너머의 옵션들</h2>
+  <p class="lede">강세론은 "백로그의 산수"에서 출발한다. $6.1B(코어)의 백로그가 10~12년에 걸쳐 평균적으로만 매출화돼도 연 $500~600M — 내재 케이스의 2030년 수치와 대략 일치한다.</p>
+
+  <h3>강세 시나리오의 구성</h3>
+  <ol class="tight">
+    <li><strong>레이더가 각본대로 간다.</strong> 2026년 $30~50M → Tier 1 Gen 8 플랫폼이 유럽·아시아 OEM 다수 차종으로 확산되면 프로그램 특성상 매출이 계단식으로 증가. 코너 레이더(대당 4개)로 확장 시 볼륨 배수 효과.</li>
+    <li><strong>비전이 레이더를 추월한다.</strong> 경영진은 2026년 비전 매출이 레이더를 넘어설 수 있다고 언급 — NIO eMirror에 이어 중국 최대 EV OEM의 CMS가 2026년 중반 램프, Valeo·한국 OEM 설계승 대기. ams 이미지센서 인수(26Q3)로 센서+프로세서 번들 판매 가능.</li>
+    <li><strong>재무 체력이 받쳐준다.</strong> Wuxi 매각대금 약 $135M + 현금 $185M이면 2027년 흑자전환(컨센 $24.5M)까지의 소진을 감당. 2027년물 전환사채는 $26M만 남아 차환 부담 미미.</li>
+    <li><strong>옵션 가치가 공짜로 붙어 있다.</strong> 휴머노이드(Figure AI·Unitree 공급 개시), 로보택시 설계승(북미 자율주행 OEM), 퀀텀 광학(26년 3배 성장 전망), 라이다 AMR — 각각은 작지만, 밸류에이션에 사실상 0으로 반영된 무료 콜옵션 묶음.</li>
+    <li><strong>수급 촉매: 공매도 29%.</strong> 강한 실적 서프라이즈나 Wuxi 클로징 확정 시 숏커버링이 상승을 증폭시킬 수 있는 구조.</li>
+  </ol>
+
+  <div class="callout co-key">
+    <p><strong>강세 가치.</strong> 내재 경로가 실현되고 CAP가 15년으로 연장되면 <strong>$5.75</strong>(+23%). 여기에 금리인하 등으로 할인율이 1%p 내려오면 <strong>$6.96</strong>(+49%). 매출 CAGR 25% 실현 시 <strong>$6.11</strong>. 강세론의 정직한 요약: "현 주가 대비 상방 25~50%, 단 그 대가로 §12의 꼬리위험을 짊어진다."</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= §12 Bear Case ================= -->
+<section id="s12">
+<div class="wrap">
+  <div class="eyebrow">Section 12 · Bear Case</div>
+  <h2 class="sec">Bear Case — 0에 수렴할 수 있는 다섯 개의 경로</h2>
+  <p class="lede">약세론은 감정이 아니라 재무 산수다. 성장 재점화가 늦어지기만 해도(실패가 아니라 지연만으로도) 희석과 부채가 주당가치를 갉아먹는 구조이기 때문이다.</p>
+
+  <ol class="tight">
+    <li><strong>램프 지연·미달.</strong> 2028년 +45% 재점화가 +15%에 그치면(최종마진 15%) 모델 가치는 사실상 <strong>$0 이하</strong>(부채 415M이 기업가치를 잠식). 자동차 프로그램의 SOP(양산개시) 지연은 업계 상수이며, indie는 2024~25년에 이미 "백로그는 늘었는데 매출은 안 늘어난" 전례가 있다.</li>
+    <li><strong>희석의 상시화.</strong> 2031년물 전환사채(전환가 $3.87)는 이미 내가격 — 약 44M주(현 주식수의 19%) 희석 대기. 여기에 SBC 연 $66.5M(시총의 6%/년), ATM 잔여 $59.8M. 주가가 올라도 주당가치 상승분의 일부는 구조적으로 새어 나간다.</li>
+    <li><strong>Wuxi 클로징 불발 리스크.</strong> 매수자(UFA) 주총 승인은 끝났지만 선전거래소·CSRC 등 중국 규제 승인이 남아 있다. 미중 긴장 국면에서 승인 지연·불발 시 $135M 현금 유입 소멸 + "코어 집중" 서사 훼손의 이중 타격. Q1 콜에서도 클로징은 "2026년 말"로 재확인 — 아직 미완의 거래다.</li>
+    <li><strong>런웨이 산수.</strong> 현금 $185M, 연 소진 약 $57M(개선 중이라 해도). Wuxi 불발 + 램프 지연이 겹치면 2027~28년 추가 조달이 필요해지고, 그 시점의 주가가 낮다면 희석의 악순환.</li>
+    <li><strong>질적 경고 신호.</strong> 공동창업자·사장 아오키 사임(26.6), CFO 교체(25.11), 5년간 반복된 목표 하향("+40%, $300M" 철회), 그리고 시장에서 가장 정보에 밝은 참여자 집단인 공매도가 유동주식의 29%를 걸고 있다는 사실 자체.</li>
+  </ol>
+
+  <div class="callout co-risk">
+    <p><strong>약세 가치.</strong> 램프 미달 시나리오 약 <strong>$0</strong>(모델상 -$0.5, 하한 0 적용), 성장 없이 현 손익만 정상화되는 정체 시나리오 <strong>$0.59</strong>, 컨센서스 실현에 그칠 경우 <strong>$1.49~1.74</strong>. 
+    즉 "회사가 망하지 않아도" 주가가 60~70% 하락하는 경로가 존재한다 — 이것이 이 종목의 진짜 하방 리스크다. 확신도: 하방 경로의 실재성 높음(~85%), 발생 확률 배정은 각자의 몫.</p>
+  </div>
+</div>
+</section>
+
+<!-- ================= §13 SWOT ================= -->
+<section id="s13">
+<div class="wrap">
+  <div class="eyebrow">Section 13 · SWOT</div>
+  <h2 class="sec">SWOT — 한 장으로 접는 구조 요약</h2>
+  <div class="grid2">
+    <div class="card" style="border-top:4px solid var(--radar)">
+      <h4 style="margin-top:0">Strengths 강점</h4>
+      <ul class="tight" style="font-size:.9rem">
+        <li>백로그 $7.4B(코어 $6.1B) — 매년 순증하는 설계승 파이프라인</li>
+        <li>센서 풀스택(레이더+비전+포토닉스+인캐빈 SW) 보유한 드문 소형사</li>
+        <li>Tier 1 차세대 레이더 플랫폼 채택 — 기술 검증의 결정적 레퍼런스</li>
+        <li>검증된 창업팀(Axiom 2.5억 개 출하 이력) · 누적 5.5억 디바이스</li>
+        <li>'no China no Taiwan' 공급망 — 지정학 세컨드소스 수요 부합</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--red)">
+      <h4 style="margin-top:0">Weaknesses 약점</h4>
+      <ul class="tight" style="font-size:.9rem">
+        <li>영업적자 지속(GAAP -$154M) · 연 $57M 현금소진</li>
+        <li>매출 대비 R&amp;D 71% — 규모의 경제 미달</li>
+        <li>전환사채 3종 $415M · SBC 연 $66.5M의 구조적 희석</li>
+        <li>2년 연속 매출 정체 · 반복된 가이던스 하향 이력</li>
+        <li>경영진 이탈(공동창업 사장 사임, CFO 교체)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--azure)">
+      <h4 style="margin-top:0">Opportunities 기회</h4>
+      <ul class="tight" style="font-size:.9rem">
+        <li>ADAS 반도체 세그먼트 CAGR 약 15.6% — 규제가 미는 시장</li>
+        <li>레이더 대당 1→5개, 카메라 1→8개+ 콘텐츠 증가</li>
+        <li>Wuxi 매각 $135M — 재무 체력 + 사업 단순화 동시 달성</li>
+        <li>ams 이미지센서 인수로 센서+SoC 번들 전략</li>
+        <li>휴머노이드·로보택시·퀀텀 — 미반영 옵션 가치</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:4px solid var(--amber)">
+      <h4 style="margin-top:0">Threats 위협</h4>
+      <ul class="tight" style="font-size:.9rem">
+        <li>인피니언·NXP·TI·Mobileye 등 10~100배 체급의 경쟁자</li>
+        <li>자동차 프로그램 지연·감산·취소의 상시 리스크</li>
+        <li>Wuxi 매각의 중국 규제 승인 불확실성</li>
+        <li>고베타(2.1) — 금리·관세·섹터 로테이션에 취약</li>
+        <li>중국 로컬 칩사의 저가 추격(중국 시장 내)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ================= §14 경영진·자본배분 ================= -->
+<section id="s14">
+<div class="wrap">
+  <div class="eyebrow">Section 14 · Management &amp; Capital Allocation</div>
+  <h2 class="sec">경영진과 자본배분 — 돈을 어떻게 조달해서 어디에 썼는가</h2>
+  <p class="lede">도입기 기업 평가에서 자본배분은 실적보다 중요한 선행지표다. indie의 기록은 "공격적 M&amp;A로 자산을 모으고, 그 대가를 희석으로 치른" 역사다.</p>
+
+  <h3>조달의 역사 — 희석의 회계</h3>
+  <div class="tblwrap"><table class="t-light">
+    <thead><tr><th>수단</th><th>규모</th><th>조건</th><th>평가</th></tr></thead>
+    <tbody>
+      <tr><td>SPAC 상장 (2021)</td><td class="num">약 $400M</td><td style="white-space:normal;text-align:left">기업가치 $1.4B</td><td style="white-space:normal;text-align:left"><span class="tag tag-g">호조건</span> 붐 정점에 고밸류 조달 — 타이밍은 탁월</td></tr>
+      <tr><td>ATM 증자</td><td class="num">$90.2M 기집행</td><td style="white-space:normal;text-align:left">평균 <strong>$8.10</strong>/주 · 잔여 $59.8M</td><td style="white-space:normal;text-align:left"><span class="tag tag-g">호조건</span> 현재가보다 73% 높은 가격에 팔았다 — 주주 관점 유리한 희석</td></tr>
+      <tr><td>2027 전환사채</td><td class="num">$26M 잔여</td><td style="white-space:normal;text-align:left">4.50% · 대부분 차환 완료</td><td style="white-space:normal;text-align:left"><span class="tag tag-b">중립</span> 만기 벽 제거</td></tr>
+      <tr><td>2029 전환사채</td><td class="num">$218.5M</td><td style="white-space:normal;text-align:left">3.50% · 전환가 $5.14 · 캡드콜 $8.06</td><td style="white-space:normal;text-align:left"><span class="tag tag-b">중립</span> 캡드콜로 희석 방어 설계</td></tr>
+      <tr><td>2031 전환사채 (26.3)</td><td class="num">$170.5M</td><td style="white-space:normal;text-align:left">4.00% · 전환가 <strong>$3.87</strong></td><td style="white-space:normal;text-align:left"><span class="tag tag-r">불리</span> 주가 바닥권에서 낮은 전환가 — 약 44M주 희석 대기. 발행 당일 주가 -20%대 급락이 시장의 평가</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>배분의 역사 — 8건의 인수는 남는 장사였나</h3>
+  <p>TeraXion($159M)·GEO·Silicon Radar·Exalos($45M)·emotion3D($17.7M)·ams 센서(€40M) 등 누적 수억 달러를 인수에 썼다.
+  평가는 양면적이다. <strong>긍정:</strong> 오늘의 핵심 서사(레이더·비전·포토닉스)는 전부 인수 자산 위에 서 있다 — 유기적 개발이었다면 5년 이상 걸렸을 포트폴리오다.
+  <strong>부정:</strong> 그 대가로 무형자산 상각 연 $26.7M이 손익을 짓누르고, 인수 통합 비용이 반복됐으며, 이 모든 자금의 원천이 결국 주주 희석이었다.
+  ROIC로 정산하기엔 아직 이익이 없다 — <em>인수의 성패 판정 자체가 2027~28년으로 이연된 상태</em>다.</p>
+
+  <div class="callout co-warn">
+    <p><strong>SBC 논점.</strong> 주식보상 연 $66.5M은 매출의 31%, 시총의 6%다. 회사의 Non-GAAP 지표는 이를 제외하지만, 본 보고서의 DCF는 SBC를 전액 실비용으로 반영했다(프레임워크 원칙). 
+    Non-GAAP 흑자전환 헤드라인이 나와도 SBC 포함 경제적 이익은 한동안 음수일 수 있음을 유의.</p>
+  </div>
+
+  <h3>인센티브 정합성</h3>
+  <p>창업 CEO가 19년째 재임 중이고 기관이 72%를 보유한 구조는 장기 정합성에 우호적이다. 반면 2026년 들어 공동창업자 사장의 사임은,
+  해석이 갈릴 수 있는 신호다(자연스러운 세대교체일 수도, 내부 전망 이견일 수도 — 현재 공개정보로는 판별 불가, 확신도 낮음 ~40%).</p>
+</div>
+</section>
+
+<!-- ================= §15 종합 (다크) ================= -->
+<section id="s15" class="dark">
+<div class="wrap">
+  <div class="eyebrow">Section 15 · Verdict &amp; Checkpoints</div>
+  <h2 class="sec">종합 판단 — 그리고 이 판단이 틀렸음을 알려줄 지표들</h2>
+  <p class="lede">결론은 등급이 아니라 구조로 제시한다. 이 종목의 투자 성패는 예측력이 아니라 "어떤 증거가 나오면 생각을 바꿀 것인가"를 미리 정해두는 규율에서 갈릴 것이다.</p>
+
+  <div class="tblwrap"><table class="t-night">
+    <thead><tr><th style="min-width:150px">평가 축</th><th style="min-width:280px">판정</th><th>확신도</th></tr></thead>
+    <tbody>
+      <tr><td>사업의 실체</td><td style="white-space:normal;text-align:left">진짜다 — 제품·고객·양산이 실재하는 도입기 기업 (스토리 셸 아님)</td><td class="num">높음 ~90%</td></tr>
+      <tr><td>생애주기 단계</td><td style="white-space:normal;text-align:left">도입기 — 외부자본 의존, 가치의 대부분이 잔존가치(TV)에 집중</td><td class="num">높음 ~90%</td></tr>
+      <tr><td>경제적 해자</td><td style="white-space:normal;text-align:left">후보(설계승 락인·인증)는 있으나 재무적으로 미검증</td><td class="num">높음 ~85%</td></tr>
+      <tr><td>시장 내재 기대</td><td style="white-space:normal;text-align:left">CAP 약 10년 + 매출 5.3배 + 마진 67%p 스윙 — 기간은 온건, 경로는 공격적</td><td class="num">높음 ~85%</td></tr>
+      <tr><td>컨센서스 대비</td><td style="white-space:normal;text-align:left">현 주가는 컨센 연장가치($1.5~1.7)의 약 2.7배 — 백로그 시나리오가 가격에 선반영</td><td class="num">높음 ~85%</td></tr>
+      <tr class="hl"><td>종합</td><td style="white-space:normal;text-align:left"><strong>"합리적 CAP에 공격적 경로" — 성장 재점화의 증거가 분기마다 갱신되는지에 가치가 전적으로 걸린 고분산 종목.</strong> 상방 +25~50%(강세), 하방 -60~100%(약세)의 비대칭이 아니라 <em>양방향 광폭 분포</em></td><td class="num">—</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>분기별 체크포인트 — 논지를 기각/강화할 증거 목록</h3>
+  <div class="grid2">
+    <div class="callout co-night" style="margin:0">
+      <p><strong>강세 논지 강화 신호</strong></p>
+      <p style="margin-bottom:0">① 코어 매출 QoQ 두 자릿수 성장 지속(2026 하반기 분기 $40M+) ② 레이더 매출 연 $30~50M 가이드 상단 달성 ③ Wuxi 클로징 완료(중국 규제 승인) ④ 비전 신규 OEM 램프 공식화 ⑤ Non-GAAP 영업 손익분기 도달(경영진 목표: 2026년 내)</p>
+    </div>
+    <div class="callout co-night" style="margin:0">
+      <p><strong>약세 논지 강화 신호 (손절 트리거 후보)</strong></p>
+      <p style="margin-bottom:0">① 코어 성장 QoQ 한 자릿수로 감속 ② 레이더 가이드 하향 또는 '2027로 이연' 언급 ③ Wuxi 승인 지연 공시 ④ ATM 재가동·추가 전환사채 ⑤ 백로그 최초 감소 ⑥ 추가 경영진 이탈</p>
+    </div>
+  </div>
+
+  <h3>한계와 가정 — 이 보고서가 틀릴 수 있는 지점</h3>
+  <ul class="tight">
+    <li><strong>모델 가정 의존:</strong> 모든 가치는 WACC 11.6%, 페이드 0.25, 세율 경로, 투자율(매출증분의 35%) 가정 위의 계산이다. 특히 베타 2.1은 저유동성 소형주의 추정 노이즈가 크다.</li>
+    <li><strong>내재 케이스의 비유일성:</strong> $4.68을 만들어내는 (성장률, 마진, T) 조합은 무한하다. 본 보고서의 경로는 백로그·경영진 목표와 정합적인 <em>하나의</em> 대표 경로일 뿐이다.</li>
+    <li><strong>정보 시점:</strong> 시세·재무는 2026.7.1 종가와 2026.3.31 분기 기준. Tier 1 파트너 = 보쉬는 정황 추론(확신도 ~65%)이며 회사 확인 사항이 아니다. 주가 차트는 이벤트 기반 근사 복원이다.</li>
+    <li><strong>백로그 검증 불가:</strong> $7.4B는 경영진 추정 비감사 수치 — 본 분석은 이를 직접 쓰지 않았지만, 시나리오 설계에 간접 반영되어 있어 완전히 독립적이지 않다.</li>
+    <li><strong>생존 편향 주의:</strong> 비교 대상(AMBA의 흑자전환)은 성공 사례다. 같은 시기 소멸한 자동차 반도체 SPAC들이 다수 존재한다.</li>
+  </ul>
+
+  <div class="callout co-night">
+    <p><strong>마지막 한 줄.</strong> indie를 산다는 것은 "주가 $4.68"을 사는 게 아니라 <strong>"2028년 +45% 성장 재점화의 확률이 시장 가격보다 높다"는 견해</strong>를 사는 것이다. 
+    그 견해에 대한 증거는 앞으로 4~6개 분기 동안 석 달에 한 번씩 도착한다. 본 자료는 정보 제공 목적의 분석이며 투자 권유가 아니다 — 매수·매도 판단과 그 책임은 투자자 본인에게 있다.</p>
+  </div>
+</div>
+</section>
+
+<footer>
+<div class="wrap">
+  <p><strong style="color:#EAF0F8">indie Semiconductor (NASDAQ: INDI) 기업 완전 이해 보고서</strong> · 작성기준일 2026-07-02 (시세 7/1 종가) · CAP 프레임워크 기반 역DCF 분석</p>
+  <p>주요 출처: 회사 10-K(FY2025)·10-Q(2026Q1)·8-K 및 실적발표 자료, 컨퍼런스콜 기록, Nasdaq/거래소 시세·공매도 통계, MarketsandMarkets·Mordor Intelligence 산업 전망, Aswath Damodaran ERP 데이터. 
+  모든 추정·역산 수치는 자체 모델 계산이며 오차를 포함할 수 있음. 본 문서는 특정 증권의 매수·매도 권유가 아니며 투자 판단의 최종 책임은 투자자 본인에게 있음.</p>
+</div>
+</footer>
+
+</body>
+</html>
