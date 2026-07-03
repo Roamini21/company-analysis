@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CGNX · 코그넥스 기업분석 — 산업 자동화의 '눈', AI 머신비전</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@500;700;800;900&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F5F7; --ink:#16202B; --muted:#4E5F6E; --line:#D3DCE3;
+  --panel:#0F1A26; --panel2:#152332; --panel-ink:#E9EFF5; --panel-muted:#9FB2C2; --panel-line:#2B3E52;
+  --yellow:#FFC400; --yellow-deep:#7A5D00; --yellow-bg:#FFF6D9; --yellow-line:#E8C766;
+  --pass:#128A60; --pass-bg:#E2F5EC; --pass-line:#9AD8BE; --pass-deep:#0B5C40;
+  --blue:#1D6FE0; --blue-bg:#E8F0FC; --blue-line:#AECBF2; --blue-deep:#124693;
+  --fail:#C63B3B; --fail-bg:#FBE9E9; --fail-line:#EBB3B3; --fail-deep:#8C2323;
+  --card:#FFFFFF;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans KR',sans-serif; font-size:16px; line-height:1.75; letter-spacing:-0.01em;}
+.wrap{max-width:1080px; margin:0 auto; padding:0 22px;}
+h1,h2,h3,h4{font-family:'Gothic A1',sans-serif; line-height:1.3; letter-spacing:-0.02em;}
+.mono{font-family:'IBM Plex Mono',monospace;}
+:where(.sec) p{color:var(--ink);}
+:where(.sec) li{color:var(--ink);}
+a{color:var(--blue-deep);}
+p.lead{font-size:1.06rem; font-weight:500;}
+.sec{padding:64px 0 30px;}
+.sec + .sec{border-top:1px solid var(--line);}
+
+/* ── viewfinder section header (signature) ── */
+.vf{position:relative; padding:18px 22px; margin-bottom:28px; background:var(--card); color:var(--ink); border:1px solid var(--line);}
+.vf::before,.vf::after,.vf .c3::before,.vf .c3::after{content:""; position:absolute; width:16px; height:16px; border:3px solid var(--yellow);}
+.vf::before{top:-3px; left:-3px; border-right:none; border-bottom:none;}
+.vf::after{top:-3px; right:-3px; border-left:none; border-bottom:none;}
+.vf .c3::before{bottom:-3px; left:-3px; border-right:none; border-top:none;}
+.vf .c3::after{bottom:-3px; right:-3px; border-left:none; border-top:none;}
+.vf .station{font-family:'IBM Plex Mono',monospace; font-size:0.72rem; font-weight:600; color:var(--yellow-deep); letter-spacing:0.14em; text-transform:uppercase;}
+.vf h2{font-size:1.7rem; font-weight:900; color:var(--ink); margin-top:2px;}
+.vf .sub{color:var(--muted); font-size:0.94rem; margin-top:4px;}
+
+h3.h3{font-size:1.18rem; font-weight:800; margin:34px 0 12px; padding-left:12px; border-left:4px solid var(--yellow); color:var(--ink);}
+h4.h4{font-size:1.02rem; font-weight:700; margin:22px 0 8px; color:var(--ink);}
+.sec p{margin:0 0 14px;}
+.sec ul,.sec ol{margin:0 0 16px 22px;}
+.sec li{margin-bottom:8px;}
+
+/* ── boxes: 자족적 색 지정 ── */
+.card{background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:6px; padding:18px 20px; margin:16px 0;}
+.card *{color:inherit;}
+.card .ttl{font-family:'Gothic A1',sans-serif; font-weight:800; font-size:0.98rem; margin-bottom:8px; color:var(--ink);}
+.note{background:var(--blue-bg); color:var(--blue-deep); border:1px solid var(--blue-line); border-left:5px solid var(--blue); border-radius:6px; padding:14px 18px; margin:16px 0; font-size:0.95rem;}
+.note *{color:var(--blue-deep);}
+.good{background:var(--pass-bg); color:var(--pass-deep); border:1px solid var(--pass-line); border-left:5px solid var(--pass); border-radius:6px; padding:14px 18px; margin:16px 0; font-size:0.95rem;}
+.good *{color:var(--pass-deep);}
+.warn{background:var(--yellow-bg); color:var(--yellow-deep); border:1px solid var(--yellow-line); border-left:5px solid var(--yellow); border-radius:6px; padding:14px 18px; margin:16px 0; font-size:0.95rem;}
+.warn *{color:var(--yellow-deep);}
+.bad{background:var(--fail-bg); color:var(--fail-deep); border:1px solid var(--fail-line); border-left:5px solid var(--fail); border-radius:6px; padding:14px 18px; margin:16px 0; font-size:0.95rem;}
+.bad *{color:var(--fail-deep);}
+.dark-card{background:var(--panel); color:var(--panel-ink); border:1px solid var(--panel-line); border-radius:8px; padding:20px 22px; margin:18px 0;}
+.dark-card *{color:var(--panel-ink);}
+.dark-card .dim{color:var(--panel-muted);}
+.dark-card .yl{color:var(--yellow);}
+.dark-card .gr{color:#3ED598;}
+.dark-card .rd{color:#FF7A7A;}
+
+/* ── stat grid ── */
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:18px 0;}
+.stat{background:var(--card); color:var(--ink); border:1px solid var(--line); border-top:3px solid var(--yellow); border-radius:6px; padding:12px 14px;}
+.stat .k{font-size:0.74rem; color:var(--muted); font-weight:600; letter-spacing:0.02em;}
+.stat .v{font-family:'IBM Plex Mono',monospace; font-size:1.28rem; font-weight:600; color:var(--ink); margin-top:2px;}
+.stat .d{font-size:0.74rem; color:var(--muted); margin-top:2px;}
+
+/* ── tables ── */
+.tblwrap{overflow-x:auto; margin:16px 0; border:1px solid var(--line); border-radius:6px; background:#FFFFFF;}
+table.tb{border-collapse:collapse; width:100%; font-size:0.87rem; background:#FFFFFF; color:var(--ink);}
+table.tb th{background:#1C2A3A; color:#F2F6FA; font-weight:700; padding:9px 10px; text-align:left; white-space:nowrap; border-bottom:2px solid var(--yellow);}
+table.tb td{padding:8px 10px; border-bottom:1px solid #E4EAEF; color:var(--ink); background:#FFFFFF;}
+table.tb tr:nth-child(even) td{background:#F4F7F9; color:var(--ink);}
+table.tb tr.hl td{background:var(--yellow-bg); color:var(--yellow-deep); font-weight:700;}
+table.tb tr.tot td{background:#1C2A3A; color:#F2F6FA; font-weight:700; border-bottom:none;}
+table.tb td.num, table.tb th.num{text-align:right; font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
+table.tb td.pos{color:var(--pass-deep); font-weight:600;}
+table.tb td.neg{color:var(--fail-deep); font-weight:600;}
+
+/* ── figure ── */
+figure.fig{margin:24px 0; background:#FFFFFF; color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:16px 16px 10px;}
+figure.fig .figtitle{font-family:'Gothic A1',sans-serif; font-weight:800; font-size:0.99rem; color:var(--ink); margin-bottom:2px;}
+figure.fig .figsub{font-size:0.82rem; color:var(--muted); margin-bottom:10px;}
+figure.fig figcaption{font-size:0.78rem; color:var(--muted); margin-top:8px; border-top:1px dashed var(--line); padding-top:7px;}
+figure.fig svg{width:100%; height:auto; display:block;}
+svg text{font-family:'IBM Plex Sans KR',sans-serif;}
+svg .m{font-family:'IBM Plex Mono',monospace;}
+
+/* ── nav ── */
+nav.top{position:sticky; top:0; z-index:50; background:#0F1A26; border-bottom:2px solid var(--yellow); padding:8px 0;}
+nav.top .in{max-width:1080px; margin:0 auto; padding:0 22px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
+nav.top .brand{font-family:'IBM Plex Mono',monospace; font-weight:600; color:var(--yellow); font-size:0.82rem; margin-right:8px; white-space:nowrap;}
+nav.top a.ch{color:#DCE6EF; background:#1B2C3E; border:1px solid #33475C; text-decoration:none; font-size:0.74rem; font-weight:500; padding:3px 9px; border-radius:99px; white-space:nowrap;}
+nav.top a.ch:hover{background:var(--yellow); color:#101A26; border-color:var(--yellow);}
+
+/* hero */
+.hero{background:linear-gradient(160deg,#0C141F 0%, #12202F 60%, #0E1C2A 100%); color:#E9EFF5; padding:52px 0 40px; border-bottom:3px solid var(--yellow);}
+:where(.hero) p{color:#C4D2DE;}
+.hero .tag{font-family:'IBM Plex Mono',monospace; color:var(--yellow); font-size:0.8rem; letter-spacing:0.16em; font-weight:600;}
+.hero h1{font-size:2.35rem; font-weight:900; color:#FFFFFF; margin:10px 0 6px;}
+.hero .sub{font-size:1.04rem; color:#C4D2DE; max-width:820px;}
+.hero .hud{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:26px;}
+.hero .hd{background:rgba(255,255,255,0.05); border:1px solid #33475C; border-radius:6px; padding:11px 13px;}
+.hero .hd .k{font-size:0.72rem; color:#93A8BA; font-weight:600;}
+.hero .hd .v{font-family:'IBM Plex Mono',monospace; font-size:1.24rem; font-weight:600; color:#FFFFFF;}
+.hero .hd .d{font-size:0.72rem; color:#93A8BA;}
+.hero .hd.acc{border-color:var(--yellow); background:rgba(255,196,0,0.08);}
+.hero .hd.acc .v{color:var(--yellow);}
+
+.legend{display:flex; flex-wrap:wrap; gap:14px; font-size:0.8rem; color:var(--muted); margin:6px 0 2px;}
+.legend span{display:inline-flex; align-items:center; gap:6px; color:var(--muted); white-space:nowrap;}
+.dot{width:10px; height:10px; border-radius:3px; display:inline-block;}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;}
+@media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr;} .hero h1{font-size:1.7rem;} .vf h2{font-size:1.35rem;}}
+.badge{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:0.7rem; font-weight:600; padding:2px 8px; border-radius:4px; margin-right:6px; vertical-align:middle;}
+.badge.b-pass{background:var(--pass-bg); color:var(--pass-deep); border:1px solid var(--pass-line);}
+.badge.b-warn{background:var(--yellow-bg); color:var(--yellow-deep); border:1px solid var(--yellow-line);}
+.badge.b-fail{background:var(--fail-bg); color:var(--fail-deep); border:1px solid var(--fail-line);}
+.badge.b-info{background:var(--blue-bg); color:var(--blue-deep); border:1px solid var(--blue-line);}
+footer.ft{background:#0F1A26; color:#9FB2C2; padding:34px 0 44px; margin-top:60px; border-top:3px solid var(--yellow);}
+:where(footer.ft) p{color:#9FB2C2; font-size:0.82rem;}
+footer.ft strong{color:#E9EFF5;}
+.kv{display:flex; flex-wrap:wrap; gap:8px 22px; font-size:0.88rem; color:var(--muted);}
+.kv b{color:var(--ink);}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+<div class="wrap">
+<div class="tag">EQUITY DEEP-DIVE · NASDAQ: CGNX · 2026-07-03 기준</div>
+<h1>코그넥스 <span style="color:#93A8BA;font-weight:700;">Cognex Corporation</span></h1>
+<p class="sub">공장과 물류창고의 기계에 '눈'을 달아주는 산업용 머신비전 세계 1위 전업 기업. 45년간 축적한 비전 알고리즘 위에 AI를 얹어, 2025~2026년 실적 턴어라운드와 함께 주가가 1년 만에 2배 이상 뛰었다. 이 보고서는 회사의 사업·기술·산업 구조를 바닥부터 해부하고, 현재 주가 $70에 시장이 심어 놓은 기대(내재 CAP)를 역산한다.</p>
+<div class="hud">
+<div class="hd"><div class="k">주가 (7/2 종가)</div><div class="v">$70.20</div><div class="d">52주 $31.77–72.88</div></div>
+<div class="hd"><div class="k">시가총액</div><div class="v">$11.7B</div><div class="d">약 16조 원 · 순현금 $6.2억</div></div>
+<div class="hd"><div class="k">2025 매출</div><div class="v">$9.94억</div><div class="d">+8.7% · 2021년 이후 첫 유기적 성장</div></div>
+<div class="hd"><div class="k">조정 EBITDA 마진</div><div class="v">26.9%</div><div class="d">26년 1Q · 전년 대비 +10.1%p</div></div>
+<div class="hd"><div class="k">2026E P/E</div><div class="v">≈49배</div><div class="d">컨센서스 조정 EPS $1.43 기준</div></div>
+<div class="hd acc"><div class="k">시장 내재 CAP (역산)</div><div class="v">≈24년</div><div class="d">강세 드라이버 가정 시 · 본문 §10</div></div>
+</div>
+</div>
+</header>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav class="top"><div class="in">
+<span class="brand">CGNX/VISION</span>
+<a class="ch" href="#s1">1 핵심요약</a><a class="ch" href="#s2">2 기업개요</a><a class="ch" href="#s3">3 수익구조</a><a class="ch" href="#s4">4 제품·기술</a><a class="ch" href="#s5">5 산업분석</a><a class="ch" href="#s6">6 경쟁우위</a><a class="ch" href="#s7">7 피어비교</a><a class="ch" href="#s8">8 시장내러티브</a><a class="ch" href="#s9">9 재무·DCF</a><a class="ch" href="#s10">10 내재CAP</a><a class="ch" href="#s11">11 Bull</a><a class="ch" href="#s12">12 Bear</a><a class="ch" href="#s13">13 SWOT</a><a class="ch" href="#s14">14 경영진</a><a class="ch" href="#s15">15 종합판단</a>
+</div></nav>
+
+<main class="wrap">
+<!-- ═══════════ 1. 핵심 요약 ═══════════ -->
+<section class="sec" id="s1">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 01 · EXECUTIVE SUMMARY</div>
+<h2>핵심 요약</h2>
+<div class="sub">회사의 본질 → 지금 시장이 열광하는 이유 → 주가에 심어진 기대의 크기, 순서로 3분 안에 파악한다.</div>
+</div>
+
+<p class="lead"><b>한 문장 요약:</b> 코그넥스는 공장 생산라인과 물류창고의 기계에 '보는 능력'을 판매하는 산업용 머신비전(Machine Vision) 세계 1위 전업 기업으로, 45년치 비전 알고리즘 자산 위에 자체 경량 AI를 얹어 "전문가 없이도 쓰는 산업 AI"로 사업 모델을 재점화하는 중이다.</p>
+
+<p>이 회사가 파는 것은 본질적으로 <b>'불량을 놓치지 않는 눈'과 '물건을 잃어버리지 않는 눈'</b>이다. 스마트폰 조립 라인에서 나사가 빠졌는지, 배터리 용접면에 미세 결함이 있는지, 택배 상자의 바코드가 초당 수 개씩 지나가도 정확히 읽히는지 — 사람 눈으로는 불가능한 속도와 정밀도의 검사를 카메라+알고리즘+조명 패키지로 해결한다. 매출총이익률 68~71%라는 소프트웨어에 가까운 마진 구조, 무차입에 현금 6억 달러가 넘는 재무 체력, 그리고 자본지출이 매출의 1%도 안 되는 자본경량(capital-light) 사업 모델이 이 회사의 경제적 골격이다. 2022~2024년 전방시장 침체(전기차 배터리·전자제품 투자 위축)로 매출이 정점 대비 19% 꺾이며 주가도 고점 대비 3분의 1 토막이 났지만, 2025년부터 (1) 신임 CEO 체제의 비용·조직 개편, (2) 물류(전자상거래 창고) 사이클 회복, (3) "몇 장의 사진만으로 학습되는 엣지 AI" 신제품 사이클이 겹치며 <b>7개 분기 연속 매출 성장, 7개 분기 연속 마진 확대</b>라는 교과서적 턴어라운드가 진행 중이다. 시장은 이를 "산업 현장에 실제로 돈을 버는 피지컬 AI"로 읽고 있으며, 주가는 2025년 4월 저점 $31.77에서 2026년 7월 $70 안팎까지 1년여 만에 2.2배가 됐다.</p>
+
+<div class="dark-card">
+<div class="ttl" style="color:#FFC400; font-family:'Gothic A1',sans-serif; font-weight:800;">시장 내재 CAP — 결론 먼저</div>
+<p style="margin-bottom:8px;">현재 주가 <span class="yl mono">$70</span>은 <b>"보수적 회계의 DCF로는 웬만한 낙관으로도 설명되지 않는 가격"</b>이다. 자본비용 10.2%, IT 섹터 페이드(초과수익 소멸률) 0.20을 적용하면:</p>
+<ul style="margin-left:20px;">
+<li><b>기본 시나리오</b>(매출 연 8~9% 성장 + EBITA 마진 26%)로는 예측 기간을 <span class="rd">아무리 늘려도(60년까지도) $70에 도달 불가</span> — 수렴치 주당 약 $42.</li>
+<li><b>강세 시나리오</b>(회사 장기 프레임워크 상단: 매출 연 13% + EBITA 마진 28%)를 가정해야 비로소 <span class="yl">내재 CAP ≈ 24년</span>에서 주가와 만난다. 프레임워크 기준 "20년 초과 = 과도한 낙관 구간"이다.</li>
+<li>참고로 무성장 가치(현 수익력의 영구 유지만 가정)는 주당 <span class="mono">$16.8</span>. 즉 시가총액의 <span class="yl mono">약 76%</span>가 '미래 성장기회의 현재가치(PVGO)'로 채워져 있다.</li>
+</ul>
+<p class="dim" style="font-size:0.86rem; margin-top:6px;">해석: 시장은 코그넥스를 "0.7%의 기업이 전체 부의 75%를 만드는" 슈퍼스타 후보로 값을 매기고 있다. 그 베팅의 근거(§11)와 균열 지점(§12)을 모두 검증하는 것이 이 보고서의 목적이다.</p>
+</div>
+
+<div class="grid3">
+<div class="card"><div class="ttl"><span class="badge b-pass">PASS</span>사업의 질</div><p style="font-size:0.92rem;">매출총이익률 68~71%, 무차입, FCF 전환율 100%+, 자본지출 매출의 0.9%. 하드웨어를 팔지만 경제 구조는 소프트웨어에 가깝다. 검사 기준이 고객 라인에 이식되는 순간 교체 비용이 커지는 락인(lock-in) 사업.</p></div>
+<div class="card"><div class="ttl"><span class="badge b-pass">PASS</span>턴어라운드 실행</div><p style="font-size:0.92rem;">조정 EBITDA 마진 16.8%(25.1Q) → 26.9%(26.1Q), 2026년 2Q 가이던스 28~31%. 연 $3,500만~4,000만 비용 절감 프로그램이 계획보다 빨리 이익으로 전환. 2025년 신규 고객 약 9,000곳(전년의 3배) 확보.</p></div>
+<div class="card"><div class="ttl"><span class="badge b-warn">CHECK</span>가격에 담긴 기대</div><p style="font-size:0.92rem;">2026E P/E 약 49배, EV/EBITDA 약 37배. 역산된 내재 CAP 약 24년은 마이크로소프트 벤치마크(17~18년)보다 길다. 성장·마진이 회사 프레임워크 상단을 장기간 유지해야 정당화되는 가격.</p></div>
+</div>
+
+<div class="kv" style="margin-top:14px;">
+<span><b>섹터/산업:</b> 정보기술 · 전자장비/계측기기</span>
+<span><b>생애주기:</b> 성숙(영업+/투자−/재무−), 성장 재가속 국면</span>
+<span><b>해자 유형:</b> 차별화형(마진 우위) — §6</span>
+<span><b>컨센서스:</b> 애널리스트 21명 매수, 평균 목표가 $76.25</span>
+</div>
+</section>
+
+<!-- ═══════════ 2. 기업 개요 ═══════════ -->
+<section class="sec" id="s2">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 02 · COMPANY PROFILE</div>
+<h2>기업 개요 — MIT 지각심리학 강사가 세운 '인지 전문가들'</h2>
+<div class="sub">기계에 시각을 이식하겠다는 1981년의 아이디어가 어떻게 45년짜리 복리 기계가 됐는가.</div>
+</div>
+
+<h3 class="h3">2-1. 창업 스토리 — 자전거 두 대로 시작한 회사</h3>
+<p>1981년, MIT에서 인간 시지각(human visual perception)을 가르치던 <b>로버트 실먼(Robert J. Shillman)</b> 박사는 학계를 떠나 전 재산(회사 공식 기록 10만 달러, 일부 문헌은 8만 6천~8만 7천 달러로 기록 — 출처 간 차이 있음)을 털어 회사를 세웠다. 그는 MIT 대학원생이던 <b>빌 실버(Bill Silver)</b>와 <b>마릴린 매츠(Marilyn Matz)</b>에게 "여름 한 철만 도와달라"며 경주용 자전거를 한 대씩 사주고 영입했는데, 그 여름 아르바이트가 평생의 회사가 됐다. 사명 'Cognex'는 <b>Cognition Experts(인지 전문가들)</b>의 줄임말이다. 실먼의 박사 논문 주제 — '사람은 어떻게 글자를 알아보는가' — 를 기계에 옮긴 것이 사업의 씨앗이었다.</p>
+<p>1982년 첫 제품 <b>데이터맨(DataMan)</b>은 세계 최초의 산업용 광학문자인식(OCR) 시스템으로, 부품 표면에 새겨진 글자·숫자를 읽고 품질을 검증했다. 첫 고객은 타자기 제조사였다. 이후 회사는 "머신비전이 없으면 공정 자체가 성립하지 않는" 시장, 즉 <b>반도체·전자 장비 산업</b>을 OEM(장비 제조사에 부품·모듈로 납품) 전략으로 파고들었다. 오늘날 반도체 제조의 거의 모든 단계에 쓰이는 머신비전 응용의 상당수가 코그넥스 엔지니어들 손에서 개발됐고, 세 창업자는 2005년 국제반도체장비재료협회(SEMI)로부터 기술 공로상을 받았다. 회사는 1987년 첫 흑자를 냈고, <b>1989년 나스닥에 주당 $1.38로 상장</b>해 1년 만에 주가가 3배가 됐다. 액면 조정 전 상장가 기준으로 현재 주가는 약 50배 수준이다.</p>
+<div class="note"><b>기업 문화 메모:</b> 실먼은 직원들을 '코그노이드(Cognoids)'라 부르고, 핼러윈을 공식 사내 휴일로 지정해 전원 분장 근무를 시키는 등 "Work Hard, Play Hard, Move Fast(열심히 일하고, 신나게 놀고, 빠르게 움직여라)" 문화를 만든 것으로 유명하다. 근속 25년 직원에게는 회사가 2만 5천 달러 기부 계좌를 만들어 '자선가가 될 기회'를 주는 퍼서비어런스 어워드 제도도 있다. 엔지니어 이탈이 치명적인 알고리즘 회사에서 장기 근속 문화는 그 자체가 기술 자산이다.</p></div>
+
+<figure class="fig">
+<div class="figtitle">그림 1. 45년 연대기 — 규칙 기반 비전에서 엣지 AI까지</div>
+<div class="figsub">기술 세대 교체(하단 밴드)와 사업 이벤트(상단)를 한 축에 정렬</div>
+<svg viewBox="0 0 960 300" role="img" aria-label="코그넥스 연혁 타임라인">
+<line x1="30" y1="150" x2="930" y2="150" stroke="#16202B" stroke-width="2"/>
+<!-- era bands -->
+<rect x="30" y="235" width="270" height="26" fill="#E8F0FC" stroke="#AECBF2"/><text x="165" y="252" text-anchor="middle" font-size="12" fill="#124693" font-weight="600">규칙 기반 알고리즘 시대 (1981–2016)</text>
+<rect x="300" y="235" width="330" height="26" fill="#E2F5EC" stroke="#9AD8BE"/><text x="465" y="252" text-anchor="middle" font-size="12" fill="#0B5C40" font-weight="600">딥러닝 이식기 (2017–2021)</text>
+<rect x="630" y="235" width="300" height="26" fill="#FFF6D9" stroke="#E8C766"/><text x="780" y="252" text-anchor="middle" font-size="12" fill="#7A5D00" font-weight="600">엣지 AI·플랫폼 시대 (2022– )</text>
+<!-- events top -->
+<g font-size="11.5" fill="#16202B">
+<circle cx="55" cy="150" r="5" fill="#1D6FE0"/><text x="55" y="120" text-anchor="middle" font-weight="700">1981</text><text x="55" y="135" text-anchor="middle" fill="#4E5F6E">창업</text>
+<circle cx="115" cy="150" r="5" fill="#1D6FE0"/><text x="115" y="90" text-anchor="middle" font-weight="700">1982</text><text x="115" y="105" text-anchor="middle" fill="#4E5F6E">DataMan OCR</text>
+<circle cx="175" cy="150" r="5" fill="#1D6FE0"/><text x="175" y="120" text-anchor="middle" font-weight="700">1989</text><text x="175" y="135" text-anchor="middle" fill="#4E5F6E">나스닥 상장 $1.38</text>
+<circle cx="250" cy="150" r="6" fill="#FFC400" stroke="#7A5D00"/><text x="250" y="90" text-anchor="middle" font-weight="700">1997</text><text x="250" y="105" text-anchor="middle" fill="#4E5F6E">PatMax 특허 기술</text>
+<circle cx="330" cy="150" r="5" fill="#1D6FE0"/><text x="330" y="120" text-anchor="middle" font-weight="700">2015</text><text x="330" y="135" text-anchor="middle" fill="#4E5F6E">표면검사 부문 매각</text>
+<circle cx="400" cy="150" r="6" fill="#128A60"/><text x="400" y="90" text-anchor="middle" font-weight="700">2017</text><text x="400" y="105" text-anchor="middle" fill="#4E5F6E">ViDi 인수(딥러닝)</text>
+<circle cx="470" cy="150" r="5" fill="#128A60"/><text x="470" y="120" text-anchor="middle" font-weight="700">2019</text><text x="470" y="135" text-anchor="middle" fill="#4E5F6E">수아랩(韓) 인수</text>
+<circle cx="540" cy="150" r="5" fill="#128A60"/><text x="540" y="90" text-anchor="middle" font-weight="700">2020</text><text x="540" y="105" text-anchor="middle" fill="#4E5F6E">In-Sight D900<tspan x="540" dy="13">카메라 속 딥러닝</tspan></text>
+<circle cx="625" cy="150" r="5" fill="#7A5D00"/><text x="625" y="120" text-anchor="middle" font-weight="700">2022</text><text x="625" y="135" text-anchor="middle" fill="#4E5F6E">Edge Learning</text>
+<circle cx="695" cy="150" r="6" fill="#FFC400" stroke="#7A5D00"/><text x="695" y="90" text-anchor="middle" font-weight="700">2023</text><text x="695" y="105" text-anchor="middle" fill="#4E5F6E">모리텍스 인수 $2.57억</text>
+<circle cx="775" cy="150" r="5" fill="#7A5D00"/><text x="775" y="120" text-anchor="middle" font-weight="700">2025</text><text x="775" y="135" text-anchor="middle" fill="#4E5F6E">CEO 교체·SLX·<tspan x="775" dy="13">인베스터 데이</tspan></text>
+<circle cx="880" cy="150" r="7" fill="#FFC400" stroke="#7A5D00" stroke-width="2"/><text x="880" y="76" text-anchor="middle" font-weight="700">2026</text><text x="880" y="91" text-anchor="middle" fill="#4E5F6E">OneVision GA·</text><text x="880" y="104" text-anchor="middle" fill="#4E5F6E">In-Sight 3900/6900</text><text x="880" y="117" text-anchor="middle" fill="#4E5F6E">NVIDIA·퀄컴 탑재</text>
+</g>
+<text x="30" y="285" font-size="10.5" fill="#4E5F6E">같은 회사가 기술 패러다임을 두 번(규칙→딥러닝→엣지 AI) 갈아탔다는 점이 45년 생존의 핵심이다.</text>
+</svg>
+<figcaption>그림 1. 출처: Cognex 회사 연혁 페이지, Electronic Design 마일스톤 기사, Wikipedia, 각 인수 보도자료. 인수가액은 보도 기준.</figcaption>
+</figure>
+
+<h3 class="h3">2-2. 머신비전이란 무엇인가 — 비전공자를 위한 3분 설명</h3>
+<p>머신비전은 <b>카메라(눈) + 조명(빛) + 렌즈(초점) + 알고리즘(뇌)</b>을 묶어 기계가 스스로 '보고 판단'하게 만드는 기술이다. 사람 검사원과 비교하면 이해가 쉽다. 사람은 8시간 일하면 집중력이 떨어지고, 0.1mm 결함은 아예 못 보며, 초당 10개씩 지나가는 택배 바코드를 읽을 수 없다. 머신비전 시스템은 24시간 같은 정밀도로, 미크론 단위 결함을, 고속 컨베이어 위에서 잡아낸다. 쓰임새는 크게 네 가지다:</p>
+<ul>
+<li><b>검사(Inspect):</b> 불량 탐지 — 배터리 용접면 흠집, 알약 포장 누락, 병뚜껑 밀봉 상태.</li>
+<li><b>식별(Identify):</b> 바코드·문자 판독 — 물류창고 분류, 부품 이력 추적(traceability).</li>
+<li><b>측정(Gauge):</b> 치수·간격을 비접촉으로 잰다 — 스마트폰 베젤 간격, 커넥터 핀 정렬.</li>
+<li><b>안내(Guide):</b> 로봇 팔에 좌표를 알려준다 — "집을 부품이 여기 있고 3.2도 돌아가 있다."</li>
+</ul>
+<p>중요한 사업적 포인트: 이 기술은 <b>'있으면 좋은 것'이 아니라 '없으면 라인이 못 도는 것'</b>이 되는 순간 가격 협상력이 뒤집힌다. 스마트폰 1대에 수백 개의 검사 포인트, 전기차 배터리 1개에 수십 개의 비전 검사가 들어가며, 검사 장비 가격(수천 달러~수만 달러)은 그것이 예방하는 리콜·불량 비용에 비하면 미미하다. 코그넥스의 68~71% 매출총이익률은 바로 이 "불량 1건의 비용 대비 검사기 1대의 가격" 비대칭에서 나온다.</p>
+
+<h3 class="h3">2-3. 오늘의 코그넥스 — 규모와 위상</h3>
+<div class="stats">
+<div class="stat"><div class="k">2025 매출</div><div class="v">$994M</div><div class="d">전년 +8.7%</div></div>
+<div class="stat"><div class="k">누적 고객</div><div class="v">30,000+</div><div class="d">5년 내 2배 목표</div></div>
+<div class="stat"><div class="k">특허(등록+출원)</div><div class="v">≈1,400건</div><div class="d">인베스터 데이 기준</div></div>
+<div class="stat"><div class="k">임직원</div><div class="v">2,900+명</div><div class="d">30여 개국 거점</div></div>
+<div class="stat"><div class="k">현금·투자자산</div><div class="v">$622M</div><div class="d">26.1Q 말 · 무차입</div></div>
+<div class="stat"><div class="k">점유율(서빙 시장)</div><div class="v">10%대 중반</div><div class="d">$70억 시장 내 1위권</div></div>
+</div>
+<p>본사는 매사추세츠 네이틱(One Vision Drive)에 있고, 생산은 자체 공장 없이 <b>위탁생산 + 모리텍스 인수로 확보한 중국·베트남 광학부품 공장</b>의 하이브리드다. 회사 스스로 정의하는 '서빙 가능 시장'은 약 70억 달러이며 그 안에서 점유율 10%대 중반의 1위권 사업자다(광의의 머신비전 시장 전체로 넓히면 §5 참조). 2025년 4월 30일 CEO 교체 발표와 6월 10일 인베스터 데이에서 회사는 향후 5년 전략 목표를 세 가지로 못 박았다: <b>① 산업용 머신비전의 AI 기술 1위 공급자가 된다, ② 업계 최고의 고객 경험을 제공한다, ③ 고객 기반을 5년 내 2배로 늘린다.</b> 이 세 문장이 이후 모든 분기 실적 발표의 채점표가 되고 있다.</p>
+</section>
+
+<!-- ═══════════ 3. 수익 구조 ═══════════ -->
+<section class="sec" id="s3">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 03 · REVENUE ARCHITECTURE</div>
+<h2>수익 구조 — 이 회사는 어떻게 돈을 버는가</h2>
+<div class="sub">하나의 기술 플랫폼을 여섯 개의 전방시장에 파는 구조. 한 시장이 꺾여도 다른 시장이 받친다.</div>
+</div>
+
+<h3 class="h3">3-1. 돈의 흐름 한 장 요약</h3>
+<figure class="fig">
+<div class="figtitle">그림 2. 코그넥스 수익 흐름도 — 기술 플랫폼 → 제품 → 전방시장</div>
+<div class="figsub">R&D로 만든 알고리즘 자산을 하드웨어에 담아 팔고, 판 만큼 데이터·노하우가 쌓여 다시 R&D로 환류</div>
+<svg viewBox="0 0 960 430" role="img" aria-label="수익 구조 흐름도">
+<defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4E5F6E"/></marker></defs>
+<!-- left: platform -->
+<rect x="20" y="130" width="200" height="150" rx="8" fill="#0F1A26" stroke="#FFC400" stroke-width="2"/>
+<text x="120" y="158" text-anchor="middle" font-size="13.5" fill="#FFC400" font-weight="800">기술 플랫폼</text>
+<text x="120" y="180" text-anchor="middle" font-size="11.5" fill="#E9EFF5">비전 알고리즘 (규칙+AI)</text>
+<text x="120" y="198" text-anchor="middle" font-size="11.5" fill="#E9EFF5">특허 약 1,400건</text>
+<text x="120" y="216" text-anchor="middle" font-size="11.5" fill="#E9EFF5">모리텍스 광학부품(렌즈·조명)</text>
+<text x="120" y="234" text-anchor="middle" font-size="11.5" fill="#E9EFF5">R&D 매출의 약 14%</text>
+<text x="120" y="258" text-anchor="middle" font-size="10.5" fill="#9FB2C2">45년 축적 · 산업 이미지 노하우</text>
+<!-- middle: products -->
+<g font-size="11.5">
+<rect x="290" y="40" width="190" height="60" rx="6" fill="#FFFFFF" stroke="#D3DCE3"/><text x="385" y="64" text-anchor="middle" font-weight="700" fill="#16202B">비전 시스템·센서</text><text x="385" y="82" text-anchor="middle" fill="#4E5F6E">In-Sight 시리즈 (검사·측정·안내)</text>
+<rect x="290" y="115" width="190" height="60" rx="6" fill="#FFFFFF" stroke="#D3DCE3"/><text x="385" y="139" text-anchor="middle" font-weight="700" fill="#16202B">ID 판독기</text><text x="385" y="157" text-anchor="middle" fill="#4E5F6E">DataMan 바코드 리더·검증기</text>
+<rect x="290" y="190" width="190" height="60" rx="6" fill="#FFFFFF" stroke="#D3DCE3"/><text x="385" y="214" text-anchor="middle" font-weight="700" fill="#16202B">물류 터널·게이트</text><text x="385" y="232" text-anchor="middle" fill="#4E5F6E">SLX 모듈러 비전 터널</text>
+<rect x="290" y="265" width="190" height="60" rx="6" fill="#FFFFFF" stroke="#D3DCE3"/><text x="385" y="289" text-anchor="middle" font-weight="700" fill="#16202B">소프트웨어·플랫폼</text><text x="385" y="307" text-anchor="middle" fill="#4E5F6E">VisionPro · OneVision(클라우드)</text>
+<rect x="290" y="340" width="190" height="60" rx="6" fill="#FFFFFF" stroke="#D3DCE3"/><text x="385" y="364" text-anchor="middle" font-weight="700" fill="#16202B">광학 부품(OEM)</text><text x="385" y="382" text-anchor="middle" fill="#4E5F6E">모리텍스 렌즈·조명</text>
+</g>
+<line x1="220" y1="205" x2="285" y2="70" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="220" y1="205" x2="285" y2="145" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="220" y1="205" x2="285" y2="220" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="220" y1="205" x2="285" y2="295" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="220" y1="205" x2="285" y2="370" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+<!-- right: end markets -->
+<g font-size="11.5">
+<rect x="600" y="30" width="330" height="52" rx="6" fill="#E2F5EC" stroke="#9AD8BE"/><text x="615" y="52" font-weight="800" fill="#0B5C40">물류 26%</text><text x="615" y="70" fill="#0B5C40">전자상거래 창고 분류·추적 — 8분기 연속 두 자릿수 성장</text>
+<rect x="600" y="92" width="330" height="52" rx="6" fill="#FFFFFF" stroke="#D3DCE3"/><text x="615" y="114" font-weight="800" fill="#16202B">포장(FMCG·헬스케어) 21%</text><text x="615" y="132" fill="#4E5F6E">식음료·생활용품·제약 라인 검사 — 영업조직 개편 수혜</text>
+<rect x="600" y="154" width="330" height="52" rx="6" fill="#FFFFFF" stroke="#D3DCE3"/><text x="615" y="176" font-weight="800" fill="#16202B">자동차 ≈20%</text><text x="615" y="194" fill="#4E5F6E">EV 배터리 침체로 2년 역성장 — 2025년 말 바닥 신호</text>
+<rect x="600" y="216" width="330" height="52" rx="6" fill="#FFFFFF" stroke="#D3DCE3"/><text x="615" y="238" font-weight="800" fill="#16202B">가전·전자 19%</text><text x="615" y="256" fill="#4E5F6E">스마트폰 등 조립 검사 — 2025년 두 자릿수 회복</text>
+<rect x="600" y="278" width="330" height="52" rx="6" fill="#FFFFFF" stroke="#D3DCE3"/><text x="615" y="300" font-weight="800" fill="#16202B">반도체 10%</text><text x="615" y="318" fill="#4E5F6E">웨이퍼 정렬·ID — AI 투자 사이클 수혜, 26.1Q +20%↑</text>
+<rect x="600" y="340" width="330" height="52" rx="6" fill="#FFFFFF" stroke="#D3DCE3"/><text x="615" y="362" font-weight="800" fill="#16202B">기타 ≈4%</text><text x="615" y="380" fill="#4E5F6E">의료기기 등 — 의료랩 자동화 파트너십(일회성) 포함</text>
+</g>
+<line x1="480" y1="215" x2="595" y2="56" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="480" y1="215" x2="595" y2="118" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="480" y1="215" x2="595" y2="180" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="480" y1="215" x2="595" y2="242" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="480" y1="215" x2="595" y2="304" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+<line x1="480" y1="215" x2="595" y2="366" stroke="#4E5F6E" stroke-width="1.5" marker-end="url(#ar)"/>
+</svg>
+<figcaption>그림 2. 전방시장 비중은 2025 회계연도 기준 근사치(분기 자료·경영진 발언 종합: 물류 26%, 포장 21%, 자동차 약 20%, 가전·전자 19%, 반도체 10%). 출처: Cognex 분기 IR 자료, 2026.2 바클레이즈 콘퍼런스 CFO 발언, Q1 2026 실적 슬라이드.</figcaption>
+</figure>
+
+<h3 class="h3">3-2. 최종시장별 성적표 — 분산이 만든 회복 탄력</h3>
+<p>코그넥스에는 회계상 사업부(세그먼트)가 따로 없다. 같은 카메라·알고리즘 플랫폼을 <b>여섯 개 전방시장</b>에 파는 단일 사업 구조이며, 회사는 시장별 매출 동향을 공개한다. 이 구조의 투자적 의미는 명확하다: 2022~2024년 자동차(EV 배터리)와 가전이 동반 침체할 때 매출이 19% 꺾였지만, 2024~2026년에는 물류가 8분기 연속 두 자릿수 성장하며 전체를 견인했고, 이제 자동차가 바닥을 다지는 동안 반도체·가전·포장이 바통을 이어받고 있다. <b>여섯 시장의 사이클이 서로 어긋나 있어, 전부 동시에 꺾이지 않는 한 성장 엔진이 완전히 멈추지 않는다.</b></p>
+<div class="tblwrap"><table class="tb">
+<tr><th>전방시장</th><th class="num">2025 비중</th><th>2025 실적</th><th>회사의 2026 전망(1Q 상향 후)</th><th>수요의 구조적 동인</th></tr>
+<tr><td><b>물류</b></td><td class="num">26%</td><td class="pos">8분기 연속 두 자릿수 성장</td><td>중~고 한 자릿수로 정상화(높은 기저)</td><td>전자상거래 물동량, 창고 자동화율, 노동력 부족</td></tr>
+<tr><td><b>포장</b></td><td class="num">21%</td><td class="pos">안정 → 4Q 강세</td><td>고 한 자릿수(상향)</td><td>FMCG·제약 이력추적 규제, 라인 고속화</td></tr>
+<tr><td><b>자동차</b></td><td class="num">≈20%</td><td class="neg">역성장 지속, 하반기 낙폭 축소</td><td>안정화~완만 회복</td><td>EV 배터리 증설 재개 여부가 관건</td></tr>
+<tr><td><b>가전·전자</b></td><td class="num">19%</td><td class="pos">두 자릿수 성장(기대 상회)</td><td>고 한 자릿수~두 자릿수</td><td>스마트폰 폼팩터 변화, 공급망 다변화(중국→인도 등) 시 라인 신설</td></tr>
+<tr><td><b>반도체</b></td><td class="num">10%</td><td class="pos">강한 성장, 26.1Q +20% 초과</td><td>고 한 자릿수~두 자릿수(상향)</td><td>AI 반도체 설비투자, 장비 OEM 심층 관계</td></tr>
+<tr><td>기타(의료 등)</td><td class="num">≈4%</td><td>일회성 파트너십 $1,200만 포함</td><td>—</td><td>의료랩 자동화 등 신규 영역 탐색</td></tr>
+</table></div>
+<div class="note"><b>회계 디테일 — 숫자를 읽을 때 주의:</b> 2025년 매출 $9.94억에는 의료랩 자동화 채널 파트너와의 일회성 '커머셜 파트너십(CP)' 매출 약 $1,200만이 포함돼 있다(대부분 3분기). 또 회사는 2025년 말 전략 재검토로 <b>연 $2,200만 규모의 비핵심·저마진 매출(일본 상사 사업, 모바일 SDK)</b>을 자발적으로 정리했고, 일본 상사 사업은 2026년 4월 1일 매각 완료돼 분기당 약 $500만의 매출 공백을 만든다. CFO는 2026년 성장률의 비교 기준으로 조정 매출 약 $9.65억을 제시했다. 즉 "표면 성장률"과 "실질 성장률"이 분기마다 1~3%p 차이 날 수 있다.</div>
+
+<div class="grid2">
+<figure class="fig">
+<div class="figtitle">그림 3. 전방시장 매출 구성 (2025, 근사)</div>
+<div class="figsub">최대 시장(물류)도 26% — 단일 시장 의존이 낮다</div>
+<svg viewBox="0 0 380 260">
+<g transform="translate(120,130)">
+<circle r="78" fill="none" stroke="#128A60" stroke-width="34" stroke-dasharray="127.4 362.6" transform="rotate(-90)"/>
+<circle r="78" fill="none" stroke="#1D6FE0" stroke-width="34" stroke-dasharray="102.9 387.1" stroke-dashoffset="-127.4" transform="rotate(-90)"/>
+<circle r="78" fill="none" stroke="#4E5F6E" stroke-width="34" stroke-dasharray="98 392" stroke-dashoffset="-230.3" transform="rotate(-90)"/>
+<circle r="78" fill="none" stroke="#FFC400" stroke-width="34" stroke-dasharray="93.1 396.9" stroke-dashoffset="-328.3" transform="rotate(-90)"/>
+<circle r="78" fill="none" stroke="#C63B3B" stroke-width="34" stroke-dasharray="49 441" stroke-dashoffset="-421.4" transform="rotate(-90)"/>
+<circle r="78" fill="none" stroke="#B9C6D0" stroke-width="34" stroke-dasharray="19.6 470.4" stroke-dashoffset="-470.4" transform="rotate(-90)"/>
+<text y="-4" text-anchor="middle" font-size="15" font-weight="800" fill="#16202B">$994M</text>
+<text y="16" text-anchor="middle" font-size="10.5" fill="#4E5F6E">FY2025</text>
+</g>
+<g font-size="12" fill="#16202B">
+<rect x="235" y="45" width="11" height="11" fill="#128A60"/><text x="252" y="55">물류 26%</text>
+<rect x="235" y="70" width="11" height="11" fill="#1D6FE0"/><text x="252" y="80">포장 21%</text>
+<rect x="235" y="95" width="11" height="11" fill="#4E5F6E"/><text x="252" y="105">자동차 ≈20%</text>
+<rect x="235" y="120" width="11" height="11" fill="#FFC400"/><text x="252" y="130">가전·전자 19%</text>
+<rect x="235" y="145" width="11" height="11" fill="#C63B3B"/><text x="252" y="155">반도체 10%</text>
+<rect x="235" y="170" width="11" height="11" fill="#B9C6D0"/><text x="252" y="180">기타 ≈4%</text>
+</g>
+</svg>
+<figcaption>그림 3. 출처: 그림 2와 동일. 근사치.</figcaption>
+</figure>
+<figure class="fig">
+<div class="figtitle">그림 4. 지역별 매출 (2024)</div>
+<div class="figsub">미주가 최대, 중화권 18% — 지정학 리스크의 크기이자 성장 옵션</div>
+<svg viewBox="0 0 380 260">
+<g font-size="12" fill="#16202B">
+<text x="10" y="52">미주</text><rect x="105" y="38" width="228" height="22" fill="#128A60"/><text x="340" y="54" class="m" font-size="12" fill="#0B5C40" font-weight="700" text-anchor="end" x="338">38%</text>
+<text x="10" y="102">유럽</text><rect x="105" y="88" width="144" height="22" fill="#1D6FE0"/><text x="257" y="104" class="m" font-size="12" fill="#124693" font-weight="700">24%</text>
+<text x="10" y="152">기타 아시아</text><rect x="105" y="138" width="120" height="22" fill="#FFC400"/><text x="233" y="154" class="m" font-size="12" fill="#7A5D00" font-weight="700">20%</text>
+<text x="10" y="202">중화권</text><rect x="105" y="188" width="108" height="22" fill="#C63B3B"/><text x="221" y="204" class="m" font-size="12" fill="#8C2323" font-weight="700">18%</text>
+</g>
+<text x="10" y="242" font-size="10.5" fill="#4E5F6E">2025년 지역별 성장(환율 불변, 4Q): 미주 +11% · 유럽 +13% · 중화권 +7%</text>
+</svg>
+<figcaption>그림 4. 출처: 2025 인베스터 데이 자료(2024 비중), Q4 2025 어닝콜(4Q 지역 성장률).</figcaption>
+</figure>
+</div>
+
+<h3 class="h3">3-3. 수익 모델의 질(質) — 하드웨어의 몸, 소프트웨어의 경제학</h3>
+<p>매출 인식 형태는 대부분 <b>제품(하드웨어+내장 소프트웨어) 일시 판매</b>다. 구독(SaaS) 매출은 아직 미미하다. 그럼에도 이 사업의 '질'이 높다고 평가되는 근거는 다음 네 가지다:</p>
+<ul>
+<li><b>가격의 근거가 원가가 아니라 '회피 비용':</b> 검사기 한 대가 막는 리콜·폐기·라인정지 비용이 장비가의 수십~수백 배다. 그래서 조정 매출총이익률이 68~71%로 유지된다(2025년 68.9%, 26.1Q 71.1%).</li>
+<li><b>설치 기반의 반복 구매:</b> 라인 증설·모델 변경 때마다 같은 브랜드로 재구매하는 관성이 강하다. 검사 레시피(파라미터·학습 데이터)가 코그넥스 포맷으로 쌓이기 때문이다. 30,000+ 고객이 곧 반복 매출의 저수지다.</li>
+<li><b>자본 소모가 거의 없다:</b> 2025년 자본지출 $870만(매출의 0.9%). 벌어들인 현금이 설비에 갇히지 않고 자사주 매입·배당·M&A로 흘러나온다.</li>
+<li><b>구독 전환 옵션:</b> 2026년 5월 정식 출시된 클라우드 플랫폼 OneVision은 AI 모델의 개발·배포·버전 관리를 중앙화한다. 베타에서 100개 이상 고객이 사용했으며, 장기적으로 반복 매출(소프트웨어 구독) 층을 얹을 수 있는 첫 구조물이다 — 다만 아직 매출 기여는 검증 전 단계다.</li>
+</ul>
+<p><b>고객 집중도:</b> 물류에서는 대형 전자상거래 사업자(회사는 개별 고객명을 밝히지 않으나 업계에서는 아마존 등 초대형 물류 투자자를 핵심 고객군으로 본다)의 투자 사이클 영향이 크고, 가전에서는 과거 특정 대형 고객(업계 통칭 스마트폰 최대 고객)의 연 단위 발주 변동이 분기 실적을 흔들어 왔다. 다만 2025년 가전 성장은 "특정 대형 고객이 아니라 여러 하위 시장 고객에서 나왔다"는 것이 CFO의 설명이며, 신규 고객 9,000곳 확보는 집중도를 낮추는 방향의 구조 변화다. 집중 리스크는 여전히 존재하되, 방향은 분산 쪽으로 움직이고 있다.</p>
+</section>
+
+<!-- ═══════════ 4. 제품·기술 ═══════════ -->
+<section class="sec" id="s4">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 04 · PRODUCT &amp; TECHNOLOGY</div>
+<h2>제품·서비스 및 기술력 — '전문가 없이 쓰는 산업 AI'의 실체</h2>
+<div class="sub">이 회사의 해자는 카메라가 아니라, 카메라 안에 들어 있는 45년치 알고리즘과 산업 이미지 노하우다.</div>
+</div>
+
+<h3 class="h3">4-1. 제품 포트폴리오 — 무엇을 파는가</h3>
+<div class="tblwrap"><table class="tb">
+<tr><th>제품군</th><th>대표 라인</th><th>무슨 일을 하나 (쉬운 설명)</th><th>2025~26 신제품 포인트</th></tr>
+<tr><td><b>비전 시스템·센서</b></td><td>In-Sight 시리즈<br>(2800/3800/L38/D900 등)</td><td>카메라·프로세서·소프트웨어가 한 몸인 '스마트 카메라'. 라인 위에서 불량 검사·치수 측정·로봇 안내를 스스로 수행</td><td><b>In-Sight 3900</b>(2026.5): 퀄컴 Dragonwing 칩 탑재, 외부 PC 없이 고속·고정밀 검사. <b>In-Sight L38</b>(2024): 세계 최초 AI 3D 비전 시스템</td></tr>
+<tr><td><b>비전 컨트롤러</b></td><td>In-Sight 6900</td><td>여러 카메라를 묶어 무거운 AI 연산을 처리하는 두뇌 박스</td><td><b>2026.4 출시, NVIDIA Jetson 탑재</b> — 연산 집약 검사를 라인 옆에서 처리, 로봇 비전의 허브</td></tr>
+<tr><td><b>ID(식별) 제품</b></td><td>DataMan 고정식·핸드헬드,<br>바코드 검증기</td><td>고속 컨베이어 위 바코드·문자를 이미지로 판독. 레이저 스캐너를 대체한 '이미지 기반 판독'의 원조</td><td>DataMan 290/390(2025.1): AI 디코딩으로 훼손·저품질 코드 판독률 향상</td></tr>
+<tr><td><b>물류 터널</b></td><td><b>SLX 모듈러 비전 터널</b></td><td>컨베이어를 통째로 감싸는 '스캔 게이트'. 상자 6면의 바코드·치수·상태를 통과와 동시에 판독</td><td>2025.10 공개 — 대형 물류 고객 중심에서 <b>중소형 창고까지 표준화 제품으로 확장</b>하려는 승부수</td></tr>
+<tr><td><b>소프트웨어</b></td><td>VisionPro, QuickBuild,<br><b>OneVision</b></td><td>PC 기반 고급 비전 개발 도구(VisionPro), 순서도식 노코드 개발(QuickBuild), 클라우드에서 AI 모델을 만들어 현장 기기로 배포·관리(OneVision)</td><td><b>OneVision 정식 출시</b>(2026.5): 베타 고객 100+ · 클라우드-투-엣지 아키텍처. 구독형 매출의 씨앗</td></tr>
+<tr><td><b>광학 부품</b></td><td>모리텍스(Moritex)</td><td>머신비전용 고급 렌즈·조명 — 2023년 $2.57억에 인수한 일본 기업. 부품 내재화 + OEM 판매 겸용</td><td>중국·베트남 자체 생산으로 원가·공급망 통제력 확보</td></tr>
+</table></div>
+
+<figure class="fig">
+<div class="figtitle">그림 5. 스마트 카메라 해부도 — 'In-Sight' 한 대에 들어 있는 것</div>
+<div class="figsub">경쟁력의 핵심은 ④번(알고리즘)이며, 나머지는 ④를 담는 그릇이다</div>
+<svg viewBox="0 0 960 300" role="img" aria-label="스마트 카메라 구조 도식">
+<rect x="60" y="70" width="480" height="160" rx="12" fill="#152332" stroke="#2B3E52" stroke-width="2"/>
+<circle cx="140" cy="150" r="52" fill="#0F1A26" stroke="#FFC400" stroke-width="3"/>
+<circle cx="140" cy="150" r="30" fill="#1B2C3E" stroke="#33475C"/>
+<circle cx="140" cy="150" r="12" fill="#1D6FE0"/>
+<rect x="215" y="105" width="80" height="90" rx="6" fill="#1B2C3E" stroke="#33475C"/>
+<text x="255" y="145" text-anchor="middle" font-size="11" fill="#E9EFF5">이미지</text><text x="255" y="161" text-anchor="middle" font-size="11" fill="#E9EFF5">센서</text>
+<rect x="320" y="105" width="95" height="90" rx="6" fill="#1B2C3E" stroke="#FFC400"/>
+<text x="367" y="140" text-anchor="middle" font-size="11" fill="#FFC400" font-weight="700">엣지 AI</text><text x="367" y="156" text-anchor="middle" font-size="11" fill="#FFC400" font-weight="700">프로세서</text><text x="367" y="174" text-anchor="middle" font-size="9.5" fill="#9FB2C2">퀄컴·엔비디아 등</text>
+<rect x="440" y="105" width="80" height="90" rx="6" fill="#1B2C3E" stroke="#33475C"/>
+<text x="480" y="140" text-anchor="middle" font-size="11" fill="#E9EFF5">산업 I/O</text><text x="480" y="158" text-anchor="middle" font-size="9.5" fill="#9FB2C2">PLC·로봇 연결</text>
+<rect x="60" y="40" width="480" height="18" rx="4" fill="#7A5D00"/><text x="300" y="53" text-anchor="middle" font-size="10.5" fill="#FFF6D9">통합 조명(모리텍스) — 결함이 '보이게' 빛을 설계</text>
+<!-- callouts -->
+<g font-size="12" fill="#16202B">
+<text x="600" y="70" font-weight="800">① 렌즈·조명 (모리텍스 내재화)</text><text x="600" y="88" fill="#4E5F6E" font-size="11">같은 알고리즘도 빛이 나쁘면 못 본다 — 광학 통제가 성능의 절반</text>
+<text x="600" y="120" font-weight="800">② 이미지 센서</text><text x="600" y="138" fill="#4E5F6E" font-size="11">범용 부품 — 차별화 요소 아님</text>
+<text x="600" y="170" font-weight="800">③ 엣지 프로세서</text><text x="600" y="188" fill="#4E5F6E" font-size="11">클라우드 왕복 없이 밀리초 단위 판정 — 라인 속도를 따라간다</text>
+<text x="600" y="220" font-weight="800" fill="#7A5D00">④ 비전 알고리즘 + 학습 노하우 ← 해자의 본체</text>
+<text x="600" y="238" fill="#4E5F6E" font-size="11">PatMax(규칙) + 딥러닝 + 트랜스포머, 45년치 산업 이미지 도메인 지식</text>
+<text x="600" y="268" font-weight="800">⑤ 산업 표준 인터페이스</text><text x="600" y="286" fill="#4E5F6E" font-size="11">공장 제어기(PLC)·로봇과 즉시 연동 — IT가 아닌 OT 세계의 언어</text>
+</g>
+<line x1="140" y1="95" x2="300" y2="49" stroke="none"/>
+</svg>
+<figcaption>그림 5. 자체 도식. 구성 요소는 회사 제품 자료(In-Sight 3900/6900 보도자료, 인베스터 데이) 기반.</figcaption>
+</figure>
+
+<h3 class="h3">4-2. 작동 원리 — 규칙 기반에서 엣지 AI까지, 쉽게</h3>
+<p>머신비전 알고리즘의 세대 교체를 요리 레시피에 비유하면 이렇다:</p>
+<ul>
+<li><b>1세대 · 규칙 기반(1981~):</b> "테두리에서 3mm 안쪽에 지름 2mm 원이 있어야 정상"처럼 사람이 조건을 일일이 수식으로 적는다. 코그넥스의 1997년 <b>PatMax</b>는 이 시대의 결정판 — 부품이 돌아가 있든, 크기가 다르든, 일부가 가려졌든 기하학적 패턴을 찾아내는 특허 기술로, 지금도 업계 표준 벤치마크다. 장점은 정확·고속·설명가능, 단점은 "긁힘처럼 정형화가 불가능한 결함"에 약하다는 것.</li>
+<li><b>2세대 · 딥러닝(2017~):</b> 좋은 제품/나쁜 제품 사진 수백~수천 장을 보여주면 신경망이 스스로 기준을 익힌다. 코그넥스는 2017년 스위스 <b>ViDi Systems</b>(산업 딥러닝 검사의 개척자), 2019년 한국 <b>수아랩(Sualab)</b>을 인수하며 이 역량을 통째로 사들였다. 단점은 학습 이미지 수집·라벨링에 데이터 사이언티스트가 필요했다는 것 — 중소 공장에는 그런 인력이 없다.</li>
+<li><b>3세대 · 엣지 러닝/트랜스포머(2022~):</b> <b>불량 사진 5~10장만으로, 현장 작업자가, 카메라 안에서 직접</b> 학습시키는 방식. 45년치 산업 이미지로 사전학습(pre-train)된 소형 모델을 기기에 심어두고, 현장에서는 미세조정만 하는 구조다. 2022년 Edge Learning, 2024년 AI 바코드 판독, 2025년 스마트카메라 내 3D AI로 확장됐다.</li>
+</ul>
+
+<div class="dark-card">
+<div style="font-family:'Gothic A1',sans-serif; font-weight:800; color:#FFC400; margin-bottom:10px;">코그넥스 소형 AI vs 범용 대형 비전언어모델(VLM) — 왜 "작은 모델"이 공장에서는 이기는가</div>
+<div class="tblwrap" style="border-color:#2B3E52; background:#0F1A26;"><table class="tb" style="background:#0F1A26;">
+<tr><th>항목</th><th>코그넥스 산업 특화 모델</th><th>범용 VLM (예: 오픈소스 7B급)</th></tr>
+<tr><td style="background:#152332; color:#E9EFF5;">모델 크기</td><td style="background:#152332; color:#3ED598;" class="num"><b>약 2,000만 파라미터</b></td><td style="background:#152332; color:#E9EFF5;" class="num">약 70억 파라미터 (≈350배)</td></tr>
+<tr><td style="background:#0F1A26; color:#E9EFF5;">처리 속도</td><td style="background:#0F1A26; color:#3ED598;"><b>초당 30회 판정</b> — 라인 속도 대응</td><td style="background:#0F1A26; color:#E9EFF5;">임베디드에서 실시간 불가</td></tr>
+<tr><td style="background:#152332; color:#E9EFF5;">전력</td><td style="background:#152332; color:#3ED598;"><b>약 8W</b> — 카메라 안에서 구동</td><td style="background:#152332; color:#E9EFF5;">GPU 서버급(~1,000W)</td></tr>
+<tr><td style="background:#0F1A26; color:#E9EFF5;">학습 데이터</td><td style="background:#0F1A26; color:#3ED598;"><b>불량 샘플 5~10장</b></td><td style="background:#0F1A26; color:#E9EFF5;">수천 장 + 전문 인력</td></tr>
+</table></div>
+<p class="dim" style="font-size:0.85rem; margin-top:8px;">출처: 2025.6 인베스터 데이 기술 세션(자사 비교 자료이므로 자사에 유리한 프레이밍임을 감안할 것). 그럼에도 "공장 라인은 클라우드 지연·GPU 전력·데이터 반출을 허용하지 않는다"는 제약 자체는 물리적 사실이며, 이 제약이 범용 AI 대기업과의 직접 충돌을 구조적으로 막아주는 완충지대다.</p>
+</div>
+
+<h3 class="h3">4-3. 서비스 제공 흐름 — OneVision이 바꾸는 배포 방식</h3>
+<figure class="fig">
+<div class="figtitle">그림 6. AI 비전 배포 흐름도 — 클라우드에서 만들고, 엣지에서 돌린다</div>
+<div class="figsub">과거엔 ①~④에 수 주 + 전문가가 필요했다. 지금은 현장 작업자가 수 시간에 끝내는 것이 목표</div>
+<svg viewBox="0 0 960 210" role="img" aria-label="배포 흐름도">
+<defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4E5F6E"/></marker></defs>
+<g font-size="11.5">
+<rect x="15" y="55" width="165" height="80" rx="8" fill="#E8F0FC" stroke="#AECBF2"/><text x="97" y="82" text-anchor="middle" font-weight="800" fill="#124693">① 샘플 촬영</text><text x="97" y="100" text-anchor="middle" fill="#124693">현장에서 양품·불량</text><text x="97" y="116" text-anchor="middle" fill="#124693">이미지 5~10장</text>
+<rect x="215" y="55" width="165" height="80" rx="8" fill="#FFF6D9" stroke="#E8C766"/><text x="297" y="82" text-anchor="middle" font-weight="800" fill="#7A5D00">② OneVision 학습</text><text x="297" y="100" text-anchor="middle" fill="#7A5D00">클라우드에서 모델 생성</text><text x="297" y="116" text-anchor="middle" fill="#7A5D00">코딩·전문가 불필요</text>
+<rect x="415" y="55" width="165" height="80" rx="8" fill="#E2F5EC" stroke="#9AD8BE"/><text x="497" y="82" text-anchor="middle" font-weight="800" fill="#0B5C40">③ 엣지 배포</text><text x="497" y="100" text-anchor="middle" fill="#0B5C40">In-Sight 카메라·6900</text><text x="497" y="116" text-anchor="middle" fill="#0B5C40">컨트롤러로 전송</text>
+<rect x="615" y="55" width="165" height="80" rx="8" fill="#FFFFFF" stroke="#D3DCE3"/><text x="697" y="82" text-anchor="middle" font-weight="800" fill="#16202B">④ 실시간 판정</text><text x="697" y="100" text-anchor="middle" fill="#4E5F6E">라인 위 밀리초 판정</text><text x="697" y="116" text-anchor="middle" fill="#4E5F6E">PASS / FAIL → PLC·로봇</text>
+<rect x="815" y="55" width="130" height="80" rx="8" fill="#0F1A26" stroke="#FFC400"/><text x="880" y="82" text-anchor="middle" font-weight="800" fill="#FFC400">⑤ 전사 확장</text><text x="880" y="100" text-anchor="middle" fill="#E9EFF5">모델 버전관리</text><text x="880" y="116" text-anchor="middle" fill="#E9EFF5">타 라인·타 공장 복제</text>
+</g>
+<line x1="180" y1="95" x2="210" y2="95" stroke="#4E5F6E" stroke-width="2" marker-end="url(#ar2)"/>
+<line x1="380" y1="95" x2="410" y2="95" stroke="#4E5F6E" stroke-width="2" marker-end="url(#ar2)"/>
+<line x1="580" y1="95" x2="610" y2="95" stroke="#4E5F6E" stroke-width="2" marker-end="url(#ar2)"/>
+<line x1="780" y1="95" x2="810" y2="95" stroke="#4E5F6E" stroke-width="2" marker-end="url(#ar2)"/>
+<path d="M 880 140 Q 880 185 500 185 Q 120 185 100 140" fill="none" stroke="#7A5D00" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#ar2)"/>
+<text x="490" y="178" text-anchor="middle" font-size="10.5" fill="#7A5D00">현장 오탐 데이터가 다시 학습으로 — 쓸수록 좋아지는 루프(플라이휠)</text>
+</svg>
+<figcaption>그림 6. 자체 도식. OneVision 정식 출시 보도자료(2026.5.13)·인베스터 데이 자료 기반.</figcaption>
+</figure>
+<p>이 흐름도가 사업적으로 중요한 이유: 기존에는 비전 시스템 1개 배포에 시스템 통합업체(SI)와 수 주의 엔지니어링이 들었고, 그래서 코그넥스의 고객은 "그런 비용을 감당할 수 있는 대기업"에 치우쳐 있었다. <b>배포 난이도가 떨어질수록 서빙 가능한 고객의 저변이 중소 제조·물류로 넓어진다</b> — 이것이 "고객 기반 5년 내 2배" 전략의 기술적 전제이자, 2025년 신규 고객 9,000곳(전년의 3배)이라는 숫자가 이미 보여주고 있는 변화다.</p>
+
+<h3 class="h3">4-4. 기술 해자의 깊이 — 모방이 왜 어려운가</h3>
+<ul>
+<li><b>데이터 해자:</b> 산업 결함 이미지는 인터넷에 없다. 고객 라인에서 45년간 축적된 결함 사례·조명 조건·재질별 노하우가 사전학습 모델의 원료다. 후발주자가 GPU와 인력으로 살 수 없는 자산이다.</li>
+<li><b>특허·알고리즘:</b> 등록·출원 특허 약 1,400건. PatMax 계열 기하 패턴 매칭은 2004년 레멜슨(Lemelson) 특허 소송 승소로 법적 방어력도 검증됐다.</li>
+<li><b>광학 수직 통합:</b> 모리텍스 인수로 렌즈·조명을 내재화 — "알고리즘이 아무리 좋아도 빛이 나쁘면 못 본다"는 물리 계층까지 통제한다.</li>
+<li><b>설치 기반 전환비용:</b> 검사 레시피·학습 모델·PLC 연동 코드가 코그넥스 생태계에 묶인다. 검증(validation)이 규제 요건인 제약·의료 라인에서는 벤더 교체가 사실상 재인증 프로젝트다.</li>
+<li><b>인재:</b> AI 기술 총괄 레토 비스(Reto Wyss)는 인수된 ViDi의 공동창업자(산업 딥러닝 검사의 개척자 그룹)이고, 소프트웨어 총괄 시린 살림(Shirin Saleem)은 아마존 알렉사 AI 창립 멤버 출신이다. 규칙 기반 시대의 베테랑과 현대 AI 인력이 한 지붕에 있는 조합은 업계에서 드물다.</li>
+</ul>
+<div class="warn"><b>정직한 반론(기술 측면):</b> ① 딥러닝 자체는 범용 기술이 됐고, 중국 하이크로봇(Hikrobot)·OPT 등이 저가 스마트카메라로 중국 내수를 잠식 중이다. ② 카메라 하드웨어는 갈수록 범용화(commoditize)되며, 코그넥스가 퀄컴·엔비디아 칩을 쓴다는 것 자체가 연산 계층은 외부 생태계에 의존함을 뜻한다. ③ 범용 VLM의 소형화·증류(distillation)가 빨라지면 "산업 특화 소형 모델"의 우위 폭이 좁아질 수 있다. 코그넥스의 대응은 속도·전력·소량학습이라는 물리 제약 + 도메인 데이터 + OT 통합의 3중 결합인데, 이 결합이 유지되는 한 우위는 지속되지만, 각 층은 개별적으로는 공격 가능하다. 기술 해자는 '두껍지만 영구적이지는 않은' 등급으로 평가한다.</div>
+</section>
+
+<!-- ═══════════ 5. 산업 분석 ═══════════ -->
+<section class="sec" id="s5">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 05 · INDUSTRY MAP</div>
+<h2>산업 분석 — 자동화의 '감각기관' 시장</h2>
+<div class="sub">로봇이 팔이고 PLC가 신경이라면, 머신비전은 눈이다. 자동화가 늘어나는 모든 곳에서 눈의 수요가 함께 늘어난다.</div>
+</div>
+
+<h3 class="h3">5-1. 밸류체인 — 코그넥스는 어디에 서 있나</h3>
+<figure class="fig">
+<div class="figtitle">그림 7. 머신비전 산업 밸류체인</div>
+<div class="figsub">코그넥스는 부가가치가 가장 높은 '시스템+알고리즘' 층을 점유하고, 모리텍스로 상류(광학)까지 확장했다</div>
+<svg viewBox="0 0 960 330" role="img" aria-label="밸류체인 도식">
+<defs><marker id="ar5" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4E5F6E"/></marker></defs>
+<g font-size="11.5">
+<rect x="15" y="40" width="200" height="180" rx="8" fill="#FFFFFF" stroke="#D3DCE3"/>
+<text x="115" y="66" text-anchor="middle" font-weight="800" fill="#16202B" font-size="13">① 부품 공급자</text>
+<text x="115" y="92" text-anchor="middle" fill="#4E5F6E">이미지 센서 (소니 등)</text>
+<text x="115" y="112" text-anchor="middle" fill="#4E5F6E">AI 칩 (퀄컴·엔비디아)</text>
+<text x="115" y="132" text-anchor="middle" fill="#7A5D00" font-weight="700">광학 렌즈·조명</text>
+<text x="115" y="150" text-anchor="middle" fill="#7A5D00" font-weight="700">← 모리텍스(코그넥스 소유)</text>
+<text x="115" y="176" text-anchor="middle" fill="#4E5F6E" font-size="10.5">교섭력: 범용품은 낮음,</text>
+<text x="115" y="192" text-anchor="middle" fill="#4E5F6E" font-size="10.5">첨단 AI 칩은 중간</text>
+<rect x="255" y="20" width="250" height="220" rx="8" fill="#0F1A26" stroke="#FFC400" stroke-width="2.5"/>
+<text x="380" y="48" text-anchor="middle" font-weight="800" fill="#FFC400" font-size="13.5">② 비전 시스템·알고리즘</text>
+<text x="380" y="66" text-anchor="middle" fill="#9FB2C2" font-size="10.5">부가가치 최상층 (GM 60~70%대)</text>
+<text x="380" y="94" text-anchor="middle" fill="#FFFFFF" font-weight="700">코그넥스 (전업 1위권)</text>
+<text x="380" y="116" text-anchor="middle" fill="#E9EFF5">키엔스 · 옴론 · 텔레다인</text>
+<text x="380" y="136" text-anchor="middle" fill="#E9EFF5">바슬러 · SICK · 지브라(매트록스)</text>
+<text x="380" y="156" text-anchor="middle" fill="#E9EFF5">하이크로봇·OPT (중국 저가)</text>
+<text x="380" y="184" text-anchor="middle" fill="#9FB2C2" font-size="10.5">상위 5개사 합산 점유율 ≈35%</text>
+<text x="380" y="200" text-anchor="middle" fill="#9FB2C2" font-size="10.5">— 여전히 파편화된 시장</text>
+<rect x="545" y="40" width="185" height="180" rx="8" fill="#FFFFFF" stroke="#D3DCE3"/>
+<text x="637" y="66" text-anchor="middle" font-weight="800" fill="#16202B" font-size="13">③ 유통·통합(SI)</text>
+<text x="637" y="92" text-anchor="middle" fill="#4E5F6E">시스템 통합업체</text>
+<text x="637" y="112" text-anchor="middle" fill="#4E5F6E">장비 제조사(OEM)</text>
+<text x="637" y="132" text-anchor="middle" fill="#4E5F6E">대리점 · 직판 병행</text>
+<text x="637" y="164" text-anchor="middle" fill="#4E5F6E" font-size="10.5">AI가 배포를 쉽게 만들수록</text>
+<text x="637" y="180" text-anchor="middle" fill="#4E5F6E" font-size="10.5">이 층의 존재감이 옅어짐</text>
+<rect x="760" y="40" width="185" height="180" rx="8" fill="#E2F5EC" stroke="#9AD8BE"/>
+<text x="852" y="66" text-anchor="middle" font-weight="800" fill="#0B5C40" font-size="13">④ 최종 수요처</text>
+<text x="852" y="92" text-anchor="middle" fill="#0B5C40">공장 (제조 라인)</text>
+<text x="852" y="112" text-anchor="middle" fill="#0B5C40">물류창고 (분류·출하)</text>
+<text x="852" y="132" text-anchor="middle" fill="#0B5C40">로봇 (팔·이동로봇의 눈)</text>
+<text x="852" y="164" text-anchor="middle" fill="#0B5C40" font-size="10.5">구매 동기: 인건비 절감,</text>
+<text x="852" y="180" text-anchor="middle" fill="#0B5C40" font-size="10.5">품질 비용 회피, 규제 대응</text>
+</g>
+<line x1="215" y1="130" x2="250" y2="130" stroke="#4E5F6E" stroke-width="2" marker-end="url(#ar5)"/>
+<line x1="505" y1="130" x2="540" y2="130" stroke="#4E5F6E" stroke-width="2" marker-end="url(#ar5)"/>
+<line x1="730" y1="130" x2="755" y2="130" stroke="#4E5F6E" stroke-width="2" marker-end="url(#ar5)"/>
+<path d="M 380 240 L 380 275 L 852 275 L 852 224" fill="none" stroke="#128A60" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#ar5)"/>
+<text x="615" y="268" text-anchor="middle" font-size="10.5" fill="#0B5C40">직판 비중 확대 — SLX·OneVision은 SI를 건너뛰고 최종 수요처로 직접</text>
+<text x="15" y="315" font-size="10.5" fill="#4E5F6E">점유율 출처: Mordor Intelligence(상위 5개사 합산 약 35%), Cognex 인베스터 데이(서빙 시장 내 자사 점유율 10%대 중반).</text>
+</svg>
+<figcaption>그림 7. 자체 도식. 경쟁사 구성은 §7 피어 비교에서 상세 분석.</figcaption>
+</figure>
+
+<h3 class="h3">5-2. 시장 규모(TAM) — 정의에 따라 $70억에서 $200억까지</h3>
+<p>머신비전 시장 규모는 <b>어디까지를 '머신비전'으로 세느냐</b>에 따라 조사기관별로 2~3배 차이가 난다. 숫자를 하나만 인용하면 오도되기 쉬우므로 병기한다:</p>
+<div class="tblwrap"><table class="tb">
+<tr><th>출처</th><th class="num">시장 규모</th><th class="num">성장률(CAGR)</th><th>정의 범위</th></tr>
+<tr class="hl"><td>Cognex 인베스터 데이 (Interact Analysis 기반)</td><td class="num">$70억 (2024)</td><td class="num">10~11%</td><td>코그넥스가 실제 팔 수 있는 '서빙 가능 시장' — 산업용 완제품 시스템 중심</td></tr>
+<tr><td>MarketsandMarkets</td><td class="num">$158억 (2025) → $236억 (2030)</td><td class="num">8.3%</td><td>부품·소프트웨어·서비스 포함 광의 시장</td></tr>
+<tr><td>Mordor Intelligence</td><td class="num">$140억 (2025) → $198억 (2030)</td><td class="num">7.3%</td><td>광의 시장 · 상위 5개사 합산 점유율 약 35%로 추정</td></tr>
+<tr><td>Grand View Research</td><td class="num">$204억 (2024)</td><td class="num">13.0% (2025~30)</td><td>가장 넓은 정의(스마트카메라·부품·SW 총계)</td></tr>
+</table></div>
+<p>투자 판단에는 <b>회사 자체 정의($70억, 연 10~11% 성장)가 가장 유용</b>하다. 이 안에서 코그넥스 점유율은 10%대 중반, 즉 1위권이면서도 <b>85%가 아직 남의 손 또는 미자동화 영역</b>이다. "시장 성장(10~11%) + 점유율 확대"가 회사가 제시하는 13~14% 장기 매출 성장 프레임워크의 산수적 근거다. 반대로 말하면, 이 프레임워크는 시장 성장률 전망(외부 기관 추정)이 틀리면 함께 무너지는 구조이기도 하다.</p>
+
+<h3 class="h3">5-3. 구조적 성장 동인 다섯 가지 — 그리고 각 동인의 반대 논리</h3>
+<ul>
+<li><b>① 인건비 상승과 노동력 부족:</b> 제조·물류 현장의 검사·분류 인력은 선진국에서 구인 자체가 어려워졌다. 비전 시스템의 투자회수 기간이 인건비가 오를수록 짧아진다. <span style="color:#4E5F6E;">(반론: 경기 침체 시 인력 채용이 쉬워지면 자동화 투자의 긴급성이 일시적으로 떨어진다.)</span></li>
+<li><b>② 공급망 재편·리쇼어링:</b> 관세·지정학으로 생산기지가 중국 밖(인도·베트남·멕시코·미국)으로 복제될 때마다 <b>새 라인 = 새 비전 시스템 수요</b>가 생긴다. 코그넥스 CFO는 2026.2 콘퍼런스에서 관세로 인한 리쇼어링을 "중립 내지 순풍"으로 평가했다. <span style="color:#4E5F6E;">(반론: 무역 갈등이 전방 고객의 설비투자 자체를 얼려버리면 단기적으로는 역풍 — 실제로 2025년 4월 관세 쇼크 때 주가가 52주 저점을 찍었다.)</span></li>
+<li><b>③ 품질·이력추적 규제:</b> 제약(시리얼라이제이션), 식품, 배터리(화재 이력추적) 등에서 "모든 개체를 식별·기록하라"는 규제가 누적된다. 규제발 수요는 경기와 무관하게 깔린다.</li>
+<li><b>④ AI로 인한 적용 범위 확대:</b> 규칙 기반으로는 불가능했던 비정형 검사(용접 비드, 직물 표면, 식품 외관)가 AI로 가능해지면서 <b>시장 자체가 커진다.</b> 회사가 "AI가 서빙 시장을 넓힌다"고 주장하는 대목이자, 인베스터 데이에서 서빙 시장 성장률(10~11%)이 광의 시장 성장률(7~8%)보다 높게 제시된 이유다.</li>
+<li><b>⑤ 로봇·피지컬 AI 붐:</b> 로봇 팔·자율이동로봇(AMR)·휴머노이드 모두 '눈'이 필요하다. 2026년 6월 자동화 전시회 Automate 2026에서 신임 CEO가 FANUC(로봇)·슈나이더일렉트릭·인트린식(구글 계열 로봇 SW)과 함께 기조연설 무대에 선 것은 이 생태계에서의 위치를 보여준다. <span style="color:#4E5F6E;">(반론: 휴머노이드 등 신형 로봇은 자체 카메라+자체 AI를 수직 통합하는 경향이 있어, 코그넥스가 그 밸류체인에 얼마나 끼어들지는 아직 검증되지 않았다.)</span></li>
+</ul>
+
+<h3 class="h3">5-4. 산업의 성숙도와 사이클성</h3>
+<p>산업 생애주기로는 <b>성장기 중반</b>으로 판단한다. 근거: (a) 침투율 — 전 세계 제조 검사 포인트의 다수가 여전히 육안 또는 무검사 상태이고, 물류창고 자동화율도 초기 단계다. (b) 기술 교체 사이클 — AI 세대 교체가 기존 설치 기반의 업그레이드 수요를 새로 만든다. (c) 그러나 성장률 자체는 한 자릿수 후반~10%대 초반으로, 폭발적 초기 성장기는 지났다.</p>
+<div class="warn"><b>이 산업의 체질적 약점 — 설비투자 사이클 연동:</b> 머신비전은 고객의 <b>설비투자(capex) 예산</b>에서 팔린다. 고객이 공장을 짓고 라인을 깔 때 사는 물건이므로, 전방 산업의 투자 사이클이 꺾이면 매출이 즉시, 그리고 깊게 꺾인다. 코그넥스 매출이 2021년 $10.4억 → 2023년 $8.4억으로 19% 역성장한 것이 실증 사례다. 지금의 회복이 '구조적 재평가'인지 '사이클 반등'인지 구분하는 것이 이 종목 판단의 핵심 질문이며, §10~12에서 정면으로 다룬다.</div>
+</section>
+
+<!-- ═══════════ 6. 경쟁우위 ═══════════ -->
+<section class="sec" id="s6">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 06 · COMPETITIVE MOAT</div>
+<h2>경쟁 우위 분석 — 5 Forces와 해자의 유형 판별</h2>
+<div class="sub">프레임워크 원칙: 마진이 높으면 차별화형, 회전율이 높으면 원가우위형. 코그넥스는 어느 쪽인가.</div>
+</div>
+
+<h3 class="h3">6-1. 포터 5 Forces — 힘의 지도</h3>
+<div class="grid2">
+<div class="card"><div class="ttl"><span class="badge b-warn">중간~강</span>기존 경쟁 강도</div><p style="font-size:0.9rem;">키엔스(영업이익률 51%의 괴물), 옴론, 텔레다인, 바슬러, SICK에 더해 중국 하이크로봇·OPT의 저가 공세. 다만 상위 5개사 합산 점유율이 약 35%에 그치는 파편화 시장이라, 정면 가격전쟁보다는 각자 강점 영역(코그넥스=고난도 검사·물류, 키엔스=영업력·범용 센서)에서의 경쟁이 지배적.</p></div>
+<div class="card"><div class="ttl"><span class="badge b-pass">약~중간</span>신규 진입 위협</div><p style="font-size:0.9rem;">알고리즘·도메인 데이터·산업 인증·영업망의 4중 장벽. 다만 AI 오픈소스화가 소프트웨어 장벽을 일부 낮췄고, 중국 정부 지원을 받는 로컬 업체의 진입은 이미 현실(중국 내수 잠식). 서구·일본 하이엔드 시장의 진입장벽은 여전히 높다.</p></div>
+<div class="card"><div class="ttl"><span class="badge b-warn">중간</span>대체재 위협</div><p style="font-size:0.9rem;">전통적 대체재(육안 검사, 레이저 스캐너)는 오히려 머신비전이 대체하는 쪽. 새로운 위협은 범용 VLM·로봇 내장 비전이 '별도 검사 시스템'의 필요 자체를 흡수하는 시나리오다. 물리 제약(속도·전력·신뢰성) 때문에 당장은 아니지만, 5~10년 시계에서는 감시가 필요한 힘.</p></div>
+<div class="card"><div class="ttl"><span class="badge b-warn">중간</span>구매자 교섭력</div><p style="font-size:0.9rem;">양면적이다. 검사기 가격이 고객 설비투자에서 차지하는 비중이 작아 개별 협상력은 약하다(가격 민감도 낮음). 그러나 물류의 초대형 고객이나 가전의 대형 고객은 물량으로 조건을 끌어낼 수 있고, 이들의 투자 지연이 분기 실적을 흔든 전례가 반복된다.</p></div>
+<div class="card"><div class="ttl"><span class="badge b-pass">약~중간</span>공급자 교섭력</div><p style="font-size:0.9rem;">이미지 센서·전자부품은 범용품. 광학은 모리텍스 인수로 내재화했다. 유일한 의존은 첨단 AI 칩(퀄컴·엔비디아)인데, 이는 업계 공통 조건이며 코그넥스는 소형 모델 전략으로 최고급 칩 의존도를 낮춰 놓았다. 26년 3분기 메모리 가격 상승이 마진에 약 0.5%p 역풍이라는 점은 공급자 힘이 0은 아님을 보여준다.</p></div>
+<div class="card" style="background:#0F1A26; border-color:#2B3E52;"><div class="ttl" style="color:#FFC400;">종합 판정</div><p style="font-size:0.9rem; color:#E9EFF5;">다섯 힘 중 압도적으로 불리한 힘은 없고, 두 개의 힘(기존 경쟁·대체재)이 장기 감시 대상. 산업 구조 자체는 <b style="color:#FFC400;">"참여자에게 우호적인 과점화 진행형 시장"</b>으로, 높은 마진이 구조적으로 허용되는 지형이다.</p></div>
+</div>
+
+<h3 class="h3">6-2. 해자의 유형 — 숫자로 판별하면 '차별화형'</h3>
+<p>프레임워크의 판별식은 단순하다: <b>산업 평균보다 NOPAT 마진이 높으면 차별화(고객이 더 내게 만든다), 투하자본 회전율이 높으면 원가우위(같은 자본으로 더 만든다)</b>. 코그넥스의 숫자를 대입하면:</p>
+<div class="tblwrap"><table class="tb">
+<tr><th>지표</th><th class="num">코그넥스</th><th class="num">비교 기준</th><th>판정</th></tr>
+<tr><td>조정 매출총이익률</td><td class="num pos">68.9% (2025) / 71.1% (26.1Q)</td><td class="num">미국 전자장비 업종은 통상 30~40%대</td><td>압도적 우위 — 가격결정력의 직접 증거</td></tr>
+<tr><td>조정 영업이익률</td><td class="num pos">19.6% (2025) → 26.1Q 연율 22%+</td><td class="num">피어 중앙값 한 자릿수 후반~10%대</td><td>평균의 약 2배 — 차별화 요건 충족</td></tr>
+<tr><td>ROIC (영업 투하자본 기준, 추정)</td><td class="num pos">약 19~20%</td><td class="num">IT 섹터 중앙값 10.8% · WACC 10.2%</td><td>자본비용을 큰 폭 상회 — 경제적 해자 존재</td></tr>
+<tr><td>투하자본 회전율</td><td class="num">약 1.2회 (보통 수준)</td><td class="num">—</td><td>원가우위형 아님 — 회전이 아니라 마진으로 번다</td></tr>
+</table></div>
+<p>판정: <b>차별화형 해자.</b> 원천은 §4에서 본 기술 스택(알고리즘+데이터+광학)과, "불량 비용 회피"라는 가치 제안이 만드는 가격 비탄력성이다. 참고로 극단적 차별화의 끝판왕이 같은 산업의 키엔스(영업이익률 51%)라는 사실은, 이 산업에서 차별화 전략의 이론적 천장이 얼마나 높은지를 보여주는 살아있는 증거다 — 강세론(§11)의 핵심 논거이기도 하다.</p>
+
+<h3 class="h3">6-3. 해자의 지속성 — 요소별 감가상각 속도</h3>
+<div class="tblwrap"><table class="tb">
+<tr><th>해자 요소</th><th>현재 강도</th><th>10년 지속성</th><th>침식 경로</th></tr>
+<tr><td>도메인 데이터·사전학습 자산</td><td class="pos">강</td><td class="pos">높음 (쓸수록 강화)</td><td>합성 데이터 기술이 실데이터 우위를 희석하는 경우</td></tr>
+<tr><td>알고리즘·특허 (~1,400건)</td><td class="pos">강</td><td>중간</td><td>AI 오픈소스화로 특허 우회 가능성 확대</td></tr>
+<tr><td>설치 기반 전환비용</td><td class="pos">강</td><td class="pos">높음</td><td>클라우드 표준화가 벤더 종속을 약화시키는 경우</td></tr>
+<tr><td>브랜드·인증 (규제 산업)</td><td>중간</td><td class="pos">높음</td><td>—</td></tr>
+<tr><td>광학 수직통합 (모리텍스)</td><td>중간</td><td>중간</td><td>광학 부품의 범용화</td></tr>
+<tr><td>가격 우위 (원가 측면)</td><td class="neg">약 (중국 대비 열위)</td><td class="neg">낮음</td><td>이미 진행 중 — 중국 내수 점유율 하락</td></tr>
+</table></div>
+<div class="note"><b>규제·무역 환경 메모:</b> 2025년 4월 미국발 관세 쇼크는 코그넥스에 양날의 검이었다 — 단기로는 고객 설비투자 동결(주가 52주 저점의 배경), 중기로는 리쇼어링발 신규 라인 수요. 회사는 생산지 다변화(베트남 등)로 관세 노출을 관리 중이라 밝혔고, 2026년 들어 실적에서 관세의 순영향은 제한적으로 나타나고 있다. 중화권 매출 18%는 미·중 기술 갈등 심화 시 구조적 리스크로 남는다.</div>
+</section>
+
+<!-- ═══════════ 7. 피어 비교 ═══════════ -->
+<section class="sec" id="s7">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 07 · PEER BENCHMARK</div>
+<h2>피어 비교 — 키엔스라는 거울</h2>
+<div class="sub">머신비전 '전업'은 코그넥스뿐이다. 나머지는 더 큰 회사의 한 사업부이거나, 더 좁은 부품 회사다.</div>
+</div>
+
+<h3 class="h3">7-1. 경쟁 지형 한눈에</h3>
+<div class="tblwrap"><table class="tb">
+<tr><th>기업</th><th>국가</th><th class="num">시가총액</th><th>머신비전에서의 위치</th><th>코그넥스와의 관계</th></tr>
+<tr class="hl"><td><b>코그넥스</b></td><td>미국</td><td class="num">$11.7B</td><td>머신비전 '전업' 세계 1위권 — 매출 100%가 비전</td><td>기준 기업</td></tr>
+<tr><td><b>키엔스 (Keyence)</b></td><td>일본</td><td class="num">≈$126B</td><td>FA 센서 전반의 최강자 — 비전은 여러 제품군 중 하나</td><td>최대 경쟁자이자 '차별화 전략의 천장'을 보여주는 벤치마크. FY26(3월 결산) 매출 ¥1.17조(+10.4%), 영업이익률 51.0%, 무공장(fabless)·직판 컨설팅 영업 모델</td></tr>
+<tr><td>옴론 (Omron)</td><td>일본</td><td class="num">—</td><td>제어기기 대기업의 비전 사업부</td><td>PLC 묶음 판매력이 강점, 비전 단독 기술은 열위 평가가 일반적</td></tr>
+<tr><td>텔레다인 (Teledyne, DALSA·FLIR)</td><td>미국</td><td class="num">$31.0B</td><td>산업 카메라·센서 포트폴리오 대기업</td><td>카메라 부품에서 겹침, 완제품 검사 시스템에서는 부분 경쟁</td></tr>
+<tr><td>지브라 (Zebra)</td><td>미국</td><td class="num">—</td><td>물류 ID의 강자 — Matrox(2022)·Photoneo(2025) 인수로 비전 확장</td><td>물류 바코드 판독에서 정면 충돌 — 2026 전시회에서 AI 물류 솔루션 공개</td></tr>
+<tr><td>바슬러 (Basler)</td><td>독일</td><td class="num">—</td><td>산업 카메라 전문(부품 성격)</td><td>알고리즘·시스템 층위가 아닌 카메라 층위 경쟁</td></tr>
+<tr><td>SICK · 다탈로직 (Datalogic)</td><td>독일·이탈리아</td><td class="num">—</td><td>센서·ID 판독기</td><td>ID 제품군에서 경쟁</td></tr>
+<tr><td>하이크로봇 · OPT 등</td><td>중국</td><td class="num">—</td><td>저가 스마트카메라 — 중국 내수 중심 급성장</td><td>중국 시장 점유율 잠식의 주범, 하이엔드·서구 시장에선 아직 제한적</td></tr>
+</table></div>
+<p style="font-size:0.85rem; color:#4E5F6E;">시가총액 출처: Yahoo Finance 비교 스크린(2026.7.1) — 표기 없는 기업은 이번 조사에서 최신 수치를 확정하지 못해 공란 처리(추정치 기입 지양). 키엔스 실적 출처: FY2026(2026.3 결산) 결산 공시 및 언론 보도.</p>
+
+<h3 class="h3">7-2. 코그넥스 vs 키엔스 — 세 개의 숫자</h3>
+<figure class="fig">
+<div class="figtitle">그림 8. 성장 · 수익성 · 밸류에이션 3지표 비교</div>
+<div class="figsub">키엔스보다 낮은 마진, 비슷한 성장, 더 비싼 배수 — 이 조합이 강세론과 약세론이 갈리는 지점</div>
+<svg viewBox="0 0 960 300" role="img" aria-label="코그넥스 키엔스 비교 바 차트">
+<g font-size="12.5" fill="#16202B">
+<!-- growth -->
+<text x="160" y="30" text-anchor="middle" font-weight="800">최근 연도 매출 성장률</text>
+<text x="60" y="70" text-anchor="end">CGNX</text><rect x="70" y="55" width="104" height="22" fill="#FFC400"/><text x="182" y="72" class="m" fill="#7A5D00" font-weight="700">+8.7%</text>
+<text x="60" y="110" text-anchor="end">키엔스</text><rect x="70" y="95" width="125" height="22" fill="#4E5F6E"/><text x="203" y="112" class="m" fill="#16202B" font-weight="700">+10.4%</text>
+<text x="160" y="150" text-anchor="middle" font-size="10.5" fill="#4E5F6E">CGNX 2025 회계연도 /</text>
+<text x="160" y="166" text-anchor="middle" font-size="10.5" fill="#4E5F6E">키엔스 FY2026(2026.3 결산)</text>
+<!-- margin -->
+<text x="480" y="30" text-anchor="middle" font-weight="800">영업이익률</text>
+<text x="390" y="70" text-anchor="end">CGNX</text><rect x="400" y="55" width="78" height="22" fill="#FFC400"/><text x="486" y="72" class="m" fill="#7A5D00" font-weight="700">19.6%</text>
+<text x="390" y="110" text-anchor="end">키엔스</text><rect x="400" y="95" width="204" height="22" fill="#4E5F6E"/><text x="612" y="112" class="m" fill="#16202B" font-weight="700">51.0%</text>
+<text x="480" y="150" text-anchor="middle" font-size="10.5" fill="#4E5F6E">CGNX 조정 영업이익률(2025) /</text>
+<text x="480" y="166" text-anchor="middle" font-size="10.5" fill="#4E5F6E">키엔스 일본 GAAP 영업이익률</text>
+<!-- P/E -->
+<text x="800" y="30" text-anchor="middle" font-weight="800">P/E 배수</text>
+<text x="710" y="70" text-anchor="end">CGNX</text><rect x="720" y="55" width="196" height="22" fill="#C63B3B"/><text x="800" y="71" class="m" fill="#FFFFFF" font-weight="700" text-anchor="middle">≈49배 (2026E 조정)</text>
+<text x="710" y="110" text-anchor="end">키엔스</text><rect x="720" y="95" width="168" height="22" fill="#4E5F6E"/><text x="800" y="111" class="m" fill="#FFFFFF" font-weight="700" text-anchor="middle">≈42배 (직전 연도)</text>
+<text x="800" y="150" text-anchor="middle" font-size="10.5" fill="#4E5F6E">참고: 미국 전자업종 평균 P/E ≈31.5배</text>
+<text x="800" y="166" text-anchor="middle" font-size="10.5" fill="#4E5F6E">(Simply Wall St, 2026.6)</text>
+</g>
+<rect x="40" y="200" width="880" height="80" rx="8" fill="#F4F7F9" stroke="#D3DCE3"/>
+<text x="60" y="228" font-size="12" fill="#16202B" font-weight="700">읽는 법:</text>
+<text x="60" y="248" font-size="11.5" fill="#4E5F6E">강세론 — "마진 격차(19.6% vs 51%)는 결함이 아니라 여백이다. 비용 개편으로 그 여백을 채우는 중이며(26.1Q 이미 22%+), 그래서 이익 성장률이 키엔스보다 훨씬 가파르다."</text>
+<text x="60" y="266" font-size="11.5" fill="#4E5F6E">약세론 — "키엔스보다 성장이 느리고 마진이 3분의 1인데 배수는 더 비싸다. 키엔스의 51%는 영업 모델(직판 컨설팅)의 산물이라 장비 회사가 복제할 수 없다."</text>
+</svg>
+<figcaption>그림 8. 출처: Cognex 2025 실적 발표, Keyence FY2026 결산 공시(매출 ¥1조 1,693억·영업이익 ¥5,958억), Yahoo Finance(시총), Simply Wall St(업종 P/E). 키엔스 P/E는 시총 ≈$126B ÷ 순이익 ¥4,452억(달러 환산 근사)로 산출한 근사치.</figcaption>
+</figure>
+
+<h3 class="h3">7-3. 밸류에이션 프리미엄의 논리 구조</h3>
+<p>코그넥스는 현재 <b>키엔스보다 비싸고, 업종 평균보다 훨씬 비싸다</b>(2026E 조정 P/E 약 49배; 참고로 후행 GAAP P/E는 일회성 세금 효과로 84배까지 왜곡돼 보인다 — 출처별로 33.9배[야후 선행]에서 84배[후행 GAAP]까지 표기가 갈리므로 반드시 기준을 확인해야 한다). 프리미엄을 정당화하는 논리는 세 층이다: (1) <b>이익 성장률의 기울기</b> — 2026년 조정 EPS 컨센서스 +40%(vs 키엔스 +11%), (2) <b>마진 개선의 증명된 궤적</b> — 6개 분기 연속 EBITDA 마진 확대, (3) <b>순수 노출(pure-play)</b> — "산업 AI"라는 테마에 베팅할 수 있는 거의 유일한 전업 상장사라는 희소성 프리미엄. 반대로 이 프리미엄은 세 층 중 하나만 금이 가도(성장 둔화, 마진 정체, 테마 냉각) 이중으로 무너진다 — 이익 추정치와 배수가 동시에 꺾이는 '이중 압축'이 이 가격대의 구조적 리스크다(§12).</p>
+</section>
+
+<!-- ═══════════ 8. 시장 내러티브 ═══════════ -->
+<section class="sec" id="s8">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 08 · MARKET NARRATIVE</div>
+<h2>시장 내러티브 — 15개월 만에 2.2배가 된 이야기</h2>
+<div class="sub">주가는 실적의 그림자가 아니라 '기대 수정'의 기록이다. 어떤 기대가 언제, 왜 바뀌었는가.</div>
+</div>
+
+<figure class="fig">
+<div class="figtitle">그림 9. 주가 여정과 기대 수정 이벤트 (2025.4 – 2026.7)</div>
+<div class="figsub">출처가 확인된 시점별 가격을 직선으로 연결한 재구성 차트 — 일별 종가 차트가 아니며 중간 경로는 근사</div>
+<svg viewBox="0 0 960 380" role="img" aria-label="주가 이벤트 차트">
+<g stroke="#E4EAEF" stroke-width="1"><line x1="50" y1="295" x2="935" y2="295"/><line x1="50" y1="245" x2="935" y2="245"/><line x1="50" y1="195" x2="935" y2="195"/><line x1="50" y1="145" x2="935" y2="145"/><line x1="50" y1="95" x2="935" y2="95"/></g>
+<g font-size="11" fill="#4E5F6E" class="m"><text x="44" y="299" text-anchor="end">$30</text><text x="44" y="249" text-anchor="end">$40</text><text x="44" y="199" text-anchor="end">$50</text><text x="44" y="149" text-anchor="end">$60</text><text x="44" y="99" text-anchor="end">$70</text></g>
+<g font-size="11" fill="#4E5F6E"><text x="77" y="330" text-anchor="middle">'25.4</text><text x="225" y="330" text-anchor="middle">'25.7</text><text x="400" y="330" text-anchor="middle">'25.10</text><text x="575" y="330" text-anchor="middle">'26.1</text><text x="750" y="330" text-anchor="middle">'26.4</text><text x="925" y="330" text-anchor="middle">'26.7</text></g>
+<polyline points="77,286 217,290 452,175 458,208 575,261 653,222 660,150 747,207 820,130 856,135 898,121 922,89 930,94" fill="none" stroke="#1D6FE0" stroke-width="3" stroke-linejoin="round"/>
+<line x1="50" y1="94" x2="935" y2="94" stroke="#C63B3B" stroke-width="1.2" stroke-dasharray="5 4"/>
+<text x="933" y="86" text-anchor="end" font-size="10.5" fill="#8C2323" class="m">현재가 $70.20</text>
+<g>
+<circle cx="77" cy="286" r="11" fill="#C63B3B"/><text x="77" y="290" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">1</text>
+<circle cx="217" cy="290" r="11" fill="#4E5F6E"/><text x="217" y="294" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">2</text>
+<circle cx="458" cy="208" r="11" fill="#C63B3B"/><text x="458" y="212" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">3</text>
+<circle cx="575" cy="261" r="11" fill="#4E5F6E"/><text x="575" y="265" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">4</text>
+<circle cx="660" cy="150" r="11" fill="#128A60"/><text x="660" y="154" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">5</text>
+<circle cx="747" cy="207" r="11" fill="#4E5F6E"/><text x="747" y="211" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">6</text>
+<circle cx="820" cy="130" r="11" fill="#128A60"/><text x="820" y="134" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">7</text>
+<circle cx="856" cy="135" r="11" fill="#1D6FE0"/><text x="856" y="139" text-anchor="middle" font-size="11" fill="#FFFFFF" font-weight="700">8</text>
+<circle cx="922" cy="89" r="11" fill="#FFC400"/><text x="922" y="93" text-anchor="middle" font-size="11" fill="#16202B" font-weight="700">9</text>
+</g>
+<text x="77" y="268" text-anchor="middle" font-size="10.5" fill="#8C2323" class="m" font-weight="600">$31.77</text>
+<text x="452" y="160" text-anchor="middle" font-size="10.5" fill="#4E5F6E" class="m">$54→47.4</text>
+<text x="575" y="245" text-anchor="middle" font-size="10.5" fill="#4E5F6E" class="m">$36.9</text>
+<text x="660" y="135" text-anchor="middle" font-size="10.5" fill="#0B5C40" class="m" font-weight="600">≈$59</text>
+<text x="905" y="72" text-anchor="middle" font-size="10.5" fill="#7A5D00" class="m" font-weight="600">고점 $72.88</text>
+<text x="50" y="368" font-size="10.5" fill="#4E5F6E">2025년 연말($36.9)과 2월 발표 직전($44.6)은 공개 수익률 데이터로부터의 역산 근사치. 나머지는 보도·데이터 제공사의 명시 가격.</text>
+</svg>
+<figcaption>그림 9. 앵커 가격 출처: Yahoo/Google/Robinhood(현재가·52주 범위), Investing·TIKR·Simply Wall St(이벤트일 가격·등락률·YTD 수익률 역산), 각 언론 보도(실적 반응). 이벤트 번호는 아래 표 참조.</figcaption>
+</figure>
+
+<div class="tblwrap"><table class="tb">
+<tr><th>#</th><th>시점</th><th>이벤트</th><th>기대의 변화</th></tr>
+<tr><td class="num">1</td><td>2025.4</td><td class="neg">관세 쇼크 — 52주 저점 $31.77</td><td>"전방 설비투자 동결 + 중국 노출" 공포로 사이클 저점 배수까지 압축</td></tr>
+<tr><td class="num">2</td><td>2025.6</td><td>CEO 교체(마슈너 취임 6/27) · 인베스터 데이(6/10)</td><td>"AI 1위·고객 2배·EBITDA 20~30%" 장기 프레임워크 제시 — 아직 시장은 반신반의</td></tr>
+<tr><td class="num">3</td><td>2025.10.29</td><td class="neg">3Q 매출 +18% 호실적에도 4Q 가이던스가 기대 하회 → 하루 −12%</td><td>"회복이 일회성 파트너십·물류 착시 아니냐"는 의심 — 성장의 질 논쟁 점화</td></tr>
+<tr><td class="num">4</td><td>2025.12</td><td>연말 $36.9 부근까지 되밀림</td><td>침체 3년차 피로감 — 이때 12개월 선행 P/E는 30배 중반까지 압축</td></tr>
+<tr><td class="num">5</td><td>2026.2.12</td><td class="pos">4Q 서프라이즈 + "2026년 말 EBITDA 25% 런레이트" 로드맵 + $5억 신규 바이백 → +23~35%</td><td>내러티브가 '사이클 반등'에서 '구조적 마진 개선'으로 전환된 결정적 순간</td></tr>
+<tr><td class="num">6</td><td>2026.3</td><td>기술주 조정 속 $47.6까지 되밀림</td><td>회사가 1분기에 자사주 $9,900만을 40달러대에서 집중 매입</td></tr>
+<tr><td class="num">7</td><td>2026.5.6~7</td><td class="pos">1Q 조정 EPS $0.34 (컨센 $0.25, +36% 서프라이즈, 전년 대비 +113%) → 프리마켓 +8.7%</td><td>골드만 $80 등 목표가 줄상향 — 2026 EPS 컨센 $1.21→$1.43</td></tr>
+<tr><td class="num">8</td><td>2026.5.26</td><td class="pos">JP모건 '비중확대' 상향(목표가 $65→$75) → +5.8%</td><td>"AI 순수 노출 + 마진 스토리"가 셀사이드 표준 논리로 정착</td></tr>
+<tr><td class="num">9</td><td>2026.6.22~7.1</td><td class="pos">Automate 2026 기조연설(CEO가 FANUC·슈나이더·인트린식과 동석) → 52주 신고가 $72.88</td><td>피지컬 AI·로봇 테마의 수혜주로 인식 확장</td></tr>
+</table></div>
+
+<h3 class="h3">8-1. 서사의 3막 구조 — 무엇이 가격을 움직였나</h3>
+<p><b>1막 (2025.4~10) "죽은 사이클주":</b> 3년 역성장의 기억 + 관세 공포가 지배하던 시기. 이때 시장의 암묵 가정은 "코그넥스 = 전방 경기의 파생상품"이었고, 밸류에이션도 그 가정대로 매겨졌다.</p>
+<p><b>2막 (2025.10~2026.2) "증명의 겨울":</b> 매출은 회복됐는데(3Q +18%) 시장이 −12%로 답한 것이 이 구간의 본질이다. 시장이 요구한 것은 성장이 아니라 <b>성장의 '질'과 마진의 '지속성' 증명</b>이었다. 2월 4분기 실적에서 회사가 (a) 일회성을 제거한 실질 성장, (b) 구체적 비용 절감 액수($3,500만~4,000만), (c) 25% EBITDA 런레이트 시점, (d) $5억 바이백이라는 네 장의 카드를 한꺼번에 내밀자 기대가 재설정됐다.</p>
+<p><b>3막 (2026.2~7) "산업 AI 재평가":</b> 1분기 실적이 로드맵을 앞당겨 증명(+36% EPS 서프라이즈)하고, OneVision 출시·엔비디아/퀄컴 협업·Automate 기조연설이 이어지며, 코그넥스는 '장비주'에서 <b>'현금흐름이 실재하는 피지컬 AI 종목'</b>으로 서랍이 옮겨졌다. 서랍이 바뀌면 비교 대상이 바뀌고(장비주 P/E 20배 → AI 프리미엄 40~50배), 그것이 이익 상향분을 넘어서는 주가 상승분의 정체다.</p>
+<div class="note"><b>기대 수정의 정량 기록:</b> 2026년 조정 EPS 컨센서스는 연초 약 $1.21에서 7월 현재 $1.43으로 +18% 상향됐고, 같은 기간 주가는 약 +90% 올랐다. 즉 상승분의 대략 5분의 1이 이익 전망 개선, 나머지가 배수 재평가(re-rating)다. 이 비율은 "다음 실수에 대한 관용이 매우 얇아졌다"는 뜻이기도 하다. 현재 컨센서스: 애널리스트 21명 전원 매수 계열, 평균 목표가 $76.25(최저 $61~최고 $94). 주요 목표가 — 골드만삭스 $80(매수), JP모건·바클레이즈·니덤·번스타인·스티펜스 $75, 베어드 $72(중립), 트루이스트 $71(보유, 7/2), DA데이비슨 $62(중립).</div>
+</section>
+
+<!-- ═══════════ 9. 재무·DCF ═══════════ -->
+<section class="sec" id="s9">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 09 · FINANCIALS &amp; DCF</div>
+<h2>재무 분석과 DCF — 숫자로 보는 턴어라운드, 그리고 보수적 가치</h2>
+<div class="sub">사이클의 상처(2022~24), 회복의 기울기(2025~26), 그리고 페이드 모델이 말하는 내재가치.</div>
+</div>
+
+<h3 class="h3">9-1. 매출 — 사이클의 해부</h3>
+<figure class="fig">
+<div class="figtitle">그림 10. 연간 매출 추이 (2019–2026E, 백만 달러)</div>
+<div class="figsub">2021 정점 → 2023 저점(−19%) → 2026년 사상 최대 경신 전망</div>
+<svg viewBox="0 0 960 300" role="img" aria-label="매출 추이 바 차트">
+<line x1="55" y1="250" x2="930" y2="250" stroke="#16202B" stroke-width="1.5"/>
+<g>
+<rect x="70" y="119" width="78" height="131" fill="#B9C6D0"/><rect x="178" y="103" width="78" height="147" fill="#B9C6D0"/>
+<rect x="286" y="62" width="78" height="188" fill="#4E5F6E"/><rect x="394" y="68" width="78" height="182" fill="#B9C6D0"/>
+<rect x="502" y="98" width="78" height="152" fill="#C63B3B"/><rect x="610" y="85" width="78" height="165" fill="#B9C6D0"/>
+<rect x="718" y="70" width="78" height="180" fill="#1D6FE0"/><rect x="826" y="50" width="78" height="200" fill="#FFC400"/>
+</g>
+<g font-size="11.5" class="m" fill="#16202B" font-weight="600" text-anchor="middle">
+<text x="109" y="112">726</text><text x="217" y="96">811</text><text x="325" y="55">1,037</text><text x="433" y="61">1,006</text><text x="541" y="91">838</text><text x="649" y="78">915</text><text x="757" y="63">994</text><text x="865" y="43">1,105E</text>
+</g>
+<g font-size="11.5" fill="#4E5F6E" text-anchor="middle">
+<text x="109" y="270">2019</text><text x="217" y="270">2020</text><text x="325" y="270">2021</text><text x="433" y="270">2022</text><text x="541" y="270">2023</text><text x="649" y="270">2024</text><text x="757" y="270">2025</text><text x="865" y="270">2026E</text>
+</g>
+<text x="325" y="290" text-anchor="middle" font-size="10.5" fill="#4E5F6E">← EV배터리·전자 슈퍼사이클 정점</text>
+<text x="541" y="30" text-anchor="middle" font-size="10.5" fill="#8C2323">정점 대비 −19%</text>
+<text x="865" y="290" text-anchor="middle" font-size="10.5" fill="#7A5D00">← 컨센서스 (+11%)</text>
+</svg>
+<figcaption>그림 10. 출처: Cognex 연간 실적 발표(2019~2025 실적), 2026E는 컨센서스 약 $11.0억(TIKR·Simply Wall St 종합, 회사 최초 가이던스 $10.15억~10.35억에서 1Q 이후 상향 궤도). 2026E는 추정치.</figcaption>
+</figure>
+
+<div class="grid2">
+<figure class="fig">
+<div class="figtitle">그림 11. 잉여현금흐름 (2020–2025, 백만 달러)</div>
+<div class="figsub">침체 저점(2023)에도 흑자 — 무차입과 결합된 생존 체력</div>
+<svg viewBox="0 0 380 260">
+<line x1="35" y1="210" x2="370" y2="210" stroke="#16202B" stroke-width="1.5"/>
+<rect x="45" y="88" width="40" height="122" fill="#B9C6D0"/><rect x="100" y="51" width="40" height="159" fill="#4E5F6E"/><rect x="155" y="91" width="40" height="119" fill="#B9C6D0"/><rect x="210" y="162" width="40" height="48" fill="#C63B3B"/><rect x="265" y="139" width="40" height="71" fill="#B9C6D0"/><rect x="320" y="84" width="40" height="126" fill="#128A60"/>
+<g font-size="11" class="m" fill="#16202B" font-weight="600" text-anchor="middle"><text x="65" y="81">229</text><text x="120" y="44">299</text><text x="175" y="84">224</text><text x="230" y="155">90</text><text x="285" y="132">134</text><text x="340" y="77">237</text></g>
+<g font-size="10.5" fill="#4E5F6E" text-anchor="middle"><text x="65" y="228">'20</text><text x="120" y="228">'21</text><text x="175" y="228">'22</text><text x="230" y="228">'23</text><text x="285" y="228">'24</text><text x="340" y="228">'25</text></g>
+<text x="35" y="250" font-size="10.5" fill="#4E5F6E">2025 FCF 전환율 138% (FCF ÷ 조정순이익 $1.72억)</text>
+</svg>
+<figcaption>그림 11. 출처: Cognex 실적 발표(영업현금흐름−자본지출).</figcaption>
+</figure>
+<figure class="fig">
+<div class="figtitle">그림 12. 분기 조정 EBITDA 마진의 계단 (25.1Q–26.2QE)</div>
+<div class="figsub">6개 분기 만에 16.8% → 28~31% 가이던스</div>
+<svg viewBox="0 0 380 260">
+<g stroke="#E4EAEF" stroke-width="1"><line x1="40" y1="175" x2="370" y2="175"/><line x1="40" y1="120" x2="370" y2="120"/><line x1="40" y1="65" x2="370" y2="65"/></g>
+<g font-size="10" fill="#4E5F6E" class="m"><text x="36" y="179" text-anchor="end">20%</text><text x="36" y="124" text-anchor="end">25%</text><text x="36" y="69" text-anchor="end">30%</text></g>
+<polyline points="55,210 115,167 175,121 235,146 295,99 355,71" fill="none" stroke="#128A60" stroke-width="3"/>
+<g fill="#128A60"><circle cx="55" cy="210" r="5"/><circle cx="115" cy="167" r="5"/><circle cx="175" cy="121" r="5"/><circle cx="235" cy="146" r="5"/><circle cx="295" cy="99" r="5"/></g>
+<circle cx="355" cy="71" r="5" fill="#FFFFFF" stroke="#128A60" stroke-width="3"/>
+<g font-size="10.5" class="m" fill="#0B5C40" font-weight="600" text-anchor="middle"><text x="55" y="200">16.8</text><text x="115" y="157">20.7</text><text x="175" y="111">24.9*</text><text x="235" y="166">22.6</text><text x="295" y="89">26.9</text><text x="355" y="61">29.5E</text></g>
+<g font-size="10" fill="#4E5F6E" text-anchor="middle"><text x="55" y="240">25.1Q</text><text x="115" y="240">2Q</text><text x="175" y="240">3Q</text><text x="235" y="240">4Q</text><text x="295" y="240">26.1Q</text><text x="355" y="240">2QE</text></g>
+<text x="40" y="30" font-size="10" fill="#4E5F6E">* 3Q는 일회성 파트너십 포함(제외 시 22.1%) · 2QE는 가이던스 28~31%의 중간값</text>
+</svg>
+<figcaption>그림 12. 출처: 분기 실적 발표(4Q는 연간 21.5%에서 역산한 근사치), 2Q 2026 가이던스.</figcaption>
+</figure>
+</div>
+
+<h3 class="h3">9-2. 재무 체력과 이익의 질</h3>
+<div class="stats">
+<div class="stat"><div class="k">현금·투자자산</div><div class="v">$622M</div><div class="d">26.1Q 말 · 차입금 0</div></div>
+<div class="stat"><div class="k">조정 매출총이익률</div><div class="v">71.1%</div><div class="d">26.1Q (2025년 68.9%)</div></div>
+<div class="stat"><div class="k">자본지출/매출</div><div class="v">0.9%</div><div class="d">2025년 $870만</div></div>
+<div class="stat"><div class="k">주식보상비용(SBC)</div><div class="v">$48.5M</div><div class="d">매출의 4.9% — 본 분석은 비용 처리</div></div>
+<div class="stat"><div class="k">주주환원(2025)</div><div class="v">$206M</div><div class="d">자사주 $151M + 배당 $55M</div></div>
+<div class="stat"><div class="k">신규 바이백 승인</div><div class="v">$500M</div><div class="d">2026.2 — 시총의 약 4%/년 소각 여력</div></div>
+</div>
+<div class="note"><b>이익의 질 체크 3가지:</b> ① 2025년 GAAP 순이익($1.14억)은 일회성 세금 항목으로 유효세율이 37.4%까지 튀어 실력 대비 눌려 보인다 — 조정 세율은 18.0%이며 본 보고서 DCF도 18%를 쓴다. ② GAAP과 조정치의 간극(조정 EPS $1.02 vs GAAP $0.68)은 대부분 인수 무형자산 상각·구조조정비이며, SBC는 조정치에서도 비용으로 남겨둔 회사 관행이 보수적이라 평가할 만하다. ③ 대차대조표에 영업권 $3.86억·이연법인세자산 $3.83억이 있는데, 무차입·현금 $6.2억 구조라 재무 리스크로 번질 소지는 낮다.</div>
+
+<h3 class="h3">9-3. 생애주기 판별 — 현금흐름 부호로 확인</h3>
+<div class="card"><div class="ttl">디킨슨(Dickinson) 현금흐름 부호 테스트 (2025년)</div>
+<p style="font-size:0.93rem;">영업활동 현금흐름 <b style="color:#0B5C40;">+$2.46억</b> / 투자활동(유가증권 매매 제외한 실물 기준) <b style="color:#8C2323;">−</b> / 재무활동 <b style="color:#8C2323;">−$2.06억</b>(자사주+배당) → 부호 조합 <b>(+, −, −) = 성숙 단계.</b> SBC를 영업에서 재무로 재분류해도 부호는 불변. 다만 매출 재가속(+8.7%→+24%)과 신제품 사이클은 성장 단계의 속성을 함께 갖는 '성숙 속 재성장' 국면으로, 초과수익 지속기간(CAP) 분석을 적용하기에 적합한 체질이다 — 도입기 기업이라면 CAP 역산 자체가 무의미했을 것이다.</p></div>
+
+<h3 class="h3">9-4. 자본비용(WACC) 산출 — 모든 가정 공개</h3>
+<div class="dark-card">
+<div class="tblwrap" style="border-color:#2B3E52;"><table class="tb">
+<tr><th>구성 요소</th><th class="num">값</th><th>출처·근거</th></tr>
+<tr><td style="background:#152332;color:#E9EFF5;">무위험이자율 (미 10년물)</td><td style="background:#152332;color:#FFC400;" class="num">4.47%</td><td style="background:#152332;color:#9FB2C2;">2026.7.2 호가 (Trading Economics·MacroMicro) — 미·이란 분쟁과 금리 인상 우려로 상승한 수준</td></tr>
+<tr><td style="background:#0F1A26;color:#E9EFF5;">원시 베타 (5년 월간)</td><td style="background:#0F1A26;color:#E9EFF5;" class="num">1.52</td><td style="background:#0F1A26;color:#9FB2C2;">Google Finance·stockanalysis.com 일치</td></tr>
+<tr><td style="background:#152332;color:#E9EFF5;">조정 베타 (⅔·β + ⅓·1)</td><td style="background:#152332;color:#FFC400;" class="num">1.347</td><td style="background:#152332;color:#9FB2C2;">평균 회귀 조정 — 사이클 저점 구간의 과대 베타 완화</td></tr>
+<tr><td style="background:#0F1A26;color:#E9EFF5;">주식위험프리미엄 (ERP)</td><td style="background:#0F1A26;color:#E9EFF5;" class="num">4.23%</td><td style="background:#0F1A26;color:#9FB2C2;">다모다란 내재 ERP (2026.1)</td></tr>
+<tr><td style="background:#152332;color:#E9EFF5;">부채 비중</td><td style="background:#152332;color:#E9EFF5;" class="num">0%</td><td style="background:#152332;color:#9FB2C2;">무차입 — WACC = 자기자본비용</td></tr>
+<tr class="tot"><td>WACC</td><td class="num">10.17% ≈ 10.2%</td><td>대안 ERP 4.75% 적용 시 10.9% — 민감도에 반영</td></tr>
+</table></div>
+</div>
+
+<h3 class="h3">9-5. DCF 본체 — 기본 시나리오 (전시 23 형식)</h3>
+<p>가정: 매출 성장은 2026년 +11%(컨센서스)에서 출발해 10년에 걸쳐 6.5%로 감속(10년 CAGR 8.6% — 서빙 시장 성장률 10~11%에 소폭 점유율 확대를 얹되 사이클 평균화를 반영). EBITA 마진은 24.5%→26%에서 안착(회사 프레임워크 20~30%의 중상단, SBC 비용 처리·인수 무형상각 제외 기준). 세율 18%(조정 유효세율). 미래 투자는 '증분 매출의 18% + 연 $2,000만'(운전자본·소규모 인수 포함)으로 정의해 NOPAT에서 차감. 연중(mid-year) 할인.</p>
+<div class="tblwrap"><table class="tb">
+<tr><th>연도</th><th class="num">매출</th><th class="num">성장률</th><th class="num">EBITA</th><th class="num">마진</th><th class="num">NOPAT</th><th class="num">투자</th><th class="num">FCF</th><th class="num">현재가치</th></tr>
+<tr><td>2026</td><td class="num">1,105</td><td class="num">11.1%</td><td class="num">271</td><td class="num">24.5%</td><td class="num">222</td><td class="num">40</td><td class="num">182</td><td class="num">173</td></tr>
+<tr><td>2027</td><td class="num">1,210</td><td class="num">9.5%</td><td class="num">309</td><td class="num">25.5%</td><td class="num">253</td><td class="num">39</td><td class="num">214</td><td class="num">185</td></tr>
+<tr><td>2028</td><td class="num">1,325</td><td class="num">9.5%</td><td class="num">344</td><td class="num">26.0%</td><td class="num">282</td><td class="num">41</td><td class="num">242</td><td class="num">190</td></tr>
+<tr><td>2029</td><td class="num">1,444</td><td class="num">9.0%</td><td class="num">375</td><td class="num">26.0%</td><td class="num">308</td><td class="num">41</td><td class="num">266</td><td class="num">190</td></tr>
+<tr><td>2030</td><td class="num">1,574</td><td class="num">9.0%</td><td class="num">409</td><td class="num">26.0%</td><td class="num">336</td><td class="num">43</td><td class="num">292</td><td class="num">189</td></tr>
+<tr><td>2031</td><td class="num">1,708</td><td class="num">8.5%</td><td class="num">444</td><td class="num">26.0%</td><td class="num">364</td><td class="num">44</td><td class="num">320</td><td class="num">188</td></tr>
+<tr><td>2032</td><td class="num">1,845</td><td class="num">8.0%</td><td class="num">480</td><td class="num">26.0%</td><td class="num">393</td><td class="num">45</td><td class="num">349</td><td class="num">186</td></tr>
+<tr><td>2033</td><td class="num">1,983</td><td class="num">7.5%</td><td class="num">516</td><td class="num">26.0%</td><td class="num">423</td><td class="num">45</td><td class="num">378</td><td class="num">183</td></tr>
+<tr><td>2034</td><td class="num">2,122</td><td class="num">7.0%</td><td class="num">552</td><td class="num">26.0%</td><td class="num">452</td><td class="num">45</td><td class="num">407</td><td class="num">179</td></tr>
+<tr><td>2035</td><td class="num">2,260</td><td class="num">6.5%</td><td class="num">588</td><td class="num">26.0%</td><td class="num">482</td><td class="num">45</td><td class="num">437</td><td class="num">174</td></tr>
+<tr class="hl"><td colspan="7">터미널 가치 (페이드 모델: f=0.20 · g=2.5% · r=30% → 선행 NOPAT의 10.3배 = 5,085)</td><td class="num">2,027</td></tr>
+<tr class="tot"><td colspan="7">기업가치 3,864 + 순현금 620 = 자기자본가치 4,484 ÷ 희석주식수 1.665억 주</td><td class="num">주당 $26.9</td></tr>
+</table></div>
+<p style="font-size:0.85rem; color:#4E5F6E;">단위: 백만 달러(주당 제외). 터미널의 페이드 계수 0.20은 IT 섹터 초과수익 소멸률(프레임워크 기준). 순현금 $6.2억은 26.1Q 말 현금·투자자산에서 근사. 희석주식수는 출처 간 1.664억~1.676억으로 갈려 1.665억을 채택.</p>
+
+<h3 class="h3">9-6. 세 가지 시나리오와 민감도</h3>
+<div class="grid3">
+<div class="card" style="border-top:4px solid #C63B3B;"><div class="ttl">약세 — $18.3</div><p style="font-size:0.88rem;">2027년 설비투자 침체 재발(성장 +2~4%로 급감), 중국·가격 경쟁으로 마진 22%대 회귀. 2023년(−19%)의 순한 재판. 이 경우에도 무성장 가치($16.8) 근처가 바닥이라는 점이 무차입 현금부자의 방어력이다.</p></div>
+<div class="card" style="border-top:4px solid #1D6FE0;"><div class="ttl">기본 — $26.9</div><p style="font-size:0.88rem;">위 표. 성장 8~9%, 마진 26% — 회사 프레임워크의 중간을 10년간 달성하는, 그 자체로 '꽤 좋은 회사' 시나리오. 그런데도 현재가의 38%에 그친다는 것이 이 종목 밸류에이션 논쟁의 출발점이다.</p></div>
+<div class="card" style="border-top:4px solid #128A60;"><div class="ttl">강세 — $36.5</div><p style="font-size:0.88rem;">10년 내내 매출 +13%(프레임워크 상단, M&A 포함) + EBITA 마진 28%. 10년 후 매출 $33.8억. 이 공격적 가정으로도 10년 예측으로는 $36.5 — 현재가는 이 강세 드라이버가 '10년을 넘어 얼마나 더 지속되느냐'를 묻고 있다(§10).</p></div>
+</div>
+<div class="tblwrap"><table class="tb">
+<tr><th>기본 시나리오 주당가치</th><th class="num">페이드 0.10</th><th class="num">페이드 0.20</th><th class="num">페이드 0.30</th></tr>
+<tr><td>WACC 9.2%</td><td class="num">30.6</td><td class="num">30.1</td><td class="num">29.8</td></tr>
+<tr class="hl"><td>WACC 10.2% (기준)</td><td class="num">27.3</td><td class="num">26.9</td><td class="num">26.7</td></tr>
+<tr><td>WACC 11.2%</td><td class="num">24.7</td><td class="num">24.4</td><td class="num">24.3</td></tr>
+</table></div>
+<p style="font-size:0.88rem;">장기 성장률 g를 1.5%/3.5%로 바꿔도 $26.6~27.3로 큰 차이가 없다. 즉 <b>이 밸류에이션 격차는 할인율·터미널 세부 조정으로 메워지는 수준이 아니라, 성장·마진 '드라이버 자체'와 그 지속 기간의 문제</b>다 — 그래서 다음 섹션의 CAP 역산이 필요하다.</p>
+</section>
+
+<!-- ═══════════ 10. 내재 CAP ═══════════ -->
+<section class="sec" id="s10">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 10 · MARKET-IMPLIED CAP</div>
+<h2>시장 내재 기대 역산 — $70에 심어진 CAP는 몇 년인가</h2>
+<div class="sub">DCF를 거꾸로 돌린다: 가치를 추정하는 대신, 현재 가격이 성립하려면 무엇이 참이어야 하는지를 푼다.</div>
+</div>
+
+<p><b>CAP(Competitive Advantage Period, 경쟁우위 지속기간)</b>는 기업이 자본비용(10.2%)을 초과하는 수익을 계속 벌어들일 것으로 시장이 기대하는 기간이다. 방법: §9의 DCF에서 명시 예측 기간 T를 1년씩 늘려가며, 각 T 이후에는 초과수익이 페이드(소멸)된다고 가정한 터미널을 붙인다. <b>모델 가치가 현재 주가 $70과 만나는 T가 곧 시장 내재 CAP</b>다. 세 가지 드라이버 세트(약세·기본·강세)로 각각 역산했다.</p>
+
+<figure class="fig">
+<div class="figtitle">그림 13. 예측 기간(CAP)별 주당 가치 곡선 — $70과 만나는 지점 찾기</div>
+<div class="figsub">기본·약세 곡선은 아무리 늘려도 $70에 닿지 않는다. 강세 곡선만 24년째에 교차한다</div>
+<svg viewBox="0 0 960 420" role="img" aria-label="CAP 가치 곡선">
+<g stroke="#E4EAEF" stroke-width="1"><line x1="55" y1="339" x2="935" y2="339"/><line x1="55" y1="254" x2="935" y2="254"/><line x1="55" y1="169" x2="935" y2="169"/><line x1="55" y1="84" x2="935" y2="84"/></g>
+<g font-size="11" fill="#4E5F6E" class="m"><text x="50" y="343" text-anchor="end">$20</text><text x="50" y="258" text-anchor="end">$40</text><text x="50" y="173" text-anchor="end">$60</text><text x="50" y="88" text-anchor="end">$80</text></g>
+<line x1="55" y1="126.2" x2="935" y2="126.2" stroke="#16202B" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="70" y="118.2" font-size="12" fill="#16202B" font-weight="700">현재 주가 $70</text>
+<polyline points="60.0,350.5 89.3,353.6 118.6,352.9 147.9,351.1 177.2,350.1 206.5,349.2 235.9,348.3 265.2,347.4 294.5,346.6 323.8,345.8 353.1,345.0 382.4,344.4 411.7,343.7 441.0,343.0 470.3,342.4 499.6,341.9 529.0,341.3 558.3,340.8 587.6,340.3 616.9,339.9 646.2,339.4 675.5,339.0 704.8,338.6 734.1,338.2 763.4,337.9 792.8,337.5 822.1,337.2 851.4,336.9 880.7,336.6 910.0,336.3" fill="none" stroke="#C63B3B" stroke-width="2.5"/>
+<polyline points="60.0,346.5 89.3,339.8 118.6,334.2 147.9,330.0 177.2,325.7 206.5,321.8 235.9,318.2 265.2,314.9 294.5,312.0 323.8,309.3 353.1,306.7 382.4,304.2 411.7,301.8 441.0,299.4 470.3,297.1 499.6,294.8 529.0,292.7 558.3,290.6 587.6,288.6 616.9,286.6 646.2,284.7 675.5,282.9 704.8,281.1 734.1,279.3 763.4,277.7 792.8,276.0 822.1,274.4 851.4,273.0 880.7,271.5 910.0,270.0" fill="none" stroke="#1D6FE0" stroke-width="2.5"/>
+<polyline points="60.0,346.0 89.3,335.1 118.6,324.5 147.9,317.3 177.2,309.9 206.5,302.2 235.9,294.3 265.2,286.0 294.5,277.6 323.8,268.8 353.1,259.8 382.4,250.5 411.7,241.0 441.0,231.1 470.3,221.0 499.6,210.6 529.0,199.9 558.3,188.9 587.6,177.6 616.9,166.0 646.2,154.1 675.5,141.8 704.8,129.3 734.1,116.4 763.4,103.2 792.8,89.6 822.1,75.6 851.4,61.3 880.7,46.6 910.0,31.5" fill="none" stroke="#128A60" stroke-width="3"/>
+<circle cx="734.1" cy="116.4" r="8" fill="#FFC400" stroke="#7A5D00" stroke-width="2"/>
+<line x1="734.1" y1="116.4" x2="734.1" y2="392" stroke="#7A5D00" stroke-width="1.4" stroke-dasharray="4 4"/>
+<text x="734.1" y="100.4" text-anchor="middle" font-size="12.5" fill="#7A5D00" font-weight="800">내재 CAP ≈ 24년</text>
+<text x="851.4" y="54.0" font-size="11.5" fill="#0B5C40" font-weight="700" text-anchor="middle">강세 드라이버</text>
+<text x="851.4" y="69.0" font-size="10" fill="#0B5C40" text-anchor="middle">성장 13%·마진 28%</text>
+<text x="822.1" y="267.1" font-size="11.5" fill="#124693" font-weight="700" text-anchor="middle">기본 드라이버 (수렴 ≈$42)</text>
+<text x="822.1" y="327.5" font-size="11.5" fill="#8C2323" font-weight="700" text-anchor="middle">약세 드라이버 (수렴 ≈$21)</text>
+<g font-size="11" fill="#4E5F6E"><text x="60" y="410">CAP 1년</text><text x="323.8" y="410" text-anchor="middle">10년</text><text x="616.9" y="410" text-anchor="middle">20년</text><text x="895.0" y="410" text-anchor="end">30년</text></g>
+</svg>
+<figcaption>그림 13. 자체 계산. 각 곡선: 해당 드라이버를 T년간 유지 후 초과수익 페이드(f=0.20) 터미널 적용, WACC 10.17%, 연중 할인, 순현금 $6.2억 가산, 1.665억 주. 강세 곡선은 T=23년에 $69.3, 24년에 $72.3으로 주가를 통과.</figcaption>
+</figure>
+
+<h3 class="h3">10-1. 역산 결과와 강건성 검사</h3>
+<div class="tblwrap"><table class="tb">
+<tr><th>드라이버 세트</th><th class="num">매출 성장</th><th class="num">EBITA 마진</th><th class="num">내재 CAP</th><th>판정</th></tr>
+<tr><td>약세</td><td class="num">+2~4%</td><td class="num">22~23.5%</td><td class="num">도달 불가 (수렴 $21)</td><td class="neg">이 드라이버라면 주가는 3분의 1 이하가 정당</td></tr>
+<tr><td>기본</td><td class="num">+8~9%→6.5%</td><td class="num">26%</td><td class="num">도달 불가 (수렴 $42)</td><td class="neg">'꽤 좋은 회사' 가정으로도 현재가 설명 불가</td></tr>
+<tr class="hl"><td>강세 (회사 프레임워크 상단)</td><td class="num">+13% 지속</td><td class="num">28%</td><td class="num">≈ 24년</td><td>이것이 시장이 실제로 매긴 가격의 좌표</td></tr>
+</table></div>
+<div class="tblwrap"><table class="tb">
+<tr><th>강건성 검사 (강세 드라이버 고정)</th><th class="num">WACC 9.2%</th><th class="num">WACC 10.2%</th><th class="num">WACC 11.2%</th><th class="num">ERP 4.75% (k=10.9%)</th></tr>
+<tr><td>내재 CAP</td><td class="num">20년</td><td class="num">24년</td><td class="num">29년</td><td class="num">27년</td></tr>
+</table></div>
+<p>어떤 합리적 할인율을 쓰든 <b>내재 CAP는 20년 이상</b>이다. 프레임워크의 해석 기준 — "실증 연구상 관찰되는 CAP는 대체로 20년 이내이며, 20년 초과를 요구하는 가격은 과도한 낙관 구간; 참고로 독점적 지위의 마이크로소프트가 17~18년" — 에 비추면, <b>현재 가격은 코그넥스에게 역사상 최상위 프랜차이즈급 지속력을 요구하고 있다.</b></p>
+
+<div class="dark-card">
+<div style="font-family:'Gothic A1',sans-serif; font-weight:800; color:#FFC400; margin-bottom:8px;">이 기대가 물리적으로 뜻하는 것 — 2049년의 코그넥스</div>
+<p style="margin-bottom:6px;">강세 드라이버(+13%)를 24년간 유지하면 <b>2049년 매출은 약 $187억</b>이 된다. 서빙 시장($70억)이 같은 기간 연 10.5%로 커진다고 후하게 가정해도 2049년 시장은 약 $770억 — 즉 <span class="yl">점유율을 현 10%대 중반에서 약 24%로 늘려야 하는 경로</span>다. 산수가 불가능하진 않다(키엔스처럼 인접 시장으로 번지면 분모가 더 커질 수도 있다). 그러나 이는 (a) 시장 성장률 전망이 사반세기 동안 유지되고, (b) 키엔스·중국 업체와의 경쟁에서 구조적으로 이기고, (c) 기술 패러다임 교체(VLM 등)를 한 번 더 넘어야 성립한다. 셋 다 개연성이 있지만, 셋 모두의 결합 확률에 베팅하는 것이 지금 가격이다.</p>
+<p class="dim" style="font-size:0.85rem;">등가 표현: 매출 성장을 10%로 낮추는 대신 마진이 키엔스 방향(EBITA 33~35%)으로 수렴한다고 가정해도 비슷한 CAP가 나온다. 즉 시장 기대의 본질은 "성장이든 마진이든, 회사 프레임워크의 상단이 20년 넘게 유지된다"는 것.</p>
+</div>
+
+<h3 class="h3">10-2. 가치 지도 — 풋볼필드</h3>
+<figure class="fig">
+<div class="figtitle">그림 14. 밸류에이션 풋볼필드 — 어디까지가 분석이고 어디부터가 믿음인가</div>
+<div class="figsub">보수적 DCF 스펙트럼(위 두 줄)과 시장의 좌표(아래 두 줄) 사이의 간극이 이 종목의 논쟁 그 자체</div>
+<svg viewBox="0 0 960 330" role="img" aria-label="풋볼필드 차트">
+<g stroke="#E4EAEF" stroke-width="1"><line x1="156.7" y1="40" x2="156.7" y2="270"/><line x1="253.4" y1="40" x2="253.4" y2="270"/><line x1="350.1" y1="40" x2="350.1" y2="270"/><line x1="446.8" y1="40" x2="446.8" y2="270"/><line x1="543.5" y1="40" x2="543.5" y2="270"/><line x1="640.2" y1="40" x2="640.2" y2="270"/><line x1="736.9" y1="40" x2="736.9" y2="270"/><line x1="833.6" y1="40" x2="833.6" y2="270"/></g>
+<g font-size="11" fill="#4E5F6E" class="m"><text x="156.7" y="292" text-anchor="middle">$20</text><text x="253.4" y="292" text-anchor="middle">$30</text><text x="350.1" y="292" text-anchor="middle">$40</text><text x="446.8" y="292" text-anchor="middle">$50</text><text x="543.5" y="292" text-anchor="middle">$60</text><text x="640.2" y="292" text-anchor="middle">$70</text><text x="736.9" y="292" text-anchor="middle">$80</text><text x="833.6" y="292" text-anchor="middle">$90</text></g>
+<line x1="642.1" y1="35" x2="642.1" y2="275" stroke="#16202B" stroke-width="2.5"/>
+<text x="642.1" y="26" text-anchor="middle" font-size="12" fill="#16202B" font-weight="800">현재가 $70.2</text>
+<g font-size="12" fill="#16202B">
+<text x="55" y="75" text-anchor="end" font-weight="700">무성장 가치</text>
+<circle cx="125.8" cy="70" r="7" fill="#4E5F6E"/><text x="139.8" y="75" class="m" font-size="11.5" fill="#16202B">$16.8 — 현 수익력의 영구 유지만 반영</text>
+<text x="55" y="130" text-anchor="end" font-weight="700">DCF 10년<tspan x="55" dy="14" font-weight="400" font-size="10.5">(약세~강세)</tspan></text>
+<rect x="140.3" y="112" width="176.0" height="24" rx="4" fill="#AECBF2"/>
+<line x1="223.4" y1="108" x2="223.4" y2="140" stroke="#124693" stroke-width="3"/>
+<text x="326.3" y="129" class="m" font-size="11.5" fill="#16202B">18.3 – 36.5 (기본 26.9)</text>
+<text x="55" y="190" text-anchor="end" font-weight="700">52주 주가 범위</text>
+<rect x="270.5" y="172" width="397.5" height="24" rx="4" fill="#D3DCE3"/>
+<text x="678.0" y="189" class="m" font-size="11.5" fill="#16202B">31.77 – 72.88</text>
+<text x="55" y="250" text-anchor="end" font-weight="700">애널 목표가</text>
+<rect x="553.2" y="232" width="319.0999999999999" height="24" rx="4" fill="#F7DFA0"/>
+<line x1="700.6" y1="228" x2="700.6" y2="260" stroke="#7A5D00" stroke-width="3"/>
+<text x="543.2" y="249" class="m" font-size="11.5" fill="#16202B" text-anchor="end">61 – 94 (평균 76.25)</text>
+</g>
+<text x="55" y="318" font-size="10.5" fill="#4E5F6E">읽는 법: 페이드 모델 DCF(상단)는 초과수익 소멸을 강제하는 보수적 자, 애널 목표가(하단)는 선행 P/E 40~50배 유지를 전제하는 자 — 두 자의 눈금 차이가 곧 내재 CAP 24년이다.</text>
+</svg>
+<figcaption>그림 14. 자체 계산 및 컨센서스(stockanalysis·Investing, 2026.6~7). 목표가 최고 $94는 집계 기관 간 차이가 있어 범위 상단으로만 표시.</figcaption>
+</figure>
+
+<div class="warn"><b>방법론 한계 고지 (중요):</b> 페이드 모델은 "초과수익은 언젠가 경쟁에 침식된다"는 실증 규칙을 터미널에 강제하는 도구다. 이 구조는 슈퍼스타 기업 — 전체의 약 0.7%가 시장 부의 75%를 만든다는 그 롱테일 — 을 <b>체계적으로 저평가</b>한다. 실제로 이 모델을 10년 전 키엔스·엔비디아에 적용했어도 '도달 불가'가 나왔을 것이고, 그 종목들은 그 후로도 올랐다. 따라서 §10의 결론은 "주가가 틀렸다"가 아니라 <b>"주가가 옳으려면 코그넥스가 통계적 예외여야 하며, 투자자는 자신이 그 예외를 식별할 근거가 있는지 자문해야 한다"</b>로 읽는 것이 정확하다.</div>
+</section>
+<!-- ═══════════ 11. Bull ═══════════ -->
+<section class="sec" id="s11">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 11 · BULL CASE</div>
+<h2>강세론 — "이것은 사이클주가 아니라 복리 기계의 재점화다"</h2>
+<div class="sub">강세론이 옳다면 내재 CAP 24년은 과도한 낙관이 아니라 정당한 인식이다. 그 논거를 가장 강한 형태로 세운다.</div>
+</div>
+
+<div class="good"><b>강세론의 한 문장:</b> 코그넥스는 68~71% 매출총이익·무차입·자본경량이라는 슈퍼스타 기업의 골격을 이미 갖춘 상태에서, AI가 (a) 마진 구조, (b) 서빙 가능 시장, (c) 매출의 반복성을 동시에 끌어올리는 3중 변곡점에 서 있다 — 그리고 그 증거가 이미 6개 분기째 숫자로 찍히고 있다.</div>
+
+<h3 class="h3">논거 1. 키엔스라는 살아있는 실존 증명 — 마진의 천장은 51%다</h3>
+<p>"EBITDA 마진이 25%를 넘어 어디까지 가겠느냐"는 질문에 대한 강세론의 답은 이론이 아니라 실물이다: 같은 산업, 같은 고객, 같은 가치 제안으로 <b>키엔스는 영업이익률 51.0%(FY2026)</b>를 찍는다. 코그넥스의 10년 평균 조정 EBITDA 마진도 28%(2014~2024)였다 — 즉 지금의 26.9%는 '이례적 고점'이 아니라 <b>침체로 무너졌던 정상 궤도로의 복귀</b>이며, 그 위로는 (i) 비용 개편의 잔여분($3,500만~4,000만 중 미실현분), (ii) 소프트웨어·구독 믹스, (iii) 규모의 영업 레버리지라는 세 개의 계단이 더 남아 있다. 회사가 제시한 20~30% 범위의 상단, 나아가 그 너머까지 열려 있다는 것이 이 논거의 골자다.</p>
+
+<h3 class="h3">논거 2. 슈퍼스타 경제학 — 페이드 모델이 구조적으로 놓치는 것</h3>
+<p>장기 주식 부의 실증 분포는 극단적으로 치우쳐 있다: <b>전체 상장사의 약 0.7%가 순부(net wealth)의 75%를 창출</b>했다. 그 0.7%의 공통 특성 — 무형자산 중심, 사용할수록 강해지는 데이터 루프, 낮은 자본 필요, 높은 매출총이익 — 은 코그넥스의 프로파일과 정확히 겹친다. 45년치 산업 결함 이미지는 후발주자가 돈으로 살 수 없는 원료이고, 배포된 카메라가 늘수록 오탐 데이터가 모델을 개선하는 플라이휠(§4 그림 6)이 돈다. §10의 "도달 불가" 판정은 페이드 모델의 보수성이 만든 결과이기도 하다 — 같은 모델은 10년 전의 키엔스·엔비디아에도 '도달 불가'를 선고했을 것이다. 시장이 롱테일을 알아보는 데에는 종종 모델보다 이르다.</p>
+
+<h3 class="h3">논거 3. 고객 2배 전략은 구호가 아니라 이미 계수화된 추세다</h3>
+<p>"5년 내 고객 기반 2배(3만→6만)"는 야심이지만, <b>2025년 신규 계정 약 9,000곳(전년의 3배)</b>이라는 첫 해 성적이 이미 목표 속도를 상회한다. 이 확장의 동력은 영업 인력이 아니라 제품이다 — 엣지 러닝(5~10장 학습)과 OneVision(노코드 배포)이 "데이터 사이언티스트 없는 중소 공장"이라는 미개척 저변을 서빙 가능 시장으로 편입시키고 있다. 인베스터 데이에서 서빙 시장 성장률(10~11%)이 광의 시장(7~8%)보다 높게 제시된 이유가 바로 이 'AI에 의한 시장 자체의 확장'이다. 신규 고객은 첫 구매가 작아도 라인 증설마다 반복 구매로 돌아온다 — 오늘의 9,000계정은 5~10년 뒤 매출의 저수지다.</p>
+
+<h3 class="h3">논거 4. 매출의 성격이 바뀌는 중 — 일회성 판매에서 플랫폼으로</h3>
+<p>OneVision(2026.5 정식 출시, 베타 100+ 고객)은 단순 신제품이 아니라 <b>수익 인식 구조를 바꿀 수 있는 첫 번째 장치</b>다. 모델의 개발·배포·버전관리·플릿 모니터링이 클라우드 구독으로 팔리기 시작하면, (a) 매출의 반복성 비율이 오르고, (b) 시장이 적용하는 배수 체계 자체가 장비주에서 소프트웨어주로 이동한다. 하드웨어 쪽에서도 SLX 터널이 '맞춤 프로젝트'였던 물류 비전을 '표준 제품'으로 바꿔 중소형 창고 시장을 연다. 두 제품 모두 매출 기여는 초기지만, 방향은 배수 재평가를 정당화하는 쪽이다.</p>
+
+<h3 class="h3">논거 5. 수요의 구조성 — 세 개의 멀티이어 순풍</h3>
+<ul>
+<li><b>물류:</b> 8분기 연속 두 자릿수 성장의 기저에는 전자상거래 물동량과 창고 노동력 부족이라는 10년짜리 추세가 있다. '정상화'는 감속이지 반전이 아니다.</li>
+<li><b>반도체:</b> AI 설비투자 사이클의 직접 수혜(26.1Q +20% 초과). 장비 OEM에 모듈로 박히는 사업이라 점유율이 끈적하다.</li>
+<li><b>리쇼어링·로봇:</b> 생산기지가 복제될 때마다 비전이 새로 깔리고, 로봇·휴머노이드 붐은 '눈'의 수요를 기하급수로 만든다. Automate 2026 기조연설 무대(FANUC·슈나이더·인트린식과 동석)는 이 생태계에서의 좌석을 보여준다.</li>
+</ul>
+
+<h3 class="h3">논거 6. 자본배분이 EPS 성장을 자체 증폭한다</h3>
+<p>무차입 + FCF 전환율 100%+ + $5억 바이백(시총의 약 4%)의 조합은 순이익 성장률에 연 3~4%p의 EPS 성장을 얹는다. 특히 2026년 1분기, 주가가 40달러대로 밀렸을 때 $9,900만을 집중 매입한 실적은 "쌀 때 사는" 자본배분 규율의 신호다. 강세론의 산수: 매출 +13% × 마진 레버리지 × 주식수 감소 = <b>조정 EPS 연 20%대 성장</b> — 이 성장이 5년만 유지돼도 2031년 EPS는 $3.5~4, 그때 배수가 30배로 눌려도 주가는 $105~120이다.</p>
+
+<div class="card" style="border-left:5px solid #128A60;"><div class="ttl">강세론이 참이 되기 위한 필요조건 (스스로 명시)</div>
+<p style="font-size:0.9rem;">① 물류 감속이 '고원'에서 멈추고 자동차가 2026~27년 회복에 합류할 것 ② EBITDA 마진이 2027년에도 확대 기조를 유지(비용 절감의 일회성 종료 이후에도)할 것 ③ OneVision이 2027년까지 유의미한 유료 전환 지표를 보일 것 ④ 중국 저가 경쟁이 서구·일본 하이엔드로 번지지 않을 것. 넷 중 셋 이상이 확인되면 내재 CAP 24년은 '낙관'이 아니라 '합리적 인식'으로 재평가될 수 있다.</p></div>
+</section>
+
+<!-- ═══════════ 12. Bear ═══════════ -->
+<section class="sec" id="s12">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 12 · BEAR CASE</div>
+<h2>약세론 — "훌륭한 회사와 훌륭한 주식은 다르다"</h2>
+<div class="sub">약세론은 회사가 나쁘다고 주장하지 않는다. 가격이 회사의 최상 시나리오를 이미 다 지불했다고 주장한다.</div>
+</div>
+
+<div class="bad"><b>약세론의 한 문장:</b> 선행 P/E 49배·내재 CAP 24년의 가격은 "설비투자 사이클주가 다시는 사이클을 겪지 않고, 키엔스가 견제하지 못하며, 기술 패러다임 교체를 한 번 더 무사히 넘는다"는 세 가지 낙관의 곱에 베팅하는 것이다 — 하나만 어긋나도 이익 추정과 배수가 동시에 꺾이는 이중 압축이 기다린다.</div>
+
+<h3 class="h3">논거 1. 이 회사는 사이클을 '졸업'한 적이 없다 — 2023년의 기억</h3>
+<p>매출 2021년 $10.4억 → 2023년 $8.4억(−19%)은 불과 3년 전 일이다. 원인은 경영 실패가 아니라 <b>전방 설비투자의 동시 위축</b>이었고, 그 구조는 지금도 그대로다: 매출의 100%가 고객 capex 예산에서 나온다. 지금의 성장 동력을 뜯어보면 취약점이 보인다 — 물류(26%)는 소수 초대형 전자상거래 고객의 투자 사이클에 얹혀 있고 회사 스스로 "높은 기저 위의 정상화(감속)"를 가이드했다. 반도체(10%)는 AI capex 사이클의 파생상품이다. 자동차(≈20%)는 아직 역성장 중이다. <b>2027년에 물류 감속 + AI capex 소화 국면 + 자동차 회복 지연이 겹치면</b>, 매출 성장은 한 자릿수 초반으로 떨어질 수 있고, 그때 49배 배수는 지지선이 없다. 2025년 10월 29일 — 매출 +18% 분기에 가이던스 하나로 하루 −12% — 가 이 가격대의 기대 비대칭을 이미 실증했다.</p>
+
+<h3 class="h3">논거 2. 키엔스 마진 수렴론의 착시 — 51%는 장비 회사의 숫자가 아니다</h3>
+<p>강세론의 앵커인 키엔스 51%는 <b>영업 모델의 산물</b>이다: 무공장(원가율 17%), 대리점 없는 직판, 엔지니어가 컨설팅하며 파는 구조. 코그넥스는 제조 원가(모리텍스 공장 포함)·유통 파트너·프로젝트성 물류 사업을 안고 있어 구조적 상한이 다르다 — 회사 스스로 제시한 프레임워크가 EBITDA 20~30%라는 사실이 그 자백이다. 즉 25%→30%까지는 열려 있어도, 강세론이 은근히 기대는 "키엔스 방향의 수렴"은 사업 모델을 갈아엎지 않는 한 없다. 그리고 §10에서 봤듯, <b>마진 30%에서 멈추면 현재 주가는 성장률 13%+가 24년 지속돼야만 성립</b>한다.</p>
+
+<h3 class="h3">논거 3. 경쟁은 두 방향에서 조여온다 — 아래에서 중국, 옆에서 대기업</h3>
+<ul>
+<li><b>아래로부터:</b> 하이크로봇·OPT 등 중국 업체가 저가 스마트카메라로 중국 내수(코그넥스 중화권 매출 18%)를 잠식 중이다. AI의 오픈소스화는 이들의 소프트웨어 격차를 매 분기 좁힌다. 중국에서 검증한 가성비 모델은 결국 동남아·유럽 중저가 시장으로 수출된다 — 다른 산업(디스플레이·배터리·전기차)에서 반복된 각본이다.</li>
+<li><b>옆으로부터:</b> 지브라는 Matrox(2022)·Photoneo(2025)를 인수하며 코그넥스의 최대 성장 시장인 물류 비전을 정조준했고, 텔레다인·바슬러는 카메라 가격을 범용화시킨다. 최고 마진 시장에 가장 공격적인 신규 진입이 몰리는 것은 우연이 아니라 그 마진 자체가 초대장이기 때문이다.</li>
+</ul>
+
+<h3 class="h3">논거 4. 기술 리스크 — 해자가 '패러다임'에는 약하다</h3>
+<p>코그넥스는 규칙→딥러닝 전환을 인수(ViDi·수아랩)로 넘었다. 그러나 다음 전환은 성격이 다르다: <b>범용 VLM의 소형화·증류가 임베디드 실시간 추론에 도달하는 순간</b>, "산업 특화 소형 모델"의 우위 폭(§4 비교표)은 급격히 좁아진다. 엔비디아·퀄컴 칩을 쓴다는 것은 연산 계층의 발전 속도를 코그넥스가 통제하지 못한다는 뜻이기도 하다. 또 하나 — 휴머노이드·차세대 로봇은 비전을 외부 구매하지 않고 수직 통합하는 경향이 있어, '로봇 붐 = 코그넥스 수혜'라는 등식은 검증되지 않은 가정이다. 5~10년 시계의 꼬리 리스크지만, <b>내재 CAP 24년짜리 가격은 정확히 그 시계까지 돈을 미리 낸 가격</b>이라는 데 문제가 있다.</p>
+
+<h3 class="h3">논거 5. 기대의 기술적 포화 — 상향 여력의 소진 신호들</h3>
+<ul>
+<li>컨센서스 2026 매출(약 $11.0억)이 이미 회사 최초 가이던스($10.15억~10.35억)를 훌쩍 넘어서 있다 — '비트 앤 레이즈'의 관성이 기대에 선반영된 상태.</li>
+<li>애널리스트 21명 전원이 매수 계열 — 새로 상향할 사람이 남아 있지 않다는 뜻이기도 하다(역발상 지표).</li>
+<li>2026년 5월 내부자(인사이더) 매도가 다수 보도됐다 — 그 자체로 악재는 아니나, 저점 매수했던 회사의 자사주와 달리 개인들은 이 가격에서 파는 쪽을 택했다.</li>
+<li>매크로: 10년물 4.47%에 연내 금리 '인상'이 가격에 반영되는 환경(중동 분쟁발 인플레 우려)은 듀레이션이 긴 성장주 배수에 정면 역풍이며, 고객의 자동화 투자 할인율도 함께 올린다.</li>
+</ul>
+
+<h3 class="h3">논거 6. 하방의 산수 — 이중 압축 시나리오</h3>
+<p>2027년 매출 성장이 +3%로 감속하고 EBITDA 마진이 24%에서 멈춘다고 하자(2023년보다 훨씬 온건한 가정). 조정 EPS는 $1.3~1.4에서 정체되고, 시장이 '사이클주' 서랍으로 되돌리며 배수를 25배로 재평가하면 주가는 <b>$33~35 — 현재가 대비 약 −50%</b>다. 이는 공교롭게도 본 보고서의 약세 DCF($18)와 기본 DCF($27) 사이, 그리고 회사가 자사주를 쓸어 담던 가격대(40달러대)의 바로 아래다. 약세론의 결론은 "회사를 팔라"가 아니라 <b>"이 가격에는 안전마진이 없고, 기대가 한 번 어긋날 때의 낙폭이 통계적으로 크다"</b>는 것이다.</p>
+
+<div class="card" style="border-left:5px solid #C63B3B;"><div class="ttl">약세론이 틀리게 되는 조건 (스스로 명시)</div>
+<p style="font-size:0.9rem;">① 2026년 하반기~2027년 상반기에 자동차·유럽이 회복에 합류해 성장의 폭이 넓어지는 경우 ② 마진이 30%를 넘어 계속 확대되며 '구조적 상한' 논거가 반박되는 경우 ③ OneVision 구독 매출이 조기에 계수화되어 배수 체계 이동이 정당화되는 경우 ④ 금리가 하락 반전해 성장주 배수 전반이 재팽창하는 경우.</p></div>
+</section>
+
+<!-- ═══════════ 13. SWOT ═══════════ -->
+<section class="sec" id="s13">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 13 · SWOT MATRIX</div>
+<h2>SWOT — 앞선 12개 섹션의 압축</h2>
+<div class="sub">각 항목 뒤 괄호는 상세 근거가 있는 섹션 번호.</div>
+</div>
+<div class="grid2">
+<div class="card" style="background:#E2F5EC; border:1px solid #9AD8BE; border-top:5px solid #128A60;">
+<div class="ttl" style="color:#0B5C40;">S · 강점 (내부·긍정)</div>
+<ul style="color:#0B5C40; font-size:0.92rem; margin-left:18px;">
+<li style="color:#0B5C40;">머신비전 전업 세계 1위권 + 45년 축적 알고리즘·산업 이미지 데이터 자산 (§2, §4)</li>
+<li style="color:#0B5C40;">매출총이익률 68~71% — 가격결정력의 직접 증거, ROIC 약 19~20% (§6)</li>
+<li style="color:#0B5C40;">무차입 + 현금 $6.2억 + FCF 전환율 100%+ — 침체 저점에서도 흑자 (§9)</li>
+<li style="color:#0B5C40;">여섯 개 전방시장 분산 — 사이클이 서로 어긋나 회복 탄력 확보 (§3)</li>
+<li style="color:#0B5C40;">규칙→딥러닝→엣지 AI, 패러다임 전환을 두 번 완주한 조직 학습력 (§2, §4)</li>
+<li style="color:#0B5C40;">광학(모리텍스) 수직 통합 + 규제 산업 인증 기반 전환비용 (§4, §6)</li>
+</ul>
+</div>
+<div class="card" style="background:#FBE9E9; border:1px solid #EBB3B3; border-top:5px solid #C63B3B;">
+<div class="ttl" style="color:#8C2323;">W · 약점 (내부·부정)</div>
+<ul style="color:#8C2323; font-size:0.92rem; margin-left:18px;">
+<li style="color:#8C2323;">매출 100%가 고객 설비투자 예산에 연동 — 2021→23년 −19% 실증 (§5, §9)</li>
+<li style="color:#8C2323;">키엔스 대비 마진 격차(19.6% vs 51%) — 영업 모델 차이로 완전 수렴 불가 (§7)</li>
+<li style="color:#8C2323;">물류 대형 고객·가전 특정 고객 등 집중 노출 잔존 (§3)</li>
+<li style="color:#8C2323;">구독·반복 매출 비중이 아직 미미 — 실적의 분기 변동성 큼 (§3)</li>
+<li style="color:#8C2323;">신임 CEO 체제 1년차 — 장기 트랙레코드 미검증 (§14)</li>
+</ul>
+</div>
+<div class="card" style="background:#E8F0FC; border:1px solid #AECBF2; border-top:5px solid #1D6FE0;">
+<div class="ttl" style="color:#124693;">O · 기회 (외부·긍정)</div>
+<ul style="color:#124693; font-size:0.92rem; margin-left:18px;">
+<li style="color:#124693;">AI가 서빙 시장 자체를 확장 — 비정형 검사 영역 신규 편입 (§5)</li>
+<li style="color:#124693;">고객 저변 확대: 노코드 배포로 중소 제조·물류 진입, 첫해 신규 9,000계정 (§4, §11)</li>
+<li style="color:#124693;">리쇼어링·공급망 복제 = 신규 라인마다 비전 신설 수요 (§5)</li>
+<li style="color:#124693;">로봇·피지컬 AI 생태계의 '눈' 좌석 — Automate 2026 기조연설 (§5, §8)</li>
+<li style="color:#124693;">OneVision 구독 전환 시 배수 체계의 소프트웨어화 (§11)</li>
+<li style="color:#124693;">$5억 바이백 — 시총 4%/년 소각 여력의 EPS 증폭 (§14)</li>
+</ul>
+</div>
+<div class="card" style="background:#FFF6D9; border:1px solid #E8C766; border-top:5px solid #FFC400;">
+<div class="ttl" style="color:#7A5D00;">T · 위협 (외부·부정)</div>
+<ul style="color:#7A5D00; font-size:0.92rem; margin-left:18px;">
+<li style="color:#7A5D00;">중국 저가 업체의 잠식(중화권 매출 18%) + 미·중 기술 갈등 (§6, §12)</li>
+<li style="color:#7A5D00;">지브라·텔레다인 등 대기업의 물류 비전 정조준 (§12)</li>
+<li style="color:#7A5D00;">범용 VLM 소형화·로봇 비전 수직통합 — 5~10년 시계 패러다임 리스크 (§4, §12)</li>
+<li style="color:#7A5D00;">금리 인상 환경 — 성장주 배수 압축 + 고객 투자 할인율 상승 (§12)</li>
+<li style="color:#7A5D00;">기대 포화: 전원 매수 컨센서스·컨센이 가이던스 상회 — 실수 관용 얇음 (§8, §12)</li>
+</ul>
+</div>
+</div>
+<p style="font-size:0.92rem;">종합: <b>S와 O는 '회사'의 이야기, W와 T는 상당 부분 '주가'의 이야기</b>다. 사업 자체의 강점-약점 대차대조표는 뚜렷하게 강점 우위인 반면, 위협 목록의 절반은 현재 밸류에이션이 만들어낸 취약성이다 — 이 비대칭이 §15 종합 판단의 뼈대가 된다.</p>
+</section>
+
+<!-- ═══════════ 14. 경영진·자본 배분 ═══════════ -->
+<section class="sec" id="s14">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 14 · MANAGEMENT &amp; CAPITAL</div>
+<h2>경영진과 자본 배분 — 세대 교체의 완결, 그리고 돈의 방향</h2>
+<div class="sub">창업자 시대(1981~2021) → 윌렛 시대(2011~2025) → 마슈너 시대(2025~). 자본의 물길도 함께 바뀌고 있다.</div>
+</div>
+
+<h3 class="h3">14-1. 경영진 프로필과 트랙 레코드</h3>
+<div class="tblwrap"><table class="tb">
+<tr><th>인물</th><th>역할·재임</th><th>배경</th><th>평가 포인트</th></tr>
+<tr class="hl"><td><b>맷 마슈너<br>(Matt Moschner)</b></td><td>CEO · 2025.6.27~</td><td>2017년 입사(전 BCG 컨설턴트), 모리텍스 인수 통합 총괄, 2025.2 사장·COO 승진 후 CEO. 듀크대 전기공학 + 노스웨스턴 MBA</td><td>내부 승진형 운영 전문가. 취임 후 4개 분기 동안 비용 프로그램($3,500만~4,000만)을 계획 대비 조기 달성, "2026년 말 EBITDA 25% 런레이트" 약속을 1분기 만에 앞당겨 증명(26.1Q 26.9%). 약속-실행 정합성은 현재까지 최상급, 단 표본이 1년.</td></tr>
+<tr><td>데니스 페어<br>(Dennis Fehr)</td><td>CFO · 2024.4~</td><td>지멘스·플루언스 에너지 출신</td><td>가이던스 보수화·비핵심 매출 자진 정리($2,200만)·조정 기준 투명화 등 '숫자의 질' 개선을 주도</td></tr>
+<tr><td>로버트 윌렛<br>(Robert Willett)</td><td>전 CEO · 2011~2025.6<br>(이사회는 2026.3.2 퇴임)</td><td>—</td><td>재임 중 매출 약 5배 성장. 딥러닝 전환(ViDi·수아랩 인수)과 모리텍스 인수를 결정한 장본인 — 현 전략의 설계자이자, 2022~24 침체기 대응이 늦었다는 평가도 병존</td></tr>
+<tr><td>로버트 실먼<br>(Robert Shillman)</td><td>창업자 · 1981~<br>(2021 이사회 사임)</td><td>MIT 지각심리학 강사 출신</td><td>창업자 리스크(1인 지배)는 이미 해소된 단계 — 문화 자산(코그노이드)은 유산으로 존속</td></tr>
+<tr><td>사미 아티야<br>(Sami Atiya)</td><td>이사 · 2026.3.2~</td><td>전 ABB 로보틱스·이산자동화 사업 총괄 사장</td><td>크리스 도나토와 동시 선임 — 이사회가 '로봇 생태계'와 '영업 확장'을 다음 승부처로 본다는 인선 신호</td></tr>
+<tr><td>레토 비스 · 시린 살림</td><td>AI 총괄 · SW 총괄</td><td>ViDi 공동창업자 · 전 아마존 알렉사 AI</td><td>기술 리더십의 연속성(인수 창업자 잔류)과 현대화(빅테크 AI 인재 영입)를 동시에 확보 (§4)</td></tr>
+</table></div>
+
+<h3 class="h3">14-2. 자본 배분 — 물길이 바뀐다: 환원 중심 → 성장 재투자 확대</h3>
+<div class="grid2">
+<div class="card"><div class="ttl">2020~2024 실적 (배치된 자본의 구성)</div>
+<p style="font-size:0.92rem;">배당 41% · 자사주 40% · M&A 19%. 특징: 2020년 주당 $2 특별배당 포함, 침체기에도 환원 지속. M&A는 모리텍스($2.57억, 역대 최대)가 대부분 — 인수 후 광학 내재화 성과로 이어져 실행력 검증.</p></div>
+<div class="card" style="border-top:3px solid #FFC400;"><div class="ttl">2025~2029 계획 (인베스터 데이)</div>
+<p style="font-size:0.92rem;"><b>M&A 40~45%</b> · 자사주 35~40% · 배당 20~25%, 필요시 EBITDA 1~2배 차입 여력 활용. 해석: "AI·소프트웨어·인접 시장 인수로 성장을 사겠다"는 선언 — 성공하면 13~14% 성장 프레임워크의 무기적 3%p를 채우지만, 대형 인수의 통합 리스크가 새로 생긴다.</p></div>
+</div>
+<ul>
+<li><b>자사주:</b> 2026.2.11 신규 $5억 승인(시총의 약 4%). 26.1Q에 $9,900만을 40달러대에서 집중 매입 — 낙폭 구간에서 사는 역발상 집행은 자본 배분의 질을 보여주는 최근 데이터 포인트다.</li>
+<li><b>배당:</b> 분기 $0.085(연 $0.34, 시가 수익률 약 0.5%) — 상징적 수준. 성장 재투자 우선 구조.</li>
+<li><b>R&D:</b> 매출의 약 14%(연 $1.4억 규모)를 유지하되 매출 성장으로 비율은 low-teens로 자연 희석 — "절대액은 늘리고 비율은 낮춘다"는 레버리지 설계.</li>
+<li><b>SBC:</b> 매출의 4.9%($4,850만) — 기술기업 평균 대비 과하지 않으나, 본 보고서 DCF는 이를 전액 비용으로 반영했다.</li>
+</ul>
+<div class="warn"><b>거버넌스 감시 항목:</b> ① 2026년 5월 다수의 내부자 매도가 보도됐다(집계: Simply Wall St) — 주가 급등 구간의 이익 실현으로 해석되나, 회사의 저가 자사주 매입과 방향이 엇갈린다는 점은 기록해 둘 사실. ② M&A 비중 확대 계획은 마슈너 CEO의 첫 대형 시험대가 될 것 — 모리텍스 통합을 본인이 이끌었다는 점은 긍정 선행 지표. ③ 경영진 인센티브의 구체 지표(어떤 KPI에 보상이 연동되는지)는 이번 조사에서 위임장(proxy) 원문까지 확인하지 못해 공란으로 남긴다 — 차기 업데이트 과제.</div>
+</section>
+
+<!-- ═══════════ 15. 종합 판단 ═══════════ -->
+<section class="sec" id="s15">
+<div class="vf"><span class="c3"></span>
+<div class="station">STATION 15 · FINAL INSPECTION</div>
+<h2>종합 판단과 체크포인트 — 최종 검사대</h2>
+<div class="sub">회사에 대한 판단과 가격에 대한 판단을 분리해서 내리고, 앞으로 무엇을 보면 되는지로 끝낸다.</div>
+</div>
+
+<h3 class="h3">15-1. 최종 검사표</h3>
+<div class="tblwrap"><table class="tb">
+<tr><th>검사 항목</th><th>판정</th><th>핵심 근거 (상세 섹션)</th></tr>
+<tr><td>사업의 질 (해자·수익 구조)</td><td class="pos">PASS — 상위등급</td><td>차별화형 해자, GM 68~71%, 자본경량, 6개 시장 분산 (§3·4·6)</td></tr>
+<tr><td>재무 건전성</td><td class="pos">PASS</td><td>무차입, 현금 $6.2억, 침체 저점에도 FCF 흑자 (§9)</td></tr>
+<tr><td>성장의 실재성</td><td class="pos">PASS — 단 사이클 성분 혼재</td><td>7개 분기 연속 성장·마진 확대, 신규 9,000계정. 다만 물류·반도체 capex 사이클 기여분 분리 불가 (§3·9·12)</td></tr>
+<tr><td>경영진·자본 배분</td><td class="pos">PASS — 표본 짧음</td><td>약속-실행 정합성 우수, 저가 자사주 매입. CEO 1년차·M&A 확대 리스크 (§14)</td></tr>
+<tr><td>시장 내러티브의 펀더멘털 정합성</td><td class="num" style="color:#7A5D00; font-weight:700;">CHECK</td><td>'산업 AI' 서사는 실적으로 뒷받침되나, 배수 재평가분(상승분의 약 5분의 4)은 서사 의존 (§8)</td></tr>
+<tr><td>밸류에이션 (내재 기대)</td><td class="neg">WATCH — 과열 구간</td><td>내재 CAP ≈24년(강세 드라이버 전제) &gt; 벤치마크 17~18년. 기본 드라이버로는 도달 불가 (§10)</td></tr>
+</table></div>
+
+<p class="lead"><b>종합:</b> 코그넥스는 "훌륭한 회사인가"라는 질문에는 이 보고서의 거의 모든 섹션이 그렇다고 답한다. "지금 가격이 그 훌륭함을 이미 얼마나 지불했는가"라는 질문에는 §10이 답한다 — <b>회사 프레임워크의 상단(성장 13%·마진 28%)이 약 24년간 지속되는 세계</b>가 현재가에 들어 있다. 따라서 이 종목의 향후 수익률은 "회사가 좋아지느냐"보다 <b>"회사가 이미 매겨진 기대보다 더 좋아지느냐"</b>에 달려 있으며, 그 판별에 필요한 계기판이 아래 체크포인트다.</p>
+
+<h3 class="h3">15-2. 모니터링 계기판 — 무엇을 보면 되는가</h3>
+<div class="tblwrap"><table class="tb">
+<tr><th>시점</th><th>체크포인트</th><th>강세론 확인 신호</th><th>약세론 확인 신호</th></tr>
+<tr class="hl"><td>2026.7.29<br>(2Q 실적)</td><td>매출 $2.8억~3.0억 가이던스 내 착지 위치, EBITDA 28~31% 달성, EPS 컨센 $0.42</td><td>상단 초과 + 3Q 가이던스 상향 + 자동차 회복 언급</td><td>하단 착지 또는 "물류 감속 가속" 코멘트 — 이 가격대에서는 인라인도 하락 재료가 될 수 있음</td></tr>
+<tr><td>분기마다</td><td>조정 EBITDA 마진의 방향</td><td>비용 절감 소진 후에도 확대(영업 레버리지 증명)</td><td>25~27%에서 고원화 — '구조적 상한' 논거 부상</td></tr>
+<tr><td>분기마다</td><td>전방시장 폭: 성장 시장의 개수</td><td>자동차·유럽 합류로 4개 이상 동시 성장</td><td>물류·반도체 2개 시장 의존 지속</td></tr>
+<tr><td>2026 하반기~</td><td>OneVision 계수화</td><td>유료 고객 수·구독 매출의 최초 공시</td><td>1년 넘게 정성적 언급만 지속</td></tr>
+<tr><td>2027.2<br>(연간 가이던스)</td><td>2027 성장률 가이드 vs 프레임워크(13~14%)</td><td>두 자릿수 가이드 → 내재 CAP 부담 완화</td><td>한 자릿수 중반 이하 → '사이클 정상화' 서사 복귀</td></tr>
+<tr><td>수시</td><td>중국 경쟁·지브라의 물류 수주, 금리 방향, 인사이더 거래</td><td>하이엔드 점유 방어 + 금리 하락 반전</td><td>주요 물류 계약 상실 보도, 추가 금리 인상</td></tr>
+</table></div>
+
+<h3 class="h3">15-3. 한계와 가정 — 이 보고서가 틀릴 수 있는 지점</h3>
+<div class="note">
+<p style="margin-bottom:6px;"><b>데이터 한계:</b> ① 그림 9의 주가 경로는 출처 확인된 앵커 시점들의 직선 연결(일별 종가 아님)이며, 2025년 말·2026년 2월 초 두 점은 공개 수익률로부터의 역산 근사다. ② 전방시장 비중은 회사가 단일 표로 공시하지 않아 분기 자료·경영진 발언을 종합한 근사치다. ③ 선행 P/E는 출처 간 33.9배(야후, 차기 4개 분기 기준 추정)~49배(2026년 컨센서스 EPS $1.43 기준)로 갈린다 — 본문은 산출 기준을 명시한 후자를 기본으로 썼고, 과거 수년치 일관된 밸류에이션 밴드 데이터는 신뢰 가능한 형태로 확보하지 못해 밴드 차트는 싣지 않았다(날조 방지 원칙). ④ 희석주식수(1.664억~1.676억)·순현금은 최신 분기 기준 근사다. ⑤ 경영진 보상 KPI는 미확인 공란이다.</p>
+<p style="margin-bottom:6px;"><b>모델 가정:</b> 페이드 터미널(f=0.20)은 초과수익 소멸을 강제하는 보수적 구조로, 슈퍼스타 기업을 체계적으로 저평가한다(§10 방법론 고지). WACC의 베타(1.52)는 침체·급등이 모두 포함된 5년 표본이라 미래 체계적 위험을 과대 반영할 수 있다. 세율 18%는 현행 조정 유효세율의 연장이다.</p>
+<p><b>판단의 확신도(베이지안 표기):</b> "현재가가 강세 드라이버+20년 초과 CAP를 요구한다"는 방향성 판정 — <b>높음 ~85%</b>(할인율·페이드를 흔들어도 결론 불변). "내재 CAP가 정확히 24년"이라는 수치 — <b>중간 ~55%</b>(드라이버 정의에 민감: 마진 경로를 바꾸면 20~29년 범위). "사업의 질이 상위 등급"이라는 평가 — <b>높음 ~80%</b>. "2026년 실적이 현 가이던스 궤도를 지킨다" — <b>높음 ~75%</b>(1Q 실적·수주 코멘트 기반, 단 하반기 매크로 변수). 새 증거로 갱신될 조건: 2Q 실적(7/29)의 가이던스 상단 초과 여부, 자동차 시장의 회복 합류, OneVision 계수 공시.</p>
+</div>
+
+<h3 class="h3">15-4. 관점별 정리 — 의사결정 자료로서의 마무리</h3>
+<div class="grid3">
+<div class="card"><div class="ttl">기업 이해의 관점</div><p style="font-size:0.9rem;">"공장·창고의 눈"이라는 한 문장, 68~71% 마진의 근거(불량 회피 비용의 비대칭), 6개 시장 분산 구조, 그리고 AI가 시장 저변을 넓히는 메커니즘 — 이 네 가지를 이해했다면 이 회사의 본질은 파악한 것이다.</p></div>
+<div class="card"><div class="ttl">가치 대비 가격의 관점</div><p style="font-size:0.9rem;">보수적 DCF의 자로는 $18~37, 시장의 자로는 $61~94. 두 자의 간극이 내재 CAP 24년이며, 그 간극을 메우는 것은 '코그넥스가 통계적 예외(슈퍼스타)라는 믿음'이다. 그 믿음의 근거(§11)와 반증 조건(§12)을 이 보고서가 나란히 놓았다.</p></div>
+<div class="card"><div class="ttl">추적의 관점</div><p style="font-size:0.9rem;">다음 관찰 시점은 7월 29일 2분기 실적. 그 전까지 이 보고서의 결론을 바꿀 수 있는 단일 변수는 없다. 분기마다 15-2의 계기판을 갱신하면 이 분석은 살아있는 문서로 유지된다.</p></div>
+</div>
+</section>
+
+</main>
+
+<footer class="ft"><div class="wrap">
+<p><strong>데이터 기준일:</strong> 2026년 7월 3일(주가·금리는 7월 1~2일 종가/호가). 주요 출처: Cognex SEC 공시(8-K/실적 보도자료, 2025 Q1~2026 Q1), 2025년 6월 10일 인베스터 데이 자료, Yahoo Finance·Google Finance·stockanalysis.com·Investing.com·TIKR·Simply Wall St(주가·컨센서스), Trading Economics·MacroMicro(10년물 금리), Damodaran 데이터(ERP), MarketsandMarkets·Mordor Intelligence(산업 규모), Keyence 결산 공시, 각 언론 보도. 상충 데이터는 본문에 병기.</p>
+<p style="margin-top:10px;">모든 추정치·시나리오·내재 CAP는 본문에 명시된 가정에 의존하며, 가정이 달라지면 결과도 달라진다. 분기 실적마다 §15-2 계기판 기준으로 갱신을 권장.</p>
+</div></footer>
+</body>
+</html>
