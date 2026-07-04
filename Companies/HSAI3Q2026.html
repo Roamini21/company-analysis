@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hesai Group (HSAI) 종합 분석 — 라이다 산업의 1위, ‘피지컬 AI의 눈’</title>
+<style>
+/* ============ 디자인 토큰 ============ */
+:root{
+  --ink:#16232E;            /* 본문 잉크 */
+  --ink-soft:#3D5160;       /* 보조 텍스트(밝은 배경 위) */
+  --paper:#F4F7F8;          /* 페이지 배경 */
+  --card:#FFFFFF;
+  --line:#D7E0E5;
+  --night:#0B1622;          /* 다크 섹션 배경 */
+  --night-2:#122334;        /* 다크 카드 */
+  --night-line:#28455C;
+  --fog:#E7EFF2;            /* 다크 위 밝은 텍스트 */
+  --fog-soft:#9FB6C4;       /* 다크 위 보조 텍스트 */
+  --laser:#19B8A6;          /* 레이저 시안(포인트) */
+  --laser-deep:#0C7A6E;     /* 시안 진한 톤(밝은 배경 위 텍스트용) */
+  --amber:#E08A00;          /* 포인트클라우드 앰버 */
+  --amber-deep:#8F5800;
+  --bull:#2E8F63; --bull-deep:#1E6B49;
+  --bear:#CE4A57; --bear-deep:#9A2F3B;
+  --serif-num:"Avenir Next","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--paper); color:var(--ink);
+  line-height:1.72; font-size:16.5px; letter-spacing:-0.011em;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1060px; margin:0 auto; padding:0 22px;}
+:where(p){margin:0 0 14px;}
+:where(h2,h3,h4){line-height:1.32; letter-spacing:-0.02em;}
+strong{font-weight:750;}
+a{color:var(--laser-deep);}
+img,svg{max-width:100%; height:auto;}
+.num{font-variant-numeric:tabular-nums; font-family:var(--serif-num);}
+
+/* ============ 히어로(다크) ============ */
+header.hero{background:var(--night); color:var(--fog); position:relative; overflow:hidden;}
+header.hero .wrap{position:relative; z-index:2; padding:58px 22px 46px;}
+.hero-eyebrow{display:inline-block; background:#0F2A33; color:#5FE0D0; border:1px solid #1E5B57;
+  font-size:12.5px; font-weight:700; letter-spacing:.14em; padding:6px 14px; border-radius:3px;}
+.hero h1{font-size:clamp(30px,4.6vw,50px); font-weight:800; margin:20px 0 6px; color:#FFFFFF;}
+.hero .sub{font-size:clamp(16px,2.2vw,21px); color:#BFD3DE; font-weight:500; max-width:820px;}
+.hero-meta{display:flex; flex-wrap:wrap; gap:10px 26px; margin-top:26px; font-size:14px; color:#8FA9B8;}
+.hero-meta b{color:#E7EFF2; font-weight:700;}
+.hero-kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-top:30px;}
+.kpi{background:#101F2E; border:1px solid #23405A; border-radius:8px; padding:14px 16px; color:#E7EFF2;}
+.kpi .k-label{font-size:12px; color:#89A5B5; letter-spacing:.05em; font-weight:600;}
+.kpi .k-val{font-size:22px; font-weight:800; color:#FFFFFF; margin-top:3px;}
+.kpi .k-val .u{font-size:13px; font-weight:600; color:#9DB8C6;}
+.kpi .k-sub{font-size:12px; color:#7FE3D5; margin-top:2px; font-weight:600;}
+.kpi .k-sub.down{color:#F2A6AE;}
+
+/* ============ 목차(잘림 금지: flex-wrap) ============ */
+nav.toc{background:#0E1D2B; border-top:1px solid #1D3850; border-bottom:1px solid #1D3850;}
+nav.toc .wrap{display:flex; flex-wrap:wrap; gap:8px; padding:14px 22px;}
+nav.toc a{display:inline-block; white-space:nowrap; text-decoration:none; font-size:13px; font-weight:600;
+  color:#BFD6E2; background:#14293C; border:1px solid #274864; padding:7px 12px; border-radius:999px;}
+nav.toc a:hover{background:#1B3A54; color:#FFFFFF;}
+
+/* ============ 섹션 공통 ============ */
+main{padding:14px 0 40px;}
+section.sec{padding:44px 0 12px;}
+.sec-head{display:flex; align-items:baseline; gap:14px; border-bottom:3px solid var(--ink); padding-bottom:10px; margin-bottom:24px;}
+.sec-no{font-family:var(--serif-num); font-size:38px; font-weight:800; color:var(--laser-deep); line-height:1;}
+.sec-head h2{font-size:clamp(21px,3vw,28px); font-weight:800; color:var(--ink);}
+.sec-head .sec-en{margin-left:auto; font-size:12px; letter-spacing:.12em; color:#54697A; font-weight:700; white-space:nowrap;}
+h3.h3{font-size:19px; font-weight:800; color:var(--ink); margin:30px 0 12px; padding-left:12px; border-left:4px solid var(--laser);}
+h4.h4{font-size:16.5px; font-weight:750; color:var(--ink); margin:20px 0 8px;}
+.lead{font-size:17.5px; color:var(--ink); font-weight:500;}
+.small{font-size:13.5px; color:var(--ink-soft);}
+.divider{height:1px; border:0; border-top:1px dashed #B9C8D1; margin:34px 0;}
+
+/* ============ 대비 자급 컴포넌트(밝은 배경용) ============ */
+.box-light{background:#FFFFFF; color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:20px 22px; margin:16px 0;}
+.box-light :where(p,li,em,small,span,strong){color:inherit;}
+.box-tint{background:#EAF1F4; color:var(--ink); border:1px solid #CBDAE1; border-radius:10px; padding:20px 22px; margin:16px 0;}
+.box-tint :where(p,li,em,small,span,strong){color:inherit;}
+.callout{border-radius:10px; padding:18px 20px; margin:18px 0; border:1px solid; border-left-width:6px;}
+.callout .c-title{font-weight:800; font-size:15px; margin-bottom:6px; display:flex; align-items:center; gap:8px;}
+.callout :where(p,li,small,span){color:inherit;}
+.callout p:last-child{margin-bottom:0;}
+.co-cyan{background:#E2F5F1; color:#123B36; border-color:#9BD9CF; border-left-color:#0C7A6E;}
+.co-cyan .c-title{color:#0A5C53;}
+.co-amber{background:#FBF0DA; color:#4A3208; border-color:#E7CD9A; border-left-color:#B26E00;}
+.co-amber .c-title{color:#8F5800;}
+.co-red{background:#FAE7E9; color:#521A20; border-color:#EBB9BF; border-left-color:#B23543;}
+.co-red .c-title{color:#9A2F3B;}
+.co-green{background:#E5F3EC; color:#143D2B; border-color:#B4DCC8; border-left-color:#1E6B49;}
+.co-green .c-title{color:#1E6B49;}
+.co-ink{background:#EDF1F4; color:#16232E; border-color:#CBD6DD; border-left-color:#16232E;}
+.co-ink .c-title{color:#16232E;}
+.conf{display:inline-block; margin-top:6px; padding:2px 11px; border-radius:12px; background:#DDE5EA; color:#2C3E4C; font-size:12.3px; font-weight:800; border:1px solid #B9C8D2; line-height:1.5;}
+.tnote{font-size:13px; color:#5E7484; margin:8px 2px 20px; line-height:1.7;}
+
+/* ============ 다크 서브 패널(밝은 섹션 내부) ============ */
+.panel-dark{background:var(--night-2); color:var(--fog); border:1px solid var(--night-line); border-radius:12px; padding:22px 24px; margin:18px 0;}
+.panel-dark :where(p,li,em,small,span){color:#D9E6EC;}
+.panel-dark :where(strong,b){color:#FFFFFF;}
+.panel-dark h4{color:#FFFFFF; font-size:16.5px; font-weight:800; margin:0 0 10px;}
+.panel-dark .accent{color:#5FE0D0;}
+
+/* ============ 표(대비 규칙 C: 홀·짝·강조·합계 전부 명시) ============ */
+.tbl-wrap{overflow-x:auto; margin:16px 0; border-radius:10px; border:1px solid var(--line); background:#FFFFFF;}
+table.t{border-collapse:collapse; width:100%; min-width:640px; font-size:14px;}
+table.t caption{caption-side:top; text-align:left; padding:12px 14px 8px; font-weight:800; color:var(--ink); background:#FFFFFF; font-size:14.5px;}
+table.t th{background:#16232E; color:#FFFFFF; font-weight:700; padding:10px 12px; text-align:right; border-bottom:2px solid #0B1622;}
+table.t th:first-child{text-align:left;}
+table.t td{padding:9px 12px; text-align:right; border-bottom:1px solid #E3EAEE; vertical-align:top; line-height:1.62;}
+table.t td:first-child{text-align:left; font-weight:600;}
+table.t tr.odd td{background:#FFFFFF; color:var(--ink);}
+table.t tr.even td{background:#F0F5F7; color:var(--ink);}
+table.t tr.hl td{background:#FCF2DB; color:#4A3208; font-weight:700;}
+table.t tr.total td{background:#16232E; color:#FFFFFF; font-weight:800; border-bottom:none;}
+table.t td.pos{color:#1E6B49; font-weight:700;}
+table.t td.neg{color:#9A2F3B; font-weight:700;}
+table.t tr.hl td.pos{color:#1E6B49;} table.t tr.hl td.neg{color:#9A2F3B;}
+.t.prose td{text-align:left;}
+.tbl-note{font-size:12.5px; color:var(--ink-soft); padding:8px 14px 12px; background:#FFFFFF;}
+.tbl-wrap.scrollable::before{content:"⟷ 표가 넓습니다 — 좌우로 스크롤"; display:block; font-size:11.5px; font-weight:700; color:#0A5C53; background:#E2F5F1; padding:5px 12px; border-bottom:1px solid #CBDAE1;}
+@media (min-width:821px){ .tbl-wrap.scrollable::before{display:none;} }
+.tbl-wrap{scrollbar-width:thin; scrollbar-color:#8FA9B8 #EAF1F4;}
+@media (max-width:820px){
+  figure.fig{overflow-x:auto; scrollbar-width:thin;}
+  figure.fig > svg{min-width:560px;}
+  figure.fig.scrollable::before{content:"⟷ 그림이 넓습니다 — 좌우로 스크롤"; display:block; font-size:11.5px; font-weight:700; color:#0A5C53; background:#E2F5F1; padding:5px 10px; border-radius:6px; margin-bottom:8px;}
+}
+
+/* ============ 그림 프레임 ============ */
+figure.fig{background:#FFFFFF; border:1px solid var(--line); border-radius:12px; padding:18px 18px 12px; margin:22px 0;}
+figure.fig .fig-title{font-size:15.5px; font-weight:800; color:var(--ink); margin-bottom:4px;}
+figure.fig .fig-sub{font-size:12.5px; color:var(--ink-soft); margin-bottom:12px;}
+figure.fig figcaption{font-size:12.5px; color:var(--ink-soft); border-top:1px dashed #D3DEE4; margin-top:10px; padding-top:8px;}
+figure.fig.on-dark{background:var(--night-2); border-color:var(--night-line);}
+figure.fig.on-dark .fig-title{color:#FFFFFF;}
+figure.fig.on-dark .fig-sub, figure.fig.on-dark figcaption{color:#9FB6C4; border-color:#2A4A63;}
+
+/* ============ 배지 ============ */
+.badge{display:inline-block; font-size:11.5px; font-weight:800; letter-spacing:.04em; padding:3px 9px; border-radius:4px; border:1px solid; vertical-align:middle;}
+.bg-cyan{background:#D8F2ED; color:#0A5C53; border-color:#8FD3C8;}
+.bg-amber{background:#FBEBCB; color:#7A4B00; border-color:#E3C288;}
+.bg-red{background:#F8E1E4; color:#8E2A37; border-color:#E7AEB6;}
+.bg-green{background:#DFF0E8; color:#1E6B49; border-color:#A9D6C0;}
+.bg-ink{background:#DDE5EA; color:#16232E; border-color:#B9C8D2;}
+.bg-night{background:#16232E; color:#FFFFFF; border-color:#16232E;}
+
+/* ============ 그리드 카드 ============ */
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0;}
+.grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:16px 0;}
+@media (max-width:820px){ .grid2,.grid3{grid-template-columns:1fr;} }
+.stat-card{background:#FFFFFF; color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:16px 18px;}
+.stat-card .s-label{font-size:12.5px; font-weight:700; color:#5E7484; letter-spacing:.03em;}
+.stat-card .s-val{font-size:24px; font-weight:800; color:var(--ink); margin-top:2px;}
+.stat-card .s-val .u{font-size:13px; color:#5E7484; font-weight:600;}
+.stat-card .s-note{font-size:12.5px; color:var(--ink-soft); margin-top:4px;}
+.stat-card :where(p,span,small){color:inherit;}
+
+/* ============ 다크 풀폭 섹션 ============ */
+.band-dark{background:var(--night); padding:40px 0 32px; margin:36px 0;}
+:where(.band-dark) p{color:#C9DAE3;}
+.band-dark h3{color:#FFFFFF; font-size:20px; font-weight:800; margin-bottom:14px;}
+.band-dark .box-light, .band-dark .co-cyan, .band-dark .co-amber, .band-dark .co-red, .band-dark .co-green{ /* 중첩 반대톤: 자체 색 유지 */ }
+
+/* ============ 리스트 ============ */
+ul.flat{list-style:none; margin:10px 0 16px;}
+ul.flat li{padding:6px 0 6px 24px; position:relative; color:var(--ink);}
+ul.flat li::before{content:""; position:absolute; left:6px; top:14px; width:7px; height:7px; background:var(--laser); border-radius:1px; transform:rotate(45deg);}
+ol.steps{margin:10px 0 16px 22px;}
+ol.steps li{margin-bottom:8px; color:var(--ink);}
+
+/* ============ 푸터 ============ */
+footer.ft{background:#0B1622; color:#8FA9B8; padding:34px 0; margin-top:44px; font-size:13px;}
+footer.ft .wrap :where(p,li,span){color:#8FA9B8;}
+footer.ft b{color:#D9E6EC;}
+
+@media (max-width:640px){
+  body{font-size:15.5px;}
+  .sec-no{font-size:28px;}
+  table.t{font-size:13px;}
+}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
+</style>
+</head>
+<body>
+
+<!-- ═════════ HERO ═════════ -->
+<header class="hero">
+  <svg aria-hidden="true" style="position:absolute; inset:0; width:100%; height:100%; opacity:.5;" viewBox="0 0 1200 460" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <radialGradient id="beam" cx="8%" cy="88%" r="95%">
+        <stop offset="0%" stop-color="#19B8A6" stop-opacity="0.30"/>
+        <stop offset="45%" stop-color="#19B8A6" stop-opacity="0.06"/>
+        <stop offset="100%" stop-color="#0B1622" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1200" height="460" fill="url(#beam)"/>
+    <g stroke="#2AA795" stroke-opacity="0.35" stroke-width="1">
+      <line x1="90" y1="410" x2="1180" y2="60"/><line x1="90" y1="410" x2="1180" y2="140"/>
+      <line x1="90" y1="410" x2="1180" y2="225"/><line x1="90" y1="410" x2="1180" y2="310"/>
+      <line x1="90" y1="410" x2="1180" y2="395"/><line x1="90" y1="410" x2="1050" y2="20"/>
+      <line x1="90" y1="410" x2="760" y2="8"/><line x1="90" y1="410" x2="430" y2="10"/>
+    </g>
+    <g fill="#4FE0CE">
+      <circle cx="410" cy="300" r="2.4"/><circle cx="520" cy="268" r="2.2"/><circle cx="640" cy="238" r="2.6"/>
+      <circle cx="700" cy="300" r="2.1"/><circle cx="805" cy="205" r="2.6"/><circle cx="900" cy="255" r="2.2"/>
+      <circle cx="960" cy="170" r="2.6"/><circle cx="1040" cy="215" r="2.1"/><circle cx="1085" cy="120" r="2.6"/>
+      <circle cx="330" cy="345" r="2.2"/><circle cx="255" cy="372" r="2.1"/><circle cx="560" cy="330" r="2.2"/>
+      <circle cx="870" cy="330" r="2.1"/><circle cx="1130" cy="290" r="2.2"/><circle cx="740" cy="130" r="2.3"/>
+      <circle cx="610" cy="95" r="2.1"/><circle cx="480" cy="150" r="2.2"/><circle cx="950" cy="70" r="2.1"/>
+    </g>
+    <circle cx="90" cy="410" r="7" fill="#19B8A6"/>
+    <circle cx="90" cy="410" r="16" fill="none" stroke="#19B8A6" stroke-opacity=".5"/>
+    <circle cx="90" cy="410" r="28" fill="none" stroke="#19B8A6" stroke-opacity=".25"/>
+  </svg>
+  <div class="wrap">
+    <span class="hero-eyebrow">EQUITY DEEP-DIVE · NASDAQ: HSAI · HKEX: 2525</span>
+    <h1>Hesai Group <span style="color:#5FE0D0;">禾赛科技</span></h1>
+    <p class="sub">세계 1위 차량용 라이다(LiDAR) 기업 — 자율주행의 ‘보이지 않는 에어백’에서 로봇·피지컬 AI의 ‘눈’으로</p>
+    <div class="hero-meta">
+      <span>기준일 <b>2026-07-04</b> (주가·컨센서스: 7/2 종가 기준)</span>
+      <span>주가 <b class="num">$18.22</b> · 시가총액 <b class="num">약 $2.86B</b></span>
+      <span>52주 범위 <b class="num">$13.90 – $30.85</b></span>
+      <span>본사 <b>중국 상하이</b> · 설립 <b>2014</b></span>
+    </div>
+    <div class="hero-kpis">
+      <div class="kpi"><div class="k-label">2025 매출</div><div class="k-val num">30.3<span class="u">억 위안</span></div><div class="k-sub">+45.8% YoY ($4.33억)</div></div>
+      <div class="kpi"><div class="k-label">2025 출하량</div><div class="k-val num">162<span class="u">만 대</span></div><div class="k-sub">+222.9% YoY</div></div>
+      <div class="kpi"><div class="k-label">2025 순이익</div><div class="k-val num">4.36<span class="u">억 위안</span></div><div class="k-sub">업계 최초 연간 흑자</div></div>
+      <div class="kpi"><div class="k-label">매출총이익률</div><div class="k-val num">41.8<span class="u">%</span></div><div class="k-sub">경쟁사 대비 +15%p</div></div>
+      <div class="kpi"><div class="k-label">순현금</div><div class="k-val num">~$9.4<span class="u">억</span></div><div class="k-sub">시총의 약 33%</div></div>
+      <div class="kpi"><div class="k-label">시장 내재 CAP</div><div class="k-val num">≈7<span class="u">년</span></div><div class="k-sub">기본 가정 기준(§10)</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="목차">
+  <div class="wrap">
+    <a href="#s1">1 핵심 요약</a><a href="#s2">2 기업 개요</a><a href="#s3">3 수익 구조</a><a href="#s4">4 제품·기술</a>
+    <a href="#s5">5 산업 분석</a><a href="#s6">6 경제적 해자</a><a href="#s7">7 피어 비교</a><a href="#s8">8 시장 내러티브</a>
+    <a href="#s9">9 재무·DCF</a><a href="#s10">10 내재 CAP</a><a href="#s11">11 Bull Case</a><a href="#s12">12 Bear Case</a>
+    <a href="#s13">13 SWOT</a><a href="#s14">14 경영진·자본배분</a><a href="#s15">15 종합 판단</a>
+  </div>
+</nav>
+
+<main>
+<div class="wrap">
+
+<section class="sec" id="s1">
+  <div class="sec-head"><span class="sec-no num">01</span><h2>핵심 요약</h2><span class="sec-en">EXECUTIVE SUMMARY</span></div>
+
+  <p class="lead"><strong>한 문장 요약 —</strong> 허사이(Hesai)는 자동차와 로봇이 세상을 3차원으로 ‘보게’ 해주는 레이저 센서(라이다)를 세계에서 가장 많이, 가장 싸게, 그러면서도 가장 높은 마진으로 만드는 회사다. 스마트폰 카메라 모듈 시장에 소니가 있다면, 라이다 시장에는 허사이가 있다.</p>
+
+  <div class="box-tint">
+    <p><strong>기업의 본질과 투자 매력.</strong> 2014년 칭화대·스탠퍼드 출신 세 엔지니어가 창업한 허사이는, 한때 대당 수천만 원이던 라이다를 자체 설계 반도체(ASIC)와 10초에 1대씩 찍어내는 자동화 공장으로 <strong>대당 약 20만 원($200 수준)까지</strong> 끌어내리면서 산업의 판을 바꿨다. 그 결과 2025년 한 해에만 <strong>162만 대를 출하(+223%)</strong>하며 세계 라이다 업계 최초로 <strong>연간 GAAP 흑자(순이익 4.36억 위안)</strong>를 달성했고, 장거리 ADAS 라이다에서 <strong>5년 연속 세계 1위</strong>(Yole 기준 2025년 점유율 43%, 2026년 3월 중국 내 55%)를 지키고 있다. 고객은 중국 톱10 완성차 전부(40개 브랜드·160여 개 차종)에 더해 <strong>메르세데스-벤츠 L3 확정 공급사, 엔비디아 DRIVE Hyperion 10 기본 라이다 파트너</strong>로 확장됐고, 로봇청소기·잔디깎이·휴머노이드·로보택시 등 로봇용 라이다에서도 다수 세부시장 1위다. 여기에 시가총액의 약 3분의 1에 달하는 <strong>순현금 약 $9.4억</strong>이 하방을 받친다. 반대편에는 미 국방부 ‘중국 군사기업(1260H)’ 지정과 항소 진행, 판가(ASP) 급락, 상위 5개 고객 매출 55.8% 집중이라는 뚜렷한 리스크가 있다. 요약하면 <strong>“압도적 1위 + 구조적 성장 산업 + 두꺼운 현금” 대 “지정학 + 가격전쟁 + 고객 집중”</strong>의 저울이며, 현재 주가는 후자를 상당히 반영한 수준으로 읽힌다.</p>
+  </div>
+
+  <div class="callout co-cyan">
+    <div class="c-title">시장 내재 CAP 결론 (상세: §10)</div>
+    <p>현재 주가 <span class="num">$18.22</span>에는, 기본 시나리오(2026–2030년 매출 연 20~45% 성장, EBITA 마진 8.5%→17%로 확장, WACC 10.4%, IT 섹터 페이드 0.20) 하에서 <strong>약 7년(민감도 범위 6~11년)의 경쟁우위기간(CAP)</strong>이 내재돼 있는 것으로 역산된다. 프레임워크 기준 5~10년 구간은 “시장이 다소 비관적”인 영역으로, <strong>업계 유일 흑자·점유율 1위 기업에 시장이 요구하는 프리미엄이 크지 않다</strong>는 뜻이다. 다만 그 기본 시나리오 자체가 높은 실행력을 전제하며, 지정학 리스크가 할인의 상당 부분을 설명한다. 무성장 정상상태 가치는 주당 약 $8.5, 순현금만으로 약 $5.8이 계산되어 하방 완충이 두껍고, 강세 시나리오(10년 명시 예측)는 약 $24, 애널리스트 평균 목표가 $30.1~30.6은 강세 영업 가정에 약 14~15년 CAP(또는 약 9%의 낮은 할인율)를 요구한다.</p>
+  </div>
+
+  <div class="grid3">
+    <div class="stat-card"><div class="s-label">이 회사가 파는 것</div><div class="s-val" style="font-size:18px;">3D 인식 센서</div><div class="s-note">차·로봇의 ‘눈’ — 레이저로 주변을 초당 수백만 점의 3D 점군으로 스캔</div></div>
+    <div class="stat-card"><div class="s-label">돈 버는 방식</div><div class="s-val" style="font-size:18px;">하드웨어 대량 판매</div><div class="s-note">완성차·로봇사에 대당 판매(2025년 평균 약 ¥1,841) + 신설 SGI(공간지능 기기·데이터)</div></div>
+    <div class="stat-card"><div class="s-label">왜 시장이 주목하나</div><div class="s-val" style="font-size:18px;">피지컬 AI의 길목</div><div class="s-note">L3 자율주행(차당 3~6개 탑재)과 로봇 대중화 — 두 물결의 공통 부품</div></div>
+  </div>
+
+  <div class="tbl-wrap">
+  <table class="t">
+    <caption>한눈 요약 — 핵심 지표 스냅숏</caption>
+    <thead><tr><th>구분</th><th>2023</th><th>2024</th><th>2025</th><th>2026E(기본)</th></tr></thead>
+    <tbody>
+      <tr class="odd"><td>매출 (백만 위안)</td><td class="num">1,877</td><td class="num">2,077</td><td class="num">3,028</td><td class="num">4,390</td></tr>
+      <tr class="even"><td>성장률</td><td class="num">+56.1%</td><td class="num">+10.7%</td><td class="num">+45.8%</td><td class="num">+45.0%</td></tr>
+      <tr class="odd"><td>출하량 (대)</td><td class="num">222,116</td><td class="num">501,889</td><td class="num">1,620,406</td><td class="num">300만~350만(가이던스)</td></tr>
+      <tr class="even"><td>매출총이익률</td><td class="num">35.2%</td><td class="num">42.6%</td><td class="num">41.8%</td><td class="num">~40% 방어(회사 코멘트)</td></tr>
+      <tr class="odd"><td>순이익 (백만 위안)</td><td class="neg num">-476</td><td class="neg num">-102</td><td class="pos num">+436</td><td class="pos num">+550 내외(GAAP, 추정)</td></tr>
+      <tr class="hl"><td>내재 CAP / 판단</td><td colspan="3" style="text-align:center;">≈ 7년 (범위 6~11년) — “약간 비관적” 구간</td><td>해자 확신 시 관심 구간</td></tr>
+    </tbody>
+  </table>
+  <div class="tbl-note">출처: 회사 6-K 실적발표(2023–2026), 2026E는 본 보고서 기본 시나리오(§9). 2025년 순이익에는 일회성 지분처분이익 약 1.85억 위안 등이 포함(§9 이익의 질 참조).</div>
+  </div>
+</section>
+
+<section class="sec" id="s2">
+  <div class="sec-head"><span class="sec-no num">02</span><h2>기업 개요</h2><span class="sec-en">COMPANY OVERVIEW</span></div>
+
+  <h3 class="h3">라이다가 뭐길래 — 30초 개념 정리</h3>
+  <p>라이다(LiDAR, Light Detection And Ranging)는 <strong>눈에 안 보이는 레이저를 초당 수백만 번 쏘고, 빛이 물체에 맞고 돌아오는 시간을 재서 거리를 계산하는 센서</strong>다. 박쥐가 초음파로 어둠 속을 날듯, 라이다는 빛으로 주변을 더듬는다. 결과물은 ‘점군(point cloud)’이라 부르는 3차원 점의 구름 — 카메라 사진이 2D 그림이라면, 라이다 점군은 <strong>모든 점에 정확한 거리(cm 단위)가 붙은 3D 지도</strong>다. 카메라는 역광·야간·안개에 약하고 거리를 ‘추측’하지만, 라이다는 스스로 빛을 쏘기 때문에 캄캄한 밤에도, 검은 옷을 입은 보행자도, 200m 앞의 타이어 조각도 ‘직접 측정’한다. 그래서 업계는 라이다를 자율주행의 <strong>‘보이지 않는 에어백’</strong>이라 부른다 — 평소엔 존재감이 없지만, 카메라가 놓치는 그 한 번을 잡아내는 안전 장치다.</p>
+
+  <h3 class="h3">설립 배경 — 가스 탐지 레이저에서 자율주행의 눈으로</h3>
+  <p>허사이는 2014년 10월, 미국 실리콘밸리 새너제이(San Jose)에서 학업과 커리어를 시작한 세 명의 중국인 엔지니어가 세웠다. 회사 이름 ‘허사이(禾赛)’ 자체가 새너제이의 음차다. <strong>리이판(李一帆, David Li) CEO</strong>는 칭화대 정밀기기과를 나와 일리노이대(UIUC)에서 로봇 모션제어로 박사를 받고 웨스턴디지털에서 일했고, <strong>쑨카이(孫愷) 수석과학자</strong>는 상하이교통대 학부 후 스탠퍼드에서 레이저 기반 초고감도 분자검출 시스템으로 기계공학 박사를, <strong>샹샤오칭(向少卿) CTO</strong>는 칭화대 정밀기기과 수석 졸업 후 스탠퍼드 기계·전기 복수 석사를 거쳐 <strong>애플에서 아이폰 하드웨어 시스템 통합 엔지니어</strong>로 일했다. 레이저 물리학(쑨), 로봇공학(리), 소비자 전자기기의 초정밀 대량생산(샹) — 라이다 회사에 필요한 세 조각이 정확히 모인 조합이다.</p>
+  <p>첫 제품은 자율주행이 아니라 <strong>천연가스 누출을 잡아내는 레이저 메탄 탐지기</strong>였다. 이 시절 다진 ‘레이저로 극미량을 정밀 측정하는’ 기술이 2016년 라이다로 방향을 튼 뒤 그대로 이식됐다. 결정적 기회는 바이두가 줬다. 당시 바이두 로보택시는 미국 벨로다인(Velodyne) 라이다를 썼는데, 대당 최대 8만 달러에 고장 나면 미국으로 보내 수개월을 기다려야 했다. 허사이는 <strong>절반 가격($4만 수준)에 이틀 내 중국 현지 수리</strong>를 내걸었고, 2018년 바이두 공급사로 선정되며 로보택시 시장을 장악하기 시작했다. 이후 “세계 상위 15개 자율주행 기업 중 12곳이 허사이를 주력 라이다로 사용”하는 위치까지 올라섰다.</p>
+
+  <figure class="fig">
+    <div class="fig-title">그림 1. 허사이 성장 연대기 — 가스 센서에서 ‘피지컬 AI의 눈’까지</div>
+    <div class="fig-sub">10년 만에 출하량 0 → 연 162만 대, 라이다 업계 최초 연간 GAAP 흑자</div>
+    <svg viewBox="0 0 980 330" role="img" aria-label="허사이 연혁 타임라인">
+      <line x1="40" y1="165" x2="940" y2="165" stroke="#16232E" stroke-width="2.5"/>
+      <g font-size="12.5" font-family="inherit">
+        <!-- 위쪽 이벤트 -->
+        <g><circle cx="70" cy="165" r="6" fill="#0C7A6E"/><line x1="70" y1="165" x2="70" y2="112" stroke="#9DB4C0"/><text x="70" y="98" text-anchor="middle" fill="#16232E" font-weight="700">2014</text><text x="70" y="82" text-anchor="middle" fill="#3D5160">창업(가스센서)</text></g>
+        <g><circle cx="205" cy="165" r="6" fill="#0C7A6E"/><line x1="205" y1="165" x2="205" y2="112" stroke="#9DB4C0"/><text x="205" y="98" text-anchor="middle" fill="#16232E" font-weight="700">2016–17</text><text x="205" y="82" text-anchor="middle" fill="#3D5160">라이다 전환 · Pandar 출시</text></g>
+        <g><circle cx="340" cy="165" r="6" fill="#0C7A6E"/><line x1="340" y1="165" x2="340" y2="112" stroke="#9DB4C0"/><text x="340" y="98" text-anchor="middle" fill="#16232E" font-weight="700">2018–19</text><text x="340" y="82" text-anchor="middle" fill="#3D5160">바이두 공급 · 1세대 자체 ASIC</text></g>
+        <g><circle cx="475" cy="165" r="6" fill="#0C7A6E"/><line x1="475" y1="165" x2="475" y2="112" stroke="#9DB4C0"/><text x="475" y="98" text-anchor="middle" fill="#16232E" font-weight="700">2021–22</text><text x="475" y="82" text-anchor="middle" fill="#3D5160">AT128 · ADAS 양산 개시</text><text x="475" y="66" text-anchor="middle" fill="#3D5160">(리오토 표준 탑재)</text></g>
+        <g><circle cx="610" cy="165" r="6" fill="#B26E00"/><line x1="610" y1="165" x2="610" y2="112" stroke="#9DB4C0"/><text x="610" y="98" text-anchor="middle" fill="#16232E" font-weight="700">2023.2</text><text x="610" y="82" text-anchor="middle" fill="#3D5160">나스닥 IPO ($1.9억)</text></g>
+        <g><circle cx="745" cy="165" r="6" fill="#B23543"/><line x1="745" y1="165" x2="745" y2="112" stroke="#9DB4C0"/><text x="745" y="98" text-anchor="middle" fill="#16232E" font-weight="700">2024.1</text><text x="745" y="82" text-anchor="middle" fill="#3D5160">美 국방부 1260H 지정</text><text x="745" y="66" text-anchor="middle" fill="#9A2F3B" font-weight="700">주가 하루 -31%</text></g>
+        <g><circle cx="880" cy="165" r="6" fill="#0C7A6E"/><line x1="880" y1="165" x2="880" y2="112" stroke="#9DB4C0"/><text x="880" y="98" text-anchor="middle" fill="#16232E" font-weight="700">2026</text><text x="880" y="82" text-anchor="middle" fill="#3D5160">벤츠 L3 확정 · 연산능력 4백만 대</text><text x="880" y="66" text-anchor="middle" fill="#3D5160">SGI(공간지능) 신설</text></g>
+        <!-- 아래쪽 이벤트 -->
+        <g><circle cx="137" cy="165" r="6" fill="#3D5160"/><line x1="137" y1="165" x2="137" y2="218" stroke="#9DB4C0"/><text x="137" y="238" text-anchor="middle" fill="#16232E" font-weight="700">2017–21</text><text x="137" y="254" text-anchor="middle" fill="#3D5160">시리즈 A~D 총 $5.99억</text><text x="137" y="270" text-anchor="middle" fill="#3D5160">(보쉬·바이두·샤오미·힐하우스)</text></g>
+        <g><circle cx="408" cy="165" r="6" fill="#3D5160"/><line x1="408" y1="165" x2="408" y2="218" stroke="#9DB4C0"/><text x="408" y="238" text-anchor="middle" fill="#16232E" font-weight="700">2023</text><text x="408" y="254" text-anchor="middle" fill="#3D5160">첫 영업현금흐름 흑자</text></g>
+        <g><circle cx="545" cy="165" r="6" fill="#3D5160"/><line x1="545" y1="165" x2="545" y2="218" stroke="#9DB4C0"/><text x="545" y="238" text-anchor="middle" fill="#16232E" font-weight="700">2024</text><text x="545" y="254" text-anchor="middle" fill="#3D5160">non-GAAP 연간 흑자</text><text x="545" y="270" text-anchor="middle" fill="#3D5160">(업계 최초)</text></g>
+        <g><circle cx="680" cy="165" r="6" fill="#0C7A6E"/><line x1="680" y1="165" x2="680" y2="218" stroke="#9DB4C0"/><text x="680" y="238" text-anchor="middle" fill="#16232E" font-weight="700">2025</text><text x="680" y="254" text-anchor="middle" fill="#3D5160">GAAP 연간 흑자 · 홍콩 상장($6.1억)</text><text x="680" y="270" text-anchor="middle" fill="#3D5160">NVIDIA 파트너 · 리오토 독점 공급</text></g>
+        <g><circle cx="815" cy="165" r="6" fill="#3D5160"/><line x1="815" y1="165" x2="815" y2="218" stroke="#9DB4C0"/><text x="815" y="238" text-anchor="middle" fill="#16232E" font-weight="700">2025.11</text><text x="815" y="254" text-anchor="middle" fill="#3D5160">태국 방콕 공장 착수</text><text x="815" y="270" text-anchor="middle" fill="#3D5160">(’27 초 가동)</text></g>
+      </g>
+    </svg>
+    <figcaption>그림 1. 회사 공시(6-K·20-F)·회사 연혁 페이지·Bloomberg·FT 보도 종합. 붉은 점은 부정 이벤트.</figcaption>
+  </figure>
+
+  <h3 class="h3">현재의 규모와 위상</h3>
+  <div class="grid3">
+    <div class="stat-card"><div class="s-label">누적 출하</div><div class="s-val num">200만+ <span class="u">대</span></div><div class="s-note">2025년 중 차량용 누적 200만 대 돌파 — 세계 최초</div></div>
+    <div class="stat-card"><div class="s-label">특허</div><div class="s-val num">2,071<span class="u">건</span></div><div class="s-note">라이다 특허 세계 1위 (KnowMade/Yole, 2025.11)</div></div>
+    <div class="stat-card"><div class="s-label">생산 속도</div><div class="s-val num">10초 <span class="u">/ 1대</span></div><div class="s-note">완전 자동화 라인 · 2026년 연산능력 400만+ 대로 2배 확장</div></div>
+    <div class="stat-card"><div class="s-label">고객 기반</div><div class="s-val num">40개 <span class="u">완성차 브랜드</span></div><div class="s-note">160+ 차종 디자인윈 · 중국 톱10 OEM 전부 · 40여 개국</div></div>
+    <div class="stat-card"><div class="s-label">글로벌 거점</div><div class="s-val" style="font-size:18px;">상하이 · 팔로알토 · 슈투트가르트</div><div class="s-note">공장: 중국(항저우·상하이 인근) + 태국 방콕 ‘갈릴레오’(’27)</div></div>
+    <div class="stat-card"><div class="s-label">인력</div><div class="s-val num">~1,118<span class="u">명</span></div><div class="s-note">1인당 매출 약 $38.7만 — 하드웨어 기업치고 높은 효율</div></div>
+  </div>
+
+  <div class="callout co-ink">
+    <div class="c-title">‘어느 시장 1위인가’를 정확히 읽는 법</div>
+    <p>라이다 순위는 집계 기준에 따라 달라진다. <strong>매출 기준 세계 1위는 4년 연속 허사이</strong>(Yole)이고, <strong>장거리(long-range) ADAS 라이다 출하 1위도 5년 연속 허사이</strong>(Yole 2025년 점유율 43%, Gasgoo 기준 2026년 3월 중국 55%로 2위의 약 3배)다. 반면 <strong>단거리·보급형까지 합친 전체 차량용 설치 대수</strong>에서는 2024년 로보센스가 1위(Gasgoo 33.5%)를 기록한 적이 있고, <strong>로봇용 출하 대수</strong>는 2025년 로보센스(30.3만 대)가 허사이(23.9만 대)를 앞섰다. 즉 허사이는 ‘비싸고 어려운 메인 라이다’의 최강자, 로보센스는 ‘저가·보조 라이다 물량’의 강자라는 구도다. 이 구분이 §7 피어 비교와 마진 격차(41.8% vs 26.5%)를 이해하는 열쇠다.</p>
+  </div>
+</section>
+
+<section class="sec" id="s3">
+  <div class="sec-head"><span class="sec-no num">03</span><h2>수익 구조 — 이 회사는 어떻게 돈을 버는가</h2><span class="sec-en">REVENUE MODEL</span></div>
+
+  <p class="lead">한 문장으로: <strong>자체 칩을 넣은 라이다 하드웨어를 완성차·로봇 회사에 대량 판매</strong>해서 번다. 매출의 99% 이상이 제품 판매이고, 2026년부터 ‘공간지능(SGI)’이라는 두 번째 축이 켜지기 시작했다.</p>
+
+  <figure class="fig">
+    <div class="fig-title">그림 2. 돈의 흐름 — 기술이 제품이 되고, 제품이 두 시장으로 흘러간다</div>
+    <div class="fig-sub">2026년 1분기부터 회사는 ‘라이다 사업’과 ‘전략성장사업(SGI)’ 2개 부문으로 보고</div>
+    <svg viewBox="0 0 980 430" role="img" aria-label="수익 구조 도식">
+      <defs><marker id="arw" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#5E7484"/></marker></defs>
+      <!-- 좌: 핵심 역량 -->
+      <rect x="18" y="120" width="196" height="190" rx="10" fill="#122334" stroke="#28455C"/>
+      <text x="116" y="150" text-anchor="middle" fill="#FFFFFF" font-weight="800" font-size="15">핵심 역량 (내재화)</text>
+      <text x="116" y="180" text-anchor="middle" fill="#7FE3D5" font-size="13" font-weight="700">4세대 자체 ASIC 칩</text>
+      <text x="116" y="204" text-anchor="middle" fill="#C9DAE3" font-size="12.5">(Picasso SPAD-SoC 등)</text>
+      <text x="116" y="232" text-anchor="middle" fill="#7FE3D5" font-size="13" font-weight="700">자동화 자체 공장</text>
+      <text x="116" y="256" text-anchor="middle" fill="#C9DAE3" font-size="12.5">10초/대 · 연 400만 대</text>
+      <text x="116" y="284" text-anchor="middle" fill="#7FE3D5" font-size="13" font-weight="700">특허 2,071건 (세계 1위)</text>
+      <!-- 중: 제품군 -->
+      <rect x="266" y="34" width="212" height="120" rx="10" fill="#FFFFFF" stroke="#D7E0E5"/>
+      <text x="372" y="62" text-anchor="middle" fill="#16232E" font-weight="800" font-size="14.5">ADAS 라이다</text>
+      <text x="372" y="86" text-anchor="middle" fill="#3D5160" font-size="12.5">ATX·AT128·ETX(장거리 메인)</text>
+      <text x="372" y="106" text-anchor="middle" fill="#3D5160" font-size="12.5">FTX(사각지대) · ET25(초박형)</text>
+      <text x="372" y="132" text-anchor="middle" fill="#0C7A6E" font-size="12.5" font-weight="700">’25 출하 138.1만 대 (85%)</text>
+      <rect x="266" y="176" width="212" height="120" rx="10" fill="#FFFFFF" stroke="#D7E0E5"/>
+      <text x="372" y="204" text-anchor="middle" fill="#16232E" font-weight="800" font-size="14.5">로보틱스 라이다</text>
+      <text x="372" y="228" text-anchor="middle" fill="#3D5160" font-size="12.5">JT·XT·QT·Pandar·OT 시리즈</text>
+      <text x="372" y="248" text-anchor="middle" fill="#3D5160" font-size="12.5">로보택시·배송로봇·잔디깎이·휴머노이드</text>
+      <text x="372" y="274" text-anchor="middle" fill="#0C7A6E" font-size="12.5" font-weight="700">’25 출하 23.9만 대 (15%)</text>
+      <rect x="266" y="318" width="212" height="96" rx="10" fill="#FBF0DA" stroke="#E7CD9A"/>
+      <text x="372" y="346" text-anchor="middle" fill="#4A3208" font-weight="800" font-size="14.5">SGI (전략성장사업) — 신설</text>
+      <text x="372" y="368" text-anchor="middle" fill="#6B4A0F" font-size="12.5">Kosmo 공간지능 기기 · 로봇 구동모듈</text>
+      <text x="372" y="388" text-anchor="middle" fill="#8F5800" font-size="12.5" font-weight="700">’26 ~1억 → ’27 ~5억 위안 목표</text>
+      <!-- 우: 고객/매출 -->
+      <rect x="540" y="34" width="200" height="120" rx="10" fill="#EAF1F4" stroke="#CBDAE1"/>
+      <text x="640" y="60" text-anchor="middle" fill="#16232E" font-weight="800" font-size="14">완성차 40개 브랜드</text>
+      <text x="640" y="82" text-anchor="middle" fill="#3D5160" font-size="12">리오토(독점)·샤오미·지리·창안</text>
+      <text x="640" y="100" text-anchor="middle" fill="#3D5160" font-size="12">BYD·GAC토요타·캐딜락·아우디</text>
+      <text x="640" y="122" text-anchor="middle" fill="#0C7A6E" font-size="12" font-weight="700">+ 메르세데스-벤츠 L3 확정</text>
+      <text x="640" y="140" text-anchor="middle" fill="#0C7A6E" font-size="12" font-weight="700">+ NVIDIA Hyperion 10 기본 탑재</text>
+      <rect x="540" y="176" width="200" height="120" rx="10" fill="#EAF1F4" stroke="#CBDAE1"/>
+      <text x="640" y="202" text-anchor="middle" fill="#16232E" font-weight="800" font-size="14">로봇·모빌리티 기업</text>
+      <text x="640" y="224" text-anchor="middle" fill="#3D5160" font-size="12">바이두·포니AI·위라이드·디디</text>
+      <text x="640" y="242" text-anchor="middle" fill="#3D5160" font-size="12">Motional(현대)·메이투안·DoorDash</text>
+      <text x="640" y="260" text-anchor="middle" fill="#3D5160" font-size="12">유니트리(휴머노이드)·드리미·MOVA</text>
+      <text x="640" y="282" text-anchor="middle" fill="#0C7A6E" font-size="12" font-weight="700">잔디깎이 백로그 1,000만 대+</text>
+      <!-- 최우: 매출 -->
+      <rect x="792" y="120" width="170" height="190" rx="10" fill="#16232E" stroke="#16232E"/>
+      <text x="877" y="152" text-anchor="middle" fill="#FFFFFF" font-weight="800" font-size="15">2025 매출</text>
+      <text x="877" y="186" text-anchor="middle" fill="#5FE0D0" font-weight="800" font-size="24">¥30.28억</text>
+      <text x="877" y="210" text-anchor="middle" fill="#C9DAE3" font-size="12.5">제품 98.5% · 서비스 1.5%</text>
+      <text x="877" y="240" text-anchor="middle" fill="#FFFFFF" font-weight="700" font-size="13">GM 41.8%</text>
+      <text x="877" y="264" text-anchor="middle" fill="#C9DAE3" font-size="12.5">평균판가 ¥1,841/대</text>
+      <text x="877" y="288" text-anchor="middle" fill="#C9DAE3" font-size="12.5">(제품매출÷출하량)</text>
+      <!-- 화살표 -->
+      <line x1="214" y1="180" x2="262" y2="96" stroke="#5E7484" stroke-width="2" marker-end="url(#arw)"/>
+      <line x1="214" y1="220" x2="262" y2="236" stroke="#5E7484" stroke-width="2" marker-end="url(#arw)"/>
+      <line x1="214" y1="270" x2="262" y2="360" stroke="#5E7484" stroke-width="2" marker-end="url(#arw)"/>
+      <line x1="478" y1="94" x2="536" y2="94" stroke="#5E7484" stroke-width="2" marker-end="url(#arw)"/>
+      <line x1="478" y1="236" x2="536" y2="236" stroke="#5E7484" stroke-width="2" marker-end="url(#arw)"/>
+      <line x1="740" y1="94" x2="788" y2="170" stroke="#5E7484" stroke-width="2" marker-end="url(#arw)"/>
+      <line x1="740" y1="236" x2="788" y2="250" stroke="#5E7484" stroke-width="2" marker-end="url(#arw)"/>
+      <line x1="478" y1="366" x2="877" y2="366" stroke="#B26E00" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arw)"/>
+      <text x="660" y="356" text-anchor="middle" fill="#8F5800" font-size="12">’26.2Q부터 매출 인식 시작</text>
+    </svg>
+    <figcaption>그림 2. 회사 6-K(2026-05-19), Q4’25/Q1’26 실적발표 콜, CES 2026 발표 기반 재구성.</figcaption>
+  </figure>
+
+  <h3 class="h3">연간 매출·이익률 — 성장은 계단식, 마진은 40% 선 방어</h3>
+  <figure class="fig">
+    <div class="fig-title">그림 3. 매출은 5년간 4.2배, 매출총이익률은 ‘하락 후 복원’ — 대량생산 전환의 교과서적 곡선</div>
+    <div class="fig-sub">막대: 연간 매출(백만 위안, 좌축) · 선: 매출총이익률(%, 우축)</div>
+    <svg viewBox="0 0 760 360" role="img" aria-label="연간 매출과 매출총이익률">
+      <g stroke="#E3EAEE"><line x1="64" y1="70" x2="700" y2="70"/><line x1="64" y1="143" x2="700" y2="143"/><line x1="64" y1="216" x2="700" y2="216"/></g>
+      <line x1="64" y1="290" x2="700" y2="290" stroke="#16232E" stroke-width="2"/>
+      <g font-size="11.5" fill="#5E7484" text-anchor="end">
+        <text x="58" y="74">4,500</text><text x="58" y="147">3,000</text><text x="58" y="220">1,500</text><text x="58" y="294">0</text>
+      </g>
+      <g font-size="11.5" fill="#8F5800" text-anchor="start">
+        <text x="706" y="88">55%</text><text x="706" y="168">45%</text><text x="706" y="248">35%</text>
+      </g>
+      <!-- 막대: v/4500*220 -->
+      <g fill="#0C7A6E">
+        <rect x="84"  y="254.8" width="56" height="35.2" rx="3"/>
+        <rect x="186" y="231.2" width="56" height="58.8" rx="3"/>
+        <rect x="288" y="198.3" width="56" height="91.7" rx="3"/>
+        <rect x="390" y="188.5" width="56" height="101.5" rx="3"/>
+        <rect x="492" y="142.0" width="56" height="148.0" rx="3"/>
+      </g>
+      <rect x="594" y="75.4" width="56" height="214.6" rx="3" fill="#8FD3C8" stroke="#0C7A6E" stroke-dasharray="5 4"/>
+      <g font-size="12" fill="#16232E" font-weight="700" text-anchor="middle">
+        <text x="112" y="248">721</text><text x="214" y="224">1,203</text><text x="316" y="191">1,877</text>
+        <text x="418" y="181">2,077</text><text x="520" y="135">3,028</text><text x="622" y="68">4,390E</text>
+      </g>
+      <!-- GM 라인: y=70+(55-gm)*8 -->
+      <polyline points="112,86 214,196.4 316,228.4 418,169.2 520,175.6 622,190" fill="none" stroke="#B26E00" stroke-width="3"/>
+      <g fill="#B26E00"><circle cx="112" cy="86" r="4.5"/><circle cx="214" cy="196.4" r="4.5"/><circle cx="316" cy="228.4" r="4.5"/><circle cx="418" cy="169.2" r="4.5"/><circle cx="520" cy="175.6" r="4.5"/><circle cx="622" cy="190" r="4.5" fill="#FFFFFF" stroke="#B26E00" stroke-width="2.5"/></g>
+      <g font-size="12" fill="#8F5800" font-weight="700" text-anchor="middle">
+        <text x="112" y="72">53.0%</text><text x="214" y="216">39.2%</text><text x="316" y="250">35.2%</text><text x="418" y="156">42.6%</text><text x="536" y="162">41.8%</text><text x="622" y="212">~40%E</text>
+      </g>
+      <g font-size="12.5" fill="#3D5160" text-anchor="middle">
+        <text x="112" y="312">2021</text><text x="214" y="312">2022</text><text x="316" y="312">2023</text><text x="418" y="312">2024</text><text x="520" y="312">2025</text><text x="622" y="312">2026E</text>
+      </g>
+      <text x="382" y="342" text-anchor="middle" font-size="12" fill="#5E7484">2023년 GM 저점(35.2%)은 저가 ADAS 초기 양산 비용 — 자체 칩·규모의 경제로 42% 선 회복</text>
+    </svg>
+    <figcaption>그림 3. 회사 6-K 연간 실적(2021–2025 실적), 2026E는 본 보고서 기본 시나리오·회사 가이던스(Q4’25 콜 “마진 40% 안팎 방어”) 기반. 단위: 백만 위안.</figcaption>
+  </figure>
+
+  <h3 class="h3">분기 흐름 — 6분기 연속 non-GAAP 흑자, 4분기 연속 GAAP 흑자</h3>
+  <figure class="fig">
+    <div class="fig-title">그림 4. 분기 매출(막대)과 GAAP 순이익(라벨) — 2024년 4분기가 흑자 전환의 변곡점</div>
+    <div class="fig-sub">단위: 백만 위안 · Q2’26은 회사 가이던스 중간값(850~900)</div>
+    <svg viewBox="0 0 760 330" role="img" aria-label="분기 매출과 순이익">
+      <line x1="50" y1="260" x2="720" y2="260" stroke="#16232E" stroke-width="2"/>
+      <g stroke="#E3EAEE"><line x1="50" y1="60" x2="720" y2="60"/><line x1="50" y1="160" x2="720" y2="160"/></g>
+      <g font-size="11.5" fill="#5E7484" text-anchor="end"><text x="45" y="64">1,000</text><text x="45" y="164">500</text><text x="45" y="264">0</text></g>
+      <!-- 막대 h=v/1000*200, base y=260, x start 62 step 66, w 44 -->
+      <g fill="#3D5160">
+        <rect x="62" y="188.2" width="44" height="71.8" rx="3"/><rect x="128" y="168.2" width="44" height="91.8" rx="3"/>
+        <rect x="194" y="152.1" width="44" height="107.9" rx="3"/><rect x="260" y="116.0" width="44" height="144.0" rx="3"/>
+      </g>
+      <g fill="#0C7A6E">
+        <rect x="326" y="155.0" width="44" height="105.0" rx="3"/><rect x="392" y="118.7" width="44" height="141.3" rx="3"/>
+        <rect x="458" y="100.9" width="44" height="159.1" rx="3"/><rect x="524" y="59.9" width="44" height="200.1" rx="3"/>
+        <rect x="590" y="123.9" width="44" height="136.1" rx="3"/>
+      </g>
+      <rect x="656" y="85.0" width="44" height="175.0" rx="3" fill="#8FD3C8" stroke="#0C7A6E" stroke-dasharray="5 4"/>
+      <g font-size="11" fill="#16232E" font-weight="700" text-anchor="middle">
+        <text x="84" y="182">359</text><text x="150" y="162">459</text><text x="216" y="146">539</text><text x="282" y="110">720</text>
+        <text x="348" y="149">525</text><text x="414" y="112">706</text><text x="480" y="95">795</text><text x="546" y="54">1,000</text>
+        <text x="612" y="118">681</text><text x="678" y="79">875E</text>
+      </g>
+      <!-- NI 라벨 -->
+      <g font-size="10.5" font-weight="800" text-anchor="middle">
+        <text x="84" y="282" fill="#9A2F3B">-107</text><text x="150" y="282" fill="#9A2F3B">-72</text><text x="216" y="282" fill="#9A2F3B">-70</text>
+        <text x="282" y="282" fill="#1E6B49">+147</text><text x="348" y="282" fill="#9A2F3B">-18</text><text x="414" y="282" fill="#1E6B49">+44</text>
+        <text x="480" y="282" fill="#1E6B49">+256*</text><text x="546" y="282" fill="#1E6B49">+153</text><text x="612" y="282" fill="#1E6B49">+18</text><text x="678" y="282" fill="#5E7484">—</text>
+      </g>
+      <g font-size="11.5" fill="#3D5160" text-anchor="middle">
+        <text x="84" y="302">1Q24</text><text x="150" y="302">2Q24</text><text x="216" y="302">3Q24</text><text x="282" y="302">4Q24</text>
+        <text x="348" y="302">1Q25</text><text x="414" y="302">2Q25</text><text x="480" y="302">3Q25</text><text x="546" y="302">4Q25</text>
+        <text x="612" y="302">1Q26</text><text x="678" y="302">2Q26E</text>
+      </g>
+      <text x="385" y="322" text-anchor="middle" font-size="11.5" fill="#5E7484">아래 숫자: GAAP 순이익(백만 위안). *3Q25에는 초기투자 지분(Sharpa) 처분이익 등 일회성 이익 포함</text>
+    </svg>
+    <figcaption>그림 4. 회사 분기 6-K(2024–2026). 1Q24·2Q24 순손실은 이후 분기 발표의 전년 비교치로 도출.</figcaption>
+  </figure>
+
+  <h3 class="h3">이 사업의 가장 중요한 그림 — ‘가위 차트’: 물량 폭발 vs 판가 급락</h3>
+  <p>허사이 수익 구조의 심장은 이 긴장 관계다. 라이다가 고급차 옵션에서 <strong>10만 위안(약 1,900만 원)대 대중차의 기본 사양</strong>으로 내려오려면 판가가 극적으로 싸져야 하고, 실제로 평균판가는 3년 만에 약 8분의 1이 됐다. 그런데도 매출총이익률이 40% 선을 지킨 것 — 이것이 자체 ASIC 설계와 자동화 생산이 만든, 이 회사에서 가장 과소평가되기 쉬운 성취다. 물량이 판가 하락을 이기는 한(2025년: 물량 +223% vs ASP -53% → 매출 +46%) 이 모델은 굴러가고, 다인승 L3(차당 3~6개, 차당 $500~1,000 콘텐츠)가 판가 하락의 다음 방어선이 된다.</p>
+  <figure class="fig">
+    <div class="fig-title">그림 5. 출하량(막대)은 3년 만에 20배, 평균판가(선)는 8분의 1 — 그런데 마진은 지켰다</div>
+    <div class="fig-sub">막대: 연간 출하량(천 대, 좌축) · 선: 평균판가(위안/대, 우축, 로그 아님)</div>
+    <svg viewBox="0 0 760 350" role="img" aria-label="출하량과 평균판가 추이">
+      <line x1="60" y1="270" x2="700" y2="270" stroke="#16232E" stroke-width="2"/>
+      <g stroke="#E3EAEE"><line x1="60" y1="70" x2="700" y2="70"/><line x1="60" y1="170" x2="700" y2="170"/></g>
+      <g font-size="11.5" fill="#5E7484" text-anchor="end"><text x="54" y="74">3,250</text><text x="54" y="174">1,625</text><text x="54" y="274">0</text></g>
+      <!-- 막대 h=v/3250*200: 80.5→5, 222→13.7, 502→30.9, 1620→99.7, 3250→200 -->
+      <g fill="#0C7A6E">
+        <rect x="92"  y="265.0" width="62" height="5.0" rx="2"/>
+        <rect x="212" y="256.3" width="62" height="13.7" rx="2"/>
+        <rect x="332" y="239.1" width="62" height="30.9" rx="2"/>
+        <rect x="452" y="170.3" width="62" height="99.7" rx="2"/>
+      </g>
+      <rect x="572" y="70" width="62" height="200" rx="2" fill="#8FD3C8" stroke="#0C7A6E" stroke-dasharray="5 4"/>
+      <g font-size="12" fill="#16232E" font-weight="700" text-anchor="middle">
+        <text x="123" y="258">80.5</text><text x="243" y="249">222</text><text x="363" y="232">502</text><text x="483" y="163">1,620</text><text x="603" y="63">3,000~3,500</text>
+      </g>
+      <!-- ASP 라인: y=70+(14400-asp)/14400*185 → 14317→71.1, 8450→146.4, 3918→204.6, 1841→231.3, 1441(Q1'26 표시 574,236.4) -->
+      <polyline points="123,71.1 243,146.4 363,204.6 483,231.3 603,239" fill="none" stroke="#B26E00" stroke-width="3"/>
+      <g fill="#B26E00"><circle cx="123" cy="71.1" r="4.5"/><circle cx="243" cy="146.4" r="4.5"/><circle cx="363" cy="204.6" r="4.5"/><circle cx="483" cy="231.3" r="4.5"/><circle cx="603" cy="239" r="4.5" fill="#FFFFFF" stroke="#B26E00" stroke-width="2.5"/></g>
+      <g font-size="12" fill="#8F5800" font-weight="700">
+        <text x="134" y="66">¥14,317</text><text x="254" y="141">¥8,450*</text><text x="374" y="199">¥3,918</text><text x="494" y="226">¥1,841</text><text x="614" y="234">¥1,441 (1Q26)</text>
+      </g>
+      <g font-size="12.5" fill="#3D5160" text-anchor="middle">
+        <text x="123" y="292">2022</text><text x="243" y="292">2023</text><text x="363" y="292">2024</text><text x="483" y="292">2025</text><text x="603" y="292">2026E</text>
+      </g>
+      <text x="380" y="322" text-anchor="middle" font-size="11.5" fill="#5E7484">ASP = 제품매출 ÷ 출하량. *2023은 서비스매출 분리 미확인으로 총매출 기준 혼합 ASP(과대 표시 가능).</text>
+      <text x="380" y="340" text-anchor="middle" font-size="11.5" fill="#5E7484">2026E 선상 점은 1Q26 실적치(¥1,441). 저가 ATX·JT 비중 확대가 하락의 주인.</text>
+    </svg>
+    <figcaption>그림 5. 회사 6-K 데이터로 산출. 출하량 2026E는 회사 가이던스(300만~350만 대).</figcaption>
+  </figure>
+
+  <h3 class="h3">매출 구성 · 고객 집중 · 지역</h3>
+  <div class="grid2">
+    <figure class="fig" style="margin:0;">
+      <div class="fig-title">그림 6a. 2025년 출하 구성 — ADAS가 몸통, 로보틱스가 성장 날개</div>
+      <svg viewBox="0 0 380 250" role="img" aria-label="출하 구성 도넛">
+        <!-- 도넛: ADAS 85.2% robotics 14.8% -->
+        <circle cx="130" cy="125" r="78" fill="none" stroke="#E3EAEE" stroke-width="34"/>
+        <circle cx="130" cy="125" r="78" fill="none" stroke="#0C7A6E" stroke-width="34" stroke-dasharray="417.6 72.5" transform="rotate(-90 130 125)"/>
+        <circle cx="130" cy="125" r="78" fill="none" stroke="#E08A00" stroke-width="34" stroke-dasharray="72.5 417.6" stroke-dashoffset="-417.6" transform="rotate(-90 130 125)"/>
+        <text x="130" y="118" text-anchor="middle" font-size="13" fill="#3D5160">총 출하</text>
+        <text x="130" y="140" text-anchor="middle" font-size="17" font-weight="800" fill="#16232E">162.0만 대</text>
+        <g font-size="13">
+          <rect x="238" y="86" width="14" height="14" fill="#0C7A6E" rx="2"/><text x="258" y="98" fill="#16232E" font-weight="700">ADAS 85.2%</text>
+          <text x="258" y="116" fill="#3D5160" font-size="12">138.1만 대 (+203%)</text>
+          <rect x="238" y="136" width="14" height="14" fill="#E08A00" rx="2"/><text x="258" y="148" fill="#16232E" font-weight="700">로보틱스 14.8%</text>
+          <text x="258" y="166" fill="#3D5160" font-size="12">23.9만 대 (+426%)</text>
+        </g>
+        <text x="190" y="232" text-anchor="middle" font-size="11.5" fill="#5E7484">매출 기준 분해는 미공시 — 로보틱스 판가가 높아 매출 비중은 출하 비중보다 큼</text>
+      </svg>
+      <figcaption>그림 6a. 회사 FY2025 6-K.</figcaption>
+    </figure>
+    <figure class="fig" style="margin:0;">
+      <div class="fig-title">그림 6b. 고객 집중 — 상위 5개사가 매출 55.8%</div>
+      <svg viewBox="0 0 380 250" role="img" aria-label="고객 집중도">
+        <g font-size="13" fill="#16232E" font-weight="700">
+          <text x="20" y="52">최대 고객</text><text x="20" y="112">2~5위 고객 합</text><text x="20" y="172">그 외 전체</text>
+        </g>
+        <g>
+          <rect x="20" y="62" width="58.1" height="22" fill="#B23543" rx="3"/><text x="86" y="78" font-size="13" font-weight="800" fill="#9A2F3B">17.1%</text>
+          <rect x="20" y="122" width="131.6" height="22" fill="#E08A00" rx="3"/><text x="160" y="138" font-size="13" font-weight="800" fill="#8F5800">38.7%</text>
+          <rect x="20" y="182" width="150.3" height="22" fill="#0C7A6E" rx="3"/><text x="178" y="198" font-size="13" font-weight="800" fill="#0A5C53">44.2%</text>
+        </g>
+        <text x="20" y="232" font-size="11.5" fill="#5E7484">막대 길이 = 매출 비중(0~50% 스케일) · 2025 연차보고서 기준</text>
+      </svg>
+      <figcaption>그림 6b. 2025 연차보고서(홍콩). 최대 고객 17.1%는 리오토로 추정(회사는 명시 안 함 — 리오토 전 차종 독점 공급 공시 근거).</figcaption>
+    </figure>
+  </div>
+
+  <div class="box-light">
+    <p><strong>수익 모델의 질(質) 평가.</strong> ① <strong>반복성</strong> — 소프트웨어 구독 같은 계약형 반복 매출은 아직 없지만, 자동차 부품 특성상 <em>디자인윈 = 차종 수명(4~7년)짜리 준(準)반복 매출</em>이다. 리오토 차세대 플랫폼 <strong>전 차종 독점</strong>, 상위 2개 고객의 <strong>2026년 전 모델 100% 탑재 계약</strong>, ATX 누적 수주 400만 대+, 로봇 잔디깎이 백로그 1,000만 대+가 그 증거다. ② <strong>집중 리스크</strong> — 최대 고객 17.1%, 상위 5개사 55.8%로 높다. 다만 40개 브랜드·160여 차종으로 분산이 빠르게 진행 중이고, 벤츠·토요타(GAC 합작)·엔비디아 경유 글로벌 OEM이 더해지며 구조적으로 완화되는 방향이다. ③ <strong>지역</strong> — 매출 대부분이 중국이며(회사는 지역별 비중을 분기 공시하지 않음), 고객은 40여 개국. 로보틱스·로보택시(Motional, DoorDash 등)와 벤츠 유럽 물량이 해외 비중 확대의 선봉이고, 태국 공장이 관세·지정학 대응의 생산 거점이다. ④ <strong>서비스 매출</strong> — 비반복 엔지니어링(NRE) 매출이 2024년 1.11억 → 2025년 0.45억 위안으로 줄며 ‘개발 용역 회사’에서 ‘양산 부품 회사’로 체질이 바뀌었다(GM에는 단기 역풍, 사업 질에는 순풍).</p>
+  </div>
+</section>
+
+<section class="sec" id="s4">
+  <div class="sec-head"><span class="sec-no num">04</span><h2>제품·서비스 및 기술력</h2><span class="sec-en">PRODUCTS &amp; TECHNOLOGY</span></div>
+
+  <h3 class="h3">작동 원리 — 빛의 왕복 시간으로 세상을 그리다</h3>
+  <figure class="fig">
+    <div class="fig-title">그림 7. 라이다의 작동 원리와 허사이 방식의 차별점 (비전공자용)</div>
+    <svg viewBox="0 0 980 400" role="img" aria-label="라이다 작동 원리 도식">
+      <!-- 왼쪽: 원리 -->
+      <rect x="16" y="20" width="470" height="360" rx="12" fill="#FFFFFF" stroke="#D7E0E5"/>
+      <text x="251" y="52" text-anchor="middle" font-size="15.5" font-weight="800" fill="#16232E">① 기본 원리: ToF(Time of Flight)</text>
+      <rect x="46" y="150" width="86" height="56" rx="8" fill="#122334"/>
+      <text x="89" y="174" text-anchor="middle" fill="#7FE3D5" font-size="12" font-weight="700">라이다</text>
+      <text x="89" y="192" text-anchor="middle" fill="#C9DAE3" font-size="11">(차량 탑재)</text>
+      <!-- 보행자 아이콘 -->
+      <g transform="translate(392,150)">
+        <circle cx="0" cy="8" r="9" fill="#3D5160"/><rect x="-7" y="20" width="14" height="26" rx="6" fill="#3D5160"/>
+        <line x1="-6" y1="50" x2="-10" y2="70" stroke="#3D5160" stroke-width="6" stroke-linecap="round"/>
+        <line x1="6" y1="50" x2="10" y2="70" stroke="#3D5160" stroke-width="6" stroke-linecap="round"/>
+      </g>
+      <line x1="136" y1="168" x2="372" y2="168" stroke="#0C7A6E" stroke-width="3"/>
+      <path d="M366,163 L378,168 L366,173 z" fill="#0C7A6E"/>
+      <text x="254" y="158" text-anchor="middle" font-size="12.5" fill="#0A5C53" font-weight="700">905nm 적외선 레이저 발사</text>
+      <line x1="372" y1="192" x2="136" y2="192" stroke="#B26E00" stroke-width="3" stroke-dasharray="7 5"/>
+      <path d="M142,187 L130,192 L142,197 z" fill="#B26E00"/>
+      <text x="254" y="212" text-anchor="middle" font-size="12.5" fill="#8F5800" font-weight="700">반사광 수신 — 왕복 시간 측정</text>
+      <rect x="66" y="248" width="370" height="52" rx="8" fill="#EAF1F4" stroke="#CBDAE1"/>
+      <text x="251" y="270" text-anchor="middle" font-size="13" fill="#16232E" font-weight="700">거리 = (빛의 속도 × 왕복시간) ÷ 2</text>
+      <text x="251" y="290" text-anchor="middle" font-size="12" fill="#3D5160">100m 왕복 ≈ 0.00000067초 — 이걸 초당 수백만 번 반복</text>
+      <text x="251" y="330" text-anchor="middle" font-size="12.5" fill="#3D5160">→ 결과: 점마다 정확한 거리가 붙은</text>
+      <text x="251" y="350" text-anchor="middle" font-size="13.5" fill="#0A5C53" font-weight="800">3차원 ‘점군(Point Cloud)’ 실시간 지도</text>
+      <!-- 오른쪽: 허사이 차별점 -->
+      <rect x="500" y="20" width="464" height="360" rx="12" fill="#122334" stroke="#28455C"/>
+      <text x="732" y="52" text-anchor="middle" font-size="15.5" font-weight="800" fill="#FFFFFF">② 허사이가 다르게 하는 것</text>
+      <g font-size="12.8">
+        <text x="522" y="90" fill="#7FE3D5" font-weight="800">칩 통합 (ASIC)</text>
+        <text x="522" y="110" fill="#D9E6EC">수백 개 부품(레이저·수신기·처리회로)을 자체 설계</text>
+        <text x="522" y="128" fill="#D9E6EC">반도체 몇 개로 압축 → 원가·크기·고장률 동시 급감</text>
+        <text x="522" y="162" fill="#7FE3D5" font-weight="800">광자 격리 (Photon Isolation, 특허)</text>
+        <text x="522" y="182" fill="#D9E6EC">채널 간 빛 간섭 차단 — 맞은편 차 라이다와 뒤섞여도</text>
+        <text x="522" y="200" fill="#D9E6EC">유령 신호가 생기지 않음</text>
+        <text x="522" y="234" fill="#7FE3D5" font-weight="800">IPE 지능형 점군 엔진</text>
+        <text x="522" y="254" fill="#D9E6EC">초당 246억 회 샘플링, 비·안개·먼지 등 환경 노이즈</text>
+        <text x="522" y="272" fill="#D9E6EC">99.9%+ 필터링 → 전천후 인식</text>
+        <text x="522" y="306" fill="#7FE3D5" font-weight="800">Picasso: 6D 풀컬러 SPAD-SoC (세계 최초, ’26.4 공개)</text>
+        <text x="522" y="326" fill="#D9E6EC">거리(XYZ)+색(RGB)을 칩 레벨에서 융합 — 라이다와</text>
+        <text x="522" y="344" fill="#D9E6EC">카메라의 경계를 지움 · 광자검출효율(PDE) 40%+</text>
+        <text x="522" y="368" fill="#9FB6C4" font-size="11.5">→ ETX(최대 4,320채널·600m)에 첫 탑재, ’26 하반기 양산</text>
+      </g>
+    </svg>
+    <figcaption>그림 7. 회사 기술 공시(6-K 2026-05-19, CES 2026, 특허 발표) 기반 재구성.</figcaption>
+  </figure>
+
+  <h3 class="h3">제품 포트폴리오 — 가격대·용도별 ‘풀 라인업’이라는 무기</h3>
+  <figure class="fig">
+    <div class="fig-title">그림 8. 제품 지도: 200달러 보급형부터 로보택시 플래그십까지 한 지붕 아래</div>
+    <div class="fig-sub">가로: 용도 · 세로: 대략적 성능/가격 포지션</div>
+    <svg viewBox="0 0 980 430" role="img" aria-label="제품 포트폴리오 맵">
+      <line x1="70" y1="380" x2="950" y2="380" stroke="#16232E" stroke-width="2"/>
+      <line x1="70" y1="380" x2="70" y2="30" stroke="#16232E" stroke-width="2"/>
+      <text x="60" y="46" text-anchor="end" font-size="12.5" fill="#5E7484" transform="rotate(-90 60 46)"></text>
+      <text x="30" y="210" text-anchor="middle" font-size="13" fill="#3D5160" font-weight="700" transform="rotate(-90 30 210)">성능 · 가격 ↑</text>
+      <g font-size="13.5" fill="#16232E" font-weight="800" text-anchor="middle">
+        <text x="290" y="408">ADAS (승용·상용차)</text><text x="770" y="408">로보틱스 · 자율주행 플릿</text>
+      </g>
+      <line x1="530" y1="40" x2="530" y2="380" stroke="#B9C8D1" stroke-dasharray="6 5"/>
+      <!-- ADAS products -->
+      <g>
+        <rect x="110" y="300" width="180" height="58" rx="9" fill="#D8F2ED" stroke="#0C7A6E"/>
+        <text x="200" y="323" text-anchor="middle" font-size="13.5" font-weight="800" fill="#0A5C53">ATX / ATL</text>
+        <text x="200" y="343" text-anchor="middle" font-size="11.5" fill="#123B36">~$200 보급형 메인 · 수주 400만+ 대</text>
+        <rect x="150" y="216" width="180" height="58" rx="9" fill="#D8F2ED" stroke="#0C7A6E"/>
+        <text x="240" y="239" text-anchor="middle" font-size="13.5" font-weight="800" fill="#0A5C53">AT128 / AT512</text>
+        <text x="240" y="259" text-anchor="middle" font-size="11.5" fill="#123B36">주력 장거리 · 세계 첫 월 1만+ 양산</text>
+        <rect x="196" y="128" width="200" height="58" rx="9" fill="#FBEBCB" stroke="#B26E00"/>
+        <text x="296" y="151" text-anchor="middle" font-size="13.5" font-weight="800" fill="#7A4B00">ETX (Picasso 탑재)</text>
+        <text x="296" y="171" text-anchor="middle" font-size="11.5" fill="#4A3208">600m · 4,320ch · L3 플래그십 ’26H2</text>
+        <rect x="110" y="52" width="200" height="52" rx="9" fill="#EAF1F4" stroke="#CBDAE1"/>
+        <text x="210" y="73" text-anchor="middle" font-size="13" font-weight="800" fill="#16232E">보조 라이다 제품군</text>
+        <text x="210" y="92" text-anchor="middle" font-size="11.5" fill="#3D5160">FTX(사각지대, 완전 솔리드스테이트) · ET25(초박형 25mm)</text>
+      </g>
+      <!-- Robotics products -->
+      <g>
+        <rect x="570" y="300" width="180" height="58" rx="9" fill="#D8F2ED" stroke="#0C7A6E"/>
+        <text x="660" y="323" text-anchor="middle" font-size="13.5" font-weight="800" fill="#0A5C53">JT16 / JT128</text>
+        <text x="660" y="343" text-anchor="middle" font-size="11.5" fill="#123B36">초소형 반구형 · 잔디깎이·휴머노이드</text>
+        <rect x="620" y="216" width="180" height="58" rx="9" fill="#D8F2ED" stroke="#0C7A6E"/>
+        <text x="710" y="239" text-anchor="middle" font-size="13.5" font-weight="800" fill="#0A5C53">XT / QT 시리즈</text>
+        <text x="710" y="259" text-anchor="middle" font-size="11.5" fill="#123B36">산업·서비스 로봇 · AGV · 360°</text>
+        <rect x="680" y="128" width="200" height="58" rx="9" fill="#D8F2ED" stroke="#0C7A6E"/>
+        <text x="780" y="151" text-anchor="middle" font-size="13.5" font-weight="800" fill="#0A5C53">Pandar / OT / AT1440</text>
+        <text x="780" y="171" text-anchor="middle" font-size="11.5" fill="#123B36">로보택시 플래그십(바이두·포니AI 등)</text>
+        <rect x="600" y="52" width="300" height="52" rx="9" fill="#FBF0DA" stroke="#E7CD9A"/>
+        <text x="750" y="73" text-anchor="middle" font-size="13" font-weight="800" fill="#4A3208">Kosmo (SGI) — 라이다+AI 공간지능 기기</text>
+        <text x="750" y="92" text-anchor="middle" font-size="11.5" fill="#6B4A0F">현실 3D 캡처·복원 → 로봇 시뮬레이션 데이터 인프라 (’26.2Q 매출 개시)</text>
+      </g>
+      <text x="510" y="428" text-anchor="middle" font-size="11.5" fill="#5E7484">모든 제품이 동일한 자체 ASIC 플랫폼 위에서 파생 — 한 번의 칩 개발이 전 라인업 원가를 낮춤</text>
+    </svg>
+    <figcaption>그림 8. 회사 제품 공시·CES 2026·6-K 종합. 성능·가격 포지션은 상대적 배치.</figcaption>
+  </figure>
+
+  <h3 class="h3">기술 해자의 실체 — 왜 경쟁사가 따라오기 어려운가</h3>
+  <div class="grid2">
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">① 반도체 내재화 — ‘부품 조립사’가 아니라 ‘칩 회사’</h4>
+      <p>허사이는 2019년부터 <strong>4세대에 걸친 자체 ASIC</strong>(송신·수신·제어 칩)을 설계해 왔다. 2025년 11월 공개한 <strong>FMC500 SoC</strong>는 MCU·FPGA·ADC를 하나로 통합해 기능안전·사이버보안을 칩 안에 넣었고, 2026년 4월 공개한 <strong>Picasso SPAD-SoC</strong>는 스위스 EPFL 계열 <strong>Fastree3D 인수(SPAD 원천특허)</strong>로 확보한 기술을 얹어 색(RGB)과 거리(XYZ)를 칩 레벨에서 융합하는 세계 최초의 6D 풀컬러 라이다 칩이다. 칩 내재화는 원가(부품 수 급감), 성능(신호처리 최적화), 공급망(외부 칩 의존 축소)의 삼중 우위를 만든다. 서방 경쟁사 다수는 소니·온세미 등 외부 SPAD 칩에 의존한다.</p>
+    </div>
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">② 제조 내재화 — 아이폰식 대량생산의 이식</h4>
+      <p>CTO 샹샤오칭이 애플에서 아이폰 양산 라인 셋업을 하던 경험이 그대로 반영돼, 허사이는 <strong>설계-시험-제조를 한 회사 안에서 돌리는 수직통합</strong> 구조다. 완전 자동화 라인은 <strong>10초에 1대</strong>를 생산하며, 2026년 연산능력 400만+ 대로 2배 확장, 2027년 초 태국 방콕 ‘갈릴레오’ 공장이 가동돼 벤츠 유럽 물량과 관세 리스크를 커버한다. 하드웨어에서 ‘남보다 싸게, 그러나 마진은 높게’는 이 조합 없이는 불가능하다 — 경쟁사 로보센스의 GM 26.5% 대비 <strong>+15%p</strong>가 그 정량 증거다.</p>
+    </div>
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">③ 특허·표준 — 진입장벽의 문서화</h4>
+      <p>특허 2,071건으로 <strong>라이다 특허 보유·패밀리 수 세계 1위</strong>(KnowMade). SPAD/SiPM, VCSEL, 간섭 방지(33개 패밀리), MEMS, 1550nm 등 핵심 축을 모두 커버하고, 중국 차량용 라이다 <strong>국가표준(GB/T) 초안 작성 위원회 의장</strong>을 맡아 규칙을 만드는 쪽에 서 있다. 2025년 9월에는 미국 Ouster와의 지재권 분쟁에서 <strong>승소·약 $640만 수령</strong>으로 ‘특허 리스크’ 꼬리표도 떼어냈다. Pandar128은 라이다 최초의 ISO 26262 기능안전·ISO/SAE 21434 사이버보안 인증 보유.</p>
+    </div>
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">④ 검증 데이터 — 하드웨어의 네트워크 효과</h4>
+      <p>차량용 부품은 ‘성능 스펙’이 아니라 <strong>‘수백만 대 실도로 무사고 이력’</strong>으로 팔린다. 누적 200만 대+, 세계 상위 자율주행 15개사 중 12곳의 주력 채택, 리오토 4년(2021~) 무중단 협력 같은 트랙레코드는 후발주자가 돈으로 살 수 없는 자산이다. 완성차의 부품 교체 비용(재검증 2~3년)이 커서 <strong>디자인윈은 사실상 차종 세대 단위로 잠긴다</strong> — 리오토가 차세대 플랫폼 전 차종 독점 공급사로 허사이를 다시 고른 것이 이 잠금 효과의 실례다.</p>
+    </div>
+  </div>
+
+  <h3 class="h3">R&amp;D 파이프라인과 신사업 — ‘공간 인식’에서 ‘공간 지능’으로</h3>
+  <ul class="flat">
+    <li><strong>ETX (’26 하반기 SOP)</strong> — Picasso 칩 기반 600m·최대 4,320채널. L3의 ‘아이즈오프’ 요건을 겨냥한 플래그십. KargoBot 수송로봇에 첫 대량 탑재 확정, 중국 톱3 NEV 업체 디자인윈, ’27~’28 글로벌 확산 목표.</li>
+    <li><strong>ATX 개량형 (’26.4 SOP)</strong> — FMC500 SoC 탑재 256채널. 이미 <strong>누적 수주 400만 대 초과</strong>. 10만 위안대 대중차 침투의 주력.</li>
+    <li><strong>Kosmo (SGI 1호 제품)</strong> — 라이다+멀티센서+자체 3DGS/AIGC 알고리즘으로 현실 공간을 고정밀 3D로 복원하는 기기. 로봇 시뮬레이션·훈련 데이터, 몰입형 미디어, 4D 엔터테인먼트가 다운스트림. 회사는 <strong>’26년 약 1억 → ’27년 약 5억 위안, 5년 내 라이다 본업에 비견되는 규모</strong>를 목표로 제시(경영진 발언 — 검증 필요 영역).</li>
+    <li><strong>로봇 구동(액추에이션) 모듈</strong> — ‘눈’에서 ‘근육’으로 확장하는 SGI 두 번째 축(’26.4 테크데이 공개).</li>
+  </ul>
+
+  <div class="callout co-amber">
+    <div class="c-title">경쟁 기술·대체 기술 대비 — 정직한 비교</div>
+    <p><strong>vs 카메라-온리(테슬라 노선):</strong> 카메라+AI만으로 자율주행을 구현하려는 접근은 부품비가 가장 싸다. 라이다의 반박은 “$200이면 보험료 수준”이라는 가격 논리와, 야간·역광·저대비 물체에서의 물리적 측정 우위다. 흥미로운 사실 하나 — 테슬라조차 자사 시스템의 정답지(ground truth) 검증용으로 허사이 라이다를 구매해 왔다는 보도가 있었다. 다만 <strong>중국 밖 시장에서 카메라-온리가 승리하면 라이다 TAM의 상당 부분이 증발하는 것</strong>은 여전히 이 산업 최대의 구조적 리스크다(§12). <strong>vs 1550nm(루미나 노선):</strong> 1550nm 파장은 출력을 높여 장거리에 유리하지만 InGaAs 소자 탓에 원가가 비싸다. 905nm+SPAD로 성능을 따라잡은 허사이 방식이 가격 전쟁에서 이겼고, 루미나는 2025년 12월 사실상 독립 기업으로서의 경쟁에서 퇴장했다(§7). <strong>vs 4D FMCW(Aeva 노선):</strong> 속도까지 직접 측정하는 차세대 방식이나 아직 양산 초기 — 허사이도 관련 특허를 보유하며 관찰 중. <strong>모방 난이도:</strong> 칩 4세대 + 자동화 공장 + 200만 대 검증 이력의 삼위일체는 자금만으로 단기 복제가 어렵다. 단, 화웨이처럼 칩·제조·고객(AITO)을 다 가진 수직계열 대기업의 내재화는 실질 위협이다.</p>
+  </div>
+
+  <p><strong>인재·연구 조직.</strong> R&amp;D 인력이 회사의 중심(연 R&amp;D 7.97억 위안, 매출의 26%)이며, 흥미롭게도 2025년 R&amp;D 비용이 전년 대비 6.9% <em>감소</em>했다 — 회사는 “AI 도구의 R&amp;D 전면 도입으로 인건비·재료비 절감”을 이유로 든다. 매출 +46% 성장 중에 연구개발비가 줄며 흑자 전환을 이끈 것으로, ‘AI로 개발하는 하드웨어 회사’라는 운영 레버리지의 실증이자, 장기 혁신 투자 축소가 아닌지 분기마다 확인해야 할 관찰 항목이기도 하다(§15 체크포인트).</p>
+</section>
+
+<section class="sec" id="s5">
+  <div class="sec-head"><span class="sec-no num">05</span><h2>산업 분석 — 라이다 시장의 구조와 흐름</h2><span class="sec-en">INDUSTRY</span></div>
+
+  <p class="lead">라이다 산업은 지금 <strong>‘고급차 옵션 → 대중차 기본사양 → 로봇 범용 부품’</strong>이라는 3단 로켓의 2단이 점화된 지점에 있다. 그리고 이 산업의 무게중심은 이미 중국으로 넘어갔다 — <strong>승용차 라이다의 93%, 전체 차량 라이다의 89%를 중국 업체가 공급</strong>한다(Yole, 2024년 기준).</p>
+
+  <h3 class="h3">시장 규모와 성장 — 세 개의 파도</h3>
+  <figure class="fig">
+    <div class="fig-title">그림 9. 차량용 라이다 TAM: 2030년까지 4배 (Yole) — 그리고 그 위에 로봇이 얹힌다</div>
+    <div class="fig-sub">막대: 차량용(승용+로보택시) 라이다 시장(억 달러) · 우측: 중국 승용차 라이다 침투율</div>
+    <svg viewBox="0 0 940 360" role="img" aria-label="TAM 성장과 침투율">
+      <!-- 좌측 TAM -->
+      <line x1="60" y1="280" x2="500" y2="280" stroke="#16232E" stroke-width="2"/>
+      <g fill="#0C7A6E">
+        <rect x="86" y="245.6" width="66" height="34.4" rx="3"/>
+        <rect x="196" y="232.0" width="66" height="48.0" rx="3"/>
+      </g>
+      <rect x="306" y="137.6" width="66" height="142.4" rx="3" fill="#8FD3C8" stroke="#0C7A6E" stroke-dasharray="5 4"/>
+      <g font-size="13" fill="#16232E" font-weight="800" text-anchor="middle">
+        <text x="119" y="238">$8.6억</text><text x="229" y="224">$12억+</text><text x="339" y="130">$35.6억</text>
+      </g>
+      <g font-size="12.5" fill="#3D5160" text-anchor="middle">
+        <text x="119" y="302">2024</text><text x="229" y="302">2025E</text><text x="339" y="302">2030E</text>
+      </g>
+      <text x="230" y="336" text-anchor="middle" font-size="12" fill="#5E7484">CAGR 24% (Yole ’25.6) · Mordor는 ’30년 $53억 전망 — 출처별 2~5배 편차 존재</text>
+      <path d="M158 250 C 190 200, 260 210, 300 190" fill="none" stroke="#B26E00" stroke-width="2" stroke-dasharray="4 4"/>
+      <!-- 우측 침투율 -->
+      <line x1="560" y1="280" x2="920" y2="280" stroke="#16232E" stroke-width="2"/>
+      <g stroke="#E3EAEE"><line x1="560" y1="90" x2="920" y2="90"/><line x1="560" y1="185" x2="920" y2="185"/></g>
+      <g font-size="11.5" fill="#5E7484" text-anchor="end"><text x="554" y="94">20%</text><text x="554" y="189">10%</text><text x="554" y="284">0%</text></g>
+      <polyline points="600,266.8 700,256 800,166 900,99.4" fill="none" stroke="#B26E00" stroke-width="3.5"/>
+      <g fill="#B26E00"><circle cx="600" cy="266.8" r="5"/><circle cx="700" cy="256" r="5"/><circle cx="800" cy="166" r="5"/><circle cx="900" cy="99.4" r="5"/></g>
+      <g font-size="12.5" font-weight="800" fill="#8F5800" text-anchor="middle">
+        <text x="600" y="252">~1.4%</text><text x="700" y="241">~2.5%*</text><text x="800" y="151">6.0%</text><text x="900" y="85">19%</text>
+      </g>
+      <g font-size="12.5" fill="#3D5160" text-anchor="middle">
+        <text x="600" y="302">2022</text><text x="700" y="302">2023</text><text x="800" y="302">2024</text><text x="900" y="302">2025말</text>
+      </g>
+      <text x="740" y="336" text-anchor="middle" font-size="12" fill="#5E7484">중국 승용차 라이다 침투율 — ’25년 설치 321만 대(+110%) · S-커브 진입 (*’22–23은 설치대수 기반 근사)</text>
+      <text x="740" y="60" text-anchor="middle" font-size="13" font-weight="800" fill="#16232E">중국 침투율: 6% → 19%, 티핑포인트 통과</text>
+      <text x="280" y="60" text-anchor="middle" font-size="13" font-weight="800" fill="#16232E">글로벌 차량용 라이다 시장</text>
+    </svg>
+    <figcaption>그림 9. Yole Group(2025.6 보도자료·optics.org), ResearchAndMarkets ‘LiDAR 응용 리서치 2025-2026’(중국 설치 321만 대, +110.1%), CnEVPost(2026.3, 침투율 19%). 침투율 초기연도는 설치대수/판매대수로 근사(추정 표시).</figcaption>
+  </figure>
+
+  <div class="grid3">
+    <div class="stat-card"><div class="s-label">파도 ① ADAS 표준화</div><div class="s-val" style="font-size:17px;">옵션 → 기본사양</div><div class="s-note">BYD ‘신의 눈’, 리오토 전 차종 표준 탑재. 10만~15만 위안 차급까지 하향 침투, BYD 시걸($1만)조차 라이다 옵션 신고</div></div>
+    <div class="stat-card"><div class="s-label">파도 ② L3 멀티 라이다</div><div class="s-val" style="font-size:17px;">차당 1개 → 3~6개</div><div class="s-note">L3 규제 개화로 안전 리던던시 요구 — 차당 라이다 콘텐츠 $500~1,000로 점프(NIO ET9 3개, AITO M9 4개, 지커 5개)</div></div>
+    <div class="stat-card"><div class="s-label">파도 ③ 로봇 범용화</div><div class="s-val" style="font-size:17px;">피지컬 AI의 눈</div><div class="s-note">잔디깎이·배송로봇·휴머노이드·로보밴. 모건스탠리는 2050년 로봇 14억 대 기반 라이다 수요 7억 대 시나리오 제시</div></div>
+  </div>
+
+  <div class="callout co-cyan">
+    <div class="c-title">규제라는 순풍 — 중국 AEB 의무화(GB 39901-2025)</div>
+    <p>중국은 2028년 1월 1일부터 경차 <strong>자동긴급제동(AEB) 국가표준을 의무화</strong>한다. 야간·복잡 시나리오 요건이 강화돼, 카메라·레이더만으로 통과가 어려운 조건에서 라이다가 사실상의 대응 하드웨어로 자리 잡는다는 것이 업계 판단이다. 여기에 L3 법제화(베이징·상하이 등 시범→전국 확대 흐름)가 겹치며, 중국 시장의 라이다 채택은 ‘선호’가 아니라 ‘요건’의 영역으로 이동 중이다. 유럽도 UNECE R157(L3) 프레임으로 같은 방향이다. 단, 2025년 4월 샤오미 SU7 사고 이후 중국 당국이 ‘스마트 드라이빙’ 과장 마케팅을 단속한 사례처럼, 규제는 촉진과 제동을 오간다.</p>
+  </div>
+
+  <h3 class="h3">가치사슬 — 허사이는 어디에 서서 어디서 차별화하는가</h3>
+  <figure class="fig">
+    <div class="fig-title">그림 10. 라이다 가치사슬: 허사이는 ‘칩 설계–제조–시스템’ 3단을 내재화한 유일 축</div>
+    <svg viewBox="0 0 980 330" role="img" aria-label="가치사슬 도식">
+      <defs><marker id="arw2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#5E7484"/></marker></defs>
+      <g font-size="13">
+        <rect x="16" y="60" width="168" height="120" rx="10" fill="#EAF1F4" stroke="#CBDAE1"/>
+        <text x="100" y="88" text-anchor="middle" font-weight="800" fill="#16232E">업스트림 부품</text>
+        <text x="100" y="112" text-anchor="middle" fill="#3D5160" font-size="12">레이저(VCSEL/EEL)</text>
+        <text x="100" y="132" text-anchor="middle" fill="#3D5160" font-size="12">검출기(SPAD/SiPM)</text>
+        <text x="100" y="152" text-anchor="middle" fill="#3D5160" font-size="12">광학·스캐너·기판</text>
+        <rect x="226" y="30" width="500" height="180" rx="12" fill="#122334" stroke="#28455C"/>
+        <text x="476" y="58" text-anchor="middle" font-weight="800" fill="#FFFFFF" font-size="14.5">라이다 업체 — 허사이의 내재화 범위</text>
+        <rect x="246" y="76" width="140" height="110" rx="8" fill="#0F2A33" stroke="#1E5B57"/>
+        <text x="316" y="102" text-anchor="middle" fill="#7FE3D5" font-weight="800" font-size="12.5">칩 설계</text>
+        <text x="316" y="124" text-anchor="middle" fill="#C9DAE3" font-size="11.5">4세대 ASIC</text>
+        <text x="316" y="142" text-anchor="middle" fill="#C9DAE3" font-size="11.5">SPAD-SoC(Picasso)</text>
+        <text x="316" y="160" text-anchor="middle" fill="#C9DAE3" font-size="11.5">FMC500 제어 SoC</text>
+        <rect x="406" y="76" width="140" height="110" rx="8" fill="#0F2A33" stroke="#1E5B57"/>
+        <text x="476" y="102" text-anchor="middle" fill="#7FE3D5" font-weight="800" font-size="12.5">시스템 설계</text>
+        <text x="476" y="124" text-anchor="middle" fill="#C9DAE3" font-size="11.5">광학·기구·전자 통합</text>
+        <text x="476" y="142" text-anchor="middle" fill="#C9DAE3" font-size="11.5">IPE 신호처리 SW</text>
+        <text x="476" y="160" text-anchor="middle" fill="#C9DAE3" font-size="11.5">기능안전 인증</text>
+        <rect x="566" y="76" width="140" height="110" rx="8" fill="#0F2A33" stroke="#1E5B57"/>
+        <text x="636" y="102" text-anchor="middle" fill="#7FE3D5" font-weight="800" font-size="12.5">자체 제조</text>
+        <text x="636" y="124" text-anchor="middle" fill="#C9DAE3" font-size="11.5">완전 자동화 라인</text>
+        <text x="636" y="142" text-anchor="middle" fill="#C9DAE3" font-size="11.5">10초/대 · 中+태국</text>
+        <text x="636" y="160" text-anchor="middle" fill="#C9DAE3" font-size="11.5">연 400만 대(’26)</text>
+        <rect x="768" y="60" width="196" height="120" rx="10" fill="#EAF1F4" stroke="#CBDAE1"/>
+        <text x="866" y="88" text-anchor="middle" font-weight="800" fill="#16232E">다운스트림 고객</text>
+        <text x="866" y="112" text-anchor="middle" fill="#3D5160" font-size="12">완성차 OEM (ADAS/L3)</text>
+        <text x="866" y="132" text-anchor="middle" fill="#3D5160" font-size="12">자율주행 플릿(로보택시·밴)</text>
+        <text x="866" y="152" text-anchor="middle" fill="#3D5160" font-size="12">로봇 제조사(청소·잔디·휴머노이드)</text>
+        <line x1="184" y1="120" x2="222" y2="120" stroke="#5E7484" stroke-width="2" marker-end="url(#arw2)"/>
+        <line x1="726" y1="120" x2="764" y2="120" stroke="#5E7484" stroke-width="2" marker-end="url(#arw2)"/>
+      </g>
+      <rect x="226" y="234" width="500" height="66" rx="10" fill="#D8F2ED" stroke="#0C7A6E"/>
+      <text x="476" y="260" text-anchor="middle" font-size="13" font-weight="800" fill="#0A5C53">차별화 지점: 경쟁사 대부분은 칩(소니·온세미 구매)이나 제조(외주)를 외부에 의존</text>
+      <text x="476" y="282" text-anchor="middle" font-size="12.5" fill="#123B36">3단 내재화 → 원가·품질·개발속도의 복리 효과 = GM +15%p의 원천</text>
+      <text x="100" y="236" text-anchor="middle" font-size="11.5" fill="#5E7484">참고: SPAD 파운드리 등</text>
+      <text x="100" y="254" text-anchor="middle" font-size="11.5" fill="#5E7484">일부 공정은 외부 협력,</text>
+      <text x="100" y="272" text-anchor="middle" font-size="11.5" fill="#5E7484">설계 IP는 자체 보유</text>
+    </svg>
+    <figcaption>그림 10. 회사 공시·산업 리포트(ResearchAndMarkets 2025) 기반 재구성.</figcaption>
+  </figure>
+
+  <h3 class="h3">산업의 미래 방향성 — 세 가지 확실한 것과 두 가지 불확실한 것</h3>
+  <div class="box-light">
+    <p><strong>확실한 흐름:</strong> ① <strong>칩화·디지털화</strong> — 기계식 회전부가 사라지고 SPAD 기반 디지털 아키텍처로 수렴(허사이·로보센스 공히 이 방향, 허사이가 세대에서 앞섬). ② <strong>가격의 계속 하락</strong> — 솔리드스테이트 ASP가 2023~25년에만 30%+ 하락, $200 이하 보급형과 $500대 L3용의 이원화(Yole). 이는 위협이 아니라 침투의 전제조건이다. ③ <strong>중국 집중</strong> — 상위 4개사(로보센스·허사이·화웨이·Seyond)가 중국 시장의 99%+를 과점, 서방 업체는 사실상 퇴출 국면. <strong>불확실한 것:</strong> ① <strong>비전-온리의 최종 승부</strong> — 테슬라 FSD가 중국 밖에서 규제 승인과 안전 실적을 쌓으면 라이다 없는 자율주행이 글로벌 표준이 될 가능성은 살아 있다. ② <strong>로봇 수요의 기울기</strong> — 잔디깎이·배송로봇은 이미 현실이지만, 휴머노이드발(發) 대량 수요의 시점과 규모는 아직 서사가 숫자를 앞선다.</p>
+  </div>
+</section>
+
+<section class="sec" id="s6">
+  <div class="sec-head"><span class="sec-no num">06</span><h2>경쟁 우위 분석 — 경제적 해자</h2><span class="sec-en">ECONOMIC MOAT</span></div>
+
+  <h3 class="h3">포터의 5 Forces — 산업 압력의 지도</h3>
+  <figure class="fig">
+    <div class="fig-title">그림 11. 5가지 경쟁 압력: ‘구매자 협상력’과 ‘대체재 위협’이 두 개의 진짜 전선</div>
+    <svg viewBox="0 0 980 480" role="img" aria-label="포터 5 forces">
+      <!-- 중앙 -->
+      <rect x="360" y="185" width="260" height="110" rx="12" fill="#122334" stroke="#28455C"/>
+      <text x="490" y="222" text-anchor="middle" fill="#FFFFFF" font-weight="800" font-size="15.5">산업 내 경쟁</text>
+      <text x="490" y="246" text-anchor="middle" fill="#F0B357" font-weight="800" font-size="14">강함 (5/5)</text>
+      <text x="490" y="270" text-anchor="middle" fill="#C9DAE3" font-size="12">로보센스·화웨이·Seyond와 가격전쟁</text>
+      <!-- 상: 신규 진입 -->
+      <rect x="330" y="24" width="320" height="118" rx="12" fill="#FFFFFF" stroke="#D7E0E5"/>
+      <text x="490" y="52" text-anchor="middle" fill="#16232E" font-weight="800" font-size="14">신규 진입 위협</text>
+      <text x="490" y="74" text-anchor="middle" fill="#1E6B49" font-weight="800" font-size="13.5">낮음 (2/5)</text>
+      <text x="490" y="96" text-anchor="middle" fill="#3D5160" font-size="12">칩 4세대 + 자동화공장 + 200만 대 검증 이력의</text>
+      <text x="490" y="114" text-anchor="middle" fill="#3D5160" font-size="12">삼중 장벽 · 단, 화웨이형 수직계열 대기업은 예외</text>
+      <!-- 좌: 공급자 -->
+      <rect x="20" y="185" width="300" height="118" rx="12" fill="#FFFFFF" stroke="#D7E0E5"/>
+      <text x="170" y="213" text-anchor="middle" fill="#16232E" font-weight="800" font-size="14">공급자 협상력</text>
+      <text x="170" y="235" text-anchor="middle" fill="#1E6B49" font-weight="800" font-size="13.5">낮음~중간 (2/5)</text>
+      <text x="170" y="257" text-anchor="middle" fill="#3D5160" font-size="12">핵심 칩 자체 설계로 의존 축소,</text>
+      <text x="170" y="275" text-anchor="middle" fill="#3D5160" font-size="12">범용 광학·기판은 다변화 · 파운드리는 관찰 지점</text>
+      <!-- 우: 구매자 -->
+      <rect x="660" y="185" width="300" height="118" rx="12" fill="#FBEBE5" stroke="#D9A79A"/>
+      <text x="810" y="213" text-anchor="middle" fill="#5A1F27" font-weight="800" font-size="14">구매자 협상력</text>
+      <text x="810" y="235" text-anchor="middle" fill="#9A2F3B" font-weight="800" font-size="13.5">강함 (4/5)</text>
+      <text x="810" y="257" text-anchor="middle" fill="#5A3A34" font-size="12">거대 OEM의 연례 단가 인하 압박(ASP -53%/년),</text>
+      <text x="810" y="275" text-anchor="middle" fill="#5A3A34" font-size="12">상위 5고객 55.8% · 단, 교체비용(재검증 2~3년)이 상쇄</text>
+      <!-- 하: 대체재 -->
+      <rect x="330" y="338" width="320" height="118" rx="12" fill="#FBEBE5" stroke="#D9A79A"/>
+      <text x="490" y="366" text-anchor="middle" fill="#5A1F27" font-weight="800" font-size="14">대체재 위협</text>
+      <text x="490" y="388" text-anchor="middle" fill="#9A2F3B" font-weight="800" font-size="13.5">중간~강함 (3.5/5)</text>
+      <text x="490" y="410" text-anchor="middle" fill="#5A3A34" font-size="12">카메라-온리(테슬라·Xpeng 노선)가 유일하되 실존하는 대체재</text>
+      <text x="490" y="428" text-anchor="middle" fill="#5A3A34" font-size="12">중국 내에선 라이다 우세 굳어짐 · 글로벌 최종 승부는 미결</text>
+      <line x1="490" y1="142" x2="490" y2="181" stroke="#5E7484" stroke-width="2"/>
+      <line x1="320" y1="244" x2="356" y2="244" stroke="#5E7484" stroke-width="2"/>
+      <line x1="660" y1="244" x2="624" y2="244" stroke="#5E7484" stroke-width="2"/>
+      <line x1="490" y1="295" x2="490" y2="334" stroke="#5E7484" stroke-width="2"/>
+    </svg>
+    <figcaption>그림 11. 본 보고서 종합 평가(§4·§5·§7 근거). 점수는 5점 만점, 높을수록 해당 압력이 강함.</figcaption>
+  </figure>
+
+  <h3 class="h3">차별화인가, 원가 우위인가 — 숫자로 판별하기</h3>
+  <p>해자의 성격은 두 숫자의 조합으로 판별한다. <strong>NOPAT 마진</strong>이 높으면 ‘차별화(더 비싸게 팔 수 있음)’, <strong>투하자본 회전율(매출÷투하자본)</strong>이 높으면 ‘원가·효율 우위(같은 자본으로 더 많이 팔 수 있음)’ 쪽 해자다. 허사이는 흥미롭게도 <strong>양쪽 지표가 동시에 경쟁사를 앞선다</strong>.</p>
+
+  <div class="tbl-wrap"><table class="t prose">
+    <thead><tr><th>판별 지표 (2025 회계연도)</th><th>허사이</th><th>로보센스 (직접 경쟁)</th><th>읽는 법</th></tr></thead>
+    <tbody>
+      <tr><td>매출총이익률 (GM)</td><td class="pos"><strong>41.8%</strong></td><td>26.5%</td><td>같은 라이다인데 +15.3%p — <strong>차별화 증거</strong> (칩·성능 프리미엄)</td></tr>
+      <tr><td>영업이익률 (GAAP)</td><td class="pos"><strong>+5.6%</strong></td><td>-13.7% (영업손실)</td><td>업계에서 유일하게 영업 레벨 흑자권</td></tr>
+      <tr><td>투하자본 회전율 (매출÷영업 투하자본)</td><td class="pos"><strong>~1.41회</strong></td><td>~0.9회 추정</td><td>자동화 10초/대 생산 — <strong>자본효율 우위 병존</strong></td></tr>
+      <tr><td>연구개발/매출</td><td>26.3%</td><td>~34%</td><td>더 적게 쓰고 더 앞선 세대 칩 — R&amp;D 생산성 우위</td></tr>
+      <tr class="hl"><td>판별 결론</td><td colspan="3"><strong>‘차별화 주도 + 효율 보강’형 해자.</strong> 프리미엄 마진(성능·신뢰성)이 주 해자이고, 수직통합 제조가 이를 원가 측면에서 방어한다. 가격전쟁 산업에서 이 조합은 드물다.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout co-red">
+    <div class="c-title">정직한 단서 — ROIC는 아직 자본비용을 못 넘는다</div>
+    <p>해자의 최종 시험대는 ‘투하자본수익률(ROIC) &gt; 자본비용(WACC)’이다. 2025년 허사이의 GAAP 기준 ROIC는 약 <strong>8% 안팎</strong>(영업이익에 정부보조금 등 기타영업수익 포함 기준)으로, 본 보고서가 산출한 WACC 10.4%(§9)에 <strong>아직 미달</strong>한다. 보조금·일회성 이익을 걷어낸 핵심 영업이익은 2025년 기준 대략 손익분기 수준이다(§9 ‘이익의 질’). 즉 현재의 해자는 <strong>‘완성된 해자’가 아니라 ‘파는 중인 해자’</strong>다 — GM 격차와 자본 회전율이라는 구조적 우위는 실재하지만, 그것이 자본비용을 넘는 이익으로 전환되는 것은 2026~27년 물량 레버리지에 달려 있다. 1Q26 라이다 부문 영업이익 +4,190만 위안(부문 기준 흑자)은 그 전환이 시작됐다는 초기 신호다. <span class="conf">확신도: 중간~높음 ~75% (부문별 원가 배부 기준에 따라 수치 변동 가능)</span></p>
+  </div>
+
+  <h3 class="h3">해자의 구성 요소와 지속 가능성</h3>
+  <div class="tbl-wrap"><table class="t prose">
+    <thead><tr><th>해자 유형</th><th>허사이의 실체</th><th>강도</th><th>지속성 전망 (얼마나 오래?)</th></tr></thead>
+    <tbody>
+      <tr><td>무형자산 (기술·특허)</td><td>특허 2,071건 세계 1위, 4세대 ASIC, 세계 최초 SPAD-SoC, ISO 26262/21434 인증</td><td class="pos">강함</td><td>칩 세대교체 주기(2~3년)마다 재투자 필요 — 갱신형 해자. 5~10년 시계에서 유효</td></tr>
+      <tr><td>전환 비용</td><td>차종 디자인윈 = 4~7년 잠금, 재검증 2~3년 소요, 벤츠·리오토 차세대 플랫폼 선점</td><td class="pos">강함</td><td>차량용에서 가장 견고. 단 차기 플랫폼 수주전은 매번 다시 열림</td></tr>
+      <tr><td>원가 우위 (규모+수직통합)</td><td>업계 최대 물량(점유 33%)+자동화 자체공장 → 단위원가 최저 수준</td><td class="pos">강함</td><td>물량 격차 유지되는 한 지속. 로보센스가 물량으로 근접 시 약화</td></tr>
+      <tr><td>네트워크 효과</td><td>엄밀한 의미의 네트워크 효과는 약함. 대신 ‘검증 데이터 축적 → 신규 수주 → 더 많은 데이터’의 유사 플라이휠</td><td>중간</td><td>NVIDIA Hyperion 기본 탑재 같은 생태계 편입이 이를 보강</td></tr>
+      <tr><td>브랜드·평판</td><td>‘안전 부품’ 시장에서 무사고 이력·벤츠 채택은 강한 신뢰 신호</td><td>중간~강함</td><td>단일 대형 리콜·사고로 훼손 가능한 비대칭 리스크</td></tr>
+      <tr class="hl"><td>종합</td><td colspan="3"><strong>다층 해자이나 ‘영구형’은 아니다.</strong> 기술 갱신·수주전 승리를 전제로 한 5~10년형 해자 — 이는 §10에서 시장이 가격에 반영한 내재 CAP(≈7년)과 정합적인 수준이다.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="sec" id="s7">
+  <div class="sec-head"><span class="sec-no num">07</span><h2>피어그룹 비교 — 정리된 판, 남은 선수들</h2><span class="sec-en">PEER COMPARISON</span></div>
+
+  <p class="lead">2019년 70여 개가 난립하던 라이다 산업은 잔혹한 정리기를 지나 <strong>‘이익을 내는 1강(허사이) + 물량 2강(로보센스) + 수직계열 변수(화웨이) + 서방 생존자들’</strong>의 구도로 재편됐다. 2025년 12월 한때 시총 수십억 달러였던 루미나(Luminar)가 사실상 헐값에 인수되며 서방 프리미엄 노선의 퇴장을 알렸다.</p>
+
+  <div class="tbl-wrap"><table class="t prose">
+    <thead><tr><th>2025 회계연도</th><th>허사이 (HSAI)</th><th>로보센스 (2498.HK)</th><th>Innoviz (INVZ)</th><th>Aeva (AEVA)</th><th>Ouster (OUST)</th><th>Luminar</th></tr></thead>
+    <tbody>
+      <tr><td>매출</td><td class="pos"><strong>$433M</strong> (¥30.3억)</td><td>$278M (¥19.4억)</td><td>$55M</td><td>$18M</td><td>~$140M 추정*</td><td>~$60M대 → <strong>’25.12 피인수</strong></td></tr>
+      <tr><td>매출 성장률 (YoY)</td><td class="pos"><strong>+45.8%</strong></td><td>+17.4%</td><td>+127%</td><td>+99%</td><td>+30%대</td><td>역성장</td></tr>
+      <tr><td>매출총이익률</td><td class="pos"><strong>41.8%</strong></td><td>26.5%</td><td>낮은 한 자릿수</td><td>대폭 마이너스</td><td>~40%</td><td>마이너스</td></tr>
+      <tr><td>GAAP 순이익</td><td class="pos"><strong>+¥4.36억 (흑자)</strong></td><td>-¥1.45억 (4Q 첫 분기흑자)</td><td>적자</td><td>적자</td><td>적자 (축소 중)</td><td>대규모 적자</td></tr>
+      <tr><td>연간 출하량</td><td class="pos"><strong>162.0만 대</strong></td><td>91.2만 대</td><td>수만 대 미만</td><td>수천 대</td><td>~2만 대급</td><td>—</td></tr>
+      <tr><td>주력 전장</td><td>ADAS+로보택시+로봇 전방위</td><td>ADAS+로봇(로봇용 1위, 30.3만 대)</td><td>VW·BMW 등 서방 OEM L3</td><td>FMCW 4D (산업·트럭)</td><td>산업·스마트인프라</td><td>볼보 EX90 (소량)</td></tr>
+      <tr><td>시가총액 (’26.7월 초)</td><td><strong>~$2.9B</strong></td><td>~$3.4B (HK$266억)†</td><td>~$0.3B</td><td>~$0.9B</td><td>~$1.5B</td><td>Quantum Computing Inc.가 인수</td></tr>
+      <tr><td>P/S (2025 매출 기준)</td><td>6.6x</td><td>~12x†</td><td>~5x</td><td>~50x</td><td>~11x</td><td>—</td></tr>
+      <tr class="hl"><td>한 줄 평</td><td class="pos"><strong>유일한 ‘이익+물량+기술’ 삼관왕</strong></td><td>물량 2위, 흑자 전환 진행형</td><td>서방 OEM 희망, 현금 소진 경주</td><td>기술 베팅, 상업화 초기</td><td>니치 수익화 성공</td><td>프리미엄 노선의 실패 사례</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tnote">허사이·로보센스는 감사 연간실적 기준(완전 검증). *Ouster FY25는 분기 공시 합산 추정(Q1’26 $49M, +49% YoY 확인). †로보센스 시총·P/S는 2026.7월 초 환율·주가 기준 근사 — 홍콩 상장으로 미국 피어와 유동성·투자자층이 달라 멀티플 직접 비교에 한계. 화웨이는 비상장(라이다 사업부 미공시)으로 표에서 제외했으나 중국 시장 점유 3위권의 실질 경쟁자.</p>
+
+  <figure class="fig">
+    <div class="fig-title">그림 12. 성장률 × 수익성 지도 — 허사이만 ‘오른쪽 위’ 사분면에 있다</div>
+    <div class="fig-sub">가로: 2025 매출 성장률 · 세로: 매출총이익률 · 원 크기: 2025 매출 규모</div>
+    <svg viewBox="0 0 900 430" role="img" aria-label="피어 2D 포지셔닝">
+      <line x1="80" y1="360" x2="860" y2="360" stroke="#16232E" stroke-width="2"/>
+      <line x1="80" y1="360" x2="80" y2="40" stroke="#16232E" stroke-width="2"/>
+      <g stroke="#E3EAEE"><line x1="80" y1="120" x2="860" y2="120"/><line x1="80" y1="200" x2="860" y2="200"/><line x1="80" y1="280" x2="860" y2="280"/></g>
+      <g font-size="12" fill="#5E7484" text-anchor="end">
+        <text x="74" y="124">45%</text><text x="74" y="204">30%</text><text x="74" y="284">15%</text><text x="74" y="364">0%</text>
+      </g>
+      <g font-size="12" fill="#5E7484" text-anchor="middle">
+        <text x="80" y="382">0%</text><text x="275" y="382">+50%</text><text x="470" y="382">+100%</text><text x="665" y="382">+150%</text><text x="860" y="382">성장률→</text>
+      </g>
+      <text x="40" y="200" text-anchor="middle" font-size="12.5" fill="#3D5160" font-weight="700" transform="rotate(-90 40 200)">매출총이익률 ↑</text>
+      <!-- 음영: 우상단 이상 지대 -->
+      <rect x="230" y="40" width="630" height="140" fill="#D8F2ED" opacity="0.35"/>
+      <text x="720" y="64" font-size="12" fill="#0A5C53" font-weight="700">고성장 · 고마진 지대</text>
+      <!-- points: x=80+growth/150*780? scale: 0%→80, 50→275(3.9/%). y=360-gm/45*320? 45%→40. use y=360-gm*7.111 -->
+      <!-- Hesai: g45.8 x=258.6, gm41.8 y=62.8, r=34 -->
+      <circle cx="258" cy="63" r="34" fill="#0C7A6E" opacity="0.9"/>
+      <text x="258" y="68" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="800">허사이</text>
+      <!-- RoboSense g17.4 x=147.9 gm26.5 y=171.6 r=27 -->
+      <circle cx="148" cy="172" r="27" fill="#3D5160" opacity="0.85"/>
+      <text x="148" y="177" text-anchor="middle" fill="#FFFFFF" font-size="11.5" font-weight="700">로보센스</text>
+      <!-- Ouster g30 x=197 gm40 y=75.6 r=18 -->
+      <circle cx="197" cy="90" r="18" fill="#5E7484" opacity="0.85"/>
+      <text x="197" y="120" text-anchor="middle" fill="#3D5160" font-size="11.5" font-weight="700">Ouster*</text>
+      <!-- Innoviz g127 x=575 gm~3 y=338.7 r=12 -->
+      <circle cx="575" cy="339" r="12" fill="#B26E00" opacity="0.85"/>
+      <text x="575" y="322" text-anchor="middle" fill="#8F5800" font-size="11.5" font-weight="700">Innoviz</text>
+      <!-- Aeva g99 x=466 gm<0 → plot at y=372 below axis marker -->
+      <circle cx="466" cy="358" r="9" fill="#9A2F3B" opacity="0.85"/>
+      <text x="466" y="340" text-anchor="middle" fill="#9A2F3B" font-size="11.5" font-weight="700">Aeva (GM&lt;0)</text>
+      <text x="470" y="412" text-anchor="middle" font-size="11.5" fill="#5E7484">원 면적 ∝ 2025 매출. Ouster 성장률·GM은 분기 공시 기반 추정. 화웨이(비공시)·Seyond(비상장) 제외.</text>
+    </svg>
+    <figcaption>그림 12. 각사 2025 연간 실적 공시·보도 종합. 허사이·로보센스 외 수치는 근사치 포함.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">vs 로보센스 — 진짜 라이벌전의 실상</h4>
+      <p>점유율 숫자만 보면 박빙처럼 보이지만(중국 ADAS 설치 기준 로보센스가 대수에서 앞선 시기도 있음), <strong>경제성에서는 격차가 크다.</strong> 로보센스는 저가 물량전으로 출하를 늘리며 GM 26.5%에 머무는 반면, 허사이는 리오토·벤츠 같은 프리미엄 디자인윈과 자체 칩으로 GM 41.8%를 지키며 같은 매출에서 1.6배의 총이익을 뽑는다. 로보틱스에서는 로보센스가 출하 1위(30.3만 대)로 앞서는 반면, 허사이는 로보택시 플래그십과 잔디깎이 백로그로 응수 중 — <strong>ADAS 프리미엄=허사이, 로봇 저가 물량=로보센스</strong>의 전선이 형성돼 있다. 관찰 포인트: 로보센스의 마진이 30%대로 올라오는지(허사이 해자 침식 신호), 허사이의 로봇 출하가 로보센스를 재역전하는지.</p>
+    </div>
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">vs 화웨이·서방 — 비대칭 경쟁</h4>
+      <p><strong>화웨이</strong>는 라이다를 팔아 돈을 벌 필요가 없는 경쟁자다 — 자사 스마트카 솔루션(AITO 등)에 번들로 넣는다. 화웨이 진영 차량이 커질수록 허사이의 접근 불가 시장이 커지는 구조적 잠식이며, 이는 가격이 아닌 진영 논리라 허사이가 기술로 이길 수 없는 유형의 위협이다(중국 시장 한정). <strong>서방(Innoviz·Aeva·Ouster)</strong>은 미·유럽 OEM의 ‘비중국 공급망’ 수요라는 보호구역에서 생존 중이다. 1260H 리스트(§12) 같은 지정학이 심화되면 이들의 보호구역이 커지고, 완화되면 허사이가 가격·기술로 압도하는 비대칭 게임 — 즉 <strong>서방 피어의 주가는 허사이 지정학 리스크의 풍향계</strong>로도 읽을 수 있다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s8">
+  <div class="sec-head"><span class="sec-no num">08</span><h2>시장 내러티브 및 자금 선호도 — 왜 이 주식에 돈이 몰리는가</h2><span class="sec-en">MARKET NARRATIVE</span></div>
+
+  <figure class="fig">
+    <div class="fig-title">그림 13. 18개월의 롤러코스터: $10.41 → $30.85 → $14.69 → $18.22 — 이 주식은 ‘내러티브 진폭’이 크다</div>
+    <div class="fig-sub">2025.1 ~ 2026.7.2 주가(달러) · 번호는 아래 이벤트 목록 대응 · 주요 지점은 확인된 종가, 구간 곡선은 근사</div>
+    <svg viewBox="0 0 960 470" role="img" aria-label="주가 추이와 이벤트">
+      <g stroke="#E3EAEE"><line x1="70" y1="97.7" x2="930" y2="97.7"/><line x1="70" y1="216.9" x2="930" y2="216.9"/><line x1="70" y1="336.2" x2="930" y2="336.2"/></g>
+      <line x1="70" y1="380" x2="930" y2="380" stroke="#16232E" stroke-width="2"/>
+      <g font-size="12" fill="#5E7484" text-anchor="end">
+        <text x="64" y="101.7">$30</text><text x="64" y="220.9">$20</text><text x="64" y="340.2">$10</text>
+      </g>
+      <g font-size="12" fill="#5E7484" text-anchor="middle">
+        <text x="70" y="400">’25.1</text><text x="212" y="400">’25.4</text><text x="353" y="400">’25.7</text><text x="495" y="400">’25.10</text><text x="637" y="400">’26.1</text><text x="778" y="400">’26.4</text><text x="920" y="400">’26.7</text>
+      </g>
+      <polyline fill="none" stroke="#0C7A6E" stroke-width="3" stroke-linejoin="round"
+        points="70,283.7 110,268 150,240 165,225 190,258.6 223,331.3 245,300 280,283 310,271 340,253 370,229 396,205 425,170 455,135 473,115 483,87.6 500,120 520,168 545,215 560,255 575,280.2 595,254 615,235 645,205 670,175 695,155 710,148.3 730,180 755,205 768,221 785,215 805,200 825,175 845,158 854,150.2 865,185 875,205 887,222.9 897,255 905,278.9 909,249.1 915,238.2"/>
+      <!-- 현재가 -->
+      <circle cx="915" cy="238.2" r="6" fill="#FFFFFF" stroke="#0C7A6E" stroke-width="3"/>
+      <text x="930" y="200" text-anchor="end" font-size="13" font-weight="800" fill="#0A5C53">$18.22 (7/2)</text>
+      <!-- 고저 라벨 -->
+      <text x="483" y="72" text-anchor="middle" font-size="12.5" font-weight="800" fill="#16232E">$30.85 사상 최고 (’25.9.22)</text>
+      <text x="223" y="356" text-anchor="middle" font-size="12" font-weight="800" fill="#9A2F3B">$10.41 (’25.4.7)</text>
+      <text x="575" y="303" text-anchor="middle" font-size="12" font-weight="800" fill="#9A2F3B">$14.69 (’25.11.21)</text>
+      <!-- 이벤트 번호 -->
+      <g font-size="11.5" font-weight="800" text-anchor="middle">
+        <circle cx="190" cy="258.6" r="11" fill="#B23543"/><text x="190" y="262.6" fill="#FFFFFF">1</text>
+        <circle cx="223" cy="331.3" r="11" fill="#B23543"/><text x="223" y="335.3" fill="#FFFFFF">2</text>
+        <circle cx="396" cy="205" r="11" fill="#1E6B49"/><text x="396" y="209" fill="#FFFFFF">3</text>
+        <circle cx="466" cy="122" r="11" fill="#E08A00"/><text x="466" y="126" fill="#FFFFFF">4</text>
+        <circle cx="483" cy="87.6" r="11" fill="#1E6B49"/><text x="483" y="91.6" fill="#FFFFFF">5</text>
+        <circle cx="575" cy="280.2" r="11" fill="#B23543"/><text x="575" y="284.2" fill="#FFFFFF">6</text>
+        <circle cx="645" cy="205" r="11" fill="#1E6B49"/><text x="645" y="209" fill="#FFFFFF">7</text>
+        <circle cx="768" cy="221" r="11" fill="#B23543"/><text x="768" y="225" fill="#FFFFFF">8</text>
+        <circle cx="854" cy="150.2" r="11" fill="#1E6B49"/><text x="854" y="154.2" fill="#FFFFFF">9</text>
+        <circle cx="887" cy="222.9" r="11" fill="#B23543"/><text x="887" y="226.9" fill="#FFFFFF">10</text>
+        <circle cx="909" cy="249.1" r="11" fill="#1E6B49"/><text x="909" y="253.1" fill="#FFFFFF">11</text>
+      </g>
+      <g font-size="12.3" fill="#3D5160">
+        <text x="80" y="428">① ’25.3.25 Blue Orca 공매도 리포트(회사 전면 반박) ↓ ② ’25.4.7 상호관세 쇼크 — 저점 $10.41 ↓ ③ ’25.7.28 모건스탠리 더블 업그레이드 “로봇의 눈” ↑</text>
+        <text x="80" y="448">④ ’25.9.16 홍콩 2차 상장 · $6.1억 조달 ⑤ ’25.9.22 사상 최고 $30.85 ⑥ ’25.11.21 상장 물량 소화·차익실현 저점 ↓ ⑦ ’26.1 CES: 생산능력 2배 발표 ↑</text>
+        <text x="80" y="468">⑧ ’26.3.24 4Q 호실적에도 1Q 가이던스 실망 -10.7% ↓ ⑨ ’26.5.19 1Q 흑자+벤츠 L3 확정 +9% ↑ ⑩ ’26.6.8~ 펜타곤 리스트 확대발 中테크 투매 ↓ ⑪ ’26.6.30 주식분할 승인·PT 상향 +16.9% ↑</text>
+      </g>
+    </svg>
+    <figcaption>그림 13. 나스닥 종가·각 시점 보도(로이터·배런스·CnEVPost·인베스팅닷컴 등) 기반. 표시 지점 외 구간은 근사 곡선.</figcaption>
+  </figure>
+
+  <h3 class="h3">시장이 이 회사에 부여한 세 개의 스토리</h3>
+  <div class="grid3">
+    <div class="stat-card"><div class="s-label">스토리 ① — 가장 강력</div><div class="s-val" style="font-size:16.5px;">“피지컬 AI의 눈”</div><div class="s-note">로보택시·배송로봇·잔디깎이·휴머노이드 — AI가 몸을 갖는 순간 전부 라이다가 필요하다는 서사. ’25.7 모건스탠리 업그레이드, ’25.12 휴머노이드 공급사 선정 랠리의 동력. 엔비디아 Hyperion 기본 탑재가 ‘AI 생태계 편입’ 도장을 찍음</div></div>
+    <div class="stat-card"><div class="s-label">스토리 ②</div><div class="s-val" style="font-size:16.5px;">“중국 스마트카 슈퍼사이클”</div><div class="s-note">라이다 침투율 6%→19%→계속. AEB 의무화·L3 법제화가 정책 뒷바람. ‘중국 EV 밸류체인에서 가격전쟁의 승자 부품사를 사라’는 기관 논리의 최적 대상</div></div>
+    <div class="stat-card"><div class="s-label">스토리 ③</div><div class="s-val" style="font-size:16.5px;">“증명된 턴어라운드”</div><div class="s-note">라이다 업계 최초·유일의 연간 GAAP 흑자 — ‘꿈을 파는 섹터에서 유일하게 돈을 버는 회사’라는 차별화. 적자 피어들이 무너질수록 이 스토리는 강해짐(루미나 퇴장이 반사 증거)</div></div>
+  </div>
+
+  <h3 class="h3">컨센서스와 자금의 방향</h3>
+  <div class="tbl-wrap"><table class="t prose">
+    <thead><tr><th>항목</th><th>현황 (2026.7월 초)</th><th>해석</th></tr></thead>
+    <tbody>
+      <tr><td>애널리스트 등급</td><td><strong>Strong Buy</strong> — 커버리지 10~14곳 전원 매수, 유일한 소수 의견도 ‘비중확대’</td><td>월가 컨센서스는 강한 낙관 — 역설적으로 ‘업그레이드 여지’는 작음</td></tr>
+      <tr><td>평균 목표주가</td><td><strong>$30~31</strong> (범위 $23.5~44, 6/30 신규 Outperform PT $23.5도 등장)</td><td>현재가 대비 +65% 안팎 — §10에서 이 목표가에 내재된 가정을 역산</td></tr>
+      <tr><td>기관 흐름</td><td>홍콩 상장 코너스톤에 힐하우스(HHLR)·Grab 등 참여, 글로벌 롱온리 접근성 확대</td><td>‘미국 상장 중국 주식’ 디스카운트를 홍콩 채널로 우회하는 구조 마련</td></tr>
+      <tr><td>공매도·회의론</td><td>Blue Orca(’25.3) 이후 대형 공격 부재. 6월 中테크 투매 때 베타 높게 반응</td><td>개별 회계 이슈보다 ‘중국 리스크 프록시’로 거래되는 성격</td></tr>
+      <tr><td>거래 성격</td><td>52주 변동폭 2.2배($13.90~30.85), 이벤트일 ±9~17% 일상</td><td>기관 장기 자금 + 테마 트레이딩 자금이 섞인 고변동 수급</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 class="h3">향후 재평가(리레이팅)를 부를 잠재 트리거</h3>
+  <ul class="flat">
+    <li><strong>단기(’26.3분기)</strong> — 7/10 주식분할 발효(유동성·접근성 개선), 8월 2Q 실적(가이던스 상단 850~900 달성 여부), 로보택시 파트너들의 차량 증차 발표.</li>
+    <li><strong>중기(’26 하반기~’27)</strong> — ETX 양산 개시와 첫 L3 탑재차 출시, 벤츠 양산 개시(태국공장), AEB 의무화 D-1년 효과, SGI(Kosmo) 첫 매출 확인, 미 국방부 1260H 항소 결과.</li>
+    <li><strong>구조적</strong> — 로봇(잔디깎이 1,000만 백로그·휴머노이드) 매출의 본격 인식, 미국 외 글로벌 OEM 추가 수주(엔비디아 Hyperion 경유), MSCI 등 지수 편입 이벤트.</li>
+  </ul>
+
+  <div class="callout co-ink">
+    <div class="c-title">이 내러티브는 펀더멘털로 뒷받침되는가 — 교차 검증</div>
+    <p>스토리 ②(중국 스마트카)와 ③(턴어라운드)은 <strong>숫자가 이미 증명</strong>했다: 출하 +223%, 연간 흑자, 6분기 연속 non-GAAP 흑자, 40% GM. 반면 가장 주가 탄력이 큰 스토리 ①(로봇/피지컬 AI)은 <strong>현재 매출의 15%(출하 기준)에 불과한 사업에 대한 선반영</strong> 성격이 강하다 — 잔디깎이 백로그 1,000만 대는 실재하지만 휴머노이드 수요는 아직 계약보다 서사가 앞선다. 요약하면 <strong>몸통(ADAS)은 실적주, 날개(로봇)는 테마주</strong>의 이중 구조이고, 이 주식의 큰 변동성은 날개 부분의 기대가 붙었다 떨어졌다 하는 과정이다. 9월 고점 $30.85는 날개에 최대 기대가 실렸던 순간, 현재 $18.22는 몸통 가치에 가까운 지점이라는 것이 §10 역산의 결론과 맞물린다. <span class="conf">확신도: 높음 ~80%</span></p>
+  </div>
+</section>
+
+<section class="sec" id="s9">
+  <div class="sec-head"><span class="sec-no num">09</span><h2>재무 분석 및 DCF 모델</h2><span class="sec-en">FINANCIALS &amp; DCF</span></div>
+
+  <h3 class="h3">5개년 재무 추이 — 숫자가 말하는 체질 개선</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>백만 위안</th><th>2021</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th></tr></thead>
+    <tbody>
+      <tr class="odd"><td>매출</td><td>721</td><td>1,203</td><td>1,877</td><td>2,077</td><td class="pos"><strong>3,028</strong></td></tr>
+      <tr class="even"><td>매출총이익률</td><td>53.0%</td><td>39.2%</td><td>35.2%</td><td>42.6%</td><td>41.8%</td></tr>
+      <tr class="odd"><td>GAAP 순이익</td><td class="neg">-245</td><td class="neg">-301</td><td class="neg">-476</td><td class="neg">-102</td><td class="pos"><strong>+436</strong></td></tr>
+      <tr class="even"><td>영업활동 현금흐름(OCF)</td><td class="neg">-228</td><td class="neg">-696</td><td>+57</td><td>+64</td><td class="pos">+117</td></tr>
+      <tr class="odd"><td>설비·무형 투자(Capex)</td><td>282</td><td>240</td><td>415</td><td>271</td><td>342</td></tr>
+      <tr class="even"><td>잉여현금흐름(OCF−Capex)</td><td class="neg">-510</td><td class="neg">-936</td><td class="neg">-357</td><td class="neg">-208</td><td class="neg">-225</td></tr>
+      <tr class="odd"><td>연구개발비 (매출 대비)</td><td colspan="2" style="text-align:center; color:#5E7484;">고비중 (매출 초과기)</td><td>~40%대</td><td>856 (41%)</td><td>797 (26%)</td></tr>
+      <tr class="even"><td>기말 현금성 보유*</td><td colspan="2" style="text-align:center; color:#5E7484;">—</td><td>~3,100</td><td>3,205</td><td class="pos"><strong>7,511</strong></td></tr>
+      <tr class="hl"><td>읽는 법</td><td colspan="5">순이익은 5년 만에 -4.8억 → +4.4억으로 스윙. 단 <strong>FCF는 아직 음수</strong>(성장 투자 지속)이고 현금 급증은 홍콩 2차 상장 조달($6.1억) 덕분 — ‘자생 현금창출’은 다음 단계 과제</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tnote">회사 20-F·6-K 연간 공시. *현금+단기예금+단기투자 합계, 연말 기준(2025년 말 이후 1Q26 말 7,232). 2021–22 R&amp;D는 매출 규모 대비 과대(스타트업기)로 금액 표기 생략.</p>
+
+  <div class="callout co-amber">
+    <div class="c-title">이익의 질(Quality of Earnings) — 2025년 흑자 4.36억의 해부</div>
+    <p>2025년 순이익 4.36억 위안을 뜯어보면, <strong>영업이익 1.69억</strong> 안에 정부 보조금·Ouster 중재 승소금($640만) 등 <strong>기타영업수익 1.81억</strong>이 들어 있다 — 즉 이를 걷어낸 <strong>핵심 영업이익은 약 -0.1억(손익분기 수준)</strong>이다. 여기에 <strong>이자수익 1.30억</strong>(현금 75억의 과실)과 3분기의 <strong>초기투자 지분 처분이익 약 1.85억</strong>(공동창업자들이 별도 설립한 로봇손 스타트업 Sharpa 관련으로 추정 — §14)이 더해져 연간 흑자가 완성됐다. 요약: <strong>2025년 흑자는 ‘진짜지만 아직 얇다’.</strong> 회계상 흑자는 맞되 본업 마진의 힘만으로 만든 흑자는 아니며, 그 전환은 2026년에 진행 중이다 — 1Q26에 <strong>라이다 부문 자체가 영업이익 +0.42억</strong>을 냈고(부문 기준 첫 명시 공시), 2025년 +5.97억이나 불어났던 매출채권도 1Q26 잔액 9.5억으로 회수가 돌기 시작했다. 다만 신설 SGI 부문(-0.51억)이 당분간 이익을 갉아먹는 구조라 연결 기준 핵심 흑자 안착은 2026년 하반기 관전 포인트다. <span class="conf">확신도: 높음 ~85% (공시 숫자 기반 분해)</span></p>
+  </div>
+
+  <h3 class="h3">생애주기 판별 — 현금흐름 부호가 가리키는 위치</h3>
+  <figure class="fig">
+    <div class="fig-title">그림 14. 딕킨슨 생애주기 판별: ‘도입 → 성장’ 경계를 막 넘었다</div>
+    <div class="fig-sub">영업/투자/재무 현금흐름 부호 조합으로 판별 · 조정 = 주식보상비용(SBC)을 영업→재무로 이동, 단기금융상품 매매를 투자CF에서 제거</div>
+    <div class="tbl-wrap" style="border:none; margin:0;"><table class="t">
+      <thead><tr><th>연도</th><th>영업CF (원시)</th><th>영업CF (조정)</th><th>투자CF (조정)</th><th>재무CF</th><th>판별 (원시)</th><th>판별 (조정)</th></tr></thead>
+      <tbody>
+        <tr class="odd"><td>2021</td><td class="neg">− (-228)</td><td class="neg">−</td><td>−</td><td>+</td><td>도입</td><td>도입</td></tr>
+        <tr class="even"><td>2022</td><td class="neg">− (-696)</td><td class="neg">−</td><td>−</td><td>+</td><td>도입</td><td>도입</td></tr>
+        <tr class="odd"><td>2023</td><td>+ (+57)</td><td class="neg">− (IPO기 SBC 대형)</td><td>−</td><td>+ (나스닥 IPO)</td><td>성장</td><td>도입</td></tr>
+        <tr class="even"><td>2024</td><td>+ (+64)</td><td class="neg">− (-53)</td><td>−</td><td>+</td><td>성장</td><td>도입</td></tr>
+        <tr class="odd"><td>2025</td><td>+ (+117)</td><td>+ (+2, 경계선)</td><td>−</td><td>+ (홍콩 상장)</td><td class="pos">성장</td><td class="pos"><strong>성장 진입</strong></td></tr>
+        <tr class="hl"><td>부문별</td><td colspan="6"><strong>라이다 사업 = 성장기</strong>(부문 영업흑자 진입, 물량 스케일링 중) · <strong>SGI = 도입기</strong>(매출 개시 전, 투자 선행). 전사는 ‘성장 초입’으로 판별 — DCF에서 도입기용 실물옵션 관점을 로봇·SGI에 한해 보조 적용</td></tr>
+      </tbody>
+    </table></div>
+    <figcaption>그림 14. 회사 현금흐름표 기반. 조정 열은 SBC(2024년 1.16억, 2025년 1.15억)를 영업에서 차감·재무에 가산, 단기투자 매매 순액을 투자CF에서 제거한 것. 2021~23 조정치는 방향만 확정 표기.</figcaption>
+  </figure>
+
+  <h3 class="h3">자본비용(WACC) 산출</h3>
+  <div class="grid2">
+    <div class="tbl-wrap" style="margin:0;"><table class="t" style="min-width:0;">
+      <thead><tr><th>구성 요소</th><th>값</th></tr></thead>
+      <tbody>
+        <tr class="odd"><td>무위험 이자율 (미 10년 국채, ’26.7.2)</td><td>4.48%</td></tr>
+        <tr class="even"><td>원시 베타 (5년 월간, 야후) → 조정 베타</td><td>1.47 → <strong>1.31</strong></td></tr>
+        <tr class="odd"><td>주식위험프리미엄 (ERP)</td><td>4.75%</td></tr>
+        <tr class="even"><td>자기자본비용 = 4.48 + 1.31×4.75</td><td><strong>10.70%</strong></td></tr>
+        <tr class="odd"><td>세후 부채비용 (위안화 차입, ~3%×0.85)</td><td>2.55%</td></tr>
+        <tr class="even"><td>자본구조 (시가): 자기자본 96.4% · 부채 3.6%</td><td>—</td></tr>
+        <tr class="total"><td>WACC</td><td>10.4%</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box-light" style="margin:0;">
+      <p style="margin-bottom:8px;"><strong>가정에 대한 정직한 주석.</strong> ① 베타는 2/3×원시+1/3×1의 표준 조정을 적용 — 미조정 베타(1.47) 사용 시 자기자본비용 11.5%, WACC ~11.2%로 상승한다. ② ERP는 본 프레임워크 표준값 4.75%를 채택했다. 다모다란 교수의 2026년 1월 내재 ERP는 4.23%로 이보다 낮다 — 이를 쓰면 WACC ~9.9%가 되고 내재 CAP은 §10 민감도에서 다룬다. ③ 중국 상장기업 특유의 지정학·규제 위험은 베타(1.47이라는 높은 수치)에 시장이 이미 상당 부분 반영한 것으로 보고 별도 국가위험 가산은 하지 않았다 — 가산 시 CAP은 더 짧게 계산된다(비관 쪽 안전마진). ④ 세율 15%는 중국 하이테크 우대세율. 이월결손금(NOL) 잔존으로 초기 몇 년 실효세율은 이보다 낮을 수 있다(가치에 소폭 +).</p>
+    </div>
+  </div>
+
+  <h3 class="h3">DCF 프로젝션 — 기본 시나리오 (10년 전개)</h3>
+  <p>매출 경로는 ’26년 회사 가이던스(출하 300~350만 대)와 컨센서스(~44억 위안)에서 출발해, 중국 침투율 심화·L3 멀티 라이다·로봇·벤츠발 해외 물량·SGI를 반영해 성장률이 45%에서 6%로 <strong>점진 감속</strong>하는 궤적이다. EBITA 마진은 규모의 레버리지로 8.5%→17%까지 확장 후 고정 — <strong>17%는 우량 자동차 부품사의 현실적 상한선</strong>으로 잡았다(모비스·덴소류 상단). 신규 투자는 증분 매출의 40%(+태국 공장 ’26~’27 가산)로, 현재 투하자본/매출 0.71 대비 자동화 효율 개선을 가정한 수치다.</p>
+
+  <div class="tbl-wrap"><table class="t" style="min-width:1080px;">
+    <thead><tr><th>백만 위안</th><th>2026E</th><th>2027E</th><th>2028E</th><th>2029E</th><th>2030E</th><th>2031E</th><th>2032E</th><th>2033E</th><th>2034E</th><th>2035E</th></tr></thead>
+    <tbody>
+      <tr class="odd"><td>매출</td><td>4,390</td><td>6,150</td><td>8,120</td><td>10,150</td><td>12,180</td><td>14,130</td><td>15,970</td><td>17,560</td><td>18,970</td><td>20,110</td></tr>
+      <tr class="even"><td>성장률</td><td>45%</td><td>40%</td><td>32%</td><td>25%</td><td>20%</td><td>16%</td><td>13%</td><td>10%</td><td>8%</td><td>6%</td></tr>
+      <tr class="odd"><td>EBITA 마진</td><td>8.5%</td><td>11.5%</td><td>14.0%</td><td>15.5%</td><td>16.5%</td><td>17.0%</td><td>17.0%</td><td>17.0%</td><td>17.0%</td><td>17.0%</td></tr>
+      <tr class="even"><td>EBITA</td><td>373</td><td>707</td><td>1,137</td><td>1,573</td><td>2,010</td><td>2,402</td><td>2,715</td><td>2,985</td><td>3,225</td><td>3,419</td></tr>
+      <tr class="odd"><td>현금세금 (15%)</td><td>-56</td><td>-106</td><td>-171</td><td>-236</td><td>-302</td><td>-360</td><td>-407</td><td>-448</td><td>-484</td><td>-513</td></tr>
+      <tr class="even"><td><strong>NOPAT</strong></td><td><strong>317</strong></td><td><strong>601</strong></td><td><strong>966</strong></td><td><strong>1,337</strong></td><td><strong>1,708</strong></td><td><strong>2,042</strong></td><td><strong>2,308</strong></td><td><strong>2,537</strong></td><td><strong>2,741</strong></td><td><strong>2,906</strong></td></tr>
+      <tr class="odd"><td>신규 투자</td><td>-695</td><td>-804</td><td>-788</td><td>-812</td><td>-812</td><td>-780</td><td>-736</td><td>-636</td><td>-564</td><td>-456</td></tr>
+      <tr class="even"><td><strong>잉여현금흐름 (FCF)</strong></td><td class="neg"><strong>-378</strong></td><td class="neg"><strong>-203</strong></td><td class="pos"><strong>+178</strong></td><td class="pos"><strong>+525</strong></td><td class="pos"><strong>+896</strong></td><td class="pos"><strong>+1,262</strong></td><td class="pos"><strong>+1,572</strong></td><td class="pos"><strong>+1,901</strong></td><td class="pos"><strong>+2,177</strong></td><td class="pos"><strong>+2,450</strong></td></tr>
+      <tr class="odd"><td>할인계수 (연중 기준)</td><td>0.952</td><td>0.862</td><td>0.781</td><td>0.707</td><td>0.641</td><td>0.580</td><td>0.526</td><td>0.476</td><td>0.431</td><td>0.391</td></tr>
+      <tr class="even"><td>FCF 현재가치</td><td class="neg">-360</td><td class="neg">-175</td><td>+139</td><td>+371</td><td>+574</td><td>+732</td><td>+826</td><td>+905</td><td>+939</td><td>+957</td></tr>
+      <tr class="odd"><td>ROIIC (증분투자수익률)</td><td>—</td><td>41%</td><td>45%</td><td>47%</td><td>46%</td><td>41%</td><td>34%</td><td>31%</td><td>32%</td><td>29%</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tnote">FCF는 연중(mid-year) 할인. ROIIC = 당해 NOPAT 증가분 ÷ 전년 신규 투자 — 29~47%라는 높은 값은 ‘마진 확장 가정’이 만든 산물이므로 그 자체가 검증 대상이다(하단 ‘한계와 가정’). 2026~27년 FCF 음수 = 성장 투자기 지속(순현금 65억으로 자체 충당 가능, 추가 조달 불요).</p>
+
+  <div class="grid2">
+    <div class="tbl-wrap" style="margin:0;"><table class="t" style="min-width:0;">
+      <caption>최종가치와 주당 가치 (10년 전개 기준)</caption>
+      <tbody>
+        <tr class="odd"><td>① FCF 현재가치 합 (’26~’35)</td><td>+4,910</td></tr>
+        <tr class="even"><td>② 최종가치: 페이드 모델 — 2036 NOPAT 2,979 × 9.94배</td><td>29,608</td></tr>
+        <tr class="odd"><td>③ 최종가치의 현재가치 (②÷1.104¹⁰)</td><td>+11,009</td></tr>
+        <tr class="even"><td>영업가치 (①+③)</td><td><strong>15,919</strong></td></tr>
+        <tr class="odd"><td>+ 현금성 보유 (1Q26)</td><td>+7,232</td></tr>
+        <tr class="even"><td>− 총차입금</td><td>-740</td></tr>
+        <tr class="odd"><td>자기자본 가치 (백만 위안)</td><td><strong>22,411</strong></td></tr>
+        <tr class="even"><td>÷ 희석 ADS 163.2백만 · ÷ 환율 6.90</td><td>—</td></tr>
+        <tr class="total"><td>주당 가치 (10년 시나리오)</td><td>$19.90</td></tr>
+      </tbody>
+    </table></div>
+    <div class="box-light" style="margin:0;">
+      <p style="margin-bottom:8px;"><strong>페이드 모델이란.</strong> 예측기간이 끝나도 회사가 갑자기 ‘평범해지는’ 것이 아니라, 초과수익률(여기선 종료 시점 증분 ROIC 20% 가정)이 IT 섹터 표준 페이드 비율 <strong>0.20</strong>의 속도로 자본비용을 향해 <em>서서히 수렴</em>한다고 보는 최종가치 계산법이다. 장기 성장률은 기대 인플레이션 2.5%. 이 조합에서 최종가치 배수는 차기년 NOPAT의 약 9.9배로, 단순 영구성장 모델(약 12.6배)보다 보수적이다.</p>
+      <p style="margin-bottom:0;"><strong>읽는 법.</strong> 기본 가정을 10년 끌고 가면 $19.9 — 현재가 $18.22와 큰 차이가 없다. 즉 <strong>시장은 대략 이 정도의 성장·마진 경로를 이미 믿고 있다</strong>는 뜻이고, 몇 년치를 믿는지가 §10의 내재 CAP 역산이다. 참고로 성장을 전부 꺼버린 무성장 정상상태 가치(2025 정상화 NOPAT을 자본비용으로 영구 환원 + 순현금)는 <strong>주당 약 $8.5</strong> — 현재가의 47%는 ‘미래 성장분’이다.</p>
+    </div>
+  </div>
+
+  <div class="callout co-cyan">
+    <div class="c-title">도입기 사업(로봇·SGI)에 대한 실물옵션 관점 — DCF가 못 담는 것</div>
+    <p>위 DCF의 매출 경로에는 로봇용 라이다의 <em>현재 가시권</em>(잔디깎이 백로그, 로보택시 증차)만 절제해서 담았다. 휴머노이드가 2030년대에 연 수백만 대급으로 열리는 시나리오(모건스탠리류 서사)는 <strong>모델에 없다</strong> — 이는 실패해도 잃을 것이 없고 성공하면 TAM이 배가되는 <strong>콜옵션</strong>으로 별도 취급하는 것이 정직하다. 같은 논리로 SGI(Kosmo)도 ’27년 5억 위안까지만 반영했다. 요컨대 본 밸류에이션은 ‘옵션 가치 0원’ 기준이며, 옵션이 살아나면 상방은 Bull 시나리오(§10) 쪽으로 열린다.</p>
+  </div>
+</section>
+
+<section class="sec" id="s10">
+  <div class="sec-head"><span class="sec-no num">10</span><h2>시장 내재 CAP 역산 — 주가가 품고 있는 기대 읽기</h2><span class="sec-en">MARKET-IMPLIED CAP</span></div>
+
+  <p class="lead">질문을 뒤집는다. “허사이가 얼마짜리인가”가 아니라 <strong>“$18.22라는 현재가는 이 회사가 몇 년 동안 초과수익 성장을 지속한다고 가정해야 나오는 값인가”</strong>를 역산한다. 그 연수가 시장 내재 경쟁우위기간(CAP)이다.</p>
+
+  <h3 class="h3">역산 과정</h3>
+  <div class="tbl-wrap"><table class="t prose">
+    <thead><tr><th>단계</th><th>계산</th><th>값 (백만 위안)</th></tr></thead>
+    <tbody>
+      <tr class="odd"><td>① 시장이 매긴 자기자본 가치</td><td>$18.22 × 163.2M ADS × 환율 6.90</td><td>20,517</td></tr>
+      <tr class="even"><td>② 시장이 매긴 ‘영업’ 가치</td><td>① − 현금 7,232 + 차입 740</td><td><strong>14,025</strong></td></tr>
+      <tr class="odd"><td>③ 모델 영업가치, 예측기간 7년</td><td>기본 시나리오, 연중 할인 + 페이드 최종가치</td><td>13,871 → 주당 $18.09</td></tr>
+      <tr class="even"><td>④ 모델 영업가치, 예측기간 8년</td><td>〃</td><td>14,723 → 주당 $18.84</td></tr>
+      <tr class="total"><td>⑤ 내재 CAP</td><td>②가 ③과 ④ 사이에 위치 → 보간</td><td><strong>≈ 7.2년</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p class="tnote">예측기간을 5년부터 1년씩 늘리며 시장 영업가치와 만나는 지점 탐색: 5년 $15.68 · 6년 $17.11 · 7년 $18.09 · 8년 $18.84 · 10년 $19.90. 현재가 $18.22는 7년과 8년 사이.</p>
+
+  <figure class="fig">
+    <div class="fig-title">그림 15. 내재 CAP 게이지: ≈7년 — ‘약간 비관적’ 구간의 한복판</div>
+    <div class="fig-sub">막대 구간 = 프레임워크의 해석 밴드 · 수염(whisker) = 민감도 범위(6~11년)</div>
+    <svg viewBox="0 0 950 210" role="img" aria-label="내재 CAP 게이지">
+      <g font-size="12.5" font-weight="800" text-anchor="middle">
+        <rect x="60" y="70" width="166" height="44" fill="#1E6B49"/><text x="143" y="90" fill="#FFFFFF">0~5년</text><text x="143" y="106" fill="#DFF0E8" font-size="11" font-weight="700">매우 비관적 (저평가 후보)</text>
+        <rect x="226" y="70" width="166" height="44" fill="#0C7A6E"/><text x="309" y="90" fill="#FFFFFF">5~10년</text><text x="309" y="106" fill="#D8F2ED" font-size="11" font-weight="700">약간 비관적</text>
+        <rect x="392" y="70" width="166" height="44" fill="#5E7484"/><text x="475" y="90" fill="#FFFFFF">10~15년</text><text x="475" y="106" fill="#E3EAEE" font-size="11" font-weight="700">합리적 (IT 통상)</text>
+        <rect x="558" y="70" width="166" height="44" fill="#B26E00"/><text x="641" y="90" fill="#FFFFFF">15~20년</text><text x="641" y="106" fill="#FBEBCB" font-size="11" font-weight="700">약간 낙관적</text>
+        <rect x="724" y="70" width="166" height="44" fill="#B23543"/><text x="807" y="90" fill="#FFFFFF">20년+</text><text x="807" y="106" fill="#F8E1E4" font-size="11" font-weight="700">과열 (회피 신호)</text>
+      </g>
+      <g font-size="11.5" fill="#5E7484" text-anchor="middle">
+        <text x="60" y="136">0</text><text x="226" y="136">5</text><text x="392" y="136">10</text><text x="558" y="136">15</text><text x="724" y="136">20</text><text x="890" y="136">25년</text>
+      </g>
+      <line x1="259" y1="150" x2="425" y2="150" stroke="#16232E" stroke-width="2"/>
+      <line x1="259" y1="144" x2="259" y2="156" stroke="#16232E" stroke-width="2"/>
+      <line x1="425" y1="144" x2="425" y2="156" stroke="#16232E" stroke-width="2"/>
+      <path d="M299,42 L311,62 L287,62 z" fill="#16232E"/>
+      <text x="299" y="34" text-anchor="middle" font-size="14.5" font-weight="800" fill="#16232E">내재 CAP ≈ 7.2년</text>
+      <text x="342" y="172" text-anchor="middle" font-size="12" fill="#3D5160">민감도 범위 6~11년 (아래 표)</text>
+      <text x="475" y="200" text-anchor="middle" font-size="12" fill="#5E7484">해석: 시장은 허사이의 초과수익 성장 지속력을 IT 섹터 통상(10~15년)보다 짧게 — 즉 다소 회의적으로 — 가격에 반영 중</text>
+    </svg>
+    <figcaption>그림 15. 본 보고서 역산. 밴드 해석 기준은 프로젝트 CAP 프레임워크.</figcaption>
+  </figure>
+
+  <h3 class="h3">민감도 — 결론이 어디까지 흔들리는가</h3>
+  <div class="tbl-wrap"><table class="t prose">
+    <thead><tr><th>가정 변경</th><th>내재 CAP</th><th>해석</th></tr></thead>
+    <tbody>
+      <tr class="odd"><td>WACC 9.4% (자본비용 -1%p)</td><td>≈ 5.7년</td><td>할인율이 낮으면 같은 주가를 정당화하는 데 더 짧은 기대로 충분</td></tr>
+      <tr class="hl"><td>WACC 10.4% (기본)</td><td><strong>≈ 7.2년</strong></td><td>기준 결론</td></tr>
+      <tr class="odd"><td>WACC 11.4% (자본비용 +1%p)</td><td>≈ 11년</td><td>중국 리스크를 할인율에 더 얹으면 시장 기대는 ‘합리 구간 초입’으로 이동</td></tr>
+      <tr class="even"><td>ERP 4.23% (다모다란 ’26.1 내재치, k≈9.9%)</td><td>≈ 6.3년</td><td>더 낮은 시장 위험프리미엄 기준으로도 결론 구간 불변</td></tr>
+      <tr class="odd"><td>성장 경로 매년 -5%p (방향 추정)</td><td>10년+ 쪽으로 연장</td><td>영업 가정을 깎으면 같은 주가에 필요한 ‘기간’이 길어짐 — 기대가 무거워짐</td></tr>
+      <tr class="even"><td>EBITA 마진 상한 14% (방향 추정)</td><td>10~12년 안팎으로 연장</td><td>마진을 못 키우면 시장 기대는 ‘합리’ 구간 — 저평가 논거 약화</td></tr>
+      <tr class="odd"><td>페이드 0.25 (해자 소멸 빠름) / 0.15 (느림)</td><td>+1년 안팎 / -1년 안팎</td><td>최종가치 민감도는 상대적으로 완만</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tnote">굵은 행이 기준. ‘방향 추정’ 행은 모델 구조상 방향과 대략 규모만 제시(정밀 재계산 아님). 종합하면 내재 CAP은 <strong>≈7년, 그럴듯한 범위 6~11년</strong> — 어떤 합리적 가정에서도 ‘15년+ 낙관 과열’ 구간에는 들어가지 않는다.</p>
+
+  <figure class="fig">
+    <div class="fig-title">그림 16. 밸류에이션 풋볼필드: 현재가는 ‘기본 시나리오 7~8년 지속’ 지점에 서 있다</div>
+    <div class="fig-sub">가로축: 주당 달러 · 세로 점선 = 현재가 $18.22 (’26.7.2)</div>
+    <svg viewBox="0 0 950 430" role="img" aria-label="밸류에이션 레인지">
+      <g stroke="#E3EAEE"><line x1="248" y1="46" x2="248" y2="368"/><line x1="427" y1="46" x2="427" y2="368"/><line x1="605" y1="46" x2="605" y2="368"/><line x1="783" y1="46" x2="783" y2="368"/></g>
+      <g font-size="12" fill="#5E7484" text-anchor="middle">
+        <text x="248" y="388">$10</text><text x="427" y="388">$20</text><text x="605" y="388">$30</text><text x="783" y="388">$40</text>
+      </g>
+      <g font-size="13" fill="#16232E" font-weight="700" text-anchor="end">
+        <text x="160" y="75">순현금/주</text>
+        <text x="160" y="121">무성장 정상가치</text>
+        <text x="160" y="167">Bear 시나리오</text>
+        <text x="160" y="213">기본 CAP 5~10년</text>
+        <text x="160" y="259">Bull 시나리오</text>
+        <text x="160" y="305">애널리스트 PT 범위</text>
+        <text x="160" y="351">52주 주가 범위</text>
+      </g>
+      <!-- rows -->
+      <rect x="170" y="58" width="6" height="0" fill="none"/>
+      <circle cx="172.9" cy="70" r="8" fill="#16232E"/><text x="188" y="75" font-size="12.5" font-weight="800" fill="#16232E">$5.77</text>
+      <circle cx="221.0" cy="116" r="8" fill="#5E7484"/><text x="236" y="121" font-size="12.5" font-weight="800" fill="#3D5160">$8.47</text>
+      <rect x="235.8" y="156" width="16.1" height="22" rx="4" fill="#B23543"/><text x="260" y="172" font-size="12.5" font-weight="800" fill="#9A2F3B">$9.3~10.2</text>
+      <rect x="349.6" y="202" width="75.3" height="22" rx="4" fill="#0C7A6E"/>
+      <line x1="406" y1="198" x2="406" y2="228" stroke="#FFFFFF" stroke-width="2.5"/>
+      <text x="433" y="218" font-size="12.5" font-weight="800" fill="#0A5C53">$15.7 (5년) ~ $19.9 (10년) · 8년=$18.8</text>
+      <circle cx="503.3" cy="254" r="8" fill="#1E6B49"/><text x="518" y="259" font-size="12.5" font-weight="800" fill="#1E6B49">$24.3</text>
+      <rect x="489.0" y="294" width="365.5" height="22" rx="4" fill="#FBEBCB" stroke="#B26E00"/>
+      <line x1="608.5" y1="290" x2="608.5" y2="320" stroke="#B26E00" stroke-width="3"/>
+      <text x="608.5" y="284" text-anchor="middle" font-size="12.5" font-weight="800" fill="#8F5800">평균 $30.2 (범위 $23.5~44)</text>
+      <rect x="317.8" y="340" width="302.3" height="22" rx="4" fill="#DDE5EA" stroke="#5E7484"/>
+      <text x="322" y="356" font-size="12" font-weight="700" fill="#2C3E4C">$13.90</text><text x="616" y="356" text-anchor="end" font-size="12" font-weight="700" fill="#2C3E4C">$30.85</text>
+      <!-- current price line -->
+      <line x1="394.9" y1="40" x2="394.9" y2="372" stroke="#E08A00" stroke-width="2.5" stroke-dasharray="7 5"/>
+      <rect x="342" y="18" width="106" height="24" rx="12" fill="#E08A00"/>
+      <text x="394.9" y="35" text-anchor="middle" font-size="13" font-weight="800" fill="#231400">현재 $18.22</text>
+    </svg>
+    <figcaption>그림 16. 본 보고서 시나리오(§9~10)·컨센서스 목표주가(’26.6~7월 집계)·52주 주가. 모든 값은 8:1 분할 전 기준.</figcaption>
+  </figure>
+
+  <h3 class="h3">시나리오 — 기대의 세 갈래</h3>
+  <div class="tbl-wrap"><table class="t prose">
+    <thead><tr><th></th><th>Bear (약세)</th><th>Base (기본)</th><th>Bull (강세)</th></tr></thead>
+    <tbody>
+      <tr class="odd"><td>핵심 가정</td><td>성장 절반 감속·마진 상한 10%·종료 ROIC 15%·페이드 0.25 (경쟁 격화+지정학 악화)</td><td>§9 테이블 그대로 (마진 17%·종료 ROIC 20%·페이드 0.20)</td><td>마진 19%·종료 ROIC 25%·페이드 0.17 — 로봇·SGI 개화, L3 글로벌 확산</td></tr>
+      <tr class="even"><td>주당 가치</td><td class="neg">$9.3~10.2</td><td><strong>$18.1~18.8 (7~8년)</strong></td><td class="pos">$24.3 (10년 기준)</td></tr>
+      <tr class="odd"><td>현재가 대비</td><td>-44~-49%</td><td>±3% 이내</td><td>+33%</td></tr>
+      <tr class="hl"><td>함의</td><td colspan="3">현재가는 기본 시나리오의 공정가 부근 — <strong>상방은 ‘로봇 옵션+마진 상향’, 하방은 ‘지정학+마진 실패’</strong>가 연다. 참고로 컨센서스 평균 PT $30은 Bull급 영업 가정에 CAP 14~15년(또는 WACC ~9%)을 얹어야 도달하는 값 — 목표주가의 낙관 강도를 가늠하는 잣대다.</td></tr>
+    </tbody>
+  </table></div>
+
+  <figure class="fig">
+    <div class="fig-title">그림 17. P/S 밴드 — 멀티플은 고점의 절반 이하로 식었다</div>
+    <div class="fig-sub">시가총액 ÷ 직전 12개월 매출(TTM P/S) · 적자 이력으로 P/E 밴드가 왜곡되어 P/S가 더 일관된 잣대</div>
+    <svg viewBox="0 0 950 190" role="img" aria-label="P/S 밴드">
+      <rect x="120" y="70" width="700" height="34" rx="17" fill="#EAF1F4" stroke="#CBDAE1"/>
+      <!-- scale 2x..14x → x=120+ (v-2)/12*700 -->
+      <g font-size="12" fill="#5E7484" text-anchor="middle">
+        <text x="120" y="128">2x</text><text x="295" y="128">5x</text><text x="470" y="128">8x</text><text x="645" y="128">11x</text><text x="820" y="128">14x</text>
+      </g>
+      <rect x="265.8" y="70" width="437.5" height="34" rx="17" fill="#B9D8D2"/>
+      <circle cx="265.8" cy="87" r="9" fill="#1E6B49"/><text x="265.8" y="60" text-anchor="middle" font-size="12" font-weight="800" fill="#1E6B49">저점 ~4.5x (’25.4)</text>
+      <circle cx="703.3" cy="87" r="9" fill="#B23543"/><text x="703.3" y="60" text-anchor="middle" font-size="12" font-weight="800" fill="#9A2F3B">고점 ~12x대 (’25.9)</text>
+      <circle cx="365" cy="87" r="11" fill="#E08A00" stroke="#231400" stroke-width="2"/><text x="365" y="150" text-anchor="middle" font-size="13" font-weight="800" fill="#8F5800">현재 6.2x (TTM)</text>
+      <circle cx="265.8" cy="87" r="0"/>
+      <text x="475" y="176" text-anchor="middle" font-size="12" fill="#5E7484">참고: 2026E 매출 기준 선행 P/S ≈ 4.5x, EV/Sales(순현금 차감) ≈ 3.0x — 성장률(+45%) 대비로는 밴드 하단권</text>
+    </svg>
+    <figcaption>그림 17. 시가총액·분기 매출 공시로 산출한 근사 밴드(고·저점 시점의 주가×주식수÷당시 TTM 매출). P/E는 2026E ~36배 → 2027E ~19배 → 2028E ~13배(컨센서스 EPS 경로 기준).</figcaption>
+  </figure>
+
+  <div class="callout co-ink">
+    <div class="c-title">§10 결론 — 시장 기대의 강도 판정</div>
+    <p>내재 CAP <strong>≈7년(범위 6~11년)</strong>은 프레임워크 기준 <strong>‘약간 비관적’</strong> 구간이다. 업계 유일 흑자·점유 1위·순현금 33%라는 팩트에 비해 시장이 반영한 기대 지속기간은 IT 통상(10~15년)보다 짧다 — 지정학(1260H·펜타곤 리스트), ASP 급락 구조, 카메라-온리 대체론이라는 세 가지 할인 요인이 눌러놓은 결과로 읽힌다. 뒤집어 말하면 <strong>이 세 리스크 중 어느 하나라도 해소·완화되는 것 자체가 CAP 재평가(기대 기간 연장) 트리거</strong>가 되고, 반대로 마진 40% 선 붕괴나 지정학 실물 타격이 확인되면 Bear 쪽($9~10)으로의 하방도 산술적으로 크다. 낙관도 비관도 아닌, ‘기대가 낮게 깔린 고변동 성장주’가 현 좌표다. <span class="conf">확신도: 중간~높음 ~70% (모델 가정 의존)</span></p>
+  </div>
+</section>
+
+<section class="sec" id="s11">
+  <div class="sec-head"><span class="sec-no num">11</span><h2>투자 논거 — Bull Case</h2><span class="sec-en">BULL CASE</span></div>
+
+  <p class="lead">부정 편향을 걷어내고 정면으로 묻는다: <strong>시장 자금은 왜 이 회사를 좋아하는가, 그리고 그 이유는 데이터로 지탱되는가.</strong> 아래 여섯 기둥은 전부 공시·실적 숫자에 뿌리를 둔 것들이다.</p>
+
+  <div class="grid2">
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">① 산업 승자에게 걸리는 복리 — ‘이미 이긴 시장’의 1위</h4>
+      <p>라이다는 승자가 정해지지 않은 시장이 아니다. 70여 개 업체가 4강(중국 99% 과점)으로 압축됐고, 그 안에서 허사이는 <strong>매출·이익·기술 세대·글로벌 인지도(Yole 5년 연속 1위)</strong> 전부에서 선두다. 산업 정리기의 생존자는 이후 정상화된 마진과 수주를 몰아 받는다 — 루미나 퇴장, Innoviz·Aeva의 자금난은 허사이 입장에서 경쟁 감소라는 순풍이다. 침투율 19%에서 1위라는 것은, S-커브의 나머지 80%가 기본적으로 1위의 몫으로 흐른다는 의미다.</p>
+    </div>
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">② 증명된 유일 흑자 — ‘꿈 섹터’에서 돈을 버는 회사</h4>
+      <p>2025년 라이다 업계 <strong>최초·유일의 연간 GAAP 흑자</strong>. 판가가 연 -50%씩 떨어지는 시장에서 GM 40%를 지킨 것은 자체 칩·자체 공장이라는 구조가 만든 결과지 운이 아니다. 1Q26 라이다 부문 영업이익 흑자(+0.42억)는 보조금 없는 본업 수익성의 개시 신호다. 적자 기술주가 금리·유동성에 휘둘릴 때, 흑자+순현금 $9.4억(시총의 33%)은 하방을 받치는 물리적 쿠션이다.</p>
+    </div>
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">③ 잠긴 성장 — 이미 계약된 미래</h4>
+      <p>2026년 가이던스 출하 300만~350만 대(+85~116%)는 희망이 아니라 <strong>수주가 뒷받침하는 숫자</strong>다: ATX 누적 수주 400만 대+, 리오토 차세대 전 차종 독점, 상위 2개 고객 ’26년 전 모델 100% 탑재, 로봇 잔디깎이 백로그 1,000만 대+. 자동차 부품의 디자인윈은 차종 수명(4~7년) 동안 잠기므로, 향후 2~3년 매출의 상당 부분은 이미 ‘예약’ 상태다. 여기에 AEB 의무화(’28)와 L3 법제화가 정책 달력에 박혀 있는 수요를 더한다.</p>
+    </div>
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">④ 글로벌 관문 통과 — 벤츠와 엔비디아라는 도장</h4>
+      <p>메르세데스-벤츠 L3 확정 공급(’26.5 공시)은 <strong>세계에서 가장 보수적인 안전 검증을 통과했다는 인증</strong>이고, 태국 공장 생산으로 지정학 우회 경로까지 설계됐다. NVIDIA DRIVE Hyperion 10의 기본 라이다 채택은 글로벌 OEM이 엔비디아 플랫폼을 고를 때마다 허사이가 기본값이 된다는 뜻 — 개별 영업 없이 생태계가 영업해 주는 구조다. Motional(현대 계열) 로보택시 독점, DoorDash 배송로봇까지, ‘중국 회사’ 딱지를 넘은 서방 레퍼런스가 쌓이는 중이다.</p>
+    </div>
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">⑤ 로봇 옵션 — 공짜로 얹힌 두 번째 S-커브</h4>
+      <p>§10의 밸류에이션은 로봇 대량화 시나리오를 담지 않았다. 그런데 로봇용 출하는 이미 연 +426%(23.9만 대)로 현실이고, 로보택시 8사 공급·차당 최대 8개 탑재, 휴머노이드(유니트리 등) 공급 개시, JT 시리즈 출시 6개월 만에 10만 대 인도라는 초기 데이터가 있다. 시장이 9월에 $30.85까지 갔던 이유가 이 옵션이고, 현재가에는 그 옵션이 거의 0원으로 빠져 있다 — <strong>기대가 식은 지금이 옵션을 싸게 쥐는 구간</strong>이라는 것이 강세론의 핵심 시간 논리다.</p>
+    </div>
+    <div class="box-light">
+      <h4 class="h4" style="margin-top:0;">⑥ 낮아진 기대 자체가 매력 — 밸류에이션의 비대칭</h4>
+      <p>내재 CAP ≈7년은 이 회사의 실적 대비 짧고(§10), 선행 P/S 4.5배·EV/Sales 3.0배는 +45% 성장 기업 기준 밴드 하단권이다. 무성장 가치 $8.5 + 순현금 $5.8이 하방 뼈대를 이루는 반면, 상방은 ‘마진 17% 도달’과 ‘로봇 개화’ 중 하나만 맞아도 열린다. 강세론은 “모든 게 잘돼야 오르는 주식”이 아니라 <strong>“몇 가지 리스크가 안 터지기만 해도 기대 기간(CAP)이 정상화되며 오르는 주식”</strong>이라고 요약한다.</p>
+    </div>
+  </div>
+
+  <div class="callout co-green">
+    <div class="c-title">지속 가능성 검증 — 왜 경쟁사가 단기간에 못 따라오는가</div>
+    <p>위 논거의 약점은 늘 “경쟁사가 따라잡으면?”이다. 검증: 로보센스가 GM 41.8%를 복제하려면 ① 4세대 축적된 ASIC(최소 2~3 칩 세대 = 4~6년), ② 10초/대 자동화 공장(자본+수율 학습), ③ 프리미엄 고객의 재검증 통과(2~3년)를 동시에 해내야 한다. 각각은 돈으로 사도 시간으로는 압축이 어렵다. 화웨이는 예외적 위협이지만 자기 진영 밖으로는 팔기 어렵다는 구조적 한계(경쟁 OEM들이 화웨이 종속을 기피)가 있다. 결론적으로 <strong>‘5~10년형 다층 해자’(§6)는 Bull Case의 시간 지평(2030년 전후까지의 성장)을 커버하기에 충분</strong>하다는 것이 강세론의 논리적 완결이다. <span class="conf">확신도: 중간~높음 ~70%</span></p>
+  </div>
+</section>
+
+<section class="sec" id="s12">
+  <div class="sec-head"><span class="sec-no num">12</span><h2>리스크 — Bear Case</h2><span class="sec-en">BEAR CASE</span></div>
+
+  <p class="lead">약세론을 허수아비로 세우지 않는다. 각 리스크를 <strong>가장 강한 형태(steel-man)</strong>로 서술하고, 그것이 이미 주가에 얼마나 반영됐는지를 함께 판정한다.</p>
+
+  <div class="tbl-wrap"><table class="t prose">
+    <thead><tr><th>리스크</th><th>가장 강한 형태의 논거</th><th>반박·완충 요인</th><th>주가 반영도 판정</th></tr></thead>
+    <tbody>
+      <tr class="odd"><td><strong>① 지정학 — 1260H·펜타곤 리스트</strong></td><td>미 국방부 ‘중국군 연계기업(1260H)’ 지정 유지(’25.7 1심 패소, 항소 중). 법적 제재는 없어도 미국 OEM·정부 관련 수요가 평판 리스크로 이탈하고, 최악엔 수출통제·투자제한으로 확장될 수 있다. ’26.6 알리바바·바이두 추가 지정에서 보듯 리스트는 좁아지지 않고 넓어지는 추세 — 이 종목은 언제든 ‘중국 리스크 ETF’처럼 투매당한다.</td><td>지정 2년 반 동안 실질 사업 타격은 미확인(매출 +46%). 벤츠·Motional·DoorDash 등 서방 수주는 지정 이후에 성사. 태국 공장이 ‘비중국 원산지’ 경로 제공. 항소 승소 시 강한 해소 트리거.</td><td class="pos"><strong>상당 반영</strong> — 6월 급락(-42%)과 내재 CAP 7년(IT 통상보다 짧음)이 이 할인의 물증. 단 ‘추가 악화’(수출통제 등) 시나리오는 미반영</td></tr>
+      <tr class="even"><td><strong>② ASP 디플레이션 — 마진 붕괴 시나리오</strong></td><td>판가가 3년에 -87% 떨어진 산업이다. 로보센스가 점유율을 위해 GM 26%로 버티는 한 가격전쟁은 끝나지 않고, 물량 성장이 둔화되는 순간(중국 EV 성장 자체가 ’26.6월 둔화 조짐) ‘물량이 판가를 이기는’ 공식이 깨진다. 그때 GM 40%는 방어선이 아니라 다음 인하 여력으로 소진된다.</td><td>ASP 하락은 침투의 전제(§3). L3 멀티 라이다·고성능 ETX가 믹스를 끌어올리는 반대 방향 힘. 1Q26에도 GM 39.1%로 40% 선 부근 유지. 원가의 상당분이 자체 칩·자동화라 인하 여력에서 구조적 우위.</td><td><strong>부분 반영</strong> — 컨센서스는 GM 40% 유지를 전제. 30%대 중반 붕괴 시나리오는 미반영(발생 시 Bear $9~10 경로)</td></tr>
+      <tr class="odd"><td><strong>③ 카메라-온리 대체론</strong></td><td>테슬라 FSD는 라이다 없이 상업 배치를 넓히는 중이고, 중국의 Xpeng마저 비전-온리로 전환했다. AI 비전의 발전 속도가 하드웨어 센서의 원가 하락 속도를 이기면, 라이다는 ‘과도기 부품’으로 끝난다 — 이 경우 TAM 자체가 소멸하는 실존 리스크다.</td><td>중국 시장은 반대로 라이다 표준화가 진행(침투 19%↑, AEB 의무화). L3 이상에서 ‘단일 센서 실패 시 대체 경로’ 요구는 규제 본능에 가까움. 벤츠·볼보 등 안전 중시 OEM의 선택. 라이다 가격이 $200이면 ‘제거할 이유’ 자체가 약해짐.</td><td><strong>부분 반영</strong> — 중국 내 승부는 사실상 결판(반영 불필요), 글로벌 승부의 불확실성이 멀티플 할인에 녹아 있음. 단 ‘중국서도 비전-온리 회귀’ 꼬리 리스크는 미반영</td></tr>
+      <tr class="even"><td><strong>④ 고객 집중 + 중국 EV 사이클</strong></td><td>상위 5개사 55.8%, 최대 고객 17%. 리오토 판매 부진이나 보조금 축소발 중국 EV 수요 절벽이 오면 가이던스 300만 대는 공수표가 된다. ’26.3월 주가 -10.7%가 보여주듯 이 주식은 분기 가이던스 하나에 두 자릿수로 반응한다.</td><td>40개 브랜드·160여 차종으로 분산 가속, 로봇(비자동차) 축이 15%→확대 중, 벤츠·글로벌 물량이 ’27부터 가세. 고객 다변화는 방향이 명확히 개선 중.</td><td><strong>부분 반영</strong> — 고변동성(52주 2.2배)이 사이클 민감도의 가격표. 특정 대형 고객 이탈은 미반영 이벤트</td></tr>
+      <tr class="odd"><td><strong>⑤ 이익의 질·회계 신뢰</strong></td><td>2025 흑자는 보조금+이자+일회성 처분이익 조합(§9). 게다가 처분이익의 상대는 공동창업자들이 세운 회사(Sharpa)로 추정되는 관련당사자 뉘앙스가 있고(§14), ’25.3 Blue Orca 공매도 리포트는 중국 신고서류와 SEC 공시 불일치를 주장했다. ‘중국 ADR + 복잡한 이익 구조’ 조합은 신뢰 디스카운트를 정당화한다.</td><td>회사는 Blue Orca 주장을 전면 반박, 이후 빅4 감사의견 적정 유지·홍콩 거래소 상장 심사 통과(추가 검증 레이어). 1Q26 부문 공시 도입으로 투명성 개선. 핵심 영업이익의 흑자 전환이 진행되면 이 논거는 자연 소멸.</td><td><strong>상당 반영</strong> — 중국 ADR 일괄 할인에 포함. 단 실제 회계 문제 확인 시엔 반영도와 무관하게 급락 요인</td></tr>
+      <tr class="even"><td><strong>⑥ 희석·수급</strong></td><td>홍콩 2차 상장으로 주식 수 증가(+약 17%), ’25.11 급락이 보여준 물량 소화 부담. SGI 등 신사업 확장에 추가 조달 가능성. 8:1 분할은 가치와 무관한 이벤트인데 +17% 급등한 것 자체가 투기적 수급의 증거.</td><td>조달 현금은 태국 공장·R&amp;D 등 사용처가 명시됐고 순현금으로 재무 리스크는 소멸. 6분기 연속 non-GAAP 흑자로 추가 대규모 조달 필요성 낮음.</td><td><strong>대체로 반영</strong> — 상장 물량 소화는 ’25.11~12에 가격으로 치름</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout co-red">
+    <div class="c-title">Bear Case의 정직한 요약 — 무엇이 이 논거를 이기게 만드는가</div>
+    <p>약세론이 승리하는 세계는 대략 이렇다: 중국 EV 수요 둔화로 ’26 출하가 가이던스를 크게 하회하고(→물량<판가 하락), 가격전쟁 속에 GM이 30%대 중반으로 밀리며(→마진 스토리 붕괴), 그 와중에 미·중 갈등이 수출통제로 격화(→글로벌 확장 서사 차단)되는 조합이다. 이 경우 §10 Bear 가치 $9~10로 현재가 대비 <strong>-45% 내외의 하방</strong>이 산술적으로 열려 있다 — 순현금($5.8/주)이 최후 바닥을 깔아줄 뿐이다. 핵심 감시 신호는 세 개: <strong>분기 GM 38% 이탈, 분기 출하의 가이던스 궤도 이탈, 1260H 관련 규제의 ‘리스트’에서 ‘제재’로의 격상.</strong> 반대로 세 신호가 잠잠한 분기가 쌓일수록 약세론의 기대값은 줄어든다. <span class="conf">확신도: 높음 ~80% (리스크 식별 자체에 대해; 발생 확률 평가는 별개)</span></p>
+  </div>
+</section>
+
+<section class="sec" id="s13">
+  <div class="sec-head"><span class="sec-no num">13</span><h2>SWOT 종합</h2><span class="sec-en">SWOT</span></div>
+  <figure class="fig">
+    <div class="fig-title">그림 18. SWOT — 앞선 12개 섹션의 한 장 요약</div>
+    <div class="grid2" style="margin-top:6px;">
+      <div style="background:#E5F3EC; color:#143D2B; border:1px solid #B4DCC8; border-top:6px solid #1E6B49; border-radius:10px; padding:18px 20px;">
+        <div style="font-weight:800; font-size:15.5px; color:#1E6B49; margin-bottom:8px;">S — 강점 (내부·현재)</div>
+        <ul class="flat" style="margin:0;">
+          <li style="color:#143D2B;">업계 유일 연간 GAAP 흑자 + GM 41.8% (경쟁사 +15%p)</li>
+          <li style="color:#143D2B;">출하 1위 162만 대·매출 1위 — 규모의 경제 선순환</li>
+          <li style="color:#143D2B;">4세대 자체 ASIC·특허 2,071건 세계 1위·수직통합 제조</li>
+          <li style="color:#143D2B;">순현금 $9.4억 (시총 33%) — 가격전쟁 버틸 탄약</li>
+          <li style="color:#143D2B;">벤츠·엔비디아·리오토 등 최상급 레퍼런스 잠금</li>
+        </ul>
+      </div>
+      <div style="background:#FAE7E9; color:#521A20; border:1px solid #EBB9BF; border-top:6px solid #B23543; border-radius:10px; padding:18px 20px;">
+        <div style="font-weight:800; font-size:15.5px; color:#9A2F3B; margin-bottom:8px;">W — 약점 (내부·현재)</div>
+        <ul class="flat" style="margin:0;">
+          <li style="color:#521A20;">핵심 영업이익 아직 손익분기권 — 흑자의 질이 얇음 (§9)</li>
+          <li style="color:#521A20;">FCF 여전히 음수, 성장이 외부 조달(홍콩 $6.1억)에 일부 의존</li>
+          <li style="color:#521A20;">상위 5고객 55.8% 집중, 중국 매출 편중</li>
+          <li style="color:#521A20;">ROIC(~8%) &lt; WACC(10.4%) — 해자가 아직 이익으로 미전환</li>
+          <li style="color:#521A20;">고변동 수급(52주 2.2배) — 이벤트마다 ±10%대 출렁임</li>
+        </ul>
+      </div>
+      <div style="background:#E2F5F1; color:#123B36; border:1px solid #9BD9CF; border-top:6px solid #0C7A6E; border-radius:10px; padding:18px 20px;">
+        <div style="font-weight:800; font-size:15.5px; color:#0A5C53; margin-bottom:8px;">O — 기회 (외부·미래)</div>
+        <ul class="flat" style="margin:0;">
+          <li style="color:#123B36;">중국 침투율 19%→ 계속: S-커브 본체 구간 + AEB 의무화(’28)</li>
+          <li style="color:#123B36;">L3 멀티 라이다 — 차당 콘텐츠 $500~1,000로 점프</li>
+          <li style="color:#123B36;">로봇 제2 S-커브: 잔디깎이 백로그 1,000만·로보택시·휴머노이드 옵션</li>
+          <li style="color:#123B36;">벤츠·엔비디아 경유 글로벌 OEM 확산 + 태국 생산 거점</li>
+          <li style="color:#123B36;">SGI(Kosmo) — 하드웨어→공간지능 데이터로 사업 확장</li>
+        </ul>
+      </div>
+      <div style="background:#FBF0DA; color:#4A3208; border:1px solid #E7CD9A; border-top:6px solid #B26E00; border-radius:10px; padding:18px 20px;">
+        <div style="font-weight:800; font-size:15.5px; color:#8F5800; margin-bottom:8px;">T — 위협 (외부·미래)</div>
+        <ul class="flat" style="margin:0;">
+          <li style="color:#4A3208;">미·중 지정학: 1260H 항소 결과, 리스트→제재 격상 꼬리 리스크</li>
+          <li style="color:#4A3208;">카메라-온리 진영의 글로벌 승리 시 TAM 축소 실존 리스크</li>
+          <li style="color:#4A3208;">로보센스 저가 공세·화웨이 수직계열의 진영 잠식</li>
+          <li style="color:#4A3208;">중국 EV 수요 사이클 둔화(’26.6월 조짐) — 물량 공식의 균열</li>
+          <li style="color:#4A3208;">스마트 드라이빙 사고·규제 후퇴(’25.4 SU7 사고류) 평판 충격</li>
+        </ul>
+      </div>
+    </div>
+    <figcaption>그림 18. §2~§12 분석 종합.</figcaption>
+  </figure>
+</section>
+
+<section class="sec" id="s14">
+  <div class="sec-head"><span class="sec-no num">14</span><h2>경영진 및 자본 배분</h2><span class="sec-en">MANAGEMENT &amp; CAPITAL ALLOCATION</span></div>
+
+  <h3 class="h3">트랙 레코드 — 약속 대비 실행의 역사</h3>
+  <div class="tbl-wrap"><table class="t prose">
+    <thead><tr><th>약속 (시점)</th><th>결과</th><th>판정</th></tr></thead>
+    <tbody>
+      <tr class="odd"><td>“2024년 4분기 GAAP 흑자 전환” (’24 연중 반복 공언)</td><td>4Q24 순이익 +1.47억 위안 — 약속 분기에 정확히 달성</td><td class="pos">이행</td></tr>
+      <tr class="even"><td>“2025년 연간 흑자 + 매출 30~35억” (’25.3 가이던스)</td><td>매출 30.3억(하단 달성)·순이익 +4.36억 — 연간 흑자 달성</td><td class="pos">이행 (매출은 하단)</td></tr>
+      <tr class="odd"><td>“2025년 출하 120만~150만 대” (’25.3)</td><td>162만 대 — 상단 초과</td><td class="pos">초과 이행</td></tr>
+      <tr class="even"><td>ATX ’25.1분기 양산, ETX ’26 양산 (’24~’25 로드맵)</td><td>ATX 예정대로 양산·수주 400만+, ETX ’26 하반기 SOP 진행</td><td class="pos">궤도 유지</td></tr>
+      <tr class="odd"><td>1Q26 가이던스 6.8억~7.2억 (’26.3)</td><td>6.81억 — 하단 턱걸이 (시장 실망, -10.7% 사례)</td><td>이행 (하단)</td></tr>
+      <tr class="hl"><td>패턴</td><td colspan="2"><strong>물량·기술 로드맵은 초과 이행, 매출 가이던스는 하단 이행 경향</strong> — 판가 하락을 물량으로 메우는 구조가 가이던스에도 그대로 나타난다. ‘안 지키는 경영진’은 아니나 ‘상단을 부르는 경영진’도 아니다</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 class="h3">지배구조·인센티브</h3>
+  <p>창업 3인방(리이판 CEO·샹샤오칭 CTO·쑨카이 수석과학자)이 이사회와 기술 방향을 장악한 <strong>창업자 경영 체제</strong>다(듀얼클래스 의결권으로 창업진 지배력 유지 — 소수주주 견제력은 구조적으로 약함). CEO 리이판은 스탠퍼드 박사·애플 출신, CTO는 아이폰 양산 경험을 제조 내재화로 이식한 장본인으로, ‘엔지니어가 경영하는 하드웨어 회사’의 전형이다. CFO는 2024년 11월 영입된 앤드루 판(前 경쟁사 Seyond CFO) — 홍콩 2차 상장을 1년 안에 완수한 것이 첫 성과다. 직원 약 1,100명으로 매출 대비 인력이 극도로 가벼운 편(1인당 매출 ~270만 위안)이며, 주식보상(연 1.1~1.2억 위안, 매출의 4%)은 미국 테크 대비 절제된 수준이다.</p>
+
+  <div class="callout co-amber">
+    <div class="c-title">투명하게 짚는 두 가지 — Sharpa 거래와 창업자 겸업</div>
+    <p>① 2026년 1월, <strong>세 공동창업자가 로봇손(촉각 매니퓰레이터) 스타트업 ‘Sharpa’를 별도 창업</strong>했다는 사실이 알려졌다. 허사이 본체가 아닌 개인 차원의 신사업으로, 경영진의 시간·집중이 분산될 수 있다는 우려와, 로봇 생태계 접점이 넓어진다는 시너지 해석이 공존한다. ② 허사이의 3Q25 대규모 처분이익(약 1.85억 위안)은 초기 투자 지분 매각에서 나왔고, 그 대상이 Sharpa 관련로 추정된다는 보도가 있다 — 사실이라면 <strong>관련당사자 거래 성격</strong>이므로 가격 산정의 공정성이 향후 공시(20-F 관련당사자 주석)에서 확인돼야 할 항목이다. 현재까지 규제 이슈로 비화된 바는 없으나, ‘이익의 질’(§9)과 겹치는 지점이라 연차보고서에서 반드시 확인할 체크포인트로 남긴다. <span class="conf">확신도: 중간 ~60% (Sharpa-처분이익 연결은 보도 기반 추정)</span></p>
+  </div>
+
+  <h3 class="h3">자본 배분 — 돈을 어디에 쓰(지 않)는가</h3>
+  <div class="grid2">
+    <div class="box-light">
+      <p style="margin:0;"><strong>쓰는 곳:</strong> ① R&amp;D 연 8억 위안(매출의 26%) — 칩 세대교체와 신제품이 전부인 사업 특성상 최우선 순위로 타당. ② Capex 연 3~4억 + 태국 공장 — 생산능력 2배 확장. ③ 볼트온 M&amp;A — Fastree3D(SPAD 원천기술, 스위스) 인수처럼 기술 조각을 사는 소형 딜 위주. 대형 M&amp;A 이력 없음. ④ 초기 생태계 투자 — Sharpa류 소수지분(수익 실현 사례 발생).</p>
+    </div>
+    <div class="box-light">
+      <p style="margin:0;"><strong>안 쓰는 곳:</strong> 배당 없음, 자사주 매입 없음 — 성장기 기업으로서 정석이나, 순현금 72억 위안(시총의 33%)이 이자수익용으로 잠자는 것은 자본 효율 관점의 아쉬움이다. 홍콩 조달분의 명시 용처는 R&amp;D·글로벌 생산·운전자본. <strong>판정: ‘공격적 성장 투자형’ 자본 배분으로 일관성 있음.</strong> 다만 2~3년 내 핵심 FCF가 흑자 안착하면, 과잉 현금의 주주환원(또는 대형 투자) 정책이 다음 시험대가 된다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="s15">
+  <div class="sec-head"><span class="sec-no num">15</span><h2>종합 판단 및 체크포인트</h2><span class="sec-en">SYNTHESIS &amp; CHECKPOINTS</span></div>
+
+  <div class="panel-dark">
+    <h4>종합 — 세 문장으로</h4>
+    <p>① 허사이는 <strong>정리가 끝난 라이다 산업의 검증된 1위</strong>로, 판가 -87% 디플레이션 속에서 GM 40%와 업계 유일 흑자를 지켜낸 ‘구조(칩+공장+수주 잠금)’를 가졌다. ② 현재가 $18.22에 내재된 시장 기대는 <strong>CAP ≈7년(범위 6~11년)의 ‘약간 비관’ 구간</strong> — 무성장 가치 $8.5와 순현금 $5.8이 바닥 뼈대를 이루고, 로봇·L3 옵션은 사실상 0원으로 계상된 좌표다. ③ 따라서 이 종목의 향후 수익률은 “회사가 잘하느냐”보다 <strong>“마진 40% 방어 + 지정학 비악화 + 로봇 매출의 숫자 전환”이라는 세 조건이 유지·확인되느냐</strong>에 걸려 있으며, 조건 확인은 아래 체크포인트로 분기마다 기계적으로 검증할 수 있다.</p>
+  </div>
+
+  <h3 class="h3">모니터링 대시보드 — 분기마다 볼 6개 숫자</h3>
+  <div class="tbl-wrap"><table class="t prose">
+    <thead><tr><th>지표</th><th>현재 값 (1Q26)</th><th>건강 신호</th><th>경고 신호</th></tr></thead>
+    <tbody>
+      <tr class="odd"><td>① 매출총이익률</td><td>39.1%</td><td>38% 이상 유지</td><td class="neg">2개 분기 연속 38% 미만</td></tr>
+      <tr class="even"><td>② 분기 출하량 (연 300만~350만 궤도)</td><td>47.2만 대 (+141%)</td><td>2Q 70만±·하반기 가속</td><td class="neg">연환산 270만 미달 궤도</td></tr>
+      <tr class="odd"><td>③ 라이다 부문 영업이익</td><td>+0.42억 위안</td><td>흑자 폭 확대 지속</td><td class="neg">보조금 제외 적자 회귀</td></tr>
+      <tr class="even"><td>④ 매출채권 회전 (DSO)</td><td>잔액 9.5억 (개선 중)</td><td>매출 성장 &lt; 채권 성장 역전 유지</td><td class="neg">채권이 매출보다 빠르게 재증가</td></tr>
+      <tr class="odd"><td>⑤ 로봇+SGI 매출 비중</td><td>출하의 ~15% + SGI 개시 전</td><td>매출 비중 20%대 진입, SGI ’26 1억 달성</td><td class="neg">로봇 성장 정체 (옵션 가치 소멸)</td></tr>
+      <tr class="even"><td>⑥ 현금·순현금</td><td>72.3억 / 순 64.9억 위안</td><td>핵심 FCF 흑자 전환 (’27 목표궤도)</td><td class="neg">순현금 급감·추가 대규모 조달</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 class="h3">이벤트 캘린더 — 확인 일정이 정해진 촉매들</h3>
+  <ul class="flat">
+    <li><strong>’26.7.10</strong> — 8:1 주식분할 발효 (이후 모든 주당 값은 ÷8로 환산해 비교할 것: 본 보고서 기본가치 $18.1~18.8 → 분할 후 $2.26~2.35).</li>
+    <li><strong>’26.8월</strong> — 2Q26 실적: 가이던스 8.5억~9.0억 달성 여부 + GM + SGI 첫 매출 인식.</li>
+    <li><strong>’26 하반기</strong> — ETX 양산(SOP)·Picasso 칩 실차 데이터, 미 항소법원 1260H 판결 가능 시기(일정 유동적).</li>
+    <li><strong>’27 초</strong> — 태국 공장 가동·벤츠 물량 개시 = 해외 매출 비중의 구조적 변곡.</li>
+    <li><strong>’28.1.1</strong> — 중국 AEB 의무화 시행: 라이다 표준 장착화의 규제 마감선.</li>
+  </ul>
+
+  <div class="callout co-red">
+    <div class="c-title">재검토(논거 훼손) 조건 — 이 분석이 틀렸다고 인정해야 할 때</div>
+    <p>다음 중 하나라도 확인되면 본 보고서의 기본 시나리오는 폐기하고 Bear 경로($9~10)로 재평가해야 한다: ① GM이 2개 분기 연속 38% 아래로 이탈(가격전쟁 패배 신호), ② 연간 출하가 가이던스 하단 대비 -15% 이상 미달(수요 공식 붕괴), ③ 1260H가 ‘리스트’에서 수출통제·거래제한 등 <strong>실행형 제재로 격상</strong>(글로벌 서사 차단), ④ 관련당사자 거래·회계 이슈가 감사의견 또는 규제 조치로 실체화. 반대로 ‘핵심 영업이익(보조금 제외) 연간 흑자’와 ‘로봇 매출 비중 20%+’가 확인되면 Bull 경로($24+) 쪽 재평가가 정당해진다.</p>
+  </div>
+
+  <h3 class="h3">한계와 가정 — 이 분석을 믿기 전에 알아야 할 것</h3>
+  <div class="box-tint">
+    <ul class="flat" style="margin:0;">
+      <li><strong>가치의 대부분이 ‘마진 확장 가정’에서 나온다.</strong> EBITA 마진 8.5%→17% 경로가 본 밸류에이션의 심장이며, ROIIC 29~47%라는 높은 수치도 이 가정의 그림자다. 마진 상한을 14%로만 낮춰도 내재 CAP 해석은 ‘합리’ 구간으로 이동한다(§10 민감도). 마진 가정의 근거는 1Q26 부문 흑자·규모 레버리지·피어 대비 구조 우위이지만, 실증은 앞으로의 몫이다.</li>
+      <li><strong>지정학은 연속 변수가 아니라 계단 변수다.</strong> DCF는 리스크를 할인율로 뭉개지만, 수출통제 같은 이벤트는 0 아니면 1로 온다 — 본 모델은 그 이분법을 구조적으로 담지 못하며, 민감도 표의 ‘WACC +1%p’는 근사적 대용일 뿐이다.</li>
+      <li><strong>ERP 기준 상충.</strong> 프레임워크 표준 4.75%를 채택했으나 다모다란 ’26.1 내재 ERP는 4.23%다. 어느 쪽을 쓰든 결론 구간(약간 비관)은 유지되나 CAP 점추정은 6.3~7.2년 사이에서 움직인다.</li>
+      <li><strong>추정치 혼입 지점 명시.</strong> ⓐ Sharpa-처분이익 연결(§9·14)은 보도 기반 추정, ⓑ Ouster FY25 매출은 분기 합산 추정, ⓒ 그림 13 주가 곡선의 구간부는 근사(주요 지점만 확인 종가), ⓓ 2023년 혼합 ASP는 과대 표시 가능, ⓔ 컨센서스 EPS(’26 4.06/’27 6.49/’28 9.50)는 집계 화면상 통화(위안 vs 달러) 표기가 불명확해 P/E는 위안 기준으로 해석했다 — 달러 기준이라면 P/E는 크게 달라진다.</li>
+      <li><strong>고정 환율(6.90)·주식 수(163.2M 희석 ADS) 가정.</strong> 위안 절상은 ADS 가치에 +, 추가 주식보상·조달은 −로 작동하며 모델에는 정적으로만 반영됐다.</li>
+      <li><strong>표본 기간의 한계.</strong> 흑자 이력이 단 1년(+6분기 non-GAAP)뿐이라, ‘구조적 수익성’ 주장(§6·11)은 통계적으로 아직 짧은 표본 위에 서 있다. 이 보고서의 확신도 표기가 대부분 60~85%에 머무는 이유다.</li>
+    </ul>
+  </div>
+
+  <p>이 문서는 특정 매수·매도 권고가 아니라, 위 체크포인트를 스스로 검증하며 판단을 갱신하기 위한 <strong>의사결정 자료</strong>다. 다음 분기 실적(’26.8월)에서 대시보드 6개 숫자를 대조하는 것이 첫 번째 후속 작업이 된다.</p>
+</section>
+
+
+</div>
+</main>
+
+<footer class="ft">
+  <div class="wrap">
+    <p><b>데이터 출처 · 기준 시점</b> — 주가/시총: Nasdaq 2026-07-02 종가($18.22, Macroaxis·CoinCodex 집계) · 실적: Hesai 6-K 실적발표(2026-05-19 Q1’26, 2026-03-24 FY2025, 2025-11-11 Q3’25 외) 및 20-F(2026-04-24) · 산업: Yole Group(2025.6), Gasgoo, GGII, ResearchAndMarkets(2026.5) · 경쟁사: RoboSense FY2025 발표(2026-03-24), Innoviz 6-K, Ouster 발표 · 금리: 미 10년물 4.48%(2026-07-02, TradingEconomics/Investing) · ERP: 다모다란 2026-01 내재 ERP 4.23% 및 프레임워크 표준 4.75% 병기.</p>
+    <p style="margin-top:10px;">추정치는 본문에 명시된 가정에 기반하며, 출처가 상충하는 수치는 해당 위치에 병기했다. 매수·매도 판단이 아닌, §15 체크포인트로 갱신해 가는 의사결정 자료다.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function mark(){
+    document.querySelectorAll('.tbl-wrap, figure.fig').forEach(function(w){
+      w.classList.toggle('scrollable', w.scrollWidth > w.clientWidth + 4);
+    });
+  }
+  window.addEventListener('load', mark);
+  window.addEventListener('resize', mark);
+  mark();
+})();
+</script>
+</body>
+</html>
