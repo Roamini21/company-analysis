@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZBRA · 제브라 테크놀로지스 — CAP 프레임워크 종합 분석 (2026-07-04)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=IBM+Plex+Mono:wght@400;600&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F5F0; --paper2:#EDEBE2; --ink:#171B21; --ink-soft:#39414B; --mute:#5C646E;
+  --line:#D9D6CA; --line2:#C4C0B1;
+  --panel:#12161C; --panel2:#1B222B; --panel-line:#303945; --panel-ink:#ECEFF2; --panel-soft:#AFB9C4;
+  --laser:#D93A26; --laser-deep:#A82A1A; --laser-soft:#FBE7E2;
+  --blue:#2451B8; --blue-deep:#183A8C; --blue-soft:#E6EDFA;
+  --pos:#1E7A4F; --pos-deep:#135A39; --pos-soft:#E2F1E8;
+  --neg:#B93327; --neg-deep:#8E2118; --neg-soft:#FAE7E4;
+  --amber:#8F6410; --amber-deep:#6E4C08; --amber-soft:#F8F0DB;
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} .scanline{animation:none !important}}
+body{font-family:'Noto Sans KR',-apple-system,'Apple SD Gothic Neo',sans-serif;background:var(--paper);color:var(--ink);line-height:1.72;font-size:16px;-webkit-text-size-adjust:100%}
+.mono{font-family:'IBM Plex Mono','Noto Sans KR',monospace}
+.disp{font-family:'Archivo','Noto Sans KR',sans-serif}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+p{margin:0 0 14px}
+a{color:var(--blue)}
+strong{font-weight:700}
+small{font-size:.82em}
+ul,ol{padding-left:22px;margin:0 0 14px}
+li{margin:0 0 7px}
+
+/* ───────── 내비게이션 ───────── */
+.topnav{position:sticky;top:0;z-index:60;background:#12161C;border-bottom:3px solid #D93A26}
+.topnav .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:2px 4px;padding-top:8px;padding-bottom:8px}
+.brand{display:flex;align-items:center;gap:9px;margin-right:12px;padding:4px 0;color:#ECEFF2;text-decoration:none}
+.brand .bstrip{display:inline-flex;gap:2px;align-items:flex-end;height:20px}
+.brand .bstrip i{display:block;background:#ECEFF2;width:3px;height:100%}
+.brand .bstrip i:nth-child(2){width:2px;height:70%}
+.brand .bstrip i:nth-child(3){width:5px}
+.brand .bstrip i:nth-child(4){width:2px;height:55%}
+.brand .bstrip i:nth-child(5){width:3px;height:85%;background:#D93A26}
+.brand b{font-family:'Archivo';font-weight:900;letter-spacing:.06em;font-size:15px}
+.topnav nav{display:flex;flex-wrap:wrap;gap:3px 4px;flex:1;min-width:0}
+.topnav nav a{white-space:nowrap;text-decoration:none;color:#C7CFD8;background:#1B222B;border:1px solid #303945;border-radius:4px;padding:3px 8px;font-size:12px;font-weight:500;line-height:1.5}
+.topnav nav a:hover{color:#FFFFFF;border-color:#D93A26;background:#232B35}
+.topnav nav a.on{color:#FFFFFF;background:#D93A26;border-color:#D93A26}
+
+/* ───────── 히어로 ───────── */
+.hero{background:#12161C;color:#ECEFF2;padding:44px 0 36px;border-bottom:1px solid #303945;position:relative;overflow:hidden}
+:where(.hero) p{color:#C6CDD6}
+.hero .kicker{color:#AFB9C4;font-size:13px;letter-spacing:.14em;font-weight:700;margin-bottom:8px}
+.hero h1{font-family:'Archivo','Noto Sans KR';font-weight:900;font-size:clamp(30px,5vw,54px);line-height:1.12;color:#FFFFFF;letter-spacing:-.01em;margin-bottom:12px}
+.hero h1 .tick{color:#D93A26}
+.hero .thesis{max-width:880px;font-size:16.5px;color:#D4DAE1;margin-bottom:22px}
+.barcode{position:relative;height:74px;display:flex;align-items:flex-end;gap:0;margin:6px 0 20px;max-width:640px}
+.barcode i{display:block;background:#ECEFF2;height:100%}
+.barcode i.h2{height:62%}
+.barcode i.red{background:#D93A26}
+.barcode .scanline{position:absolute;left:0;top:0;height:3px;width:100%;background:linear-gradient(90deg,rgba(217,58,38,0),#FF6A50,rgba(217,58,38,0));animation:scan 3.2s ease-in-out infinite}
+@keyframes scan{0%{top:4%}50%{top:92%}100%{top:4%}}
+.bnum{font-family:'IBM Plex Mono';color:#AFB9C4;font-size:12px;letter-spacing:.42em;margin-top:-14px;margin-bottom:20px}
+.heromtx{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.hstat{background:#1B222B;border:1px solid #303945;border-radius:8px;padding:10px 12px;color:#ECEFF2}
+.hstat .l{font-size:11.5px;color:#AFB9C4;font-weight:500;letter-spacing:.03em}
+.hstat .v{font-family:'IBM Plex Mono';font-weight:600;font-size:19px;color:#FFFFFF;line-height:1.35}
+.hstat .s{font-size:11.5px;color:#8F9AA6}
+.hstat.acc{border-color:#D93A26;background:#231A18}
+.hstat.acc .v{color:#FF8A73}
+.verdict{margin-top:18px;background:#1B222B;border:1px solid #303945;border-left:5px solid #D93A26;border-radius:8px;padding:14px 16px;color:#E7EBEF;max-width:980px}
+.verdict b{color:#FFFFFF}
+.verdict .tag{display:inline-block;background:#D93A26;color:#FFFFFF;border-radius:4px;font-size:11.5px;font-weight:700;padding:2px 8px;margin-right:8px;vertical-align:1px}
+
+/* ───────── 섹션 공통 ───────── */
+section{padding:52px 0 30px}
+section.alt{background:var(--paper2)}
+.shead{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.shead .code{display:flex;gap:2px;align-items:flex-end;height:30px}
+.shead .code i{display:block;background:var(--ink);width:3px;height:100%}
+.shead .code i:nth-child(2){width:2px;height:64%}
+.shead .code i:nth-child(3){width:6px}
+.shead .code i:nth-child(4){width:2px;height:48%}
+.shead .code i:nth-child(5){width:3px;background:var(--laser)}
+.shead .num{font-family:'IBM Plex Mono';font-weight:600;font-size:13px;color:var(--laser);letter-spacing:.18em}
+h2{font-family:'Archivo','Noto Sans KR';font-weight:900;font-size:clamp(24px,3.4vw,34px);color:var(--ink);line-height:1.2;letter-spacing:-.01em;margin-bottom:6px}
+.slede{color:var(--ink-soft);font-size:16.5px;max-width:960px;margin-bottom:26px}
+h3{font-family:'Noto Sans KR';font-weight:900;font-size:20px;color:var(--ink);margin:34px 0 12px;padding-left:12px;border-left:4px solid var(--laser)}
+h4{font-weight:700;font-size:16.5px;color:var(--ink);margin:22px 0 8px}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media(max-width:860px){.cols2,.cols3{grid-template-columns:1fr}}
+
+/* ───────── 카드/콜아웃 (자체 완결 색상) ───────── */
+.card{background:#FFFFFF;border:1px solid var(--line);border-radius:10px;padding:18px 20px;color:var(--ink)}
+.card p,.card li,.card strong,.card em,.card small,.card span,.card b{color:inherit}
+.card .ct{font-weight:900;font-size:15.5px;color:var(--ink);margin-bottom:8px}
+.dcard{background:#171D25;border:1px solid #303945;border-radius:10px;padding:18px 20px;color:#E9EDF1}
+.dcard p,.dcard li,.dcard strong,.dcard em,.dcard small,.dcard span,.dcard b{color:inherit}
+.dcard .ct{font-weight:900;font-size:15.5px;color:#FFFFFF;margin-bottom:8px}
+.co{border-radius:10px;padding:15px 18px;margin:16px 0;border:1px solid}
+.co p,.co li,.co strong,.co em,.co small,.co span,.co b{color:inherit}
+.co .t{font-weight:900;font-size:14px;margin-bottom:6px;letter-spacing:.02em}
+.co-blue{background:var(--blue-soft);border-color:#B9CBEE;color:#14285C}
+.co-blue .t{color:#183A8C}
+.co-pos{background:var(--pos-soft);border-color:#B4D9C4;color:#0E4229}
+.co-pos .t{color:#135A39}
+.co-neg{background:var(--neg-soft);border-color:#EBBEB7;color:#6E1911}
+.co-neg .t{color:#8E2118}
+.co-amber{background:var(--amber-soft);border-color:#E4D3A4;color:#553A05}
+.co-amber .t{color:#6E4C08}
+.co-laser{background:var(--laser-soft);border-color:#F0BDB2;color:#701D10}
+.co-laser .t{color:#A82A1A}
+.co-ink{background:#171D25;border-color:#303945;color:#E9EDF1}
+.co-ink .t{color:#FF8A73}
+.term{background:#FFFFFF;border:1px dashed var(--line2);border-radius:10px;padding:14px 18px;margin:14px 0;color:var(--ink)}
+.term p,.term li,.term b,.term span,.term small{color:inherit}
+.term .t{font-weight:900;color:var(--blue-deep);font-size:13.5px;margin-bottom:5px}
+.term .t::before{content:"용어 ";background:var(--blue-deep);color:#FFFFFF;border-radius:3px;padding:1px 6px;font-size:11px;margin-right:7px}
+
+/* ───────── 통계 그리드 ───────── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:14px 0 20px}
+.stat{background:#FFFFFF;border:1px solid var(--line);border-radius:8px;padding:11px 13px;color:var(--ink)}
+.stat .l{font-size:11.5px;color:var(--mute);font-weight:500}
+.stat .v{font-family:'IBM Plex Mono';font-weight:600;font-size:18.5px;color:var(--ink);line-height:1.4}
+.stat .s{font-size:11.5px;color:var(--mute)}
+.stat.up .v{color:var(--pos)}
+.stat.dn .v{color:var(--neg)}
+
+/* ───────── 표 ───────── */
+.tablewrap{overflow-x:auto;margin:14px 0 8px;border-radius:10px;border:1px solid var(--line);background:
+  linear-gradient(90deg,#FFFFFF 0,rgba(255,255,255,0)16px),linear-gradient(270deg,#FFFFFF 0,rgba(255,255,255,0)16px),#FFFFFF}
+table.tbl{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+.tbl th{background:#12161C;color:#FFFFFF;font-weight:700;text-align:left;padding:9px 11px;white-space:nowrap;border-bottom:2px solid #D93A26}
+.tbl td{padding:8px 11px;border-bottom:1px solid #E7E4D9;color:#171B21;vertical-align:top}
+.tbl tr:nth-child(odd) td{background:#FFFFFF}
+.tbl tr:nth-child(even) td{background:#F4F2EA}
+.tbl tr.hl td{background:#FBE7E2;color:#701D10;font-weight:700}
+.tbl tr.sum td{background:#12161C;color:#FFFFFF;font-weight:700;border-bottom:none}
+.tbl td.num,.tbl th.num{text-align:right;font-family:'IBM Plex Mono';white-space:nowrap}
+.tbl td .pos{color:#135A39;font-weight:700}
+.tbl td .neg{color:#8E2118;font-weight:700}
+.tbl tr.sum td .pos{color:#7BE0AC}
+.tbl tr.sum td .neg{color:#FF9E8E}
+.capnote{font-size:12px;color:var(--mute);margin:6px 2px 18px}
+
+/* ───────── 그림/피겨 ───────── */
+.figure{background:#FFFFFF;border:1px solid var(--line);border-radius:12px;padding:18px 18px 12px;margin:20px 0;color:var(--ink)}
+.figure .ft{font-weight:900;font-size:15.5px;color:var(--ink);margin-bottom:2px}
+.figure .fs{font-size:12.5px;color:var(--mute);margin-bottom:12px}
+.figure svg{width:100%;height:auto;display:block}
+.figure .cap{font-size:12px;color:var(--mute);margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.figure.dk{background:#12161C;border-color:#303945;color:#E9EDF1}
+.figure.dk .ft{color:#FFFFFF}
+.figure.dk .fs{color:#AFB9C4}
+.figure.dk .cap{color:#8F9AA6;border-top-color:#303945}
+.badge{display:inline-block;border-radius:4px;padding:1px 8px;font-size:11.5px;font-weight:700;vertical-align:1px}
+.b-pos{background:#1E7A4F;color:#FFFFFF}.b-neg{background:#B93327;color:#FFFFFF}
+.b-blue{background:#2451B8;color:#FFFFFF}.b-amber{background:#8F6410;color:#FFFFFF}
+.b-ink{background:#171B21;color:#FFFFFF}.b-laser{background:#D93A26;color:#FFFFFF}
+.b-lt{background:#EDEBE2;color:#171B21;border:1px solid #C4C0B1}
+
+/* ───────── 다크 밴드 (판정) ───────── */
+.darkband{background:#12161C;color:#E9EDF1;border-radius:14px;padding:26px 26px 14px;margin:28px 0;border:1px solid #303945}
+:where(.darkband) p{color:#D2D9E0}
+:where(.darkband) li{color:#D2D9E0}
+:where(.darkband) h3{color:#FFFFFF;border-left-color:#D93A26}
+:where(.darkband) h4{color:#FFFFFF}
+:where(.darkband) strong{color:#FFFFFF}
+:where(.darkband) small{color:#AFB9C4}
+.darkband .ttl{font-family:'Archivo','Noto Sans KR';font-weight:900;font-size:21px;color:#FFFFFF;margin-bottom:10px}
+.darkband .ttl .tag{background:#D93A26;color:#FFFFFF;border-radius:4px;font-size:11.5px;padding:2px 8px;margin-right:9px;vertical-align:3px;letter-spacing:.04em}
+
+/* 타임라인 */
+.tline{position:relative;margin:18px 0 6px;padding-left:26px}
+.tline::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line2)}
+.tev{position:relative;margin-bottom:16px;background:#FFFFFF;border:1px solid var(--line);border-radius:9px;padding:11px 14px;color:var(--ink)}
+.tev p,.tev li,.tev b,.tev span,.tev small{color:inherit}
+.tev::before{content:"";position:absolute;left:-23px;top:16px;width:10px;height:10px;border-radius:50%;background:var(--laser);border:2px solid #FFFFFF;box-shadow:0 0 0 1px var(--line2)}
+.tev .d{font-family:'IBM Plex Mono';font-weight:600;font-size:12px;color:var(--laser-deep)}
+.tev .h{font-weight:700;font-size:14.5px;color:var(--ink)}
+.tev .b{font-size:13.5px;color:var(--ink-soft)}
+
+footer{background:#12161C;color:#AFB9C4;padding:30px 0 44px;margin-top:40px;border-top:3px solid #D93A26}
+:where(footer) p{color:#AFB9C4;font-size:12.5px}
+footer b{color:#ECEFF2}
+.srcbox{background:#1B222B;border:1px solid #303945;border-radius:8px;padding:12px 16px;color:#C7CFD8;font-size:12.5px;line-height:1.8}
+@media(max-width:760px){
+  .topnav .wrap{flex-wrap:nowrap}
+  .brand{flex:0 0 auto}
+  .topnav nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+  .topnav nav::-webkit-scrollbar{display:none}
+}
+@media(max-width:640px){
+  section{padding:40px 0 22px}
+  .wrap{padding:0 14px}
+  .hero{padding:32px 0 28px}
+  table.tbl{font-size:12.5px}
+}
+</style>
+</head>
+<body id="top">
+
+<div class="topnav"><div class="wrap">
+  <a class="brand" href="#top"><span class="bstrip"><i></i><i></i><i></i><i></i><i></i></span><b>ZBRA · 2026-07</b></a>
+  <nav id="nav">
+    <a href="#s1">1 핵심요약</a><a href="#s2">2 기업개요</a><a href="#s3">3 수익구조</a><a href="#s4">4 제품·기술</a><a href="#s5">5 산업</a><a href="#s6">6 해자</a><a href="#s7">7 피어비교</a><a href="#s8">8 내러티브</a><a href="#s9">9 재무·DCF</a><a href="#s10">10 내재 CAP</a><a href="#s11">11 Bull</a><a href="#s12">12 Bear</a><a href="#s13">13 SWOT</a><a href="#s14">14 경영진</a><a href="#s15">15 종합</a>
+  </nav>
+</div></div>
+
+<div class="hero"><div class="wrap">
+  <div class="kicker">CAP 프레임워크 · 종목 심층 보고서 · 기준일 2026-07-04 (미국 7/3 휴장 전 종가 기준)</div>
+  <h1>Zebra Technologies <span class="tick">NASDAQ: ZBRA</span></h1>
+  <p class="thesis">공급망과 매장·병원·공장의 "현장(frontline)"에서 <b>사물과 사람의 위치·상태를 데이터로 바꾸는 장비와 소프트웨어</b> — 산업용 바코드 프린터·스캐너·러기드 모바일 컴퓨터·RFID·머신비전에서 세계 1위 — 를 파는 회사. 2021년 $614 고점에서 재고조정 사이클로 급락한 뒤, 지금은 "현장 AI(Physical AI)" 스토리와 14.5배 선행 PER 사이에서 재평가를 시도 중이다.</p>
+  <div class="barcode" aria-hidden="true">
+    <i style="width:5px"></i><i class="h2" style="width:2px"></i><i style="width:3px"></i><i style="width:8px"></i><i class="h2" style="width:2px"></i><i style="width:4px"></i><i class="h2" style="width:3px"></i><i style="width:2px"></i><i style="width:6px"></i><i class="h2" style="width:2px"></i><i class="red" style="width:4px"></i><i style="width:2px"></i><i style="width:7px"></i><i class="h2" style="width:3px"></i><i style="width:2px"></i><i style="width:5px"></i><i class="h2" style="width:2px"></i><i style="width:3px"></i><i style="width:8px"></i><i class="h2" style="width:2px"></i><i style="width:4px"></i><i class="red h2" style="width:2px"></i><i style="width:6px"></i><i style="width:2px"></i><i class="h2" style="width:4px"></i><i style="width:3px"></i><i style="width:7px"></i><i class="h2" style="width:2px"></i><i style="width:5px"></i><i style="width:2px"></i><i class="h2" style="width:3px"></i><i style="width:6px"></i><i class="red" style="width:3px"></i><i class="h2" style="width:2px"></i><i style="width:4px"></i><i style="width:8px"></i>
+    <span class="scanline"></span>
+  </div>
+  <div class="bnum mono">9 8 9 2 0 7 1 0 5 4 · Z B R A</div>
+  <div class="heromtx">
+    <div class="hstat"><div class="l">주가 (7/2 종가)</div><div class="v">$268.24</div><div class="s">7/1 종가 $267.85</div></div>
+    <div class="hstat"><div class="l">시가총액</div><div class="v">$12.78B</div><div class="s">발행주식 47.6M주</div></div>
+    <div class="hstat"><div class="l">52주 범위</div><div class="v">199 – 353</div><div class="s">사상 최고 $614.55('21.12)</div></div>
+    <div class="hstat"><div class="l">2026E 매출 (가이던스)</div><div class="v">≈ $6.0B</div><div class="s">+10~14% (M&A·환율 +7%p)</div></div>
+    <div class="hstat"><div class="l">2026E 조정 EPS</div><div class="v">$18.30–18.70</div><div class="s">선행 PER ≈ 14.5배</div></div>
+    <div class="hstat"><div class="l">FCF 가이던스</div><div class="v">≥ $900M</div><div class="s">FCF 수익률 ≈ 7%</div></div>
+    <div class="hstat acc"><div class="l">시장 내재 CAP (판정)</div><div class="v">할인율 지배</div><div class="s">9.0%→15.5년 · 10.0%→31.5년</div></div>
+    <div class="hstat"><div class="l">애널리스트 컨센서스</div><div class="v">Buy · $329</div><div class="s">18명 평균 목표가, 범위 $256–400</div></div>
+  </div>
+  <div class="verdict"><span class="tag">한 줄 결론</span><b>"현장 데이터의 신경망"이라는 구조적 과점 사업이, 사이클 상처(2023 재고조정)와 메모리 인플레 공포로 역사 하단 멀티플(선행 14.5배 vs 과거 평균 약 25배)에 거래되고 있다.</b> 내재 CAP 역산 결과, 이 종목 가치평가의 지배 변수는 성장률이 아니라 <b>할인율(베타)</b>이다 — 순환 왜곡이 낀 베타(1.63)를 그대로 쓰면 시장 기대가 20~30년 이상으로 계산되지만, 정상화 할인율(8.5~9.0%)에서는 12~16년으로 IT 섹터에서 검증된 해자 기업의 합리 구간에 들어온다. 본문 10장에서 이 진단을 분해한다.</div>
+</div></div>
+
+<!-- ══════════ 1. 핵심 요약 ══════════ -->
+<section id="s1"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 01</span></div>
+  <h2>핵심 요약 — 3분 안에 파악하는 ZBRA</h2>
+  <p class="slede"><b>한 문장 정의:</b> 제브라 테크놀로지스는 창고·매장·병원·공장에서 일하는 사람과 물건에 "디지털 이름표"를 붙이고 읽어내는 장비(바코드 프린터·스캐너·산업용 스마트폰·RFID·머신비전 카메라)와 이를 묶는 소프트웨어를 파는, 이 분야(AIDC) 세계 1위 기업이다.</p>
+
+  <div class="cols2">
+    <div class="card"><div class="ct">이 회사의 본질 — 왜 존재하는가</div>
+      <p>아마존에서 물건을 주문하면, 그 상자는 창고에서 집까지 오는 동안 수십 번 스캔된다. 병원의 수액 팩, 마트의 신선식품, 공장의 반제품도 마찬가지다. <b>"지금 이 물건이 어디에, 어떤 상태로 있는가"를 실시간으로 아는 것</b>이 현대 공급망의 기본 인프라인데, 그 데이터를 물리 세계에서 처음 만들어내는 장비의 절반 가까이가 제브라 제품이다. 인건비 상승·전자상거래 확대·자동화라는 세 개의 장기 추세가 모두 이 회사의 수요를 만든다.</p>
+      <p style="margin-bottom:0">비유하면, 클라우드·AI가 "뇌"라면 제브라는 <b>물리 세계의 말단 신경(센서)과 손발(현장 단말)</b>을 파는 회사다. 뇌가 똑똑해질수록 신경이 더 많이, 더 좋은 것으로 필요해진다 — 이것이 2026년 현재 경영진이 내세우는 "Physical AI(현장 AI)" 논리의 뼈대다.</p>
+    </div>
+    <div class="card"><div class="ct">숫자로 본 현재 위치 (2026-07-04 기준)</div>
+      <div class="stats" style="margin-top:2px">
+        <div class="stat"><div class="l">2025 매출 / 순이익</div><div class="v">$5.40B / $419M</div><div class="s">매출 +8.3%, GAAP 순익 −20.6%*</div></div>
+        <div class="stat"><div class="l">2025 조정 EPS / EBITDA마진</div><div class="v">$15.84 / 21.7%</div><div class="s">조정 EPS +17% YoY</div></div>
+        <div class="stat up"><div class="l">Q1 2026 (5/12 발표)</div><div class="v">EPS $4.75</div><div class="s">컨센 $4.25 대비 +12% 서프라이즈</div></div>
+        <div class="stat"><div class="l">순부채 / 레버리지</div><div class="v">$2.55B / 2.1×</div><div class="s">Elo 인수($1.3B) 반영 후</div></div>
+      </div>
+      <p style="font-size:12.5px;color:#5C646E;margin-bottom:0">* GAAP 순익 감소는 로보틱스 사업 철수 등 일회성 구조조정 $76M과 인수 관련 비용 탓. 조정 이익은 두 자릿수 성장.</p>
+    </div>
+  </div>
+
+  <h3>투자 매력의 핵심 — 시장이 이 회사에서 보는 것</h3>
+  <p>① <b>구조적 과점:</b> 기업용 모바일 컴퓨터·열전사 바코드 프린터·데이터 캡처·RFID 리더 네 카테고리 모두 세계 1위(회사 IR·모닝스타 확인). 2026년 4월에는 최대 직접 경쟁자였던 <b>허니웰이 해당 사업부(PSS)를 매출의 1.3배라는 헐값에 브래디에 매각하며 사실상 시장에서 철수</b>했다 — 과점 구조가 더 굳어지는 사건이다. ② <b>사이클 회복 + AI 옵션:</b> 2021~22년 코로나 특수 때 과잉 구매된 단말들이 2027년 전후 대규모 교체 주기에 들어가고, 그 교체분은 AI 연산칩(NPU)을 단 신형(TC501/701 등)으로 업그레이드된다. ③ <b>현금 기계:</b> FCF 전환율 약 100%, 배당 없이 연 $500M~1B 자사주 매입(총주주환원수익률 약 6%). ④ <b>낮아진 기대치:</b> 선행 PER 14.5배는 자체 역사 평균(약 25배)과 순수 자동화 피어(코그넥스 매출 대비 12배) 대비 크게 낮다.</p>
+
+  <div class="co co-laser"><div class="t">시장 내재 CAP — 결론 미리보기 (상세는 10장)</div>
+    <p style="margin-bottom:6px">현재가 $268에 내재된 "자본비용을 초과하는 수익을 몇 년간 지속해야 하는가(CAP)"를 역산하면, <b>답이 하나의 숫자가 아니라 할인율에 따라 크게 갈린다</b>: WACC 9.0%면 약 15.5년, 9.4%면 20.5년, 10.0%면 31.5년. 원인은 제브라의 5년 베타(1.63)가 2021~23년 붐-버스트로 부풀려져 있고, 회사의 재투자율이 낮아(잉여현금이 대부분 환원됨) 연간 가치 창출 폭이 얇기 때문이다.</p>
+    <p style="margin-bottom:0"><b>판정:</b> 순환 왜곡을 보정한 정상화 할인율(8.5~9.0%) 기준 내재 CAP는 <b>12~16년 — "합리(10~15년)~약간 낙관(15~20년)" 경계</b>. 허니웰 철수·전환비용·설치기반이라는 해자 근거를 감안하면 정당화 가능한 수준이며, 반대로 보수적 할인율(10%)을 고집하면 현 주가는 비싸 보인다. 즉 <b>이 종목의 진짜 논쟁은 "성장하느냐"가 아니라 "이 사업의 위험을 얼마로 볼 것이냐"</b>다.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="l">생애주기 판별 (9장)</div><div class="v">성숙 단계</div><div class="s">영업CF+ · 투자CF− · 재무CF−</div></div>
+    <div class="stat"><div class="l">해자 판별 (6장)</div><div class="v">차별화형</div><div class="s">마진·회전율 모두 산업 상회</div></div>
+    <div class="stat"><div class="l">섹터 페이드 비율</div><div class="v">0.20</div><div class="s">정보기술 섹터 평균 적용</div></div>
+    <div class="stat"><div class="l">무성장 가치 (모델)</div><div class="v">≈ $130/주</div><div class="s">현 주가의 48% = 성장 기대분 52%</div></div>
+  </div>
+</div></section>
+
+<!-- ══════════ 2. 기업 개요 ══════════ -->
+<section id="s2" class="alt"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 02</span></div>
+  <h2>기업 개요 — $1,000로 시작해 물류 인프라 과점까지</h2>
+  <p class="slede">1969년 두 엔지니어가 각자 500달러씩 내 세운 전기기계 부품 회사가, 바코드 프린터 발명(1982) → 모토로라 엔터프라이즈 인수(2014, 자기 몸집의 2.5배) → 소프트웨어·AI 확장(2020~)을 거쳐 오늘의 "현장 디지털화" 플랫폼이 됐다. 성장의 절반은 발명, 절반은 대담한 인수였다.</p>
+
+  <h3>57년 역사 — 세 번의 변신</h3>
+  <div class="cols2">
+  <div>
+  <div class="tline">
+    <div class="tev"><div class="d">1969</div><div class="h">창업: Data Specialties Inc.</div><div class="b">에드 캐플런과 게르하르트 클레스가 각자 $500를 출자해 일리노이에서 설립. 고속 전기기계 부품(천공테이프 장치 등)을 만들던 평범한 부품사였다.</div></div>
+    <div class="tev"><div class="d">1982 – 1986</div><div class="h">첫 변신: 바코드 프린터 "The Zebra"</div><div class="b">수요 즉석 인쇄(on-demand) 바코드 라벨 프린터를 출시하며 회사의 운명이 바뀐다. 1986년 사명을 아예 Zebra Technologies로 변경 — 바코드의 흑백 줄무늬가 곧 얼룩말이다.</div></div>
+    <div class="tev"><div class="d">1991</div><div class="h">나스닥 상장 (IPO)</div><div class="b">바코드 프린팅 전문기업으로 상장. 이후 1998년 엘트론, 2000년 컴텍(휴대형 프린터) 인수로 프린팅 카테고리를 평정한다.</div></div>
+    <div class="tev"><div class="d">2004 – 2007</div><div class="h">모바일 컴퓨터 진출 · 구스타프손 CEO 취임</div><div class="b">첫 모바일 컴퓨터를 내놓고, 2007년 앤더스 구스타프손이 CEO로 취임해 16년 확장기를 이끈다.</div></div>
+    <div class="tev"><div class="d">2014</div><div class="h">두 번째 변신: 모토로라 엔터프라이즈 인수 $3.45B</div><div class="b">연매출 $1.0B였던 제브라가 매출 $2.5B짜리 모토로라 솔루션즈 엔터프라이즈 사업부(심볼 테크놀로지스·싸이언 포함)를 현금 $2억 + 신규 부채 $32.5억으로 통째로 인수. 하루아침에 스캐너·모바일 컴퓨터 세계 1위가 됐고, 포춘 500의 약 95%를 고객으로 확보했다. 같은 해 NFL 경기장에 실시간 위치추적(RTLS)을 공급하며 "Next Gen Stats"의 데이터 기반이 된다.</div></div>
+  </div>
+  </div>
+  <div>
+  <div class="tline">
+    <div class="tev"><div class="d">2018 – 2021</div><div class="h">세 번째 변신 시작: 소프트웨어·비전·로봇</div><div class="b">엑스플로어(러기드 태블릿, '18), 템프타임·프로피텍트('19), <b>리플렉시스(현장 인력관리 SW, '20, $575M)</b>, 페치 로보틱스(자율이동로봇)·앤튜잇.ai('21)를 연쇄 인수. 하드웨어 회사에서 "현장 워크플로 회사"로 정체성을 넓힌다.</div></div>
+    <div class="tev"><div class="d">2022</div><div class="h">매트록스 인수 $875M · 허니웰 특허합의 $360M</div><div class="b">머신비전 명가 매트록스 이미징 인수로 산업 검사시장 진입. 같은 해 허니웰과의 전면 특허분쟁을 $360M(8분기 분할) 지급 + 상호 무료 교차라이선스로 종결 — 2022년 GAAP 이익 급감의 주범이지만, 이후 특허 리스크가 제거됐다.</div></div>
+    <div class="tev"><div class="d">2023</div><div class="h">시련: 재고조정 쇼크 · 빌 번스 CEO 취임</div><div class="b">코로나 특수(2021 매출 +26.5%)의 반작용으로 매출 −20.7% 급감. 유통·고객의 이중 재고 소진이 원인. 3월 사내 승진한 빌 번스가 CEO로 취임해 위기 관리를 맡는다.</div></div>
+    <div class="tev"><div class="d">2024 – 2025</div><div class="h">회복 + 포트폴리오 재편</div><div class="b">2024 매출 +8.7%로 반등. 2025년 포토네오(3D 비전, $62M)와 <b>Elo 터치솔루션즈($1.3B, 매출 약 $400M)</b> 인수로 셀프서비스 키오스크·POS 시장 진출(TAM +$8B). 4분기에는 수익성 낮던 로보틱스(페치) 사업 철수를 결정($76M 구조조정) — "확장하되, 안 되는 건 자른다".</div></div>
+    <div class="tev"><div class="d">2026 상반기</div><div class="h">현장 AI 원년 + 경쟁구도 격변</div><div class="b">AI 네이티브 단말 TC501/701(1월), 통합 기기관리 플랫폼 Nucleus(6월 ZONE), 머신비전 CV70(6월 Automate) 발표. 4월 허니웰이 직접 경쟁 사업부 PSS를 브래디에 $1.4B에 매각하며 철수. Q1 어닝 서프라이즈로 주가 하루 +15%.</div></div>
+  </div>
+  </div>
+  </div>
+
+  <h3>지금의 제브라 — 규모와 위상</h3>
+  <div class="stats">
+    <div class="stat"><div class="l">본사 / 상장</div><div class="v">일리노이 링컨셔</div><div class="s">NASDAQ · 1991년 상장</div></div>
+    <div class="stat"><div class="l">2025 매출</div><div class="v">$5,396M</div><div class="s">2026E 약 $6.0B (가이던스)</div></div>
+    <div class="stat"><div class="l">고객 기반</div><div class="v">포춘 500의 ~95%</div><div class="s">채널 파트너 중심 판매</div></div>
+    <div class="stat"><div class="l">시장 지위</div><div class="v">4개 카테고리 1위</div><div class="s">모바일컴퓨터·프린터·스캐너·RFID리더</div></div>
+    <div class="stat"><div class="l">서비스 산업</div><div class="v">리테일·물류·제조·헬스케어</div><div class="s">공공부문 포함 전방위</div></div>
+    <div class="stat"><div class="l">외부 평가</div><div class="v">AI 준비도 10위</div><div class="s">WSJ 'Best Companies for the Future' S&P500 내</div></div>
+  </div>
+
+  <div class="co co-blue"><div class="t">비전공자를 위한 큰 그림 — 무엇을 파는 회사인가</div>
+    <p style="margin-bottom:0">제브라의 상품은 크게 다섯 가지다. ① <b>산업용 프린터</b>: 택배 송장·가격표·병원 손목밴드를 그 자리에서 뽑는 기계(잉크 대신 열로 인쇄하는 "열전사" 방식). ② <b>스캐너</b>: 계산대·창고에서 바코드를 읽는 기기. ③ <b>러기드 모바일 컴퓨터</b>: 떨어뜨려도, 냉동창고에서도 작동하는 "산업용 스마트폰". 택배기사 손에 들린 단말이 대부분 이것이다. ④ <b>RFID·머신비전</b>: 바코드를 안 대고도 전파로 수백 개를 한꺼번에 인식(RFID)하거나, 카메라+AI로 제품 불량을 검사(머신비전)하는 차세대 인식 기술. ⑤ <b>소프트웨어·서비스</b>: 이 기기들을 관리하고, 매장 직원의 업무를 배분하고, 데이터를 분석하는 구독형 SW(Workcloud)와 유지보수. 요컨대 <b>"현장의 모든 것을 읽고, 연결하고, 지시하는 도구 세트"</b>다.</p>
+  </div>
+</div></section>
+
+<!-- ══════════ 3. 수익 구조 ══════════ -->
+<section id="s3"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 03</span></div>
+  <h2>수익 구조 — 돈이 흐르는 길</h2>
+  <p class="slede">고객이 직접 사는 게 아니라, 전 세계 1만 개 이상의 채널 파트너(유통사·시스템 통합사·소프트웨어사)가 제브라 장비에 자기 솔루션을 얹어 파는 구조다. 매출의 큰 몸통은 하드웨어지만, 그 하드웨어가 라벨·리본(소모품), 유지보수, 구독 소프트웨어라는 반복 매출을 계속 끌고 들어온다.</p>
+
+  <div class="figure">
+    <div class="ft">그림 1. 제브라의 수익 흐름도 — 누가, 무엇에, 왜 돈을 내는가</div>
+    <div class="fs">2025년 실적 기준 세그먼트 비중. 화살표는 돈과 제품의 흐름.</div>
+    <svg viewBox="0 0 960 440" role="img" aria-label="수익 흐름도">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#5C646E"/></marker>
+      <marker id="arR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#D93A26"/></marker></defs>
+      <!-- 고객 -->
+      <rect x="10" y="20" width="200" height="180" rx="10" fill="#EDEBE2" stroke="#C4C0B1"/>
+      <text x="110" y="44" text-anchor="middle" font-size="14" font-weight="800" fill="#171B21">최종 고객 (수요처)</text>
+      <text x="24" y="70" font-size="12.5" fill="#39414B">· 리테일·이커머스 (최대 축)</text>
+      <text x="24" y="92" font-size="12.5" fill="#39414B">· 운송·물류 (택배·창고)</text>
+      <text x="24" y="114" font-size="12.5" fill="#39414B">· 제조 (검사·추적)</text>
+      <text x="24" y="136" font-size="12.5" fill="#39414B">· 헬스케어 (환자·검체)</text>
+      <text x="24" y="158" font-size="12.5" fill="#39414B">· 공공부문 등</text>
+      <text x="24" y="184" font-size="11.5" fill="#5C646E">포춘 500의 약 95%가 고객</text>
+      <!-- 채널 -->
+      <rect x="10" y="240" width="200" height="130" rx="10" fill="#E6EDFA" stroke="#B9CBEE"/>
+      <text x="110" y="264" text-anchor="middle" font-size="14" font-weight="800" fill="#183A8C">채널 파트너</text>
+      <text x="24" y="288" font-size="12.5" fill="#14285C">· 유통사·리셀러(VAR)</text>
+      <text x="24" y="310" font-size="12.5" fill="#14285C">· 소프트웨어사(ISV)</text>
+      <text x="24" y="332" font-size="12.5" fill="#14285C">· 결제사(PSP)·통합사</text>
+      <text x="24" y="356" font-size="11.5" fill="#14285C">PartnerConnect 10년차 생태계</text>
+      <path d="M110 200 L110 240" stroke="#5C646E" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M210 300 L300 300" stroke="#5C646E" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M210 110 L300 150" stroke="#5C646E" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+      <text x="222" y="98" font-size="11" fill="#5C646E">대형 계정 직판(일부)</text>
+      <!-- 제브라 -->
+      <rect x="300" y="70" width="330" height="300" rx="12" fill="#12161C" stroke="#303945"/>
+      <text x="465" y="98" text-anchor="middle" font-size="15" font-weight="900" fill="#FFFFFF">ZEBRA — 2025 매출 $5,396M</text>
+      <rect x="318" y="114" width="294" height="108" rx="8" fill="#1B222B" stroke="#D93A26"/>
+      <text x="330" y="136" font-size="13" font-weight="800" fill="#FF8A73">커넥티드 프론트라인 (CF) · 54.9%</text>
+      <text x="330" y="158" font-size="12" fill="#ECEFF2">$2,960M · 기업용 모바일 컴퓨터·스캐닝</text>
+      <text x="330" y="178" font-size="12" fill="#ECEFF2">Elo 키오스크/POS · Workcloud SW</text>
+      <text x="330" y="200" font-size="11.5" fill="#AFB9C4">"사람이 들고 쓰는 것" — Q1'26 +20.6%</text>
+      <rect x="318" y="232" width="294" height="108" rx="8" fill="#1B222B" stroke="#4C7BE0"/>
+      <text x="330" y="254" font-size="13" font-weight="800" fill="#9DB8F2">자산 가시성·자동화 (AVA) · 45.1%</text>
+      <text x="330" y="276" font-size="12" fill="#ECEFF2">$2,436M · 프린터+소모품 · RFID</text>
+      <text x="330" y="296" font-size="12" fill="#ECEFF2">머신비전(매트록스·포토네오) · 위치추적</text>
+      <text x="330" y="318" font-size="11.5" fill="#AFB9C4">"물건에 붙는 것" — Q1'26 +7.4%</text>
+      <text x="465" y="360" text-anchor="middle" font-size="11.5" fill="#AFB9C4">생산은 EMS 외주(자본경량) · 설비투자 매출의 약 1.6%</text>
+      <!-- 매출 유형 -->
+      <rect x="680" y="20" width="270" height="128" rx="10" fill="#FFFFFF" stroke="#D9D6CA"/>
+      <text x="815" y="44" text-anchor="middle" font-size="13.5" font-weight="800" fill="#171B21">① 하드웨어 판매 (몸통)</text>
+      <text x="694" y="68" font-size="12" fill="#39414B">단말·프린터·스캐너·카메라 일시불 매출.</text>
+      <text x="694" y="88" font-size="12" fill="#39414B">경기·교체주기 따라 출렁이는 부분.</text>
+      <text x="694" y="112" font-size="12" fill="#39414B">CF 세그먼트 매출의 71%가 유형제품</text>
+      <text x="694" y="130" font-size="11" fill="#5C646E">(2024년 기준 $1,916M/$2,714M)</text>
+      <rect x="680" y="160" width="270" height="118" rx="10" fill="#E2F1E8" stroke="#B4D9C4"/>
+      <text x="815" y="184" text-anchor="middle" font-size="13.5" font-weight="800" fill="#135A39">② 반복 매출 (완충재)</text>
+      <text x="694" y="208" font-size="12" fill="#0E4229">· 소모품: 라벨·리본·RFID 태그</text>
+      <text x="694" y="228" font-size="12" fill="#0E4229">· 서비스: 유지보수·수리 계약(다년)</text>
+      <text x="694" y="248" font-size="12" fill="#0E4229">· 소프트웨어: Workcloud 구독(SaaS)</text>
+      <text x="694" y="268" font-size="11" fill="#135A39">장비 설치기반이 클수록 자동으로 커짐</text>
+      <rect x="680" y="290" width="270" height="120" rx="10" fill="#FBE7E2" stroke="#F0BDB2"/>
+      <text x="815" y="314" text-anchor="middle" font-size="13.5" font-weight="800" fill="#A82A1A">③ 이익의 사용처</text>
+      <text x="694" y="338" font-size="12" fill="#701D10">FCF 전환율 ≈ 100% (2026E ≥ $900M)</text>
+      <text x="694" y="358" font-size="12" fill="#701D10">→ 자사주 매입(무배당) + 볼트온 M&A</text>
+      <text x="694" y="378" font-size="12" fill="#701D10">→ R&D 재투자(매출의 약 10%)</text>
+      <text x="694" y="398" font-size="11" fill="#A82A1A">'26년 4월까지 반년간 자사주 $5억 소각</text>
+      <path d="M630 130 L680 90" stroke="#5C646E" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M630 220 L680 215" stroke="#5C646E" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M630 310 L680 345" stroke="#D93A26" stroke-width="2.4" marker-end="url(#arR)"/>
+    </svg>
+    <div class="cap">그림 1. 세그먼트 금액·비중은 2025년 회사 공시(recast 기준), 유형제품 비중은 2024년 10-K 재편 공시, 성장률은 Q1 2026 실적 발표. 출처: Zebra 8-K(2025.10.28 recast 표·2026.2.12·2026.5.12).</div>
+  </div>
+
+  <h3>세그먼트 해부 — 두 개의 엔진, 다른 리듬</h3>
+  <p>2025년 4분기부터 제브라는 기존 AIT/EVM 체제를 <b>커넥티드 프론트라인(CF)</b>과 <b>자산 가시성·자동화(AVA)</b>로 재편했다. 재무제표엔 영향이 없지만, 회사가 스스로를 어떻게 보는지가 드러난다: "장비 종류"가 아니라 <b>"사람의 일(CF)"과 "물건의 흐름(AVA)"</b>이라는 문제 단위로 조직을 다시 짠 것이다.</p>
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>세그먼트</th><th>무엇을 파나</th><th class="num">2023 매출</th><th class="num">2024 매출</th><th class="num">2025 매출</th><th class="num">2024 총이익률</th><th class="num">2024 영업이익률</th><th>추세 읽기</th></tr>
+    <tr><td><b>커넥티드 프론트라인 (CF)</b></td><td>모바일 컴퓨터, 스캐닝, Elo 터치·키오스크, Workcloud SW, 서비스</td><td class="num">$2,280M</td><td class="num">$2,714M</td><td class="num">$2,960M</td><td class="num">49.2%</td><td class="num">20.6%</td><td>2023 재고조정 직격 → 2024 +19% 반등. Elo 편입(’25.4Q~)으로 성장 가속. Q1’26 +20.6%(유기 +3.8%)</td></tr>
+    <tr><td><b>자산 가시성·자동화 (AVA)</b></td><td>프린터+라벨·리본 소모품, RFID, 머신비전, 위치솔루션</td><td class="num">$2,304M</td><td class="num">$2,267M</td><td class="num">$2,436M</td><td class="num">48.0%</td><td class="num">18.5%</td><td>프린팅은 안정적 현금원, RFID·비전이 성장 엔진. Q1’26 +7.4%(유기 +4.8%), 머신비전 두 자릿수 성장 "변곡점"</td></tr>
+    <tr class="sum"><td>합계</td><td>—</td><td class="num">$4,584M</td><td class="num">$4,981M</td><td class="num">$5,396M</td><td class="num">48.4%</td><td class="num">계 14.9%*</td><td>* 본사 공통비용 차감 후 전사 GAAP 기준</td></tr>
+  </table></div>
+  <p class="capnote">표 1. 세그먼트 recast 수치는 2025.10.28 8-K 공시, 2025년 연간은 분기 합산. 2024 세그먼트 영업이익: CF $559M, AVA $420M, 본사 −$237M.</p>
+
+  <div class="cols2">
+    <div class="figure">
+      <div class="ft">그림 2. 2025년 매출 구성 — 55 : 45의 균형 잡힌 두 축</div>
+      <div class="fs">단위: $M. 한쪽 사이클이 꺾여도 다른 쪽이 받친다.</div>
+      <svg viewBox="0 0 420 240" role="img" aria-label="세그먼트 도넛">
+        <circle cx="120" cy="120" r="78" fill="none" stroke="#EDEBE2" stroke-width="34"/>
+        <circle cx="120" cy="120" r="78" fill="none" stroke="#D93A26" stroke-width="34" stroke-dasharray="269 221" stroke-dashoffset="122.5" stroke-linecap="butt"/>
+        <circle cx="120" cy="120" r="78" fill="none" stroke="#2451B8" stroke-width="34" stroke-dasharray="221 269" stroke-dashoffset="-146.5" stroke-linecap="butt"/>
+        <text x="120" y="114" text-anchor="middle" font-size="15" font-weight="900" fill="#171B21">$5,396M</text>
+        <text x="120" y="134" text-anchor="middle" font-size="11.5" fill="#5C646E">2025 매출</text>
+        <rect x="240" y="52" width="14" height="14" fill="#D93A26" rx="2"/>
+        <text x="262" y="64" font-size="13" font-weight="700" fill="#171B21">CF $2,960M · 54.9%</text>
+        <text x="262" y="82" font-size="11.5" fill="#5C646E">모바일컴퓨팅 중심 + Elo</text>
+        <rect x="240" y="104" width="14" height="14" fill="#2451B8" rx="2"/>
+        <text x="262" y="116" font-size="13" font-weight="700" fill="#171B21">AVA $2,436M · 45.1%</text>
+        <text x="262" y="134" font-size="11.5" fill="#5C646E">프린팅·RFID·머신비전</text>
+        <text x="240" y="172" font-size="11.5" fill="#5C646E">참고: 프린팅 계열은 전사 매출의 약 1/3</text>
+        <text x="240" y="190" font-size="11.5" fill="#5C646E">(모닝스타) — 성숙하지만 소모품을 끄는</text>
+        <text x="240" y="208" font-size="11.5" fill="#5C646E">"면도기-면도날" 캐시카우</text>
+      </svg>
+      <div class="cap">그림 2. 출처: Zebra 2025 4분기 실적 발표(2026.2.12) 세그먼트 공시 합산.</div>
+    </div>
+    <div class="figure">
+      <div class="ft">그림 3. 지역별 성장 온도계 (Q1 2026, 전년比)</div>
+      <div class="fs">모든 지역이 플러스 — 회복이 특정 지역 반짝이 아니라는 신호.</div>
+      <svg viewBox="0 0 420 240" role="img" aria-label="지역별 성장률">
+        <line x1="120" y1="20" x2="120" y2="200" stroke="#C4C0B1"/>
+        <text x="112" y="46" text-anchor="end" font-size="13" font-weight="700" fill="#171B21">북미</text>
+        <rect x="120" y="32" width="64" height="20" fill="#2451B8" rx="3"/><text x="192" y="47" font-size="12.5" font-weight="700" fill="#171B21">+4%</text>
+        <text x="112" y="90" text-anchor="end" font-size="13" font-weight="700" fill="#171B21">EMEA</text>
+        <rect x="120" y="76" width="32" height="20" fill="#2451B8" rx="3"/><text x="160" y="91" font-size="12.5" font-weight="700" fill="#171B21">+2% <tspan fill="#5C646E" font-weight="400">(중동 부진 상쇄)</tspan></text>
+        <text x="112" y="134" text-anchor="end" font-size="13" font-weight="700" fill="#171B21">아시아·태평양</text>
+        <rect x="120" y="120" width="176" height="20" fill="#1E7A4F" rx="3"/><text x="304" y="135" font-size="12.5" font-weight="700" fill="#135A39">+11% (인도·동남아 주도)</text>
+        <text x="112" y="178" text-anchor="end" font-size="13" font-weight="700" fill="#171B21">라틴아메리카</text>
+        <rect x="120" y="164" width="160" height="20" fill="#1E7A4F" rx="3"/><text x="288" y="179" font-size="12.5" font-weight="700" fill="#135A39">+10%</text>
+        <text x="120" y="222" font-size="11.5" fill="#5C646E">막대 길이 = 성장률(16px/1%p). 북미가 최대 매출 지역(달러 기준).</text>
+      </svg>
+      <div class="cap">그림 3. 출처: Q1 2026 어닝콜(2026.5.12). 지역별 성장률은 보고 기준.</div>
+    </div>
+  </div>
+
+  <h3>수익 모델의 질(質) — 하드웨어치고는 좋은 체질</h3>
+  <p>순수 하드웨어 기업의 약점은 ① 일회성 매출, ② 재고 사이클, ③ 가격 경쟁이다. 제브라는 세 가지 장치로 이를 완화한다. 첫째, <b>소모품과 다년 서비스 계약</b>: 프린터는 라벨·리본을, 단말은 수리·유지보수 계약(보통 3~5년)을 달고 다닌다. 프린터를 한번 깔면 라벨이 계속 팔리는 "면도기-면도날" 구조다. 둘째, <b>소프트웨어 어태치</b>: 리플렉시스에서 출발한 Workcloud(인력관리·태스크·커뮤니케이션·수요예측)와 기기관리 DNA/Nucleus가 구독 매출을 쌓는다 — 2026년 6월 ZONE 콘퍼런스에서 SW 포트폴리오를 대폭 확장했고, Workcloud는 Nucleus Research 가치 매트릭스에서 부문 리더로 평가받았다. 셋째, <b>자본경량 생산</b>: 제조는 EMS(전자제품 위탁생산)에 외주를 주므로 2025년 설비투자는 매출의 1.6%($86M)에 불과했고, 이 덕에 영업현금($917M)의 대부분이 잉여현금($831M)으로 남는다.</p>
+  <div class="co co-amber"><div class="t">정직한 한계 — 그래도 하드웨어 사이클 회사다</div>
+    <p style="margin-bottom:0">반복 매출이 완충재이긴 해도, 매출의 다수는 여전히 장비 판매이고 유통 채널을 경유한다. 그래서 2023년처럼 <b>채널 재고가 쌓이면 실제 수요보다 매출이 훨씬 크게 꺾이는 "채찍 효과"</b>에 노출된다(2021 +26.5% → 2023 −20.7%). 또 판매가 소수 대형 유통사에 집중되는 채널 구조상, 특정 유통사의 주문 타이밍이 분기 실적을 흔들 수 있다. 최종 고객 집중도는 낮지만(단일 고객 의존 없음, 포춘 500의 95%에 분산) <b>채널 집중과 사이클 민감성은 이 회사 밸류에이션이 소프트웨어 기업만큼 못 받는 근본 이유</b>이며, 뒤에서 볼 "선행 PER 14.5배"는 이 체질에 대한 시장의 할인이 이미 반영된 값이다.</p>
+  </div>
+</div></section>
+
+<!-- ══════════ 4. 제품·기술 ══════════ -->
+<section id="s4" class="alt"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 04</span></div>
+  <h2>제품·서비스 및 기술력 — "읽고, 붙이고, 판단하는" 기술 스택</h2>
+  <p class="slede">제브라의 기술은 한 문장으로 "물리 세계를 데이터로 변환하는 입출력 장치"다. 아래 네 개의 하드웨어 기둥과 그 위의 소프트웨어·AI 층을 알면 이 회사의 8할을 이해한 것이다. (실제 제품 사진은 저작권·링크 안정성 문제로 싣지 않고, 구조를 직접 그린 도식으로 대체한다.)</p>
+
+  <div class="figure">
+    <div class="ft">그림 4. 제품 4대 기둥 — 구조 도식으로 보는 제브라 하드웨어</div>
+    <div class="fs">왼쪽 위부터 시계방향: 러기드 모바일 컴퓨터 → 산업용 열전사 프린터 → 머신비전 검사 → RFID 일괄 인식.</div>
+    <svg viewBox="0 0 960 560" role="img" aria-label="제품 구조 도식">
+      <!-- 1. 러기드 모바일 컴퓨터 -->
+      <rect x="10" y="10" width="460" height="260" rx="12" fill="#FFFFFF" stroke="#D9D6CA"/>
+      <text x="26" y="38" font-size="14.5" font-weight="900" fill="#171B21">① 러기드 모바일 컴퓨터 — "산업용 스마트폰"</text>
+      <rect x="50" y="62" width="110" height="180" rx="16" fill="#12161C" stroke="#303945" stroke-width="2"/>
+      <rect x="60" y="76" width="90" height="120" rx="4" fill="#1B222B" stroke="#4C7BE0"/>
+      <text x="105" y="126" text-anchor="middle" font-size="10" fill="#9DB8F2">Android</text>
+      <text x="105" y="140" text-anchor="middle" font-size="10" fill="#9DB8F2">+ 업무앱</text>
+      <rect x="78" y="206" width="54" height="18" rx="9" fill="#D93A26"/>
+      <text x="105" y="219" text-anchor="middle" font-size="9.5" fill="#FFFFFF">스캔 트리거</text>
+      <path d="M105 62 L105 44 L150 30" stroke="#D93A26" stroke-width="2" fill="none"/>
+      <text x="186" y="76" font-size="12" fill="#39414B">· 상단 스캔엔진: 바코드를 0.x초에 판독</text>
+      <text x="186" y="98" font-size="12" fill="#39414B">· 2.4m 낙하·IP65 방진방수·냉동창고 사양</text>
+      <text x="186" y="120" font-size="12" fill="#39414B">· 배터리 교체·5년+ 지원 (소비폰과 다른 점)</text>
+      <text x="186" y="142" font-size="12" fill="#39414B">· Wi-Fi 7 / 5G / UHF RFID 내장(신형)</text>
+      <text x="186" y="170" font-size="12.5" font-weight="700" fill="#A82A1A">2026 신형 TC501/TC701:</text>
+      <text x="186" y="192" font-size="12" fill="#39414B">업계 첫 AMOLED + 컬러 스캔엔진,</text>
+      <text x="186" y="214" font-size="12" fill="#39414B">퀄컴 Dragonwing NPU로 기기내 AI 실행</text>
+      <text x="186" y="240" font-size="11" fill="#5C646E">대표: TC/MC 시리즈, 웨어러블, 태블릿</text>
+      <!-- 2. 프린터 -->
+      <rect x="490" y="10" width="460" height="260" rx="12" fill="#FFFFFF" stroke="#D9D6CA"/>
+      <text x="506" y="38" font-size="14.5" font-weight="900" fill="#171B21">② 산업용 열전사 프린터 — 라벨 공장</text>
+      <rect x="530" y="70" width="170" height="130" rx="10" fill="#EDEBE2" stroke="#C4C0B1" stroke-width="2"/>
+      <circle cx="575" cy="115" r="28" fill="none" stroke="#5C646E" stroke-width="6"/>
+      <text x="575" y="120" text-anchor="middle" font-size="9.5" fill="#39414B">라벨롤</text>
+      <rect x="614" y="98" width="66" height="10" fill="#D93A26"/>
+      <text x="647" y="92" text-anchor="middle" font-size="9.5" fill="#A82A1A">열 헤드</text>
+      <path d="M700 122 L760 122" stroke="#5C646E" stroke-width="2"/>
+      <rect x="700" y="112" width="70" height="20" fill="#FFFFFF" stroke="#171B21"/>
+      <g transform="translate(704,116)"><rect width="3" height="12" fill="#171B21"/><rect x="5" width="2" height="12" fill="#171B21"/><rect x="9" width="4" height="12" fill="#171B21"/><rect x="15" width="2" height="12" fill="#171B21"/><rect x="19" width="3" height="12" fill="#171B21"/><rect x="24" width="5" height="12" fill="#171B21"/><rect x="31" width="2" height="12" fill="#171B21"/><rect x="35" width="3" height="12" fill="#171B21"/><rect x="40" width="2" height="12" fill="#171B21"/><rect x="44" width="4" height="12" fill="#171B21"/><rect x="50" width="2" height="12" fill="#171B21"/><rect x="54" width="3" height="12" fill="#171B21"/><rect x="59" width="2" height="12" fill="#171B21"/></g>
+      <text x="735" y="150" text-anchor="middle" font-size="10.5" fill="#5C646E">인쇄된 라벨 →</text>
+      <text x="506" y="228" font-size="12" fill="#39414B">· 원리: 잉크 없이 <tspan font-weight="700">열</tspan>로 리본 왁스를 라벨에 녹여 붙임(열전사)</text>
+      <text x="506" y="250" font-size="12" fill="#39414B">· 라벨·리본·RFID태그 = 반복 구매 소모품 → "면도날" 매출</text>
+      <!-- 3. RFID -->
+      <rect x="10" y="290" width="460" height="260" rx="12" fill="#FFFFFF" stroke="#D9D6CA"/>
+      <text x="26" y="318" font-size="14.5" font-weight="900" fill="#171B21">④ RFID — 안 보여도, 수백 개를 한 번에</text>
+      <rect x="44" y="344" width="16" height="150" rx="4" fill="#12161C"/>
+      <rect x="250" y="344" width="16" height="150" rx="4" fill="#12161C"/>
+      <text x="155" y="340" text-anchor="middle" font-size="10.5" fill="#5C646E">RFID 게이트(리더+안테나)</text>
+      <path d="M66 380 q45 -22 90 0" stroke="#D93A26" stroke-width="2" fill="none" opacity=".85"/>
+      <path d="M66 410 q60 -30 120 0" stroke="#D93A26" stroke-width="2" fill="none" opacity=".6"/>
+      <path d="M66 440 q75 -36 150 0" stroke="#D93A26" stroke-width="2" fill="none" opacity=".4"/>
+      <rect x="120" y="430" width="60" height="46" fill="#EDEBE2" stroke="#C4C0B1"/>
+      <rect x="150" y="424" width="26" height="14" rx="3" fill="#2451B8"/>
+      <text x="163" y="434" text-anchor="middle" font-size="8.5" fill="#FFFFFF">태그</text>
+      <text x="150" y="500" text-anchor="middle" font-size="10.5" fill="#5C646E">상자(팔레트째 통과)</text>
+      <text x="300" y="372" font-size="12" fill="#39414B">· 태그 속 초소형 칩이 전파를</text>
+      <text x="300" y="392" font-size="12" fill="#39414B">  반사하며 ID 송신(배터리 불필요)</text>
+      <text x="300" y="414" font-size="12" fill="#39414B">· 시야 불필요, 초당 수백 개 판독</text>
+      <text x="300" y="436" font-size="12" fill="#39414B">· 리더·게이트·태그·프린터까지</text>
+      <text x="300" y="456" font-size="12" fill="#39414B">  풀스택 보유 (칩은 임핀지 협업)</text>
+      <text x="300" y="482" font-size="11.5" fill="#A82A1A" font-weight="700">신선식품·택배 추적으로 확산 중</text>
+      <text x="300" y="502" font-size="11" fill="#5C646E">(Q1'26 일시 역성장 후 재성장 국면)</text>
+      <!-- 4. 머신비전 -->
+      <rect x="490" y="290" width="460" height="260" rx="12" fill="#FFFFFF" stroke="#D9D6CA"/>
+      <text x="506" y="318" font-size="14.5" font-weight="900" fill="#171B21">③ 머신비전 — 사람 눈을 대신하는 검사</text>
+      <rect x="530" y="470" width="380" height="14" fill="#EDEBE2" stroke="#C4C0B1"/>
+      <rect x="560" y="440" width="44" height="30" fill="#FFFFFF" stroke="#171B21"/>
+      <rect x="640" y="440" width="44" height="30" fill="#FFFFFF" stroke="#171B21"/>
+      <rect x="720" y="440" width="44" height="30" fill="#FFFFFF" stroke="#B93327" stroke-width="2.5"/>
+      <text x="742" y="432" text-anchor="middle" font-size="10.5" font-weight="700" fill="#8E2118">불량!</text>
+      <rect x="662" y="342" width="60" height="40" rx="6" fill="#12161C"/>
+      <circle cx="692" cy="362" r="10" fill="#1B222B" stroke="#4C7BE0" stroke-width="2"/>
+      <path d="M676 382 L648 440 M708 382 L736 440" stroke="#D93A26" stroke-width="1.6" stroke-dasharray="4 3"/>
+      <text x="692" y="336" text-anchor="middle" font-size="10.5" fill="#5C646E">고정형 카메라(CV70 등) + 조명</text>
+      <text x="506" y="512" font-size="12" fill="#39414B">· 매트록스('22 $875M)+포토네오(3D, '25) 인수로 진입, Aurora SW로 통합</text>
+      <text x="506" y="534" font-size="12" fill="#39414B">· 딥러닝(NPU)으로 스크래치·누락 검사 — Q1'26 두 자릿수 성장 "변곡점"</text>
+    </svg>
+    <div class="cap">그림 4. 자체 제작 구조 도식(실사 아님). 제품 사양·발표 내용 출처: Zebra NRF 2026 보도자료(2026.1.9), Automate 2026 발표(2026.6.22), Q1 2026 어닝콜.</div>
+  </div>
+
+  <h3>기술 원리 쉽게 풀기 — 왜 아무나 못 만드나</h3>
+  <p><b>① 열전사 인쇄:</b> 가정용 프린터의 잉크는 물류 현장에서 번지고 지워진다. 제브라 프린터는 수백 개의 미세 발열점이 리본의 왁스·수지를 순간적으로 녹여 라벨에 "구워" 붙인다. 영하 창고·기름때·마찰에도 살아남는 바코드가 핵심이고, <b>인쇄 헤드의 내구성·해상도, 그리고 40년치 라벨 재질 노하우</b>가 진입장벽이다. 여기에 라벨 안에 RFID 칩을 심어 인쇄와 동시에 데이터를 기록(인코딩)하는 RFID 프린터는 제브라가 가장 앞서 있다.</p>
+  <p><b>② 스캐닝(데이터 캡처):</b> 요즘 스캐너는 레이저가 아니라 초소형 카메라(이미저)로 바코드 "사진"을 찍어 알고리즘으로 해독한다. 제브라의 PRZM 같은 해독 엔진은 <b>찢어지고, 구겨지고, 성에 낀 바코드</b>를 읽는 확률에서 차이를 만든다 — 창고에서 판독 실패 1%는 곧 인건비다. 2026년형 스캔엔진은 업계 최초로 컬러 이미징을 넣어, 바코드만이 아니라 상품·문서 자체를 인식하는 AI 비전의 입력장치로 진화했다.</p>
+  <p><b>③ 러기드 모바일 컴퓨팅:</b> "그냥 갤럭시 쓰면 안 되나?"가 이 사업의 영원한 질문이다. 답은 총소유비용(TCO)이다. 산업 현장에서 소비자 폰은 파손·배터리·OS 지원 종료로 2년을 못 버티지만, 제브라 단말은 낙하 2.4m·교체형 배터리·5년 이상 보안 패치·전용 스캔엔진·기기관리 소프트웨어(Mobility DNA)를 갖춘다. 결정적으로 2010년대 제브라(구 모토로라 심볼)는 업계의 <b>윈도우CE→안드로이드 전환을 주도</b>하며, 수만 개 기업 고객의 업무 앱이 제브라 단말 위에서 개발·검증되게 만들었다. 앱과 주변기기, IT 관리 체계가 얽힌 이 <b>생태계 자체가 전환비용</b>이다.</p>
+  <p><b>④ RFID(RAIN UHF):</b> 바코드는 "보여야" 읽지만, RFID 태그는 전파로 응답하므로 상자를 열지 않고도 팔레트째 수백 개를 초 단위로 인식한다. 태그 값이 개당 몇 센트대로 떨어지며 의류(재고 정확도)에서 신선식품(유통기한 추적)·택배(분실 방지)로 확산 중이다. 제브라는 <b>리더·게이트·핸드헬드·프린터/인코더·태그까지 풀스택</b>을 갖춘 유일한 대형사이고, 칩 리더인 임핀지의 Gen2X 확장 규격을 신형 단말에 탑재하는 협업 관계다. Q1 2026에는 전년 대형 프로젝트의 역기저로 일시 감소했지만, 회사는 2분기부터 재성장을 제시했고 실제 임핀지의 태그칩 수주는 사상 최고를 기록 중이다 — 산업 전체 파이가 커지고 있다는 방증이다.</p>
+  <p><b>⑤ 머신비전:</b> 공장 라인에서 사람 눈 대신 카메라+AI가 불량·누락·정렬을 검사한다. 제브라는 매트록스(2022, $875M)로 30년 업력의 프레임그래버·비전 SW를, 포토네오(2025, $62M)로 로봇 픽킹용 3D 비전을 확보했고, 2026년 6월 초고속 검사용 CV70 카메라를 내놨다. 코그넥스·키엔스가 버티는 어려운 시장이지만, 제브라의 차별점은 <b>"물류·리테일 고객을 이미 쥐고 있다"</b>는 것 — 창고 컨베이어의 바코드 터널 스캐너와 검사 카메라를 한 회사가 묶어 파는 크로스셀이다. Q1 2026 두 자릿수 성장으로 경영진이 "변곡점"을 선언했다.</p>
+
+  <h3>소프트웨어·AI 층 — 하드웨어 위에 쌓는 두 번째 이야기</h3>
+  <div class="cols2">
+    <div class="card"><div class="ct">Workcloud + Nucleus — 반복 매출의 뼈대</div>
+      <p><b>Workcloud</b>(리플렉시스 기반)는 매장·현장 직원의 근무표 짜기, 업무 지시, 본사-매장 소통, 수요예측을 처리하는 구독 SW로, 월마트급 대형 리테일러들이 쓴다. 2026년 6월 ZONE에서 대폭 확장됐고 Nucleus Research 평가에서 태스크·인력관리 부문 리더로 선정됐다.</p>
+      <p style="margin-bottom:0"><b>Nucleus</b>(2026.6 신규)는 수만 대 단말을 한 화면에서 설정·보안·모니터링하는 통합 기기관리 플랫폼. 단말이 많아질수록 이 SW 없이는 운영이 불가능해진다 — <b>하드웨어 점유율을 SW 종속성으로 바꾸는 장치</b>다.</p>
+    </div>
+    <div class="card"><div class="ct">Frontline AI Suite — 2026년의 핵심 신상품</div>
+      <p>3층 구조다. ① <b>AI Enablers</b>: 단말 안(NPU)에서 도는 비전 모델·API — 상품 인식, 다중 바코드 동시 판독, 텍스트 읽기를 클라우드 왕복 없이 처리. ② <b>AI Blueprints</b>: 이를 조합한 업무 템플릿(선반 결품 감지, 검수 자동화 등). ③ <b>Zebra Companion</b>: 직원용 생성형 AI 에이전트 — 매장 재고·매뉴얼·상품 카탈로그를 학습해 "이 상품 대체재 뭐 있어?", "반품 규정이 뭐야?"에 즉답한다(Knowledge/Sales 에이전트, 대형 리테일러 실배포 시작).</p>
+      <p style="margin-bottom:0">중요한 건 <b>AI가 별매 상품이자 하드웨어 교체의 명분</b>이라는 점 — Companion을 제대로 쓰려면 NPU 달린 신형 단말이 필요하다. AI가 교체 사이클을 앞당기고 단가를 올리는 구조다.</p>
+    </div>
+  </div>
+
+  <h3>R&D · 특허 · 모방 난이도</h3>
+  <p>연구개발비는 연 5억 달러대 중반, 매출의 약 10~11% 수준(회사 공시 기반 추정)으로, 매출 규모가 1/5인 경쟁 전문업체들이 절대금액으로 따라올 수 없는 투자다. 특허는 심볼·모토로라 유산까지 수천 건 규모의 포트폴리오이며(Elo 인수로 터치 관련 수백 건 추가), <b>2022년 허니웰과 총 $360M 규모로 종결한 특허전쟁 뒤 상호 영구 교차라이선스를 맺어 업계 최대 특허 리스크가 제거</b>된 상태다. 2026년 4월에는 로봇 비전 스타트업 아페라 AI에 전략 투자하며 지능형 자동화 쪽 옵션도 사 두었다.</p>
+  <p><b>모방 난이도의 실체는 개별 기술이 아니라 시스템이다.</b> 스캐너 한 대는 중국 업체(유로보·뉴랜드 등)도 만든다. 그러나 ① 40년 축적된 판독 알고리즘과 내구 설계, ② 수만 기업의 IT 시스템에 이미 검증·인증된 앱 생태계, ③ 전 세계 수리·서비스망, ④ 1만+ 채널 파트너, ⑤ 기기관리 SW까지 묶인 <b>토탈 패키지를 한 번에 복제하는 비용이, 그냥 제브라를 계속 쓰는 비용보다 크다</b>. 이 명제의 가장 강력한 증거가 2026년 4월 허니웰의 철수다 — 세계 2위조차 이 게임의 규모의 경제를 못 버텼다.</p>
+
+  <div class="co co-neg"><div class="t">파괴 위협 점검 — 정직하게 볼 것 세 가지</div>
+    <p>① <b>소비자 스마트폰 + 스캔 앱</b>(스캔딧 등): 저강도 현장(매장 접객 등)에선 실제 침식이 있다. 다만 고강도 물류·창고에선 TCO와 스캔 성능 격차로 방어 중이고, 제브라도 소비자폰용 SW를 병행 판매해 헤지한다. ② <b>프린팅 커머디티화</b>: 매출의 약 1/3인 프린팅은 성숙 시장으로, 모닝스타도 이 부분의 범용화 위험을 지적한다 — 소모품·RFID 인코딩으로 방어하지만 성장 기대는 낮게 잡아야 한다. ③ <b>RFID의 바코드 잠식</b>: 역설적으로 자사 스캐너 수요를 갉을 수 있는 기술이지만, 제브라는 RFID 풀스택 1위이므로 잠식이 곧 자기 매출 전환이 된다 — "파괴자가 될 것인가, 파괴당할 것인가"에서 파괴자 편에 미리 서 있는 셈이다.</p>
+    <p style="margin-bottom:0">종합하면 파괴 리스크는 실재하지만, 세 축 모두 제브라가 <b>방어 수단이나 대체 포지션을 이미 보유</b>하고 있어 "존립 위협"이라기보다 "마진·성장률 변수"에 가깝다.</p>
+  </div>
+
+  <p><b>기술 리더십·인재:</b> CTO 톰 비안쿨리가 20년 이상 기술 전략을 이끌며 Nucleus·Frontline AI를 설계했고, AI 전략은 전담 부사장(요게시 컬카니) 체제다. 회사는 사내 소프트웨어 개발·영업·공급망에도 AI를 전면 적용해 마진 개선 동력으로 삼겠다고 밝혔고, WSJ의 2026년 'Best Companies for the Future' 평가에서 <b>S&P 500 중 AI 준비도 10위</b>에 올랐다 — "구식 하드웨어 회사"라는 통념과 데이터가 다르다는 외부 검증이다.</p>
+</div></section>
+
+<!-- ══════════ 5. 산업 분석 ══════════ -->
+<section id="s5"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 05</span></div>
+  <h2>산업 분석 — AIDC: 공급망의 신경계 산업</h2>
+  <p class="slede">제브라가 속한 산업은 AIDC(Automatic Identification &amp; Data Capture, 자동인식·데이터캡처)다. 쉽게 말해 "물리 세계의 사물·사람을 컴퓨터가 알아보게 만드는" 산업으로, 이커머스·자동화·노동력 부족이라는 세 개의 장기 순풍을 동시에 받는다. 회사가 제시하는 인접 시장 포함 총시장(TAM)은 $35B 이상이다.</p>
+
+  <div class="figure">
+    <div class="ft">그림 5. AIDC 가치사슬 — 제브라의 위치와 차별화 지점</div>
+    <div class="fs">굵은 빨간 테두리 = 제브라의 영역. 부품은 사고, 판매는 채널에 맡기며, 가운데 "장비+소프트웨어 통합" 자리를 독점적으로 넓게 차지한다.</div>
+    <svg viewBox="0 0 960 380" role="img" aria-label="가치사슬">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#5C646E"/></marker></defs>
+      <rect x="10" y="40" width="185" height="270" rx="10" fill="#EDEBE2" stroke="#C4C0B1"/>
+      <text x="102" y="66" text-anchor="middle" font-size="13.5" font-weight="800" fill="#171B21">업스트림 (부품)</text>
+      <text x="24" y="94" font-size="12" fill="#39414B">· AP/NPU: 퀄컴</text>
+      <text x="24" y="116" font-size="12" fill="#39414B">· RFID 칩: 임핀지·NXP</text>
+      <text x="24" y="138" font-size="12" fill="#39414B">· 메모리: 삼성·하이닉스</text>
+      <text x="24" y="160" font-size="12" fill="#39414B">· 센서·디스플레이</text>
+      <text x="24" y="182" font-size="12" fill="#39414B">· EMS 위탁생산</text>
+      <text x="24" y="216" font-size="11.5" font-weight="700" fill="#8F6410">2026 리스크 지점:</text>
+      <text x="24" y="236" font-size="11.5" fill="#553A05">AI發 메모리 가격 급등이</text>
+      <text x="24" y="254" font-size="11.5" fill="#553A05">원가에 ~2%p 마진 압박</text>
+      <text x="24" y="272" font-size="11.5" fill="#553A05">(가격 인상으로 상쇄 중)</text>
+      <path d="M195 175 L235 175" stroke="#5C646E" stroke-width="2.4" marker-end="url(#ar2)"/>
+      <rect x="235" y="20" width="330" height="330" rx="12" fill="#FBE7E2" stroke="#D93A26" stroke-width="3"/>
+      <text x="400" y="48" text-anchor="middle" font-size="14.5" font-weight="900" fill="#A82A1A">장비 + 소프트웨어 통합 (제브라)</text>
+      <rect x="252" y="64" width="140" height="58" rx="8" fill="#FFFFFF" stroke="#D9D6CA"/>
+      <text x="322" y="88" text-anchor="middle" font-size="12" font-weight="700" fill="#171B21">데이터 생성 HW</text>
+      <text x="322" y="108" text-anchor="middle" font-size="11" fill="#5C646E">프린터·스캐너·단말</text>
+      <rect x="408" y="64" width="140" height="58" rx="8" fill="#FFFFFF" stroke="#D9D6CA"/>
+      <text x="478" y="88" text-anchor="middle" font-size="12" font-weight="700" fill="#171B21">차세대 인식</text>
+      <text x="478" y="108" text-anchor="middle" font-size="11" fill="#5C646E">RFID·머신비전·위치</text>
+      <rect x="252" y="136" width="296" height="56" rx="8" fill="#12161C" stroke="#303945"/>
+      <text x="400" y="160" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">소프트웨어: DNA/Nucleus·Workcloud·Frontline AI</text>
+      <text x="400" y="180" text-anchor="middle" font-size="10.5" fill="#AFB9C4">기기관리 → 업무관리 → AI 에이전트로 확장</text>
+      <rect x="252" y="206" width="296" height="52" rx="8" fill="#FFFFFF" stroke="#D9D6CA"/>
+      <text x="400" y="228" text-anchor="middle" font-size="12" font-weight="700" fill="#171B21">서비스·소모품: 유지보수, 라벨·리본·태그</text>
+      <text x="400" y="248" text-anchor="middle" font-size="10.5" fill="#5C646E">설치기반에 비례하는 반복 매출</text>
+      <text x="400" y="288" text-anchor="middle" font-size="11.5" font-weight="700" fill="#A82A1A">차별화 지점: 4대 카테고리 1위의 폭 + HW→SW→AI 수직 통합</text>
+      <text x="400" y="308" text-anchor="middle" font-size="11" fill="#701D10">경쟁사는 대부분 한두 칸만 보유 (코그넥스=비전만, SATO=프린터만…)</text>
+      <text x="400" y="336" text-anchor="middle" font-size="11" fill="#701D10">2026.4 허니웰 PSS 철수로 "풀라인 경쟁자"가 사실상 소멸</text>
+      <path d="M565 175 L605 175" stroke="#5C646E" stroke-width="2.4" marker-end="url(#ar2)"/>
+      <rect x="605" y="40" width="160" height="270" rx="10" fill="#E6EDFA" stroke="#B9CBEE"/>
+      <text x="685" y="66" text-anchor="middle" font-size="13.5" font-weight="800" fill="#183A8C">유통·통합 채널</text>
+      <text x="619" y="94" font-size="12" fill="#14285C">· IT 유통사</text>
+      <text x="619" y="116" font-size="12" fill="#14285C">· 리셀러(VAR)</text>
+      <text x="619" y="138" font-size="12" fill="#14285C">· 소프트웨어사(ISV)</text>
+      <text x="619" y="160" font-size="12" fill="#14285C">· 시스템 통합사</text>
+      <text x="619" y="192" font-size="11.5" fill="#183A8C">1만+ 파트너가 제브라</text>
+      <text x="619" y="210" font-size="11.5" fill="#183A8C">기반으로 솔루션 구축 —</text>
+      <text x="619" y="228" font-size="11.5" fill="#183A8C">사실상 "표준 플랫폼"</text>
+      <path d="M765 175 L805 175" stroke="#5C646E" stroke-width="2.4" marker-end="url(#ar2)"/>
+      <rect x="805" y="40" width="145" height="270" rx="10" fill="#E2F1E8" stroke="#B4D9C4"/>
+      <text x="877" y="66" text-anchor="middle" font-size="13.5" font-weight="800" fill="#135A39">수요 산업</text>
+      <text x="819" y="94" font-size="12" fill="#0E4229">· 리테일·이커머스</text>
+      <text x="819" y="116" font-size="12" fill="#0E4229">· 운송·물류</text>
+      <text x="819" y="138" font-size="12" fill="#0E4229">· 제조</text>
+      <text x="819" y="160" font-size="12" fill="#0E4229">· 헬스케어·공공</text>
+      <text x="819" y="196" font-size="11.5" fill="#135A39">순풍(회사 IR):</text>
+      <text x="819" y="216" font-size="11.5" fill="#135A39">AI SW 지출 +47%</text>
+      <text x="819" y="234" font-size="11.5" fill="#135A39">창고 면적 +7%</text>
+      <text x="819" y="252" font-size="11.5" fill="#135A39">이커머스 매출 +9%</text>
+    </svg>
+    <div class="cap">그림 5. 자체 도식. 메가트렌드 수치는 Zebra Q1 2026 투자자 프레젠테이션 인용치, 채널 구조는 회사 공시·PartnerConnect 10주년 발표(2026.4) 기준.</div>
+  </div>
+
+  <h3>산업의 구조와 흐름 — 네 가지 축</h3>
+  <p><b>① 수요의 뿌리는 "실시간 가시성"이다.</b> 이커머스는 "오늘 주문, 내일 도착"을 표준으로 만들었고, 이는 창고·매장·배송의 모든 접점에서 스캔 횟수와 단말 수를 늘린다. 여기에 선진국 공통의 현장 노동력 부족이 겹치면서, 기업들은 "사람을 더 뽑는 대신 한 사람이 더 많이 처리하게 하는" 장비·소프트웨어에 예산을 배정한다. 이것이 이 산업이 GDP보다 빠르게(연 중반 한 자릿수, 회사 기준 유기 5~7%) 크는 구조적 이유다.</p>
+  <p><b>② 기술 세대교체가 시장을 계속 다시 판다.</b> 바코드(1D)→2D코드→RFID→머신비전→온디바이스 AI로 인식 기술이 진화할 때마다 기존 설치기반 전체가 업그레이드 대상이 된다. 지금은 두 개의 세대교체가 겹치는 국면이다: 코로나기(2020~22)에 대량 구매된 단말의 <b>물리적 교체 주기(2027년 전후 대형 물류사 리프레시 파이프라인 구축 중 — 회사 언급)</b>와, AI 기능을 이유로 한 <b>기능적 조기 교체(TC501/701)</b>다.</p>
+  <p><b>③ 공급 구조는 과점으로 더 굳어지는 중.</b> 풀라인(전 제품군) 공급자는 제브라와 허니웰 PSS 둘뿐이었는데, 2026년 4월 허니웰이 PSS(2025 매출 약 $1.1B)를 라벨·안전용품 회사 브래디에 $1.4B — <b>매출의 약 1.3배</b> — 에 매각하며 철수했다. 창고 자동화 설비(Intelligrated)도 사모펀드에 팔았다. 2위가 시장을 떠나고 그 자산이 AIDC 본업 역량이 약한 인수자에게 넘어간 것은, 남은 1위의 가격 결정력과 인재·파트너 흡수 기회를 동시에 키운다.</p>
+  <p><b>④ 인접 시장으로의 확장 여지.</b> 제브라의 정의상 TAM은 $35B+로 현재 매출($5.4B)의 6배가 넘는다. Elo 인수로 셀프서비스 키오스크·POS(+$8B), 매트록스·포토네오로 산업 검사, Workcloud로 현장 SW까지 — "인식 장비 회사"에서 "현장 운영 플랫폼"으로 정의를 넓히는 중이다. TAM 숫자 자체는 회사 측 프레이밍이므로 할인해 듣더라도, 방향(하드웨어 지위를 지렛대로 한 인접 확장)은 지난 10년의 M&A 실적으로 입증돼 있다.</p>
+
+  <div class="co co-blue"><div class="t">산업 사이클 이해 — 이 산업의 "심장 박동"</div>
+    <p style="margin-bottom:0">AIDC 수요는 장기 우상향하지만 단기로는 <b>기업 설비투자 심리 + 채널 재고</b>에 따라 2~4년 주기로 출렁인다. 2021년(+26.5%) 과열 → 2023년(−20.7%) 급랭 → 2024~25년(+8%대) 회복이 전형적 파형이다. 투자 관점의 함의: 이 산업 주식은 <b>사이클 바닥 공포(2023, 2026 봄) 때 멀티플이 과도하게 눌리고, 회복 확인 시 이익과 멀티플이 동시에 도는(더블 플레이)</b> 패턴을 반복해 왔다. 지금 위치는 회복 중반 + 2027 교체 사이클 대기 국면이다.</p>
+  </div>
+</div></section>
+
+<!-- ══════════ 6. 경쟁 우위(해자) ══════════ -->
+<section id="s6" class="alt"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 06</span></div>
+  <h2>경쟁 우위 분석 — 해자의 실체와 유통기한</h2>
+  <p class="slede">프레임워크의 판별법(마진 vs 회전율)으로 보면 제브라는 전형적인 <b>차별화형(differentiation) 해자</b> 기업이다. 경쟁사보다 25~30% 비싸게 팔면서도 점유율 1위를 40년간 유지해 왔고, 2026년에는 2위의 자진 철수로 해자가 오히려 깊어졌다.</p>
+
+  <div class="figure">
+    <div class="ft">그림 6. 포터의 5 Forces — 위협 강도 게이지 (낮을수록 유리)</div>
+    <div class="fs">막대 길이 = 위협 강도(정성 평가, 근거는 아래 본문). 제브라에 가장 아픈 축은 뜻밖에도 "공급자 교섭력"이다.</div>
+    <svg viewBox="0 0 940 300" role="img" aria-label="5 forces">
+      <g font-size="13" font-weight="700" fill="#171B21">
+        <text x="200" y="42" text-anchor="end">신규 진입 위협</text>
+        <text x="200" y="94" text-anchor="end">기존 경쟁 강도</text>
+        <text x="200" y="146" text-anchor="end">공급자 교섭력</text>
+        <text x="200" y="198" text-anchor="end">구매자 교섭력</text>
+        <text x="200" y="250" text-anchor="end">대체재 위협</text>
+      </g>
+      <g>
+        <rect x="215" y="26" width="640" height="22" rx="11" fill="#EDEBE2" stroke="#C4C0B1"/>
+        <rect x="215" y="26" width="176" height="22" rx="11" fill="#1E7A4F"/>
+        <text x="404" y="42" font-size="12" font-weight="700" fill="#135A39">낮음 — R&D·생태계·서비스망 3중 장벽, 2위도 포기한 시장</text>
+        <rect x="215" y="78" width="640" height="22" rx="11" fill="#EDEBE2" stroke="#C4C0B1"/>
+        <rect x="215" y="78" width="288" height="22" rx="11" fill="#8F6410"/>
+        <text x="516" y="94" font-size="12" font-weight="700" fill="#553A05">중간 — 카테고리별 전문가와 각개전투(코그넥스·SATO·중국계), 단 풀라인 맞수는 소멸</text>
+        <rect x="215" y="130" width="640" height="22" rx="11" fill="#EDEBE2" stroke="#C4C0B1"/>
+        <rect x="215" y="130" width="400" height="22" rx="11" fill="#B93327"/>
+        <text x="628" y="146" font-size="12" font-weight="700" fill="#8E2118">중상 — 퀄컴 AP·메모리 과점: 2026 메모리 급등이 마진 2%p 압박(실증)</text>
+        <rect x="215" y="182" width="640" height="22" rx="11" fill="#EDEBE2" stroke="#C4C0B1"/>
+        <rect x="215" y="182" width="288" height="22" rx="11" fill="#8F6410"/>
+        <text x="516" y="198" font-size="12" font-weight="700" fill="#553A05">중간 — 고객은 분산돼 있으나(단일 10% 미만) 초대형 리테일러·물류사는 협상력 큼</text>
+        <rect x="215" y="234" width="640" height="22" rx="11" fill="#EDEBE2" stroke="#C4C0B1"/>
+        <rect x="215" y="234" width="256" height="22" rx="11" fill="#8F6410"/>
+        <text x="484" y="250" font-size="12" font-weight="700" fill="#553A05">중하 — 소비자폰+앱의 저강도 침식은 실재, 고강도 현장은 TCO로 방어</text>
+      </g>
+      <text x="215" y="284" font-size="11.5" fill="#5C646E">평가 근거: 본문 서술 및 2026.4 허니웰 PSS 매각, Q1'26 어닝콜 메모리 코멘트, 가격 비교 자료(경쟁기종 25~30% 저가 포지셔닝).</text>
+    </svg>
+    <div class="cap">그림 6. 자체 정성 평가 도식. 정량 근거는 각 축 설명 문장에 병기.</div>
+  </div>
+
+  <h3>차별화 vs 원가 우위 — 프레임워크 판별</h3>
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>판별 지표</th><th class="num">제브라</th><th>비교 기준</th><th>판정</th></tr>
+    <tr><td>핵심 영업 마진 (조정 EBITA, SBC 비용 반영)</td><td class="num">16.7% ('25) → 17.5%+ ('26E)</td><td>직접 경쟁 PSS: 매각가 1.3×매출·영업권 손상이 시사하는 저수익 / 데이터로직: 한 자릿수 마진</td><td><span class="badge b-pos">산업 대비 약 2배 — 차별화 신호</span></td></tr>
+    <tr><td>가격 포지셔닝</td><td class="num">경쟁기종 대비 +25~30%</td><td>허니웰 CK65 = 제브라 MC9400 대비 25~30% 저가로 판매(유통사 비교 자료)</td><td><span class="badge b-pos">프리미엄 가격 수용 = 차별화 실증</span></td></tr>
+    <tr><td>투자자본 회전율 (매출/IC)</td><td class="num">0.91× (영업권 포함) / 4×+ (영업권 제외 추정)</td><td>영업권 $3.9B+는 과거 인수 프리미엄의 흔적</td><td><span class="badge b-lt">원가우위형 아님 — 회전율은 평범</span></td></tr>
+    <tr class="hl"><td>종합</td><td class="num" colspan="2">마진 우위 뚜렷 + 회전율 평범</td><td>차별화형 해자 — 상위 ROIC 지속 기업의 전형 패턴(프레임워크: 지속 우위 기업의 다수가 차별화형)</td></tr>
+  </table></div>
+  <p class="capnote">표 2. 제브라 마진은 9장 계산(GAAP 영업이익 + 무형상각 + 일회성, SBC는 비용 처리). 가격 비교는 2026년 유통사 공개 자료 기준.</p>
+
+  <h3>해자의 다섯 켜 — 왜 경쟁사가 못 따라오나</h3>
+  <ul>
+    <li><b>① 전환비용(가장 두꺼운 켜):</b> 고객의 창고관리시스템(WMS)·매장 앱·IT 관리체계가 제브라 단말·DNA 소프트웨어 기준으로 짜여 있다. 단말 교체는 앱 재검증·직원 재교육·주변기기(크래들·홀스터) 총교체를 뜻해, <b>기기값 몇 % 아끼자고 벌일 일이 아니게 된다.</b> 신형 Nucleus 플랫폼은 이 종속을 더 조인다.</li>
+    <li><b>② 규모의 경제:</b> 연 $5억대 R&D와 전 세계 수리·서비스망은 매출 $5.4B이니까 가능한 고정비다. 매출 $1.1B의 허니웰 PSS가 손상차손 끝에 매각된 것이 이 문턱의 높이를 증명한다.</li>
+    <li><b>③ 채널·생태계 (약한 네트워크 효과):</b> 1만+ 파트너와 ISV가 제브라 기반으로 솔루션을 만들수록 고객은 제브라를 고르게 되고, 고객이 많을수록 파트너가 또 모인다. 승자독식까진 아니어도 1위 프리미엄을 강화하는 되먹임이다.</li>
+    <li><b>④ 무형자산:</b> 심볼·모토로라 유산 포함 수천 건 특허(허니웰과 영구 교차라이선스로 소송 리스크 정리), 40년 축적 판독 알고리즘, 그리고 "현장 장비 = 지브라"라는 B2B 브랜드.</li>
+    <li><b>⑤ 데이터·AI 포지션(형성 중):</b> 현장 데이터가 생성되는 첫 접점을 쥐고 있다는 위치 자체가, AI 시대에 "누가 현장 AI를 배포하는가"의 기본값을 제브라로 만든다. 아직 재무로 완전히 증명되진 않은, 옵션 성격의 여섯 번째 켜다.</li>
+  </ul>
+
+  <div class="co co-pos"><div class="t">해자 지속성 판정 — 페이드 0.20보다 느리게 닳을 근거</div>
+    <p style="margin-bottom:0">IT 섹터 평균 페이드(0.20)는 "평균적 IT 기업은 초과수익이 매년 20%씩 평균으로 회귀한다"는 뜻이다. 제브라는 ① 40년간 지위를 지킨 실적, ② 2위의 철수(2026), ③ 소모품·서비스·SW로 두꺼워지는 반복 매출, ④ 특허 휴전으로 <b>섹터 평균보다 느린 페이드를 주장할 근거가 실재</b>한다. 반면 ⑤ 매출 1/3의 프린팅 범용화, ⑥ 부품 과점(공급자 파워), ⑦ 저가 아시아 경쟁의 하단 침식은 페이드를 앞당길 수 있는 힘이다. 종합: <b>페이드 0.20(섹터 표준)을 기본으로 쓰되, 0.10~0.20 사이가 정당화 가능한 범위</b> — 뒤의 민감도 분석에서 확인하듯 다행히 이 종목 가치는 페이드보다 할인율에 훨씬 민감하다.</p>
+  </div>
+</div></section>
+
+<!-- ══════════ 7. 피어그룹 비교 ══════════ -->
+<section id="s7"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 07</span></div>
+  <h2>피어그룹 비교 — 같은 사슬, 극단적으로 다른 가격표</h2>
+  <p class="slede">제브라의 "완전한 피어"는 이제 없다 — 유일한 풀라인 맞수(허니웰 PSS)가 팔려 나갔기 때문이다. 그래서 비교는 세 층으로 한다: ① 카테고리별 전문 경쟁사, ② 같은 자동화 테마의 순수 플레이(코그넥스·임핀지), ③ 실제 M&A 거래가 매긴 가격. 이 세 층을 겹치면 흥미로운 그림이 나온다.</p>
+
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>기업 (티커)</th><th>제브라와의 관계</th><th class="num">시가총액</th><th class="num">매출 규모</th><th class="num">밸류에이션</th><th>비교 포인트</th></tr>
+    <tr class="hl"><td><b>Zebra (ZBRA)</b></td><td>본 분석 대상 — AIDC 풀라인 1위</td><td class="num">$12.78B</td><td class="num">$5.40B ('25, +8.3%)</td><td class="num">선행 PER 14.5× · P/S 2.4×</td><td>4개 카테고리 1위 + 비전·RFID·SW 통합. FCF 수익률 ~7%</td></tr>
+    <tr><td><b>코그넥스 (CGNX)</b></td><td>머신비전 전문 — AVA 부문 경쟁자</td><td class="num">$11.86B</td><td class="num">$0.99B ('25, +8.7%)</td><td class="num">P/E(TTM) ~84× · P/S ~12×</td><td>매출이 제브라의 1/5.4인데 시총은 거의 같음. AI 검사 테마로 52주 저점 대비 2배+ 급등 — 시장이 "비전"에 주는 프리미엄의 척도</td></tr>
+    <tr><td><b>임핀지 (PI)</b></td><td>RAIN RFID 칩 1위 — 제브라의 파트너이자 RFID 생태계 지표</td><td class="num">$4.27B</td><td class="num">$0.37B ('26E)</td><td class="num">GAAP 적자 · 선행 P/S ~11×</td><td>Q2'26 태그칩 수주 사상 최고 — RFID 사이클 재가속의 선행지표. 순수 RFID 스토리의 시장가</td></tr>
+    <tr><td><b>허니웰 PSS → 브래디(BRC)</b></td><td>과거 유일한 풀라인 맞수 — 2026.4 매각으로 철수</td><td class="num">거래가 $1.4B</td><td class="num">$1.1B ('25)</td><td class="num">P/S 1.3× (실거래)</td><td>세계 2위 사업의 청산가격. 규모 열위 사업의 운명과, "하드웨어만의 가치"가 얼마인지 보여주는 준거점</td></tr>
+    <tr><td><b>허니웰 테크놀로지스 (HON)</b></td><td>분할 후 잔존 자동화 회사(PSS 매각 진행)</td><td class="num">주가 $221.65</td><td class="num">$38.8~39.8B ('26 가이드)</td><td class="num">P/E(TTM) 15.6×</td><td>대형 산업 자동화의 "정상 멀티플" 기준선 — 제브라 14.5×는 이보다도 낮음</td></tr>
+    <tr><td><b>데이터로직 (이탈리아)</b></td><td>스캐닝·산업 센서 전문</td><td class="num">소형(제브라의 수십분의 1)</td><td class="num">약 $0.5B대</td><td class="num">저마진(한 자릿수)</td><td>스캐닝 단품 경쟁사의 현실 — 규모 없인 마진이 안 나온다는 반례</td></tr>
+    <tr><td><b>기타</b></td><td>SATO·TSC(프린터), 유로보·뉴랜드(저가 단말), 키엔스(비전), 에이버리 데니슨(RFID 태그)</td><td class="num" colspan="2">카테고리별 부분 경쟁</td><td class="num">—</td><td>각자 한 칸씩만 점유 — 풀라인 통합 공급자는 제브라 유일</td></tr>
+  </table></div>
+  <p class="capnote">표 3. 시세·시총은 2026-07-02 종가 기준(주요 브로커·시세 사이트 취합), 코그넥스·임핀지 실적은 각사 발표, PSS 거래는 허니웰 보도자료(2026.4.20). 데이터로직·기타는 정성 서술(정밀 시세 미검증).</p>
+
+  <div class="figure">
+    <div class="ft">그림 7. 하나의 자, 다섯 개의 가격 — "매출 1달러"에 시장이 지불하는 값 (P/S 배수)</div>
+    <div class="fs">같은 산업 사슬 안에서도 "순수 테마 스토리"와 "하드웨어 실물"의 가격이 9배 차이 난다. 제브라는 그 사이 어디에 있어야 하는가가 이 종목의 재평가 논쟁이다.</div>
+    <svg viewBox="0 0 940 300" role="img" aria-label="P/S 비교 축">
+      <line x1="70" y1="200" x2="900" y2="200" stroke="#171B21" stroke-width="2"/>
+      <g font-size="11.5" fill="#5C646E">
+        <line x1="70" y1="196" x2="70" y2="204" stroke="#171B21"/><text x="70" y="222" text-anchor="middle">0×</text>
+        <line x1="208" y1="196" x2="208" y2="204" stroke="#171B21"/><text x="208" y="222" text-anchor="middle">2×</text>
+        <line x1="346" y1="196" x2="346" y2="204" stroke="#171B21"/><text x="346" y="222" text-anchor="middle">4×</text>
+        <line x1="484" y1="196" x2="484" y2="204" stroke="#171B21"/><text x="484" y="222" text-anchor="middle">6×</text>
+        <line x1="622" y1="196" x2="622" y2="204" stroke="#171B21"/><text x="622" y="222" text-anchor="middle">8×</text>
+        <line x1="760" y1="196" x2="760" y2="204" stroke="#171B21"/><text x="760" y="222" text-anchor="middle">10×</text>
+        <line x1="898" y1="196" x2="898" y2="204" stroke="#171B21"/><text x="898" y="222" text-anchor="middle">12×</text>
+      </g>
+      <text x="485" y="252" text-anchor="middle" font-size="12" fill="#39414B">시가총액(또는 거래가) ÷ 연매출 — 오른쪽일수록 시장이 "스토리"에 후한 값</text>
+      <!-- markers -->
+      <g>
+        <circle cx="158" cy="200" r="9" fill="#8F6410"/>
+        <line x1="158" y1="191" x2="158" y2="120" stroke="#8F6410" stroke-width="1.6"/>
+        <rect x="76" y="76" width="164" height="46" rx="7" fill="#F8F0DB" stroke="#E4D3A4"/>
+        <text x="158" y="95" text-anchor="middle" font-size="12" font-weight="800" fill="#6E4C08">허니웰 PSS 매각 1.3×</text>
+        <text x="158" y="113" text-anchor="middle" font-size="11" fill="#553A05">'26.4 실거래 — "HW 청산가"</text>
+      </g>
+      <g>
+        <circle cx="234" cy="200" r="12" fill="#D93A26"/>
+        <line x1="234" y1="188" x2="234" y2="52" stroke="#D93A26" stroke-width="2"/>
+        <rect x="168" y="8" width="140" height="46" rx="7" fill="#FBE7E2" stroke="#F0BDB2"/>
+        <text x="238" y="27" text-anchor="middle" font-size="12.5" font-weight="900" fill="#A82A1A">ZBRA 2.4×</text>
+        <text x="238" y="45" text-anchor="middle" font-size="11" fill="#701D10">현재 시장가 (7/2)</text>
+      </g>
+      <g>
+        <circle cx="294" cy="200" r="9" fill="#2451B8"/>
+        <line x1="294" y1="191" x2="294" y2="120" stroke="#2451B8" stroke-width="1.6"/>
+        <rect x="252" y="76" width="150" height="46" rx="7" fill="#E6EDFA" stroke="#B9CBEE"/>
+        <text x="327" y="95" text-anchor="middle" font-size="12" font-weight="800" fill="#183A8C">Elo 인수 3.25×</text>
+        <text x="327" y="113" text-anchor="middle" font-size="11" fill="#14285C">제브라가 지불한 값('25.8)</text>
+      </g>
+      <g>
+        <circle cx="856" cy="200" r="9" fill="#1E7A4F"/>
+        <line x1="856" y1="191" x2="856" y2="120" stroke="#1E7A4F" stroke-width="1.6"/>
+        <rect x="746" y="76" width="176" height="46" rx="7" fill="#E2F1E8" stroke="#B4D9C4"/>
+        <text x="834" y="95" text-anchor="middle" font-size="12" font-weight="800" fill="#135A39">코그넥스 ~12× (TTM)</text>
+        <text x="834" y="113" text-anchor="middle" font-size="11" fill="#0E4229">"AI 머신비전" 순수 스토리</text>
+      </g>
+      <g>
+        <circle cx="822" cy="200" r="9" fill="#12161C"/>
+        <line x1="822" y1="191" x2="822" y2="152" stroke="#12161C" stroke-width="1.6"/>
+        <rect x="700" y="128" width="188" height="26" rx="7" fill="#FFFFFF" stroke="#C4C0B1"/>
+        <text x="794" y="146" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">임핀지 ~11× (선행) — RFID 칩</text>
+      </g>
+      <text x="480" y="286" text-anchor="middle" font-size="12" font-weight="700" fill="#A82A1A">읽는 법: 시장은 제브라를 "하드웨어(1.3×)에 약간의 프리미엄"으로 값 매기는 중 — 내부의 비전·RFID·AI SW 자산에는 코그넥스·임핀지식 프리미엄이 사실상 0으로 반영</text>
+    </svg>
+    <div class="cap">그림 7. P/S = 7/2 시총 ÷ 최근 연매출(임핀지는 2026E 컨센서스 매출 기준 선행 P/S, 코그넥스는 2025 실적 기준). 거래 배수는 발표 인수가 ÷ 공시 연매출. 출처: 각사 공시·시세(2026-07-02), 허니웰·제브라 보도자료.</div>
+  </div>
+
+  <h3>우위와 열위 — 세 줄 요약</h3>
+  <p><b>우위:</b> 규모(경쟁 전문사 대비 매출 5~10배)와 통합 폭(HW 4관왕 + SW/AI)은 압도적이고, 수익성(핵심 영업마진 ~17%)은 전문사 대부분을 앞선다. 밸류에이션은 자동화 테마 피어 대비 극단적으로 낮고, 심지어 대형 산업재(허니웰 15.6×)보다도 낮다. <b>열위:</b> 성장률의 "순수함" — 코그넥스·임핀지는 매출 전부가 성장 테마인 반면, 제브라는 성숙한 프린팅·단말이 몸통이라 블렌디드 성장률이 중간 한 자릿수에 머문다. 시장은 순수함에 프리미엄을 주므로, <b>제브라의 재평가는 "성장 부문(비전·RFID·AI SW)의 존재를 시장이 따로 값 매기기 시작할 때" 일어난다</b> — 8장의 내러티브 분석이 정확히 이 지점을 다룬다.</p>
+</div></section>
+
+<!-- ══════════ 8. 시장 내러티브 ══════════ -->
+<section id="s8" class="alt"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 08</span></div>
+  <h2>시장 내러티브 및 자금 선호도 — 지금 이 주식을 움직이는 이야기</h2>
+  <p class="slede">지난 12개월의 주가는 "실적의 문제"가 아니라 "기대의 문제"였다. 분기마다 컨센서스를 이겼는데도(4개 분기 연속 EPS 비트) 주가는 −43% 급락 후 +35% 반등이라는 롤러코스터를 탔다. 아래 차트의 이벤트를 따라가면 시장이 이 회사에서 무엇을 사고파는지가 보인다.</p>
+
+  <div class="figure dk">
+    <div class="ft">그림 8. 주가 12개월 — 실적이 아니라 '기대'가 만든 롤러코스터 (2025.8 ~ 2026.7)</div>
+    <div class="fs">단위: 달러. 번호 이벤트는 차트 아래 설명. 확인된 시점별 종가·보도치를 잇는 근사 경로.</div>
+    <svg viewBox="0 0 960 500" role="img" aria-label="주가 이벤트 차트">
+      <g stroke="#303945" stroke-width="1"><line x1="60" y1="96" x2="920" y2="96"/><line x1="60" y1="206" x2="920" y2="206"/><line x1="60" y1="316" x2="920" y2="316"/><line x1="60" y1="426" x2="920" y2="426"/></g>
+      <g font-size="11" fill="#8F9AA6"><text x="54" y="100" text-anchor="end">$350</text><text x="54" y="210" text-anchor="end">$300</text><text x="54" y="320" text-anchor="end">$250</text><text x="54" y="430" text-anchor="end">$200</text></g>
+      <g font-size="11" fill="#8F9AA6"><text x="80" y="466">'25.8</text><text x="219" y="466">10월</text><text x="368" y="466">12월</text><text x="517" y="466">'26.2</text><text x="666" y="466">4월</text><text x="815" y="466">6월</text></g>
+      <polyline points="80,120 110,90 140,110 204,202 219,213 260,196 281,188 284,270 320,278 380,268 442,260 466,255 505,266 546,263 575,330 613,399 645,420 675,428 700,420 715,412 740,400 764,389 767,318 790,325 817,312 845,300 867,288 889,277 892,276" fill="none" stroke="#FF8A73" stroke-width="3" stroke-linejoin="round"/>
+      <!-- key dots -->
+      <g fill="#FFFFFF" stroke="#D93A26" stroke-width="2.4">
+        <circle cx="80" cy="120" r="5"/><circle cx="110" cy="90" r="5"/><circle cx="284" cy="270" r="5"/><circle cx="546" cy="263" r="5"/><circle cx="675" cy="428" r="5"/><circle cx="767" cy="318" r="5"/><circle cx="892" cy="276" r="6"/>
+      </g>
+      <!-- annotations -->
+      <g font-size="11.5" font-weight="700">
+        <text x="80" y="145" fill="#7BE0AC">①</text>
+        <text x="118" y="78" fill="#ECEFF2">② 52주 고점 $352.66</text>
+        <text x="222" y="238" fill="#AFB9C4">③ 10/1 Elo 완료</text>
+        <text x="292" y="296" fill="#FF9E8E">④ 10/28 −12.8% → $270.77</text>
+        <text x="352" y="246" fill="#AFB9C4">⑤ 목표가 하향기</text>
+        <text x="452" y="234" fill="#AFB9C4">⑥ NRF</text>
+        <text x="540" y="240" fill="#FF9E8E">⑦ 2/12 Q4·'26가이던스</text>
+        <text x="560" y="446" fill="#FF9E8E">⑧ 저점 $199.05 (3~4월)</text>
+        <text x="676" y="392" fill="#ECEFF2">⑨ 4/20 허니웰 PSS 매각</text>
+        <text x="700" y="300" fill="#7BE0AC">⑩ 5/12 Q1 서프라이즈 +15%</text>
+        <text x="796" y="270" fill="#7BE0AC">⑪ 6월 신제품·지수편입</text>
+        <text x="866" y="256" fill="#FFFFFF">$268</text>
+      </g>
+      <text x="490" y="492" text-anchor="middle" font-size="11" fill="#8F9AA6">고점 대비 최대 −43.6% (352.66→199.05) 후 저점 대비 +34.7% 반등 — 같은 회사, 8개월 사이 시가총액 $7.3B 증발 후 $3.3B 복원</text>
+    </svg>
+    <div class="cap">그림 8. 주요 지점(8/5·9/25·10/1·10/28·2/12·3/10·저점·5/11·5/12·7/1·7/2)의 종가·보도치를 확인해 연결한 근사 곡선으로, 중간 구간의 미세 등락은 단순화됨. 출처: Yahoo Finance(52주 범위·7/1~2 종가), Investing.com(10/28·5/12 실적 반응), StockInvest(2/12 피벗·3/10 종가), WalletInvestor(9/25 시세), Investing.com 기사(10/1 시총 $15.1B).</div>
+  </div>
+
+  <div class="tablewrap"><table class="tbl">
+    <tr><th style="width:120px">시점</th><th>사건</th><th>주가 반응·의미</th></tr>
+    <tr><td class="num">① '25.8.5</td><td>Q2 EPS $3.61(컨센 +$0.28) 서프라이즈 + <b>Elo $1.3B 인수</b> 동시 발표</td><td><span class="badge b-pos">↑</span> "회복 + 확장" 조합에 주가 급등, 이후 고점권 진입</td></tr>
+    <tr><td class="num">② '25.8~10</td><td>52주 고점 <b>$352.66</b> 기록(기록 시점은 8~10월 사이)</td><td>회복 기대의 정점 — 2025 조정 EPS($15.84) 기준 약 22배</td></tr>
+    <tr><td class="num">④ '25.10.28</td><td>Q3 EPS $3.88 비트에도 <b>4분기 가이던스가 기대 미달</b>, EMEA 부진</td><td><span class="badge b-neg">↓ −12.8%</span> 하루 만에 $270.77 — "감속을 2026까지 연장 해석"(애널리스트 목표가 연쇄 하향 ⑤)</td></tr>
+    <tr><td class="num">⑥ '26.1.11</td><td>NRF에서 AI 네이티브 단말 TC501/701·Frontline AI 공개</td><td>AI 스토리 재점화 시도 — 주가 영향은 제한적</td></tr>
+    <tr><td class="num">⑦ '26.2.12</td><td>Q4 매출 비트·신규 $10억 자사주 승인·<b>'26 가이던스 $17.70~18.30 제시</b>, 로보틱스 철수 발표</td><td>발표 직후 반짝 강세 후 <b>"메모리 비용 공포"로 되돌림 시작</b> — 2/12가 피벗 톱이 되어 3/10까지 −22.5%</td></tr>
+    <tr><td class="num">⑧ '26.3~4</td><td>메모리(DRAM) 가격 급등 우려 + 연준 <b>금리 인상</b> 재론 국면</td><td><span class="badge b-neg">↓</span> 52주 저점 $199.05 — 당시 가이던스 기준 선행 PER 약 11배까지 압축</td></tr>
+    <tr><td class="num">⑨ '26.4.20</td><td><b>허니웰, PSS를 브래디에 $1.4B 매각</b>(WWS는 사모펀드에)</td><td>경쟁구도 격변 — 단기 주가엔 묻혔지만 중기 해자 강화 재료</td></tr>
+    <tr><td class="num">⑩ '26.5.12</td><td>Q1 EPS $4.75(컨센 +12%)·매출 +14.3%·<b>가이던스 상향($18.30~18.70)</b>·"메모리 2%p 역풍 전액 상쇄" 선언</td><td><span class="badge b-pos">↑ 약 +15%</span> 하루 급등. 다음 날 KeyBanc·Baird 상향, Barclays $345</td></tr>
+    <tr><td class="num">⑪ '26.6</td><td>ZONE SW 대확장(6/2)·머신비전 CV70(6/22)·<b>러셀 2500 편입</b></td><td><span class="badge b-pos">↑</span> $268까지 점진 회복 — 저점 대비 +35%, 고점 대비 여전히 −24%</td></tr>
+  </table></div>
+  <p class="capnote">표 4. 각 행 출처: Investing.com·Fool 어닝콜 기록, StockStory·Weiss(2월 반응), TipRanks 로그(5/12~13 상향), 허니웰·제브라 보도자료. 4개 분기 연속 EPS 비트: $4.02/$3.61/$3.88/$4.33/$4.75.</p>
+
+  <h3>시장이 붙인 "스토리" — 자금이 사는 다섯 가지 이야기</h3>
+  <ul>
+    <li><b>① "Physical AI(현장 AI)" 수혜주:</b> 데이터센터 AI 다음 물결은 물리 세계라는 테마에서, 제브라는 "현장 AI의 배포 채널"로 소개된다. 경영진도 Q1 콜에서 수요 동인을 "모빌리티·지능형 자동화·자산 가시성·클라우드 연결·Physical AI"로 명시했고, WSJ AI 준비도 10위가 외부 인증이 됐다. 코그넥스가 같은 테마로 저점 대비 2배 이상 재평가된 것이 이 스토리의 "가격표"다.</li>
+    <li><b>② 2027 교체 슈퍼사이클:</b> 코로나기 대량 구매 단말의 교체 파이프라인(대형 물류사 중심)이 2027년 실적에 반영된다는 기대. 회사는 현재 가이던스에 이 대형 리프레시를 <b>넣지 않았다</b>고 명시 — 즉 실현되면 온전히 상방이다.</li>
+    <li><b>③ 숨은 성장 자산 재평가:</b> 머신비전 두 자릿수 성장 "변곡점" 선언(Q1'26), 임핀지의 사상 최대 태그칩 수주가 가리키는 RFID 재가속 — 순수 플레이엔 P/S 11~12배가 붙는 자산들이 제브라 안에선 2.4배로 뭉뚱그려져 있다는 "숨은 가치(SOTP)" 논리.</li>
+    <li><b>④ 산업 구조 개선:</b> 허니웰 철수로 "이제 가격 전쟁 걱정이 줄었다"는 과점 심화 스토리. 사모펀드·비전문 인수자 아래의 PSS는 통상 투자보다 수확(harvest)을 택한다.</li>
+    <li><b>⑤ 자사주 흡수 기계:</b> 무배당·전액 환원 정책으로 반년 만에 유통 주식의 약 4%를 소각. 경영진은 "주가가 매력적이면 FCF 전부를 매입에 쓸 수 있다"고 발언 — 하방을 회사 스스로 받치는 구조.</li>
+  </ul>
+
+  <div class="cols2">
+    <div class="card"><div class="ct">컨센서스의 방향과 강도</div>
+      <p>18명 평균 <b>Buy, 목표가 $328.88</b>(현재가 대비 +23%), 범위 $256~400. Q1 직후 KeyBanc(섹터중립→비중확대, $305)·Baird(중립→아웃퍼폼, $310) 동반 상향, Barclays $345→346, 모닝스타 계열은 $400 유지("저평가"). 신중론은 씨티(중립 $284)·트루이스트(보유, 그러나 목표가 $267→296 상향). <b>방향은 일치(상향), 온도차는 "메모리·유기성장"에 대한 확신 차이</b>다.</p>
+      <p style="margin-bottom:0">참고 지표: 공매도 잔고는 유통 주식의 약 2%대(2025.9 시점 데이터)로 낮음 — 하락 베팅이 몰린 종목이 아니라, "확신 부족으로 비워 둔" 종목에 가깝다.</p>
+    </div>
+    <div class="card"><div class="ct">향후 재평가(리레이팅) 트리거 목록</div>
+      <ul style="margin-bottom:0">
+        <li><b>8/4 Q2 실적</b>: 가이던스 $4.20~4.50 상단 통과 + 메모리 상쇄 재확인 여부</li>
+        <li><b>메모리 가격 안정화</b>: 2027 증설로 완화 시 "마진 공포" 해소 — 3~4월 급락분의 되돌림 근거</li>
+        <li><b>대형 T&L 리프레시 수주 공시</b>: 2027 슈퍼사이클 스토리의 물증</li>
+        <li><b>RFID 재가속 수치 확인</b>: 신선식품·택배 신규 수직시장 안착</li>
+        <li><b>소프트웨어·AI 매출의 별도 공시 시작</b>: SOTP 재평가의 방아쇠 — 코그넥스 12배와 제브라 2.4배의 간극이 논쟁 무대에 오름</li>
+        <li><b>지수·수급</b>: 러셀 2500 편입 후 패시브 자금 유입, 지속되는 자사주</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="co co-blue"><div class="t">이 내러티브, 펀더멘털이 받치고 있나 — 교차 검증</div>
+    <p style="margin-bottom:0">스토리별 물증을 보면: ①현장 AI — 아직 매출 기여는 초기지만 <b>실배포(대형 리테일러의 Companion 도입)와 신제품 출하가 시작</b>됐고, ②교체 사이클 — 회사가 파이프라인 구축을 공식 언급, ③숨은 자산 — 머신비전 두 자릿수 성장·임핀지 수주 최고치라는 <b>제3자 데이터</b>가 존재, ④과점 심화 — 실거래(PSS $1.4B)로 확정, ⑤자사주 — 반년 $5억 집행 완료. 다섯 스토리 모두 최소한의 사실 기반이 있으며, 순수한 "꿈"으로만 이루어진 내러티브는 아니다. 다만 ①③이 <b>이익 숫자로 크게 잡히기까지는 1~2년의 시차</b>가 있고, 그 사이를 메모리·관세 같은 원가 뉴스가 흔들 수 있다 — 이것이 12장의 리스크에서 다룰 지점이다.</p>
+  </div>
+</div></section>
+
+<!-- ══════════ 9. 재무 분석 및 DCF ══════════ -->
+<section id="s9"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 09</span></div>
+  <h2>재무 분석 및 DCF 모델 — 숫자로 확인하는 체질</h2>
+  <p class="slede">지난 6년의 재무는 "붐(2021) → 버스트(2023) → 회복(2024~)"이라는 한 편의 사이클 드라마다. 그 아래를 들여다보면 변하지 않은 것이 있다: 매출의 15%를 잉여현금으로 바꿔내는 자본경량 체질과, 자본비용을 웃도는 투하자본수익률(ROIC)이다. 이 체질 위에 DCF를 세운다.</p>
+
+  <div class="figure">
+    <div class="ft">그림 9. 매출과 성장률 (2020 – 2026E) — 사이클의 상처와 회복</div>
+    <div class="fs">막대 = 연매출($M), 라벨 = 전년比 성장률. 2023년 −20.7%는 수요 붕괴가 아니라 채널·고객 재고 소진이 만든 착시적 급락이었다.</div>
+    <svg viewBox="0 0 940 330" role="img" aria-label="매출 추이">
+      <line x1="60" y1="285" x2="910" y2="285" stroke="#171B21" stroke-width="1.6"/>
+      <g font-size="11" fill="#5C646E">
+        <line x1="60" y1="65" x2="910" y2="65" stroke="#E7E4D9"/><text x="54" y="69" text-anchor="end">$6.0B</text>
+        <line x1="60" y1="138" x2="910" y2="138" stroke="#E7E4D9"/><text x="54" y="142" text-anchor="end">$4.0B</text>
+        <line x1="60" y1="212" x2="910" y2="212" stroke="#E7E4D9"/><text x="54" y="216" text-anchor="end">$2.0B</text>
+      </g>
+      <g>
+        <rect x="80"  y="122" width="88" height="163" fill="#8F9AA6"/><text x="124" y="303" text-anchor="middle" font-size="12" font-weight="700" fill="#171B21">2020</text><text x="124" y="114" text-anchor="middle" font-size="11.5" font-weight="700" fill="#39414B">4,448</text>
+        <rect x="198" y="79"  width="88" height="206" fill="#D93A26"/><text x="242" y="303" text-anchor="middle" font-size="12" font-weight="700" fill="#171B21">2021</text><text x="242" y="71" text-anchor="middle" font-size="11.5" font-weight="700" fill="#A82A1A">5,627 · +26.5%</text>
+        <rect x="316" y="73"  width="88" height="212" fill="#8F9AA6"/><text x="360" y="303" text-anchor="middle" font-size="12" font-weight="700" fill="#171B21">2022</text><text x="360" y="65" text-anchor="middle" font-size="11.5" font-weight="700" fill="#39414B">5,781 · +2.7%</text>
+        <rect x="434" y="117" width="88" height="168" fill="#B93327"/><text x="478" y="303" text-anchor="middle" font-size="12" font-weight="700" fill="#171B21">2023</text><text x="478" y="109" text-anchor="middle" font-size="11.5" font-weight="700" fill="#8E2118">4,584 · −20.7%</text>
+        <rect x="552" y="102" width="88" height="183" fill="#5C646E"/><text x="596" y="303" text-anchor="middle" font-size="12" font-weight="700" fill="#171B21">2024</text><text x="596" y="94" text-anchor="middle" font-size="11.5" font-weight="700" fill="#39414B">4,981 · +8.7%</text>
+        <rect x="670" y="87"  width="88" height="198" fill="#171B21"/><text x="714" y="303" text-anchor="middle" font-size="12" font-weight="700" fill="#171B21">2025</text><text x="714" y="79" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">5,396 · +8.3%</text>
+        <rect x="788" y="65"  width="88" height="220" fill="#1E7A4F"/><text x="832" y="303" text-anchor="middle" font-size="12" font-weight="700" fill="#171B21">2026E</text><text x="832" y="57" text-anchor="middle" font-size="11.5" font-weight="700" fill="#135A39">≈6,000 · +10~14%</text>
+      </g>
+      <text x="770" y="328" font-size="11" fill="#5C646E">조정 EBITDA 마진: '24 21.0% → '25 21.7% → '26E ≈22%</text>
+      <text x="60" y="328" font-size="11" fill="#5C646E">'20→'25 연평균 성장 +3.9% (사이클 평균) · '26E는 M&A·환율 +7%p 포함</text>
+    </svg>
+    <div class="cap">그림 9. 출처: Zebra 10-K·연간 실적 발표(2021~2026.2), 2026E는 회사 가이던스(2026.5.12 상향분).</div>
+  </div>
+
+  <h3>현금흐름 — 번 돈이 어디로 갔나 (2025년 실사례)</h3>
+  <div class="figure">
+    <div class="ft">그림 10. 2025년 현금 워터폴 — "벌어서(FCF $831M) 미래를 샀다(Elo $1.37B)"</div>
+    <div class="fs">단위: $M. 잉여현금을 넘어서는 인수 대금은 차입과 보유현금으로 충당 — 공격적이지만 레버리지 2.1×로 관리 범위.</div>
+    <svg viewBox="0 0 940 360" role="img" aria-label="현금 워터폴">
+      <line x1="60" y1="170" x2="910" y2="170" stroke="#171B21" stroke-width="1.4"/>
+      <g font-size="10.5" fill="#5C646E">
+        <line x1="60" y1="80" x2="910" y2="80" stroke="#E7E4D9"/><text x="54" y="84" text-anchor="end">+1,000</text>
+        <text x="54" y="174" text-anchor="end">0</text>
+        <line x1="60" y1="260" x2="910" y2="260" stroke="#E7E4D9"/><text x="54" y="264" text-anchor="end">−1,000</text>
+      </g>
+      <rect x="80" y="87.5" width="95" height="82.5" fill="#1E7A4F"/>
+      <text x="127" y="80" text-anchor="middle" font-size="12" font-weight="800" fill="#135A39">+917</text>
+      <text x="127" y="187" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">영업현금</text>
+      <line x1="175" y1="87.5" x2="195" y2="87.5" stroke="#8F9AA6" stroke-dasharray="4 3"/>
+      <rect x="195" y="87.5" width="95" height="7.7" fill="#B93327"/>
+      <text x="242" y="82" text-anchor="middle" font-size="12" font-weight="800" fill="#8E2118">−86</text>
+      <text x="242" y="187" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">설비투자</text>
+      <line x1="290" y1="95.2" x2="310" y2="95.2" stroke="#8F9AA6" stroke-dasharray="4 3"/>
+      <rect x="310" y="95.2" width="95" height="74.8" fill="#12161C"/>
+      <text x="357" y="88" text-anchor="middle" font-size="12.5" font-weight="900" fill="#171B21">FCF 831</text>
+      <text x="357" y="187" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">잉여현금</text>
+      <line x1="405" y1="95.2" x2="425" y2="95.2" stroke="#8F9AA6" stroke-dasharray="4 3"/>
+      <rect x="425" y="95.2" width="95" height="122.9" fill="#B93327"/>
+      <text x="472" y="232" text-anchor="middle" font-size="12" font-weight="800" fill="#8E2118">−1,365</text>
+      <text x="472" y="249" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">M&amp;A (Elo·포토네오)</text>
+      <line x1="520" y1="218.1" x2="540" y2="218.1" stroke="#8F9AA6" stroke-dasharray="4 3"/>
+      <rect x="540" y="218.1" width="95" height="52.8" fill="#B93327"/>
+      <text x="587" y="285" text-anchor="middle" font-size="12" font-weight="800" fill="#8E2118">−587</text>
+      <text x="587" y="302" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">자사주 매입</text>
+      <line x1="635" y1="270.9" x2="655" y2="270.9" stroke="#8F9AA6" stroke-dasharray="4 3"/>
+      <rect x="655" y="241.4" width="95" height="29.5" fill="#1E7A4F"/>
+      <text x="702" y="235" text-anchor="middle" font-size="12" font-weight="800" fill="#135A39">+328</text>
+      <text x="702" y="287" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">순차입 증가</text>
+      <line x1="750" y1="241.4" x2="770" y2="241.4" stroke="#8F9AA6" stroke-dasharray="4 3"/>
+      <rect x="770" y="170" width="95" height="71.4" fill="#5C646E"/>
+      <text x="817" y="255" text-anchor="middle" font-size="12" font-weight="800" fill="#39414B">≈ −790</text>
+      <text x="817" y="287" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">현금 순감*</text>
+      <text x="485" y="345" text-anchor="middle" font-size="11" fill="#5C646E">* 기타 소액 항목 포함 근사. 2025년 말 현금 $125M · 총부채 $2,511M (Q1'26 말: 현금 $114M · 부채 $2,660M · 조정 EBITDA 대비 순부채 2.1배)</text>
+    </svg>
+    <div class="cap">그림 10. 출처: Zebra 2025 4분기·연간 실적 발표(2026.2.12), Q1 2026 실적 발표(2026.5.12). 항목 간 잔여 차이는 환율·리스 등 기타 소액.</div>
+  </div>
+
+  <h3>생애주기 판별 — 현금흐름 부호가 말해주는 위치</h3>
+  <div class="figure">
+    <div class="ft">그림 11. 기업 생애주기 5단계 — 제브라는 "성숙"이되, 성장 재점화에 투자 중</div>
+    <div class="fs">판별 근거: 현금흐름표 세 부호. 영업(+) · 투자(−) · 재무(−)의 조합은 교과서적 성숙 단계다.</div>
+    <svg viewBox="0 0 940 250" role="img" aria-label="생애주기">
+      <path d="M60 190 C 200 190, 260 60, 470 55 C 640 52, 740 110, 900 205" fill="none" stroke="#C4C0B1" stroke-width="3"/>
+      <g font-size="12.5" font-weight="700" fill="#5C646E">
+        <text x="95" y="222" text-anchor="middle">도입</text>
+        <text x="280" y="222" text-anchor="middle">성장</text>
+        <text x="480" y="222" text-anchor="middle">성숙</text>
+        <text x="670" y="222" text-anchor="middle">정리(Shake-out)</text>
+        <text x="855" y="222" text-anchor="middle">감소</text>
+      </g>
+      <circle cx="500" cy="55" r="11" fill="#D93A26" stroke="#FFFFFF" stroke-width="3"/>
+      <rect x="393" y="8" width="220" height="30" rx="6" fill="#12161C"/>
+      <text x="503" y="28" text-anchor="middle" font-size="13" font-weight="800" fill="#FFFFFF">ZBRA — 성숙 단계 (2026)</text>
+      <g>
+        <rect x="60" y="88" width="216" height="88" rx="8" fill="#FFFFFF" stroke="#D9D6CA"/>
+        <text x="76" y="110" font-size="12" font-weight="800" fill="#171B21">2025 현금흐름 부호</text>
+        <text x="76" y="132" font-size="12" fill="#0E4229">영업 <tspan font-weight="800" fill="#135A39">+ $917M</tspan></text>
+        <text x="76" y="151" font-size="12" fill="#6E1911">투자 <tspan font-weight="800" fill="#8E2118">− 약 $1.45B</tspan> (M&amp;A 포함)</text>
+        <text x="76" y="170" font-size="12" fill="#6E1911">재무 <tspan font-weight="800" fill="#8E2118">− 약 $0.26B</tspan> (자사주&gt;차입)</text>
+      </g>
+      <g>
+        <rect x="660" y="70" width="250" height="106" rx="8" fill="#FBE7E2" stroke="#F0BDB2"/>
+        <text x="676" y="92" font-size="12" font-weight="800" fill="#A82A1A">단서 조항</text>
+        <text x="676" y="112" font-size="11.5" fill="#701D10">투자CF의 대부분이 유지보수가 아닌</text>
+        <text x="676" y="130" font-size="11.5" fill="#701D10">신사업 인수(Elo·비전)라는 점에서,</text>
+        <text x="676" y="148" font-size="11.5" fill="#701D10">"성숙에 안주"가 아니라 "성숙 현금으로</text>
+        <text x="676" y="166" font-size="11.5" fill="#701D10">성장 부문을 사는" 재점화형 성숙이다.</text>
+      </g>
+    </svg>
+    <div class="cap">그림 11. 사업부별 보조 판별: 프린팅(성숙 후기) · 모바일컴퓨팅/스캐닝(성숙, 2027 교체 사이클 대기) · RFID·머신비전·SW(성장) · Elo(성숙, 통합 초기) — 전사 블렌드는 성숙.</div>
+  </div>
+
+  <h3>수익성의 실체 — ROIC와 자본비용의 간격</h3>
+  <p>프레임워크의 핵심 질문은 "투하자본수익률(ROIC)이 자본비용(WACC)을 넘느냐"다. 제브라의 2025년 핵심 영업이익(조정 EBITA: 무형자산 상각·일회성 제외, 주식보상비용은 실비용으로 반영)은 약 $902M(마진 16.7%). 여기에 세율 19%를 적용한 세후영업이익(NOPAT)은 약 $731M이다. 투하자본은 순부채 $2.55B + 자기자본 약 $3.4B ≈ <b>$5.95B(영업권 $3.9B+ 포함)</b>. 따라서:</p>
+  <div class="stats">
+    <div class="stat"><div class="l">ROIC (영업권 포함)</div><div class="v">≈ 12.3%</div><div class="s">NOPAT $731M ÷ IC $5.95B</div></div>
+    <div class="stat"><div class="l">WACC (아래 산출)</div><div class="v">9.4 ~ 10.0%</div><div class="s">모델 중심값 9.7%</div></div>
+    <div class="stat up"><div class="l">초과수익 스프레드</div><div class="v">+2.3 ~ +2.9%p</div><div class="s">과거 인수 프리미엄을 다 얹고도 흑자</div></div>
+    <div class="stat"><div class="l">ROIC (영업권 제외)</div><div class="v">50%+ (추정)</div><div class="s">영업용 자본만 보면 극단적 자본효율</div></div>
+  </div>
+  <p><b>해석:</b> 영업권을 포함해도 자본비용을 2~3%p 웃돈다는 것은, 모토로라·리플렉시스·매트록스 같은 <b>과거 인수에 지불한 프리미엄까지 회수하고 있다</b>는 뜻이다. 영업권을 빼면 ROIC가 50%를 넘는데, 이는 신규 성장에 들어가는 <b>증분 자본의 수익률(ROIIC)이 매우 높다</b>는 의미 — 본 모델은 보수적으로 ROIIC 28%(프레임워크 IT 상위권 수준)를 가정한다. 다만 뒤집어 보면, 잉여현금 대부분을 환원하고 증분 투자가 작기 때문에(연 $230~300M) <b>성장 자체가 가치에 기여하는 폭은 생각보다 얇다</b> — 10장에서 내재 CAP가 길게 나오는 구조적 이유 중 하나다.</p>
+
+  <h3>WACC 산출 — 이 보고서에서 가장 논쟁적인 숫자</h3>
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>구성 요소</th><th class="num">값</th><th>근거·출처 (기준일)</th></tr>
+    <tr><td>무위험수익률 (미 10년 국채)</td><td class="num">4.47%</td><td>2026-07-02 종가 기준</td></tr>
+    <tr><td>베타 β — 원시값</td><td class="num">1.63 (야후, 5Y 월간) / 1.75 (Investing)</td><td>2021 급등·2022~23 급락이 만든 <b>순환 왜곡 포함</b> 값</td></tr>
+    <tr><td>베타 β — 조정값 (모델 사용)</td><td class="num">1.42</td><td>블룸 조정(⅔×1.63+⅓): 베타의 평균회귀 반영</td></tr>
+    <tr><td>주식위험프리미엄 ERP</td><td class="num">4.75% / 4.23%</td><td>표준 가정 4.75% vs 다모다란 내재 ERP('26.1) 4.23% — 두 값 병행</td></tr>
+    <tr><td>자기자본비용</td><td class="num">11.21% / 10.48%</td><td>= 4.47% + 1.42 × ERP</td></tr>
+    <tr><td>세후 타인자본비용</td><td class="num">≈ 4.3%</td><td>차입금리 약 5.3% × (1 − 세율 19%)</td></tr>
+    <tr><td>자본구조 (시장가)</td><td class="num">자기자본 82.9% / 부채 17.1%</td><td>시총 $12.78B, 순부채 $2.55B</td></tr>
+    <tr class="hl"><td>WACC 범위 → 모델 중심값</td><td class="num">10.03% / 9.42% → <b>9.7%</b></td><td>장기 성장률 g = 2.3% (10년 기대인플레 2.21%, '26.6 FRED)</td></tr>
+  </table></div>
+  <p class="capnote">표 5. β 1.42조차 이 회사의 "정상" 위험을 과대평가할 수 있다는 논거(순환 왜곡)는 10장에서 다룬다 — 이 한 변수에 밸류에이션 결론이 걸려 있다.</p>
+
+  <h3>DCF 본표 — 현 주가가 요구하는 경로 (전시 23 형식)</h3>
+  <p><b>가정:</b> 매출 2026 $6.0B(가이던스 중간, +11.2%) → 2027 +7.0%(컨센서스 $6.35B와 정합) → 5.5%로 수렴 후 페이드(0.20)로 장기 2.3%에 접근. EBITA 마진 17.5% → 2029년 18.5% 도달 후 유지. 세율 19%, ROIIC 28%(신규투자 = 증분 NOPAT ÷ 0.28), 연중(mid-year) 할인, 평가 시점 2026년 중반 — 2026년 행은 <b>남은 하반기 현금흐름만</b> 반영한다. 아래 표는 "예상"이 아니라 <b>WACC 9.7%에서 현 주가 $268이 성립하려면 필요한 초과수익 지속 경로(약 25.5년 CAP)</b>다.</p>
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>연도</th><th class="num">매출 ($M)</th><th class="num">EBITA 마진</th><th class="num">NOPAT ($M)</th><th class="num">신규투자 ($M)</th><th class="num">FCF ($M)</th><th class="num">현재가치 @9.7%</th></tr>
+    <tr><td>2026 (하반기분)</td><td class="num">6,000</td><td class="num">17.5%</td><td class="num">851</td><td class="num">306</td><td class="num">545</td><td class="num">266</td></tr>
+    <tr><td>2027</td><td class="num">6,420</td><td class="num">18.0%</td><td class="num">936</td><td class="num">277</td><td class="num">659</td><td class="num">601</td></tr>
+    <tr><td>2028</td><td class="num">6,838</td><td class="num">18.3%</td><td class="num">1,014</td><td class="num">259</td><td class="num">754</td><td class="num">627</td></tr>
+    <tr><td>2029</td><td class="num">7,248</td><td class="num">18.5%</td><td class="num">1,086</td><td class="num">233</td><td class="num">853</td><td class="num">646</td></tr>
+    <tr><td>2030</td><td class="num">7,683</td><td class="num">18.5%</td><td class="num">1,151</td><td class="num">226</td><td class="num">925</td><td class="num">639</td></tr>
+    <tr><td>2031</td><td class="num">8,105</td><td class="num">18.5%</td><td class="num">1,215</td><td class="num">239</td><td class="num">976</td><td class="num">614</td></tr>
+    <tr><td>2035 (중간 연도 생략 …)</td><td class="num">10,041</td><td class="num">18.5%</td><td class="num">1,505</td><td class="num">296</td><td class="num">1,209</td><td class="num">526</td></tr>
+    <tr><td>2040 …</td><td class="num">13,123</td><td class="num">18.5%</td><td class="num">1,967</td><td class="num">386</td><td class="num">1,580</td><td class="num">432</td></tr>
+    <tr><td>2045 …</td><td class="num">17,152</td><td class="num">18.5%</td><td class="num">2,570</td><td class="num">505</td><td class="num">2,065</td><td class="num">356</td></tr>
+    <tr><td>2051 (CAP 종점)</td><td class="num">23,650</td><td class="num">18.5%</td><td class="num">3,544</td><td class="num">696</td><td class="num">2,848</td><td class="num">281</td></tr>
+    <tr><td>말기가치 (2051 이후, g 2.3%)</td><td class="num" colspan="4">초과수익 소멸 가정 (NOPAT 영구가치)</td><td class="num">39,855</td><td class="num">3,760</td></tr>
+    <tr class="sum"><td>기업가치 EV</td><td class="num" colspan="5">명시기간 현가 합 11,758 + 말기 3,760</td><td class="num">15,518</td></tr>
+    <tr class="sum"><td>− 순부채 → 자기자본가치</td><td class="num" colspan="5">15,518 − 2,546 = 12,972 ÷ 48.0M주</td><td class="num">= 주당 $270</td></tr>
+  </table></div>
+  <p class="capnote">표 6 (전시 23 형식). 자체 DCF 모델 산출(가정은 본문 명시). 성장률은 5.5%에서 페이드 비율 0.20으로 2.3%에 수렴. 중간 연도(2032~34, 2036~39 등)는 지면상 생략했으며 합계에는 전부 포함됨.</p>
+
+  <div class="cols2">
+    <div class="figure">
+      <div class="ft">그림 12. 유기 성장률 분기 추이 — 감속 공포와 실제</div>
+      <div class="fs">M&amp;A·환율 효과를 뺀 "진짜 성장". 회색 밴드 = 2026년 회사 가이던스의 유기 성장 구간(약 3~7%).</div>
+      <svg viewBox="0 0 420 260" role="img" aria-label="유기 성장률">
+        <rect x="60" y="32" width="340" height="96" fill="#EDEBE2" opacity="0.7"/>
+        <text x="396" y="46" text-anchor="end" font-size="10.5" fill="#5C646E">'26 가이던스 유기 성장 구간 ≈3~7%</text>
+        <line x1="60" y1="200" x2="400" y2="200" stroke="#171B21" stroke-width="1.4"/>
+        <g font-size="10.5" fill="#5C646E">
+          <line x1="60" y1="104" x2="400" y2="104" stroke="#DAD7CC"/><text x="54" y="108" text-anchor="end">4%</text>
+          <line x1="60" y1="152" x2="400" y2="152" stroke="#DAD7CC"/><text x="54" y="156" text-anchor="end">2%</text>
+          <text x="54" y="204" text-anchor="end">0%</text>
+        </g>
+        <rect x="86"  y="84.8" width="64" height="115.2" fill="#5C646E"/><text x="118" y="77" text-anchor="middle" font-size="12" font-weight="800" fill="#39414B">+4.8%</text><text x="118" y="220" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">Q3'25</text>
+        <rect x="186" y="140" width="64" height="60" fill="#B93327"/><text x="218" y="132" text-anchor="middle" font-size="12" font-weight="800" fill="#8E2118">+2.5%</text><text x="218" y="220" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">Q4'25</text>
+        <rect x="286" y="104" width="64" height="96" fill="#1E7A4F"/><text x="318" y="96" text-anchor="middle" font-size="12" font-weight="800" fill="#135A39">+4.0%</text><text x="318" y="220" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">Q1'26</text>
+        <text x="230" y="248" text-anchor="middle" font-size="11" fill="#5C646E">Q4'25의 +2.5%가 10월 급락(−12.8%)을 만든 "감속 공포"의 진원 — Q1'26에 반등</text>
+      </svg>
+      <div class="cap">그림 12. 출처: 각 분기 실적 발표의 유기 성장 공시(2025.10.28, 2026.2.12, 2026.5.12).</div>
+    </div>
+    <div class="card"><div class="ct">재무 체질 요약 — 3가지 확인 포인트</div>
+      <p><b>① 현금 전환:</b> 설비투자가 매출의 1.6%뿐이라 조정 이익이 거의 그대로 잉여현금이 된다(전환율 약 100%). 2026년 가이던스도 FCF ≥ $900M — 시총의 7%.</p>
+      <p><b>② 마진의 방향:</b> 총이익률 50.4%(Q1'26, 사상급 수준), EBITDA 마진 21.0→21.7→22%(E)로 우상향. 메모리 인플레 2%p 역풍을 가격 인상·고밀도 부품 전환으로 "전액 상쇄"했다는 Q1 발표가 이 추세의 최근 검증.</p>
+      <p style="margin-bottom:0"><b>③ 재무 여력:</b> 레버리지 2.1×는 인수 직후치고 부담이 크지 않고, 회사는 자사주와 디레버리징을 병행 중. 다만 현금 잔고가 $114M로 얇아져 <b>당분간 대형 M&A 여력은 제한적</b> — 자본배분의 다음 수는 14장에서 평가한다.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ══════════ 10. 시장 내재 CAP ══════════ -->
+<section id="s10" class="alt"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 10</span></div>
+  <h2>시장 내재 CAP 역산 및 해석 — 이 가격에 숨어 있는 기대</h2>
+  <p class="slede">CAP(Competitive Advantage Period)는 "이 회사가 자본비용을 초과하는 수익을 몇 년이나 더 낼 것이라고 시장이 가정하는가"다. 주가는 그 가정의 결과물이므로, 거꾸로 풀면 시장의 기대치가 나온다. 제브라의 답은 뜻밖에도 하나의 숫자가 아니라 <b>하나의 곡선</b>이었다.</p>
+
+  <div class="term"><div class="t">내재 CAP 역산이란</div>
+    <p style="margin-bottom:0">9장의 DCF에서 "초과수익이 지속되는 마지막 연도"를 5년부터 1년씩 늘려 가며, 산출 주당가치가 현재 주가 $268.24와 만나는 지점을 찾는다. 그 연수가 시장이 가격에 반영한 경쟁우위 지속 기간이다. 짧게 나오면 시장이 비관적, 길게 나오면 낙관적이라는 뜻이며, 프레임워크는 IT 기업 기준 10~15년을 "합리", 15~20년을 "약간 낙관(해자 근거 필요)", 20년 초과를 "과도한 기대"로 본다.</p>
+  </div>
+
+  <div class="figure">
+    <div class="ft">그림 13. 내재 CAP 곡선 — 답은 숫자가 아니라 "할인율에 대한 함수"다</div>
+    <div class="fs">가로축 = WACC, 세로축 = 현재가 $268.24를 정당화하는 데 필요한 CAP(년). 곡선이 가파르다는 것 자체가 이 종목의 핵심 진단이다.</div>
+    <svg viewBox="0 0 940 400" role="img" aria-label="CAP 대 WACC 곡선">
+      <rect x="70" y="283.8" width="810" height="46.2" fill="#EDEBE2"/>
+      <rect x="70" y="260.8" width="810" height="23" fill="#E2F1E8"/>
+      <rect x="70" y="237.7" width="810" height="23.1" fill="#F8F0DB"/>
+      <rect x="70" y="30" width="810" height="207.7" fill="#FAE7E4" opacity="0.55"/>
+      <g font-size="11" fill="#5C646E">
+        <text x="876" y="320" text-anchor="end">0~10년: 비관 구간</text>
+        <text x="876" y="276" text-anchor="end" fill="#135A39" font-weight="700">10~15년: 합리</text>
+        <text x="876" y="253" text-anchor="end" fill="#6E4C08" font-weight="700">15~20년: 약간 낙관</text>
+        <text x="876" y="60" text-anchor="end" fill="#8E2118" font-weight="700">20년 초과: 과도한 기대 영역</text>
+      </g>
+      <line x1="70" y1="330" x2="880" y2="330" stroke="#171B21" stroke-width="1.6"/>
+      <g font-size="11" fill="#5C646E">
+        <line x1="70" y1="283.8" x2="880" y2="283.8" stroke="#C4C0B1" stroke-dasharray="3 3"/><text x="64" y="287" text-anchor="end">10년</text>
+        <line x1="70" y1="237.7" x2="880" y2="237.7" stroke="#C4C0B1" stroke-dasharray="3 3"/><text x="64" y="241" text-anchor="end">20년</text>
+        <line x1="70" y1="191.5" x2="880" y2="191.5" stroke="#C4C0B1" stroke-dasharray="3 3"/><text x="64" y="195" text-anchor="end">30년</text>
+        <line x1="70" y1="53.1" x2="880" y2="53.1" stroke="#C4C0B1" stroke-dasharray="3 3"/><text x="64" y="57" text-anchor="end">60년</text>
+      </g>
+      <g font-size="11.5" fill="#39414B" font-weight="700">
+        <text x="80" y="352" text-anchor="middle">8.5%</text><text x="232" y="352" text-anchor="middle">9.0%</text><text x="354" y="352" text-anchor="middle">9.4%</text><text x="445" y="352" text-anchor="middle">9.7%</text><text x="536" y="352" text-anchor="middle">10.0%</text><text x="688" y="352" text-anchor="middle">10.5%</text><text x="840" y="352" text-anchor="middle">11.0%</text>
+      </g>
+      <text x="475" y="382" text-anchor="middle" font-size="12" fill="#39414B">가중평균자본비용 WACC — 왼쪽으로 갈수록 "이 사업의 위험을 낮게 본다"는 뜻</text>
+      <rect x="80" y="30" width="152" height="330" fill="#2451B8" opacity="0.07"/>
+      <text x="156" y="46" text-anchor="middle" font-size="11" font-weight="700" fill="#183A8C">정상화 β(1.1~1.2) 구간</text>
+      <line x1="354" y1="30" x2="354" y2="330" stroke="#5C646E" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text x="358" y="86" font-size="10.5" fill="#5C646E">다모다란 ERP 기준 9.42%</text>
+      <line x1="536" y1="30" x2="536" y2="330" stroke="#5C646E" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text x="540" y="86" font-size="10.5" fill="#5C646E">표준 ERP 기준 10.03%</text>
+      <polyline points="80,276.9 232,258.5 354,235.4 445,212.3 536,184.6 620,120 688,50.8 720,34" fill="none" stroke="#D93A26" stroke-width="3.5" stroke-linejoin="round"/>
+      <line x1="840" y1="30" x2="840" y2="330" stroke="#B93327" stroke-width="1.6" stroke-dasharray="2 4"/>
+      <text x="836" y="120" text-anchor="end" font-size="11" font-weight="700" fill="#8E2118">11.0%: 아무리 늘려도 도달 불가</text>
+      <text x="836" y="137" text-anchor="end" font-size="10.5" fill="#8E2118">(모델 최대 가치 $244 &lt; $268)</text>
+      <g fill="#FFFFFF" stroke="#D93A26" stroke-width="2.6">
+        <circle cx="80" cy="276.9" r="6"/><circle cx="232" cy="258.5" r="6"/><circle cx="354" cy="235.4" r="6"/><circle cx="445" cy="212.3" r="6"/><circle cx="536" cy="184.6" r="6"/><circle cx="688" cy="50.8" r="6"/>
+      </g>
+      <g font-size="11.5" font-weight="800" fill="#171B21">
+        <text x="80" y="266">11.5년</text><text x="232" y="248">15.5년</text><text x="354" y="225">20.5년</text><text x="447" y="202">25.5년</text><text x="538" y="174">31.5년</text><text x="640" y="46">60.5년</text>
+      </g>
+    </svg>
+    <div class="cap">그림 13. 자체 모델 산출(9장 기준 경로, 현재가 $268.24 고정). 판정 구간은 프레임워크의 IT 섹터 합리성 기준.</div>
+  </div>
+
+  <h3>해석 — 세 단계로 읽기</h3>
+  <p><b>1단계 · 표면의 판정:</b> 표준 절차대로 원시 베타(1.63)를 블룸 조정(1.42)해 얻은 WACC 9.4~10.0%를 적용하면 내재 CAP는 <b>20.5~31.5년</b> — 구간표상 "과도한 기대" 영역이다. 여기서 멈추면 결론은 "현 주가는 비싸다"가 된다.</p>
+  <p><b>2단계 · 곡선의 기울기가 알려주는 진짜 구조:</b> 그런데 민감도를 보면 이상한 점이 보인다. 장기 성장률을 ±1%p 흔들어도 가치는 주당 $2~3밖에 안 움직이고, 페이드를 0.10→0.30으로 3배 바꿔도 $5 차이인데, <b>WACC 1%p는 가치를 $30~70씩 움직인다</b>. 이유는 9장에서 본 체질 — 잉여현금을 거의 다 환원하고 증분 투자가 얇아, 연간 "새로 창출되는 가치"가 작은 대신 <b>기존 이익 흐름의 현재가치(=할인율의 함수)가 기업가치의 거의 전부</b>이기 때문이다. 즉 이 종목의 밸류에이션 논쟁은 성장 논쟁이 아니라 <b>위험(베타) 논쟁</b>이다.</p>
+  <p><b>3단계 · 베타를 심문하기:</b> 5년 원시 베타 1.63에는 2021년 급등과 2022~23년 재고조정 폭락이라는, 다시 겪을 확률이 낮은 극단 구간이 통째로 들어 있다. 사업의 실질을 보면 — B2B 필수 인프라, 포춘 500의 95%에 분산된 고객, 반복 매출 완충, 40년 유지된 점유율 — 시장 평균보다 약간 높은 정도(β 1.1~1.2)가 "정상" 위험에 가깝다는 반론이 성립한다. 그 경우 WACC는 8.5~9.0%로 내려오고, 내재 CAP는 <b>12~16년: "합리~약간 낙관" 경계</b>로 재판정된다. 6장의 해자 근거(2위 철수·전환비용·규모의 경제)는 15년 안팎의 CAP를 정당화하기에 충분한 수준이다.</p>
+
+  <div class="co co-laser"><div class="t">종합 판정 — "시장 기대는 온건한 중립, 논쟁의 축은 할인율"</div>
+    <p>현 주가에 대한 정직한 서술은 이렇다: <b>보수적 위험 가정(β 1.4+, WACC 10%)을 고집하는 투자자에게 $268은 20~30년치 해자를 선반영한 비싼 가격이고, 순환 왜곡을 걷어낸 위험 가정(WACC 8.5~9.0%)을 받아들이는 투자자에게는 12~16년 — 이 회사의 실증된 해자로 무리 없이 설명되는 합리적 가격</b>이다. 어느 쪽이든 "터무니없는 낙관이 낀 가격"은 아니며, 특히 아래 두 사실이 기대치의 온건함을 교차 확인해 준다.</p>
+    <p style="margin-bottom:0">① <b>베어 경로는 가격에 없다:</b> 성장 3%·마진 16%의 약세 경로로는 WACC를 아무리 낮춰도 모델 최대가치가 $164에 그쳐 현 주가에 도달 자체가 불가능하다 — 시장은 약세 시나리오를 배제한 가격을 매기고 있다(= 약세 현실화 시 하방이 크다는 경고이기도 하다). ② <b>불 경로면 CAP가 짧아진다:</b> 마진 19.5%의 강세 경로에서는 내재 CAP가 12.5년으로 줄어, 낙관론자에게 현재가는 오히려 "합리 구간 초입"이 된다.</p>
+  </div>
+
+  <h3>민감도 — 무엇이 가치를 움직이는가</h3>
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>변수 (기타 조건 고정)</th><th class="num">변동 폭</th><th class="num">주당 가치 영향</th><th>읽기</th></tr>
+    <tr class="hl"><td>WACC (할인율)</td><td class="num">8.7% / 9.7% / 10.7%</td><td class="num">$248 / $210 / $181</td><td>지배 변수 — ±1%p에 ±$30~40 (2035년 CAP 기준)</td></tr>
+    <tr><td>장기 성장률 g</td><td class="num">1.3% / 2.3% / 3.3%</td><td class="num">$208 / $210 / $213</td><td>영향 미미 — 말기 초과수익이 소멸하는 구조라 둔감</td></tr>
+    <tr><td>페이드 비율</td><td class="num">0.10 / 0.20 / 0.30</td><td class="num">$214 / $210 / $209</td><td>영향 작음 — 해자 유통기한 논쟁은 가치보다 서사에 중요</td></tr>
+    <tr><td>ROIIC (증분 자본수익률)</td><td class="num">20% / 28% / 40%</td><td class="num">내재 CAP 40.5 / 25.5 / 19.5년</td><td>재투자 효율이 좋을수록 요구 CAP가 짧아짐 (@9.7%)</td></tr>
+    <tr><td>고정 CAP별 가치 @9.7%</td><td class="num">0년 / 4.5년 / 9.5년 / 14.5년</td><td class="num">$130 / $183 / $210 / $233</td><td>"몇 년치 해자를 사는 셈인가"의 가격표</td></tr>
+  </table></div>
+  <p class="capnote">표 7. 자체 모델 산출. 고정 CAP 가치의 연수는 평가 시점(2026년 중반)부터 2030/2035/2040년 말까지.</p>
+
+  <h3>시나리오 — 세 개의 미래와 그 가격</h3>
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>시나리오</th><th>핵심 가정 (2035년까지 초과수익)</th><th class="num">WACC</th><th class="num">주당 가치</th><th class="num">현재가 대비</th></tr>
+    <tr><td><span class="badge b-neg">약세 Bear</span></td><td>유기 성장 3%로 감속 고착, 메모리·경쟁으로 마진 16% 후퇴 — "2023의 그림자가 길어지는 세계"</td><td class="num">10.0%</td><td class="num">$138</td><td class="num"><span class="neg">−49%</span></td></tr>
+    <tr><td><span class="badge b-ink">기본 Base</span></td><td>가이던스 경로: 성장 5~7% 수렴, 마진 18.5% 도달·유지</td><td class="num">9.7%</td><td class="num">$210</td><td class="num"><span class="neg">−22%</span></td></tr>
+    <tr><td><span class="badge b-pos">강세 Bull</span></td><td>2027 교체 사이클 + AI 단가 상승 + 과점 심화로 마진 19.5%, 성장 상단</td><td class="num">9.4%</td><td class="num">$250</td><td class="num"><span class="neg">−7%</span></td></tr>
+  </table></div>
+  <p class="capnote">표 8. 자체 모델. 주의: 세 시나리오 모두 초과수익 기간을 2035년(약 9.5년)까지로 한정한 값이다 — 현재가 $268이 이 셋보다 높은 것은 시장이 "9.5년보다 긴 CAP" 또는 "더 낮은 할인율"을 반영 중이라는 뜻으로, 본문 판정과 정합적이다. 기간 한정 없이 보면 강세 경로의 내재 CAP는 12.5년.</p>
+
+  <div class="figure">
+    <div class="ft">그림 14. 선행 PER로 본 기대치의 위치 — 역사 하단</div>
+    <div class="fs">주가 ÷ 다음 해 예상 EPS. 같은 회사에 시장이 붙였던 배수의 스펙트럼 위에서 지금 위치.</div>
+    <svg viewBox="0 0 940 220" role="img" aria-label="선행 PER 축">
+      <line x1="60" y1="130" x2="900" y2="130" stroke="#171B21" stroke-width="2"/>
+      <g font-size="11" fill="#5C646E">
+        <line x1="60" y1="126" x2="60" y2="134" stroke="#171B21"/><text x="60" y="152" text-anchor="middle">10×</text>
+        <line x1="316" y1="126" x2="316" y2="134" stroke="#171B21"/><text x="316" y="152" text-anchor="middle">15×</text>
+        <line x1="573" y1="126" x2="573" y2="134" stroke="#171B21"/><text x="573" y="152" text-anchor="middle">20×</text>
+        <line x1="829" y1="126" x2="829" y2="134" stroke="#171B21"/><text x="829" y="152" text-anchor="middle">25×</text>
+      </g>
+      <g>
+        <circle cx="116" cy="130" r="7" fill="#B93327"/><text x="116" y="108" text-anchor="middle" font-size="11.5" font-weight="700" fill="#8E2118">저점 11.1×</text><text x="116" y="93" text-anchor="middle" font-size="10.5" fill="#5C646E">'26.3~4 ($199)</text>
+        <circle cx="291" cy="130" r="9" fill="#D93A26"/><text x="291" y="172" text-anchor="middle" font-size="12.5" font-weight="900" fill="#A82A1A">현재 14.5×</text><text x="291" y="189" text-anchor="middle" font-size="10.5" fill="#701D10">$268 ÷ '26E $18.5</text>
+        <circle cx="373" cy="130" r="6" fill="#5C646E"/><text x="373" y="108" text-anchor="middle" font-size="11" font-weight="700" fill="#39414B">목표가 16.1×</text><text x="373" y="93" text-anchor="middle" font-size="10.5" fill="#5C646E">$329 ÷ '27E $20.4</text>
+        <circle cx="690" cy="130" r="7" fill="#171B21"/><text x="690" y="108" text-anchor="middle" font-size="11.5" font-weight="700" fill="#171B21">'25 고점 22.3×</text><text x="690" y="93" text-anchor="middle" font-size="10.5" fill="#5C646E">$352.66 시점</text>
+        <circle cx="829" cy="130" r="7" fill="#8F9AA6"/><text x="829" y="180" text-anchor="middle" font-size="11" font-weight="700" fill="#39414B">역사 평균 ≈25× (근사)</text>
+      </g>
+      <text x="480" y="212" text-anchor="middle" font-size="11.5" font-weight="700" fill="#39414B">CAP 렌즈(β 그대로)로는 "길어" 보이고, 멀티플 렌즈로는 "싸" 보이는 이 모순 자체가 — 할인율이 쟁점이라는 증거다</text>
+    </svg>
+    <div class="cap">그림 14. 각 배수 = 해당 시점 주가 ÷ 당시 최신 연간 가이던스/컨센서스 EPS. 역사 평균은 지난 수년 시장 데이터 기반 근사치(±2× 오차 가능).</div>
+  </div>
+
+  <div class="figure">
+    <div class="ft">그림 15. 밸류에이션 풋볼필드 — 현재가의 좌표</div>
+    <div class="fs">모든 잣대를 한 축 위에. 빨간 세로선 = 현재가 $268.24.</div>
+    <svg viewBox="0 0 940 300" role="img" aria-label="풋볼필드">
+      <g font-size="11" fill="#5C646E">
+        <line x1="60" y1="250" x2="880" y2="250" stroke="#171B21" stroke-width="1.6"/>
+        <text x="87" y="270" text-anchor="middle">$130</text><text x="306" y="270" text-anchor="middle">$210</text><text x="465" y="270" text-anchor="middle">$268</text><text x="631" y="270" text-anchor="middle">$329</text><text x="825" y="270" text-anchor="middle">$400</text>
+      </g>
+      <line x1="465" y1="28" x2="465" y2="250" stroke="#D93A26" stroke-width="3"/>
+      <rect x="400" y="8" width="132" height="22" rx="5" fill="#D93A26"/>
+      <text x="466" y="24" text-anchor="middle" font-size="12" font-weight="800" fill="#FFFFFF">현재가 $268.24</text>
+      <g>
+        <rect x="109" y="52" width="306" height="26" rx="6" fill="#EDEBE2" stroke="#C4C0B1"/>
+        <circle cx="306" cy="65" r="6" fill="#171B21"/>
+        <path d="M87 58 L94 65 L87 72 L80 65 Z" fill="#2451B8"/>
+        <text x="70" y="47" font-size="11" font-weight="700" fill="#183A8C">무성장 $130 ◆</text>
+        <text x="120" y="69" font-size="11" font-weight="700" fill="#39414B">베어 $138</text>
+        <text x="306" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="#171B21">베이스 $210</text>
+        <text x="418" y="69" font-size="11" font-weight="700" fill="#135A39">불 $250</text>
+        <text x="66" y="90" font-size="11.5" font-weight="800" fill="#171B21">① 자체 모델 (초과수익 ~2035 한정)</text>
+      </g>
+      <g>
+        <rect x="276" y="118" width="421" height="26" rx="6" fill="#E6EDFA" stroke="#B9CBEE"/>
+        <text x="286" y="135" font-size="11" font-weight="700" fill="#183A8C">$199.05</text>
+        <text x="686" y="135" text-anchor="end" font-size="11" font-weight="700" fill="#183A8C">$352.66</text>
+        <text x="66" y="156" font-size="11.5" font-weight="800" fill="#171B21">② 52주 실거래 범위</text>
+      </g>
+      <g>
+        <rect x="432" y="184" width="393" height="26" rx="6" fill="#E2F1E8" stroke="#B4D9C4"/>
+        <circle cx="631" cy="197" r="6" fill="#135A39"/>
+        <text x="442" y="201" font-size="11" font-weight="700" fill="#0E4229">$256</text>
+        <text x="631" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="#135A39">평균 $329</text>
+        <text x="818" y="201" text-anchor="end" font-size="11" font-weight="700" fill="#0E4229">$400</text>
+        <text x="66" y="222" font-size="11.5" font-weight="800" fill="#171B21">③ 애널리스트 목표가 (18명)</text>
+      </g>
+      <text x="470" y="292" text-anchor="middle" font-size="11.5" fill="#39414B">현재가는 ①모델 강세치 약간 위 · ②52주 중상단 · ③컨센서스 최저 목표가 근처 — "낙관이 과하지도, 공포가 남지도 않은" 좌표</text>
+    </svg>
+    <div class="cap">그림 15. 모델 값은 표 8, 목표가는 7/2 기준 취합(범위 $256~400·평균 $328.88), 52주 범위는 Yahoo Finance.</div>
+  </div>
+</div></section>
+
+<!-- ══════════ 11. Bull Case ══════════ -->
+<section id="s11"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 11</span></div>
+  <h2>투자 논거 — Bull Case: 가치 창출의 다섯 엔진</h2>
+  <p class="slede">"낡은 바코드 회사"라는 첫인상은 이 회사의 가장 저평가된 지점이다. 아래 다섯 엔진은 각각 독립적으로 작동하며, 서로를 강화한다. 핵심은 각 엔진이 "왜 지속 가능한가, 왜 경쟁사가 못 따라오는가"다.</p>
+
+  <div class="cols2">
+    <div class="card"><div class="ct">엔진 ① 현장 AI(Physical AI) — 교체 사이클의 "질"을 바꾼다</div>
+      <p>AI 열풍의 다음 단계는 물리 세계 배포다. 그때 필요한 것이 <b>현장 데이터가 태어나는 첫 접점의 하드웨어</b> — 바로 제브라가 40년간 깔아 놓은 수백만 대의 설치기반이다. TC501/701(NPU 내장)·Frontline AI Suite·Companion 에이전트는 이 설치기반을 AI 배포 채널로 전환하는 장치이고, 대형 리테일러 실배포가 이미 시작됐다.</p>
+      <p style="margin-bottom:0"><b>왜 못 따라오나:</b> AI 스타트업엔 단말·현장·고객 관계가 없고, 빅테크엔 러기드 하드웨어와 산업 채널이 없다. 제브라는 그 교집합을 유일하게 쥔다. 재무적 의미: AI는 별매 소프트웨어 매출 + <b>단가 인상 + 교체 주기 단축</b>이라는 3중 효과다.</p>
+    </div>
+    <div class="card"><div class="ct">엔진 ② 2027 교체 슈퍼사이클 — 가이던스 밖의 상방</div>
+      <p>2020~22년 코로나 특수로 팔린 대량의 단말이 통상 수명(4~6년)의 끝에 도달한다. 회사는 대형 운송·물류(T&amp;L) 고객들과 2027년 리프레시 파이프라인을 구축 중이라고 밝히면서도, <b>이를 2026년 가이던스에 넣지 않았다</b> — 실현되면 순수한 서프라이즈 요인이다.</p>
+      <p style="margin-bottom:0"><b>지속 가능성:</b> 교체는 선택이 아니다 — 배터리·OS 지원 종료·앱 요구사양이 강제한다. 그리고 교체 시점의 기본값 선택지는 기존 생태계와 호환되는 제브라다(6장 전환비용). 2014년 이후 매 사이클에서 반복 검증된 패턴.</p>
+    </div>
+    <div class="card"><div class="ct">엔진 ③ 숨은 성장 자산 — 공짜로 얹혀 있는 코그넥스·임핀지</div>
+      <p>제브라 안에는 머신비전(두 자릿수 성장 "변곡점" 선언), RFID 풀스택(임핀지 태그칩 수주 사상 최고가 가리키는 산업 재가속), 구독 SW(Workcloud·Nucleus)가 들어 있다. 순수 플레이 시장가는 매출의 11~12배(7장) — 그런데 제브라 전체가 2.4배에 거래되므로, <b>이 성장 자산들의 가치가 사실상 0으로 계산되고 있다.</b></p>
+      <p style="margin-bottom:0"><b>재평가 방아쇠:</b> 이 부문들의 매출·성장이 별도 수치로 시장에 각인되는 순간(공시 세분화, 애널리스트 SOTP 리포트). 그때까지는 "공짜 옵션"으로 보유되는 셈이다.</p>
+    </div>
+    <div class="card"><div class="ct">엔진 ④ 과점 심화 — 2위가 스스로 떠났다</div>
+      <p>2026년 4월 허니웰의 PSS 매각(매출 1.3배 헐값)은 이 산업 20년래 최대 구조 변화다. 남은 유일한 풀라인 공급자로서 제브라는 <b>가격 결정력 강화, 이탈 고객·파트너·인재 흡수</b>라는 3중 수혜를 본다. 브래디는 라벨 회사라 PSS의 단말·스캐너 R&D를 제브라 수준으로 유지할 유인이 약하다.</p>
+      <p style="margin-bottom:0"><b>지속 가능성:</b> 진입장벽(연 $5억 R&D + 글로벌 서비스망 + 생태계)은 시간이 갈수록 높아지는 종류다. 2위조차 포기한 문턱을 신규 진입자가 넘을 확률은 낮다.</p>
+    </div>
+  </div>
+  <div class="co co-pos"><div class="t">엔진 ⑤ 자본 환원 기계 — 기다림에 이자가 붙는 구조</div>
+    <p style="margin-bottom:0">배당 없이 잉여현금을 자사주 매입에 집중하는 정책으로, 최근 반년간($500M) 유통 주식의 약 4%를 소각했고 신규 $10억 승인분이 남아 있다. 선행 PER 14.5배·FCF 수익률 7%에서의 자사주 매입은 그 자체로 주당가치를 복리로 키운다 — <b>주가가 눌릴수록 매입 효율이 올라가는 자동 안정장치</b>다. 여기에 메모리 가격이 2027년 공급 증설로 안정되면(업계 전망), "마진 공포"로 눌린 부분이 이익 서프라이즈로 되돌아오는 옵션까지 겹친다. 요약하면 Bull Case는 "기적"을 요구하지 않는다: <b>가이던스대로만 가도(성장 5~7%·마진 18%대) 10장의 계산상 12~16년 CAP 가격은 정당화되며, 다섯 엔진 중 하나라도 켜지면 그 위가 열린다.</b></p>
+  </div>
+</div></section>
+
+<!-- ══════════ 12. Bear Case ══════════ -->
+<section id="s12" class="alt"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 12</span></div>
+  <h2>리스크 — Bear Case: 무엇이 이 논리를 부술 수 있나</h2>
+  <p class="slede">10장에서 확인했듯 현재가는 약세 시나리오를 배제한 가격이다($138 vs $268). 그래서 리스크 점검이 더 중요하다 — 아래 각 항목은 "실체 → 심각도 → 이미 주가에 반영됐는가"의 순서로 평가한다.</p>
+
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>리스크</th><th>실체와 전개 경로</th><th>심각도</th><th>주가 반영 평가</th></tr>
+    <tr><td><b>① 메모리 인플레 장기화</b></td><td>AI發 DRAM 수급난으로 부품 원가 급등 — 회사 추산 2026년 마진 2%p 역풍. 가격 인상·고밀도 전환으로 "전액 상쇄" 선언했으나, 2027년까지 이어지면 추가 인상이 수요를 깎을 수 있음</td><td><span class="badge b-neg">상</span></td><td><b>상당 부분 반영</b> — 2~4월 −27% 급락의 주범. Q1 상쇄 확인으로 절반쯤 되돌림. 잔여 리스크는 "상쇄 지속 실패" 시나리오</td></tr>
+    <tr><td><b>② 금리·고베타 (할인율)</b></td><td>연준의 인상 재론 국면에서 베타 1.6짜리 주식은 지수보다 크게 흔들림. 10장에서 봤듯 이 종목 가치는 할인율에 극도로 민감</td><td><span class="badge b-neg">상</span></td><td><b>부분 반영</b> — 3~4월 급락이 실증. 금리가 실제 오르면 펀더멘털 무관하게 멀티플 재압축 가능. 이 종목의 구조적 숙명</td></tr>
+    <tr><td><b>③ 유기 성장 재감속</b></td><td>Q4'25 유기 +2.5%가 보여준 취약성 — EMEA(중동) 부진, 대기업 설비투자 심리 냉각 시 재발. 가이던스 유기 성장(3~7%)의 하단 이탈 위험</td><td><span class="badge b-amber">중상</span></td><td><b>크게 반영됐다가 완화</b> — 10/28 하루 −12.8%가 이 공포의 가격. Q1 +4.0%로 반박됐으나 분기마다 재시험대</td></tr>
+    <tr><td><b>④ 채널 재고 채찍 재발</b></td><td>유통 경유 판매 구조상, 경기 급랭 시 2023년형(−20.7%) 이중 재고 소진이 재발할 수 있음</td><td><span class="badge b-amber">중상</span></td><td><b>멀티플에 상시 반영</b> — 선행 14.5배 자체가 이 체질의 할인. 다만 실제 재발 시 추가 −30~40% 여지(2023 실증)</td></tr>
+    <tr><td><b>⑤ 관세·무역정책</b></td><td>미 관세 변동이 아시아·멕시코 생산 기반의 원가를 흔듦. 회사는 생산지 다변화·가격 전가로 대응, 현행 관세 영향은 가이던스에 반영했다고 밝힘</td><td><span class="badge b-amber">중</span></td><td><b>부분 반영</b> — 정책 급변(세율 인상·범위 확대) 시 추가 역풍. 예측 불가 변수로 상시 감시 대상</td></tr>
+    <tr><td><b>⑥ 프린팅 범용화</b></td><td>매출 약 1/3의 성숙 사업. 저가 경쟁·디지털화로 장기 성장 정체 — 모닝스타도 지적하는 구조 약점</td><td><span class="badge b-amber">중</span></td><td><b>구조적으로 반영</b> — 블렌디드 멀티플 할인의 근원. 급격한 악화보다 "성장률 상한"으로 작동</td></tr>
+    <tr><td><b>⑦ Elo 통합·재무 여력</b></td><td>$1.3B 인수(매출 3.25배)의 초기 수익률은 5%대로 낮음. 레버리지 2.1×에 현금 $114M — 통합 부진 시 영업권 손상·자사주 축소 압박</td><td><span class="badge b-amber">중</span></td><td><b>미반영에 가까움</b> — 시장은 통합 성공을 기본값으로 가정 중. Q1 Elo "계획 상회" 발표는 긍정 신호이나 검증 기간 필요</td></tr>
+    <tr><td><b>⑧ 저가 아시아 경쟁</b></td><td>유로보·뉴랜드 등이 중저가 단말·스캐너에서 하단 침식. 신흥시장·중소고객부터 잠식</td><td><span class="badge b-amber">중</span></td><td><b>장기 페이드 요인</b> — 프리미엄 시장(대기업·미션크리티컬)은 방어 중이나, 6장의 페이드 가정(0.20)이 이 힘을 반영</td></tr>
+  </table></div>
+  <p class="capnote">표 9. 심각도는 발생 시 영향 × 개연성의 정성 종합(자체 평가). "반영 평가"는 8장의 주가 이벤트 기록과 10장 시나리오 갭에 근거.</p>
+
+  <div class="co co-neg"><div class="t">Bear Case의 한 문장 — 그리고 그 반론</div>
+    <p style="margin-bottom:0"><b>약세론:</b> "메모리 원가와 관세가 마진을 갉는 와중에 유기 성장은 한 자릿수 초반으로 식고, 채찍 효과가 재발하면 이 회사는 2023년처럼 이익이 반토막 나는 사이클 하드웨어주일 뿐이다 — 그때 β 1.6의 주가는 $138 시나리오를 향해 간다." <b>반론(데이터):</b> 그 약세 세계가 오려면 ① 가격 전가 실패(Q1'26에 반증됨), ② 4분기 연속 비트 흐름의 반전, ③ 2위 철수로 완화된 경쟁이 다시 격화 — 세 가지가 동시에 필요하다. 가능성은 있으나 현재 증거의 무게는 반대쪽이며, 그 경우에도 무성장 가치 $130·FCF 수익률 7%·자사주가 하방의 마찰재로 작동한다. 요컨대 <b>Bear는 "감시할 시나리오"이지 "현재 진행형 현실"이 아니다.</b></p>
+  </div>
+</div></section>
+
+<!-- ══════════ 13. SWOT ══════════ -->
+<section id="s13"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 13</span></div>
+  <h2>SWOT 분석 — 앞선 12개 장의 한 장 요약</h2>
+  <p class="slede">그림 16. 내부 역량(위)과 외부 환경(아래), 우호 요인(왼쪽)과 위협 요인(오른쪽)의 교차표. 각 항목 끝 괄호는 상세 논의 장.</p>
+  <div class="cols2" style="gap:14px">
+    <div class="card" style="border-top:5px solid #1E7A4F"><div class="ct" style="color:#135A39">S · 강점 (내부 × 우호)</div>
+      <ul style="margin-bottom:0">
+        <li>4개 하드웨어 카테고리 세계 1위 + 유일한 풀라인 통합 공급자 (2·5장)</li>
+        <li>전환비용·규모·생태계·특허의 다층 해자 — 가격 프리미엄 25~30% 실증 (6장)</li>
+        <li>ROIC 12.3% &gt; WACC, FCF 전환율 ~100%의 자본경량 체질 (9장)</li>
+        <li>포춘 500의 95% 고객 기반·1만+ 채널 파트너 (3장)</li>
+        <li>HW→SW→AI 수직 통합 스택 — WSJ AI 준비도 S&amp;P500 10위 (4장)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:5px solid #B93327"><div class="ct" style="color:#8E2118">W · 약점 (내부 × 위협)</div>
+      <ul style="margin-bottom:0">
+        <li>매출 몸통이 여전히 사이클성 하드웨어 — 채찍 효과 취약 (3·12장)</li>
+        <li>매출 1/3이 성숙한 프린팅 — 블렌디드 성장률 희석 (12장)</li>
+        <li>부품(퀄컴·메모리) 공급자 교섭력에 노출 — 2026 실증 (6장)</li>
+        <li>Elo 인수 후 레버리지 2.1×·현금 $114M — 재무 유연성 일시 저하 (9장)</li>
+        <li>β 1.6대의 높은 주가 변동성 — 할인율 민감 체질 (10장)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:5px solid #2451B8"><div class="ct" style="color:#183A8C">O · 기회 (외부 × 우호)</div>
+      <ul style="margin-bottom:0">
+        <li>현장 AI 물결 — 설치기반의 AI 배포 채널화, 단가·주기 개선 (11장)</li>
+        <li>2027 대형 T&amp;L 교체 사이클 — 가이던스 미반영 상방 (11장)</li>
+        <li>RFID 신선식품·택배 확산 + 머신비전 변곡점 (4장)</li>
+        <li>허니웰 철수 후 점유율·인재·가격 결정력 흡수 (5장)</li>
+        <li>TAM $35B+ 인접 확장 (Elo 키오스크 +$8B) + 메모리 정상화 시 마진 서프라이즈 (5·11장)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:5px solid #8F6410"><div class="ct" style="color:#6E4C08">T · 위협 (외부 × 위협)</div>
+      <ul style="margin-bottom:0">
+        <li>메모리 인플레 장기화 → 가격 전가 한계 도달 위험 (12장)</li>
+        <li>금리 인상 재개 → 고베타 멀티플 재압축 (12장)</li>
+        <li>관세·무역정책 급변 (12장)</li>
+        <li>저가 아시아 경쟁의 하단 침식 + 소비자폰 저강도 침투 (4·12장)</li>
+        <li>경기 급랭 시 채널 재고 조정 재발 — 2023년형 쇼크 (12장)</li>
+      </ul>
+    </div>
+  </div>
+  <p class="capnote" style="margin-top:12px">그림 16. 자체 종합. 순위는 중요도순.</p>
+</div></section>
+
+<!-- ══════════ 14. 경영진·자본 배분 ══════════ -->
+<section id="s14" class="alt"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 14</span></div>
+  <h2>경영진 및 자본 배분 — 약속과 이행의 기록</h2>
+  <p class="slede">이 회사의 역사는 자본 배분의 역사다. 2014년 자기 몸집 2.5배 인수라는 도박을 성공시켰고, 안 되는 사업(로보틱스)은 잘라냈으며, 주가가 눌리자 자사주를 쓸어 담았다. 완벽하진 않다 — Elo의 가격표는 논쟁적이다.</p>
+
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>인물</th><th>역할·재임</th><th>기록과 평가</th></tr>
+    <tr><td><b>빌 번스 (Bill Burns)</b></td><td>CEO · 2023.3~</td><td>사내 승진으로 취임(취임 전 제브라의 제품·솔루션 사업을 총괄). 취임 직후가 −20.7% 재고조정의 한복판 — 비용 구조조정과 채널 재고 정상화로 2년 만에 EBITDA 마진을 21.7%까지 복원했고, 취임 후 분기 가이던스를 상회하는 흐름(최근 4개 분기 연속 EPS 비트)을 유지. "Physical AI" 전략의 설계자</td></tr>
+    <tr><td><b>네이선 윈터스 (Nathan Winters)</b></td><td>CFO</td><td>메모리 인플레 국면에서 "2%p 역풍 전액 상쇄" 계획을 제시하고 Q1'26에 총이익률 50.4%로 <b>약속을 1분기 만에 수치로 증명</b>. 가이던스 스타일은 보수적 제시 후 상회하는 패턴</td></tr>
+    <tr><td><b>톰 비안쿨리 (Tom Bianculli)</b></td><td>CTO · 20년+</td><td>심볼 시절부터의 기술 계보 계승자. Nucleus·Frontline AI Suite 설계를 주도 — 하드웨어 회사의 SW·AI 전환을 기술적으로 실행하는 핵심 인물</td></tr>
+  </table></div>
+  <p class="capnote">표 10. 회사 공시·어닝콜·보도자료 기반. 개별 내부자 지분율·보상 세부는 이번 조사 범위에서 정밀 검증하지 못함(전형적 전문경영 체제이며 창업가 대주주는 없음).</p>
+
+  <h3>자본 배분 스코어카드 — 네 개의 지갑</h3>
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>배분처</th><th>기록</th><th>평가</th></tr>
+    <tr><td><b>M&amp;A</b></td><td>2014 모토로라 엔터프라이즈 $3.45B(변신 성공) → 2020 리플렉시스 $575M(SW 기반 확보) → 2022 매트록스 $875M(비전 진입) → 2021 페치 로보틱스(실패, '25 철수 결정 $76M) → 2025 포토네오 $62M·Elo $1.3B</td><td><span class="badge b-pos">전반 우수</span> 큰 베팅의 타율이 높고, <b>실패를 4년 만에 인정하고 자르는 규율</b>이 확인됨. 단 Elo는 매출 3.25배·초기 수익률 5%대로 비싸게 산 편 — 시너지 $25M과 크로스셀 실행이 향후 2년의 시험대</td></tr>
+    <tr><td><b>자사주 매입</b></td><td>배당 대신 전액 매입 정책. '25년 $587M + '26년 상반기 $500M 집행(주가 $200~270 구간), 2월 신규 $10억 승인</td><td><span class="badge b-pos">타이밍 우수</span> 저점권($199~250)에서 집중 집행 — 선행 PER 11~14배에서의 매입은 주당가치 복리 장치. "매력적이면 FCF 전부 매입 가능" 발언으로 정책 지속성 시사</td></tr>
+    <tr><td><b>배당</b></td><td>없음 (창사 이래 무배당)</td><td><span class="badge b-lt">전략적 선택</span> 성숙 기업으로선 이례적이나, ROIC&gt;WACC 상태의 자사주·볼트온이 배당보다 세후 효율이 높다는 논리는 수치로 방어됨. 배당 투자자에겐 부적합 종목</td></tr>
+    <tr><td><b>R&amp;D</b></td><td>매출의 약 10~11% 수준 꾸준히 유지 — 침체기(2023)에도 삭감보다 유지 선택</td><td><span class="badge b-pos">일관성</span> 침체기의 R&amp;D 유지가 2026년 신제품 러시(TC 신형·Nucleus·CV70·AI Suite)로 회수되는 중 — "사이클 밑에서도 해자를 파는" 배분</td></tr>
+  </table></div>
+  <p class="capnote">표 11. 각 거래·집행액은 회사 공시. 평가는 자체 종합.</p>
+
+  <div class="co co-amber"><div class="t">감시할 자본 배분 리스크</div>
+    <p style="margin-bottom:0">현금 $114M·레버리지 2.1×의 현 상태에서 경영진이 <b>또 대형 인수에 손을 대면</b> 그것이 가장 큰 자본 배분 경고 신호다(자사주 여력 잠식 + 통합 리스크 중첩). 반대로 향후 4~6분기 동안 "Elo 시너지 이행 + 디레버리징 + 자사주"의 3박자를 지키면, 이 경영진의 배분 신뢰도는 한 단계 올라간다.</p>
+  </div>
+</div></section>
+
+<!-- ══════════ 15. 종합 판단 ══════════ -->
+<section id="s15"><div class="wrap">
+  <div class="shead"><span class="code"><i></i><i></i><i></i><i></i><i></i></span><span class="num">SECTION 15</span></div>
+  <h2>종합 판단 및 체크포인트</h2>
+  <p class="slede">15개 장의 결론을 한 표로 모으고, 이후 무엇을 어떻게 지켜볼지의 계기판을 제시한다. 이 보고서는 매수·매도 신호가 아니라, 그 판단을 스스로 내리기 위한 재료다.</p>
+
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>평가 축</th><th>판정</th><th>근거 요약</th></tr>
+    <tr><td>사업의 질</td><td><span class="badge b-pos">상위</span></td><td>4관왕 과점 + 2위 철수, 전환비용 해자, ROIC 12.3% &gt; WACC, FCF 전환율 ~100% (5·6·9장)</td></tr>
+    <tr><td>성장 전망</td><td><span class="badge b-blue">중간+옵션</span></td><td>본체는 유기 5~7%의 성숙 성장. 그 위에 AI 교체·2027 사이클·비전/RFID라는 세 개의 미반영 옵션 (11장)</td></tr>
+    <tr><td>재무 체질</td><td><span class="badge b-pos">건전 (일시 부담)</span></td><td>레버리지 2.1×·현금 얇음은 Elo 직후의 일시 상태. 연 $900M+ FCF가 빠르게 복원 (9장)</td></tr>
+    <tr><td>밸류에이션</td><td><span class="badge b-blue">중립 — 할인율 논쟁</span></td><td>내재 CAP: WACC 9.4~10.0%면 20~30년(과도), 정상화 8.5~9.0%면 12~16년(합리~약간 낙관). 멀티플은 역사 하단 (10장)</td></tr>
+    <tr><td>촉매 밀도</td><td><span class="badge b-pos">높음</span></td><td>8/4 실적, 메모리 정상화, T&amp;L 수주, RFID 재가속, SOTP 공시화, 자사주·지수 수급 (8장)</td></tr>
+    <tr><td>핵심 리스크</td><td><span class="badge b-neg">원가·할인율</span></td><td>메모리/관세의 마진 시험 + 고베타의 금리 민감. 약세 시나리오($138)는 현재가에 미반영 (12장)</td></tr>
+  </table></div>
+  <p class="capnote">표 12. 자체 종합 판정.</p>
+
+  <div class="darkband">
+    <div class="ttl"><span class="tag">최종 종합</span>세 문장으로 남기는 결론</div>
+    <p><b>① 사업:</b> 제브라는 "물리 세계를 데이터로 바꾸는" 인프라의 사실상 표준 사업자이며, 2026년 2위의 철수로 그 지위는 상장 이래 가장 단단해졌다 — 이 회사의 문제는 한 번도 "경쟁에서 지는 것"이 아니었고, 언제나 "수요 사이클의 진폭"이었다.</p>
+    <p><b>② 가격:</b> 현재가 $268은 강한 낙관도 공포도 아닌 중간 좌표다 — 약세 경로는 배제됐고(주의점), 강세 경로 기준으론 합리 구간 초입이며(기회점), 판정을 가르는 단 하나의 변수는 성장 전망이 아니라 <b>"이 사업의 위험을 β 1.4로 볼 것인가 1.1로 볼 것인가"</b>다.</p>
+    <p style="margin-bottom:6px"><b>③ 관전법:</b> 따라서 이 종목의 추적은 성장률 집착이 아니라 <b>"마진 방어(=가격 결정력의 증거)"와 "변동성의 원천(금리·메모리·재고)"</b>을 보는 일이다 — 아래 계기판이 그 체크리스트다.</p>
+  </div>
+
+  <h3>모니터링 계기판 — 분기·이벤트별 체크포인트</h3>
+  <div class="tablewrap"><table class="tbl">
+    <tr><th>주기</th><th>지표</th><th class="num">합격선 (녹색 신호)</th><th>경고 신호 (재검토 트리거)</th></tr>
+    <tr><td rowspan="5">매 분기<br>(다음: 8/4 Q2)</td><td>유기 성장률 (전사)</td><td class="num">+3% 이상 유지</td><td>2개 분기 연속 0% 이하 → 채찍 재발 의심</td></tr>
+    <tr><td>조정 총이익률</td><td class="num">50% 안팎 사수</td><td>2개 분기 연속 48% 하회 → 메모리 전가 실패</td></tr>
+    <tr><td>머신비전·RFID 코멘트</td><td class="num">두 자릿수 성장 지속 언급</td><td>"변곡점" 서사 철회 → 숨은 자산 스토리 훼손</td></tr>
+    <tr><td>FCF·자사주</td><td class="num">연환산 $900M+ · 매입 지속</td><td>자사주 중단 + 차입 증가 동시 발생</td></tr>
+    <tr><td>Elo 통합</td><td class="num">"계획 상회" 유지, 시너지 $25M 진척</td><td>손상차손 시사·시너지 하향</td></tr>
+    <tr><td rowspan="4">이벤트·연간</td><td>2027 교체 사이클</td><td class="num">하반기 중 대형 T&amp;L 수주 공시</td><td>'27.2월 가이던스에 리프레시 부재</td></tr>
+    <tr><td>메모리(DRAM) 가격</td><td class="num">'27 증설로 안정화 — 마진 순풍 전환</td><td>급등 지속 + 추가 가격 인상 발표(수요 훼손 위험)</td></tr>
+    <tr><td>금리·관세</td><td class="num">현상 유지</td><td>연준 인상 사이클 개시 / 관세 범위 확대 — 멀티플 압축 각오</td></tr>
+    <tr><td>레버리지</td><td class="num">2.1× → 하향 추세</td><td>2.5× 초과 방치 or 신규 대형 M&amp;A 발표</td></tr>
+  </table></div>
+  <p class="capnote">표 13. 합격선은 회사 가이던스·본 분석 가정과 정합하도록 설정.</p>
+
+  <h3>이 분석의 한계와 가정 — 결론을 읽기 전 알아야 할 것</h3>
+  <div class="card">
+    <ul style="margin-bottom:0">
+      <li><b>시세·재무 데이터(확신 높음 ~95%):</b> 주가·시총·실적·가이던스는 2026-07-02 종가와 회사 공시(8-K·실적 발표) 기준으로 복수 소스 교차 확인. 단, 7/3 휴장 전후 시세 변동은 미반영.</li>
+      <li><b>주가 경로 차트(~80%):</b> 그림 8은 확인된 이벤트 시점의 가격을 잇는 근사 곡선이며 일봉 재현이 아님. 52주 고점의 정확한 날짜는 특정하지 못해 "8~10월 중"으로 표기.</li>
+      <li><b>일부 추정치(~75%):</b> R&amp;D 비율(약 10~11%), 영업권 제외 ROIC(50%+), 서비스·SW 비중, 역사 평균 PER(≈25×)은 공시 기반 추정·근사로, 본문에 그때마다 표기함.</li>
+      <li><b>WACC와 베타(판정 신뢰 ~70%):</b> 이 보고서의 최종 판정은 β 선택에 지배된다. 원시 1.63 / 블룸 조정 1.42 / 정상화 1.1~1.2 중 무엇이 "참"인지는 방법론상 단일 정답이 없다 — 그래서 결론을 단일 숫자가 아닌 곡선(그림 13)으로 제시했다. 향후 12개월의 실현 변동성이 낮게 유지되면 정상화 β 쪽 논거가, 다시 급등락하면 고β 쪽 논거가 강화된다.</li>
+      <li><b>ROIIC 28% 가정(~70%):</b> 증분 투자 수익률은 직접 관측이 어려운 값. 20~40% 구간의 민감도를 표 7에 병기.</li>
+      <li><b>회사 측 프레이밍 수치:</b> TAM $35B+, 메가트렌드 성장률, "AI 준비도 10위" 등은 회사 IR·언론 평가 인용으로, 독립 검증엔 한계가 있음.</li>
+      <li><b>컨센서스의 시점성:</b> 목표가·추정 EPS는 7/2 스냅샷 — 8/4 실적 후 갱신될 값이며, 본 모델의 '27년 이후 경로는 컨센서스보다 완만한(보수적) 성장을 가정.</li>
+      <li><b>다루지 않은 것:</b> 개별 소송·환율 헤지 세부·연금 부채 등 미시 항목, 그리고 독자의 포트폴리오 맥락(비중·세금·기간)은 이 보고서 범위 밖이다.</li>
+    </ul>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p><b>ZBRA · Zebra Technologies — CAP 프레임워크 종합 분석</b> · 기준일 2026-07-04 (시세 기준 2026-07-02 종가) · 통화: USD, 금액 단위 $M(백만)·$B(십억)</p>
+  <div class="srcbox"><b>주요 출처</b> — 회사 공시: Zebra 8-K·실적 보도자료(2025.10.28 세그먼트 recast, 2026.2.12 Q4, 2026.5.12 Q1)·어닝콜 기록(Motley Fool/Investing.com)·NRF/ZONE/Automate 보도자료(2026.1~6) · 시세·컨센서스: Yahoo Finance, Investing.com, StockInvest.us, WalletInvestor, TipRanks(등급 변경 로그), MarketBeat(목표가 취합) · 경쟁·거래: Honeywell 보도자료(PSS 매각, 2026.4.20), Brady·Cognex·Impinj 실적 발표, 유통사 공개 가격자료(단말 가격 비교) · 거시: 미 재무부 10Y 수익률(2026.7.2), FRED 10년 BEI(2026.6), Damodaran 내재 ERP(2026.1) · 평가·언론: Morningstar, WSJ 'Best Companies for the Future'(2026). 모든 모델 산출(DCF·내재 CAP·시나리오)은 본문 명시 가정에 따른 자체 계산.</div>
+</div></footer>
+
+<script>
+(function(){
+  var links=document.querySelectorAll('#nav a');
+  var map={};
+  links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){a.classList.remove('on');});
+        var a=map[e.target.id]; if(a)a.classList.add('on');
+      }
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('section[id]').forEach(function(s){obs.observe(s);});
+})();
+</script>
+</body>
+</html>
