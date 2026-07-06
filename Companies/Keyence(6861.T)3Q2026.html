@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>키엔스(KEYENCE, 6861) 기업 심층 분석 — 시장 내재 CAP 역산 | 2026.7.6</title>
+<style>
+:root{
+  --navy:#16324f; --navy2:#0e2238; --red:#c8102e; --blue:#2563eb; --teal:#0f766e;
+  --amber:#b45309; --green:#15803d; --txt:#1f2937; --sub:#475569; --line:#dbe3ec;
+  --bg:#f2f5f9; --card:#ffffff; --soft:#f7f9fc;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;
+  background:var(--bg); color:var(--txt); font-size:16.5px; line-height:1.75; word-break:keep-all;}
+.wrap{max-width:1100px; margin:0 auto; padding:0 20px;}
+p{margin:0 0 14px;}
+strong{color:#111827;}
+a{color:var(--blue); text-decoration:none;}
+/* ---------- hero ---------- */
+header.hero{background:linear-gradient(135deg,#0e2238 0%,#16324f 55%,#1d3f63 100%); color:#eaf1f8; padding:52px 0 44px;}
+.hero .kicker{font-size:13.5px; letter-spacing:.14em; color:#9fb8d0; text-transform:uppercase; margin-bottom:10px;}
+.hero h1{font-size:34px; line-height:1.3; color:#ffffff; margin-bottom:10px; font-weight:800;}
+.hero h1 .tk{color:#ffb3be;}
+.hero .sub{font-size:17px; color:#c3d4e5; max-width:860px; margin-bottom:22px;}
+.chips{display:flex; flex-wrap:wrap; gap:10px;}
+.chip{background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.22); color:#eaf1f8;
+  border-radius:999px; padding:6px 14px; font-size:13.5px;}
+.chip b{color:#ffffff;}
+.hero .disc{margin-top:20px; font-size:12.5px; color:#8fa9c2;}
+/* ---------- toc ---------- */
+nav.toc{position:sticky; top:0; z-index:50; background:#ffffffee; backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line); padding:9px 0;}
+nav.toc .wrap{display:flex; flex-wrap:wrap; gap:6px;}
+nav.toc a{font-size:12.5px; color:var(--sub); background:var(--soft); border:1px solid var(--line);
+  padding:4px 10px; border-radius:999px; white-space:nowrap;}
+nav.toc a:hover{background:#e8eef6; color:var(--navy);}
+/* ---------- sections ---------- */
+main{padding:30px 0 10px;}
+section.sec{background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:34px 36px; margin:0 0 26px; scroll-margin-top:70px;}
+h2.st{display:flex; align-items:center; gap:12px; font-size:24px; color:var(--navy); margin:0 0 6px; line-height:1.35;}
+h2.st .no{flex:none; background:var(--navy); color:#fff; font-size:14px; font-weight:700;
+  width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center;}
+.stsub{font-size:14px; color:var(--sub); margin:0 0 22px; padding-left:46px;}
+h3{font-size:18.5px; color:var(--navy); margin:26px 0 10px; padding-left:12px; border-left:4px solid var(--red);}
+h4{font-size:16px; color:var(--navy); margin:18px 0 8px;}
+ul.ls, ol.ls{margin:0 0 14px 22px;}
+ul.ls li, ol.ls li{margin-bottom:8px;}
+/* ---------- cards / callouts ---------- */
+.cards{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px 0 8px;}
+.card{background:var(--soft); border:1px solid var(--line); border-radius:11px; padding:14px 15px;}
+.card .k{font-size:12.5px; color:var(--sub); margin-bottom:4px; line-height:1.4;}
+.card .v{font-size:20px; font-weight:800; color:var(--navy); line-height:1.3;}
+.card .d{font-size:12px; color:var(--sub); margin-top:3px; line-height:1.45;}
+.card.acc .v{color:var(--red);}
+.note,.insight,.warn,.keybox{border-radius:11px; padding:16px 20px; margin:16px 0; font-size:15.5px;}
+.note{background:#f0f6ff; border:1px solid #bfd6f6;}
+.insight{background:#f0fbf7; border:1px solid #b9e3d2;}
+.warn{background:#fff7ec; border:1px solid #f2d9ae;}
+.keybox{background:#fdf2f4; border:1px solid #ecc4cc;}
+.keybox .kt,.note .kt,.insight .kt,.warn .kt{font-weight:800; color:var(--navy); display:block; margin-bottom:6px; font-size:15px;}
+.keybox .kt{color:var(--red);}
+/* ---------- badges ---------- */
+.b{display:inline-block; font-size:11px; font-weight:700; border-radius:5px; padding:1.5px 7px; vertical-align:1px; margin-left:4px;}
+.bh{background:#e7f6ee; color:#116b3f; border:1px solid #bfe5cf;}
+.bm{background:#fdf3e2; color:#92600a; border:1px solid #f0dcb0;}
+.bl{background:#fdeaea; color:#a02531; border:1px solid #f0c4c8;}
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto; margin:14px 0 6px; border:1px solid var(--line); border-radius:10px;}
+table.tbl{border-collapse:collapse; width:100%; font-size:14px; background:#fff; min-width:640px;}
+table.tbl th{background:var(--navy); color:#fff; padding:9px 11px; text-align:left; font-weight:700; white-space:nowrap;}
+table.tbl td{padding:8px 11px; border-top:1px solid #e8edf3; vertical-align:top;}
+table.tbl tr:nth-child(even) td{background:#f7f9fc;}
+table.tbl td.n, table.tbl th.n{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;}
+table.tbl td.c, table.tbl th.c{text-align:center;}
+table.tbl tr.hlrow td{background:#fdf2f4 !important; font-weight:700;}
+/* exhibit 23 */
+table.ex23{border-collapse:collapse; font-size:12px; background:#fff; min-width:1900px;}
+table.ex23 th{background:var(--navy); color:#fff; padding:6px 8px; font-weight:700; text-align:right; white-space:nowrap;}
+table.ex23 th .yr-a{font-weight:400; font-size:10.5px; color:#ffd7dd;}
+table.ex23 th.rowh{position:sticky; left:0; text-align:left; background:var(--navy); z-index:2; min-width:132px;}
+table.ex23 tbody th.rowh{background:#243f5e; font-size:12px;}
+table.ex23 td{padding:5px 8px; border-top:1px solid #e8edf3; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;}
+table.ex23 tr.dim td{color:#6b7a8c; background:#fafbfd;}
+table.ex23 tr.hl td{font-weight:700; background:#fdf6f7;}
+/* ---------- figures ---------- */
+figure.fig{margin:22px 0; background:#fff;}
+figure.fig .figbox{border:1px solid var(--line); border-radius:11px; padding:16px 14px 10px; background:#fff;}
+figcaption{font-size:13px; color:var(--sub); margin-top:9px; line-height:1.6;}
+figcaption b{color:var(--navy);}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;}
+.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;}
+/* ---------- flow / loop diagrams ---------- */
+.flow{display:flex; flex-wrap:wrap; gap:8px; align-items:stretch; margin:16px 0;}
+.fnode{flex:1 1 140px; background:var(--soft); border:1.5px solid var(--line); border-radius:10px; padding:12px 12px; min-width:138px;}
+.fnode .ft{font-weight:800; color:var(--navy); font-size:14.5px; margin-bottom:4px;}
+.fnode .fd{font-size:12.5px; color:var(--sub); line-height:1.55;}
+.fnode.hot{border-color:#e3aab3; background:#fdf2f4;}
+.fnode.hot .ft{color:var(--red);}
+.farr{flex:0 0 auto; align-self:center; color:var(--red); font-size:19px; font-weight:800;}
+/* SWOT / forces */
+.swot{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0;}
+.sq{border-radius:11px; padding:16px 18px; border:1px solid var(--line);}
+.sq h4{margin:0 0 8px; font-size:15.5px;}
+.sq ul{margin:0 0 0 18px; font-size:14.5px;}
+.sq ul li{margin-bottom:6px;}
+.sq.s1{background:#f0fbf7;} .sq.s2{background:#fff7ec;} .sq.s3{background:#f0f6ff;} .sq.s4{background:#fdf2f4;}
+.forces{display:grid; grid-template-columns:1fr 1.15fr 1fr; grid-template-rows:auto auto auto; gap:12px; margin:16px 0;}
+.fo{background:var(--soft); border:1px solid var(--line); border-radius:11px; padding:13px 15px; font-size:13.5px;}
+.fo h5{font-size:14px; color:var(--navy); margin-bottom:5px;}
+.fo .lvl{font-weight:800;}
+.fo.center{background:var(--navy); color:#e8f0f8; display:flex; flex-direction:column; justify-content:center; text-align:center;}
+.fo.center h5{color:#fff; font-size:16px;}
+.lv-low{color:var(--green);} .lv-mid{color:var(--amber);} .lv-high{color:var(--red);}
+/* bull/bear */
+.bb{border-radius:12px; border:1px solid var(--line); margin:14px 0; overflow:hidden;}
+.bb .bbh{padding:10px 18px; font-weight:800; font-size:15.5px; color:#fff;}
+.bb .bbc{padding:14px 18px; font-size:15px; background:#fff;}
+.bb.bull .bbh{background:var(--green);} .bb.bear .bbh{background:#9f1d2e;}
+.tagline{display:inline-block; font-size:12px; font-weight:700; border-radius:5px; padding:2px 8px; margin-left:6px; vertical-align:1px;}
+.tg-in{background:#e7f6ee; color:#116b3f;} .tg-part{background:#fdf3e2; color:#92600a;} .tg-out{background:#fdeaea; color:#a02531;}
+/* misc */
+.small{font-size:13px; color:var(--sub);}
+.hr{border:none; border-top:1px dashed var(--line); margin:24px 0;}
+footer{padding:30px 0 60px; font-size:13px; color:var(--sub);}
+footer h4{color:var(--navy); margin-bottom:8px;}
+.evlegend{display:grid; grid-template-columns:1fr 1fr; gap:4px 22px; font-size:13px; margin-top:10px;}
+.evlegend div{padding:3px 0; border-bottom:1px dashed #e8edf3; line-height:1.5;}
+.evlegend b.up{color:var(--green);} .evlegend b.dn{color:var(--red);} .evlegend b.nt{color:var(--sub);}
+@media (max-width:860px){
+  body{font-size:15.5px;}
+  section.sec{padding:24px 18px;}
+  .cards{grid-template-columns:1fr 1fr;}
+  .grid2,.grid3,.swot{grid-template-columns:1fr;}
+  .forces{grid-template-columns:1fr;}
+  .hero h1{font-size:26px;}
+  .evlegend{grid-template-columns:1fr;}
+  table.tbl{font-size:13px;}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Equity Deep-Dive · Market-Implied CAP Analysis</div>
+    <h1>키엔스 <span class="tk">KEYENCE · TSE 6861</span><br>세계 최고 마진 제조업의 가격에 내재된 기대 읽기</h1>
+    <div class="sub">모부신(Mauboussin) 경쟁우위기간(CAP) 프레임워크로 현재 주가 ¥80,300에 내재된 시장 기대를 역산한 심층 분석.
+    회사가 "얼마짜리냐"가 아니라, <b>"시장이 이 가격으로 무엇을 믿고 있는가"</b>를 묻는 보고서.</div>
+    <div class="chips">
+      <span class="chip">기준일 <b>2026.7.6</b> (주가 7.3 종가)</span>
+      <span class="chip">주가 <b>¥80,300</b> · 1년 <b>+43.5%</b></span>
+      <span class="chip">시가총액 <b>¥19.5조</b></span>
+      <span class="chip">FY2026 매출 <b>¥1조 1,693억</b> · OPM <b>51.0%</b></span>
+      <span class="chip">내재 CAP <b>≈ 19.5년</b></span>
+    </div>
+    <div class="disc">본 보고서는 정보 제공 목적의 분석 자료이며 투자 권유가 아닙니다. 모든 수치는 2026.7.6 완료된 리서치 데이터(공시·보도 집계)에 근거하고, 신뢰도가 중간 이하인 항목은 <span class="b bm">중간</span> 배지로 표기했습니다.</div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#s1">1 요약</a><a href="#s2">2 기업 개요</a><a href="#s3">3 수익 구조</a><a href="#s4">4 제품·기술</a>
+  <a href="#s5">5 산업</a><a href="#s6">6 경쟁 우위</a><a href="#s7">7 피어 비교</a><a href="#s8">8 시장 내러티브</a>
+  <a href="#s9">9 재무·DCF</a><a href="#s10">10 내재 CAP</a><a href="#s11">11 Bull</a><a href="#s12">12 Bear</a>
+  <a href="#s13">13 SWOT</a><a href="#s14">14 경영진·자본배분</a><a href="#s15">15 종합 판단</a>
+</div></nav>
+
+<main><div class="wrap">
+<!-- ================= 1. 요약 ================= -->
+<section class="sec" id="s1">
+<h2 class="st"><span class="no">1</span>핵심 요약 — 현재 주가에는 '약 19.5년의 경쟁우위'가 선불되어 있다</h2>
+<p class="stsub">결론 먼저: 현재 주가에 내재된 경쟁우위기간(CAP)과 그 의미</p>
+
+<div class="keybox"><span class="kt">한 줄 결론</span>
+현재 주가 ¥80,300은 <b>"키엔스가 NOPAT을 연 9%씩(FY27 컨센서스 수준) 약 19.5년간 키우고, 그 뒤에야 초과수익이 서서히 소멸한다"</b>는 기대를 내재한다. 이는 프레임워크 해석표에서 '약간 낙관(15~20년)'의 최상단이자 '과도한 낙관(20년+)'의 경계 — 강력한 해자 근거가 있어야만 정당화되는 구간의 끝에 해당한다. 30년 가까이 관측된 영업이익률 50%대와 영업 ROIC 약 94%라는 실증 기록은 키엔스를 이런 기대의 '정당한 후보'로 만들지만, 이 가격에는 성장 둔화·금리 상승 어느 한쪽에 대해서도 여유가 거의 없다.</div>
+
+<div class="cards">
+  <div class="card"><div class="k">주가 (26.7.3 종가)</div><div class="v">¥80,300</div><div class="d">52주 51,510~84,170 · 최고가 대비 −4.6%</div></div>
+  <div class="card"><div class="k">시가총액</div><div class="v">¥19.5조</div><div class="d">자사주 제외 242,525,136주</div></div>
+  <div class="card"><div class="k">FY2026 매출 / 영업이익</div><div class="v">¥1조1,693억</div><div class="d">+10.4% · 영업이익 ¥5,958억 (OPM 51.0%)</div></div>
+  <div class="card"><div class="k">순이익 (5년 연속 최고)</div><div class="v">¥4,452억</div><div class="d">+11.7% · EPS ¥1,836</div></div>
+  <div class="card"><div class="k">실적 PER / 예상 PER</div><div class="v">43.7배 / 40.4배</div><div class="d">PBR 5.6배 · 배당수익률 0.7%</div></div>
+  <div class="card"><div class="k">순금융자산 (무차입)</div><div class="v">¥2.98조</div><div class="d">시총의 15% — 현금·예금·유가증권</div></div>
+  <div class="card"><div class="k">영업 ROIC (추정)</div><div class="v">≈94%</div><div class="d">NOPAT ¥4,171억 ÷ 영업 투하자본 ¥4,450억</div></div>
+  <div class="card acc"><div class="k">시장 내재 CAP (기본 시나리오)</div><div class="v">≈19.5년</div><div class="d">성장 9%·WACC 7.53%·f 0.17 기준 역산</div></div>
+</div>
+
+<h3>무엇을 하는 회사인가 — 30초 요약</h3>
+<p>키엔스는 공장 자동화(FA)용 센서·머신비전·측정기·마킹 장비를 만드는 오사카 기반 기업이다. 다만 '만드는' 방식이 특이하다. 생산은 협력사에 외주(팹리스)하고, 회사는 <b>상품 기획·설계와 직판 컨설팅 영업이라는 가치사슬의 양끝만 내재화</b>했다. 대리점 없이 46개국 250개 거점의 영업 인력이 약 40만 고객사의 생산 현장을 직접 다니며 미충족 니즈를 수집('니즈카드')하고, 이를 상품기획에 직결시켜 신제품의 약 70%를 '세계 최초 또는 업계 최초'로 내놓는다. 원가가 아니라 <b>고객이 얻는 생산성 개선분을 기준으로 값을 매기는 가치 가격(value pricing)</b>과 당일출하 체제가 결합해, 매출총이익률 83.0%·영업이익률 51.0%라는 제조업에서 유례를 찾기 어려운 손익 구조가 나온다. 직원 1인당 영업이익은 ¥4,660만으로, 이 회사의 상품이 사실상 '영업 정보 자산'임을 보여준다.</p>
+
+<h3>지금 왜 주목받나 — 1년 +43.5%의 배경</h3>
+<p>2021년 고점 이후 약 5년간 주가는 "완벽하지만 지루한 주식"으로 횡보했다. 매출 ¥1조 돌파 후 성장률이 한 자릿수로 내려왔고, ¥3조에 달하는 현금이 배당성향 20% 안팎에 묶여 ROE를 희석했기 때문이다. 반전은 세 겹으로 왔다. <b>① 자본배분 정상화</b>: 2025년 5월 창사 첫 M&A(CADENAS), 10월 배당 +57%(성향 30%)와 44세 나카노 신임 사장 발표, 2026년 4월 이사회 결의만으로 자사주를 취득할 수 있게 하는 정관변경 부의 — 시장은 "저 키엔스가 변했다"로 읽었고, 4월 27일 주가는 하루 +16% 스톱고를 기록했다. <b>② AI 설비투자 수혜</b>: FY2026 4분기 매출이 +17.9%로 가속(연간 +10.4%)했고, 증권사들은 반도체 등 AI 관련 투자 수요를 상회 요인으로 지목했다. 중국 +18.2%, 미국 +14.3% 등 해외(매출의 66.6%)가 성장을 견인했다. <b>③ 거버넌스 세대교체</b>: 창업자 다키자키(1945년생)의 이사 퇴임과 지명보수위원회 체제가 일본 거버넌스 개혁 흐름과 공명했다. 그 결과 주가는 5월 하순~6월 초 사상 최고가 ¥84,170을 기록<span class="b bm">고가 일자 중간</span>한 뒤 현재 ¥80,300이다.</p>
+
+<h3>이 보고서의 핵심 질문 — 가격에 무엇이 들어 있나</h3>
+<p>본 분석은 "적정주가 계산"이 아니라 <b>역산</b>이다. 시가총액 ¥19.5조에서 순금융자산 ¥2.98조를 빼면 시장이 영업에 매긴 값은 ¥16.5조다. 그런데 키엔스가 지금 수준의 이익(NOPAT ¥4,171억)을 성장 없이 영원히 내기만 한다고 가정한 '정체가치'는 ¥5.5조, 주당 ¥35,117에 불과하다. 즉 <b>영업가치의 66.4%(주당 약 ¥45,000)는 아직 오지 않은 미래 성장에 대한 선불금</b>이다. 컨센서스 수준의 성장(연 9%)을 대입해 이 선불금이 정당화되는 데 필요한 기간을 풀면 약 19.5년이 나온다 — 이것이 시장 내재 CAP다. 민감도는 비대칭적이다: 금리가 1%p 올라 할인율이 8.53%가 되면 필요한 CAP는 26년(과도한 낙관 영역)으로 뛰고, 성장률이 5.5% 아래로 떨어지면 <b>어떤 기간을 대입해도 현재가에 도달할 수 없다</b>. 반대로 강세 가정(성장 13%)에서는 10.8년으로, '합리적 범위'에 안착한다.</p>
+
+<div class="insight"><span class="kt">균형 잡힌 시각 — 이 가격이 말이 되는 경우와 안 되는 경우</span>
+말이 되는 경우: 키엔스는 프레임워크가 요구하는 '강력한 해자 근거'를 드물게 실증으로 갖춘 회사다. 영업이익률 50%대가 20년 이상, 피어 대비 마진 격차 2~7배가 장기간 유지되어 평균회귀(페이드)가 사실상 관측되지 않았고, AI·반도체 설비투자 사이클과 자사주 프로그램(현금 ¥3조 재원)이라는 두 개의 살아있는 촉매가 있다.<br>
+안 되는 경우: 4분기 가속(+17.9%)이 사이클 정점 신호이고 FY24처럼 성장이 5% 안팎으로 재감속하면, 이 가격은 산수로 방어되지 않는다(성장 7%면 20년 CAP를 줘도 주당 ¥64,643). 일본 10년 금리 2.78%가 계속 오르는 국면이라는 점도 장기 CAP 주식에 구조적 역풍이다. 다음 분수령은 <b>7월 28일 1분기 실적과 자사주 프로그램 발표 여부</b>다.</div>
+</section>
+<!-- ================= 2. 기업 개요 ================= -->
+<section class="sec" id="s2">
+<h2 class="st"><span class="no">2</span>기업 개요 — "사사(社史)를 만들지 않는 회사"의 52년</h2>
+<p class="stsub">기본 정보 · 창업자와 창업 스토리 · 역대 사장 계보 · 연혁 하이라이트</p>
+
+<div class="tablewrap"><table class="tbl">
+<tr><th style="width:180px">항목</th><th>내용</th></tr>
+<tr><td><b>정식 명칭</b></td><td>株式会社キーエンス / KEYENCE CORPORATION (TSE: 6861)</td></tr>
+<tr><td><b>본사</b></td><td>오사카시 히가시요도가와구(신오사카역 인근) — 본사·연구소 통합, 1994년 이전</td></tr>
+<tr><td><b>설립</b></td><td>1972년 3월 창업(리드전기, 효고현), 1974년 5월 법인화. 1986년 "KEYENCE"(Key of Science)로 사명 변경. 1987년 10월 오사카증권거래소 2부 상장</td></tr>
+<tr><td><b>사업</b></td><td>FA용 센서·머신비전·측정기·마킹·현미경 등 — 단일 세그먼트(전자응용기기), 단일 제품군이 매출 90% 초과라 제품별 매출 비공시</td></tr>
+<tr><td><b>규모</b></td><td>종업원 연결 12,784명(2026.3, 전년 12,261명) · 단독 평균연령 34.8세, 평균근속 11.1년 · 자본금 ¥306.4억 · 연결 자회사 39개</td></tr>
+<tr><td><b>고객·판매망</b></td><td>약 40만 고객사 / 110개국 서비스 · 해외 46개국 250거점 <b>완전 직판</b>(대리점 없음). 미국 법인(1985년 설립) 42개 거점, 중국 21개, 한국 6개 거점 등</td></tr>
+<tr><td><b>지수 편입</b></td><td>닛케이225 · TOPIX Core30 · JPX닛케이400</td></tr>
+<tr><td><b>주주 수</b></td><td>27,117명(2026.3) — 초고가 주가(최저 투자단위 ¥630만~800만, 분할 미실시)로 개인 참여가 구조적으로 제한된 <b>이례적으로 좁은 주주 기반</b></td></tr>
+<tr><td><b>주요 관계사</b></td><td>CADENAS(독일, 2025년 인수 — 3D CAD 데이터 플랫폼) · 저스트시스템 1대주주(2009년~, 지분법: 장부 ¥500억/시가 ¥992억) · 이프로스(B2B 미디어) 등</td></tr>
+</table></div>
+
+<h3>창업자 다키자키 다케미쓰 — 두 번 도산한 고졸 창업자의 '숫자 경영'</h3>
+<p>다키자키 다케미쓰(滝崎武光, 1945년생)는 효고현 아마가사키공업고를 졸업한 뒤 두 번 창업해 두 번 도산했다. 1972년 27세에 세 번째로 세운 회사가 리드전기 — 훗날의 키엔스다. 고교 시절 학생운동 지도부였다가 "이데올로기로는 세상이 바뀌지 않는다, 숫자로 승부하는 사업가가 되겠다"고 방향을 튼 인물로(닛케이비즈니스 1989·1991 인터뷰), 두 번의 도산 경험이 이후 무차입·초고수익 집착의 원점이 됐다.</p>
+<p>회사의 DNA를 보여주는 결정적 장면은 <b>1982년, 여전히 영업이익률 20%로 흑자였던 창업 사업(자동 선재절단기)을 매각한 일</b>이다. 이유는 "이익률도 문제지만 장래 부가가치 향상 여지가 없어서". 잘 되는 사업을 정점 전에 팔고 매출총이익률 40%+의 센서로 전환한 이 결단은, 이후 '매출총이익 80% 미만이면 개발 불허'라는 80% 룰(§4)로 제도화된다. 창업 3년차부터는 영업이익의 일부를 매월 급여에 직접 가산하는 보수 구조를 도입해 '회사 이익 = 사원 소득'을 물리적으로 연결했다.</p>
+<p>다키자키의 또 다른 특이점은 <b>과거에 대한 태도</b>다. 본사에 화석 오브제를 두고 "키엔스에 과거는 불필요"라며 사사(社史)를 만들지 않는 방침을 고수했고, 2000년에는 55세의 나이에 비창업가 출신에게 사장직을 조기 승계했다("카리스마가 전부 결재하는 게 아니라 권한을 위양해야 좋은 아이디어가 나온다"). 2023년에는 세습 가능성도 공개 부정했다. 포브스 2025년 기준 자산 약 $195억(약 ¥3조)으로 일본 부호 3위이며, <b>2026년 4월 24일 이사 퇴임을 발표(6월 12일 주총부로 임기 만료), 명예회장 칭호만 유지</b>했다 — 법인화 기준 창업 52년 만의 공식·완전 은퇴다.</p>
+
+<h3>역대 사장 계보 — 전원 내부 승진·비세습, 그리고 44세의 '해외통'</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th class="c">대수</th><th>이름</th><th>재임</th><th>비고</th></tr>
+<tr><td class="c">1</td><td>다키자키 다케미쓰</td><td>1974~2000</td><td>창업자. 이후 회장→명예회장</td></tr>
+<tr><td class="c">2</td><td>사사키 미치오</td><td>2000~2010</td><td>첫 비창업가 사장</td></tr>
+<tr><td class="c">3</td><td>야마모토 아키노리</td><td>2010~2019.12</td><td></td></tr>
+<tr><td class="c">4</td><td>나카타 유</td><td>2019.12~2025.12</td><td>1974년생, 1997년 입사, 센서사업부장 출신. 중기경영계획을 만들지 않는 스타일("환경 변화는 예측 불가"). 관례(약 10년)보다 짧은 6년 재임 — 2025.6 주총 이사 선임 찬성률 77.06%로 급락(전년 82.73%)하며 주주 불만이 표면화된 뒤 교체. 현재 이사로 잔류</td></tr>
+<tr class="hlrow"><td class="c">5</td><td>나카노 데쓰야</td><td>2025.12.22~</td><td><b>1981년생, 44세 취임.</b> 히토쓰바시대 상학부 졸업 후 2004년 입사. 국내 제어기기 영업 7년 → 중국 제어기기 책임자 → 제어시스템사업부장(2020) → 이사·해외사업강화부장(2023.12). <b>해외 성장 전담 커리어</b> — "영업 스킬을 높여 상품 가치를 올바르게 전달하는 것이 중요, 인재육성과 직판 체제를 강화하겠다"</td></tr>
+</table></div>
+
+<h3>연혁 하이라이트 — 성장의 변곡점들</h3>
+<ul class="ls">
+<li><b>1972~1987</b>: 선재절단기 창업 → 1982년 센서 전환 → 1985년 미국 법인 설립 → 1986년 KEYENCE 개명 → 1987년 상장. 상장 직후 자기자본비율이 62.6%에서 90%대로 점프 — 팹리스라 조달자금이 설비가 아닌 자본 축적으로 쌓이는 구조가 이때부터 드러남.</li>
+<li><b>1990~2009</b>: 세계 직판망 확장. 2003년 닛케이비즈니스가 "이익률 40%, 경이의 경영" 특집으로 세계최초 개발력·팹리스·직판 컨설팅영업의 3요소를 정리. 2009년 저스트시스템 1대주주.</li>
+<li><b>2018~2021</b>: FY18 OPM 55.6% 달성. 2021년 시가총액 일본 2위(도요타 다음) 기록 — 이후 성장 감속과 함께 15위까지 후퇴하는 5년 횡보의 출발점.</li>
+<li><b>2022~2024</b>: FY22 매출 +40.3%(¥7,552억)의 코로나 후 폭발 성장 → FY24 +4.9%로 급감속. 2024년 5월 설립 50주년.</li>
+<li><b>2025~2026</b>: CADENAS 인수(25.5, 첫 본격 M&A) → 배당 +57%·사장 교체(25.10) → 자사주 정관변경 부의·창업자 퇴임(26.4) → 사상 최고가 ¥84,170(26.5~6). 반세기 만에 자본배분·거버넌스·경영진이 동시에 바뀌는 국면.</li>
+</ul>
+
+<div class="note"><span class="kt">분석 관점의 함의</span>
+키엔스의 역사는 '기술 돌파'의 역사가 아니라 <b>수익률 규율의 역사</b>다. 흑자 사업 매각(1982), 80% 룰, 사사 폐지, 조기 승계 — 전부 "과거·매몰비용·감정을 배제하고 부가가치가 높은 곳에만 자원을 둔다"는 하나의 원칙에서 나온다. 이 원칙이 30년 이상 OPM 50%대를 지켜온 조직적 기반이며, 뒤에서 볼 CAP 분석에서 '긴 경쟁우위기간'을 정당화하는 정성적 근거이기도 하다. 동시에 이 시스템은 사람(영업·기획 인력)에 극도로 의존하므로, 창업자 완전 은퇴 이후에도 문화가 유지되는지가 장기 리스크 항목이 된다(§12).</div>
+</section>
+<!-- ================= 3. 수익 구조 ================= -->
+<section class="sec" id="s3">
+<h2 class="st"><span class="no">3</span>수익 구조 — 매출총이익률 83%는 어디서 오는가</h2>
+<p class="stsub">손익 폭포 · 비즈니스 모델 순환 · 지역/분기 분해</p>
+
+<p>키엔스의 손익계산서는 제조업의 상식과 반대로 생겼다. 매출 ¥1조 1,693억 중 매출원가는 <b>17.0%(¥1,986억)</b>에 불과하고, 대신 판관비가 29.3%(¥3,421억) — 그 중심은 영업·기획 인건비다. 즉 "물건을 만드는 데"가 아니라 "사람(영업·기획)"에 자본을 투입하는 구조로, 전 기관투자자 이즈미다 료스케는 이를 <b>"키엔스의 본질은 제조업이 아니라 자사 하드웨어를 지렛대로 쓰는 컨설팅 회사"</b>라고 요약했다. 연구개발비는 별도 계상 기준 매출의 2.8%(¥328억)로 낮은데도 신제품의 약 70%가 세계·업계 최초다(§4). 결과가 영업이익률 51.0%다.</p>
+
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="66.0" y1="296.0" x2="860.0" y2="296.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="300.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >0%</text><line x1="66.0" y1="232.0" x2="860.0" y2="232.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="236.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >25%</text><line x1="66.0" y1="168.0" x2="860.0" y2="168.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="172.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >50%</text><line x1="66.0" y1="104.0" x2="860.0" y2="104.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="108.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >75%</text><line x1="66.0" y1="40.0" x2="860.0" y2="40.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="44.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >100%</text><rect x="92.5" y="40.0" width="79.4" height="256.0" fill="#16324f" rx="3" /><text x="132.2" y="18.0" font-size="12.5" fill="#1f2937" text-anchor="middle" font-weight="bold" >매출</text><text x="132.2" y="33.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >¥1조1,693억</text><rect x="224.8" y="40.0" width="79.4" height="43.5" fill="#ef9a9a" rx="3" /><text x="264.5" y="18.0" font-size="12.5" fill="#1f2937" text-anchor="middle" font-weight="bold" >매출원가</text><text x="264.5" y="33.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >−¥1,986억 (17.0%)</text><line x1="171.9" y1="83.5" x2="224.8" y2="83.5" stroke="#64748b" stroke-width="1" stroke-dasharray="3,3" /><rect x="357.1" y="83.5" width="79.4" height="212.5" fill="#0f766e" rx="3" /><text x="396.8" y="61.5" font-size="12.5" fill="#1f2937" text-anchor="middle" font-weight="bold" >매출총이익</text><text x="396.8" y="76.5" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >¥9,707억 (83.0%)</text><line x1="304.2" y1="83.5" x2="357.1" y2="83.5" stroke="#64748b" stroke-width="1" stroke-dasharray="3,3" /><rect x="489.5" y="83.5" width="79.4" height="75.0" fill="#ef9a9a" rx="3" /><text x="529.2" y="61.5" font-size="12.5" fill="#1f2937" text-anchor="middle" font-weight="bold" >판관비</text><text x="529.2" y="76.5" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >−¥3,421억 (29.3%)</text><line x1="436.5" y1="158.5" x2="489.5" y2="158.5" stroke="#64748b" stroke-width="1" stroke-dasharray="3,3" /><rect x="621.8" y="158.5" width="79.4" height="7.2" fill="#ef9a9a" rx="3" /><text x="661.5" y="136.5" font-size="12.5" fill="#1f2937" text-anchor="middle" font-weight="bold" >연구개발비</text><text x="661.5" y="151.5" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >−¥328억 (2.8%)</text><line x1="568.9" y1="165.7" x2="621.8" y2="165.7" stroke="#64748b" stroke-width="1" stroke-dasharray="3,3" /><rect x="754.1" y="165.4" width="79.4" height="130.6" fill="#c8102e" rx="3" /><text x="793.8" y="143.4" font-size="12.5" fill="#1f2937" text-anchor="middle" font-weight="bold" >영업이익</text><text x="793.8" y="158.4" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >¥5,958억 (51.0%)</text><line x1="701.2" y1="165.4" x2="754.1" y2="165.4" stroke="#64748b" stroke-width="1" stroke-dasharray="3,3" /><line x1="66.0" y1="296.0" x2="860.0" y2="296.0" stroke="#64748b" stroke-width="1.2"  /></svg></div><figcaption><b>그림 1. FY2026 손익 구조 폭포</b> — 매출 100% 기준. 하드웨어 회사인데 원가율이 17%에 그치고, 최대 비용이 '사람'(판관비 29.3%)이다. | 출처: 연차보고서 FY2026 손익계산서</figcaption></figure>
+
+<h3>수익 방정식 — 4개 부품이 맞물린 순환</h3>
+<p>이 마진의 원천은 어느 한 요소가 아니라 <b>순환 구조</b>다: 초고부가가치 표준품(커스터마이즈 원칙 거부) × 직판 컨설팅 영업(중간 마진 0) × 팹리스(고정비 최소) × 가치 가격. 아래 루프의 어느 한 칸만 베껴서는 재현되지 않는다는 점이 §6 해자 분석의 핵심이 된다.</p>
+
+<div class="flow">
+  <div class="fnode hot"><div class="ft">① 직판 컨설팅 영업</div><div class="fd">대리점 0 · 46개국 250거점. 데모기 지참, 고객 생산라인에 직접 들어가 과제를 발굴. 외출 보고는 1분 단위(타임차지 관리)</div></div>
+  <div class="farr">➜</div>
+  <div class="fnode"><div class="ft">② 니즈카드</div><div class="fd">현장에서 감지한 잠재 니즈를 필터 없이 기획·개발에 직송 — "고객도 모르는 니즈"의 상품화 파이프라인</div></div>
+  <div class="farr">➜</div>
+  <div class="fnode hot"><div class="ft">③ 80% 룰 기획</div><div class="fd">기획 단계에서 매출총이익 80% 미만 예상이면 개발 불허. 신제품의 약 70%가 세계·업계 최초</div></div>
+  <div class="farr">➜</div>
+  <div class="fnode"><div class="ft">④ 팹리스 생산</div><div class="fd">자사 공장 0 — 제품별 최적 협력공장에 외주. 유형자산이 총자산의 2.6%뿐</div></div>
+  <div class="farr">➜</div>
+  <div class="fnode"><div class="ft">⑤ 당일 출하</div><div class="fd">전 기종 계획생산·재고 보유 → 주문 즉시 세계 당일 출하. 고객의 라인 정지 리스크 제거 = 락인</div></div>
+  <div class="farr">➜</div>
+  <div class="fnode hot"><div class="ft">⑥ 가치 가격 → ①로</div><div class="fd">원가가 아닌 고객 ROI 기준 가격("이 센서로 인력 1명분 절감") — 가격 경쟁 자체를 회피, GM 83%로 순환 재투자</div></div>
+</div>
+
+<p class="small">비고: 수익 인식은 하드웨어 매절(sell-outright) 중심으로 구독·리커링 매출은 없으며, 유지보수 계약 규모는 "무시할 수준"(연차보고서). 즉 매 분기 매출을 새로 만들어야 하는 모델이라는 점은 약점 항목(§13 W)이기도 하다.</p>
+
+<h3>어디서 버는가 — 지역·분기 분해</h3>
+<p>FY2026 해외 매출 비중은 66.6%(¥7,792억, +13.5%)로 성장의 무게중심이 완전히 해외에 있다. 특히 <b>중국 +18.2%</b>(부동산 불황 속에서도 AI·반도체 등 첨단산업 국책 투자), <b>미국 +14.3%</b>(트럼프 관세 15%를 제품 가격 인상으로 흡수)가 두드러지고, 일본은 +4.6%로 안정적 기반 역할이다. 10% 이상 단일 고객이 없고 자동차·반도체·식품·의약 등 전방위 산업에 분산돼 있어 특정 업종 사이클에 대한 노출이 상대적으로 완충된다.</p>
+
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 330" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><path d="M210.0,56.0 A112,112 0 0 1 306.8,224.4 L265.3,200.2 A64,64 0 0 0 210.0,104.0 Z" fill="#16324f" stroke="#fff" stroke-width="2"/><text x="321.0" y="108.2" font-size="12" fill="#16324f" text-anchor="start" font-weight="bold" >33.4%</text><path d="M306.8,224.4 A112,112 0 0 1 191.1,278.4 L199.2,231.1 A64,64 0 0 0 265.3,200.2 Z" fill="#2563eb" stroke="#fff" stroke-width="2"/><text x="264.1" y="288.0" font-size="12" fill="#2563eb" text-anchor="start" font-weight="bold" >19.3%</text><path d="M191.1,278.4 A112,112 0 0 1 106.7,211.2 L150.9,192.7 A64,64 0 0 0 199.2,231.1 Z" fill="#c8102e" stroke="#fff" stroke-width="2"/><text x="130.3" y="272.1" font-size="12" fill="#c8102e" text-anchor="end" font-weight="bold" >16.0%</text><path d="M106.7,211.2 A112,112 0 0 1 210.7,56.0 L210.4,104.0 A64,64 0 0 0 150.9,192.7 Z" fill="#0f766e" stroke="#fff" stroke-width="2"/><text x="103.7" y="100.7" font-size="12" fill="#0f766e" text-anchor="end" font-weight="bold" >31.4%</text><text x="210.0" y="162.0" font-size="13" fill="#475569" text-anchor="middle" font-weight="normal" >FY26 매출</text><text x="210.0" y="184.0" font-size="15" fill="#1f2937" text-anchor="middle" font-weight="bold" >¥1.169조</text><text x="430.0" y="44.0" font-size="12" fill="#475569" text-anchor="start" font-weight="bold" >지역</text><text x="680.0" y="44.0" font-size="12" fill="#475569" text-anchor="end" font-weight="bold" >FY26 매출</text><text x="780.0" y="44.0" font-size="12" fill="#475569" text-anchor="end" font-weight="bold" >YoY</text><rect x="430.0" y="55.0" width="13.0" height="13.0" fill="#16324f" rx="3" /><text x="451.0" y="66.0" font-size="13" fill="#1f2937" text-anchor="start" font-weight="normal" >일본 (33.4%)</text><text x="680.0" y="66.0" font-size="13" fill="#1f2937" text-anchor="end" font-weight="normal" >¥3,901억</text><text x="780.0" y="66.0" font-size="13" fill="#475569" text-anchor="end" font-weight="bold" >+4.6%</text><rect x="430.0" y="89.0" width="13.0" height="13.0" fill="#2563eb" rx="3" /><text x="451.0" y="100.0" font-size="13" fill="#1f2937" text-anchor="start" font-weight="normal" >미국 (19.3%)</text><text x="680.0" y="100.0" font-size="13" fill="#1f2937" text-anchor="end" font-weight="normal" >¥2,258억</text><text x="780.0" y="100.0" font-size="13" fill="#15803d" text-anchor="end" font-weight="bold" >+14.3%</text><rect x="430.0" y="123.0" width="13.0" height="13.0" fill="#c8102e" rx="3" /><text x="451.0" y="134.0" font-size="13" fill="#1f2937" text-anchor="start" font-weight="normal" >중국 (16.0%)</text><text x="680.0" y="134.0" font-size="13" fill="#1f2937" text-anchor="end" font-weight="normal" >¥1,866억</text><text x="780.0" y="134.0" font-size="13" fill="#15803d" text-anchor="end" font-weight="bold" >+18.2%</text><rect x="430.0" y="157.0" width="13.0" height="13.0" fill="#0f766e" rx="3" /><text x="451.0" y="168.0" font-size="13" fill="#1f2937" text-anchor="start" font-weight="normal" >기타 해외 (31.4%)</text><text x="680.0" y="168.0" font-size="13" fill="#1f2937" text-anchor="end" font-weight="normal" >¥3,669억</text><text x="780.0" y="168.0" font-size="13" fill="#15803d" text-anchor="end" font-weight="bold" >+10.9%</text><text x="430.0" y="210.0" font-size="13.5" fill="#16324f" text-anchor="start" font-weight="bold" >해외 합계 ¥7,792억 (66.6%) · YoY +13.5%</text><text x="430.0" y="232.0" font-size="12" fill="#475569" text-anchor="start" font-weight="normal" >10% 이상 단일 고객 없음 · 약 40만 고객사 / 110개국</text></svg></div><figcaption><b>그림 2. FY2026 지역별 매출 구성과 성장률</b> — 해외 66.6%. 중국·미국이 성장 엔진. | 출처: 연차보고서 Note 13, 닛케이(26.4.24)</figcaption></figure>
+
+<div class="grid2">
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 300" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="62.0" y1="240.0" x2="392.0" y2="240.0" stroke="#eef2f7" stroke-width="1"  /><text x="56.0" y="244.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >0</text><line x1="62.0" y1="187.5" x2="392.0" y2="187.5" stroke="#eef2f7" stroke-width="1"  /><text x="56.0" y="191.5" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >90</text><line x1="62.0" y1="135.0" x2="392.0" y2="135.0" stroke="#eef2f7" stroke-width="1"  /><text x="56.0" y="139.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >180</text><line x1="62.0" y1="82.5" x2="392.0" y2="82.5" stroke="#eef2f7" stroke-width="1"  /><text x="56.0" y="86.5" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >270</text><line x1="62.0" y1="30.0" x2="392.0" y2="30.0" stroke="#eef2f7" stroke-width="1"  /><text x="56.0" y="34.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >360</text><text x="398.0" y="244.0" font-size="11" fill="#c8102e" text-anchor="start" font-weight="normal" >0%</text><text x="398.0" y="191.5" font-size="11" fill="#c8102e" text-anchor="start" font-weight="normal" >5%</text><text x="398.0" y="139.0" font-size="11" fill="#c8102e" text-anchor="start" font-weight="normal" >10%</text><text x="398.0" y="86.5" font-size="11" fill="#c8102e" text-anchor="start" font-weight="normal" >15%</text><text x="398.0" y="34.0" font-size="11" fill="#c8102e" text-anchor="start" font-weight="normal" >20%</text><rect x="81.0" y="87.7" width="44.6" height="152.3" fill="#8fb3d9" rx="2" /><text x="103.2" y="81.7" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >261</text><text x="103.2" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >1Q</text><rect x="163.5" y="74.2" width="44.6" height="165.8" fill="#8fb3d9" rx="2" /><text x="185.8" y="68.2" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >284</text><text x="185.8" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >2Q</text><rect x="246.0" y="71.2" width="44.6" height="168.8" fill="#8fb3d9" rx="2" /><text x="268.2" y="65.2" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >289</text><text x="268.2" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >3Q</text><rect x="328.5" y="44.8" width="44.6" height="195.2" fill="#8fb3d9" rx="2" /><text x="350.8" y="38.8" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >335</text><text x="350.8" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >4Q</text><polyline points="103.2,181.2 185.8,132.9 268.2,161.2 350.8,52.1" fill="none" stroke="#c8102e" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" /><circle cx="103.2" cy="181.2" r="3.2" fill="#c8102e" stroke="#ffffff" stroke-width="1.2"/><text x="103.2" y="172.2" font-size="11" fill="#c8102e" text-anchor="middle" font-weight="bold" >+5.6%</text><circle cx="185.8" cy="132.9" r="3.2" fill="#c8102e" stroke="#ffffff" stroke-width="1.2"/><text x="185.8" y="123.9" font-size="11" fill="#c8102e" text-anchor="middle" font-weight="bold" >+10.2%</text><circle cx="268.2" cy="161.2" r="3.2" fill="#c8102e" stroke="#ffffff" stroke-width="1.2"/><text x="268.2" y="152.2" font-size="11" fill="#c8102e" text-anchor="middle" font-weight="bold" >+7.5%</text><circle cx="350.8" cy="52.1" r="3.2" fill="#c8102e" stroke="#ffffff" stroke-width="1.2"/><text x="336.8" y="43.1" font-size="11" fill="#c8102e" text-anchor="end" font-weight="bold" >+17.9%</text><line x1="62.0" y1="240.0" x2="392.0" y2="240.0" stroke="#64748b" stroke-width="1.2"  /><text x="62.0" y="16.0" font-size="12" fill="#475569" text-anchor="start" font-weight="normal" >FY26 분기 매출(¥십억, 좌) · YoY(우)</text></svg></div><figcaption><b>그림 3. FY2026 분기 매출과 YoY</b> — 1Q +5.6% → 4Q +17.9%로 갈수록 가속("尻上がり"). 4Q 영업이익은 컨센서스를 +9.5% 상회했고 OPM 53.6%. | 출처: IR 분기 공시</figcaption></figure>
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 280" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="64.0" y1="224.0" x2="400.0" y2="224.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="228.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >30%</text><line x1="64.0" y1="181.8" x2="400.0" y2="181.8" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="185.8" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >40%</text><line x1="64.0" y1="139.6" x2="400.0" y2="139.6" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="143.6" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >50%</text><line x1="64.0" y1="97.3" x2="400.0" y2="97.3" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="101.3" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >60%</text><line x1="64.0" y1="55.1" x2="400.0" y2="55.1" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="59.1" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >70%</text><polyline points="64.0,183.9 232.0,102.0 400.0,69.5" fill="none" stroke="#0f766e" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" /><circle cx="64.0" cy="183.9" r="5" fill="#0f766e" stroke="#ffffff" stroke-width="2"/><text x="64.0" y="171.9" font-size="13" fill="#0f766e" text-anchor="middle" font-weight="bold" >39.5%</text><text x="64.0" y="242.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY2012*</text><circle cx="232.0" cy="102.0" r="5" fill="#0f766e" stroke="#ffffff" stroke-width="2"/><text x="232.0" y="90.0" font-size="13" fill="#0f766e" text-anchor="middle" font-weight="bold" >58.9%</text><text x="232.0" y="242.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY2021*</text><circle cx="400.0" cy="69.5" r="5" fill="#0f766e" stroke="#ffffff" stroke-width="2"/><text x="400.0" y="57.5" font-size="13" fill="#0f766e" text-anchor="middle" font-weight="bold" >66.6%</text><text x="400.0" y="242.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY2026</text><line x1="64.0" y1="224.0" x2="400.0" y2="224.0" stroke="#64748b" stroke-width="1.2"  /><text x="64.0" y="16.0" font-size="12" fill="#475569" text-anchor="start" font-weight="normal" >해외 매출 비중</text></svg></div><figcaption><b>그림 4. 해외 매출 비중의 구조 전환</b> — *FY2012·FY2021은 the社史 정리 수치 기준으로 산출(각 39.5%, 58.9%), FY2026은 공시(66.6%). 회계연도 표기 관행 차이가 있을 수 있어 추세 참고용. | 출처: the社史, 연차보고서</figcaption></figure>
+</div>
+
+<div class="insight"><span class="kt">§3의 분석적 함의 — 4Q 가속의 해석이 밸류에이션의 갈림길</span>
+분기 궤적(+5.6 → +10.2 → +7.5 → +17.9%)은 두 가지로 읽을 수 있다. 강세 해석: AI·반도체 설비투자 사이클의 초입에서 수요가 구조적으로 올라오는 신호(피어 확인: Cognex 26.1Q +24%, 화낙 중국 수주 급증 — §7). 약세 해석: 설비투자 사이클의 국지적 정점 — 키엔스는 리먼기 매출 −16%, FY20 −6%를 겪은 경기민감주이며, 4Q 서프라이즈가 기저효과·수요 선반영일 가능성. 어느 쪽이 맞는지는 7월 28일 1분기 성장률이 첫 판정 자료가 된다. §10의 CAP 계산이 보여주듯, 이 판정은 '해석 차이' 수준이 아니라 주당 수만 엔의 가치 차이로 직결된다.</div>
+</section>
+<!-- ================= 4. 제품·기술 ================= -->
+<section class="sec" id="s4">
+<h2 class="st"><span class="no">4</span>제품·기술 — R&D 2.8%로 '세계 최초 70%'를 만드는 방법</h2>
+<p class="stsub">사업부·제품군 · 제판일체 개발 · 공급망 차단 설계 · CADENAS</p>
+
+<h3>사업부·제품군 지도</h3>
+<p>키엔스는 공장의 '눈·손·기록'에 해당하는 계측·검출·표시 장비를 9개 사업부 체제로 공급한다(위키피디아 기준 분류; 회사는 단일 세그먼트로 제품별 매출을 공시하지 않으며, 센서가 최대라는 외부 추정은 검증된 공식 수치가 아니다 <span class="b bm">비공시·추정</span>).</p>
+<div class="tablewrap"><table class="tbl">
+<tr><th style="width:150px">사업부</th><th>대표 제품</th><th>기술·전략 포인트</th></tr>
+<tr><td><b>센서</b></td><td>광전·파이버·레이저·근접·변위 센서, 클램프온 유량센서(배관 외부 측정, 세계 최초)</td><td>FA의 '눈'. 최다 매출로 추정(비공시)</td></tr>
+<tr><td><b>화상(비전)시스템</b></td><td>CV-X 화상처리, XT 3D 카메라(944만 화소), VS-G(AI+비전스토리지, 처리속도 종전비 13배)</td><td>AI 검사 자동 튜닝, LumiTrax·멀티스펙트럼 조명</td></tr>
+<tr><td><b>응용(앱리)센서</b></td><td>AI 화상판별센서 IV3/IV4 — 학습 서치·카운트·OCR, 최속 250개/초</td><td>위치결정 불요 AI, 비전문가도 1분 설치</td></tr>
+<tr><td><b>제어시스템</b></td><td>PLC(KV 시리즈, 차세대 신제품: 초고속+오픈 접속+머신 오퍼레이션 레코더), 서보, HMI</td><td>나카노 신임 사장의 출신 사업부</td></tr>
+<tr><td><b>정밀측정</b></td><td>레이저 변위계, 화상치수측정기 IM("놓고 누르면" 측정), 3D 스캐너</td><td>비숙련자도 동일 결과 — '측정의 민주화'</td></tr>
+<tr><td><b>마이크로스코프</b></td><td>VHX 디지털 마이크로스코프(R&D100 Award 2010·2020), 올인원 형광현미경(신제품), SEM</td><td>공장을 넘어 연구·개발 시장 진출</td></tr>
+<tr><td><b>메트롤로지</b></td><td>3차원측정기, 형상측정, 조도계</td><td></td></tr>
+<tr><td><b>자동인식</b></td><td>바코드리더, 핸디터미널</td><td>물류·리테일로 고객 확장</td></tr>
+<tr><td><b>마킹</b></td><td>레이저마커 MD, 산업 잉크젯</td><td>반도체·배터리 각인 수요</td></tr>
+<tr><td>(기타)</td><td>3D프린터(GX), 데이터로거, 정전기 대책, RPA·데이터분석 SW</td><td>소프트웨어 확장 축</td></tr>
+</table></div>
+<p class="small">FY2026 신제품(연차보고서 명시): 차세대 PLC, 올인원 형광현미경, 제조현장용 고강도 수지 3D프린터, 그리고 <b>리니어 실린더 센서 &amp; 스마트 밸브</b>(공압기기 가시화) — 마지막 항목은 공압 세계 1위 SMC의 영역에 들어가는 침투 신호로 읽힌다(§7).</p>
+
+<h3>제판일체(製販一体) 개발 — 왜 R&D 2.8%로 충분한가</h3>
+<p>키엔스의 개발은 '연구소에서 신기술을 발명'하는 모델이 아니다. 기획자·엔지니어·디자이너가 영업과 함께 고객 공장에 직접 들어가 과제를 추출하고, <b>다음날 조작 가능한 프로토타입</b>을 만들어 재방문하는 초고속 반복이 기본이다. 개발 프로젝트는 수 명~십수 명의 소수 정예. '세계 최초 70%'의 실체도 특허적 신기술보다 <b>타 분야 기술의 전용·재조합</b>이다 — 예컨대 자동차 드라이브레코더 개념을 PLC에 최초 탑재해 설비 정지 전후 데이터를 자동 기록하게 한 것. 기준은 "최신 기술"이 아니라 "고객 제공가치 최대화"이며, 니즈카드로 수요가 검증된 과제만 개발하므로 실패율이 구조적으로 낮다. 매출 대비 R&D 2.8%라는 숫자가 '기술 투자를 안 한다'가 아니라 <b>'수요 검증이 끝난 것만 개발한다'</b>는 의미인 이유다. 포브스 "세계에서 가장 혁신적인 기업 100"에 8년 연속 선정된 이력이 이 효율의 방증이다.</p>
+
+<h3>공급망 차단 설계 — 팹리스인데 어떻게 베끼지 못하게 하나</h3>
+<p>자사 공장이 없는 회사의 고전적 약점은 '협력사가 배워서 경쟁자가 되는 것'이다. 키엔스는 이를 공정 분리로 차단한다(모닝스타 2026.4 분석):</p>
+<div class="flow">
+  <div class="fnode hot"><div class="ft">키엔스</div><div class="fd">원자재 <b>일괄 구매</b>(대량 구매로 원가 협상력 확보)</div></div>
+  <div class="farr">➜</div>
+  <div class="fnode"><div class="ft">부품 협력사</div><div class="fd">지급받은 원자재로 부품 가공 → 완성 부품을 키엔스에 반납</div></div>
+  <div class="farr">➜</div>
+  <div class="fnode hot"><div class="ft">키엔스 (회수·재배분)</div><div class="fd">부품을 회수해 조립사에 전달 — <b>조립사는 부품 공급사를 모른다</b></div></div>
+  <div class="farr">➜</div>
+  <div class="fnode"><div class="ft">조립 협력사</div><div class="fd">완성품 조립 (전체 설계·부품 출처 파악 불가)</div></div>
+  <div class="farr">➜</div>
+  <div class="fnode hot"><div class="ft">키엔스 물류</div><div class="fd">전 기종 계획생산 재고 → 세계 <b>당일 출하</b>(해외는 항공편)</div></div>
+</div>
+<p>어느 협력사도 전체 생산 공정을 파악할 수 없으므로 '협력사의 경쟁자화'가 원천 봉쇄되고, 품질은 키엔스 품질관리 부서가 협력공장과 직결로 관리한다(ISO 체계). 부산물로 라인 재편 비용 없이 기획을 유연하게 바꿀 수 있고, 유형자산이 총자산의 2.6%에 그쳐 ROIC가 극대화된다(§9). 단, 당일출하의 해외 배송이 항공편에 의존해 2025~26년 항공운임 상승이 2026년 4월 국내 가격 인상의 배경 중 하나가 됐다는 점(골드만 코멘트)은 이 모델의 비용 민감점이다.</p>
+
+<h3>CADENAS 인수 — 하드웨어 매절 모델의 첫 확장</h3>
+<p>2025년 5월 20일 완료된 독일 CADENAS 인수는 창사 첫 본격 M&A다. 1992년 설립된 아우크스부르크 기업으로 3D CAD 부품 라이브러리·디지털 트윈·전자 카탈로그 플랫폼(PARTsolutions, 3Dfindit 등)을 운영하며 사용자 약 1,000만 명, 17거점 380명 규모. 거래액은 비공시이나 약 €2억 직전, EV/EBITDA 약 21배로 전해진다 <span class="b bm">중간 — 비공식 소스</span>. 의미는 두 겹이다: ① 하드웨어 매절 → 엔지니어링 '디지털 인프라'로의 확장 개시(리커링 매출 부재라는 약점에 대한 첫 응답), ② <b>"¥3조 현금을 쓰라"는 시장 압박에 대한 첫 행동</b> — §14 자본배분 연대기의 출발점이다.</p>
+</section>
+
+<!-- ================= 5. 산업 분석 ================= -->
+<section class="sec" id="s5">
+<h2 class="st"><span class="no">5</span>산업 분석 — FA·머신비전, '피지컬 AI'의 감각기관</h2>
+<p class="stsub">시장 규모(출처별 범위) · 구조적 수요 동인 · 가치사슬 내 위치</p>
+
+<h3>시장 규모 — 출처별 편차가 크므로 범위로 본다</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th>시장 정의</th><th class="n">규모 → 전망</th><th class="n">CAGR</th><th>출처</th></tr>
+<tr><td>글로벌 머신비전 (협의)</td><td class="n">$158.3억(2025) → $236.3억(2030)</td><td class="n">8.3%</td><td>MarketsandMarkets</td></tr>
+<tr><td>글로벌 머신비전 (광의)</td><td class="n">$203.8억(2024) → $417.4억(2030)</td><td class="n">13.0%</td><td>Grand View Research</td></tr>
+<tr><td>FA + 머신비전 통합</td><td class="n">$784억(2025) → $1,689억(2034)</td><td class="n">8.9%</td><td>Dataintelo</td></tr>
+<tr><td>└ 그중 머신비전 시스템</td><td class="n">$182억(2025) → $510억(2034)</td><td class="n">10.8%</td><td>Dataintelo</td></tr>
+<tr><td>지역별 (머신비전)</td><td class="n" colspan="2">APAC $58.5억→$98.1억(9.2%) · 북미 $41.3억→$66.6억(8.5%) · 유럽 $36.1억→$54.3억(7.3%)</td><td>MarketsandMarkets</td></tr>
+</table></div>
+<p>키엔스의 FY26 매출(약 $73억 상당)은 협의 머신비전 시장($158억)의 절반에 육박하는 규모인데, 이는 회사가 비전만이 아니라 <b>FA 계측·검출 전반</b>에 걸쳐 있기 때문이다 — 시장 정의에 따라 점유율 해석이 크게 달라지므로 단일 점유율 숫자는 제시하지 않는다. MarketsandMarkets 경쟁 매트릭스는 키엔스를 광범위 포트폴리오·글로벌 직판·재무력을 근거로 "Star" 등급으로 분류하며, 주요 플레이어로 Cognex, KEYENCE, Teledyne, Basler, Omron을 꼽는다.</p>
+
+<h3>구조적 수요 동인 — 사이클 위에 올라탄 네 개의 조류</h3>
+<ol class="ls">
+<li><b>노동력 부족과 임금 상승</b>: ILO 추산 2030년까지 전 세계 숙련 제조인력 8,500만 명 부족. 미국 제조업 시급은 2021~25년 +18.3%, 중국 연안부는 2019년 이후 연 +12~15% 상승 — 자동화의 '인건비 대체 ROI'가 구조적으로 개선되는 중이다. 키엔스의 가치 가격 모델은 인건비가 오를수록 판가 논리가 강해진다.</li>
+<li><b>AI·반도체 설비투자</b>: FY26 실적 상회 요인으로 SMBC닛코가 "AI 관련 투자 수요 포착"을 명시했고, 중국은 AI·반도체를 국책 지원 중. 화낙 4Q 중국 FA 수주 +36.9%(QoQ), Cognex 2026.1Q 매출 +24% 등 업종 전반에서 사이클 상승이 교차 확인된다 — "FA = 피지컬 AI의 인프라" 내러티브의 실체.</li>
+<li><b>EV·배터리</b>: 2030년 글로벌 EV 3,000만 대 전망, 배터리 제조 자동화 투자 $1,200억 추산. 셀 마이크로크랙·코팅 결함 검출에 비전이 필수 <span class="b bm">중간</span>. 단, Cognex가 2024년 EV·배터리 수요 급감을 겪었듯 이 축은 변동성이 크다.</li>
+<li><b>AI 비전의 기술 변곡점</b>: 엣지 컴퓨팅+트랜스포머 CV로 실시간 고처리량 검사가 2025년 상업화 인플렉션에 도달(Dataintelo). 로봇 출하는 2024년 59만 대 → 2030년 90만 대+ 전망이고, 키엔스가 강한 스마트카메라가 최고 성장 세그먼트다. 정책 측면에선 Made in China 2025, Make in India, 일본의 ¥370조 전략투자 계획(2026.6 발표) 등이 받침대.</li>
+</ol>
+
+<h3>가치사슬 내 위치 — 스마일 커브의 양끝만 갖는다</h3>
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><path d="M70.0,104.6 C226.0,197.5 343.0,213.7 460.0,209.6 C577.0,213.7 713.5,193.5 850.0,96.5" fill="none" stroke="#64748b" stroke-width="2.6"/><circle cx="70.0" cy="104.6" r="7" fill="#c8102e" stroke="#fff" stroke-width="2"/><text x="70.0" y="268.0" font-size="12.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >상품 기획·R&D</text><text x="70.0" y="286.0" font-size="11" fill="#c8102e" text-anchor="middle" font-weight="normal" >키엔스 내재화</text><circle cx="265.0" cy="177.3" r="7" fill="#64748b" stroke="#fff" stroke-width="2"/><text x="265.0" y="268.0" font-size="12.5" fill="#64748b" text-anchor="middle" font-weight="bold" >핵심 부품</text><text x="265.0" y="286.0" font-size="11" fill="#64748b" text-anchor="middle" font-weight="normal" >협력사 외주</text><circle cx="460.0" cy="209.6" r="7" fill="#64748b" stroke="#fff" stroke-width="2"/><text x="460.0" y="268.0" font-size="12.5" fill="#64748b" text-anchor="middle" font-weight="bold" >제조·조립</text><text x="460.0" y="286.0" font-size="11" fill="#64748b" text-anchor="middle" font-weight="normal" >협력사 외주</text><circle cx="655.0" cy="169.2" r="7" fill="#c8102e" stroke="#fff" stroke-width="2"/><text x="655.0" y="268.0" font-size="12.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >물류·재고</text><text x="655.0" y="286.0" font-size="11" fill="#c8102e" text-anchor="middle" font-weight="normal" >키엔스 내재화</text><circle cx="850.0" cy="96.5" r="7" fill="#c8102e" stroke="#fff" stroke-width="2"/><text x="850.0" y="268.0" font-size="12.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >직판·컨설팅 영업</text><text x="850.0" y="286.0" font-size="11" fill="#c8102e" text-anchor="middle" font-weight="normal" >키엔스 내재화</text><rect x="10.0" y="58.3" width="150.0" height="22.0" fill="#c8102e15" rx="11" /><text x="85.0" y="73.3" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >80% 룰 · 니즈카드</text><rect x="754.0" y="54.2" width="170.0" height="22.0" fill="#c8102e15" rx="11" /><text x="839.0" y="69.2" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >46개국 250거점 직판</text><text x="460.0" y="227.8" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >팹리스 · 공급망 분리 통제</text><text x="16.0" y="24.0" font-size="11" fill="#475569" text-anchor="start" font-weight="normal" ></text><text x="70.0" y="20.0" font-size="12.5" fill="#475569" text-anchor="start" font-weight="normal" >부가가치 (스마일 커브) — 키엔스는 곡선의 양끝을 내재화</text></svg></div><figcaption><b>그림 5. 가치사슬 스마일 커브와 키엔스의 포지션</b> — 부가가치가 높은 양끝(기획·R&D와 고객 접점)만 내재화하고 중간(제조)을 외부화. 곡선 높이는 개념도이며 실측치가 아님. | 출처: 데이터 문서 §4.3 구조를 도식화</figcaption></figure>
+<p>경쟁 지형은 카테고리별로 다르다 — 센서(오무론, SICK, 파나소닉인더스트리 등), 머신비전(Cognex, Basler, Teledyne), 계측(미쓰토요, 자이스), PLC(미쓰비시전기, 지멘스), 마킹(트럼프), 바코드(Zebra). 흥미로운 점은 키엔스가 <b>어느 단일 카테고리에서도 '기술 스펙 최강'이라기보다, 사용 편의성+제안영업+당일출하의 총합으로 이긴다</b>는 것이다(positen 분석). 이는 산업 분석의 결론을 하나로 모은다: 이 회사의 경쟁 단위는 '제품'이 아니라 '시스템'이며, 따라서 §6의 해자 평가도 제품 스펙이 아닌 시스템 재현 난이도를 물어야 한다. 마지막으로, 경기 민감성은 실재한다 — 리먼기 매출 −16.1%(FY10/3), 미중 마찰기 −6%(FY20/3)의 전례가 있고, 광범위한 산업·지역 분산과 소모성 수요가 완충재 역할을 할 뿐 사이클을 없애 주지는 않는다.</p>
+</section>
+<!-- ================= 6. 경쟁 우위 ================= -->
+<section class="sec" id="s6">
+<h2 class="st"><span class="no">6</span>경쟁 우위 분석 — 프레임워크 기준으로 '차별화 해자'를 판정한다</h2>
+<p class="stsub">차별화 vs 원가우위 판별 · 포터 5 Forces · 해자의 원천 분해와 반론</p>
+
+<h3>1단계: 정량 판별 — NOPAT 마진이 산업 평균의 몇 배인가</h3>
+<p>모부신 프레임워크는 해자의 '유형'을 정량으로 먼저 가른다: <b>NOPAT 마진이 산업 평균의 2배 이상이면 차별화 전략, 투하자본 회전율이 1.5배 이상이면 원가 우위</b>. 실증적으로 10년간 ROIC 상위 20%를 유지한 기업들의 중앙 NOPAT 마진은 평균의 2.8배였다. 키엔스의 세후 영업이익률(NOPAT 마진)은 약 35.7%로, 일본 FA 피어의 세전 OPM(화낙 21.4%, SMC 22.6%, 오무론 7.8% — §7)과 비교해도 <b>세후 기준으로 산업 평균의 3배를 넘는다</b> — 기준을 여유 있게 충족하는 명백한 차별화형이다. 게다가 팹리스로 투하자본 회전율까지 극단적으로 높아(영업 IC ¥4,450억으로 매출 ¥1.17조 창출 — 회전율 2.6회), 차별화와 자본 효율을 동시에 갖춘 드문 사례다. 프레임워크의 언어로 말하면, 키엔스는 '10년 상위 20% ROIC 유지 기업'의 전형적 프로필을 이미 20년 이상 실연해 왔다.</p>
+
+<h3>2단계: 포터 5 Forces</h3>
+<div class="forces">
+  <div class="fo"><h5>신규 진입 위협 <span class="lvl lv-low">낮음</span></h5>제품 하나는 만들 수 있어도 40만 고객 접점·니즈카드 DB·전 기종 당일출하 재고망·46개국 직판 조직을 동시에 구축해야 함. 진입장벽은 자본이 아니라 <b>시간과 조직</b>.</div>
+  <div class="fo"><h5>대체재 위협 <span class="lvl lv-mid">중간 (구조 변화 감시)</span></h5>저가 카메라+오픈소스 AI 모델의 범용화가 '전문 컨설팅 영업'의 부가가치를 잠식할 가능성. 반론: 키엔스는 AI를 자사 제품(IV3/IV4, VS-G)에 내재화해 오히려 판가를 올리는 중. §12 ⑥에서 별도 판정.</div>
+  <div class="fo"><h5>구매자 교섭력 <span class="lvl lv-low">낮음</span></h5>약 40만 고객 분산, 10% 이상 단일 고객 없음. 장비 가격 대비 '라인 정지 비용'이 압도적으로 커 가격 민감도가 낮고, ROI 기준 가치 가격이 통함(관세 15%도 가격 전가).</div>
+  <div class="fo center"><h5>키엔스</h5>OPM 51.0%<br>GM 83.0%<br>영업 ROIC ≈94%<br><span style="font-size:12px; color:#b9cde0">종합: 5개 힘 모두에서 우위 구조</span></div>
+  <div class="fo"><h5>공급자 교섭력 <span class="lvl lv-low">낮음</span></h5>원자재 일괄구매 + 부품/조립 공정 분리(§4)로 어떤 협력사도 전체 공정을 모름. 협력사의 경쟁자화·교섭력 축적이 설계 단계에서 차단됨.</div>
+  <div class="fo"><h5>기존 경쟁 강도 <span class="lvl lv-mid">중간</span></h5>카테고리별 강자(오무론, Cognex, SICK, 미쓰비시전기 등)가 존재하나, '총합 시스템'으로 경쟁하는 회사는 사실상 부재 — 마진 격차 2~7배가 20년 이상 유지된 것이 그 증거(§7).</div>
+</div>
+
+<h3>3단계: 해자의 원천 분해 — 무엇이 진짜 자산인가</h3>
+<ul class="ls">
+<li><b>영업 정보 자산(무형)</b>: 니즈카드로 축적된 '고객도 모르는 니즈' 데이터베이스와 40만 고객 접점. 재무제표에 잡히지 않는 이 자산이 세계최초 70%의 원료다.</li>
+<li><b>물류·재고 시스템</b>: 전 기종 계획생산+당일출하 — 고객이 자체 재고를 안 가져도 되게 만들어 전환비용을 높인다.</li>
+<li><b>인재 시스템</b>: 타임차지(시간당 부가가치 관리)·완전 매뉴얼화된 영업 프로세스·이익 연동 보수(평균연봉 ¥2,279만, FY22 — 일본 상장사 1위권). 신졸 채용 중심으로 문화를 이식해 개인기가 아닌 시스템으로 재생산.</li>
+<li><b>규율 자산</b>: 80% 룰과 '흑자 사업도 판다'는 철수 규율 — 마진을 갉아먹는 사업이 포트폴리오에 들어오는 것 자체를 막는다.</li>
+</ul>
+
+<div class="warn"><span class="kt">반론의 강한 복원(steel-man) — "이것은 기술 해자가 아니다"</span>
+회의론의 가장 강한 형태는 이렇다: "키엔스의 해자는 특허·기술이 아니라 영업 조직과 프로세스다. 사람에 얹힌 해자는 ① 인재 유출(유가증권보고서 리스크 항목에 명시)과 ② AI가 영업·컨설팅 기능 자체를 범용화하는 시대에 물리적 특허보다 취약할 수 있다. 실제로 R&D 2.8%는 기술 축적의 얕음을 시사하며, 저가 하드웨어+오픈소스 AI 조합이 '충분히 좋은' 검사를 제공하면 가치 가격의 근거가 무너진다." — 이 논리는 내적으로 타당(valid)하다. 다만 전제의 사실성(soundness)에서, 20년 이상 마진 격차가 좁혀지지 않았다는 관측과 회사가 AI를 방어가 아닌 판가 인상 수단으로 흡수해 온 실적(IV 시리즈, VS-G 등)이 반대 증거로 존재한다. 결론적으로 '해자 소멸'은 현재 데이터로는 기각되지만, <b>해외 인당 생산성과 AI 범용화 속도는 §15 체크포인트에서 상시 감시할 1급 변수</b>다.</div>
+</section>
+
+<!-- ================= 7. 피어 비교 ================= -->
+<section class="sec" id="s7">
+<h2 class="st"><span class="no">7</span>피어 비교 — 20년 넘게 좁혀지지 않은 마진 격차</h2>
+<p class="stsub">일본 FA 4사 + Cognex · 밸류에이션 비교 · '페이드 미관측'의 의미</p>
+
+<div class="tablewrap"><table class="tbl">
+<tr><th>회사</th><th class="n">매출</th><th class="n">영업이익</th><th class="n">OPM</th><th class="n">순이익</th><th>특징</th></tr>
+<tr class="hlrow"><td><b>키엔스 (6861)</b></td><td class="n">¥11,693억</td><td class="n">¥5,958억</td><td class="n">51.0%</td><td class="n">¥4,452억</td><td>팹리스·무차입·순금융자산 ¥3.0조. ROE 13.5%</td></tr>
+<tr><td>화낙 (6954)</td><td class="n">¥8,578억 (+7.6%)</td><td class="n">¥1,838억</td><td class="n">21.4%</td><td class="n">¥1,665억</td><td>CNC 세계 점유 50%+. 배당성향 60%+자사주 ¥500억·1,300만주 소각 — 환원의 벤치마크. 예상 PER ~35배(26.4)</td></tr>
+<tr><td>SMC (6273)</td><td class="n">¥8,425억 (+6.4%)</td><td class="n">¥1,905억</td><td class="n">22.6%</td><td class="n">¥1,673억</td><td>공압기기 세계 1위. Capex ¥1,502억(+39%) — 자산 무거움(키엔스와 대조). 배당 ¥1,000(성향 37.9%)</td></tr>
+<tr><td>오무론 (6645)</td><td class="n">¥7,674억 (+7.3%)</td><td class="n">¥599억</td><td class="n">7.8%</td><td class="n">¥285억</td><td>IAB가 생성AI 수요 포착, 구조조정 후 회복 중. ROIC 3.0%</td></tr>
+<tr><td>Cognex (CGNX, CY25)</td><td class="n">~$10.0억 (+9%)</td><td class="n">–</td><td class="n">16.3%</td><td class="n">조정 EPS +38%</td><td>머신비전 순수기업. <b>2026.1Q 매출 +24%</b>, GM 71.1% — 업황 급회복 신호. OneVision 클라우드 AI 플랫폼 출시</td></tr>
+</table></div>
+
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="76.0" y1="356.0" x2="850.0" y2="356.0" stroke="#eef2f7" stroke-width="1"  /><text x="68.0" y="360.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >0%</text><line x1="76.0" y1="302.3" x2="850.0" y2="302.3" stroke="#eef2f7" stroke-width="1"  /><text x="68.0" y="306.3" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >10%</text><line x1="76.0" y1="248.7" x2="850.0" y2="248.7" stroke="#eef2f7" stroke-width="1"  /><text x="68.0" y="252.7" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >20%</text><line x1="76.0" y1="195.0" x2="850.0" y2="195.0" stroke="#eef2f7" stroke-width="1"  /><text x="68.0" y="199.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >30%</text><line x1="76.0" y1="141.3" x2="850.0" y2="141.3" stroke="#eef2f7" stroke-width="1"  /><text x="68.0" y="145.3" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >40%</text><line x1="76.0" y1="87.7" x2="850.0" y2="87.7" stroke="#eef2f7" stroke-width="1"  /><text x="68.0" y="91.7" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >50%</text><line x1="76.0" y1="34.0" x2="850.0" y2="34.0" stroke="#eef2f7" stroke-width="1"  /><text x="68.0" y="38.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >60%</text><line x1="76.0" y1="356.0" x2="76.0" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="76.0" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >0</text><line x1="195.1" y1="356.0" x2="195.1" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="195.1" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2,000</text><line x1="314.2" y1="356.0" x2="314.2" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="314.2" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >4,000</text><line x1="433.2" y1="356.0" x2="433.2" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="433.2" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >6,000</text><line x1="552.3" y1="356.0" x2="552.3" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="552.3" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >8,000</text><line x1="671.4" y1="356.0" x2="671.4" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="671.4" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >10,000</text><line x1="790.5" y1="356.0" x2="790.5" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="790.5" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >12,000</text><text x="463.0" y="398.0" font-size="12" fill="#475569" text-anchor="middle" font-weight="normal" >매출 (¥억, FY26/3월기 · Cognex는 CY2025 ¥160 환산 [중간])</text><line x1="76.0" y1="356.0" x2="850.0" y2="356.0" stroke="#64748b" stroke-width="1.2"  /><circle cx="772.2" cy="82.3" r="60.20670394565708" fill="#c8102e2e" stroke="#c8102e" stroke-width="2"/><line x1="772.2" y1="78.3" x2="772.2" y2="74.9" stroke="#c8102e" stroke-width="1"  /><text x="772.2" y="72.3" font-size="13" fill="#c8102e" text-anchor="middle" font-weight="bold" >키엔스</text><text x="772.2" y="88.3" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="normal" >OPM 51.0%</text><circle cx="586.7" cy="241.2" r="33.44008373195259" fill="#16324f2e" stroke="#16324f" stroke-width="2"/><line x1="602.8" y1="224.2" x2="629.0" y2="209.9" stroke="#16324f" stroke-width="1"  /><text x="632.7" y="205.2" font-size="13" fill="#16324f" text-anchor="start" font-weight="bold" >화낙</text><text x="632.7" y="221.2" font-size="11.5" fill="#16324f" text-anchor="start" font-weight="normal" >OPM 21.4%</text><circle cx="577.6" cy="234.7" r="34.044118434760506" fill="#0f766e2e" stroke="#0f766e" stroke-width="2"/><line x1="561.5" y1="234.7" x2="535.3" y2="234.7" stroke="#0f766e" stroke-width="1"  /><text x="531.6" y="232.7" font-size="13" fill="#0f766e" text-anchor="end" font-weight="bold" >SMC</text><text x="531.6" y="248.7" font-size="11.5" fill="#0f766e" text-anchor="end" font-weight="normal" >OPM 22.6%</text><circle cx="532.9" cy="314.1" r="19.09009167081185" fill="#64748b2e" stroke="#64748b" stroke-width="2"/><line x1="543.4" y1="314.1" x2="560.5" y2="314.1" stroke="#64748b" stroke-width="1"  /><text x="562.9" y="312.1" font-size="13" fill="#64748b" text-anchor="start" font-weight="bold" >오무론</text><text x="562.9" y="328.1" font-size="11.5" fill="#64748b" text-anchor="start" font-weight="normal" >OPM 7.8%</text><circle cx="171.3" cy="268.5" r="12.601285648694738" fill="#2563eb2e" stroke="#2563eb" stroke-width="2"/><line x1="171.3" y1="253.5" x2="171.3" y2="240.9" stroke="#2563eb" stroke-width="1"  /><text x="171.3" y="236.5" font-size="13" fill="#2563eb" text-anchor="middle" font-weight="bold" >Cognex*</text><text x="171.3" y="252.5" font-size="11.5" fill="#2563eb" text-anchor="middle" font-weight="normal" >OPM 16.3%</text><text x="772.2" y="104.3" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >영업이익 ¥5,958억</text><text x="76.0" y="16.0" font-size="12" fill="#475569" text-anchor="start" font-weight="normal" >세로: 영업이익률 · 원 크기: 영업이익 규모</text></svg></div><figcaption><b>그림 6. 피어 포지셔닝</b> — 가로: 매출, 세로: 영업이익률, 원 크기: 영업이익. 키엔스는 매출 최대이면서 마진이 화낙·SMC의 2.3배, 오무론의 6.5배. *Cognex는 CY2025 실적을 USD/JPY 160으로 환산한 참고치 <span class="b bm">중간</span>. | 출처: 각사 결산(FY26/3월기·CY2025)</figcaption></figure>
+
+<h3>밸류에이션 비교 — '현금 조정'을 하면 그림이 달라진다</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th>지표</th><th class="n">키엔스</th><th>비교 기준</th></tr>
+<tr><td>실적 PER / 예상 PER</td><td class="n">43.7배 / 40.4배</td><td>화낙 예상 ~35.1배 · 일본 기계업 평균 14.6배 · 닛케이 시장 ~20배 대비 약 2배 멀티플</td></tr>
+<tr><td>PBR / 배당수익률</td><td class="n">5.6배 / 0.7%</td><td>자기자본비율 94.6%의 초우량 B/S가 PBR 해석을 왜곡(자본의 대부분이 현금)</td></tr>
+<tr class="hlrow"><td>(시총 − 순금융자산) / 영업이익</td><td class="n"><b>27.7배</b></td><td>(19.5조 − 3.0조) ÷ 0.596조 — 현금을 제외한 '영업의 값'은 헤드라인 PER보다 크게 낮음</td></tr>
+</table></div>
+
+<div class="insight"><span class="kt">피어 비교의 결론 — 이 표가 CAP 분석의 실증 기반이다</span>
+프레임워크의 핵심 경험칙은 "초과수익은 평균으로 회귀한다(페이드)"이며, 섹터 평균 페이드 비율은 0.20이다. 그런데 키엔스와 피어의 마진 격차 2~7배는 <b>20년 이상 좁혀지지 않았다</b> — 통계적 평균회귀가 사실상 관측되지 않은 이례적 사례다. 이것이 §10에서 페이드 비율 f를 섹터 표준(기술 하드웨어·장비 0.17)으로 두되 강세 시나리오에서 0.10(강한 해자)까지 허용하는 실증적 근거다. 동시에 주의점: 과거 20년의 미회귀가 미래 20년의 미회귀를 보장하지는 않는다(귀납의 한계) — 그래서 결론은 'f를 낮게 확신'이 아니라 '민감도로 다룬다'이다. 흥미롭게도 §10에서 확인되듯, 이 종목의 가격을 좌우하는 것은 f가 아니라 성장률과 할인율이다.</div>
+</section>
+<!-- ================= 8. 시장 내러티브 ================= -->
+<section class="sec" id="s8">
+<h2 class="st"><span class="no">8</span>시장 내러티브 — "완벽하지만 지루한 주식"이 스톱고를 기록하기까지</h2>
+<p class="stsub">주가 궤적과 13개 이벤트 · 눌림의 3요인 · 리레이팅 3연타 · 컨센서스(상충 공시 포함)</p>
+
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 470" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="78.0" y1="339.5" x2="916.0" y2="339.5" stroke="#eef2f7" stroke-width="1"  /><text x="70.0" y="343.5" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >50,000</text><line x1="78.0" y1="298.2" x2="916.0" y2="298.2" stroke="#eef2f7" stroke-width="1"  /><text x="70.0" y="302.2" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >55,000</text><line x1="78.0" y1="257.0" x2="916.0" y2="257.0" stroke="#eef2f7" stroke-width="1"  /><text x="70.0" y="261.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >60,000</text><line x1="78.0" y1="215.8" x2="916.0" y2="215.8" stroke="#eef2f7" stroke-width="1"  /><text x="70.0" y="219.8" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >65,000</text><line x1="78.0" y1="174.5" x2="916.0" y2="174.5" stroke="#eef2f7" stroke-width="1"  /><text x="70.0" y="178.5" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >70,000</text><line x1="78.0" y1="133.2" x2="916.0" y2="133.2" stroke="#eef2f7" stroke-width="1"  /><text x="70.0" y="137.2" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >75,000</text><line x1="78.0" y1="92.0" x2="916.0" y2="92.0" stroke="#eef2f7" stroke-width="1"  /><text x="70.0" y="96.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >80,000</text><line x1="78.0" y1="50.8" x2="916.0" y2="50.8" stroke="#eef2f7" stroke-width="1"  /><text x="70.0" y="54.8" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >85,000</text><line x1="107.5" y1="356.0" x2="107.5" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="107.5" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >'24.4</text><line x1="193.9" y1="356.0" x2="193.9" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="193.9" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >'24.7</text><line x1="281.3" y1="356.0" x2="281.3" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="281.3" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >'24.10</text><line x1="368.7" y1="356.0" x2="368.7" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="368.7" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >'25.1</text><line x1="454.2" y1="356.0" x2="454.2" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="454.2" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >'25.4</text><line x1="540.7" y1="356.0" x2="540.7" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="540.7" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >'25.7</text><line x1="628.1" y1="356.0" x2="628.1" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="628.1" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >'25.10</text><line x1="715.5" y1="356.0" x2="715.5" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="715.5" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >'26.1</text><line x1="801.0" y1="356.0" x2="801.0" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="801.0" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >'26.4</text><line x1="887.5" y1="356.0" x2="887.5" y2="361.0" stroke="#64748b" stroke-width="1"  /><text x="887.5" y="376.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >'26.7</text><line x1="78.0" y1="356.0" x2="916.0" y2="356.0" stroke="#64748b" stroke-width="1.2"  /><line x1="227.2" y1="26.0" x2="227.2" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="227.2" y1="356.0" x2="227.2" y2="389.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="227.2" cy="400.0" r="11" fill="#ffffff" stroke="#c8102e" stroke-width="2"/><text x="227.2" y="404.0" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >1</text><line x1="455.2" y1="26.0" x2="455.2" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="455.2" y1="356.0" x2="455.2" y2="389.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="455.2" cy="400.0" r="11" fill="#ffffff" stroke="#c8102e" stroke-width="2"/><text x="455.2" y="404.0" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >2</text><line x1="654.7" y1="26.0" x2="654.7" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="654.7" y1="356.0" x2="654.7" y2="389.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="654.7" cy="400.0" r="11" fill="#ffffff" stroke="#15803d" stroke-width="2"/><text x="654.7" y="404.0" font-size="11.5" fill="#15803d" text-anchor="middle" font-weight="bold" >3</text><line x1="703.2" y1="26.0" x2="703.2" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="703.2" y1="356.0" x2="703.2" y2="389.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="703.2" cy="400.0" r="11" fill="#ffffff" stroke="#64748b" stroke-width="2"/><text x="703.2" y="404.0" font-size="11.5" fill="#64748b" text-anchor="middle" font-weight="bold" >4</text><line x1="706.0" y1="26.0" x2="706.0" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="706.0" y1="356.0" x2="706.0" y2="419.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="706.0" cy="430.0" r="11" fill="#ffffff" stroke="#64748b" stroke-width="2"/><text x="706.0" y="434.0" font-size="11.5" fill="#64748b" text-anchor="middle" font-weight="bold" >5</text><line x1="742.1" y1="26.0" x2="742.1" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="742.1" y1="356.0" x2="742.1" y2="389.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="742.1" cy="400.0" r="11" fill="#ffffff" stroke="#64748b" stroke-width="2"/><text x="742.1" y="404.0" font-size="11.5" fill="#64748b" text-anchor="middle" font-weight="bold" >6</text><line x1="779.2" y1="26.0" x2="779.2" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="779.2" y1="356.0" x2="779.2" y2="389.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="779.2" cy="400.0" r="11" fill="#ffffff" stroke="#c8102e" stroke-width="2"/><text x="779.2" y="404.0" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >7</text><line x1="822.9" y1="26.0" x2="822.9" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="822.9" y1="356.0" x2="822.9" y2="389.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="822.9" cy="400.0" r="11" fill="#ffffff" stroke="#15803d" stroke-width="2"/><text x="822.9" y="404.0" font-size="11.5" fill="#15803d" text-anchor="middle" font-weight="bold" >8</text><line x1="825.7" y1="26.0" x2="825.7" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="825.7" y1="356.0" x2="825.7" y2="419.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="825.7" cy="430.0" r="11" fill="#ffffff" stroke="#15803d" stroke-width="2"/><text x="825.7" y="434.0" font-size="11.5" fill="#15803d" text-anchor="middle" font-weight="bold" >9</text><line x1="859.0" y1="26.0" x2="859.0" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="859.0" y1="356.0" x2="859.0" y2="389.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="859.0" cy="400.0" r="11" fill="#ffffff" stroke="#15803d" stroke-width="2"/><text x="859.0" y="404.0" font-size="11.5" fill="#15803d" text-anchor="middle" font-weight="bold" >10</text><line x1="865.6" y1="26.0" x2="865.6" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="865.6" y1="356.0" x2="865.6" y2="419.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="865.6" cy="430.0" r="11" fill="#ffffff" stroke="#c8102e" stroke-width="2"/><text x="865.6" y="434.0" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >11</text><line x1="869.4" y1="26.0" x2="869.4" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="869.4" y1="356.0" x2="885.0" y2="389.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="885.0" cy="400.0" r="11" fill="#ffffff" stroke="#64748b" stroke-width="2"/><text x="885.0" y="404.0" font-size="11.5" fill="#64748b" text-anchor="middle" font-weight="bold" >12</text><line x1="873.2" y1="26.0" x2="873.2" y2="356.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="3,4" /><line x1="873.2" y1="356.0" x2="891.6" y2="419.0" stroke="#c7d4e4" stroke-width="1" stroke-dasharray="2,3" /><circle cx="891.6" cy="430.0" r="11" fill="#ffffff" stroke="#64748b" stroke-width="2"/><text x="891.6" y="434.0" font-size="11.5" fill="#64748b" text-anchor="middle" font-weight="bold" >13</text><polyline points="104.6,178.3 203.4,113.5 453.3,269.5 654.7,240.1 663.3,298.2 689.9,304.3 713.6,284.4 748.8,326.7 767.8,186.0 822.9,231.4 825.7,148.3 859.0,57.6 865.6,182.8 889.4,89.5" fill="none" stroke="#16324f" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="1,0"/><circle cx="104.6" cy="178.3" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><circle cx="203.4" cy="113.5" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><text x="203.4" y="103.5" font-size="12" fill="#16324f" text-anchor="middle" font-weight="bold" >77,400</text><circle cx="453.3" cy="269.5" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><text x="453.3" y="287.5" font-size="12" fill="#16324f" text-anchor="middle" font-weight="bold" >58,480</text><circle cx="654.7" cy="240.1" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><circle cx="663.3" cy="298.2" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><circle cx="689.9" cy="304.3" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><text x="689.9" y="322.3" font-size="12" fill="#16324f" text-anchor="middle" font-weight="bold" >54,270</text><circle cx="713.6" cy="284.4" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><circle cx="748.8" cy="326.7" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><text x="748.8" y="344.7" font-size="12" fill="#16324f" text-anchor="middle" font-weight="bold" >51,550</text><circle cx="767.8" cy="186.0" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><text x="767.8" y="176.0" font-size="12" fill="#16324f" text-anchor="middle" font-weight="bold" >68,610</text><circle cx="822.9" cy="231.4" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><circle cx="825.7" cy="148.3" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><circle cx="859.0" cy="57.6" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><text x="859.0" y="47.6" font-size="12" fill="#16324f" text-anchor="middle" font-weight="bold" >84,170 사상 최고</text><circle cx="865.6" cy="182.8" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><text x="865.6" y="200.8" font-size="12" fill="#16324f" text-anchor="middle" font-weight="bold" >69,000</text><circle cx="889.4" cy="89.5" r="4" fill="#16324f" stroke="#ffffff" stroke-width="1.5"/><text x="883.4" y="77.5" font-size="12" fill="#16324f" text-anchor="end" font-weight="bold" >80,300</text><circle cx="889.4" cy="89.5" r="6" fill="#c8102e" stroke="#ffffff" stroke-width="2"/><text x="78.0" y="16.0" font-size="12" fill="#475569" text-anchor="start" font-weight="normal" >종가(¥) · 확정 앵커 연결선</text></svg><div class="evlegend">
+<div><b class="dn">①</b> 24.8.5 — 닛케이 −12.4% 사상 최대 하락(일은 인상+엔캐리 청산). 키엔스 동반 급락</div>
+<div><b class="dn">②</b> 25.4.2 — 트럼프 상호관세 쇼크(7월 미일 합의로 15% 확정, 8/1 적용)</div>
+<div><b class="up">③</b> 25.10.29 — 2Q 결산 + <b>배당 ¥350→550(+57%)</b> + 나카노 사장 내정 동시 발표 (종가 62,050)</div>
+<div><b class="nt">④</b> 25.12.19 — 일은 정책금리 0.75%로 인상(30년 만의 수준)</div>
+<div><b class="nt">⑤</b> 25.12.22 — 나카노 사장 취임 (44세)</div>
+<div><b class="nt">⑥</b> 26.1.29 — 3Q 결산: 누적 매출 +7.7%, OP +4.9%</div>
+<div><b class="dn">⑦</b> 26.3.9 전후 — 이란 정세 긴박→유가 급등→닛케이 −4,200(역대 3위 하락폭)</div>
+<div><b class="up">⑧</b> 26.4.24 — FY26 결산: 순익 최고 경신, 4Q OP 컨센 +9.5% 상회 + <b>자사주 정관변경 부의</b> + 창업자 퇴임 발표</div>
+<div><b class="up">⑨</b> 26.4.27 — <b>스톱고 장중 73,180 (+16%)</b> — 2024.8 이후 최대 상승폭</div>
+<div><b class="up">⑩</b> 26.5하순~6초 — 사상 최고가 84,170 <span class="b bm">일자 중간</span></div>
+<div><b class="dn">⑪</b> 26.6.8 — 미 고용 서프라이즈→연준 '추가 인상' 관측→AI·반도체 급락 (6월 저가 ~69,000)</div>
+<div><b class="nt">⑫</b> 26.6.12 — 정기주총(정관변경·창업자 퇴임 부의) <span class="b bm">가결 직접 확인 없음</span></div>
+<div><b class="nt">⑬</b> 26.6.16 — 일은 1.00%로 인상 · 6.15 미-이란 60일 정전 발표</div>
+</div>
+</div><figcaption><b>그림 7. 주가와 이벤트 (2024.3~2026.7)</b> — 선은 데이터 문서의 <b>확정 종가 앵커 14개를 직선 연결한 근사 궤적</b>이며 일봉이 아니다(예: ① 직후의 급락 저점, 2026.2.5 저가 51,550 <span class="b bm">일자 중간</span> 등 미확정 구간은 표현되지 않음). | 출처: 데이터 문서 §6.1 가격 앵커·이벤트 타임라인</figcaption></figure>
+
+<h3>1막 (2022~2025): 왜 5년을 눌려 있었나 — 세 가지 무게</h3>
+<p><b>① 성장률의 체감(rate of change)</b>. 매출 ¥1조를 돌파하자 성장률이 FY22 +40%에서 FY24 +4.9%로 급감속했다. 절대 이익이 아니라 '증가 속도'를 사는 성장주 투자자에게 이것은 이탈 신호였고(이즈미다 분석), 주가는 2021년 고점 이후 약 5년 횡보하며 TOPIX 강세장(2023~25)에서 소외됐다 — 시총 순위는 일본 2위에서 15위까지 밀렸다. <b>② 현금 ¥3조의 적체와 인색한 환원</b>. 배당성향 20% 안팎, 자사주 매입 이력 0(정관상 주총 결의가 필요한 이례적 제약 — 미즈호 지적), ROE 2년 연속 하락. 골드만삭스는 한때 "개선 없이는 리레이팅 어렵다"며 목표가를 ¥63,000까지 내렸다. <b>③ 매크로 역풍</b>. 중국 부동산발 설비투자 침체, 미중 마찰, 2024.8 엔고 쇼크, 2025.4 관세. 2025년 10월 29일 시점에도 1년 수익률 −7.4%로 닛케이(+30%대)·화낙 대비 크게 뒤져 있었다.</p>
+
+<h3>2막 (2025.10~2026.6): 리레이팅 트리거 3연타</h3>
+<p><b>① 자본배분 정상화 시퀀스</b> — CADENAS 인수(25.5) → 배당 +57%·성향 30%(25.10) → 이사회 결의 자사주 취득을 가능케 하는 정관변경 부의(26.4). 개별 조치보다 '방향 전환의 연쇄'가 핵심으로, 4월 24일 결산·정관변경 발표 다음 거래일 주가는 +16% 스톱고를 기록했다. 제프리즈는 "누적 매수·장기 포지션 구축을 촉발할 수 있다"고 평가. <b>② AI 설비투자 수혜의 실적 증명</b> — 4Q 매출 +17.9%, SMBC닛코 "AI 관련 투자 수요 포착이 상회 요인". 중국 +18.2%, 미주 +14.3%에 피어 교차 확인(Cognex 1Q +24%, 화낙 중국 수주 급증)까지 겹치며 '피지컬 AI 인프라' 내러티브가 형성됐다. <b>③ 거버넌스 세대교체</b> — 44세 사장, 창업자 완전 퇴진, 지명보수위원회(2023.3 설치)가 일본 밸류업·거버넌스 개혁 흐름과 공명. 여기에 수급 구조도 특이하다: 분할 미실시로 최저 투자금이 ¥630만~800만이라 개인이 배제된 기관·해외 중심 수급이며, TSE가 최저투자단위 10만 엔을 요청 중이라 <b>주식분할 자체가 잠재 촉매</b>로 남아 있다(나카노: "그때그때 이사회에서 논의").</p>
+
+<h3>컨센서스 — 목표가 상향 러시, 그러나 집계 출처 간 상충</h3>
+<p>회사는 "합리적 예상이 곤란하다"(글로벌·전방위 산업 노출)는 이유로 <b>실적 가이던스를 내지 않는 원칙</b>이라, 애널리스트 추정의 분산이 크고 컨센서스 집계도 출처별로 갈린다. FY27(2027/3월기) 컨센서스는 매출 ¥1조 2,761억(+9%), 순이익 ¥4,818억(+8%, QUICK; IBES 평균 ¥4,842억)으로 6년 연속 최고 이익을 예상한다. 목표주가는 결산 전 평균 ¥71,192(26.4.24, QUICK 12명)에서 결산 후 상향 러시(예: 미국계 대형사 ¥75,000→¥82,000, 등급은 중립 유지)를 거쳐 7월 초 평균 ¥85,043(Investing.com)까지 올라왔다.</p>
+<div class="warn"><span class="kt">상충 공시 — 애널리스트 등급 집계가 출처 간 불일치</span>
+Investing.com은 "매수 11 / 매도 0, 평균 목표 ¥85,043"으로 집계하는 반면, TradingView 계열 집계는 "44명, 종합 Hold, 목표 ¥107,360"으로 표시한다 — 모수·시점·산정 방식이 달라 직접 비교가 불가능하다. 본 보고서는 시점이 명확한 <b>QUICK 26.4.24(12명, ¥71,192) → 결산 후 상향</b>을 기준선으로 삼고 양쪽 수치를 병기한다. '컨센서스가 강한 매수 일치'라고 단정할 근거는 없다.</div>
+
+<h3>밸류에이션 밴드 — 지금 PER은 역사상 어디쯤인가</h3>
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 340" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="60.0" y1="251.4" x2="850.0" y2="251.4" stroke="#eef2f7" stroke-width="1"  /><text x="52.0" y="255.4" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >20배</text><line x1="60.0" y1="202.2" x2="850.0" y2="202.2" stroke="#eef2f7" stroke-width="1"  /><text x="52.0" y="206.2" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >30배</text><line x1="60.0" y1="153.0" x2="850.0" y2="153.0" stroke="#eef2f7" stroke-width="1"  /><text x="52.0" y="157.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >40배</text><line x1="60.0" y1="103.8" x2="850.0" y2="103.8" stroke="#eef2f7" stroke-width="1"  /><text x="52.0" y="107.8" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >50배</text><line x1="60.0" y1="54.6" x2="850.0" y2="54.6" stroke="#eef2f7" stroke-width="1"  /><text x="52.0" y="58.6" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >60배</text><line x1="60.0" y1="153.0" x2="850.0" y2="153.0" stroke="#b45309" stroke-width="1.6" stroke-dasharray="6,5" /><text x="850.0" y="145.0" font-size="12" fill="#b45309" text-anchor="end" font-weight="bold" >10년 평균 ≈40배 초반</text><text x="83.2" y="294.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2017</text><text x="160.7" y="294.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2018</text><text x="238.1" y="294.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2019</text><text x="315.6" y="294.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2020</text><text x="393.0" y="294.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2021</text><text x="470.5" y="294.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2022</text><text x="547.9" y="294.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2023</text><text x="625.4" y="294.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2024</text><text x="702.8" y="294.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2025</text><text x="780.3" y="294.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >2026</text><polyline points="83.2,129.4 160.7,167.3 238.1,170.2 315.6,140.2 393.0,45.7 470.5,124.5 547.9,151.5 625.4,125.4 722.2,174.6 776.4,187.4 805.9,158.9 819.0,134.8" fill="none" stroke="#16324f" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" /><circle cx="83.2" cy="129.4" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="160.7" cy="167.3" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="238.1" cy="170.2" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="315.6" cy="140.2" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="393.0" cy="45.7" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="470.5" cy="124.5" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="547.9" cy="151.5" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="625.4" cy="125.4" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="722.2" cy="174.6" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="776.4" cy="187.4" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="805.9" cy="158.9" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><circle cx="819.0" cy="134.8" r="3.6" fill="#16324f" stroke="#ffffff" stroke-width="1.4"/><text x="393.0" y="35.7" font-size="12" fill="#c8102e" text-anchor="middle" font-weight="bold" >61.8배 (2021 정점)</text><text x="776.4" y="207.4" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >33배 (25.12)</text><circle cx="819.0" cy="134.8" r="6" fill="#c8102e" stroke="#ffffff" stroke-width="2"/><text x="819.0" y="122.8" font-size="12.5" fill="#c8102e" text-anchor="end" font-weight="bold" >현재 43.7배</text><line x1="60.0" y1="276.0" x2="850.0" y2="276.0" stroke="#64748b" stroke-width="1.2"  /><text x="60.0" y="16.0" font-size="12" fill="#475569" text-anchor="start" font-weight="normal" >실적 PER (각 시점, 배) · 참고: 2010년 말 22.3배, 2010~26 범위 16.5~61.8배</text></svg></div><figcaption><b>그림 8. 실적 PER 밴드 (각 회계연도 말 기준 + 최근 시점)</b> — 현재 43.7배는 10년 평균(약 40배 초반)의 소폭 상단. 2021년 버블권(61.8배)보다는 한참 아래, 2025년 말 저점(33배)보다는 크게 위. | 출처: IRBANK 밴드 데이터</figcaption></figure>
+<p>정리하면 현재 가격은 "역사적 밴드 내 상단부"다 — 절대 고평가 논쟁은 배수로는 결론이 나지 않는다. 배수는 ROIC·성장·위험·CAP의 혼합물이기 때문이다(프레임워크 함정 1). 그래서 다음 두 섹션에서 배수를 분해해, 가격에 내재된 가정 자체를 꺼내 본다.</p>
+</section>
+<!-- ================= 9. 재무·DCF ================= -->
+<section class="sec" id="s9">
+<h2 class="st"><span class="no">9</span>재무 분석과 DCF 모델 — 숫자의 체질, 그리고 전시 23</h2>
+<p class="stsub">10개년 실적 · 대차대조표의 특이성 · 생애주기 판별 · WACC · 연도별 DCF 테이블</p>
+
+<h3>10개년 손익 — 계단식 성장과 흔들리지 않는 마진</h3>
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="72.0" y1="312.0" x2="828.0" y2="312.0" stroke="#eef2f7" stroke-width="1"  /><text x="64.0" y="316.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >0</text><line x1="72.0" y1="256.4" x2="828.0" y2="256.4" stroke="#eef2f7" stroke-width="1"  /><text x="64.0" y="260.4" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >250</text><line x1="72.0" y1="200.8" x2="828.0" y2="200.8" stroke="#eef2f7" stroke-width="1"  /><text x="64.0" y="204.8" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >500</text><line x1="72.0" y1="145.2" x2="828.0" y2="145.2" stroke="#eef2f7" stroke-width="1"  /><text x="64.0" y="149.2" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >750</text><line x1="72.0" y1="89.6" x2="828.0" y2="89.6" stroke="#eef2f7" stroke-width="1"  /><text x="64.0" y="93.6" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >1,000</text><line x1="72.0" y1="34.0" x2="828.0" y2="34.0" stroke="#eef2f7" stroke-width="1"  /><text x="64.0" y="38.0" font-size="11.5" fill="#475569" text-anchor="end" font-weight="normal" >1,250</text><text x="836.0" y="316.0" font-size="11.5" fill="#c8102e" text-anchor="start" font-weight="normal" >44%</text><text x="836.0" y="246.5" font-size="11.5" fill="#c8102e" text-anchor="start" font-weight="normal" >48%</text><text x="836.0" y="177.0" font-size="11.5" fill="#c8102e" text-anchor="start" font-weight="normal" >52%</text><text x="836.0" y="107.5" font-size="11.5" fill="#c8102e" text-anchor="start" font-weight="normal" >56%</text><text x="836.0" y="38.0" font-size="11.5" fill="#c8102e" text-anchor="start" font-weight="normal" >60%</text><rect x="88.6" y="220.2" width="42.3" height="91.8" fill="#8fb3d9" rx="2" /><text x="109.8" y="214.2" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >413</text><text x="109.8" y="330.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY17</text><rect x="164.2" y="194.8" width="42.3" height="117.2" fill="#8fb3d9" rx="2" /><text x="185.4" y="188.8" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >527</text><text x="185.4" y="330.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY18</text><rect x="239.8" y="181.4" width="42.3" height="130.6" fill="#8fb3d9" rx="2" /><text x="261.0" y="175.4" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >587</text><text x="261.0" y="330.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY19</text><rect x="315.4" y="189.3" width="42.3" height="122.7" fill="#8fb3d9" rx="2" /><text x="336.6" y="183.3" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >552</text><text x="336.6" y="330.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY20</text><rect x="391.0" y="192.3" width="42.3" height="119.7" fill="#8fb3d9" rx="2" /><text x="412.2" y="186.3" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >538</text><text x="412.2" y="330.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY21</text><rect x="466.6" y="144.0" width="42.3" height="168.0" fill="#8fb3d9" rx="2" /><text x="487.8" y="138.0" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >755</text><text x="487.8" y="330.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY22</text><rect x="542.2" y="106.9" width="42.3" height="205.1" fill="#8fb3d9" rx="2" /><text x="563.4" y="100.9" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >922</text><text x="563.4" y="330.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY23</text><rect x="617.8" y="96.9" width="42.3" height="215.1" fill="#8fb3d9" rx="2" /><text x="639.0" y="90.9" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >967</text><text x="639.0" y="330.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY24</text><rect x="693.4" y="76.5" width="42.3" height="235.5" fill="#8fb3d9" rx="2" /><text x="714.6" y="70.5" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >1,059</text><text x="714.6" y="330.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY25</text><rect x="769.0" y="51.9" width="42.3" height="260.1" fill="#8fb3d9" rx="2" /><text x="790.2" y="45.9" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >1,169</text><text x="790.2" y="330.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >FY26</text><polyline points="109.8,155.6 185.4,110.4 261.0,136.5 336.6,202.5 412.2,183.4 487.8,113.9 563.4,136.5 639.0,186.9 714.6,174.7 790.2,190.4" fill="none" stroke="#c8102e" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" /><circle cx="109.8" cy="155.6" r="3.6" fill="#c8102e" stroke="#ffffff" stroke-width="1.4"/><circle cx="185.4" cy="110.4" r="3.6" fill="#c8102e" stroke="#ffffff" stroke-width="1.4"/><circle cx="261.0" cy="136.5" r="3.6" fill="#c8102e" stroke="#ffffff" stroke-width="1.4"/><circle cx="336.6" cy="202.5" r="3.6" fill="#c8102e" stroke="#ffffff" stroke-width="1.4"/><circle cx="412.2" cy="183.4" r="3.6" fill="#c8102e" stroke="#ffffff" stroke-width="1.4"/><circle cx="487.8" cy="113.9" r="3.6" fill="#c8102e" stroke="#ffffff" stroke-width="1.4"/><circle cx="563.4" cy="136.5" r="3.6" fill="#c8102e" stroke="#ffffff" stroke-width="1.4"/><circle cx="639.0" cy="186.9" r="3.6" fill="#c8102e" stroke="#ffffff" stroke-width="1.4"/><circle cx="714.6" cy="174.7" r="3.6" fill="#c8102e" stroke="#ffffff" stroke-width="1.4"/><circle cx="790.2" cy="190.4" r="3.6" fill="#c8102e" stroke="#ffffff" stroke-width="1.4"/><text x="185.4" y="100.4" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >55.6%</text><text x="336.6" y="220.5" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >50.3%</text><text x="790.2" y="180.4" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="bold" >51.0%</text><line x1="72.0" y1="312.0" x2="828.0" y2="312.0" stroke="#64748b" stroke-width="1.2"  /><rect x="72.0" y="8.0" width="14.0" height="10.0" fill="#8fb3d9" rx="2" /><text x="92.0" y="17.0" font-size="12" fill="#475569" text-anchor="start" font-weight="normal" >매출(¥십억, 좌)</text><line x1="222.0" y1="13.0" x2="250.0" y2="13.0" stroke="#c8102e" stroke-width="2.6"  /><text x="256.0" y="17.0" font-size="12" fill="#475569" text-anchor="start" font-weight="normal" >영업이익률(우)</text></svg></div><figcaption><b>그림 9. 매출과 영업이익률 10개년 (FY2017~2026, 3월 결산)</b> — 매출 CAGR +12.3%. OPM은 50.3~55.6% 밴드에서만 움직였다 — 경기 하강기(FY20~21)에도 50% 선이 깨지지 않았다는 점이 핵심. FY17~18은 2차 자료 기반 <span class="b bm">높음~85%</span>. | 출처: IR 공시·IRBANK</figcaption></figure>
+
+<div class="tablewrap"><table class="tbl">
+<tr><th>FY(3월)</th><th class="n">매출(¥십억)</th><th class="n">YoY</th><th class="n">영업이익</th><th class="n">OPM</th><th class="n">순이익</th><th class="n">EPS(¥)</th></tr>
+<tr><td>2022</td><td class="n">755.2</td><td class="n">+40.3%</td><td class="n">418.0</td><td class="n">55.4%</td><td class="n">303.4</td><td class="n">1,250.8</td></tr>
+<tr><td>2023</td><td class="n">922.4</td><td class="n">+22.1%</td><td class="n">498.9</td><td class="n">54.1%</td><td class="n">363.0</td><td class="n">1,496.6</td></tr>
+<tr><td>2024</td><td class="n">967.3</td><td class="n">+4.9%</td><td class="n">495.0</td><td class="n">51.2%</td><td class="n">369.6</td><td class="n">1,524.1</td></tr>
+<tr><td>2025</td><td class="n">1,059.1</td><td class="n">+9.5%</td><td class="n">549.8</td><td class="n">51.9%</td><td class="n">398.7</td><td class="n">1,643.8</td></tr>
+<tr class="hlrow"><td>2026</td><td class="n">1,169.3</td><td class="n">+10.4%</td><td class="n">595.8</td><td class="n">51.0%</td><td class="n">445.2</td><td class="n">1,835.6</td></tr>
+</table></div>
+<p class="small">직전 5개년. FY26 상세: 세전이익 ¥6,358억(+13.3%, 컨센 +5% 상회 — 이자·배당수익 +80%와 외환이익 ¥163억의 기여 포함), 실효세율 29.0%. 참고로 경기 민감성의 역사적 증거: 리먼기 FY10/3 매출 −16.1%, 미중 마찰기 FY20/3 −6%.</p>
+
+<h3>대차대조표 — '제조업'이라 부르기 민망한 구성</h3>
+<p>총자산 ¥3.67조 중 <b>유형자산은 ¥947억, 2.6%</b>에 불과하다(팹리스). 대신 현금·예금·채권 중심 유가증권으로 구성된 <b>금융자산이 약 ¥2조 9,784억</b> — 유이자부채는 0, 자기자본비율 94.6%, BPS ¥14,274. 채권 포트폴리오는 만기 1년 내 ¥1.875조·1~5년 ¥1.5조로 금리 상승의 재투자 수혜를 받는 중이다(이자·배당수익 FY26 ¥164억, +80%). 자사주는 68만 주(¥38.5억)로 사실상 없고, 스톡옵션 등 잠재 희석 요인도 0이다(연차보고서) — 프레임워크가 경고하는 SBC 왜곡(함정 3)이 이 종목에는 사실상 부재하다는 뜻이다.</p>
+
+<div class="grid2">
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 250" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="190.0" y1="30.0" x2="190.0" y2="200.0" stroke="#eef2f7" stroke-width="1"  /><text x="190.0" y="218.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >0%</text><line x1="355.0" y1="30.0" x2="355.0" y2="200.0" stroke="#eef2f7" stroke-width="1"  /><text x="355.0" y="218.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >25%</text><line x1="520.0" y1="30.0" x2="520.0" y2="200.0" stroke="#eef2f7" stroke-width="1"  /><text x="520.0" y="218.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >50%</text><line x1="685.0" y1="30.0" x2="685.0" y2="200.0" stroke="#eef2f7" stroke-width="1"  /><text x="685.0" y="218.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >75%</text><line x1="850.0" y1="30.0" x2="850.0" y2="200.0" stroke="#eef2f7" stroke-width="1"  /><text x="850.0" y="218.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >100%</text><text x="178.0" y="59.0" font-size="13" fill="#1f2937" text-anchor="end" font-weight="bold" >영업 ROIC (추정)</text><rect x="190.0" y="44.0" width="620.4" height="24.0" fill="#0f766e" rx="4" /><text x="818.4" y="60.0" font-size="13" fill="#0f766e" text-anchor="start" font-weight="bold" >≈94%</text><text x="178.0" y="111.0" font-size="13" fill="#1f2937" text-anchor="end" font-weight="bold" >전사 ROE</text><rect x="190.0" y="96.0" width="89.1" height="24.0" fill="#2563eb" rx="4" /><text x="287.1" y="112.0" font-size="13" fill="#2563eb" text-anchor="start" font-weight="bold" >13.5%</text><text x="178.0" y="163.0" font-size="13" fill="#1f2937" text-anchor="end" font-weight="bold" >WACC (자기자본비용)</text><rect x="190.0" y="148.0" width="49.7" height="24.0" fill="#64748b" rx="4" /><text x="247.7" y="164.0" font-size="13" fill="#64748b" text-anchor="start" font-weight="bold" >7.53%</text><line x1="282.1" y1="118.0" x2="807.4" y2="118.0" stroke="#b45309" stroke-width="1.6" stroke-dasharray="5,4" /><text x="544.8" y="112.0" font-size="12.5" fill="#b45309" text-anchor="middle" font-weight="bold" >≈80%p 격차 = 순금융자산 ¥3.0조(시총의 15%)가 자본을 희석</text></svg></div><figcaption><b>그림 10. 수익성의 3층 구조</b> — 영업 ROIC ≈94%(NOPAT ¥4,171억÷영업 투하자본 ¥4,450억) vs ROE 13.5% vs WACC 7.53%. ROE가 낮아 보이는 것은 수익성 문제가 아니라 분모(자본)에 쌓인 현금 탓 — ROE는 15%대에서 2년 연속 하락했는데, 자본이 연 12%씩 불어난 결과다. | 출처: §7.3 계산, IR 5개년 지표</figcaption></figure>
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 300" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="64.0" y1="240.0" x2="420.0" y2="240.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="244.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >0</text><line x1="64.0" y1="198.0" x2="420.0" y2="198.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="202.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >1,000</text><line x1="64.0" y1="156.0" x2="420.0" y2="156.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="160.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >2,000</text><line x1="64.0" y1="114.0" x2="420.0" y2="114.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="118.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >3,000</text><line x1="64.0" y1="72.0" x2="420.0" y2="72.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="76.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >4,000</text><line x1="64.0" y1="30.0" x2="420.0" y2="30.0" stroke="#eef2f7" stroke-width="1"  /><text x="58.0" y="34.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >5,000</text><rect x="79.0" y="44.1" width="41.3" height="195.9" fill="#0f766e" rx="2" /><text x="99.6" y="38.1" font-size="11" fill="#0f766e" text-anchor="middle" font-weight="bold" >4,665</text><text x="99.6" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >FY22</text><rect x="150.2" y="41.9" width="41.3" height="198.1" fill="#0f766e" rx="2" /><text x="170.8" y="35.9" font-size="11" fill="#0f766e" text-anchor="middle" font-weight="bold" >4,716</text><text x="170.8" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >FY23</text><rect x="221.4" y="70.8" width="41.3" height="169.2" fill="#0f766e" rx="2" /><text x="242.0" y="64.8" font-size="11" fill="#0f766e" text-anchor="middle" font-weight="bold" >4,029</text><text x="242.0" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >FY24</text><rect x="292.6" y="51.7" width="41.3" height="188.3" fill="#0f766e" rx="2" /><text x="313.2" y="45.7" font-size="11" fill="#0f766e" text-anchor="middle" font-weight="bold" >4,484</text><text x="313.2" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >FY25</text><rect x="363.8" y="44.3" width="41.3" height="195.7" fill="#0f766e" rx="2" /><text x="384.4" y="38.3" font-size="11" fill="#0f766e" text-anchor="middle" font-weight="bold" >4,660</text><text x="384.4" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >FY26</text><line x1="64.0" y1="240.0" x2="420.0" y2="240.0" stroke="#64748b" stroke-width="1.2"  /><text x="64.0" y="16.0" font-size="12" fill="#475569" text-anchor="start" font-weight="normal" >1인당 영업이익 (만엔)</text></svg></div><figcaption><b>그림 11. 1인당 영업이익 5개년</b> — FY26 ¥4,660만. 웬만한 대기업의 1인당 '매출'을 상회하는 수준으로, 인재 시스템이 곧 생산설비임을 보여준다. FY24 하락은 감익+인원 증가의 동시 효과. | 출처: IR 5개년 지표</figcaption></figure>
+</div>
+
+<h3>생애주기 판별 (Dickinson) — 조정 후 '성숙' 단계, CAP 분석 적격</h3>
+<p>현금흐름 부호로 판별하되, 프레임워크가 요구하는 조정(유가증권 매매를 투자CF에서 제거)을 적용한다. FY26: 영업 +¥4,307억 / 투자 −¥3,124억인데 이 중 유가증권 순매입 −¥2,431억과 정기예금 순증 −¥88억은 금융활동이므로 제거하면 <b>조정 투자CF ≈ −¥605억</b>(Capex −¥284억 + CADENAS 포함 기타 −¥321억) / 재무 −¥1,137억(전액 배당). 부호 (+, −, −)는 <b>성숙(Mature) 단계</b> — DCF+CAP 분석이 적합한 구간이며, 역사적으로 이 단계 기업의 평균 ROIC 11.1%를 키엔스는 8배 이상 상회한다. SBC 조정은 해당 없음(스톡옵션 0).</p>
+
+<h3>WACC와 모델 가정</h3>
+<div class="grid2">
+<div><div class="tablewrap"><table class="tbl" style="min-width:0">
+<tr><th>WACC 구성</th><th class="n">값</th></tr>
+<tr><td>무위험이자율 (일본 10년 국채, 26.7.3)</td><td class="n">2.78%</td></tr>
+<tr><td>베타 (5년 월간)</td><td class="n">1.00</td></tr>
+<tr><td>주식위험프리미엄(ERP)</td><td class="n">4.75%</td></tr>
+<tr class="hlrow"><td><b>자기자본비용 = WACC</b> (부채 0)</td><td class="n"><b>7.53%</b></td></tr>
+<tr><td>민감도 범위</td><td class="n">6.53~8.53%</td></tr>
+</table></div>
+<p class="small">참고: 다모다란 미국 내재 ERP 4.23%(26.1), 일본은 CRP 가산 시 ~5.0% 추정 <span class="b bm">중간</span> — 4.75%는 그 사이의 프레임워크 표준값. JGB 2.78%는 1996년 이후 최고권(1년 새 +1.34%p)으로, <b>무위험이자율 자체가 움직이는 변수</b>라는 점이 §10 민감도의 주인공이 된다.</p></div>
+<div><div class="tablewrap"><table class="tbl" style="min-width:0">
+<tr><th>DCF 가정 (기본)</th><th class="n">값</th></tr>
+<tr><td>매출 성장률 (FY27 컨센에서 출발, 예측기간 유지)</td><td class="n">9.0%/년</td></tr>
+<tr><td>EBITA 마진 (FY26 실적 50.95%)</td><td class="n">51.0%</td></tr>
+<tr><td>현금세율 (실효 29.0%·법정 30.5% 사이)</td><td class="n">30%</td></tr>
+<tr><td>순투자율 (투자−D&A, NOPAT 대비 — FY26 실적 13.9%)</td><td class="n">14%</td></tr>
+<tr><td>장기 성장률 g (일본 기대 인플레)</td><td class="n">2.0%</td></tr>
+<tr><td>페이드 비율 f (기술 하드웨어·장비)</td><td class="n">0.17</td></tr>
+<tr><td>할인 방식</td><td class="n">연중(mid-year)</td></tr>
+</table></div>
+<p class="small">모델의 함의 ROIIC = 성장률÷재투자율 = 9%÷14% ≈ <b>64%</b> — 실적 궤적(FY26 NOPAT 증가 +¥322억 vs 순투자 ¥580억 규모)과 정합적인 '매우 높은' 증분수익률이다. 최종가치는 페이드 모델(f=0.17 → 페이드 계수 0.2007, 최종 배수 NOPAT의 14.1배)로 계산.</p></div>
+</div>
+
+<h3>전시 23 — 기본 시나리오 연도별 DCF (예측기간 20년 표시)</h3>
+<div class="tablewrap"><table class="ex23">
+<thead><tr><th class="rowh">항목 (¥십억)</th><th>FY26<br><span class="yr-a">실적</span></th><th>FY27E</th><th>FY28E</th><th>FY29E</th><th>FY30E</th><th>FY31E</th><th>FY32E</th><th>FY33E</th><th>FY34E</th><th>FY35E</th><th>FY36E</th><th>FY37E</th><th>FY38E</th><th>FY39E</th><th>FY40E</th><th>FY41E</th><th>FY42E</th><th>FY43E</th><th>FY44E</th><th>FY45E</th><th>FY46E</th></tr></thead>
+<tbody>
+<tr class=""><th class="rowh">매출</th><td>1,169</td><td>1,275</td><td>1,389</td><td>1,514</td><td>1,651</td><td>1,799</td><td>1,961</td><td>2,138</td><td>2,330</td><td>2,540</td><td>2,768</td><td>3,017</td><td>3,289</td><td>3,585</td><td>3,907</td><td>4,259</td><td>4,642</td><td>5,060</td><td>5,516</td><td>6,012</td><td>6,553</td></tr>
+<tr class="dim"><th class="rowh">매출 성장률</th><td>–</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td><td>9.0%</td></tr>
+<tr class=""><th class="rowh">EBITA(≈영업이익)</th><td>596</td><td>650</td><td>709</td><td>772</td><td>842</td><td>918</td><td>1,000</td><td>1,090</td><td>1,188</td><td>1,295</td><td>1,412</td><td>1,539</td><td>1,677</td><td>1,828</td><td>1,993</td><td>2,172</td><td>2,368</td><td>2,581</td><td>2,813</td><td>3,066</td><td>3,342</td></tr>
+<tr class="dim"><th class="rowh">EBITA 마진</th><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td><td>51.0%</td></tr>
+<tr class="dim"><th class="rowh">현금세율</th><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td><td>30.0%</td></tr>
+<tr class="hl"><th class="rowh">NOPAT</th><td>417</td><td>455</td><td>496</td><td>541</td><td>589</td><td>642</td><td>700</td><td>763</td><td>832</td><td>907</td><td>988</td><td>1,077</td><td>1,174</td><td>1,280</td><td>1,395</td><td>1,521</td><td>1,657</td><td>1,807</td><td>1,969</td><td>2,146</td><td>2,340</td></tr>
+<tr class=""><th class="rowh">미래 투자(순)</th><td>58</td><td>64</td><td>69</td><td>76</td><td>82</td><td>90</td><td>98</td><td>107</td><td>116</td><td>127</td><td>138</td><td>151</td><td>164</td><td>179</td><td>195</td><td>213</td><td>232</td><td>253</td><td>276</td><td>300</td><td>328</td></tr>
+<tr class="hl"><th class="rowh">잉여현금흐름(FCF)</th><td>359</td><td>391</td><td>427</td><td>465</td><td>507</td><td>552</td><td>602</td><td>656</td><td>715</td><td>780</td><td>850</td><td>926</td><td>1,010</td><td>1,101</td><td>1,200</td><td>1,308</td><td>1,425</td><td>1,554</td><td>1,693</td><td>1,846</td><td>2,012</td></tr>
+<tr class=""><th class="rowh">FCF 현재가치</th><td>–</td><td>377</td><td>383</td><td>388</td><td>393</td><td>398</td><td>404</td><td>409</td><td>415</td><td>421</td><td>426</td><td>432</td><td>438</td><td>444</td><td>450</td><td>456</td><td>463</td><td>469</td><td>475</td><td>482</td><td>488</td></tr>
+</tbody></table></div><div class="tablewrap"><table class="tbl">
+<tr><th>가치 집계 (T=20년 기준, ¥십억)</th><th class="n">값</th></tr>
+<tr><td>① FCF 현재가치 누계 (FY27~46)</td><td class="n">8,613</td></tr>
+<tr><td>② 최종가치(페이드 모델, FY46 말) → 현재가치</td><td class="n">33,721 → 8,186</td></tr>
+<tr><td>③ 영업가치 (①+②)</td><td class="n">16,799</td></tr>
+<tr><td>④ 순금융자산 가산</td><td class="n">+2,978</td></tr>
+<tr class="hlrow"><td><b>⑤ 주주가치 → 주당가치</b></td><td class="n"><b>19,777 → ¥81,545 (현재가 +1.6%)</b></td></tr>
+<tr><td>참고: T=19년일 때 주당가치</td><td class="n">¥79,015 (−1.6%)</td></tr>
+</table></div>
+<p class="small">읽는 법: 예측기간 T=19년이면 모델 가치가 현재가를 1.6% 밑돌고, T=20년이면 1.6% 웃돈다 — 즉 현재가 ¥80,300과 정확히 일치하는 T는 그 사이, <b>선형 보간으로 약 19.5년</b>이다(§10). 표는 스크롤로 전체 연도를 볼 수 있다. FY27 모델 매출 ¥1조 2,745억은 QUICK 컨센(¥1조 2,761억)과 0.1% 이내로 정합. 모형 검증: 위 ⑤를 발행주식(242,525,136주)으로 나누면 현재 시총 산식이 재현된다.</p>
+</section>
+<!-- ================= 10. 내재 CAP ================= -->
+<section class="sec" id="s10">
+<h2 class="st"><span class="no">10</span>시장 내재 CAP — 가격에 들어 있는 기대의 해부</h2>
+<p class="stsub">역산 결과 · 해석 · 민감도 · 시나리오 · 필요 성장률의 역산</p>
+
+<div class="keybox"><span class="kt">역산 결과</span>
+영업가치 ¥16.5조(시총 ¥19.47조 − 순금융자산 ¥2.98조)를 §9의 기본 가정으로 재현하는 예측기간은 <b>약 19.5년</b>이다. 분해하면: 성장이 전혀 없다고 가정한 정체가치는 ¥5.54조(주당 ¥35,117)뿐이고, 나머지 <b>¥10.96조 — 영업가치의 66.4% — 가 미래 성장기회의 현재가치(PVGO)</b>다. 즉 시장은 "연 9% 성장 × 약 20년 × 그 후의 완만한 페이드"라는, 매우 긴 기대를 지불하고 있다. 이 길이의 감을 잡는 참고 눈금으로, 같은 방법으로 내재 CAP가 역산된 마이크로소프트 사례가 17~18년(2026.3)이었다 — 사업이 비슷하다는 비교가 아니라, '시장이 몇 년치 초과수익 지속을 선반영했는가'라는 동일한 잣대 위에서 키엔스가 그 윗눈금에 있다는 의미다.</p>
+</div>
+
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 290" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><rect x="70.0" y="96.0" width="126.6" height="54.0" fill="#dcfce7" rx="0" /><text x="133.3" y="172.0" font-size="12" fill="#475569" text-anchor="middle" font-weight="normal" >매우 비관</text><rect x="196.6" y="96.0" width="126.6" height="54.0" fill="#ecfdf3" rx="0" /><text x="259.8" y="172.0" font-size="12" fill="#475569" text-anchor="middle" font-weight="normal" >약간 비관</text><rect x="323.1" y="96.0" width="126.6" height="54.0" fill="#f1f5f9" rx="0" /><text x="386.4" y="172.0" font-size="12" fill="#475569" text-anchor="middle" font-weight="normal" >합리적 범위</text><rect x="449.7" y="96.0" width="126.6" height="54.0" fill="#fef3c7" rx="0" /><text x="513.0" y="172.0" font-size="12" fill="#475569" text-anchor="middle" font-weight="normal" >약간 낙관</text><rect x="576.2" y="96.0" width="303.8" height="54.0" fill="#fee2e2" rx="0" /><text x="728.1" y="172.0" font-size="12" fill="#475569" text-anchor="middle" font-weight="normal" >과도한 낙관 영역</text><line x1="70.0" y1="150.0" x2="70.0" y2="155.0" stroke="#64748b" stroke-width="1"  /><text x="70.0" y="190.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >0년</text><line x1="196.6" y1="150.0" x2="196.6" y2="155.0" stroke="#64748b" stroke-width="1"  /><text x="196.6" y="190.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >5년</text><line x1="323.1" y1="150.0" x2="323.1" y2="155.0" stroke="#64748b" stroke-width="1"  /><text x="323.1" y="190.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >10년</text><line x1="449.7" y1="150.0" x2="449.7" y2="155.0" stroke="#64748b" stroke-width="1"  /><text x="449.7" y="190.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >15년</text><line x1="576.2" y1="150.0" x2="576.2" y2="155.0" stroke="#64748b" stroke-width="1"  /><text x="576.2" y="190.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >20년</text><line x1="702.8" y1="150.0" x2="702.8" y2="155.0" stroke="#64748b" stroke-width="1"  /><text x="702.8" y="190.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >25년</text><line x1="829.4" y1="150.0" x2="829.4" y2="155.0" stroke="#64748b" stroke-width="1"  /><text x="829.4" y="190.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >30년</text><line x1="342.9" y1="66.0" x2="342.9" y2="150.0" stroke="#15803d" stroke-width="2.4"  /><path d="M342.9,98.0 l7,-11 l-14,0 Z" fill="#15803d"/><text x="342.9" y="60.0" font-size="13" fill="#15803d" text-anchor="middle" font-weight="bold" >강세 10.8년</text><text x="342.9" y="76.0" font-size="11.5" fill="#15803d" text-anchor="middle" font-weight="normal" >(성장 13% · f 0.10)</text><line x1="564.1" y1="66.0" x2="564.1" y2="150.0" stroke="#c8102e" stroke-width="2.4"  /><path d="M564.1,98.0 l7,-11 l-14,0 Z" fill="#c8102e"/><text x="564.1" y="60.0" font-size="13" fill="#c8102e" text-anchor="middle" font-weight="bold" >기본(현재가 내재) 19.5년</text><text x="564.1" y="76.0" font-size="11.5" fill="#c8102e" text-anchor="middle" font-weight="normal" >(성장 9% · f 0.17)</text><line x1="839.5" y1="123.0" x2="880.0" y2="123.0" stroke="#64748b" stroke-width="2.4"  /><path d="M880.0,123.0 l-10,-6 l0,12 Z" fill="#64748b"/><text x="854.7" y="82.0" font-size="12" fill="#64748b" text-anchor="end" font-weight="bold" >약세: 도달 불가 →</text><line x1="500.3" y1="154.0" x2="525.6" y2="154.0" stroke="#2563eb" stroke-width="4"  /><text x="513.0" y="224.0" font-size="11.5" fill="#2563eb" text-anchor="middle" font-weight="normal" >같은 방법 역산 사례: MS 17~18년</text></svg></div><figcaption><b>그림 12. 내재 CAP 게이지</b> — 프레임워크 해석 구간 위에 시나리오별 내재 CAP를 표시. 기본 19.5년은 '약간 낙관(15~20년)'의 최상단. 약세 가정(성장 4.5%)에서는 기간을 아무리 늘려도 현재가에 도달하지 못한다. | 출처: 자체 계산(§9 모델)</figcaption></figure>
+
+<h3>해석 — 프레임워크 기준표에 얹어 보기</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th>내재 CAP</th><th>해석</th><th>방향성 (프레임워크)</th><th>키엔스 해당 여부</th></tr>
+<tr><td>5년 미만</td><td>시장이 매우 비관적</td><td>매수 후보</td><td>—</td></tr>
+<tr><td>5~10년</td><td>약간 비관적</td><td>해자 확실하면 매수</td><td>—</td></tr>
+<tr><td>10~15년</td><td>합리적 범위</td><td>중립</td><td>강세 가정(10.8년)에서만 해당</td></tr>
+<tr class="hlrow"><td><b>15~20년</b></td><td><b>약간 낙관적</b></td><td><b>해자 근거가 강력해야 정당화</b></td><td><b>기본 19.5년 — 이 구간의 최상단</b></td></tr>
+<tr><td>20년 초과</td><td>과도한 낙관</td><td>회피 고려</td><td>WACC +1%p 시 26.1년으로 진입</td></tr>
+</table></div>
+<p>공정하게 보면, 키엔스는 프레임워크가 15~20년 구간에 요구하는 '강력한 해자 근거'를 <b>실증으로</b> 갖춘 드문 후보다: 30년 가까운 OPM 50%대, 산업 평균의 3배가 넘는 NOPAT 마진(차별화 조건 충족), ROIC 90%대, 그리고 피어와의 격차가 20년 이상 좁혀지지 않은 페이드 미관측 기록(§7). 프레임워크의 경험 데이터에서 상장기업의 70%가 초기 주가를 정당화하는 데 실패하지만 0.7%가 전체 부의 75% 이상을 만들었다 — 시장은 키엔스를 그 0.7% 후보로 가격 매기고 있고, 그 판단이 근거 없는 것은 아니다. 문제는 근거의 유무가 아니라 <b>여유의 유무</b>다. 아래 민감도가 그것을 보여준다.</p>
+
+<h3>CAP 사다리 — "몇 년을 믿으면 얼마인가"</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th>예측기간(CAP) 가정</th><th class="n">5년</th><th class="n">10년</th><th class="n">15년</th><th class="n">20년</th><th class="n">25년</th></tr>
+<tr><td>주당가치 (기본 가정: 성장 9%)</td><td class="n">¥47,776</td><td class="n">¥58,258</td><td class="n">¥69,476</td><td class="n">¥81,482</td><td class="n">¥94,331</td></tr>
+<tr><td>현재가 ¥80,300 대비</td><td class="n">−40.5%</td><td class="n">−27.4%</td><td class="n">−13.5%</td><td class="n">+1.5%</td><td class="n">+17.5%</td></tr>
+</table></div>
+<p class="small">이 사다리는 §15 풋볼필드의 뼈대다. 예컨대 "9% 성장을 10년만 확신한다"는 투자자에게 이 주식의 값은 ¥58,258이고, 25년을 확신하면 ¥94,331이다 — 목표가 논쟁의 정체는 대부분 이 '기간 확신'의 차이다.</p>
+
+<h3>민감도 — 가격의 본체는 성장률 × 할인율</h3>
+<div class="grid2">
+<div><div class="tablewrap"><table class="tbl" style="min-width:0">
+<tr><th>내재 CAP (년)</th><th class="n">WACC 6.53%</th><th class="n">7.53%</th><th class="n">8.53%</th></tr>
+<tr><td>성장 7%</td><td class="n">22.1</td><td class="n">32.7</td><td class="n">53.6</td></tr>
+<tr class="hlrow"><td><b>성장 9% (기본)</b></td><td class="n">14.6</td><td class="n"><b>19.5</b></td><td class="n">26.1</td></tr>
+<tr><td>성장 11%</td><td class="n">10.9</td><td class="n">14.1</td><td class="n">17.8</td></tr>
+</table></div></div>
+<div><div class="tablewrap"><table class="tbl" style="min-width:0">
+<tr><th>2차 변수 (기본 대비)</th><th class="n">변화</th><th class="n">내재 CAP</th></tr>
+<tr><td rowspan="2">페이드 비율 f</td><td class="n">0.10 (강한 해자)</td><td class="n">19.1년</td></tr>
+<tr><td class="n">0.25 (보수)</td><td class="n">19.8년</td></tr>
+<tr><td rowspan="2">장기 성장률 g</td><td class="n">1.5%</td><td class="n">19.8년</td></tr>
+<tr><td class="n">2.5%</td><td class="n">19.2년</td></tr>
+</table></div></div>
+</div>
+<div class="insight"><span class="kt">민감도가 말해 주는 두 가지</span>
+① <b>비대칭적 금리 민감도</b>: WACC가 1%p 오르면(JGB 2.78%가 3.5%+로, 또는 ERP 상승) 필요한 CAP가 19.5→26.1년으로 '과도한 낙관' 영역에 진입한다. 반대로 1%p 내리면 14.6년으로 합리 구간에 근접한다. 일본이 30년 만의 금리 정상화 사이클(정책금리 1.00%, 추가 인상 관측) 한복판이라는 점에서, 이 주식의 최대 단일 변수는 회사 바깥 — 금리 — 에 있다. ② <b>f와 g는 2차 변수</b>: 페이드 비율을 0.10~0.25로, 장기 성장률을 1.5~2.5%로 흔들어도 CAP는 ±0.4년밖에 안 움직인다. 즉 이 가격의 본체는 '해자가 얼마나 천천히 녹느냐'가 아니라 <b>'9%대 성장을 몇 년 유지하느냐'</b>다. 해자 서사에 취해 성장률 검증을 소홀히 하면 안 되는 이유.</div>
+
+<h3>시나리오 — 강세·기본·약세</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th>시나리오</th><th>서사</th><th class="n">성장률 / f</th><th class="n">내재 CAP</th><th>판정</th></tr>
+<tr><td><b>강세</b></td><td>AI 설비투자 슈퍼사이클 지속 + 자사주 프로그램 개시 + 해외 영업 증원 성공</td><td class="n">13% / 0.10</td><td class="n">10.8년</td><td>합리적 범위 — 현재가가 정당화되고도 남음</td></tr>
+<tr class="hlrow"><td><b>기본</b></td><td>FY27 컨센서스(+9%) 수준의 성장이 지속</td><td class="n">9% / 0.17</td><td class="n"><b>19.5년</b></td><td>약간 낙관의 최상단 — 완벽한 실행 전제</td></tr>
+<tr><td><b>약세</b></td><td>중국 재둔화 + 엔고 반전 + 관세 심화로 성장 반토막</td><td class="n">4.5% / 0.25</td><td class="n">도달 불가</td><td>기간 무한대로도 현재가 미달 — 20년 CAP를 줘도 ¥49,451, 40년을 줘도 ¥56,295</td></tr>
+</table></div>
+
+<h3>뒤집어 묻기 — 현재가가 '합리적'이려면 무엇이 필요한가</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th>목표 내재 CAP</th><th class="n">10년 (합리 중앙)</th><th class="n">12.5년</th><th class="n">15년</th><th class="n">도달 불가 경계</th></tr>
+<tr><td>필요한 NOPAT 성장률</td><td class="n">14.1%/년</td><td class="n">11.9%/년</td><td class="n">10.6%/년</td><td class="n">약 5.5% 미만이면 어떤 기간으로도 불가</td></tr>
+</table></div>
+<p>즉 "이 가격은 합리적(10~15년 CAP)"이라고 주장하려면 컨센서스(9%)를 넘어 <b>연 11~14% 성장</b>을 전제해야 한다 — 4Q +17.9%가 새로운 추세라는 강세 해석과 정확히 같은 베팅이다. 반대로 성장률이 7%면 20년 CAP를 인정해도 가치는 ¥64,643(−19.5%)에 그친다.</p>
+
+<div class="warn"><span class="kt">정직성 공시 ① — 사전 개산치와의 편차</span>
+리서치 단계의 개산은 "내재 CAP 대략 13~18년"이었으나 <span class="b bm">개산치·중간</span>, 본 작성 단계의 정밀 계산(연중 할인·페이드 최종가치·보간 일관 적용)은 <b>19.5년</b>으로 확정됐다. 개산 하단(13~14년)은 성장률을 10%+로 두거나 할인 관행을 달리할 때 나오는 값이다(성장 10%이면 약 17년). 본 보고서의 공식 수치는 19.5년이며, 결론의 방향(슈퍼스타급 기대·상단 구간)은 어느 쪽이든 동일하다.</div>
+<div class="warn"><span class="kt">정직성 공시 ② — 이 계산의 성격</span>
+CAP 역산은 정밀 과학이 아니라 <b>기대를 읽는 렌즈</b>다(프레임워크: "정밀함보다 방향성"). 순투자율 14%는 FY26 단년 실적 기반이고(운전자본 증가가 큰 해였다), 마진 51% 고정은 55%대 회복도 40%대 하락도 배제한 가정이다. 마진이 1%p 위/아래로 가면 NOPAT 경로가 통째로 이동하므로, 이 수치는 '19.5년'이라는 점 추정보다 <b>"15~20년 구간의 최상단, 금리 상승 시 20년+"</b>라는 구간 서술로 소비되는 것이 옳다.</div>
+</section>
+<!-- ================= 11. Bull ================= -->
+<section class="sec" id="s11">
+<h2 class="st"><span class="no">11</span>Bull 관점 — 시장이 19.5년을 지불하는 7가지 이유</h2>
+<p class="stsub">각 논거에 근거 수치를 붙여, 강세론을 그 지지자만큼 강하게 복원한다</p>
+
+<div class="bb bull"><div class="bbh">① 세계 최상급 유닛 이코노믹스 — 그리고 그것의 '지속' 실증</div><div class="bbc">OPM 51.0%·GM 83.0%·영업 ROIC ≈94%·1인당 영업이익 ¥4,660만·무차입. 숫자 자체보다 중요한 것은 지속성이다 — OPM이 50%를 밑돈 해가 최근 10년간 없고(최저 FY20 50.3%), 30년 가까이 마진 수준이 유지됐다. 페이드 프레임에서 f 0.10~0.17(평균 이상~강한 해자)을 데이터로 정당화할 수 있는 제조업은 극소수다.</div></div>
+<div class="bb bull"><div class="bbh">② 시스템형 해자 — 단품 모방이 통하지 않는 구조</div><div class="bbc">직판 40만 고객 접점 × 니즈카드 → 세계최초 70% 기획 × 당일출하 물류 × 팹리스 공급망 차단(§4·§6). Cognex·오무론 같은 유력 경쟁자가 수십 년간 마진 격차를 좁히지 못한 것이 모방 난이도의 실증이다. 해자의 단위가 '제품'이 아니라 '조직 프로세스의 결합'이라는 점이 장기 CAP의 질적 근거.</div></div>
+<div class="bb bull"><div class="bbh">③ 해외 침투 여백 = 경기와 독립적인 성장 활주로</div><div class="bbc">해외 비중 66.6%까지 왔지만 나카노 사장은 "고객 수·제조업 부가가치는 압도적으로 해외가 크다"고 말한다. 골드만도 "해외 채용 가속+키엔스식 제안영업 이식이 관건"으로 본다. 이 모델의 성장은 시장 성장률의 함수가 아니라 <b>'영업 인원 × 인당 생산성'의 함수</b>라 — FY26 미주 +14.3%, 아시아 +17%가 보여주듯 — 침투 여백이 남아 있는 한 경기 대비 자율성이 높다. 44세 '해외통' 사장의 취임은 이 축에 대한 조직적 베팅이다.</div></div>
+<div class="bb bull"><div class="bbh">④ AI·피지컬 AI 수혜 — 내러티브가 아니라 실적으로 확인됨</div><div class="bbc">반도체·데이터센터 공급망·중국 첨단산업 국책 투자에 센서·비전·마킹이 필수 부품이다. FY26 4Q +17.9%(컨센 +9.5% 상회)가 1차 증거이고, Cognex 26.1Q +24%·화낙 중국 수주 급증이 교차 증거다. 동시에 자사 제품의 AI화(IV3/IV4 학습 판별센서, VS-G 비전스토리지)로 판가와 용도를 스스로 넓히는 중 — AI가 위협이 아니라 판가 인상 수단으로 작동해 온 트랙레코드.</div></div>
+<div class="bb bull"><div class="bbh">⑤ 자본배분 정상화의 옵션 가치 — ¥3조가 아직 '미개봉'</div><div class="bbc">순현금 ¥2.98조는 시총의 15%다. 환원성향 30%는 화낙(배당성향 60%+자사주 상시 소각)에 비하면 절반 이하 — 즉 리레이팅의 연료가 아직 남아 있다. 정관변경으로 '이사회 결의 자사주'라는 수단은 확보됐고(6/12 주총 부의 <span class="b bm">가결 직접 확인 없음</span>), 대규모 자사주가 실행되면 EPS·ROE가 즉시 개선된다. FY27 배당 ¥550 유지는 확약 상태.</div></div>
+<div class="bb bull"><div class="bbh">⑥ 가격 결정력의 실증 — 관세와 인플레를 전가한다</div><div class="bbc">트럼프 관세 15%를 제품 가격 인상으로 흡수해 미주에서 +14.3% 성장(닛케이 4/24), 2026년 4월 국내 가격 인상 단행. 가치 가격 모델은 고객의 인건비가 오를수록 판가 논리가 강해지는 구조라(§5), 인플레 환경이 오히려 순풍이다.</div></div>
+<div class="bb bull"><div class="bbh">⑦ 촉매 파이프라인 — 자사주 · 주식분할 · 소프트웨어</div><div class="bbc">(a) 7/28 1Q에서 자사주 프로그램 발표 가능성, (b) TSE가 최저투자단위 10만 엔을 요청 중인 가운데 분할 실시 시 개인 수급 유입(현재 최저 투자금 ¥630만~800만), (c) CADENAS발 소프트웨어·데이터 사업 가시화. 셋 다 시점 미정이지만 방향은 모두 위쪽이다.</div></div>
+</section>
+
+<!-- ================= 12. Bear ================= -->
+<section class="sec" id="s12">
+<h2 class="st"><span class="no">12</span>Bear 관점 — 7가지 리스크와 '주가에 얼마나 반영됐나'</h2>
+<p class="stsub">각 항목에 반영도 태그: <span class="tagline tg-in">상당 반영</span> <span class="tagline tg-part">부분 반영</span> <span class="tagline tg-out">미반영</span></p>
+
+<div class="bb bear"><div class="bbh">① 밸류에이션 그 자체 — 가격이 곧 1번 리스크 <span class="tagline tg-out">미반영</span></div><div class="bbc">내재 CAP 19.5년은 MS(17~18년)를 웃도는 기대치이고, WACC +1%p면 26년(과도한 낙관)으로 넘어간다(§10). PER 43.7배는 자체 10년 밴드 상단부·시장의 2배. 4~6월 저점 대비 +33% 급등으로 호재(정관변경·어닝비트)가 상당 부분 가격에 들어갔다. 정의상 '높은 기대'는 가격에 반영될 수 없는 리스크다 — 기대를 지불한 사람이 기대 미달의 비용을 낸다.</div></div>
+<div class="bb bear"><div class="bbh">② 금리 상승 사이클 — 장기 CAP 주식의 구조적 역풍 <span class="tagline tg-part">부분 반영</span></div><div class="bbc">JGB 10년 2.78%(1996년 이후 최고권, 1년 +1.34%p), 일은 1.00%에 9~12월 추가 인상 관측·터미널 1.25~1.75% 논쟁. 가치의 66%가 먼 미래(PVGO)인 주식은 듀레이션이 길어 금리에 가장 취약한 부류다. 6/8 급락(연준 인상 관측)이 예고편. 상쇄 요인: 보유 채권 ¥2.9조의 재투자 수익률 상승(이자수익 +80% 이미 발생) — 단 이는 이익의 문제이고 할인율 타격이 훨씬 크다.</div></div>
+<div class="bb bear"><div class="bbh">③ 성장 재감속 — 4Q 가속이 사이클 정점일 가능성 <span class="tagline tg-out">미반영</span></div><div class="bbc">매출 ¥1.2조 규모에서 두 자릿수 유지는 난이도가 다르다. FY24 +4.9%의 기억이 생생하고, 영업 인원 의존 모델은 채용·이직이 병목이다(유가증권보고서 리스크 항목 명시). 리먼기 −16%, FY20 −6%의 경기민감성 전례. §10이 보여주듯 성장 5.5% 미만이면 현재가는 산술적으로 방어 불가, 7%여도 −20% — <b>이 리스크의 손익 비대칭이 이 종목에서 가장 크다.</b></div></div>
+<div class="bb bear"><div class="bbh">④ 중국 집중 수혜의 이면 <span class="tagline tg-part">부분 반영</span></div><div class="bbc">FY26 성장 견인차였던 중국 +18.2%는 국책(AI·반도체) 투자 의존 — 정책 변화·미중 마찰 재격화·로컬 저가 경쟁 부상 시 가장 먼저 꺾일 축이다. 중국 매출 비중 16%(홍콩·대만 포함 시 그 이상). 부동산발 침체를 이미 한 번 겪었다는 점에서 시장이 일부 학습했지만, '국책 수혜의 지속성'은 검증되지 않은 전제다.</div></div>
+<div class="bb bear"><div class="bbh">⑤ 엔고 반전 — 40년 엔저의 정점에서 <span class="tagline tg-out">미반영</span></div><div class="bbc">해외 매출 66.6%에 USD/JPY 160~166 <span class="b bm">중간</span>은 40년 만의 엔저권 — 즉 현재 손익에는 환 순풍이 최대치로 들어가 있다. 일은 추가 인상+연준 전환이 겹치면 엔고 시나리오가 열리고, 1Q FY26 순이익 −1.5%(환율 영향)가 미니 예고편이었다. FY26 외환이익 ¥163억도 재현 보장이 없는 항목.</div></div>
+<div class="bb bear"><div class="bbh">⑥ AI 범용화에 의한 해자 침식 — 판정 미결 논점 <span class="tagline tg-part">부분 반영</span></div><div class="bbc">저가 카메라+오픈소스 비전 모델이 '충분히 좋은' 검사를 제공하면, 전문 컨설팅 영업의 부가가치와 가치 가격의 근거가 잠식될 수 있다. Cognex의 OneVision 클라우드 플랫폼 등 소프트웨어 중심 경쟁도 개시. 반증(§6): 키엔스는 AI를 제품에 내재화해 판가를 올려 왔고 마진 침식의 징후는 아직 없다 — 다만 '아직 없음'은 '앞으로 없음'의 증명이 아니므로 §15 감시 항목으로 상시 편입.</div></div>
+<div class="bb bear"><div class="bbh">⑦ 거버넌스·이벤트 리스크 묶음 <span class="tagline tg-part">부분 반영</span></div><div class="bbc">(a) 자사주 실행 지연: 나카노 사장은 "단기 지표 개선이 목적 아님, 가장 중요한 것은 성장 투자"라고 못 박았다 — 7/28에 프로그램이 안 나오면 정관변경 랠리의 일부가 되감길 수 있는 이벤트 리스크. (b) 창업자 완전 은퇴 후 '실력주의 인재 시스템' 문화의 장기 유지 여부와 44세 사장의 경험 부족 논점. (c) 가이던스 부재로 인한 실적 변동성 증폭. (d) Pillar Two 글로벌최저한세(2026.3 일본 법제화, 영향 평가 중)의 세부담 가능성. (e) 평판 각주: 2024~25년 당시 사원 6명이 개인 형사사건(불동의성교죄)으로 기소된 보도가 있었다 — 사업 실적과 직접 관련은 없으나 고강도 조직문화 논쟁의 소재로 제기되는 사안이다.</div></div>
+
+<div class="note"><span class="kt">Bear 종합 — 무엇이 진짜 급소인가</span>
+7개 중 사업 모델을 직접 부수는 것은 ⑥(해자 침식) 하나뿐이고 현재로선 증거가 약하다. 반면 ①~③(밸류에이션·금리·성장 감속)은 <b>사업이 멀쩡해도 주가를 크게 훼손할 수 있는 조합</b>이다 — 19.5년짜리 기대는 사업 실패가 아니라 '기대 조정'만으로도 값이 내려간다. 2021~25년의 5년 횡보(사업은 계속 성장했는데 주가는 제자리)가 바로 그 사례였다.</div>
+</section>
+
+<!-- ================= 13. SWOT ================= -->
+<section class="sec" id="s13">
+<h2 class="st"><span class="no">13</span>SWOT 요약</h2>
+<p class="stsub">§3~§12의 분석을 한 장으로 압축</p>
+<div class="swot">
+<div class="sq s1"><h4>S — 강점</h4><ul>
+<li>OPM 51%·GM 83%·영업 ROIC ≈94% — 30년 가까이 지속된 세계 최상급 수익성</li>
+<li>직판 40만 고객망 + 니즈카드 = 복제 불가한 영업 정보 자산</li>
+<li>세계최초 70% 상품기획력 (R&D 2.8%의 극단적 효율)</li>
+<li>전 기종 당일출하 물류와 공급망 차단 설계</li>
+<li>무차입 + 순금융자산 ¥3.0조, 자기자본비율 94.6%</li>
+<li>1인당 영업이익 ¥4,660만의 인재 밀도</li></ul></div>
+<div class="sq s2"><h4>W — 약점</h4><ul>
+<li>영업 인력 의존 확장 모델 — 채용·이직이 성장의 병목</li>
+<li>리커링 매출 부재(하드웨어 매절) — 매 분기 매출을 새로 창출해야 함</li>
+<li>단일 세그먼트·제품별 매출 비공시 + 가이던스 부재 → 낮은 가시성</li>
+<li>초고가 주가(최저 투자 ¥630만~800만)·주주 27,117명의 좁은 수급 기반</li>
+<li>배당수익률 0.7% — 인컴 투자자 배제</li></ul></div>
+<div class="sq s3"><h4>O — 기회</h4><ul>
+<li>해외 영업 인원 확대 여백 ("고객 수는 압도적으로 해외가 크다")</li>
+<li>AI·반도체·EV·로봇 설비투자 사이클 — 4Q +17.9%로 개화 확인</li>
+<li>소프트웨어·데이터 확장 (CADENAS, RPA·분석 SW)</li>
+<li>자사주 프로그램·주식분할·환원 확대의 촉매 파이프라인</li>
+<li>일본 거버넌스 개혁·밸류업 수혜 (세대교체 완료)</li></ul></div>
+<div class="sq s4"><h4>T — 위협</h4><ul>
+<li>금리 상승 사이클 — 장기 CAP 주식의 디레이팅 (WACC +1%p → CAP 26년 필요)</li>
+<li>경기·설비투자 침체 재발 (리먼기 −16% 전례) 및 관세·중국 정책 변화</li>
+<li>엔고 반전 (해외 66.6% 노출, 현재 40년 엔저의 정점권)</li>
+<li>AI 범용화에 의한 컨설팅 영업 부가가치 잠식 가능성</li>
+<li>인재 유출·문화 희석 (창업자 완전 은퇴 이후)</li></ul></div>
+</div>
+</section>
+<!-- ================= 14. 경영진·자본배분 ================= -->
+<section class="sec" id="s14">
+<h2 class="st"><span class="no">14</span>경영진과 자본배분 — ¥3조의 향방이 리레이팅의 남은 절반</h2>
+<p class="stsub">세대교체의 의미 · 자본배분 연대기 · 주주 구성 · 이사회와 인센티브 구조</p>
+
+<h3>경영진 — 창업자 없는 키엔스의 첫해</h3>
+<p>2026년 6월 12일부로 키엔스는 창업 이래 처음으로 <b>창업자가 이사회에 없는 회사</b>가 됐다(명예회장 칭호는 유지, 가문·재단 지분 약 23%는 존속 — 즉 '영향력의 소멸'이 아니라 '공식 권한의 종료'다). 경영은 5대에 걸쳐 전원 내부 승진·비세습으로 이어져 왔고, 이번 승계의 메시지는 인선 자체에 있다: 1981년생(취임 시 44세) 나카노 데쓰야는 국내 제어기기 영업 → 중국 책임자 → 해외사업강화부장으로 이어진 <b>해외 성장 전담 커리어</b>다. 회사가 다음 10년의 병목을 '해외 영업 조직의 확장'으로 정의했다는 신호로 읽힌다. 전임 나카타 유(2019.12~2025.12)는 성장 감속기와 주가 횡보기를 관리하다 2025년 6월 주총에서 이사 선임 찬성률이 77.06%로 급락(전년 82.73%)한 뒤 관례(약 10년)보다 짧은 6년 만에 교체됐다 — <b>주주 압력이 실제로 인사에 반영된 사례</b>이며, 나카타는 이사로 잔류한다.</p>
+<p>평가의 한계도 명시한다. 이 회사는 중기경영계획과 실적 가이던스를 내지 않으므로 '약속 대비 실행'을 검증할 표준 잣대가 없다. 현재 검증 가능한 약속은 두 개다: ① FY27 배당 ¥550 유지(공표 완료), ② 자사주 취득 '수단'의 확보(정관변경) — ②의 실행 여부·규모가 나카노 체제의 첫 실행력 시험대다.</p>
+
+<h3>자본배분 연대기 — 반세기의 침묵과 최근 14개월의 전환</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th style="width:120px">시점</th><th>조치</th><th>규모·내용</th></tr>
+<tr><td>~FY23</td><td>배당성향 16~20% 고수 · 자사주 매입 이력 0</td><td>DPS ¥200(FY22)→¥300(FY23). 자사주 취득에 주총 결의가 필요한 이례적 정관(미즈호 지적)</td></tr>
+<tr><td>2025.5.20</td><td><b>CADENAS 인수</b> — 창사 첫 본격 M&A</td><td>약 €2억 직전 <span class="b bm">중간·비공식</span> · "풍부한 현금을 신사업에" (닛케이아시아)</td></tr>
+<tr><td>2025.10.29</td><td><b>연간 배당 ¥350→¥550 (+57%), 성향 30%</b></td><td>배당총액 ¥1,334억. 나카타: "중장기 성장 투자 최우선, 안정 배당과 자본효율 향상". 주식분할은 보류</td></tr>
+<tr><td>2026.4.24</td><td><b>'이사회 결의 자사주 취득' 정관변경 부의</b> + FY27 배당 ¥550 유지</td><td>나카노: "경영환경에 따라 기동적 판단 가능하게. 단, 단기 지표 개선이 목적은 아니며 가장 중요한 것은 성장 투자"</td></tr>
+<tr><td>2026.6.12</td><td>정기주총 (정관변경 + 창업자 퇴임 부의)</td><td><b>가결 여부 직접 확인 없음 — 부결 보도 부재로 통과가 유력시</b> <span class="b bm">중간~80%</span></td></tr>
+<tr class="hlrow"><td>2026.7.28</td><td>FY27 1Q 결산 — <b>자사주 프로그램 발표 여부 확인 시점</b></td><td>7/6 현재 프로그램 발표는 확인되지 않음. 시장의 최대 관심 이벤트</td></tr>
+</table></div>
+
+<p>회사 발언을 종합한 현금 사용의 위계는 <b>① 성장 투자(인재·해외 채용) &gt; ② 안정 배당 &gt; ③ M&A(선택지) &gt; ④ 자사주(수단 확보 단계)</b>다. 대조군은 화낙이다 — 배당성향 60%에 자사주 취득·소각을 상시화(직전에도 ¥500억·1,300만 주 소각)한 화낙 대비, 키엔스의 총환원성향 30%는 절반 수준이다. 이 격차가 부정적으로는 '환원 소극성', 긍정적으로는 <b>'리레이팅의 남은 연료'</b>로 읽히는 것이 현 국면의 본질이다.</p>
+
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 300" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="58.0" y1="240.0" x2="396.0" y2="240.0" stroke="#eef2f7" stroke-width="1"  /><text x="52.0" y="244.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >0</text><line x1="58.0" y1="187.5" x2="396.0" y2="187.5" stroke="#eef2f7" stroke-width="1"  /><text x="52.0" y="191.5" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >150</text><line x1="58.0" y1="135.0" x2="396.0" y2="135.0" stroke="#eef2f7" stroke-width="1"  /><text x="52.0" y="139.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >300</text><line x1="58.0" y1="82.5" x2="396.0" y2="82.5" stroke="#eef2f7" stroke-width="1"  /><text x="52.0" y="86.5" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >450</text><line x1="58.0" y1="30.0" x2="396.0" y2="30.0" stroke="#eef2f7" stroke-width="1"  /><text x="52.0" y="34.0" font-size="11" fill="#475569" text-anchor="end" font-weight="normal" >600</text><text x="402.0" y="244.0" font-size="11" fill="#b45309" text-anchor="start" font-weight="normal" >0%</text><text x="402.0" y="184.0" font-size="11" fill="#b45309" text-anchor="start" font-weight="normal" >10%</text><text x="402.0" y="124.0" font-size="11" fill="#b45309" text-anchor="start" font-weight="normal" >20%</text><text x="402.0" y="64.0" font-size="11" fill="#b45309" text-anchor="start" font-weight="normal" >30%</text><rect x="72.9" y="170.0" width="37.9" height="70.0" fill="#8fb3d9" rx="2" /><text x="91.8" y="164.0" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >200</text><text x="91.8" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >FY22</text><rect x="140.5" y="135.0" width="37.9" height="105.0" fill="#8fb3d9" rx="2" /><text x="159.4" y="129.0" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >300</text><text x="159.4" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >FY23</text><rect x="208.1" y="135.0" width="37.9" height="105.0" fill="#8fb3d9" rx="2" /><text x="227.0" y="129.0" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >300</text><text x="227.0" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >FY24</text><rect x="275.7" y="117.5" width="37.9" height="122.5" fill="#8fb3d9" rx="2" /><text x="294.6" y="111.5" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >350</text><text x="294.6" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >FY25</text><rect x="343.3" y="47.5" width="37.9" height="192.5" fill="#8fb3d9" rx="2" /><text x="362.2" y="41.5" font-size="11" fill="#16324f" text-anchor="middle" font-weight="bold" >550</text><text x="362.2" y="257.0" font-size="11" fill="#475569" text-anchor="middle" font-weight="normal" >FY26</text><polyline points="91.8,144.0 159.4,120.0 227.0,121.8 294.6,112.2 362.2,60.0" fill="none" stroke="#b45309" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" /><circle cx="91.8" cy="144.0" r="3.2" fill="#b45309" stroke="#ffffff" stroke-width="1.2"/><circle cx="159.4" cy="120.0" r="3.2" fill="#b45309" stroke="#ffffff" stroke-width="1.2"/><circle cx="227.0" cy="121.8" r="3.2" fill="#b45309" stroke="#ffffff" stroke-width="1.2"/><circle cx="294.6" cy="112.2" r="3.2" fill="#b45309" stroke="#ffffff" stroke-width="1.2"/><circle cx="362.2" cy="60.0" r="3.2" fill="#b45309" stroke="#ffffff" stroke-width="1.2"/><text x="346.2" y="50.0" font-size="11.5" fill="#b45309" text-anchor="end" font-weight="bold" >30.0%</text><line x1="58.0" y1="240.0" x2="396.0" y2="240.0" stroke="#64748b" stroke-width="1.2"  /><text x="58.0" y="16.0" font-size="12" fill="#475569" text-anchor="start" font-weight="normal" >DPS(¥, 좌) · 총환원성향(우)</text></svg></div><figcaption><b>그림 13. 배당(DPS)과 총환원성향 5개년</b> — DPS ¥200→¥550, 성향 16.0%→30.0%, DOE 2.4%→4.1%, 배당총액 ¥485억→¥1,334억. 인상의 기울기 자체가 '정책 전환'의 증거. | 출처: IR 5개년 지표</figcaption></figure>
+
+<h3>주주 구성 — 창업 가문 약 23%, 개인 주주는 극소</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th>주주</th><th class="n">지분</th><th>성격</th></tr>
+<tr><td>㈜티·티 (T.T.)</td><td class="n">15.07%</td><td>다키자키 가문 자산관리 회사 — 필두주주</td></tr>
+<tr><td>일본마스터트러스트신탁 (신탁구)</td><td class="n">13.24%</td><td>패시브·기관</td></tr>
+<tr><td>일본커스터디은행 (신탁구)</td><td class="n">7.73%</td><td>패시브·기관</td></tr>
+<tr><td>키엔스재단</td><td class="n">4.57%</td><td>다키자키 대표이사. 자산 ¥6,521억, 무상 장학금 연 ¥38.85억(2025년도)</td></tr>
+<tr><td>다키자키 다케미쓰 개인</td><td class="n">3.15%</td><td>2022.3 변경보고에서 공동보유 21.25%→18.18%로 축소(개인분 6.21→3.15, 재단 이전 추정)</td></tr>
+</table></div>
+<p>창업 가문+재단 합산 약 23% — 적대적 개입은 어렵지만 절대 과반은 아닌 구조다. 주주 수 27,117명(개인 극소)에 나머지는 신탁·해외 기관 중심이라, <b>주식분할이 실시되면 수급의 저변 자체가 바뀔 잠재력</b>이 있다(§8·§11 ⑦).</p>
+
+<h3>이사회·인센티브 — 스톡옵션 0의 정렬 구조</h3>
+<p>2026.6.12 이후 이사회는 사내 5인(나카노 사장, 야마구치 아키지, 야마모토 히로아키, 데라다 가즈히코, 나카타 유) + 독립사외 4인(다니구치 세이이치, 스에나가 구미코, 요시오카 미치후미, 사토미 료코), 감사역 3인 전원 사외이며, 2023년 3월 설치된 지명·보수위원회(과반 독립사외)가 승계·보수를 관장한다. 특이점은 <b>임원 스톡옵션이 0(잠재주식 없음)</b>이라는 것 — 희석 리스크가 없는 대신, 경영진-주주 정렬은 옵션이 아니라 '전 사원 영업이익 연동 보수'(창업 3년차부터 매월 급여 가산)라는 문화적 장치와 창업 가문 지분으로 이뤄진다. 프레임워크의 SBC 함정(희석 미반영으로 가치 과대평가)이 원천적으로 없는 자본 구조다.</p>
+
+<div class="insight"><span class="kt">자본배분 관점의 핵심 질문 — "성장 투자 최우선"과 시장 기대의 갭</span>
+영업 ROIC 94%인 회사에서 성장 투자(해외 인원)는 자본 효율상 언제나 1순위가 맞다. 문제는 성장 투자가 소화할 수 있는 금액이 연 수백억 규모인 반면 현금은 ¥3조라는 것 — 남는 현금의 수익률은 사실상 채권 수익률(≈2~3%)이라 자본비용(7.53%)을 밑돌고, 이것이 ROE 13.5%로의 희석(그림 10)을 만든다. 자사주 매입은 이 '저수익 자산'을 주주 몫으로 돌리는 산술적 개선책이므로, 규모가 관건이다. 나카노의 "단기 지표 목적 아님" 발언은 시장이 기대하는 대규모(예: 화낙식 상시 소각)보다 보수적 실행의 가능성을 시사한다 — <b>7/28의 확인 포인트는 '발표 유무'와 함께 '규모·상시성'</b>이다.</div>
+</section>
+<!-- ================= 15. 종합 판단 ================= -->
+<section class="sec" id="s15">
+<h2 class="st"><span class="no">15</span>종합 판단과 체크포인트</h2>
+<p class="stsub">판단 매트릭스 · 밸류에이션 지형 종합 · 모니터링 캘린더 · 한계와 가정</p>
+
+<div class="keybox"><span class="kt">종합 결론</span>
+사업의 질 — 해자의 구조, 수익성, 재무 안전성, 자본 효율 — 은 관측 가능한 글로벌 제조업 가운데 최상급이며, 그 지속성은 서사가 아니라 30년 가까운 데이터로 실증돼 있다. 그러나 현재 가격은 그 탁월함을 이미 <b>약 19.5년어치 선반영</b>한 상태다(약간 낙관 구간의 최상단). 따라서 이 종목의 향후 수익률을 결정하는 것은 "회사가 훌륭한가"(높은 확신으로 그렇다)가 아니라, <b>"연 9%+ 성장이 얼마나 오래 지속되는가"와 "일본 금리가 어디서 멈추는가"</b>라는 두 개의 불확실한 변수다. 단기 최대 분기점은 7월 28일 1분기 실적과 자사주 프로그램 발표 여부다.</div>
+
+<h3>판단 매트릭스</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th style="width:140px">평가 축</th><th style="width:150px">판정</th><th>근거 (본문 섹션)</th></tr>
+<tr><td>사업의 질·해자</td><td><b style="color:#15803d">최상급</b></td><td>OPM 51%·GM 83%·영업 ROIC ≈94%, 시스템형 해자, 20년+ 마진 격차 유지 (§3·§6·§7)</td></tr>
+<tr><td>재무 안전성</td><td><b style="color:#15803d">최상급</b></td><td>무차입·순금융자산 ¥3.0조·자기자본비율 94.6%·희석 요인 0 (§9)</td></tr>
+<tr><td>성장 전망</td><td><b style="color:#b45309">양호하나 검증 필요</b></td><td>컨센 +9%, 4Q +17.9% 가속 vs FY24 +4.9% 재감속 전례 — 사이클 판정 미결 (§3·§5)</td></tr>
+<tr><td>가격 (밸류에이션)</td><td><b style="color:#c8102e">부담</b></td><td>내재 CAP 19.5년(MS 초과), 정체가치 대비 +129%, PER 자체 밴드 상단부 (§8·§10)</td></tr>
+<tr><td>촉매</td><td><b style="color:#15803d">풍부</b></td><td>자사주(7/28)·주식분할·AI 설비투자·소프트웨어 확장 (§8·§11)</td></tr>
+<tr><td>핵심 리스크</td><td><b style="color:#c8102e">금리·성장·엔고</b></td><td>WACC +1%p → 필요 CAP 26년, 성장 5.5%↓ → 도달 불가, 40년 엔저 정점권 (§10·§12)</td></tr>
+</table></div>
+
+<h3>밸류에이션 지형 종합 — 풋볼 필드</h3>
+<figure class="fig"><div class="figbox">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 470" role="img" style="width:100%;height:auto;display:block;font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif"><line x1="326.5" y1="34.0" x2="326.5" y2="400.0" stroke="#eef2f7" stroke-width="1"  /><text x="326.5" y="420.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >4만</text><line x1="402.9" y1="34.0" x2="402.9" y2="400.0" stroke="#eef2f7" stroke-width="1"  /><text x="402.9" y="420.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >5만</text><line x1="479.4" y1="34.0" x2="479.4" y2="400.0" stroke="#eef2f7" stroke-width="1"  /><text x="479.4" y="420.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >6만</text><line x1="555.9" y1="34.0" x2="555.9" y2="400.0" stroke="#eef2f7" stroke-width="1"  /><text x="555.9" y="420.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >7만</text><line x1="632.4" y1="34.0" x2="632.4" y2="400.0" stroke="#eef2f7" stroke-width="1"  /><text x="632.4" y="420.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >8만</text><line x1="708.8" y1="34.0" x2="708.8" y2="400.0" stroke="#eef2f7" stroke-width="1"  /><text x="708.8" y="420.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >9만</text><line x1="785.3" y1="34.0" x2="785.3" y2="400.0" stroke="#eef2f7" stroke-width="1"  /><text x="785.3" y="420.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >10만</text><line x1="861.8" y1="34.0" x2="861.8" y2="400.0" stroke="#eef2f7" stroke-width="1"  /><text x="861.8" y="420.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="normal" >11만</text><text x="236.0" y="66.0" font-size="12.5" fill="#1f2937" text-anchor="end" font-weight="bold" >52주 주가 범위</text><rect x="414.5" y="52.0" width="249.8" height="22.0" fill="#64748b33" rx="4" stroke="#64748b" stroke-width="1.5"/><text x="408.5" y="67.0" font-size="11" fill="#64748b" text-anchor="end" font-weight="normal" >51,510</text><text x="670.2" y="67.0" font-size="11" fill="#64748b" text-anchor="start" font-weight="normal" >84,170</text><text x="236.0" y="116.0" font-size="12.5" fill="#1f2937" text-anchor="end" font-weight="bold" >애널리스트 목표가 (7월 초)</text><rect x="479.4" y="102.0" width="382.4" height="22.0" fill="#2563eb33" rx="4" stroke="#2563eb" stroke-width="1.5"/><text x="473.4" y="117.0" font-size="11" fill="#2563eb" text-anchor="end" font-weight="normal" >60,000</text><text x="867.8" y="117.0" font-size="11" fill="#2563eb" text-anchor="start" font-weight="normal" >110,000</text><path d="M670.9,104.0 l8,9 l-8,9 l-8,-9 Z" fill="#2563eb"/><text x="670.9" y="138.0" font-size="11" fill="#2563eb" text-anchor="middle" font-weight="normal" >평균 85,043</text><text x="236.0" y="166.0" font-size="12.5" fill="#1f2937" text-anchor="end" font-weight="bold" >QUICK 컨센 목표 (26.4.24)</text><path d="M565.0,154.0 l9,9 l-9,9 l-9,-9 Z" fill="#2563eb"/><text x="579.0" y="167.0" font-size="11.5" fill="#2563eb" text-anchor="start" font-weight="bold" >71,192</text><text x="236.0" y="216.0" font-size="12.5" fill="#1f2937" text-anchor="end" font-weight="bold" >이론주가 PBR·PER 기준 (25.12)</text><rect x="412.5" y="202.0" width="94.4" height="22.0" fill="#0f766e33" rx="4" stroke="#0f766e" stroke-width="1.5"/><text x="406.5" y="217.0" font-size="11" fill="#0f766e" text-anchor="end" font-weight="normal" >51,245</text><text x="512.9" y="217.0" font-size="11" fill="#0f766e" text-anchor="start" font-weight="normal" >63,595</text><text x="236.0" y="266.0" font-size="12.5" fill="#1f2937" text-anchor="end" font-weight="bold" >커뮤니티 적정가 레인지 (26.4)</text><rect x="325.7" y="252.0" width="254.6" height="22.0" fill="#0f766e33" rx="4" stroke="#0f766e" stroke-width="1.5"/><text x="319.7" y="267.0" font-size="11" fill="#0f766e" text-anchor="end" font-weight="normal" >39,900</text><text x="586.4" y="267.0" font-size="11" fill="#0f766e" text-anchor="start" font-weight="normal" >73,200</text><text x="236.0" y="316.0" font-size="12.5" fill="#1f2937" text-anchor="end" font-weight="bold" >CAP 역산: 5→25년 (기본 가정)</text><rect x="385.9" y="302.0" width="356.0" height="22.0" fill="#b4530933" rx="4" stroke="#b45309" stroke-width="1.5"/><text x="379.9" y="317.0" font-size="11" fill="#b45309" text-anchor="end" font-weight="normal" >47,776</text><text x="747.9" y="317.0" font-size="11" fill="#b45309" text-anchor="start" font-weight="normal" >94,331</text><text x="236.0" y="366.0" font-size="12.5" fill="#1f2937" text-anchor="end" font-weight="bold" >정체가치 (무성장)</text><path d="M289.1,354.0 l9,9 l-9,9 l-9,-9 Z" fill="#16324f"/><text x="303.1" y="367.0" font-size="11.5" fill="#16324f" text-anchor="start" font-weight="bold" >35,117</text><line x1="385.9" y1="298.0" x2="385.9" y2="328.0" stroke="#b45309" stroke-width="1.6"  /><text x="385.9" y="342.0" font-size="10.5" fill="#b45309" text-anchor="middle" font-weight="bold" >5년</text><line x1="466.1" y1="298.0" x2="466.1" y2="328.0" stroke="#b45309" stroke-width="1.6"  /><text x="466.1" y="342.0" font-size="10.5" fill="#b45309" text-anchor="middle" font-weight="bold" >10년</text><line x1="551.9" y1="298.0" x2="551.9" y2="328.0" stroke="#b45309" stroke-width="1.6"  /><text x="551.9" y="342.0" font-size="10.5" fill="#b45309" text-anchor="middle" font-weight="bold" >15년</text><line x1="643.7" y1="298.0" x2="643.7" y2="328.0" stroke="#b45309" stroke-width="1.6"  /><text x="643.7" y="342.0" font-size="10.5" fill="#b45309" text-anchor="middle" font-weight="bold" >20년</text><line x1="741.9" y1="298.0" x2="741.9" y2="328.0" stroke="#b45309" stroke-width="1.6"  /><text x="741.9" y="342.0" font-size="10.5" fill="#b45309" text-anchor="middle" font-weight="bold" >25년</text><line x1="634.6" y1="30.0" x2="634.6" y2="404.0" stroke="#c8102e" stroke-width="2"  /><rect x="568.6" y="8.0" width="132.0" height="22.0" fill="#c8102e" rx="11" /><text x="634.6" y="23.0" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold" >현재가 ¥80,300</text></svg></div><figcaption><b>그림 14. 밸류에이션 레인지 종합</b> — 현재가 ¥80,300(적색 선)은 CAP 사다리의 '20년' 눈금(¥81,482) 바로 아래, 애널리스트 평균 목표(¥85,043) 바로 아래에 있다. 커뮤니티 적정가·이론주가·정체가치와의 거리가 곧 '성장 프리미엄'의 크기다. 애널리스트 목표 상단 ¥110,000은 TradingView 계열 집계 기준 <span class="b bm">상충 공시 §8</span>. | 출처: §7.5 풋볼필드 재료 + 자체 CAP 계산</figcaption></figure>
+<p>이 그림의 요점은 하나다: <b>시장 목표가 자체가 이미 'CAP 20년 근방'의 언어로 쓰여 있다</b>. 현재가와 애널리스트 평균의 간극(+6%)은 좁고, 정체가치(¥35,117)와의 간극(+129%)은 넓다 — 즉 이 주식에서 다투는 것은 '회사의 현재'가 아니라 '미래 성장의 지속 기간'이며, 그 다툼의 눈금이 §10의 CAP 사다리다.</p>
+
+<h3>관점별 사고 프레임 (매매 추천이 아님)</h3>
+<ul class="ls">
+<li><b>이 가격이 편안하려면</b>: 연 11~14% 성장의 지속을 높은 확신으로 봐야 한다(그 경우 내재 CAP 10~14년 = 합리 구간). 이는 "4Q +17.9%가 새 추세이고, 해외 인원 확장과 AI 설비투자 사이클이 수년간 이어진다"는 베팅과 동치다.</li>
+<li><b>이 가격이 불편하다면</b>: 컨센서스 +9%조차 사이클 정점의 수치로 보는 경우다 — 성장 7%면 20년 CAP를 인정해도 ¥64,643(−20%), 5.5% 미만이면 어떤 기간으로도 정당화 불가.</li>
+<li><b>공통 사용법</b>: 어느 쪽이든 자신의 '성장률 × 기간' 가정을 명시하고 CAP 사다리(§10)에서 해당 가치를 읽는 것 — 이 보고서는 목표가를 주는 대신 <b>자기 가정의 가격표</b>를 주는 문서다.</li>
+</ul>
+
+<h3>모니터링 캘린더 — 무엇을, 언제, 왜 보는가</h3>
+<div class="tablewrap"><table class="tbl">
+<tr><th style="width:150px">시점</th><th>체크 항목</th><th>판정 기준·의미</th></tr>
+<tr class="hlrow"><td><b>2026.7.28 (1Q)</b></td><td>① 자사주 취득 프로그램 발표 여부·규모 ② 매출 성장률 ③ 중국·미주 성장 ④ 환율 영향</td><td>①이 최대 관심 — 무발표 시 4월 랠리 일부 되감김 리스크. ②는 전년 1Q +5.6%의 낮은 기저 대비 두 자릿수 유지가 '가속 지속'의 증거</td></tr>
+<tr><td>매 분기</td><td>성장률 vs 컨센 +9% · OPM 51% 유지 · 중국 +17% 지속성 · 종업원 수 증가율(해외 영업 인원 프록시) · 매출채권 회전</td><td>내재 CAP의 1차 변수(성장률) 추적. 매출채권(+18.5%)이 매출(+10.4%)보다 빠른 것은 성장기 특성이나 지속 시 신용·품질 점검</td></tr>
+<tr><td>연간</td><td>내재 CAP 재계산(JGB 금리 반영) · 배당성향 추가 인상 · 주식분할 · CADENAS 시너지·소프트 매출 가시화 · 후속 M&A</td><td>금리가 오르면 같은 주가라도 내재 기대는 더 공격적이 됨 — 연 1회 재역산 권장</td></tr>
+<tr><td>재검토·이탈 신호<br>(프레임워크 표준)</td><td>내재 CAP가 관찰 시작 시점 대비 +50%(≈29년 영역) 도달 · ROIC/OPM 2년 연속 하락 · 해외 인당 생산성 하락 · 성숙→정리 단계 전환 징후</td><td>'기대 과열'과 '해자 훼손'의 조기 경보 — 가격이 아니라 구조 변수로 판단</td></tr>
+<tr><td>매크로</td><td>일은 금리 경로(9~12월 인상 여부, 터미널 1.25~1.75% 논쟁) · USD/JPY 160선 · 미 연준 · 미일 관세 재협상 · 중동 정전(60일) 만기</td><td>WACC ±1%p = 필요 CAP 14.6↔26.1년의 비대칭 (§10)</td></tr>
+</table></div>
+
+<h3>한계와 가정 — 이 분석을 신뢰하기 전에 알아야 할 것</h3>
+<div class="warn">
+<span class="kt">① 핵심 가정 (결론이 여기에 얹혀 있다)</span>
+성장률 9%는 FY27 한 해의 컨센서스를 장기(약 20년) 외삽한 것이다 · EBITA 마진 51% 고정(55% 복귀도 40%대 하락도 배제) · 순투자율 14%는 운전자본 증가가 컸던 FY26 단년 실적 기반 · WACC는 베타 1.00, ERP 4.75% 가정(일본 ERP 정확값 미취득 <span class="b bm">중간</span>) · 페이드 최종가치의 r은 예측기간 말 ROIIC(64.3%)를 동적 적용.
+</div>
+<div class="warn">
+<span class="kt">② 확신도가 낮은 데이터 (데이터 갭 8건 — 원문 그대로 공시)</span>
+(1) 애널리스트 컨센 집계 상충(Investing 매수11/¥85,043 vs TradingView Hold 44명/¥107,360 — §8에서 병기) (2) 2026.2.5 저가 ¥51,550의 정확한 발생 일자 (3) 사상 최고가 ¥84,170의 정확한 날짜(5월 하순~6월 초 추정) (4) 6/12 주총 정관변경 가결의 직접 확인 부재(정황상 유력) (5) USD/JPY 정확값 미취득(160~166 범위) (6) FY2017·18 재무는 2차 자료 기반 (7) CADENAS 인수가는 비공식 소스 (8) Cognex 최신 시총 미취득 — 피어 버블에서 실적만 환산 사용.
+</div>
+<div class="warn">
+<span class="kt">③ 이 분석이 틀리게 되는 조건 · ④ 다음 검증</span>
+<b>틀리는 조건</b>: 성장이 5.5% 아래로 정착하는데 주가가 유지된다면 본 모델 밖의 요인(수급·인수 프리미엄 등)이 지배한다는 뜻 / 마진이 55%대로 복귀하면 내재 CAP는 계산보다 짧아진다(낙관 방향의 오류) / JGB가 3.5%+로 급등하거나 반대로 인하 전환하면 민감도 표의 다른 열이 기준이 된다 / AI 범용화가 판가를 실제로 훼손하기 시작하면 f 0.17 가정 자체가 무너진다. <b>다음 검증</b>: 7/28 1Q(성장·자사주), 주총 결의 공시의 직접 확인, 일은 9~12월 결정, 반기 단위 내재 CAP 재역산.
+</div>
+
+<p>마지막으로 이 보고서의 성격을 다시 적는다. 여기서 계산한 19.5년은 "키엔스의 가치"가 아니라 <b>"시장이 지금 믿고 있는 것"의 측정치</b>다. 그 믿음은 이 회사의 실증 기록에 비추면 무모하지 않지만, 해석표의 '약간 낙관' 구간 맨 끝에 있다는 점에서 가볍지도 않다. 믿음의 근거(성장률·금리)가 갱신될 때마다 이 숫자도 갱신되어야 하며, 그 첫 갱신 시점이 3주 뒤다.</p>
+</section>
+
+</div></main>
+
+<footer><div class="wrap">
+<h4>출처 (데이터 기준일 2026.7.6 · 주가 7.3 종가)</h4>
+<p style="margin-bottom:10px">키엔스 IR(FY2026 결산단신·연차보고서 2026.6.15, 업적 하이라이트, 배당 수정 공시 25.10.29) · 닛케이(사장 교체·배당 25.10.29, FY26 결산 26.4.24, 일은 25.12.19) · Bloomberg(스톱고·정관변경 26.4.27, 전환점 분석 26.4.24) · BigGo Finance(연차보고서 전재, 이즈미다 분석 26.5.15, 목표가 26.4.25) · kabuya66(결산 해설·주가 레인지) · the社史(창업사·사장 계보) · Yahoo/Google Finance·Investing.com·PitchBook(주가·컨센 26.6~7) · IRBANK(PER/PBR 밴드·대주주·장기 실적) · 요미우리(다키자키 지분·포브스·재단 25.10) · 피어: 화낙·SMC·오무론 결산단신(26.4~5), Cognex 8-K · 산업: MarketsandMarkets, Grand View Research, Dataintelo · 매크로: TradingEconomics(JGB 26.7.3), 다모다란(26.1), NRI·다이이치생명(일은 전망), 도요케이자이·EBC·노무라(시황) · 비즈니스 모델: 키엔스 공식, positen.jp, 고조 다쿠미, 프레지던트 아카데미, 모닝스타(26.4.28)</p>
+<h4>표기 원칙</h4>
+<p style="margin-bottom:10px">본문 수치는 상기 리서치 데이터 문서(2026.7.6 확정)만을 사용해 작성했으며 작성 중 신규 검색은 수행하지 않았다(날조 0 원칙). 신뢰도가 '중간' 이하이거나 비공식·미확인인 항목에는 <span class="b bm">중간</span> 배지를 본문에 직접 표기했다. 차트의 모든 수치는 본문·표와 동일한 원천에서만 산출했고, 주가 차트는 확정 종가 앵커의 연결선(일봉 아님)임을 그림 7에 명시했다.</p>
+<h4>면책</h4>
+<p>본 자료는 정보 제공 목적의 분석이며 특정 종목의 매수·매도 권유가 아니다. 투자 판단과 그 결과에 대한 책임은 투자자 본인에게 있다. 기준일: 2026년 7월 6일.</p>
+</div></footer>
+</body>
+</html>
