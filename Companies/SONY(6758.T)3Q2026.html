@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SONY Group (6758 / SONY) 심층 기업분석 — 2026.07.05</title>
+<style>
+:root{
+  --ink:#1c2733; --ink-soft:#41505e; --ink-faint:#68788a;
+  --bg:#eef1f5; --card:#ffffff; --line:#d9e0e8;
+  --navy:#0f1b2d; --navy2:#16263f; --blue:#1b66d1; --blue-deep:#0a4bb5; --blue-soft:#e8f0fc;
+  --teal:#0e8a6d; --teal-soft:#e4f4ef; --red:#c0392b; --red-soft:#fdecea;
+  --amber:#b8860b; --amber-soft:#fdf6e3; --purple:#8e44ad; --orange:#e67e22; --gray:#7f8c8d;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:96px}
+body{margin:0; background:var(--bg); color:var(--ink);
+  font-family:'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic','Segoe UI',system-ui,sans-serif;
+  font-size:15.5px; line-height:1.72; -webkit-text-size-adjust:100%}
+.wrap{max-width:1160px; margin:0 auto; padding:0 18px}
+p{margin:0 0 12px}
+strong{color:#132033}
+a{color:var(--blue-deep)}
+/* ---------- 헤더 ---------- */
+.hero{background:linear-gradient(135deg,#0f1b2d 0%,#16263f 55%,#1d3557 100%); color:#f2f6fb; padding:40px 0 30px}
+.hero *{color:#f2f6fb}
+.hero .tag{display:inline-block; background:#233b5f; color:#cfe0f7; font-size:12.5px; letter-spacing:.14em; padding:4px 12px; border-radius:20px; margin-bottom:14px}
+.hero h1{margin:0 0 8px; font-size:30px; line-height:1.3; color:#ffffff}
+.hero .sub{color:#b9c9de; font-size:15px; max-width:860px}
+.hero .meta{margin-top:16px; display:flex; flex-wrap:wrap; gap:8px 18px; font-size:13px; color:#9fb2ca}
+.hero .meta b{color:#e8eff8; font-weight:600}
+/* ---------- 내비 ---------- */
+nav.toc{position:sticky; top:0; z-index:50; background:#ffffffee; backdrop-filter:blur(6px); border-bottom:1px solid var(--line); padding:9px 0}
+nav.toc .wrap{display:flex; flex-wrap:wrap; gap:6px}
+nav.toc a{display:inline-block; white-space:nowrap; text-decoration:none; font-size:12.5px; color:#2a3948; background:#f1f4f8; border:1px solid #dde4ec; padding:4px 10px; border-radius:16px; line-height:1.5}
+nav.toc a:hover{background:var(--blue-soft); color:var(--blue-deep); border-color:#bcd3f2}
+/* ---------- 섹션 ---------- */
+section.sec{background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:14px; margin:26px 0; padding:30px 32px; overflow:hidden}
+section.sec h2{display:flex; align-items:center; gap:12px; font-size:22.5px; margin:0 0 6px; color:#122033; line-height:1.35}
+.secnum{flex:0 0 auto; width:34px; height:34px; border-radius:9px; background:var(--navy); color:#ffffff; font-size:15px; font-weight:700; display:flex; align-items:center; justify-content:center}
+.seclead{color:var(--ink-faint); font-size:13.5px; margin:0 0 18px; padding-left:46px}
+section.sec h3{font-size:17.5px; color:#16324f; margin:28px 0 10px; padding-left:11px; border-left:4px solid var(--blue)}
+section.sec h4{font-size:15.5px; color:#1c3a5c; margin:20px 0 8px}
+/* ---------- KPI 카드 ---------- */
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:12px; margin:18px 0}
+.kpi{background:#f6f9fd; color:var(--ink); border:1px solid #dfe7f1; border-radius:11px; padding:13px 14px}
+.kpi .k{font-size:12px; color:#5a6b7d; margin-bottom:3px}
+.kpi .v{font-size:20px; font-weight:800; color:#10233b; line-height:1.25}
+.kpi .d{font-size:12px; color:#6b7c8e; margin-top:3px}
+.kpi.hl{background:linear-gradient(135deg,#0f1b2d,#1d3557); border-color:#0f1b2d}
+.kpi.hl .k{color:#a9bdd6}.kpi.hl .v{color:#ffd76a}.kpi.hl .d{color:#c4d4e8}
+/* ---------- 콜아웃 ---------- */
+.box{border-radius:11px; padding:16px 18px; margin:16px 0; font-size:14.5px}
+.box b,.box strong{color:inherit}
+.box .bt{display:block; font-weight:800; margin-bottom:6px; font-size:14.5px}
+.box-blue{background:var(--blue-soft); color:#143a68; border:1px solid #c4d9f5}
+.box-green{background:var(--teal-soft); color:#0c4f3f; border:1px solid #bfe4d8}
+.box-red{background:var(--red-soft); color:#7a2318; border:1px solid #f3c8c1}
+.box-amber{background:var(--amber-soft); color:#6b4e07; border:1px solid #ecd9a0}
+.box-navy{background:var(--navy); color:#e8eff8; border:1px solid #0c1524}
+.box-navy .bt{color:#ffd76a}
+.box-navy strong{color:#ffffff}
+/* ---------- 표 ---------- */
+.tablewrap{overflow-x:auto; margin:14px 0; border:1px solid var(--line); border-radius:10px; -webkit-overflow-scrolling:touch}
+table{border-collapse:collapse; width:100%; min-width:640px; font-size:13.5px; background:#ffffff; color:var(--ink)}
+th{background:#132b47; color:#ffffff; font-weight:700; padding:9px 10px; text-align:left; white-space:nowrap; border-bottom:2px solid #0d1f35}
+td{padding:8px 10px; border-bottom:1px solid #e6ebf1; color:#243342; vertical-align:top}
+tbody tr:nth-child(even) td{background:#f6f8fb; color:#243342}
+td.num,th.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+tr.total td{background:#eaf1fa !important; color:#10233b; font-weight:700; border-top:2px solid #c7d8ee}
+tr.hlrow td{background:#fdf3d7 !important; color:#5b4405; font-weight:600}
+td.cellhl{background:#ffe9a8 !important; color:#5b4405 !important; font-weight:800}
+.small{font-size:12.5px; color:var(--ink-faint)}
+/* ---------- 그림 ---------- */
+figure{margin:20px 0; padding:0}
+.figbox{background:#fbfcfe; border:1px solid #e2e8f0; border-radius:11px; padding:16px 14px 8px; color:var(--ink)}
+figcaption{font-size:12.5px; color:#5f7183; margin:10px 4px 6px; line-height:1.55}
+figcaption b{color:#33475c}
+svg{max-width:100%; height:auto; display:block}
+svg text{font-family:inherit}
+.legend{display:flex; flex-wrap:wrap; gap:6px 16px; font-size:12.5px; color:#42556a; margin:8px 4px 2px}
+.legend span{display:inline-flex; align-items:center; gap:6px; white-space:nowrap}
+.dot{width:11px; height:11px; border-radius:3px; display:inline-block; flex:0 0 auto}
+/* ---------- 이벤트 리스트(주가 차트용) ---------- */
+.evgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:4px 22px; font-size:13px; color:#37485a; margin-top:10px}
+.evgrid div{display:flex; gap:8px; align-items:flex-start; line-height:1.5}
+.evnum{flex:0 0 auto; width:19px; height:19px; border-radius:50%; background:var(--navy); color:#ffffff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:2px}
+.evnum.up{background:var(--teal)} .evnum.dn{background:var(--red)} .evnum.nt{background:#5a6b7d}
+/* ---------- 플로우 다이어그램 ---------- */
+.flowrow{display:flex; flex-wrap:wrap; gap:10px; align-items:stretch; margin:14px 0}
+.fnode{flex:1 1 150px; min-width:150px; background:#f2f7fe; color:#14335c; border:1.5px solid #b9d2f2; border-radius:10px; padding:11px 12px; font-size:13px; line-height:1.55}
+.fnode b{display:block; font-size:13.5px; color:#0d2b52; margin-bottom:3px}
+.fnode .fx{font-size:12px; color:#4a6076}
+.farrow{flex:0 0 auto; align-self:center; color:#8aa2bd; font-size:20px; font-weight:700}
+.fnode.dark{background:var(--navy); color:#dbe7f6; border-color:#0c1524}
+.fnode.dark b{color:#ffd76a}
+.fnode.teal{background:var(--teal-soft); color:#0c4f3f; border-color:#9fd6c4}
+.fnode.teal b{color:#0a4436}
+/* ---------- 배지 ---------- */
+.pill{display:inline-block; font-size:11.5px; font-weight:700; border-radius:12px; padding:2px 9px; margin-left:6px; vertical-align:middle; white-space:nowrap}
+.pill-hi{background:#fdecea; color:#a4271a; border:1px solid #f0b8b0}
+.pill-md{background:#fdf6e3; color:#7a5a06; border:1px solid #ecd9a0}
+.pill-lo{background:#e4f4ef; color:#0b5c47; border:1px solid #b5e0d1}
+/* ---------- 5F / SWOT 그리드 ---------- */
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:14px; margin:14px 0}
+.gcard{border-radius:11px; padding:15px 16px; font-size:13.8px; line-height:1.66}
+.gcard b.gt{display:block; font-size:14.5px; margin-bottom:6px}
+.g-s{background:var(--teal-soft); color:#0c4f3f; border:1px solid #b5e0d1}.g-s b.gt{color:#08553f}
+.g-w{background:var(--red-soft); color:#71241a; border:1px solid #f0c3bb}.g-w b.gt{color:#8f2416}
+.g-o{background:var(--blue-soft); color:#14335c; border:1px solid #c4d9f5}.g-o b.gt{color:#0d3f7d}
+.g-t{background:var(--amber-soft); color:#63490a; border:1px solid #ecd9a0}.g-t b.gt{color:#7a5606}
+.g-n{background:#f4f6f9; color:#2c3c4d; border:1px solid #dde3ea}.g-n b.gt{color:#1b2c3e}
+ul.tight{margin:6px 0 10px; padding-left:20px}
+ul.tight li{margin:4px 0}
+ol.tight{margin:6px 0 12px; padding-left:22px}
+ol.tight li{margin:10px 0; line-height:1.8}
+span.tag{display:inline-block; background:#eef2f7; color:#41505e; border:1px solid #d3dce6; border-radius:6px; padding:1px 8px; font-size:12px; margin-top:5px; font-weight:600}
+.foot{background:var(--navy); color:#9fb2ca; padding:30px 0 40px; margin-top:40px; font-size:12.5px; line-height:1.7}
+.foot b{color:#dce7f4}
+.srcnote{font-size:12px; color:#71818f; margin-top:6px}
+@media (max-width:640px){
+  body{font-size:14.5px}
+  section.sec{padding:22px 16px; border-radius:12px}
+  .hero h1{font-size:23px}
+  section.sec h2{font-size:19px}
+  .seclead{padding-left:0}
+  table{min-width:560px; font-size:12.5px}
+  .kpi .v{font-size:17px}
+  .figbox{overflow-x:auto; -webkit-overflow-scrolling:touch}
+  .figbox svg{min-width:660px}
+  .figbox::after{content:"← 좌우로 밀어 전체 보기 →"; display:block; text-align:center; font-size:11px; color:#8a99aa; padding:4px 0 2px}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="tag">EQUITY DEEP-DIVE · CAP FRAMEWORK</span>
+    <h1>Sony Group Corporation<span style="font-size:18px; font-weight:500; color:#a9bdd6"> — 도쿄 6758 · NYSE ADR "SONY"</span></h1>
+    <p class="sub">게임(PlayStation)·음악(Sony Music)·영화/애니메이션(Pictures·Crunchyroll)의 3대 엔터테인먼트 IP 위에 세계 1위 CMOS 이미지센서(I&amp;SS)를 결합한 '크리에이티브 엔터테인먼트' 기업. 2025~26년 금융 스핀오프·TV 합작 이관·EV 중단·실물 디스크 폐지로 IP·센서 중심 구조 전환을 완성한 직후의 국면을, 시장 내재 경쟁우위기간(CAP) 역산으로 해부한다.</p>
+    <div class="meta">
+      <span>기준일 <b>2026-07-05 (일)</b></span>
+      <span>주가 <b>¥3,292</b> (7/3 종가, 도쿄)</span>
+      <span>ADR <b>약 $21~22</b></span>
+      <span>시가총액 <b>약 ¥19.4조 (≈$120B)</b></span>
+      <span>52주 <b>¥3,043 ~ ¥4,776</b> (고점 대비 −31%)</span>
+      <span>회계연도 <b>4월~익년 3월 (FY2025 = 2025.4~2026.3)</b></span>
+    </div>
+  </div>
+</div>
+
+<nav class="toc"><div class="wrap">
+  <a href="#s1">1 핵심요약</a><a href="#s2">2 기업개요</a><a href="#s3">3 수익구조</a><a href="#s4">4 기술·제품</a><a href="#s5">5 산업분석</a><a href="#s6">6 경제적 해자</a><a href="#s7">7 피어비교</a><a href="#s8">8 시장 내러티브</a><a href="#s9">9 재무·DCF</a><a href="#s10">10 내재 CAP</a><a href="#s11">11 Bull</a><a href="#s12">12 Bear</a><a href="#s13">13 SWOT</a><a href="#s14">14 경영진</a><a href="#s15">15 종합판단</a>
+</div></nav>
+
+<div class="wrap">
+
+<!-- ================= 1. 핵심 요약 ================= -->
+<section class="sec" id="s1">
+  <h2><span class="secnum">1</span>핵심 요약 (Executive Summary)</h2>
+  <p class="seclead">회사의 본질 · 투자 매력의 핵심 · 시장 내재 CAP 결론</p>
+
+  <div class="box box-navy">
+    <span class="bt">한 문장 요약</span>
+    소니는 <strong>PlayStation 네트워크(월간 이용자 1.3억)·세계 2위 음반+세계 1위 음악출판·애니메이션 수직계열(Aniplex→Crunchyroll)</strong>이라는 3대 엔터테인먼트 IP 플랫폼에 <strong>세계 점유 40%대의 CMOS 이미지센서</strong>를 결합해, 영업이익의 3분의 2를 구조적 성장 시장에서 벌어들이는 IP·기술 복합 기업이다.
+  </div>
+
+  <p><strong>기업의 본질과 투자 매력.</strong> FY2025(2026년 3월기)에 소니는 계속사업 기준 매출 ¥12조4,796억(+3.7%)·영업이익 ¥1조4,475억(+13.4%)으로 <strong>둘 다 사상 최대</strong>를 기록했다. 그것도 Bungie 감손 ¥1,201억을 비롯한 일회성 손실 약 ¥2,080억을 흡수하고서다. 같은 해에 회사는 ①금융사업 부분 스핀오프(일본 최초 세제적격, 2025.10) ②TV·AV의 TCL 합작 이관 확정(2026.3) ③이미지센서의 TSMC 합작 MOU와 '팹라이트' 선언(2026.5) ④AFEELA EV 중단(2026.3) ⑤PlayStation 실물 디스크 2028년 종료 발표(2026.7)라는 다섯 건의 대형 구조 결정을 단행했다. 저마진·고자본 사업을 걷어내고 <strong>IP와 센서 설계라는 고ROIC 코어만 남기는 '최종 변태'</strong>가 1년 만에 완결 국면에 들어선 것이다. 영업이익률은 10.6%→11.6%→13.0%(FY2026 가이던스)로 계단식 상승 중이고, 순현금 ¥5,392억 위에서 연 ¥5,000억 자사주 매입(시총의 약 2.6%)과 배당 가속(¥25→¥35)이 진행된다.</p>
+
+  <p><strong>그런데 주가는 반대로 움직였다.</strong> 2025년 가을 ¥4,776의 사상 최고권을 찍은 주가는 AI 데이터센터發 <strong>메모리 크런치</strong>(2026년 DRAM 계약가 1분기 +90~95%)가 콘솔 원가를 직격하며 −31% 조정됐고, PS5 2차 가격 인상($649.99) 이후 미국 5월 판매량 −58%라는 수요 충격 데이터가 우려를 실증했다. 현재 FY2026 추정 P/E는 16.6배로 미국 시장 평균(19.4배)을 밑돌고, 애널리스트 23명 중 21명이 매수(평균 목표 ¥4,687, +42%)를 유지하는 것과 극명한 괴리를 이룬다.</p>
+
+  <div class="box box-amber">
+    <span class="bt">시장 내재 CAP 결론 — 미리 보기</span>
+    현재 주가 ¥3,292를 역산하면, 시장이 소니에 부여한 <strong>경쟁우위기간(CAP: 자본비용을 초과하는 수익을 신규 투자에서 지속할 수 있는 기간)은 약 0~4년</strong>에 불과하다. 엔화 기준 자본비용 6.7%로는 FY2026 가이던스 1년치+잔여 페이드 가치만으로 이미 현 주가(내재 CAP ≒ 1년 미만)가 설명되고, 일본 국가위험을 얹은 보수적 7.4%를 써도 약 3.6년이다. 프레임워크 기준표에서 <strong>"5년 미만 = 시장이 매우 비관적"</strong> 구간이며, 무성장 정체가치(주당 ¥2,820~¥3,306)와 현 주가가 사실상 겹친다. 즉 시장은 <strong>세계 1위 센서, 1.3억 게임 네트워크, 영구 IP인 음악 카탈로그의 초과수익 지속력을 거의 값에 넣지 않고 있다.</strong> 반대로 컨센서스 목표 ¥4,687이 성립하려면 마진 15.5%·성장 5~6%의 강세 펀더멘털에 CAP 약 9년이 필요하다 — 이 갭이 본 보고서의 핵심 논점이다. (상세: 섹션 9~10)
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="k">주가 (7/3, 도쿄)</div><div class="v">¥3,292</div><div class="d">52주 고점比 −31%</div></div>
+    <div class="kpi"><div class="k">FY2025 매출 / OI</div><div class="v">¥12.48조 / ¥1.45조</div><div class="d">둘 다 사상 최대</div></div>
+    <div class="kpi"><div class="k">FY2026E OI (가이던스)</div><div class="v">¥1.60조</div><div class="d">+11%, OPM 13.0%</div></div>
+    <div class="kpi"><div class="k">P/E (FY2026E)</div><div class="v">16.6배</div><div class="d">미국 시장 19.4배 대비 할인</div></div>
+    <div class="kpi hl"><div class="k">시장 내재 CAP</div><div class="v">약 0~4년</div><div class="d">"매우 비관적" 구간 (&lt;5년)</div></div>
+    <div class="kpi"><div class="k">컨센서스 목표가</div><div class="v">¥4,687</div><div class="d">+42% · 매수 21/보유 2/매도 0</div></div>
+    <div class="kpi"><div class="k">주주환원 (FY2026)</div><div class="v">¥5,000억 + ¥35</div><div class="d">자사주(한도) + 배당(+¥10)</div></div>
+    <div class="kpi"><div class="k">순현금 (FY2025말)</div><div class="v">+¥5,392억</div><div class="d">현금성자산 ¥2.21조</div></div>
+  </div>
+
+  <p class="small">본 보고서의 모든 수치는 2026-07-05 기준 수집 데이터(회사 6-K/20-F·결산자료, CNBC·Reuters·Investing·IFPI·Yole 등 약 40개 출처)에 근거하며, 추정치는 [추정]·파생계산은 [파생]·출처 간 불일치는 [상충] 표기로 구분했다. 매매 추천이 아닌 의사결정 보조 자료다.</p>
+</section>
+<!-- ================= 2. 기업 개요 ================= -->
+<section class="sec" id="s2">
+  <h2><span class="secnum">2</span>기업 개요 — 트랜지스터 라디오에서 IP 제국까지</h2>
+  <p class="seclead">설립 배경과 80년의 변태 과정 · 현재의 사업 골격 · 규모와 위상</p>
+
+  <h3>2.1 설립과 역사: '기술의 소니'가 '이야기의 소니'가 되기까지</h3>
+  <p>소니는 1946년 5월, 패전 직후의 도쿄에서 엔지니어 이부카 마사루(井深大)와 사업가 모리타 아키오(盛田昭夫)가 자본금 19만 엔으로 세운 '도쿄통신공업'에서 출발했다(1958년 Sony로 개명, 본사 도쿄 미나토구 Sony City). 이후 궤적은 일본 제조업사의 축소판이다. 1955년 일본 최초의 트랜지스터 라디오, 1968년 트리니트론 컬러 TV, 1979년 워크맨으로 '휴대 음악'이라는 카테고리 자체를 발명했고, 1982년에는 필립스와 CD 규격을 공동 제정하며 디지털 미디어의 표준을 쥐었다.</p>
+  <p>결정적 분기점은 하드웨어가 아니라 <strong>콘텐츠 인수</strong>였다. 1988년 CBS 레코드(현 Sony Music Entertainment), 1989년 컬럼비아 픽처스(현 Sony Pictures)를 사들이며 "하드웨어를 팔려면 그 위에 흐르는 소프트웨어를 소유해야 한다"는 모리타의 명제를 실행했고, 1994년 PlayStation으로 게임 플랫폼까지 확보했다. 2000년대 TV 사업의 만성 적자와 '갈라파고스화'로 위기를 겪었으나, 2010년대 히라이 가즈오·요시다 켄이치로 체제의 구조조정이 전자 중심 → 콘텐츠·센서 중심으로 무게추를 옮겼다. 2021년 4월 지주형 'Sony Group Corporation'으로 재편하며 게임·음악·영화·센서를 대등한 축으로 세웠고, 2024년에는 <strong>"Creative Entertainment Vision"</strong> — 크리에이티비티와 테크놀로지로 감동(Kando)을 전달하고 그룹 IP 가치를 극대화한다 — 을 공식 비전으로 선언했다.</p>
+  <p>그리고 2025~26년, 이 전환의 '마지막 장'이 압축적으로 실행됐다. 아래 다섯 건의 구조 결정은 각각 독립 사건이 아니라 <strong>"IP·설계 자산은 남기고, 자본집약·저마진 하드웨어는 지분법 또는 폐지로 내보낸다"</strong>는 단일 원칙의 표현이다.</p>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>시점</th><th>구조 결정</th><th>내용</th><th>재무·전략적 의미</th></tr></thead>
+    <tbody>
+      <tr><td>2025.10.1</td><td><b>금융 부분 스핀오프</b></td><td>Sony Financial Group(SFGI)을 1:1 현물배당으로 분리 상장, 잔여지분 16.40%만 지분법 보유. 일본 최초의 세제적격 파셜 스핀오프</td><td>복합기업 디스카운트 해소, IFRS17 보험회계 변동성 제거, ROE·자본효율 개선. 일회성 비현금 재측정 손실로 FY2025 최종 순이익은 −¥3,269억 적자(계속사업은 +¥1조309억)</td></tr>
+      <tr><td>2026.3.31</td><td><b>TV·AV → TCL 합작</b></td><td>BRAVIA TV·프로젝터·홈오디오 등을 신설 "BRAVIA Inc."(TCL 51%/소니 49%)에 이관, 2027.4 가동. TCL이 약 ¥750억 납입</td><td>만년 저마진 TV 하드웨어의 사실상 출구. 연결 매출은 줄지만 마진 개선 + 지분법 이익 전환. Sony/BRAVIA 브랜드는 유지</td></tr>
+      <tr><td>2026.5.8</td><td><b>센서 TSMC 합작 MOU</b></td><td>차세대 이미지센서 개발·제조 JV(소니 과반), 구마모토 코시 신공장 활용. "팹라이트로 가는 첫걸음"(CEO)</td><td>I&amp;SS의 CAPEX 부담 구조적 경감 + TSMC 최첨단 로직 공정으로 기술 격차 확대. 피지컬 AI(차량·로봇) 겨냥</td></tr>
+      <tr><td>2026.3.25</td><td><b>AFEELA EV 중단</b></td><td>혼다의 전동화 전략 철회로 Sony Honda Mobility의 EV 개발·출시 전면 중단, 인력 400명 복귀</td><td>FY2025 −¥449억 계상 후 손익 노이즈 제거. '소니카' 성장 옵션은 소멸</td></tr>
+      <tr><td>2026.7.1</td><td><b>실물 디스크 폐지</b></td><td>2028년 1월부터 PS 신작 실물 디스크 생산 종료(기존작 유지). 실물은 이미 PS 게임 매출의 약 3%</td><td>유통·제조비 제거, 중고시장 축소, 플랫폼 수수료 완전 내재화 → 발표 당일 주가 +3%대. PS6 디지털 전용 사실상 확정</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>2.2 현재의 사업 골격 — 6개 보고 부문</h3>
+  <p>금융 분리 후 소니의 보고 부문은 여섯 개다. <strong>G&amp;NS</strong>(Game &amp; Network Services: PS 하드·소프트·PS Plus·PSN), <strong>Music</strong>(세계 2위 음반사 Sony Music Entertainment + 세계 1위 출판사 Sony Music Publishing + 일본 SMEJ, 애니메 제작사 <b>Aniplex</b> 포함), <strong>Pictures</strong>(영화·TV 제작·미디어 네트워크, 애니메 스트리밍 <b>Crunchyroll</b> 포함), <strong>ET&amp;S</strong>(TV·카메라 α·오디오 — TV/AV는 2027.4 TCL 합작으로 이관 예정), <strong>I&amp;SS</strong>(CMOS 이미지센서 세계 1위), 그리고 All Other/본사(축소된 Sony Honda Mobility 등). 특기할 점은 애니메이션 밸류체인이 부문을 가로지른다는 것 — 제작(Aniplex, Music 부문)과 유통(Crunchyroll, Pictures 부문)이 분리 계상되므로, 소니의 '애니메 익스포저'는 어느 한 부문 숫자보다 크다.</p>
+
+  <h3>2.3 규모와 위상</h3>
+  <p>시가총액 약 ¥19.4~19.6조(≈$120~122B)로 일본 시총 최상위권이며, 발행주식은 자기주식 차감 후 약 58.9억 주(2026년 5월 1.845억 주 소각 반영), 직원 약 11만 명(금융 스핀오프 전 기준; 출처 간 9.5만~11.3만 상충)이다. 사업 위상은 부문별로 '세계 1~2위'가 반복된다: 콘솔 게임 플랫폼 1위(PS5 누적 9,370만 대·PSN 월간 이용자 1.32억), 음악출판 1위·음반 2위, 애니메 스트리밍 전문 1위(Crunchyroll 유료 2,100만), CMOS 이미지센서 1위(점유 약 42~45%). 배당은 47년 연속 지급 중이다. 요컨대 소니는 '한 산업의 챔피언'이 아니라 <strong>서로를 강화하는 네 개의 챔피언 포지션을 한 지붕 아래 모은 회사</strong>이고, 2026년 현재의 투자 논쟁은 "그 조합의 가치를 시장이 얼마나 쳐주고 있는가"로 수렴한다.</p>
+</section>
+
+<!-- ================= 3. 수익 구조 ================= -->
+<section class="sec" id="s3">
+  <h2><span class="secnum">3</span>수익 구조 — 소니는 어떻게 돈을 버는가</h2>
+  <p class="seclead">매출·이익의 원천 지도 · 부문별 성장/마진/추세 · 수익 모델의 질 · 고객·지역 분포</p>
+
+  <h3>3.1 수익 흐름 한눈에: 부문 × 수익 모델</h3>
+  <p>FY2025 계속사업 매출 ¥12.48조의 원천을 부문별로 펼치면 아래와 같다. 핵심은 <strong>매출 구성(게임 37%)과 이익 구성(엔터 3사 66%)의 착시 차이</strong>다. 하드웨어가 섞인 게임·전자가 외형을 키우지만, 이익의 무게중심은 마진 21%의 음악과 16.6%의 센서, 그리고 게임 안에서도 디지털·구독으로 이미 이동해 있다.</p>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 980 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="부문별 매출과 영업이익 인포그래픽">
+      <text x="20" y="26" font-size="14" font-weight="700" fill="#122033">FY2025 부문별 매출(좌) · 영업이익(우) · 핵심 수익 모델</text>
+      <!-- rows: name x=20 w=150 / rev bar x=175..535 (max 4700→360px) / model tag x=545..700 / OI bar x=710..900 (max 470→190px) -->
+      <text x="175" y="48" font-size="11" fill="#68788a">매출 (¥B)</text>
+      <text x="710" y="48" font-size="11" fill="#68788a">영업이익 (¥B) · OPM</text>
+      <!-- G&NS -->
+      <g>
+        <text x="20" y="76" font-size="13" font-weight="700" fill="#1b66d1">G&amp;NS 게임</text>
+        <rect x="175" y="60" width="359" height="22" rx="4" fill="#1b66d1"/>
+        <text x="526" y="76" font-size="12" fill="#ffffff" font-weight="700" text-anchor="end">4,685.7 (+0.3%)</text>
+        <text x="545" y="76" font-size="11.5" fill="#41505e">HW + 디지털·수수료·구독</text>
+        <rect x="710" y="60" width="187" height="22" rx="4" fill="#1b66d1"/>
+        <text x="889" y="76" font-size="12" fill="#ffffff" font-weight="700" text-anchor="end">463.3 · 9.9%</text>
+      </g>
+      <!-- Music -->
+      <g>
+        <text x="20" y="118" font-size="13" font-weight="700" fill="#8e44ad">Music 음악</text>
+        <rect x="175" y="102" width="162" height="22" rx="4" fill="#8e44ad"/>
+        <text x="329" y="118" font-size="12" fill="#ffffff" font-weight="700" text-anchor="end">2,120.1 (+15%)</text>
+        <text x="545" y="118" font-size="11.5" fill="#41505e">스트리밍 로열티+출판+공연</text>
+        <rect x="710" y="102" width="181" height="22" rx="4" fill="#8e44ad"/>
+        <text x="883" y="118" font-size="12" fill="#ffffff" font-weight="700" text-anchor="end">447.0 · 21.1%</text>
+      </g>
+      <!-- I&SS -->
+      <g>
+        <text x="20" y="160" font-size="13" font-weight="700" fill="#0e8a6d">I&amp;SS 센서</text>
+        <rect x="175" y="144" width="165" height="22" rx="4" fill="#0e8a6d"/>
+        <text x="332" y="160" font-size="12" fill="#ffffff" font-weight="700" text-anchor="end">2,151.5 (+20%)</text>
+        <text x="545" y="160" font-size="11.5" fill="#41505e">부품 판매 (스마트폰·차량 B2B)</text>
+        <rect x="710" y="144" width="144" height="22" rx="4" fill="#0e8a6d"/>
+        <text x="846" y="160" font-size="12" fill="#ffffff" font-weight="700" text-anchor="end">357.3 · 16.6%</text>
+      </g>
+      <!-- ET&S -->
+      <g>
+        <text x="20" y="202" font-size="13" font-weight="700" fill="#7f8c8d">ET&amp;S 전자</text>
+        <rect x="175" y="186" width="173" height="22" rx="4" fill="#7f8c8d"/>
+        <text x="340" y="202" font-size="12" fill="#ffffff" font-weight="700" text-anchor="end">2,260.5 (−6%)</text>
+        <text x="545" y="202" font-size="11.5" fill="#41505e">기기 판매 (TV는 JV 이관 예정)</text>
+        <rect x="710" y="186" width="64" height="22" rx="4" fill="#7f8c8d"/>
+        <text x="782" y="202" font-size="12" fill="#243342">158.6 · 7.0%</text>
+      </g>
+      <!-- Pictures -->
+      <g>
+        <text x="20" y="244" font-size="13" font-weight="700" fill="#e67e22">Pictures 영화</text>
+        <rect x="175" y="228" width="115" height="22" rx="4" fill="#e67e22"/>
+        <text x="298" y="244" font-size="12" fill="#243342">1,499.3 (0%)</text>
+        <text x="545" y="244" font-size="11.5" fill="#41505e">극장+제작 수수료+구독(CR)</text>
+        <rect x="710" y="228" width="42" height="22" rx="4" fill="#e67e22"/>
+        <text x="760" y="244" font-size="12" fill="#243342">104.9 · 7.0%</text>
+      </g>
+      <!-- total -->
+      <line x1="20" y1="266" x2="960" y2="266" stroke="#d9e0e8" stroke-width="1"/>
+      <text x="20" y="292" font-size="13" font-weight="700" fill="#122033">연결(계속사업)</text>
+      <text x="175" y="292" font-size="13" font-weight="700" fill="#122033">매출 ¥12,479.6B (+3.7%)</text>
+      <text x="545" y="292" font-size="12" fill="#41505e">All Other/조정 약 −¥84B 포함</text>
+      <text x="710" y="292" font-size="13" font-weight="700" fill="#122033">OI ¥1,447.5B · OPM 11.6%</text>
+      <text x="20" y="316" font-size="11.5" fill="#68788a">막대 길이는 각 열 내 상대 비율. 엔터테인먼트 3부문(게임+음악+영화)의 OI 합 ¥1,015.2B = 흑자 부문 합계의 66.3%</text>
+    </svg>
+  </div>
+  <figcaption><b>그림 1.</b> FY2025 부문별 매출·영업이익·수익 모델 지도. All Other(Sony Honda Mobility −¥449억 포함)·본사 조정 합산 약 −¥84B [파생]. | 출처: 회사 FY2025 결산자료(2026.5.8), 6-K</figcaption></figure>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="매출·영업이익 구성 도넛 차트">
+      <!-- 매출 도넛 -->
+      <g transform="translate(215,158)">
+        <circle r="80" fill="none" stroke="#e6ebf1" stroke-width="34"/>
+        <g transform="rotate(-90)">
+          <circle r="80" fill="none" stroke="#1b66d1" stroke-width="34" stroke-dasharray="184.98 317.67" stroke-dashoffset="0"/>
+          <circle r="80" fill="none" stroke="#8e44ad" stroke-width="34" stroke-dasharray="83.94 418.71" stroke-dashoffset="-184.98"/>
+          <circle r="80" fill="none" stroke="#e67e22" stroke-width="34" stroke-dasharray="59.31 443.34" stroke-dashoffset="-268.92"/>
+          <circle r="80" fill="none" stroke="#7f8c8d" stroke-width="34" stroke-dasharray="89.47 413.18" stroke-dashoffset="-328.23"/>
+          <circle r="80" fill="none" stroke="#0e8a6d" stroke-width="34" stroke-dasharray="84.95 417.70" stroke-dashoffset="-417.70"/>
+        </g>
+        <text y="-4" text-anchor="middle" font-size="14" font-weight="800" fill="#122033">매출 구성</text>
+        <text y="16" text-anchor="middle" font-size="11.5" fill="#68788a">부문 합계 대비</text>
+      </g>
+      <text x="215" y="290" text-anchor="middle" font-size="12" fill="#41505e">게임 36.8 · 전자 17.8 · 음악 16.7 · 센서 16.9 · 영화 11.8 (%)</text>
+      <!-- OI 도넛 -->
+      <g transform="translate(650,158)">
+        <circle r="80" fill="none" stroke="#e6ebf1" stroke-width="34"/>
+        <g transform="rotate(-90)">
+          <circle r="80" fill="none" stroke="#1b66d1" stroke-width="34" stroke-dasharray="152.10 350.55" stroke-dashoffset="0"/>
+          <circle r="80" fill="none" stroke="#8e44ad" stroke-width="34" stroke-dasharray="146.72 355.93" stroke-dashoffset="-152.10"/>
+          <circle r="80" fill="none" stroke="#0e8a6d" stroke-width="34" stroke-dasharray="117.32 385.33" stroke-dashoffset="-298.82"/>
+          <circle r="80" fill="none" stroke="#7f8c8d" stroke-width="34" stroke-dasharray="52.07 450.58" stroke-dashoffset="-416.14"/>
+          <circle r="80" fill="none" stroke="#e67e22" stroke-width="34" stroke-dasharray="34.43 468.22" stroke-dashoffset="-468.21"/>
+        </g>
+        <text y="-4" text-anchor="middle" font-size="14" font-weight="800" fill="#122033">영업이익 구성</text>
+        <text y="16" text-anchor="middle" font-size="11.5" fill="#68788a">흑자 부문 합계 대비</text>
+      </g>
+      <text x="650" y="290" text-anchor="middle" font-size="12" fill="#41505e">게임 30.3 · 음악 29.2 · 센서 23.3 · 전자 10.4 · 영화 6.9 (%)</text>
+      <!-- 중앙 화살표 코멘트 -->
+      <text x="433" y="120" text-anchor="middle" font-size="12.5" fill="#0e8a6d" font-weight="700">이익의 무게중심은</text>
+      <text x="433" y="138" text-anchor="middle" font-size="12.5" fill="#0e8a6d" font-weight="700">음악·센서로 이동</text>
+      <text x="433" y="166" text-anchor="middle" font-size="20" fill="#8aa2bd">→</text>
+    </svg>
+    <div class="legend">
+      <span><i class="dot" style="background:#1b66d1"></i>G&amp;NS 게임</span>
+      <span><i class="dot" style="background:#8e44ad"></i>Music 음악</span>
+      <span><i class="dot" style="background:#0e8a6d"></i>I&amp;SS 센서</span>
+      <span><i class="dot" style="background:#7f8c8d"></i>ET&amp;S 전자</span>
+      <span><i class="dot" style="background:#e67e22"></i>Pictures 영화</span>
+    </div>
+  </div>
+  <figcaption><b>그림 2.</b> 매출은 게임이 3분의 1이지만, 이익에서는 음악(29.2%)이 게임(30.3%)과 사실상 대등 — 엔터 3사 합계가 66.3%. | 출처: 회사 FY2025 결산자료 기반 [파생계산]</figcaption></figure>
+
+  <h3>3.2 부문별 성장·마진·추세: FY2025 실적과 FY2026 가이던스</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>부문</th><th class="num">FY2025 매출</th><th class="num">YoY</th><th class="num">FY2025 OI</th><th class="num">YoY</th><th class="num">FY2026E 매출</th><th class="num">FY2026E OI</th><th>추세 해석</th></tr></thead>
+    <tbody>
+      <tr><td><b>G&amp;NS</b> 게임</td><td class="num">¥4,685.7B</td><td class="num">+0.3%</td><td class="num">¥463.3B</td><td class="num">+12%</td><td class="num">¥4,420B (−6%)</td><td class="num"><b>¥600B (+30%)</b></td><td>Bungie 감손 제외 시 FY2025 OI는 +45%로 사상 최대. FY2026은 하드웨어 축소·이익 사수 전략 + GTA6 하반기 촉매</td></tr>
+      <tr><td><b>Music</b> 음악</td><td class="num">¥2,120.1B</td><td class="num"><b>+15%</b></td><td class="num"><b>¥447.0B</b></td><td class="num"><b>+25% 사상최대</b></td><td class="num">¥2,140B (0%)</td><td class="num">¥400B (−11%)</td><td>스트리밍(음반 +9%·출판 +14%, USD) + '귀멸' 극장판 + Peanuts 재측정 +¥347억. FY2026 감익은 일회성 반작용, 기조는 구조 성장</td></tr>
+      <tr><td><b>Pictures</b> 영화</td><td class="num">¥1,499.3B</td><td class="num">0%</td><td class="num">¥104.9B</td><td class="num">−11%</td><td class="num">¥1,630B (+9%)</td><td class="num"><b>¥145B (+38%)</b></td><td>극장 대작 공백(−) vs Crunchyroll 포함 미디어 네트워크 +13%(+). FY2026은 스파이더맨 신작·Pixomondo 감손 소멸</td></tr>
+      <tr><td><b>ET&amp;S</b> 전자</td><td class="num">¥2,260.5B</td><td class="num">−6%</td><td class="num">¥158.6B</td><td class="num">−17%</td><td class="num" colspan="2" style="text-align:center">TCL 합작 대기 (2027.4 이관)</td><td>TV 판매 감소가 주인. 카메라 α·제작기술 중심으로 재편 중</td></tr>
+      <tr><td><b>I&amp;SS</b> 센서</td><td class="num">¥2,151.5B</td><td class="num"><b>+20%</b></td><td class="num"><b>¥357.3B</b></td><td class="num"><b>+37% 사상최대</b></td><td class="num">¥2,070B (−4%)</td><td class="num"><b>¥400B (+12%)</b></td><td>모바일 플래그십(애플 추정) 호조·믹스 개선. FY2026 매출은 메모리發 스마트폰 위축을 보수 반영, 이익은 구조조정비 소멸로 증가</td></tr>
+      <tr class="total"><td>연결(계속사업)</td><td class="num">¥12,479.6B</td><td class="num">+3.7%</td><td class="num">¥1,447.5B</td><td class="num">+13.4%</td><td class="num">¥12,300B (−1%)</td><td class="num">¥1,600B (+11%)</td><td>OPM 11.6% → 13.0%(E)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">FY2025 일회성: Bungie 감손 −¥1,201억(G&amp;NS)·Pixomondo −¥271억(Pictures)·디스플레이 디바이스 −¥165억 및 Altair 매각손 −¥199억(I&amp;SS)·AFEELA −¥449억(All Other)·Peanuts 재측정 +¥347억(Music). 합산 약 −¥2,080억을 제외한 실질 체력은 표면치보다 강함. | 출처: 회사 6-K, 결산 슬라이드</p>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="부문 포지셔닝 버블차트: 성장률 대 마진">
+      <text x="20" y="26" font-size="14" font-weight="700" fill="#122033">부문 포지셔닝: 성장(가로) × 수익성(세로) × 규모(원 크기 = 매출)</text>
+      <!-- plot: x -8..22 → 90..900 ; y 0..24% → 370..60 -->
+      <g stroke="#e6ebf1" stroke-width="1">
+        <line x1="90" y1="370" x2="900" y2="370"/><line x1="90" y1="292.5" x2="900" y2="292.5"/><line x1="90" y1="215" x2="900" y2="215"/><line x1="90" y1="137.5" x2="900" y2="137.5"/><line x1="90" y1="60" x2="900" y2="60"/>
+      </g>
+      <line x1="306" y1="55" x2="306" y2="375" stroke="#c3ccd6" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <text x="306" y="392" font-size="11" fill="#68788a" text-anchor="middle">0%</text>
+      <text x="60" y="374" font-size="11" fill="#68788a" text-anchor="end">0%</text>
+      <text x="60" y="296" font-size="11" fill="#68788a" text-anchor="end">6%</text>
+      <text x="60" y="219" font-size="11" fill="#68788a" text-anchor="end">12%</text>
+      <text x="60" y="141" font-size="11" fill="#68788a" text-anchor="end">18%</text>
+      <text x="60" y="64" font-size="11" fill="#68788a" text-anchor="end">24%</text>
+      <text x="28" y="215" font-size="11.5" fill="#41505e" transform="rotate(-90 28 215)" text-anchor="middle">영업이익률 (FY2025)</text>
+      <text x="495" y="412" font-size="11.5" fill="#41505e" text-anchor="middle">매출 성장률 YoY (FY2025)</text>
+      <!-- x ticks -->
+      <text x="144" y="392" font-size="11" fill="#68788a" text-anchor="middle">−6%</text>
+      <text x="468" y="392" font-size="11" fill="#68788a" text-anchor="middle">+6%</text>
+      <text x="630" y="392" font-size="11" fill="#68788a" text-anchor="middle">+12%</text>
+      <text x="792" y="392" font-size="11" fill="#68788a" text-anchor="middle">+18%</text>
+      <!-- bubbles: x=306+g*27 ; y=370-m*12.9167 -->
+      <!-- ET&S (-6, 7.0) x=144 y=279.6 r=24 -->
+      <circle cx="144" cy="279.6" r="24" fill="#7f8c8d" opacity="0.75"/>
+      <text x="144" y="243" font-size="12.5" font-weight="700" fill="#5b6a70" text-anchor="middle">ET&amp;S</text>
+      <!-- Pictures (0, 7.0) x=306 y=279.6 r=19 -->
+      <circle cx="306" cy="279.6" r="19" fill="#e67e22" opacity="0.8"/>
+      <text x="306" y="320" font-size="12.5" font-weight="700" fill="#b05f0e" text-anchor="middle">Pictures</text>
+      <!-- G&NS (0.3, 9.9) x=314 y=242.1 r=34 -->
+      <circle cx="314" cy="242.1" r="34" fill="#1b66d1" opacity="0.75"/>
+      <text x="352" y="216" font-size="12.5" font-weight="700" fill="#0d3f8f">G&amp;NS</text>
+      <!-- I&SS (20, 16.6) x=846 y=155.6 r=23 -->
+      <circle cx="846" cy="155.6" r="23" fill="#0e8a6d" opacity="0.8"/>
+      <text x="846" y="119" font-size="12.5" font-weight="700" fill="#0a6b54" text-anchor="middle">I&amp;SS</text>
+      <!-- Music (15, 21.1) x=711 y=97.5 r=23 -->
+      <circle cx="711" cy="97.5" r="23" fill="#8e44ad" opacity="0.8"/>
+      <text x="711" y="140" font-size="12.5" font-weight="700" fill="#6f2f8c" text-anchor="middle">Music</text>
+      <!-- annotation -->
+      <text x="770" y="60" font-size="12" fill="#0e8a6d" font-weight="700" text-anchor="middle">우상단 = 성장+고마진</text>
+    </svg>
+  </div>
+  <figcaption><b>그림 3.</b> 음악·센서가 성장·수익성 모두에서 우상단, 전자는 좌하단 — 2025~26년 구조 개편은 정확히 좌하단을 잘라내는 작업이다. | 출처: 회사 FY2025 결산자료 [파생]</figcaption></figure>
+
+  <h3>3.3 수익 모델의 질(質) 평가</h3>
+  <p>수익 모델의 질을 '반복성·마진·자본 소요' 세 축으로 평가하면 부문 간 격차가 뚜렷하다. <strong>최상급은 음악</strong>이다. 스트리밍 로열티는 재생될 때마다 발생하는 사용료로, 한계비용이 거의 없고 카탈로그(퀸·마이클 잭슨·밥 딜런 등 10년간 $60억+ 인수)는 감가되지 않는 영구 자산에 가깝다. <strong>게임은 이중 구조</strong>다: 하드웨어는 저마진·경기민감이지만, 그 위의 디지털 소프트(4분기 비중 85%)·PS Store 30% 수수료·PS Plus 구독은 플랫폼 경제학을 따른다 — 실물 디스크 폐지는 이 '플랫폼 순도'를 100%로 끌어올리는 결정이다. <strong>센서는 B2B 부품 판매</strong>로 반복 구매성은 높으나 고객 집중(애플 추정)과 스마트폰 사이클 노출이 약점이며, TSMC 합작·팹라이트 전환은 이 모델의 자본 소요를 낮추는 방향이다. <strong>영화는 흥행 변동성이 크지만</strong> Crunchyroll 구독(2,100만 유료, 2026년 2월 가격 인상)이 반복 매출 비중을 키우는 중이고, <strong>전자는 전형적 기기 판매 모델</strong>로 — 그래서 내보내는 것이다.</p>
+
+  <h3>3.4 고객 집중도와 지역 분포</h3>
+  <p>고객 구조는 부문별로 상이하다. 게임·음악·Crunchyroll은 수천만~억 단위 개인 고객으로 분산돼 집중 리스크가 낮은 반면, <strong>I&amp;SS는 특정 스마트폰 대형 고객(애플로 추정)에 대한 의존이 높다</strong> — FY2025 4분기에도 "주요 고객향 강한 출하"가 실적을 견인했고, 역으로 2025년 12월 삼성이 애플에 3층 적층 센서 공급 계약을 맺었다는 보도는 이 집중의 이면 리스크를 보여준다(섹션 12). 음악 유통에서는 스포티파이·유튜브 등 플랫폼 교섭력이, 게임에서는 소비자 가격 저항(PS5 인상 후 미국 5월 판매 −58%)이 각각의 '구매자 파워'로 작용한다. 지역적으로는 미국이 최대 시장(게임·음악·영화 소비, 관세 영향 −¥500억 반영)이고, 일본은 애니메 IP 원천이자 센서 생산 기지, 중국은 귀멸의 칼날 오프닝 $5,240만이 보여준 성장 시장이다. <strong>엔저(USD/JPY 161, 40년 만의 수준)는 해외 이익의 엔화 환산에 대형 순풍</strong>으로, 3분기 게임 OI +19%의 명시 요인이었다 — 동시에 반전 시 역풍이 된다는 뜻이기도 하다.</p>
+
+  <h3>3.5 성장 가시성: 선행 지표 대시보드</h3>
+  <p>소니의 수익 반복성을 보여주는 네 개의 선행 지표가 모두 우상향이다. 하드웨어 판매량(PS5 분기 출하)이 흔들리는 국면에서도 <strong>네트워크·구독 지표는 사상 최대를 경신</strong>하고 있다는 점이, "소니의 본체는 이제 하드웨어가 아니라 플랫폼"이라는 회사 측 반론의 근거다.</p>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="선행지표 4패널">
+      <!-- panel 1 PSN MAU -->
+      <g transform="translate(10,10)">
+        <text x="110" y="16" font-size="13" font-weight="700" fill="#122033" text-anchor="middle">PSN 월간 이용자 (억)</text>
+        <rect x="30" y="130" width="60" height="90" rx="4" fill="#9db9e8"/>
+        <rect x="120" y="112" width="60" height="108" rx="4" fill="#1b66d1"/>
+        <text x="60" y="122" font-size="12.5" text-anchor="middle" fill="#41505e" font-weight="700">1.25</text>
+        <text x="150" y="104" font-size="12.5" text-anchor="middle" fill="#0d3f8f" font-weight="700">1.32</text>
+        <text x="60" y="240" font-size="11" text-anchor="middle" fill="#68788a">'26.3 (4Q 최대)</text>
+        <text x="150" y="240" font-size="11" text-anchor="middle" fill="#68788a">'25.12 사상최대</text>
+        <text x="110" y="266" font-size="11" text-anchor="middle" fill="#0e8a6d" font-weight="700">둘 다 해당 시점 신기록</text>
+      </g>
+      <!-- panel 2 digital ratio -->
+      <g transform="translate(255,10)">
+        <text x="110" y="16" font-size="13" font-weight="700" fill="#122033" text-anchor="middle">디지털 소프트 비중</text>
+        <rect x="30" y="128" width="60" height="92" rx="4" fill="#f0b985"/>
+        <rect x="120" y="117" width="60" height="103" rx="4" fill="#e67e22"/>
+        <text x="60" y="120" font-size="12.5" text-anchor="middle" fill="#41505e" font-weight="700">76%</text>
+        <text x="150" y="109" font-size="12.5" text-anchor="middle" fill="#b05f0e" font-weight="700">85%</text>
+        <text x="60" y="240" font-size="11" text-anchor="middle" fill="#68788a">FY2024 연간</text>
+        <text x="150" y="240" font-size="11" text-anchor="middle" fill="#68788a">FY2025 4Q</text>
+        <text x="110" y="266" font-size="11" text-anchor="middle" fill="#0e8a6d" font-weight="700">2028.1 디스크 폐지 → 100%로</text>
+      </g>
+      <!-- panel 3 Crunchyroll -->
+      <g transform="translate(500,10)">
+        <text x="110" y="16" font-size="13" font-weight="700" fill="#122033" text-anchor="middle">Crunchyroll 유료 (백만)</text>
+        <rect x="18" y="156" width="52" height="64" rx="4" fill="#d3b4e3"/>
+        <rect x="84" y="147" width="52" height="73" rx="4" fill="#b07cc9"/>
+        <rect x="150" y="130" width="52" height="90" rx="4" fill="#8e44ad"/>
+        <text x="44" y="148" font-size="12.5" text-anchor="middle" fill="#41505e" font-weight="700">15</text>
+        <text x="110" y="139" font-size="12.5" text-anchor="middle" fill="#41505e" font-weight="700">17</text>
+        <text x="176" y="122" font-size="12.5" text-anchor="middle" fill="#6f2f8c" font-weight="700">21</text>
+        <text x="44" y="240" font-size="11" text-anchor="middle" fill="#68788a">'24.8</text>
+        <text x="110" y="240" font-size="11" text-anchor="middle" fill="#68788a">'25 봄</text>
+        <text x="176" y="240" font-size="11" text-anchor="middle" fill="#68788a">'26.5</text>
+        <text x="110" y="266" font-size="11" text-anchor="middle" fill="#0e8a6d" font-weight="700">21개월 만에 +40%</text>
+      </g>
+      <!-- panel 4 PS5 cumulative -->
+      <g transform="translate(745,10)">
+        <text x="110" y="16" font-size="13" font-weight="700" fill="#122033" text-anchor="middle">PS5 누적 출하 (백만)</text>
+        <rect x="30" y="126" width="60" height="94" rx="4" fill="#8fc7b6"/>
+        <rect x="120" y="107" width="60" height="113" rx="4" fill="#0e8a6d"/>
+        <text x="60" y="118" font-size="12.5" text-anchor="middle" fill="#41505e" font-weight="700">77.7</text>
+        <text x="150" y="99" font-size="12.5" text-anchor="middle" fill="#0a6b54" font-weight="700">93.7</text>
+        <text x="60" y="240" font-size="11" text-anchor="middle" fill="#68788a">FY2024말</text>
+        <text x="150" y="240" font-size="11" text-anchor="middle" fill="#68788a">FY2025말</text>
+        <text x="110" y="266" font-size="11" text-anchor="middle" fill="#0e8a6d" font-weight="700">수개월 내 1억 대 돌파 예상</text>
+      </g>
+    </svg>
+  </div>
+  <figcaption><b>그림 4.</b> 성장 가시성 4대 선행지표 — 설치 기반(PS5)·활성도(MAU)·화폐화 순도(디지털 비중)·구독(Crunchyroll)이 모두 확대. PSN MAU는 연말(1.32억)과 회계 4분기(1.25억)가 각각 해당 기준 사상 최대. | 출처: 회사 결산자료, PlayStation 발표, Crunchyroll 발표(2026.5.8)</figcaption></figure>
+</section>
+<!-- ================= 4. 제품·서비스 및 기술력 ================= -->
+<section class="sec" id="s4">
+  <h2><span class="secnum">4</span>제품·서비스 및 기술력 — 네 개의 엔진, 작동 원리까지</h2>
+  <p class="seclead">PlayStation 플랫폼 경제학 · CMOS 센서의 기술 해자 · 음악 카탈로그라는 영구 자산 · 애니메 IP 파이프라인</p>
+
+  <h3>4.1 PlayStation: '기계 판매업'에서 '수수료 징수 플랫폼'으로</h3>
+  <p>PS5는 2026년 3월 말 누적 9,370만 대가 출하됐고 수개월 내 1억 대 돌파가 예상된다. 그러나 이 하드웨어 숫자보다 중요한 것은 그 위의 <strong>경제 구조</strong>다. PlayStation Network의 월간 활성 이용자(MAU)는 2025년 12월 1억3,200만 계정으로 사상 최대, 소프트웨어의 디지털 판매 비중은 FY2025 4분기 85%다. 디지털 판매에서 소니는 PS Store를 통해 <strong>서드파티 매출의 30%를 수수료로 수취</strong>하며, 유통·재고·중고 반품이라는 실물 채널의 비용과 누수가 모두 사라진다. 2026년 7월 발표된 '2028년 1월 신작 실물 디스크 종료'는 이 구조를 완성하는 조치다 — 실물이 이미 PS 게임 매출의 약 3%까지 줄었기에 매출 손실은 미미하고, 마진 개선분만 남는다. 시장도 같은 해석을 했다: 발표 당일 주가는 +3%대 상승했다.</p>
+  <p>콘텐츠 측면에서 FY2025는 명암이 갈렸다. Ghost of Yotei(2025.10)는 32일 330만 장에서 2026년 6월 약 480만~500만 장으로 롱테일을 그리며 $70 정가 유지 전략으로 전작 대비 '판매량은 낮아도 매출은 높은' 성과를 냈고, Death Stranding 2도 170만 장을 팔았다. 반면 라이브서비스 전략의 기함이던 Bungie의 Marathon은 PS5 34.7만 장에 그치며 <strong>¥1,201억 감손</strong>의 배경이 됐다 — 소니가 2022년 $36억에 인수한 스튜디오의 실패는 라이브서비스 확장 전략 전반의 재검토를 의미한다. FY2026 상반기는 신작 공백기이며, 9월 Marvel's Wolverine(인섬니악)과 <strong>11월 19일 GTA6</strong>(PS5/Xbox 독점, PS5 예약이 Xbox의 약 6배)가 하반기 반전 카드다. GTA6는 소니에 하드웨어 판매·30% 디지털 수수료·PS Plus 가입이라는 삼중 수혜를 준다. 차세대 PS6는 가이던스상 "차세대 플랫폼 투자"로 개발이 공식화됐고, 디스크 폐지로 디지털 전용이 사실상 확정됐다(출시 시점은 미공표, 2027년 말 루머 수준).</p>
+  <div class="box box-amber"><span class="bt">기술·원가의 최대 변수 — 메모리 크런치 대응</span>
+  AI 데이터센터가 2026년 세계 메모리 생산의 약 70%를 흡수하며 DRAM 계약가가 1분기 +90~95%(사상 최대 상승) 급등했다. 소니의 대응은 두 갈래다: ①가격 전가 — PS5 $649.99/Pro $899.99로 2차 인상(출시가보다 비싸진 최초의 콘솔 세대) ②물량 절제 — "합리적 가격에 확보 가능한 메모리 물량 기준으로 판매·프로모션을 축소해 수익성을 사수"(FY2026 하드웨어 전략). 회사는 메모리 영향을 FY2026에 약 −¥300억으로 억제하고 2026년 필요 물량·가격을 대체로 확보했다고 밝혔다. 즉 소니의 선택은 '점유율 방어'가 아니라 <strong>'이익 방어'</strong>이며, 이는 플랫폼 수익(소프트·구독)이 하드웨어 대수에 과거만큼 민감하지 않다는 자신감의 표현이다.</div>
+
+  <h3>4.2 I&amp;SS: CMOS 이미지센서 — 물리 세계의 '눈'을 만드는 기술</h3>
+  <p>CMOS 이미지센서(CIS)는 빛을 전기 신호로 바꾸는 반도체로, 스마트폰 카메라의 심장이다. 소니의 기술 우위는 <strong>적층(stacked) 구조</strong>에서 나온다 — 빛을 받는 픽셀층과 신호를 처리하는 로직층을 별도 웨이퍼로 만들어 수직으로 붙이는 방식으로, 소니가 세계 최초로 상용화했다. 여기에 이면조사(BSI: 배선을 픽셀 뒤로 보내 수광 면적을 극대화), 2층 트랜지스터 픽셀(포토다이오드와 트랜지스터를 분리 적층해 포화 신호량을 배가), 글로벌 셔터(전 픽셀 동시 노출로 왜곡 제거) 등 픽셀 아키텍처 혁신을 겹겹이 쌓았다. 설계부터 제조까지 수직통합한 IDM(종합반도체기업) 체제여서 <strong>픽셀 구조의 실험→양산 반복 속도</strong>에서 팹리스 경쟁사를 앞선다. 최근 라인업은 스마트폰 플래그십용 LYTIA 901, 차량용 최초로 MIPI A-PHY 인터페이스를 내장한 IMX828(2025.10), 보안 4K IMX908, 산업용 IMX925 등으로 응용처를 넓히고 있다.</p>
+  <p>2026년 5월의 TSMC 합작 MOU는 이 기술 전략의 다음 수다. 지금까지 로직층까지 자체 공정으로 만들던 것을, <strong>세계 최고 파운드리인 TSMC의 미세공정으로 로직층을 만들어 적층 밀도를 높이고</strong>, 동시에 팹 투자 부담을 나눈다("팹라이트로 가는 첫걸음" — CEO 토토키). 구마모토 코시의 소니 신공장을 활용하고 일본 정부 지원을 전제로 나가사키 증설도 병행한다. 겨냥하는 시장은 명시적으로 <strong>피지컬 AI</strong> — 자율주행차와 로봇의 '눈' — 이며, 이는 일본 정부의 2040 피지컬 AI 국가전략과도 공명한다. FY2025 I&amp;SS가 매출 +20%·OI +37%(사상 최대)를 기록한 것은 이 기술력이 이미 최상위 고객(애플 추정)의 플래그십 수요로 현금화되고 있음을 보여준다.</p>
+
+  <h3>4.3 Music: 감가되지 않는 자산 — 카탈로그와 출판의 경제학</h3>
+  <p>Sony Music은 두 개의 세계 정상 포지션을 갖는다. 녹음음악(음반)에서 세계 2위(점유 20%대 초반 [추정]), 그리고 <strong>음악출판(작곡·작사 저작권 관리)에서 세계 1위</strong>다. 출판은 특히 강력한데, 곡이 어디서 재생·커버·삽입되든 저작권료가 발생하는 '상류' 권리이기 때문이다. 회사는 지난 10년간 <strong>$60억 이상을 카탈로그 인수에 투입</strong>했다: 퀸 약 $12.7억(사상 최대 음악 거래), 마이클 잭슨 지분 50%(≥$6억), 핑크 플로이드 녹음원반·초상권(~$4억), 브루스 스프링스틴(~$5.5억), 밥 딜런 녹음원반 등. 이 자산들은 스트리밍 단가 인상, 그리고 새로 열리는 <strong>AI 라이선싱 시장</strong>(2026년 5월 UMG×Spotify AI 음악 딜이 신호탄)의 직접 수혜 지점이다. FY2025 Music OI ¥4,470억(+25%, 사상 최대)에는 스트리밍 구조 성장(음반 +9%·출판 +14%, USD)에 더해, Aniplex가 제작위원회를 주도한 '귀멸의 칼날' 극장판 기여와 Peanuts(스누피) 지분 재측정 이익 +¥347억이 겹쳤다.</p>
+
+  <h3>4.4 애니메이션: 원작부터 굿즈까지 — 그룹을 관통하는 IP 파이프라인</h3>
+  <p>소니의 애니메 사업은 단일 부문이 아니라 <strong>그룹 전체를 관통하는 수직 파이프라인</strong>이다. 원작(라이트노벨·망가)은 2025년 1월 최대주주(약 10%)가 된 KADOKAWA와의 동맹으로 상류를 확보했고(엘든링의 FromSoftware 지분 14.09%는 별도 직접 보유), 제작은 Music 부문의 Aniplex(귀멸의 칼날·Fate 시리즈)와 산하 스튜디오 A-1 Pictures·CloverWorks, 그리고 Aniplex×Crunchyroll 합작 제작사 Hayate(2026.4 스튜디오 Lay-duce 인수)가 담당한다. 배급은 Pictures(SPE)가, 글로벌 스트리밍은 Crunchyroll(유료 2,100만)이 맡고, 마지막으로 게임화·음악(주제가·OST)·머천다이즈·라이브 이벤트가 그룹 내에서 순환한다. <strong>하나의 IP가 그룹 안에서 최소 5번 과금되는 구조</strong>다. 2025년 '귀멸의 칼날 무한성편'이 전 세계 $7.93억(일본 영화·애니메 영화 역대 1위, 북미 외국어 영화 역대 1위)을 기록한 것은 이 파이프라인의 실증이며, 3부작의 후속 2편이 파이프라인에 남아 있다.</p>
+
+  <h3>4.5 R&amp;D·인재·모방 난이도 종합</h3>
+  <p>기술 해자의 깊이를 부문별로 보면: 센서는 <strong>수십 년 축적된 픽셀 공정 노하우+특허+IDM 반복속도</strong>로 모방 난이도가 가장 높고(삼성이 수년째 추격 중이나 점유 격차 2배 이상), 게임 플랫폼은 <strong>네트워크 효과+독점 IP 스튜디오군</strong>(인섬니악·너티독·산타모니카 등)이 진입장벽이며, 음악 카탈로그는 <strong>물리적으로 복제 불가능한 희소 자산</strong>이다. 파괴적 혁신의 위협은 존재한다 — 클라우드 게이밍이 콘솔을, AI 생성 콘텐츠가 음악·영상 제작을, 스마트폰 카메라의 소프트웨어적 보정이 하드웨어 센서 차별화를 각각 잠식할 가능성 — 그러나 현시점 데이터는 반대 방향이다: 콘솔 디지털 생태계는 강화됐고, AI는 오히려 카탈로그 라이선싱 수요를 만들며, AI 시대의 '피지컬 확장'은 센서 수요를 늘린다. 조직 측면에서는 재무통 CEO(토토키)와 창작·기술 리더(SIE 공동 CEO 체제, SPE의 Ravi Ahuja, SMG의 Rob Stringer)가 분업하는 구조로, 2018년 이후 '3축 전략'의 인적 연속성이 유지되고 있다.</p>
+</section>
+
+<!-- ================= 5. 산업 분석 ================= -->
+<section class="sec" id="s5">
+  <h2><span class="secnum">5</span>산업 분석 — 네 개의 전장(戰場)과 가치사슬 위치</h2>
+  <p class="seclead">게임 · 음악 · 애니메이션 · 이미지센서: 각 산업의 구조, 규모, 방향성, 그리고 소니의 자리</p>
+
+  <h3>5.1 게임 산업: 저성장 콘텐츠 + 고성장 구독, 그리고 메모리 쇼크</h3>
+  <p>글로벌 게임 시장은 약 $1,900억 내외[통설, 추정]의 성숙 시장이다. 미국 2025년 게임 지출은 $607억(+1.4%)로 저성장이지만, 내부 구성이 갈린다: 콘텐츠 $523억 중 <strong>구독이 +20%로 성장을 견인</strong>했고, 실물 소프트는 $16억으로 콜렉터 니치가 됐다. 즉 산업의 가치는 '기기·패키지 판매'에서 '플랫폼·구독·라이브 화폐화'로 이동 중이며, 소니의 디스크 폐지·PS Plus 강화는 이 흐름의 정면에 서 있다. 2026년의 최대 산업 변수는 앞서 본 <strong>메모리 크런치</strong>다. 3대 플랫폼이 일제히 가격을 올렸고(소니 2회, 닌텐도 Switch 2 +$50 및 연간 전망 1,990만→1,650만 대 하향, MS Xbox 최대 +$150), '차기 콘솔 $1,000 시대' 담론까지 등장했다. 사상 처음으로 '나이 들수록 비싸지는 콘솔 세대'가 된 것이다. 이 충격은 소니만의 문제가 아니라 <strong>섹터 공통 역풍</strong>이며(닌텐도 주가 고점比 −53%), 오히려 하드웨어 의존도가 낮아진 쪽이 상대적으로 유리하다 — 디지털 85%·MAU 최대의 소니가 그 위치다.</p>
+
+  <h3>5.2 음악 산업: 11년 연속 성장, 그리고 AI라는 새 저작권 시장</h3>
+  <p>IFPI 집계 2025년 글로벌 녹음음악 매출은 <strong>$317억(+6.4%)로 11년 연속 성장하며 재가속</strong>했다. 유료 스트리밍이 +8.8%(매출의 52.4%), 유료 구독 계정은 8.37억(+11%)으로 늘었고, 바이닐은 19년 연속 성장(+13.7%) 중이다. 지역적으로는 미국 +3.3%(점유 38.7%), 일본 +8.9%(2위 시장 성장 복귀), <strong>중국 +20.1%(4위 부상)</strong>, 중남미 +17.1% — 신흥 시장의 구독 침투가 장기 성장의 원천이다. 구조 테마는 AI다: UMG×Spotify의 AI 음악 라이선싱 딜(2026.5)은 대형 카탈로그 보유사가 AI 시대의 '원료 공급자'로 재평가될 수 있음을 보여줬고, 동시에 AI 생성 트랙의 스트리밍 사기는 업계 공통 리스크다. 세계 1위 출판+2위 음반의 소니는 이 구조 성장과 신규 라이선싱 시장 양쪽의 수혜 포지션에 있다.</p>
+
+  <h3>5.3 애니메이션: 니치에서 주류로 — 그리고 넷플릭스라는 침입자</h3>
+  <p>애니메는 글로벌 스트리밍에서 약 $55억(전체 구독매출의 6%)을 유발하는 시장으로 성장했고, 극장에서는 '귀멸의 칼날 무한성편' $7.93억(2025년 글로벌 흥행 7위), 체인소맨 레제편 국제 $0.94억 등이 <strong>애니메 영화의 주류화</strong>를 실증했다. 귀멸 영화 프랜차이즈 누적은 $10억을 넘었다. 경쟁 구도의 핵심 변화는 넷플릭스의 공세다 — 애니메 유발 스트리밍 매출에서 넷플릭스 점유 38%($20억+)가 Crunchyroll을 추월했다(2024, Parrot Analytics). 다만 두 회사의 포지션은 다르다: 넷플릭스는 '유통 채널 중 하나'지만, 소니는 원작 지분(KADOKAWA)→제작(Aniplex)→배급(SPE)→전문 스트리밍(Crunchyroll)→2차 사업까지 <strong>수직 전체를 소유</strong>한 유일한 플레이어다. 애니메 시장이 커질수록 어느 채널에서 소비되든 소니의 상류 수익은 늘어나는 구조다.</p>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 980 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="애니메 수직계열화 가치사슬">
+      <text x="20" y="24" font-size="14" font-weight="700" fill="#122033">소니 애니메이션 가치사슬 — 한 IP가 그룹 안에서 다중 과금되는 구조</text>
+      <!-- 5 boxes -->
+      <g font-size="12">
+        <rect x="20" y="46" width="168" height="104" rx="10" fill="#e8f0fc" stroke="#b9d2f2" stroke-width="1.5"/>
+        <text x="104" y="68" text-anchor="middle" font-weight="800" fill="#0d2b52" font-size="13">① 원작 IP</text>
+        <text x="104" y="90" text-anchor="middle" fill="#14335c">KADOKAWA 약 10%</text>
+        <text x="104" y="108" text-anchor="middle" fill="#14335c">(최대주주, ¥500억)</text>
+        <text x="104" y="126" text-anchor="middle" fill="#14335c">FromSoftware 14.09%</text>
+
+        <rect x="216" y="46" width="168" height="104" rx="10" fill="#f3eaf9" stroke="#d3b4e3" stroke-width="1.5"/>
+        <text x="300" y="68" text-anchor="middle" font-weight="800" fill="#5b2478" font-size="13">② 제작</text>
+        <text x="300" y="90" text-anchor="middle" fill="#4a2d5c">Aniplex (귀멸·FGO)</text>
+        <text x="300" y="108" text-anchor="middle" fill="#4a2d5c">A-1 · CloverWorks</text>
+        <text x="300" y="126" text-anchor="middle" fill="#4a2d5c">Hayate (CR 합작)</text>
+
+        <rect x="412" y="46" width="168" height="104" rx="10" fill="#fdf1e3" stroke="#f0cf9e" stroke-width="1.5"/>
+        <text x="496" y="68" text-anchor="middle" font-weight="800" fill="#8a5206" font-size="13">③ 극장 배급</text>
+        <text x="496" y="90" text-anchor="middle" fill="#6d4a10">Sony Pictures</text>
+        <text x="496" y="108" text-anchor="middle" fill="#6d4a10">귀멸 무한성편 $7.93억</text>
+        <text x="496" y="126" text-anchor="middle" fill="#6d4a10">(日 역대 1위)</text>
+
+        <rect x="608" y="46" width="168" height="104" rx="10" fill="#fdece8" stroke="#f0b8ab" stroke-width="1.5"/>
+        <text x="692" y="68" text-anchor="middle" font-weight="800" fill="#9c3a1c" font-size="13">④ 스트리밍</text>
+        <text x="692" y="90" text-anchor="middle" fill="#7c3620">Crunchyroll</text>
+        <text x="692" y="108" text-anchor="middle" fill="#7c3620">유료 2,100만 (+40%/21개월)</text>
+        <text x="692" y="126" text-anchor="middle" fill="#7c3620">2,000+ 시리즈</text>
+
+        <rect x="804" y="46" width="156" height="104" rx="10" fill="#e4f4ef" stroke="#9fd6c4" stroke-width="1.5"/>
+        <text x="882" y="68" text-anchor="middle" font-weight="800" fill="#0a4436" font-size="13">⑤ 2차 수익</text>
+        <text x="882" y="90" text-anchor="middle" fill="#0c4f3f">게임화 · 음악/OST</text>
+        <text x="882" y="108" text-anchor="middle" fill="#0c4f3f">머천다이즈</text>
+        <text x="882" y="126" text-anchor="middle" fill="#0c4f3f">라이브 이벤트</text>
+      </g>
+      <g fill="#8aa2bd" font-size="18" font-weight="700">
+        <text x="196" y="104">→</text><text x="392" y="104">→</text><text x="588" y="104">→</text><text x="784" y="104">→</text>
+      </g>
+      <!-- feedback loop -->
+      <path d="M 882 150 L 882 186 L 104 186 L 104 150" fill="none" stroke="#0e8a6d" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrgreen)"/>
+      <defs><marker id="arrgreen" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0e8a6d"/></marker></defs>
+      <text x="493" y="206" text-anchor="middle" font-size="12" fill="#0a6b54" font-weight="700">수익이 원작·제작 투자로 재순환 — 부문 표기상 제작(Aniplex)은 Music, 유통(Crunchyroll)은 Pictures에 계상</text>
+      <text x="493" y="228" text-anchor="middle" font-size="11.5" fill="#68788a">경쟁 지형: 애니메 유발 스트리밍 매출 점유 넷플릭스 38% &gt; Crunchyroll — 단, 수직 전체를 소유한 것은 소니뿐</text>
+    </svg>
+  </div>
+  <figcaption><b>그림 5.</b> 애니메 수직계열화 — 원작 지분부터 굿즈까지 한 IP당 그룹 내 최소 5회 과금. | 출처: 회사 발표(KADOKAWA 2025.1, Hayate 2026.4), THR·Variety 흥행 집계, Parrot Analytics</figcaption></figure>
+
+  <h3>5.4 이미지센서 산업: 모바일이 기반, 자동차·로봇이 성장</h3>
+  <p>CMOS 이미지센서 시장은 2024년 $232억(Yole 기준)에서 2030년 $301억으로 성장이 전망된다(연 4~5%; 조사기관별 정의차로 $190억~$336억 분산 [상충]). 매출의 약 64%가 모바일이지만, <strong>최고 성장 응용처는 자동차(ADAS)</strong> — 차량당 카메라 수가 늘고 해상도가 올라가는 이중 성장이다. 경쟁 구도는 소니 약 42~45%, 삼성 19~20%, OmniVision(Will Semi) 약 11%로 상위 5사가 83%를 점하는 과점이며, 소니는 고화소·대형 센서의 프리미엄 세그먼트를 지배한다(회사 자체 목표는 '금액 기준 60%' — 산정 범위가 달라 조사기관 수치와 직접 비교는 주의). 하단에서는 중국 SmartSens·GalaxyCore의 저가 침투가, 상단에서는 삼성의 애플 3층 적층 센서 공급 계약(2025.12 보도)이 각각 압박 요인이다. 소니의 대응 — TSMC 합작으로 최첨단 로직 공정을 확보하고 피지컬 AI(차량·로봇)로 응용처를 넓히는 것 — 은 프리미엄 지배력을 지키면서 성장 축을 갈아타는 전략이다.</p>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 980 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CIS 시장 점유율과 시장 규모 전망">
+      <text x="20" y="26" font-size="14" font-weight="700" fill="#122033">글로벌 CMOS 이미지센서: 점유율 (2024~25, 좌) · 시장 규모 전망 (우)</text>
+      <!-- left: share horizontal bars, max 45% -> 380px -->
+      <g font-size="12.5">
+        <text x="20" y="70" fill="#0a6b54" font-weight="700">Sony</text>
+        <rect x="115" y="54" width="363" height="24" rx="4" fill="#0e8a6d"/>
+        <text x="470" y="71" fill="#ffffff" font-weight="700" text-anchor="end">42~45%</text>
+        <text x="20" y="112" fill="#41505e" font-weight="700">Samsung</text>
+        <rect x="115" y="96" width="165" height="24" rx="4" fill="#5a7ea8"/>
+        <text x="288" y="113" fill="#243342">19~20%</text>
+        <text x="20" y="154" fill="#41505e" font-weight="700">OmniVision</text>
+        <rect x="115" y="138" width="91" height="24" rx="4" fill="#9bb1c6"/>
+        <text x="214" y="155" fill="#243342">약 11%</text>
+        <text x="20" y="196" fill="#41505e" font-weight="700">기타</text>
+        <rect x="115" y="180" width="206" height="24" rx="4" fill="#d3dce6"/>
+        <text x="329" y="197" fill="#243342">ST·onsemi·중국계 등</text>
+        <text x="20" y="238" fill="#68788a" font-size="11.5">상위 5사 합산 점유 83% — 프리미엄(고화소·대형)은 소니 지배</text>
+      </g>
+      <!-- right: market size bars -->
+      <g font-size="12.5">
+        <line x1="620" y1="40" x2="620" y2="260" stroke="#e6ebf1"/>
+        <text x="790" y="60" text-anchor="middle" fill="#122033" font-weight="700" font-size="13">시장 규모 ($B, Yole)</text>
+        <rect x="680" y="130" width="90" height="110" rx="6" fill="#8fc7b6"/>
+        <rect x="830" y="97" width="90" height="143" rx="6" fill="#0e8a6d"/>
+        <text x="725" y="120" text-anchor="middle" fill="#41505e" font-weight="800" font-size="14">23.2</text>
+        <text x="875" y="87" text-anchor="middle" fill="#0a6b54" font-weight="800" font-size="14">30.1</text>
+        <text x="725" y="262" text-anchor="middle" fill="#68788a">2024</text>
+        <text x="875" y="262" text-anchor="middle" fill="#68788a">2030E</text>
+        <text x="790" y="286" text-anchor="middle" fill="#0e8a6d" font-weight="700" font-size="12">모바일 64% 기반 + 차량(ADAS) 최고 성장</text>
+      </g>
+    </svg>
+  </div>
+  <figcaption><b>그림 6.</b> CIS 과점 구도와 성장 전망 — 점유율은 조사기관별 40~50%대 분산으로 Yole 계열 42~45%를 채택 [상충 각주]. | 출처: Yole($23.2B→$30.1B), siliconsignals·GMI 점유 추정</figcaption></figure>
+
+  <h3>5.5 가치사슬 종합: 소니는 어디서 차별화하는가</h3>
+  <p>네 산업을 관통하는 공통점은, 소니가 가치사슬의 <strong>'IP·설계' 상류와 '플랫폼·유통' 하류 양끝을 쥐고, 중간의 자본집약 제조를 외부화</strong>한다는 것이다. 게임에서는 스튜디오(상류)와 PSN(하류)을 갖고 콘솔 제조는 위탁하며 실물 유통은 폐지한다. 센서에서는 픽셀 설계(상류)를 갖고 로직 제조를 TSMC와 나눈다. 애니메에서는 원작 지분과 스트리밍을 갖는다. TV처럼 양끝을 쥐지 못한 사업은 내보냈다. 산업 규모(TAM)로 보면 게임 ~$1,900억·음악 $317억·애니메 스트리밍 유발 ~$55억·CIS $232억 — 합산 성장률은 완만하지만, 소니가 서 있는 <strong>세그먼트(디지털 게임 플랫폼·스트리밍 로열티·애니메·프리미엄 센서)는 각 산업 내 최고 성장 구획</strong>이라는 점이 전사 성장률 이상의 의미를 갖는다.</p>
+</section>
+<!-- ================= 6. 경쟁 우위 분석 ================= -->
+<section class="sec" id="s6">
+  <h2><span class="secnum">6</span>경쟁 우위 분석 — 해자의 종류와 지속 가능성</h2>
+  <p class="seclead">포터 5 Forces · 차별화 vs 원가우위 판별 · 해자의 원천과 수명</p>
+
+  <h3>6.1 포터 5 Forces 평가</h3>
+  <div class="grid2">
+    <div class="gcard g-n"><b class="gt">① 신규 진입 위협 <span class="pill pill-lo">낮음</span></b>
+    콘솔 플랫폼은 자본·독점 IP·네트워크 효과의 3중 장벽으로 MS조차 고전하는 영역이고(2026년 Xbox 전략 리셋·감원), CIS는 IDM 공정 노하우와 특허가, 음악 카탈로그는 물리적 희소성이 진입을 막는다. 유일한 균열은 중국 저가 CIS(SmartSens 등)의 하단 침투 — 단 소니의 프리미엄 구획과는 세그먼트가 다르다.</div>
+    <div class="gcard g-n"><b class="gt">② 기존 경쟁 강도 <span class="pill pill-md">중간</span></b>
+    게임(닌텐도·MS)은 플랫폼별 차별화로 직접 충돌이 제한적이고, 음악(UMG·WMG)은 3사 과점의 안정 구도다. 영상(넷플릭스·디즈니)에서는 열위 — 특히 넷플릭스의 애니메 공세가 Crunchyroll을 직접 위협한다. 센서(삼성·OmniVision)는 프리미엄에서 소니 우위이나 삼성의 애플 침투 시도가 변수.</div>
+    <div class="gcard g-n"><b class="gt">③ 공급자 교섭력 <span class="pill pill-hi">높음 — 현재 최대 압박</span></b>
+    메모리 3사(삼성·하이닉스·마이크론)의 교섭력이 AI 수요로 급등, DRAM 1분기 +90~95%가 콘솔 원가를 직격했다. TSMC(파운드리)도 강한 공급자이나 소니는 합작으로 '고객이자 파트너' 관계를 구축. 이 힘의 항목이 2026년 주가 조정의 근인(根因)이다.</div>
+    <div class="gcard g-n"><b class="gt">④ 구매자 교섭력 <span class="pill pill-md">중간~높음 (부문별 상이)</span></b>
+    센서의 최대 고객(애플 추정) 집중은 명백한 리스크 — 삼성 이원화 시도가 그 증거다. 음악 유통에서 스포티파이·유튜브의 힘도 상당하나, 필수 카탈로그 보유가 균형추. 게임 소비자는 분산돼 있으나 가격 저항이 실증됐다(인상 후 미국 5월 −58%).</div>
+    <div class="gcard g-n" style="grid-column:1/-1"><b class="gt">⑤ 대체재 위협 <span class="pill pill-md">중간 — 방향은 오히려 우호적</span></b>
+    클라우드/모바일 게이밍, AI 생성 콘텐츠, 스마트폰 카메라의 상향평준화가 이론적 대체재다. 그러나 현재 데이터는 콘솔 디지털 생태계 강화(디지털 85%), AI의 카탈로그 라이선싱 수요 창출(UMG×Spotify 딜), 피지컬 AI의 센서 수요 확대를 가리킨다 — 대체 위협이 소니의 자산을 '원료'로 쓰는 쪽으로 전개되는 중.</div>
+  </div>
+
+  <h3>6.2 차별화인가, 원가우위인가 — 정량 판별</h3>
+  <p>프레임워크의 판별 기준(NOPAT 마진이 산업 평균의 2배+ → 차별화 / 투하자본 회전율 1.5배+ → 원가우위)으로 보면 소니는 명확한 <strong>차별화(IP·기술) 전략형</strong>이다. 부문 영업이익률 — 음악 21.1%, 센서 16.6%, 게임 9.9%(감손 전 12%대) — 은 하드웨어·미디어 업계 평균을 크게 웃도는 반면, 투하자본 회전율은 보통 수준이다 [파생판단]. 전사 ROIC는 약 12~15%로 추정되어(NOPAT ¥1.06조 ÷ 투하자본 ¥7~9조 [거친 추정]) 자본비용 6~7%를 뚜렷이 초과한다. 차별화형 해자는 원가우위형보다 지속성이 강하다는 것이 장기 실증의 결론이며, 이는 섹션 10의 페이드 비율 선택(0.18~0.20)의 근거가 된다.</p>
+
+  <h3>6.3 해자의 원천 — 부문별 '왜 못 따라잡는가'</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>부문</th><th>해자 유형</th><th>구체적 원천</th><th>지속 가능성 평가</th></tr></thead>
+    <tbody>
+      <tr><td><b>G&amp;NS</b></td><td>네트워크 효과 + 무형자산(IP)</td><td>MAU 1.32억의 양면 네트워크(유저↔개발사), 인섬니악·너티독 등 독점 스튜디오, PS Store 30% 수수료 구조, 디지털 라이브러리 락인</td><td><b>높음</b> — 세대 전환(PS6)마다 시험대에 오르나, 디지털 라이브러리는 이월되므로 락인은 세대가 갈수록 강해짐</td></tr>
+      <tr><td><b>Music</b></td><td>무형자산(희소 카탈로그)</td><td>퀸·MJ·딜런 등 복제 불가능한 권리, 세계 1위 출판의 '상류' 지위, 신인 발굴 네트워크</td><td><b>매우 높음</b> — 카탈로그는 시간이 지나도 감가되지 않으며 스트리밍·AI로 화폐화 채널만 늘어남</td></tr>
+      <tr><td><b>Pictures/애니메</b></td><td>수직통합 + 니치 지배</td><td>원작(KADOKAWA)→제작(Aniplex)→유통(Crunchyroll) 풀스택은 업계 유일, 귀멸 등 검증 프랜차이즈</td><td><b>중상</b> — 애니메 니치 내 구조는 견고하나, 범용 스트리밍(넷플릭스)의 자금력 공세에 유통단이 노출</td></tr>
+      <tr><td><b>I&amp;SS</b></td><td>공정 노하우 + 특허 + 규모</td><td>적층·BSI·2층 트랜지스터 등 픽셀 아키텍처 선점, IDM 반복속도, 애플급 고객 인증, TSMC 동맹</td><td><b>높음(단 고객 집중이 조건)</b> — 기술 격차는 유지·확대 방향이나 최대 고객 이원화가 단가·물량을 압박할 수 있음</td></tr>
+    </tbody>
+  </table></div>
+  <p>종합하면 소니의 해자는 단일 성이 아니라 <strong>네 개의 성이 해자를 공유하는 성곽 도시</strong>에 가깝다. 어느 한 부문의 침식(예: 센서 고객 이탈)이 전사를 무너뜨리지 않고, 반대로 IP는 부문 경계를 넘어 재사용된다(귀멸: 애니메→극장→음악→게임). 이 '포트폴리오형 해자'가 섹터 평균 페이드(0.18~0.20)보다 완만한 초과수익 소멸을 정당화할 수 있는지가, 시장 내재 CAP 0~4년(섹션 10)의 합리성을 가르는 질문이다.</p>
+</section>
+
+<!-- ================= 7. 피어그룹 비교 ================= -->
+<section class="sec" id="s7">
+  <h2><span class="secnum">7</span>피어그룹 비교 — 어느 잣대로 재느냐의 문제</h2>
+  <p class="seclead">게임·음악·센서 각 전장의 경쟁자와 나란히 세워 보기 · SOTP 관점</p>
+
+  <p>소니의 밸류에이션 논쟁의 뿌리는 '비교 대상이 없다'는 데 있다. 게임 피어(닌텐도)로 보면 소니는 훨씬 다각화됐고, 음악 피어(UMG)로 보면 소니 Music은 UMG급 사업인데 그룹 전체 시총이 UMG의 3배에 불과하며, 반도체 피어로 보면 센서 1위가 '덤'으로 붙어 있다. 아래 표는 2026년 6~7월 시점의 스냅샷이다.</p>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>기업</th><th class="num">시가총액</th><th>밸류에이션</th><th>최근 상황 (2026년 상반기)</th></tr></thead>
+    <tbody>
+      <tr class="hlrow"><td><b>Sony (6758/SONY)</b></td><td class="num">약 ¥19.4~19.6조 (~$120B)</td><td>P/E TTM 18.9배 · FY26E 16.6배 [파생]</td><td>고점比 −31%, 컨센 목표 +42%, 구조개편 5건 완료</td></tr>
+      <tr><td>Nintendo (7974)</td><td class="num">~$52~55B (≈¥8.4조)</td><td>—</td><td>ADR 고점比 −53%. Switch 2 첫해 1,986만 대(최속)이나 가격 인상·전망 하향(1,990만→1,650만)으로 급락</td></tr>
+      <tr><td>Microsoft 게임부문</td><td class="num">MSFT $420.77 (7월 초)</td><td>—</td><td>Xbox 전략 리셋·감원, +$150 인상, 차세대 'Project Helix' 부품난으로 재검토</td></tr>
+      <tr><td>UMG (음악 최대 비교군)</td><td class="num">€34.8B (~$38~43B)</td><td>P/E TTM 23.1 · Fwd 17.5 · <b>EV/EBITDA 14.4 · EV/Sales 3.1</b></td><td>Pershing Square의 $64B 인수 제안(2026.4), Spotify AI 라이선싱 딜</td></tr>
+      <tr><td>Warner Music</td><td class="num">$14.1~15.1B</td><td>배당수익률 2.6%, 베타 1.28</td><td>FY26 1분기 매출 +7%</td></tr>
+      <tr><td>Samsung LSI (센서)</td><td class="num">— (그룹 내 사업부)</td><td>—</td><td>CIS 점유 19~20%. 애플 3층 적층 센서 수주 보도(2025.12)</td></tr>
+      <tr><td>OmniVision (Will Semi)</td><td class="num">—</td><td>—</td><td>CIS ~11%, 차량·의료 특화, TSMC 활용 팹리스</td></tr>
+      <tr><td>Netflix / Disney</td><td class="num">NFLX $88.25 (분할 후 추정)</td><td>—</td><td>넷플릭스 애니메 공세(애니메 스트리밍 매출 점유 38%로 CR 추월)</td></tr>
+      <tr><td>SFGI (舊 금융 자회사)</td><td class="num">~¥1.1조 [파생]</td><td>목표가 ¥185~188</td><td>주가 ¥153~162, ¥1,000억 자사주 진행 — 소니 보유 16.40%의 가치 준거</td></tr>
+    </tbody>
+  </table></div>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 960 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="P/E 비교 막대 차트">
+      <text x="20" y="26" font-size="14" font-weight="700" fill="#122033">P/E 비교 — 성장 스토리 대비 할인 상태 (배)</text>
+      <!-- y scale 0..26 -> 280..60 ; bar width 96 -->
+      <g stroke="#e6ebf1"><line x1="70" y1="280" x2="930" y2="280"/><line x1="70" y1="197" x2="930" y2="197"/><line x1="70" y1="114" x2="930" y2="114"/></g>
+      <text x="60" y="284" font-size="11" fill="#68788a" text-anchor="end">0</text>
+      <text x="60" y="201" font-size="11" fill="#68788a" text-anchor="end">10</text>
+      <text x="60" y="118" font-size="11" fill="#68788a" text-anchor="end">20</text>
+      <!-- bars: v*8.4615 px height -->
+      <rect x="100" y="139.5" width="96" height="140.5" rx="6" fill="#0a4bb5"/>
+      <text x="148" y="131" font-size="14" font-weight="800" fill="#0a3a8c" text-anchor="middle">16.6</text>
+      <text x="148" y="300" font-size="12" fill="#41505e" text-anchor="middle">Sony FY26E</text>
+      <rect x="266" y="120.1" width="96" height="159.9" rx="6" fill="#5a8bd6"/>
+      <text x="314" y="112" font-size="14" font-weight="800" fill="#2c5da8" text-anchor="middle">18.9</text>
+      <text x="314" y="300" font-size="12" fill="#41505e" text-anchor="middle">Sony TTM</text>
+      <rect x="432" y="115.8" width="96" height="164.2" rx="6" fill="#9bb1c6"/>
+      <text x="480" y="107" font-size="14" font-weight="800" fill="#5a6f84" text-anchor="middle">19.4</text>
+      <text x="480" y="300" font-size="12" fill="#41505e" text-anchor="middle">미국 시장 평균</text>
+      <rect x="598" y="131.9" width="96" height="148.1" rx="6" fill="#b07cc9"/>
+      <text x="646" y="123" font-size="14" font-weight="800" fill="#6f2f8c" text-anchor="middle">17.5</text>
+      <text x="646" y="300" font-size="12" fill="#41505e" text-anchor="middle">UMG Fwd</text>
+      <rect x="764" y="84.5" width="96" height="195.5" rx="6" fill="#8e44ad"/>
+      <text x="812" y="76" font-size="14" font-weight="800" fill="#6f2f8c" text-anchor="middle">23.1</text>
+      <text x="812" y="300" font-size="12" fill="#41505e" text-anchor="middle">UMG TTM</text>
+      <text x="500" y="324" font-size="11.5" fill="#68788a" text-anchor="middle">Sony TTM은 ¥3,330 기준, FY26E는 ¥3,292·EPS ¥198 기준 [파생] · UMG는 2026.6~7월 시세</text>
+    </svg>
+  </div>
+  <figcaption><b>그림 7.</b> 소니 FY26E P/E 16.6배는 미국 시장(19.4배)·순수 음악사(UMG)보다 낮다 — 다각화 디스카운트인가, 기회인가. | 출처: Yahoo·Investing·SimplyWallSt 집계 [파생계산 포함]</figcaption></figure>
+
+  <h3>7.1 SOTP(부분합산) 관점 — 셀사이드 강세론의 골간</h3>
+  <p>부분합산의 논리는 단순하다. <strong>Sony Music의 FY2025 매출 ¥2.12조(≈$138억)는 UMG의 TTM 매출($125~141억)과 같은 급</strong>이다. 여기에 UMG의 EV/Sales 3.1배를 적용하면 Music만 약 ¥6.5조, EV/EBITDA 14.4배 기준이면 ¥7조+가 나온다 [파생] — 소니 시총 ¥19.4조의 3분의 1 이상이다. 같은 방식으로 G&amp;NS(감손 제외 OI ¥5,800억+, 퍼블리셔 멀티플 적용 시 ¥8~11조대 [러프])와 I&amp;SS(OI ¥3,573억, 반도체 멀티플 15~20배 시 ¥5~7조 [러프])를 더하면 부분합산이 현 시총을 크게 웃돈다는 계산이 성립하며, 이것이 매수 21/매도 0이라는 이례적 컨센서스의 뼈대로 추정된다. 물론 SOTP는 '분리 상장했을 때의 가치'라는 가정을 깔고 있고, 소니의 반론은 오히려 반대다 — IP가 부문을 순환하기에 합쳐져 있을 때 더 가치 있다는 것. 두 논리 모두에서 결론은 같다: <strong>현재 가격은 어느 쪽 논리로도 후하지 않다.</strong></p>
+</section>
+
+<!-- ================= 8. 시장 내러티브 및 자금 선호도 ================= -->
+<section class="sec" id="s8">
+  <h2><span class="secnum">8</span>시장 내러티브 및 자금 선호도 — 시장은 소니를 무엇이라 부르는가</h2>
+  <p class="seclead">주가를 움직인 사건들 · 다섯 개의 스토리 · 컨센서스와 촉매 캘린더</p>
+
+  <h3>8.1 최근 9개월, 주가는 어떤 사건에 반응했나</h3>
+  <p>2025년 가을 사상 최고가(¥4,776)에서 2026년 5월 저점(¥3,043)까지 −36%, 이후 실적·자사주·디스크 폐지로 반등해 현재 ¥3,292다. 하락의 주범은 회사 고유 악재가 아니라 <strong>메모리 크런치라는 섹터 공통 역풍 + 콘솔 세대말 공백</strong>이었고, 반등의 동력은 <strong>사상 최대 실적과 구조 개편의 실행</strong>이었다 — 이 비대칭이 현재 밸류에이션 논쟁의 배경이다.</p>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="주가 추이와 주요 이벤트">
+      <text x="20" y="24" font-size="14" font-weight="700" fill="#122033">주가 개략 궤적 × 주요 이벤트 (2025.10 ~ 2026.7, 도쿄 6758, ¥)</text>
+      <!-- plot x 70..950 (t 0..9.2 months from Oct1'25), y: v5000->40, v2800->380 ; y=40+(5000-v)*340/2200 -->
+      <g stroke="#e9edf2" stroke-width="1">
+        <line x1="70" y1="71" x2="950" y2="71"/><line x1="70" y1="148.2" x2="950" y2="148.2"/><line x1="70" y1="225.5" x2="950" y2="225.5"/><line x1="70" y1="302.7" x2="950" y2="302.7"/><line x1="70" y1="380" x2="950" y2="380"/>
+      </g>
+      <g font-size="11" fill="#68788a" text-anchor="end">
+        <text x="62" y="75">4,800</text><text x="62" y="152">4,300</text><text x="62" y="229">3,800</text><text x="62" y="307">3,300</text><text x="62" y="384">2,800</text>
+      </g>
+      <g font-size="11" fill="#68788a" text-anchor="middle">
+        <text x="70" y="400">'25.10</text><text x="166" y="400">11</text><text x="261" y="400">12</text><text x="357" y="400">'26.1</text><text x="453" y="400">2</text><text x="548" y="400">3</text><text x="644" y="400">4</text><text x="740" y="400">5</text><text x="835" y="400">6</text><text x="931" y="400">7</text>
+      </g>
+      <!-- price path (schematic through verified anchors) -->
+      <path d="M 70 86 L 118 76 L 156 74.6 L 223 94 L 252 124 L 309 178 L 385 190 L 414 194 L 467 202 L 577 248 L 649 279 L 748 341 L 758 342.5 L 787 262.5 L 811 276 L 864 316 L 887 322.8 L 926 288 L 936 294.4 L 950 304"
+            fill="none" stroke="#0a4bb5" stroke-width="2.6" stroke-linejoin="round"/>
+      <!-- key anchor dots with values -->
+      <circle cx="156" cy="74.6" r="4" fill="#0a4bb5"/><text x="156" y="60" font-size="11.5" fill="#0a3a8c" font-weight="700" text-anchor="middle">52주 고점 ¥4,776</text>
+      <circle cx="758" cy="342.5" r="4" fill="#c0392b"/><text x="758" y="366" font-size="11.5" fill="#a4271a" font-weight="700" text-anchor="middle">52주 저점 ¥3,043 (5월 초)</text>
+      <circle cx="950" cy="304" r="4.5" fill="#0e8a6d"/><text x="946" y="326" font-size="11.5" fill="#0a6b54" font-weight="700" text-anchor="end">현재 ¥3,292 (7/3)</text>
+      <!-- event markers -->
+      <g font-size="10.5" font-weight="700" fill="#ffffff">
+        <circle cx="118" cy="76" r="9" fill="#0e8a6d"/><text x="118" y="79.5" text-anchor="middle">1</text>
+        <circle cx="223" cy="94" r="9" fill="#5a6b7d"/><text x="223" y="97.5" text-anchor="middle">2</text>
+        <circle cx="252" cy="124" r="9" fill="#c0392b"/><text x="252" y="127.5" text-anchor="middle">3</text>
+        <circle cx="309" cy="178" r="9" fill="#c0392b"/><text x="309" y="181.5" text-anchor="middle">4</text>
+        <circle cx="385" cy="190" r="9" fill="#5a6b7d"/><text x="385" y="193.5" text-anchor="middle">5</text>
+        <circle cx="453" cy="200" r="9" fill="#5a6b7d"/><text x="453" y="203.5" text-anchor="middle">6</text>
+        <circle cx="577" cy="248" r="9" fill="#c0392b"/><text x="577" y="251.5" text-anchor="middle">7</text>
+        <circle cx="649" cy="279" r="9" fill="#c0392b"/><text x="649" y="282.5" text-anchor="middle">8</text>
+        <circle cx="787" cy="262.5" r="9" fill="#0e8a6d"/><text x="787" y="266" text-anchor="middle">9</text>
+        <circle cx="811" cy="276" r="9" fill="#0e8a6d"/><text x="811" y="279.5" text-anchor="middle">10</text>
+        <circle cx="864" cy="316" r="9" fill="#c0392b"/><text x="864" y="319.5" text-anchor="middle">11</text>
+        <circle cx="926" cy="288" r="9" fill="#0e8a6d"/><text x="926" y="291.5" text-anchor="middle">12</text>
+      </g>
+      <line x1="70" y1="304" x2="950" y2="304" stroke="#0e8a6d" stroke-width="1" stroke-dasharray="3 4" opacity="0.5"/>
+      <text x="500" y="452" font-size="11.5" fill="#8a2f24" text-anchor="middle" font-weight="600">※ 확인된 주요 시세 포인트(52주 고·저, 5/8 반등, 6월 말 약세, 7월 초 종가)를 연결한 개략 궤적 — 일별 종가 데이터가 아님. 9/29~10/1 SFGI 현물배당 분배락 조정 이후 구간.</text>
+    </svg>
+    <div class="evgrid">
+      <div><span class="evnum up">1</span><span><b>'25.11.11</b> Q2 호실적·연간 상향·추가 자사주 → 고점권 형성 후 피크아웃 ↑</span></div>
+      <div><span class="evnum nt">2</span><span><b>'25.11.19</b> GTA6, 2026.5 → 11.19 재연기 — FY2025 내 수혜 소멸 ↓</span></div>
+      <div><span class="evnum dn">3</span><span><b>'25.11~12</b> 메모리 크런치 표면화(NAND 연간 +246%) — 콘솔 섹터 전반 디레이팅 시작 ↓↓</span></div>
+      <div><span class="evnum dn">4</span><span><b>'25.12~'26.1</b> DRAM 계약가 급등 전망 확산, 섹터 투매 지속 ↓</span></div>
+      <div><span class="evnum nt">5</span><span><b>'26.1.20</b> TCL과 TV 합작 MOU — 구조개혁 지속 신호 (혼조)</span></div>
+      <div><span class="evnum nt">6</span><span><b>'26.2.5</b> Q3 OI +22% 사상최대·상향 — 그러나 반등 제한 (중립)</span></div>
+      <div><span class="evnum dn">7</span><span><b>'26.3.12→25</b> 혼다 전동화 철회 → AFEELA 전면 중단 ↓</span></div>
+      <div><span class="evnum dn">8</span><span><b>'26.3.27→4.2</b> PS5 2차 대폭 인상($649.99/Pro $899.99) — 수요 충격 우려 ↓↓</span></div>
+      <div><span class="evnum up">9</span><span><b>'26.5.8</b> FY2025 사상최대 + OI ¥1.6조 가이던스 + ¥5,000억 자사주 + TSMC JV → 저점比 "+17%" 반등 랠리 ↑↑</span></div>
+      <div><span class="evnum up">10</span><span><b>'26.5.29</b> 자기주식 1.845억 주 소각 ↑</span></div>
+      <div><span class="evnum dn">11</span><span><b>'26.6</b> 미국 5월 PS5 −58% 데이터·닌텐도 급락 등 섹터 역풍 재부각 ↓</span></div>
+      <div><span class="evnum up">12</span><span><b>'26.7.1</b> 실물 디스크 2028.1 종료 발표 → 마진 개선 호재로 +3%대 ↑</span></div>
+    </div>
+  </div>
+  <figcaption><b>그림 8.</b> 하락 구간의 주범은 섹터 공통(메모리·콘솔 인플레), 반등의 동력은 회사 고유(실적·환원·구조개편) — 악재와 호재의 성격이 비대칭적이다. | 출처: Yahoo·Investing 시세, 각 사건 회사 발표·언론 보도 종합</figcaption></figure>
+
+  <h3>8.2 시장이 부여한 다섯 개의 스토리</h3>
+  <p><strong>① "일본판 디즈니 + 세계의 눈".</strong> 복합 전자기업 → 순수 크리에이티브 엔터+센서 IP 기업으로의 최종 변태. 스핀오프·TCL·AFEELA 정리가 완결되면서, 아직 소니를 'TV·플스 회사'로 인식하는 다수 투자자의 인식 갱신 자체가 재평가(리레이팅) 여력이라는 논리다. <strong>② 애니메 슈퍼사이클의 최대 수혜자.</strong> 귀멸 $7.9억 신기록이 "애니메 = 차세대 글로벌 주류"를 실증했고, Crunchyroll 2,100만 + 수직계열화 + KADOKAWA 동맹이 그 수혜 파이프다. Bernstein은 향후 2년 내 Crunchyroll이 Pictures OI의 40% 이상을 창출할 것으로 추정했다. <strong>③ 피지컬 AI의 감각기관.</strong> AI가 데이터센터에서 물리 세계(차·로봇)로 확장될 때 '눈'은 CIS이고, 그 1위가 소니다 — TSMC 동맹과 일본 정부 2040 전략이 이 서사를 보강한다. <strong>④ 일본 거버넌스 개혁 수혜주.</strong> 순현금 위 연 ¥5,000억 자사주(시총의 ~2.6%)+소각+배당 가속은 도쿄 시장 전반의 자본효율 개혁 프레임에 정확히 부합한다. <strong>⑤ (역풍 내러티브) "콘솔의 구조적 인플레".</strong> 메모리 크런치가 하드웨어 사업 모델 자체를 훼손한다는 우려 — 2025년 11월 이후 −31% 조정의 주범이다. 회사의 반론은 '하드웨어는 이익 사수, 본체는 소프트·서비스'(디지털 85%·MAU 최대·디스크 폐지)이며, ①~④가 펀더멘털(실적·가입자·계약)로 뒷받침되는 반면 ⑤는 <strong>2028년까지의 지속 여부가 미검증</strong>이라는 것이 현재의 힘겨루기다.</p>
+
+  <h3>8.3 컨센서스·수급의 방향과 강도</h3>
+  <p>도쿄 6758 기준 애널리스트 의견은 <strong>매수 21 / 보유 2 / 매도 0의 Strong Buy</strong>, 평균 목표 ¥4,687~4,691(+42~47%), 범위 ¥3,500~5,900이다. ADR 기준 31명 평균 $29.09(+30%)로 방향은 같으나, 최근 3개월 목표가가 −11.7% 하향된 점(메모리 반영)과 7월 초 Citi·Bernstein의 '보유' 콜이 보여주듯 <strong>단기 신중론이 늘고 있다</strong> — 즉 컨센서스는 '방향은 강세, 타이밍은 유보'다. P/E 16.1~16.6배로 미국 시장(19.4배)을 밑도는 것이 강세론의 밸류에이션 근거이고, 골드만삭스 주최 투자자 콜(6월)·신규 매수 개시(7/2) 등 기관 관심은 유지되고 있다.</p>
+
+  <div class="box box-blue"><span class="bt">촉매 캘린더 — 무엇이 재평가를 방아쇠 당길 수 있나</span>
+  <b>2026.8.5~6</b> Q1 실적(컨센 매출 ¥2.76조·EPS 약 ¥44 [해석]: 메모리 −¥300억 계획의 첫 검증) → <b>9월</b> Marvel's Wolverine 발매(1st파티 공백 종료) → <b>11.19</b> GTA6 발매(PS5 예약 6:1 — 홀리데이 하드웨어·30% 수수료·PS Plus 삼중 수혜) → <b>2027 초</b> Q3 실적(GTA6 효과 확인) → <b>2027.4</b> BRAVIA JV 가동(마진 점프) → <b>2027 중</b> 차기 중기계획 FY2027~29(I&amp;SS "대형 센서 재가속" 예고)·PS6 로드맵 → TSMC JV 확정계약. 역방향 트리거: 메모리 가격 2027년 지속, 삼성의 애플向 센서 실공급, 엔화 급반전.</div>
+</section>
+<!-- ================= 9. 재무 분석 및 DCF 모델 ================= -->
+<section class="sec" id="s9">
+  <h2><span class="secnum">9</span>재무 분석 및 DCF 모델 — 숫자로 재구성한 소니</h2>
+  <p class="seclead">최근 재무 추이 · 현금흐름과 생애주기 · WACC 산출 · 페이드 모델 기반 전시 23 테이블</p>
+
+  <h3>9.1 실적 추이: 마진이 이끄는 이익 성장</h3>
+  <p>계속사업(금융 제외) 기준으로 소니의 최근 3~4년은 <strong>"매출은 완만, 이익은 가파른"</strong> 궤적이다. 매출은 FY2023 약 ¥11.27조에서 FY2025 ¥12.48조로 연 5%대 성장에 그쳤지만, 영업이익은 ¥1.04조 → ¥1.45조로 연 18%씩 늘었고 OPM은 9.2% → 11.6%로 확대됐다. FY2026 가이던스는 매출 −1%에 OI +11%(¥1.6조, OPM 13.0%) — 즉 회사 스스로도 성장의 엔진이 '외형'이 아니라 <strong>'믹스 개선'(디지털·구독·카탈로그·프리미엄 센서 비중 확대)</strong>임을 숫자로 선언하고 있다. 5차 중기계획(FY2024~26)의 목표였던 'OI CAGR 10%·누적 OPM 10%'는 현재 전망 기준 <strong>CAGR 16%·누적 OPM 11.7%로 초과 달성</strong> 궤도다.</p>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 960 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="매출·영업이익·OPM 추이">
+      <text x="20" y="26" font-size="14" font-weight="700" fill="#122033">매출(막대) · 영업이익률(선) 추이 — 계속사업 기준, ¥B</text>
+      <!-- grid: rev axis left 0..14000 -> y320..60 -->
+      <g stroke="#e9edf2"><line x1="90" y1="320" x2="900" y2="320"/><line x1="90" y1="255" x2="900" y2="255"/><line x1="90" y1="190" x2="900" y2="190"/><line x1="90" y1="125" x2="900" y2="125"/><line x1="90" y1="60" x2="900" y2="60"/></g>
+      <g font-size="11" fill="#68788a" text-anchor="end"><text x="82" y="324">0</text><text x="82" y="259">3,500</text><text x="82" y="194">7,000</text><text x="82" y="129">10,500</text><text x="82" y="64">14,000</text></g>
+      <g font-size="11" fill="#8a5206" text-anchor="start"><text x="908" y="324">8%</text><text x="908" y="244">10%</text><text x="908" y="164">12%</text><text x="908" y="84">14%</text></g>
+      <!-- bars w=120 centered 190/390/590/790 -->
+      <rect x="130" y="110.7" width="120" height="209.3" rx="6" fill="#9db9e8"/>
+      <rect x="330" y="96.3" width="120" height="223.7" rx="6" fill="#6f96d8"/>
+      <rect x="530" y="88.2" width="120" height="231.8" rx="6" fill="#1b66d1"/>
+      <rect x="730" y="91.6" width="120" height="228.4" rx="6" fill="#0a4bb5" opacity="0.82"/>
+      <g font-size="12.5" font-weight="800" text-anchor="middle">
+        <text x="190" y="103" fill="#41505e">11,266</text>
+        <text x="390" y="88" fill="#2c5da8">12,044</text>
+        <text x="590" y="80" fill="#0a3a8c">12,480</text>
+        <text x="790" y="84" fill="#0a3a8c">12,300E</text>
+      </g>
+      <!-- OPM line: y=320-(opm-8)*40 -->
+      <path d="M 190 272 L 390 216 L 590 176 L 790 120" fill="none" stroke="#e67e22" stroke-width="3"/>
+      <g fill="#e67e22"><circle cx="190" cy="272" r="5"/><circle cx="390" cy="216" r="5"/><circle cx="590" cy="176" r="5"/><circle cx="790" cy="120" r="5.5"/></g>
+      <g font-size="12.5" font-weight="800" fill="#b05f0e" text-anchor="middle">
+        <text x="190" y="258">9.2%</text><text x="390" y="202">10.6%</text><text x="590" y="162">11.6%</text><text x="790" y="106">13.0%E</text>
+      </g>
+      <g font-size="12" fill="#41505e" text-anchor="middle">
+        <text x="190" y="342">FY2023*</text><text x="390" y="342">FY2024</text><text x="590" y="342">FY2025</text><text x="790" y="342">FY2026E</text>
+      </g>
+      <g font-size="11.5" fill="#68788a" text-anchor="middle">
+        <text x="190" y="360">OI ≈1,035</text><text x="390" y="360">OI 1,276.6</text><text x="590" y="360">OI 1,447.5</text><text x="790" y="360">OI 1,600E</text>
+      </g>
+      <text x="495" y="386" font-size="11.5" fill="#68788a" text-anchor="middle">*FY2023은 공시 성장률(매출 +6.9%, OI +23.3%)로부터의 역산치 [파생] · FY2026E는 회사 가이던스(2026.5.8)</text>
+    </svg>
+  </div>
+  <figcaption><b>그림 9.</b> 매출 연 5%대 성장에 OPM +3.8%p 확대가 겹쳐 OI는 3년 만에 +55% — 이익 성장의 주인은 믹스다. | 출처: 회사 6-K·결산자료</figcaption></figure>
+
+  <h3>9.2 현금흐름·재무상태·생애주기 판별</h3>
+  <p>FY2025 영업현금흐름은 <strong>약 ¥1.97조</strong>(자료 간 ¥1,945.6B~1,966.3B로 소폭 상충 — 계속사업 범위차로 추정), 현금성자산 ¥2조2,089억에 <strong>순현금 +¥5,392억</strong>(전년 +¥1,292억)으로 재무 여력은 두텁다. 현금흐름 부호는 영업(+)/투자(−)/재무(−) — 배당과 자사주로 연 ¥6,500억 규모를 돌려주면서도 순현금이 4배로 늘었다는 것은 <strong>현금 창출이 투자+환원 소요를 초과</strong>한다는 뜻이다. 이 부호 조합은 생애주기 판별상 전형적 <strong>'성숙(Mature)'</strong> 기업이다. 다만 부문 단위로 쪼개면 Music·I&amp;SS·Crunchyroll은 '성장', ET&amp;S의 TV는 '정리(Shake-out)' 단계로, 전사 평균 뒤에 <strong>성장 부문과 정리 부문의 교체</strong>가 진행 중이라는 점이 소니 분석의 요체다 — 정리 부문을 실제로 내보내고 있으므로(TCL·디스크 폐지), 남는 포트폴리오의 체질은 표면 수치보다 젊다.</p>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="주주환원과 순현금 추이">
+      <text x="20" y="26" font-size="14" font-weight="700" fill="#122033">자본 여력과 환원 — 순현금(좌) · 배당/주(중) · 자사주(우)</text>
+      <!-- panel 1 net cash -->
+      <g transform="translate(30,40)">
+        <text x="120" y="14" font-size="13" font-weight="700" fill="#122033" text-anchor="middle">순현금 (¥B)</text>
+        <rect x="30" y="182" width="70" height="38" rx="5" fill="#8fc7b6"/>
+        <rect x="140" y="62" width="70" height="158" rx="5" fill="#0e8a6d"/>
+        <text x="65" y="172" font-size="13" font-weight="800" fill="#41505e" text-anchor="middle">129</text>
+        <text x="175" y="52" font-size="13" font-weight="800" fill="#0a6b54" text-anchor="middle">539</text>
+        <text x="65" y="240" font-size="11.5" fill="#68788a" text-anchor="middle">FY2024말</text>
+        <text x="175" y="240" font-size="11.5" fill="#68788a" text-anchor="middle">FY2025말</text>
+      </g>
+      <!-- panel 2 DPS -->
+      <g transform="translate(360,40)">
+        <text x="120" y="14" font-size="13" font-weight="700" fill="#122033" text-anchor="middle">배당/주 (¥) — 47년 연속</text>
+        <rect x="10" y="134" width="62" height="86" rx="5" fill="#c9d6e6"/>
+        <rect x="89" y="113" width="62" height="107" rx="5" fill="#6f96d8"/>
+        <rect x="168" y="70" width="62" height="150" rx="5" fill="#0a4bb5"/>
+        <text x="41" y="124" font-size="13" font-weight="800" fill="#41505e" text-anchor="middle">20</text>
+        <text x="120" y="103" font-size="13" font-weight="800" fill="#2c5da8" text-anchor="middle">25</text>
+        <text x="199" y="60" font-size="13" font-weight="800" fill="#0a3a8c" text-anchor="middle">35E</text>
+        <text x="41" y="240" font-size="11.5" fill="#68788a" text-anchor="middle">FY24</text>
+        <text x="120" y="240" font-size="11.5" fill="#68788a" text-anchor="middle">FY25</text>
+        <text x="199" y="240" font-size="11.5" fill="#68788a" text-anchor="middle">FY26E</text>
+      </g>
+      <!-- panel 3 buyback -->
+      <g transform="translate(690,40)">
+        <text x="120" y="14" font-size="13" font-weight="700" fill="#122033" text-anchor="middle">자사주 매입 (¥B/년)</text>
+        <rect x="25" y="95" width="80" height="125" rx="5" fill="#8e44ad"/>
+        <rect x="135" y="95" width="80" height="125" rx="5" fill="#b07cc9"/>
+        <text x="65" y="85" font-size="13" font-weight="800" fill="#6f2f8c" text-anchor="middle">500 완료</text>
+        <text x="175" y="85" font-size="13" font-weight="800" fill="#6f2f8c" text-anchor="middle">500 신규</text>
+        <text x="65" y="240" font-size="11.5" fill="#68788a" text-anchor="middle">FY2025</text>
+        <text x="175" y="240" font-size="11.5" fill="#68788a" text-anchor="middle">FY2026 한도</text>
+      </g>
+      <text x="480" y="292" font-size="11.5" fill="#68788a" text-anchor="middle">FY2026 자사주: 2.3억 주(발행주식의 3.89%) 한도, 5월 중 ¥672.6억 기집행 · 2026.5.29 자기주식 1억8,449만 주 소각</text>
+    </svg>
+  </div>
+  <figcaption><b>그림 10.</b> 순현금 4배 증가 위에서 배당 가속(+¥10)과 시총 ~2.6% 규모 자사주가 병행 — '환원 여력'이 아니라 '환원 실행'의 단계. | 출처: 회사 6-K, 결산자료(2026.5.8)</figcaption></figure>
+
+  <h3>9.3 DCF 모델 설계 — 가정과 근거</h3>
+  <p>이하 모델은 계속사업(금융 제외) 연결 기준, 회계연도(3월 결산) 기준이며 모든 현금흐름에 <strong>연중(mid-year) 할인</strong>을 적용했다. 기준 주가는 도쿄 6758 종가 ¥3,292(2026.7.3), 주식 수는 소각 반영 후 약 58.9억 주다.</p>
+
+  <div class="box box-blue"><span class="bt">자본비용(WACC) 산출 — 순현금 기업이므로 자기자본비용에 수렴</span>
+  엔화 재무제표를 할인하므로 <b>JPY 기준</b>이 정합적이다: 무위험 이자율 = 일본 10년 국채 2.75%(7월 초), 베타 = 5년 월간 0.74 → 조정 베타 0.827, ERP = 4.75%(프레임워크 기본) 또는 4.23%(2026년 1월 내재 추정치). 이로부터 <b>k<sub>낙관</sub> 6.25%</b>(ERP 4.23%) / <b>k<sub>기본</sub> 6.68%</b>(ERP 4.75%) / <b>k<sub>보수</sub> 7.38%</b>(+일본 국가리스크 0.7%p [추정]). 참고로 ADR·USD 관점(미국채 4.37%)에서는 약 7.9%로, 통화 관점에 따라 할인율이 1%p 이상 달라진다 — 본 보고서는 k<sub>기본</sub> 6.68%를 중심으로 세 값을 병렬 제시한다. 순현금(+¥5,392억) 구조라 부채 가중은 무시할 수준.</div>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>가정 항목</th><th>기본 시나리오 값</th><th>설정 근거</th></tr></thead>
+    <tbody>
+      <tr><td>매출 성장률</td><td class="num">FY26 −1.4% → FY27 +1.0% → FY28~29 +4.5% → 점감 → +3.0%(10년차)</td><td>FY26은 가이던스(메모리·관세 보수 반영). FY27은 GTA6 연간화·디스크 폐지에도 BRAVIA JV 이관(연결 매출 축소)이 상쇄. FY28~은 차기 중기계획의 센서 재가속·PS6·애니메 확장 반영 후 성숙 기업답게 점감</td></tr>
+      <tr><td>EBITA 마진</td><td class="num">13.0% → 14.5%(FY2030)에서 유지</td><td>출발점은 가이던스 13.0%. 디지털 100%화(2028)·저마진 TV 이관·Crunchyroll 규모화·카탈로그 성장의 믹스 효과로 5년간 +1.5%p — FY23→26 실적 개선폭(+3.8%p)의 절반 이하로 보수적 외삽</td></tr>
+      <tr><td>현금세율</td><td class="num">27%</td><td>FY2025 실효세율 수준 [파생]</td></tr>
+      <tr><td>미래 순투자</td><td class="num">연 ¥450B에서 연 4% 증가</td><td>CAPEX 연 ~¥6,000억(중기계획) + 전략투자 − D&amp;A(¥6,500억± 추정) + 운전자본으로 근사한 순투자 [추정]. 이 가정하의 연도별 증분투자수익률(ROIIC)은 26%→8%대로 체감 — 초과수익 소멸 서사와 정합</td></tr>
+      <tr><td>페이드 비율 f</td><td class="num">0.20</td><td>정보기술 섹터 표준값. 소니의 IP 포트폴리오형 해자는 이보다 완만한 소멸(0.15~0.18)을 주장할 여지가 있어 민감도로 병행(§10.4)</td></tr>
+      <tr><td>영구 성장률 g</td><td class="num">2.5%</td><td>기대 인플레이션 수준</td></tr>
+      <tr><td>최종 가치</td><td class="num">페이드 모델</td><td>예측 종점의 NOPAT×(1+g)를 기점으로, 초과수익(최근 3년 ROIIC − k)이 매년 비율 f로 체감하며 소멸하는 가치식. ROIIC 하한은 k+0.5%p</td></tr>
+      <tr><td>비영업자산</td><td class="num">+¥779.2B (주당 ¥132)</td><td>순현금 ¥539.2B + SFGI 지분 16.40% ≈ ¥185B + KADOKAWA 지분 ≈ ¥55B [파생·추정]</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>9.4 전시 23 — 연도별 DCF 테이블 (기본 시나리오, k=6.68%)</h3>
+  <p>아래 표의 각 열은 "예측 기간(=CAP)을 그 해까지로 끊었을 때"의 가치를 뜻한다. 즉 <strong>맨 아래 세 줄(주당 가치)은 CAP를 1년부터 10년까지 늘려가며 읽는 가치 사다리</strong>이며, 현재 주가 ¥3,292와 만나는 지점이 시장 내재 CAP다(§10에서 해석).</p>
+
+  <div class="tablewrap"><table style="min-width:1080px">
+    <thead><tr><th>연도 (3월 결산)</th><th class="num">FY26E</th><th class="num">FY27E</th><th class="num">FY28E</th><th class="num">FY29E</th><th class="num">FY30E</th><th class="num">FY31E</th><th class="num">FY32E</th><th class="num">FY33E</th><th class="num">FY34E</th><th class="num">FY35E</th></tr></thead>
+    <tbody>
+      <tr><td>매출 (¥B)</td><td class="num">12,300</td><td class="num">12,423</td><td class="num">12,982</td><td class="num">13,566</td><td class="num">14,109</td><td class="num">14,673</td><td class="num">15,187</td><td class="num">15,718</td><td class="num">16,190</td><td class="num">16,676</td></tr>
+      <tr><td>성장률 (%)</td><td class="num">−1.4</td><td class="num">+1.0</td><td class="num">+4.5</td><td class="num">+4.5</td><td class="num">+4.0</td><td class="num">+4.0</td><td class="num">+3.5</td><td class="num">+3.5</td><td class="num">+3.0</td><td class="num">+3.0</td></tr>
+      <tr><td>EBITA (¥B)</td><td class="num">1,599</td><td class="num">1,690</td><td class="num">1,817</td><td class="num">1,940</td><td class="num">2,046</td><td class="num">2,128</td><td class="num">2,202</td><td class="num">2,279</td><td class="num">2,348</td><td class="num">2,418</td></tr>
+      <tr><td>EBITA 마진 (%)</td><td class="num">13.0</td><td class="num">13.6</td><td class="num">14.0</td><td class="num">14.3</td><td class="num">14.5</td><td class="num">14.5</td><td class="num">14.5</td><td class="num">14.5</td><td class="num">14.5</td><td class="num">14.5</td></tr>
+      <tr><td>NOPAT (¥B, 세율 27%)</td><td class="num">1,167</td><td class="num">1,233</td><td class="num">1,327</td><td class="num">1,416</td><td class="num">1,493</td><td class="num">1,553</td><td class="num">1,608</td><td class="num">1,664</td><td class="num">1,714</td><td class="num">1,765</td></tr>
+      <tr><td>미래 순투자 (¥B)</td><td class="num">450</td><td class="num">468</td><td class="num">487</td><td class="num">506</td><td class="num">526</td><td class="num">547</td><td class="num">569</td><td class="num">592</td><td class="num">616</td><td class="num">640</td></tr>
+      <tr><td>잉여현금흐름 FCF (¥B)</td><td class="num">717</td><td class="num">765</td><td class="num">840</td><td class="num">910</td><td class="num">967</td><td class="num">1,006</td><td class="num">1,038</td><td class="num">1,072</td><td class="num">1,098</td><td class="num">1,125</td></tr>
+      <tr><td>FCF 현재가치 (¥B, 연중할인)</td><td class="num">694</td><td class="num">695</td><td class="num">715</td><td class="num">726</td><td class="num">723</td><td class="num">705</td><td class="num">682</td><td class="num">660</td><td class="num">634</td><td class="num">609</td></tr>
+      <tr><td>증분투자수익률 ROIIC (%)</td><td class="num">25.6</td><td class="num">14.7</td><td class="num">20.0</td><td class="num">18.4</td><td class="num">15.3</td><td class="num">11.3</td><td class="num">9.9</td><td class="num">9.9</td><td class="num">8.4</td><td class="num">8.3</td></tr>
+      <tr><td>최종가치 (¥B, 페이드 f=0.20)</td><td class="num">18,988</td><td class="num">19,952</td><td class="num">21,463</td><td class="num">22,834</td><td class="num">24,082</td><td class="num">24,905</td><td class="num">25,570</td><td class="num">26,273</td><td class="num">26,919</td><td class="num">27,633</td></tr>
+      <tr><td>최종가치 현재가치 (¥B)</td><td class="num">18,384</td><td class="num">18,108</td><td class="num">18,260</td><td class="num">18,210</td><td class="num">18,004</td><td class="num">17,453</td><td class="num">16,797</td><td class="num">16,178</td><td class="num">15,538</td><td class="num">14,952</td></tr>
+      <tr><td>기업가치 EV (¥B)</td><td class="num">19,079</td><td class="num">19,497</td><td class="num">20,364</td><td class="num">21,039</td><td class="num">21,556</td><td class="num">21,710</td><td class="num">21,736</td><td class="num">21,777</td><td class="num">21,771</td><td class="num">21,794</td></tr>
+      <tr><td>+ 비영업자산 (¥B)</td><td class="num" colspan="10" style="text-align:center">779 (순현금 539 + SFGI 185 + KADOKAWA 55)</td></tr>
+      <tr class="hlrow"><td><b>주당 가치, k<sub>기본</sub> 6.68% (¥)</b></td><td class="num cellhl">3,371</td><td class="num">3,443</td><td class="num">3,590</td><td class="num">3,704</td><td class="num">3,792</td><td class="num">3,818</td><td class="num">3,823</td><td class="num">3,830</td><td class="num">3,829</td><td class="num">3,832</td></tr>
+      <tr><td>주당 가치, k<sub>보수</sub> 7.38% (¥)</td><td class="num">3,056</td><td class="num">3,111</td><td class="num">3,235</td><td class="num cellhl">3,330</td><td class="num">3,400</td><td class="num">3,416</td><td class="num">3,412</td><td class="num">3,412</td><td class="num">3,405</td><td class="num">3,402</td></tr>
+      <tr><td>주당 가치, k<sub>낙관</sub> 6.25% (¥)</td><td class="num cellhl">3,601</td><td class="num">3,684</td><td class="num">3,847</td><td class="num">3,977</td><td class="num">4,078</td><td class="num">4,112</td><td class="num">4,123</td><td class="num">4,136</td><td class="num">4,140</td><td class="num">4,149</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">표 읽는 법: 예컨대 'FY29E' 열의 주당 가치는 "명시적 예측을 FY2029까지 4년만 하고 그 뒤는 페이드 최종가치로 대체"했을 때의 가치. 노란 강조 셀 = 현재 주가 ¥3,292가 처음으로 하회되는(즉 시장가와 만나는) 지점: k<sub>기본</sub>·k<sub>낙관</sub>에서는 1년 차 값이 이미 주가를 넘고, k<sub>보수</sub>에서도 3~4년 차에 도달한다. 최종가치 행은 각 연도를 종점으로 했을 때의 값이며 명시 기간 FCF와 합산 시 이중계상이 없도록 해당 연도 이후 흐름만 반영. | 출처: 자체 모델(가정은 §9.3)</p>
+
+  <h3>9.5 이 테이블이 말하는 것</h3>
+  <p>세 가지가 핵심이다. 첫째, <strong>가치의 대부분이 최종가치가 아니라 '가까운 미래'에서 나온다.</strong> k<sub>기본</sub> 기준 1년만 명시해도 주당 ¥3,371로 현 주가를 넘는데, 이는 FY2026 가이던스 NOPAT(¥1.17조)만으로도 정체 상태 가치가 주가에 근접한다는 뜻이다. 둘째, <strong>CAP를 10년까지 늘려도 주당 가치는 ¥3,832에서 수렴</strong>한다 — ROIIC가 8%대로 자본비용에 접근하면 추가 연수가 가치를 거의 못 늘리기 때문으로, '기대 없는 가격'의 전형적 형태다. 셋째, 컨센서스 목표 ¥4,687은 <strong>이 기본 가정으로는 어떤 CAP에서도 도달 불가능</strong>하다(영구 상한 ¥3,914) — 목표가가 상정하는 것은 더 높은 마진·성장(강세 시나리오, §10.3) 또는 더 낮은 할인율이라는 역산이 성립한다.</p>
+</section>
+<!-- ================= 10. 시장 내재 CAP ================= -->
+<section class="sec" id="s10">
+  <h2><span class="secnum">10</span>시장 내재 CAP 역산 및 해석 — 주가에 새겨진 기대 읽기</h2>
+  <p class="seclead">현재 주가 ¥3,292가 전제하는 경쟁우위기간은 몇 년인가 · 그 기대는 합리적인가</p>
+
+  <h3>10.1 출발점: 정체가치(성장 제로) 앵커</h3>
+  <p>역산의 첫 닻은 "소니가 오늘 이후 한 푼도 성장 투자를 하지 않고 FY2026 이익을 영구히 유지만 한다면 얼마인가"다. FY2026E NOPAT ¥1.17조를 자본비용으로 나눈 영구가치에 비영업자산(¥779B)을 더하면, 주당 정체가치는 <strong>k<sub>낙관</sub> ¥3,306 / k<sub>기본</sub> ¥3,102 / k<sub>보수</sub> ¥2,820</strong>이 나온다. 현재 주가 ¥3,292는 이 세 값의 한복판 — 즉 <strong>시장가는 '가이던스 이익의 영구 유지'와 거의 같은 값</strong>이며, 미래 성장·초과수익에 지불된 프리미엄은 시가총액 ¥19.39조 중 기껏 수 %에 불과하다. EV로 보아도 시장 EV ¥18.6조 대 정체 EV(k<sub>기본</sub>) ¥17.5조로 격차는 6% 남짓이다 [파생].</p>
+
+  <h3>10.2 내재 CAP 역산 — 가치 사다리와 주가의 교점</h3>
+  <p>전시 23(§9.4)의 기본 시나리오에서 예측 기간(CAP)을 1년부터 20년까지 늘려가며 주당 가치를 그리면 아래의 '가치 사다리'가 된다. 현재 주가와의 교점이 시장 내재 CAP다.</p>
+
+  <figure><div class="figbox">
+    <svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CAP 래더: 예측기간별 주당 가치와 현재 주가의 교점">
+      <text x="20" y="24" font-size="14" font-weight="700" fill="#122033">CAP 사다리 — 예측 기간(가로)을 늘릴 때의 주당 가치(세로, ¥) · 기본 시나리오</text>
+      <!-- grid y: 2800..4800 -->
+      <g stroke="#e9edf2"><line x1="70" y1="380" x2="930" y2="380"/><line x1="70" y1="321.8" x2="930" y2="321.8"/><line x1="70" y1="263.6" x2="930" y2="263.6"/><line x1="70" y1="205.5" x2="930" y2="205.5"/><line x1="70" y1="147.3" x2="930" y2="147.3"/><line x1="70" y1="89.1" x2="930" y2="89.1"/></g>
+      <g font-size="11" fill="#68788a" text-anchor="end">
+        <text x="62" y="384">2,800</text><text x="62" y="326">3,200</text><text x="62" y="268">3,600</text><text x="62" y="210">4,000</text><text x="62" y="151">4,400</text><text x="62" y="93">4,800</text>
+      </g>
+      <g font-size="11" fill="#68788a" text-anchor="middle">
+        <text x="70" y="400">1</text><text x="251" y="400">5</text><text x="477" y="400">10</text><text x="704" y="400">15</text><text x="930" y="400">20</text>
+      </g>
+      <text x="500" y="422" font-size="11.5" fill="#41505e" text-anchor="middle">예측 기간 = 경쟁우위기간 CAP (년)</text>
+      <!-- price & target lines -->
+      <line x1="70" y1="308.4" x2="930" y2="308.4" stroke="#c0392b" stroke-width="1.8" stroke-dasharray="6 4"/>
+      <text x="925" y="302" font-size="12" fill="#a4271a" font-weight="800" text-anchor="end">현재 주가 ¥3,292</text>
+      <line x1="70" y1="105.5" x2="930" y2="105.5" stroke="#c08a00" stroke-width="1.6" stroke-dasharray="6 4"/>
+      <text x="925" y="99" font-size="12" fill="#8a5f00" font-weight="800" text-anchor="end">컨센서스 목표 ¥4,687 — 기본 가정으로는 도달 불가 (영구 상한 ¥3,914)</text>
+      <!-- k_low curve -->
+      <path d="M 70 263.5 L 115.3 251.5 L 160.5 227.7 L 205.8 208.8 L 251.1 194.1 L 296.3 189.2 L 341.6 187.6 L 386.8 185.7 L 432.1 185.1 L 477.4 183.8 L 522.6 182.8 L 567.9 180.7 L 613.2 178.7 L 658.4 176.8 L 703.7 175.2 L 748.9 173.6 L 794.2 172.0 L 839.5 170.7 L 884.7 169.4 L 930 168.2" fill="none" stroke="#0e8a6d" stroke-width="2.6"/>
+      <!-- k_base curve -->
+      <path d="M 70 297.0 L 115.3 286.5 L 160.5 265.1 L 205.8 248.6 L 251.1 235.7 L 296.3 231.9 L 341.6 231.2 L 386.8 230.2 L 432.1 230.3 L 477.4 229.9 L 522.6 229.5 L 567.9 228.0 L 613.2 226.8 L 658.4 225.7 L 703.7 224.5 L 748.9 223.6 L 794.2 222.7 L 839.5 222.0 L 884.7 221.3 L 930 220.7" fill="none" stroke="#0a4bb5" stroke-width="3"/>
+      <!-- k_cons curve -->
+      <path d="M 70 342.8 L 115.3 334.8 L 160.5 316.7 L 205.8 302.9 L 251.1 292.7 L 296.3 290.4 L 341.6 291.0 L 386.8 291.0 L 432.1 292.0 L 477.4 292.4 L 522.6 292.9 L 567.9 292.3 L 613.2 291.9 L 658.4 291.6 L 703.7 291.3 L 748.9 291.1 L 794.2 291.0 L 839.5 290.7 L 884.7 290.5 L 930 290.4" fill="none" stroke="#7f8c8d" stroke-width="2.4"/>
+      <!-- crossing markers -->
+      <circle cx="70" cy="297.0" r="6" fill="#0a4bb5" stroke="#ffffff" stroke-width="2"/>
+      <text x="84" y="284" font-size="12" fill="#0a3a8c" font-weight="800">k기본: 1년 차부터 주가 상회 → CAP ≤ 1년</text>
+      <circle cx="187.7" cy="308.4" r="6" fill="#5a6b7d" stroke="#ffffff" stroke-width="2"/>
+      <text x="200" y="330" font-size="12" fill="#41505e" font-weight="800">k보수: 교점 ≈ 3.6년</text>
+      <!-- legend -->
+      <g font-size="12">
+        <rect x="80" y="52" width="26" height="5" rx="2" fill="#0e8a6d"/><text x="112" y="58" fill="#0a6b54" font-weight="700">k낙관 6.25%</text>
+        <rect x="225" y="52" width="26" height="5" rx="2" fill="#0a4bb5"/><text x="257" y="58" fill="#0a3a8c" font-weight="700">k기본 6.68%</text>
+        <rect x="370" y="52" width="26" height="5" rx="2" fill="#7f8c8d"/><text x="402" y="58" fill="#5a6b7d" font-weight="700">k보수 7.38%</text>
+      </g>
+      <text x="500" y="452" font-size="11.5" fill="#68788a" text-anchor="middle">곡선이 6~8년 차에서 평평해지는 이유: 가정상 ROIIC가 자본비용에 수렴해, CAP 연장의 한계 가치가 0으로 감소</text>
+    </svg>
+  </div>
+  <figcaption><b>그림 11.</b> 시장 내재 CAP = 약 0~4년 (k기본·k낙관 ≤1년, k보수 ≈3.6년). 컨센서스 목표선은 기본 가정 사다리의 천장보다 높은 곳에 있다. | 출처: 자체 모델</figcaption></figure>
+
+  <div class="box box-amber"><span class="bt">판정 — 내재 CAP 약 0~4년: '매우 비관적' 구간</span>
+  해석 기준(내재 CAP 5년 미만 = 시장이 매우 비관적 / 5~10년 = 약간 비관 / 10~15년 = 합리적 / 15~20년 = 낙관적 / 20년+ = 과도한 낙관)에 대입하면, 소니의 현재 주가는 <b>가장 비관적인 첫 구간</b>에 있다. 정보기술·플랫폼 대기업이 통상 10~15년의 내재 CAP를 부여받는 것과 비교하면 이례적으로 짧다. 의미를 정확히 하면 — 시장은 소니의 '적자 전환'을 가격한 것이 아니라(그 경우 가치는 ¥2,800대), <b>"FY2026 가이던스 수준의 이익은 인정하되, 그 너머의 초과수익 지속은 사실상 0년"</b>으로 가격하고 있다. 섹션 6에서 본 차별화형·포트폴리오형 해자(카탈로그·플랫폼 락인·센서 공정 격차)와 정면으로 충돌하는 가격 구조다.</div>
+
+  <h3>10.3 시나리오 × 자본비용 매트릭스 (CAP 10년 기준)</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>시나리오 (핵심 가정)</th><th class="num">k<sub>보수</sub> 7.38%</th><th class="num">k<sub>기본</sub> 6.68%</th><th class="num">k<sub>낙관</sub> 6.25%</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td><b>약세</b> — 메모리 지속·GTA6 효과 미미: 성장 −3/−2/+2/+2.5%, 마진 12.0→12.5%, f=0.25, 투자 축소</td><td class="num">¥2,552</td><td class="num">¥2,856</td><td class="num">—</td><td>이 펀더멘털로는 <b>CAP를 무한대로 늘려도 상한 ¥2,811(k기본)</b> — 현 주가에 못 미침. 즉 시장은 완전한 약세까지는 가격하지 않았다</td></tr>
+      <tr class="hlrow"><td><b>기본</b> — §9.3 가정 그대로</td><td class="num">¥3,402</td><td class="num"><b>¥3,832</b></td><td class="num">¥4,149</td><td>현 주가 대비 +3%~+26%. 컨센 목표에는 미달</td></tr>
+      <tr><td><b>강세</b> — 마진 15.5% 도달(디지털 100%+JV+CR 스케일), 성장 4.5~6.5%, f=0.15</td><td class="num">—</td><td class="num">¥4,723</td><td class="num">¥5,124</td><td>컨센 평균 ¥4,687은 <b>강세 펀더멘털 + CAP 약 9.1년</b>과 등가 — 목표가의 숨은 가정이 이것이다</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">각 셀은 해당 가정으로 CAP=10년 명시 예측 후 페이드 최종가치를 더한 주당 가치. '—'는 별도 산출하지 않은 조합. | 출처: 자체 모델</p>
+
+  <h3>10.4 민감도 — 무엇이 가치를 흔들고, 무엇은 안 흔드는가</h3>
+  <p>기본 시나리오(CAP 10년)에서 자본비용과 영구성장률을 동시에 흔든 결과가 아래 히트맵이다. 눈에 띄는 사실: <strong>25개 조합 중 21개에서 가치가 현 주가를 상회</strong>한다 — 즉 "10년의 경쟁우위"라는 전제만 받아들이면, 할인율·성장률을 상당히 비틀어도 현재가는 정당화 하한 근처다. 가치를 주가 아래로 끌어내리는 유일한 영역은 우하단이 아니라 <strong>최하단 행(k 7.68%)</strong> — 즉 이 밸류에이션의 진짜 급소는 성장 가정이 아니라 <strong>일본 금리·할인율</strong>이다.</p>
+
+  <div class="tablewrap"><table>
+    <thead><tr><th>주당 가치 (¥)<br>CAP=10년</th><th class="num">g 0.5%</th><th class="num">g 1.5%</th><th class="num">g 2.5%</th><th class="num">g 3.5%</th><th class="num">g 4.5%</th></tr></thead>
+    <tbody>
+      <tr><td><b>k 5.68%</b></td>
+        <td class="num" style="background:#0e8a6d; color:#ffffff; font-weight:700">4,505</td>
+        <td class="num" style="background:#0e8a6d; color:#ffffff; font-weight:700">4,575</td>
+        <td class="num" style="background:#0e8a6d; color:#ffffff; font-weight:700">4,647</td>
+        <td class="num" style="background:#0e8a6d; color:#ffffff; font-weight:700">4,723</td>
+        <td class="num" style="background:#0e8a6d; color:#ffffff; font-weight:700">4,804</td></tr>
+      <tr><td><b>k 6.18%</b></td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">4,092</td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">4,147</td>
+        <td class="num" style="background:#0e8a6d; color:#ffffff; font-weight:700">4,204</td>
+        <td class="num" style="background:#0e8a6d; color:#ffffff; font-weight:700">4,264</td>
+        <td class="num" style="background:#0e8a6d; color:#ffffff; font-weight:700">4,327</td></tr>
+      <tr><td><b>k 6.68% (기본)</b></td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">3,743</td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">3,787</td>
+        <td class="num" style="background:#fff3cd; color:#5b4405; font-weight:800; border:2px solid #c08a00">3,832</td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">3,880</td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">3,929</td></tr>
+      <tr><td><b>k 7.18%</b></td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">3,446</td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">3,480</td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">3,516</td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">3,553</td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">3,591</td></tr>
+      <tr><td><b>k 7.68%</b></td>
+        <td class="num" style="background:#fdecea; color:#8a2f24; font-weight:600">3,189</td>
+        <td class="num" style="background:#fdecea; color:#8a2f24; font-weight:600">3,216</td>
+        <td class="num" style="background:#fdecea; color:#8a2f24; font-weight:600">3,244</td>
+        <td class="num" style="background:#fdecea; color:#8a2f24; font-weight:600">3,273</td>
+        <td class="num" style="background:#e4f4ef; color:#0a4436; font-weight:600">3,303</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">초록 진함 = ¥4,200 이상 · 초록 연함 = 현 주가(¥3,292) 이상 · 붉은 연함 = 현 주가 미만 · 노란 테두리 = 기본 조합. 보조 민감도: <b>페이드 비율</b> 0.10→¥3,878 / 0.20→¥3,832 / 0.30→¥3,813 (영향 미미 — 종점 ROIIC가 이미 k에 근접해서), <b>연간 순투자</b> ¥350B→¥4,013 / ¥450B→¥3,832 / ¥550B→¥3,652 (±¥100B당 약 ∓¥180). | 출처: 자체 모델</p>
+
+  <h3>10.5 종합: 풋볼 필드 — 모든 잣대를 한 줄에</h3>
+  <figure><div class="figbox">
+    <svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="밸류에이션 레인지 풋볼필드">
+      <text x="20" y="24" font-size="14" font-weight="700" fill="#122033">밸류에이션 레인지 종합 (¥/주) — 세로 점선 = 현재 주가 ¥3,292</text>
+      <!-- x axis 2400..6000 -->
+      <g stroke="#e9edf2"><line x1="150" y1="300" x2="920" y2="300"/></g>
+      <g font-size="11" fill="#68788a" text-anchor="middle">
+        <text x="150" y="318">2,400</text><text x="278.3" y="318">3,000</text><text x="406.7" y="318">3,600</text><text x="535" y="318">4,200</text><text x="663.3" y="318">4,800</text><text x="791.7" y="318">5,400</text><text x="920" y="318">6,000</text>
+      </g>
+      <g stroke="#f0f3f7"><line x1="278.3" y1="46" x2="278.3" y2="300"/><line x1="406.7" y1="46" x2="406.7" y2="300"/><line x1="535" y1="46" x2="535" y2="300"/><line x1="663.3" y1="46" x2="663.3" y2="300"/><line x1="791.7" y1="46" x2="791.7" y2="300"/></g>
+      <!-- rows -->
+      <text x="140" y="77" font-size="12.5" fill="#8a2f24" font-weight="700" text-anchor="end">모델 약세 (CAP10)</text>
+      <rect x="182.5" y="60" width="65" height="26" rx="6" fill="#e8998d"/>
+      <text x="178" y="77" font-size="11.5" fill="#8a2f24" text-anchor="end">2,552</text>
+      <text x="252" y="77" font-size="11.5" fill="#8a2f24">2,856</text>
+
+      <text x="140" y="127" font-size="12.5" fill="#0a3a8c" font-weight="700" text-anchor="end">모델 기본 (CAP10)</text>
+      <rect x="364.3" y="110" width="92" height="26" rx="6" fill="#5a8bd6"/>
+      <text x="360" y="127" font-size="11.5" fill="#0a3a8c" text-anchor="end">3,402</text>
+      <text x="461" y="127" font-size="11.5" fill="#0a3a8c">3,832</text>
+
+      <text x="140" y="177" font-size="12.5" fill="#0a6b54" font-weight="700" text-anchor="end">모델 강세 (CAP10)</text>
+      <rect x="646.8" y="160" width="85.8" height="26" rx="6" fill="#5cb89f"/>
+      <text x="642" y="177" font-size="11.5" fill="#0a6b54" text-anchor="end">4,723</text>
+      <text x="737" y="177" font-size="11.5" fill="#0a6b54">5,124</text>
+
+      <text x="140" y="227" font-size="12.5" fill="#8a5f00" font-weight="700" text-anchor="end">컨센서스 목표 범위</text>
+      <rect x="385.3" y="210" width="513.3" height="26" rx="6" fill="#f2d488"/>
+      <text x="381" y="227" font-size="11.5" fill="#8a5f00" text-anchor="end">3,500</text>
+      <text x="903" y="227" font-size="11.5" fill="#8a5f00">5,900</text>
+      <line x1="639.1" y1="206" x2="639.1" y2="240" stroke="#8a5f00" stroke-width="2.5"/>
+      <text x="639.1" y="252" font-size="11.5" fill="#8a5f00" text-anchor="middle" font-weight="700">평균 4,687</text>
+
+      <text x="140" y="287" font-size="12.5" fill="#41505e" font-weight="700" text-anchor="end">52주 주가 밴드</text>
+      <rect x="287.5" y="270" width="370.7" height="26" rx="6" fill="#c3ccd6"/>
+      <text x="283" y="287" font-size="11.5" fill="#41505e" text-anchor="end">3,043</text>
+      <text x="663" y="287" font-size="11.5" fill="#41505e">4,776</text>
+
+      <!-- current price line -->
+      <line x1="340.8" y1="46" x2="340.8" y2="300" stroke="#c0392b" stroke-width="2.2" stroke-dasharray="6 4"/>
+      <text x="340.8" y="40" font-size="12.5" fill="#a4271a" font-weight="800" text-anchor="middle">¥3,292</text>
+      <text x="500" y="346" font-size="11.5" fill="#68788a" text-anchor="middle">현재가는 '기본 시나리오 하단'과 '약세 상단' 사이 — 강세는 물론 기본 경로의 실현조차 거의 가격되지 않은 위치</text>
+    </svg>
+  </div>
+  <figcaption><b>그림 12.</b> 풋볼 필드 — 모델 3시나리오(CAP 10년)·컨센서스·52주 밴드의 병렬 비교. | 출처: 자체 모델, 컨센서스는 도쿄 6758 집계(§8.3)</figcaption></figure>
+
+  <h3>10.6 이 기대는 합리적인가 — 판단</h3>
+  <p>세 갈래로 답한다. <strong>(1) 해자 대비:</strong> 0~4년의 내재 CAP는 감가되지 않는 음악 카탈로그, 세대를 넘겨 이월되는 디지털 게임 라이브러리, 2배 이상의 점유 격차를 가진 센서라는 자산 구성과 맞지 않는다. 이들 자산의 초과수익이 4년 안에 소멸한다는 것이 시장의 명시적 주장이라면, 그 근거는 현재 데이터에 없다. <strong>(2) 비관의 정체:</strong> 다만 시장이 어리석다고 단정하기 전에, 짧은 CAP에는 이유 있는 할인이 섞여 있음을 인정해야 한다 — 메모리 크런치의 2027~28년 지속 가능성, 콘솔 세대 전환기의 실적 골짜기, 엔저 순풍의 반전 리스크, 그리고 '일본 복합기업 디스카운트'라는 오래된 관성. 이 중 앞의 셋은 <strong>시간이 답을 주는(검증 가능한) 변수</strong>이고, 마지막은 회사가 구조 개편으로 정면 공격 중인 변수다. <strong>(3) 비대칭성:</strong> 약세 펀더멘털의 영구 상한이 ¥2,811(현재가 −15%)인 반면, 기본 경로만 실현돼도 ¥3,832(+16%), 강세면 ¥4,723~5,124(+43~56%)다. 즉 현재 가격 구조에서 <strong>하방은 '약세 시나리오의 완전 실현'을, 상방은 '가이던스대로만 가는 것'을 각각 요구</strong>한다 — 기대치의 문턱이 비대칭적으로 낮은 상태이며, 이것이 매수 21/매도 0 컨센서스의 수학적 배경이다. 이 판단을 뒤집을 증거는 §15의 체크포인트(특히 8월 5일 Q1의 메모리 −¥300억 계획 검증, GTA6 이후 하드웨어·수수료 실적)에서 나온다.</p>
+</section>
+<!-- ================= 11. Bull Case ================= -->
+<section class="sec" id="s11">
+  <h2><span class="secnum">11</span>투자 논거 — Bull Case: 가치 창출의 엔진들</h2>
+  <p class="seclead">무엇이 돈을 벌고, 왜 지속되며, 왜 경쟁사가 따라오기 어려운가</p>
+  <ol class="tight">
+    <li><b>이익의 질 개선이 이미 숫자로 확인됐다.</b> OPM 10.6% → 11.6% → 13.0%(E)의 3년 연속 확대는 일회성이 아니라 믹스(디지털·구독·카탈로그·프리미엄 센서)의 구조 변화다. ¥2,080억의 감손을 정통으로 맞고도 사상 최대 OI를 낸 FY2025가 그 스트레스 테스트였다.</li>
+    <li><b>이익의 3분의 2가 구조적 성장 시장에 있다.</b> 엔터 3사(게임·음악·영화)가 OI의 66.3% — 각각 게임 구독(+20%), 음악 스트리밍(산업 +6.4%, 11년 연속), 애니메(귀멸 $7.93억 신기록)라는 성장 조류 위에 있다. 성숙 기업의 외형에 성장 기업의 이익 구성이 들어 있는 셈이다.</li>
+    <li><b>PlayStation의 본체는 네트워크다.</b> MAU 1.32억(사상 최대)·디지털 85%·PS Plus의 삼중 화폐화에, 2028년 디스크 폐지로 플랫폼 순도가 100%가 된다. 경쟁사가 못 따라오는 이유: 30년 축적된 유저 계정·디지털 라이브러리·독점 스튜디오군은 세대가 바뀌어도 이월되는 락인이다. 11월 GTA6(PS 예약 6:1)는 이 기계에 넣는 최상급 연료다.</li>
+    <li><b>음악 카탈로그는 인플레이션 헤지형 영구 IP다.</b> $60억+를 들여 모은 퀸·마이클 잭슨·핑크 플로이드·딜런·스프링스틴의 권리는 복제 불가능하고 감가되지 않으며, 스트리밍 단가 인상과 AI 라이선싱(UMG×Spotify 딜이 선례)이라는 두 개의 새 화폐화 채널을 얻었다. UMG식 멀티플(EV/EBITDA 14배대)로만 재평가돼도 Music 단독 가치가 시총의 3분의 1을 넘는다 [파생].</li>
+    <li><b>애니메 수직계열화는 업계에서 소니만 완성했다.</b> 원작 지분(KADOKAWA 최대주주)→제작(Aniplex)→배급(SPE)→전문 스트리밍(Crunchyroll 2,100만)→게임·음악·굿즈의 풀스택. 넷플릭스가 유통에서 이기더라도 상류 수익은 소니로 흐른다. 귀멸 3부작 후속 2편·체인소맨 등 파이프라인 가시성도 높다.</li>
+    <li><b>I&amp;SS는 새 성장 사이클의 입구에 있다.</b> FY2025 +20%/+37%(사상 최대)은 메모리 역풍 속 플래그십(애플 추정) 수요의 견조함을 실증했고, 차기 중기계획은 대형 센서 재가속을 예고했다. TSMC 합작은 기술 격차 확대와 자본 부담 경감을 동시에 푸는 수이며, '피지컬 AI(차·로봇의 눈)'는 스마트폰 다음의 수요 곡선이다.</li>
+    <li><b>재무 여력과 환원이 겹친다.</b> 순현금 ¥5,392억·OCF ¥2조 위에서 자사주 연 ¥5,000억(시총의 ~2.6%)+1.85억 주 소각+배당 가속(¥25→35, 47년 연속). 주식 수 감소는 그 자체로 주당 가치의 복리 엔진이다.</li>
+    <li><b>엔저 순풍(USD/JPY 161).</b> 해외에서 벌어 엔으로 환산하는 구조상 40년 만의 엔저는 이익의 직접 증폭기다(Q3 게임 OI +19%의 명시 요인). 리스크의 이면이기도 하나(§12), 현재형 순풍임은 분명하다.</li>
+    <li><b>경영진 실행력이 입증됐다.</b> 취임 1년 차 CEO가 스핀오프·TCL·TSMC·AFEELA 정리·디스크 폐지의 5대 구조 결정을 일관된 원칙(IP·팹라이트·자본효율)으로 집행했고, 중기계획은 목표(OI CAGR 10%)를 16%로 초과 중이다. '약속-실행 격차'가 작은 회사다.</li>
+    <li><b>밸류에이션 자체가 논거다.</b> FY26E P/E 16.6배(미국 시장 19.4배 미만), 고점比 −31%, 내재 CAP 0~4년(§10) — 강세 서사가 아니라 <u>기본 경로의 실현만으로 상방이 열리는 가격</u>이라는 점이 Bull Case의 마지막이자 가장 수학적인 항목이다.</li>
+  </ol>
+</section>
+
+<!-- ================= 12. Bear Case ================= -->
+<section class="sec" id="s12">
+  <h2><span class="secnum">12</span>리스크 — Bear Case: 정직한 위협 목록과 기반영 점검</h2>
+  <p class="seclead">각 리스크의 실체 · 그리고 "이미 주가에 얼마나 반영됐는가"</p>
+  <ol class="tight">
+    <li><b>메모리 크런치의 장기화(~2028?).</b> DRAM 계약가 1분기 +90~95%에 3분기 추가 +20% 전망 — −¥300억 억제 계획은 '판매량 희생'이 전제이고, 미국 5월 PS5 −58%는 수요 파괴의 실증이다. PS6 출시 원가('$1,000 콘솔' 담론)까지 이어질 수 있다. <span class="tag">기반영: 상당 — 고점比 −31%와 목표가 −11.7% 하향의 주범. 단 2027년 지속 시나리오는 미반영 영역</span></li>
+    <li><b>콘솔 세대말 실적 골짜기.</b> FY2026 G&amp;NS 매출 −6% 가이던스, 상반기 1st파티 공백(Marathon 34.7만·Saros 40.6만 부진), 라이브서비스 전략의 좌초(Bungie 감손 ¥1,201억). GTA6조차 재연기 이력이 있어 11월 일정이 절대적이지 않다. <span class="tag">기반영: 상당 — 가이던스에 명시, 감손은 완료. GTA6 3차 연기는 미반영 꼬리 리스크</span></li>
+    <li><b>관세·지정학.</b> 미국 관세 −¥500억 반영, 첨단반도체 25% 관세, 미·이란 분쟁발 물류·소비 불확실성, 중·일 긴장. <span class="tag">기반영: 부분 — 가이던스에 −¥500억 포함, 확전 시나리오는 미반영</span></li>
+    <li><b>센서 고객 집중과 삼성의 침투.</b> 애플 추정 의존이 높은 상태에서 삼성의 애플向 3층 적층 센서 공급 보도(2025.12)는 이원화→단가 압박의 서막일 수 있다. 하단에서는 중국 저가 CIS가, 시장 전체로는 메모리發 스마트폰 위축이 겹친다. <span class="tag">기반영: 부분 — FY2026 I&amp;SS 매출 −4% 가이던스에 보수 반영. 실제 공급 개시·물량은 미확정 변수</span></li>
+    <li><b>Pictures 본체의 취약성.</b> 극장 매출 $9.0억→4.9억, 리니어 TV 가입 6.27억→5.32억의 구조 감소 — 애니메를 걷어내면 성장이 없다. Crunchyroll도 2회 감원, 넷플릭스에 애니메 스트리밍 매출 추월, 소송·보안 사고를 겪었다. <span class="tag">기반영: 대체로 — 부문 OI 비중 6.9%로 이미 작고, FY2026 +38% 가이던스는 낮은 기저 회복분</span></li>
+    <li><b>엔화 급반전 리스크.</b> 161엔은 당국 개입 경계의 최상단(4/30 개입 전례, "언제든 대응" 발언). BOJ 추가 인상과 겹친 급격한 엔고는 이익 역풍이자 일본 주식 전반의 조정 트리거다. <span class="tag">기반영: 미미 — 현재 실적·가이던스는 엔저 수혜를 전제. 가장 덜 반영된 거시 리스크</span></li>
+    <li><b>일본 금리 상승 = 할인율 상승.</b> JGB 10년 2.75%는 30년래 최고 수준이며, §10.4가 보여주듯 이 밸류에이션의 급소는 성장률이 아니라 자본비용이다(k 7.68% 행에서만 가치가 주가를 하회). <span class="tag">기반영: 진행형 — 금리 상승분은 주가에 반영 중이나 추가 인상 경로는 열린 변수</span></li>
+    <li><b>소비자 신뢰의 마모.</b> 2회 가격 인상 + 디스크 폐지 + 과거 PS3/Vita 스토어 폐쇄 이력의 조합은 '반소비자' 밈을 키우고 있다. 단기 실적엔 안 보이지만 PS6 전환율에 잠복하는 브랜드 리스크다. <span class="tag">기반영: 불명 — 정량화 곤란, 시장이 가격하기 어려운 유형</span></li>
+    <li><b>회계 착시에 의한 수급 노이즈.</b> SFGI 스핀오프의 비현금 손실로 최종 순이익 −¥3,269억이 찍히며 스크리너에 'EPS −129%'로 표기 — 퀀트·스크리너 기반 자금의 기계적 회피를 부를 수 있다. <span class="tag">기반영: 일시적 — FY2026 결산에서 자연 소멸되는 광학적 문제</span></li>
+    <li><b>종합 기반영 판정.</b> 고점比 −31%, 목표가 하향 소화, 시장 이하 P/E, 내재 CAP 0~4년 — 리스크 ①②③⑦의 상당분은 가격에 있다. 반면 <u>⑥ 엔 반전과 ①의 2027년 연장</u>은 현 가격이 담지 않은 꼬리이며, 이 둘이 약세 시나리오(주당 ¥2,552~2,856)로 가는 경로다.</li>
+  </ol>
+</section>
+
+<!-- ================= 13. SWOT ================= -->
+<section class="sec" id="s13">
+  <h2><span class="secnum">13</span>SWOT — 앞선 분석의 한 장 요약</h2>
+  <div class="grid2">
+    <div class="gcard g-s"><b class="gt">Strength 강점</b>
+    이익의 66%가 성장형 엔터 3사 · 감가 없는 음악 카탈로그($60억+)와 세계 1위 출판 · MAU 1.32억의 플랫폼 락인과 디지털 85% · CIS 점유 42~45%의 기술 격차(적층·2층 트랜지스터) · 애니메 풀스택 수직계열화(업계 유일) · 순현금 ¥5,392억 + OCF ¥2조 · 검증된 경영진 실행력(중기계획 16% vs 목표 10%)</div>
+    <div class="gcard g-w"><b class="gt">Weakness 약점</b>
+    센서의 단일 대형고객(애플 추정) 집중 · 라이브서비스 게임 역량 공백(Bungie 실패) · Pictures 본체(극장·리니어)의 구조 감소 · 하드웨어 원가의 메모리 노출 · 엔저에 기댄 이익 체력(환율 민감) · 애니메 유통에서 넷플릭스 대비 자금력 열위</div>
+    <div class="gcard g-o"><b class="gt">Opportunity 기회</b>
+    GTA6(11/19)發 하드·소프트·구독 삼중 수혜 · 디스크 폐지(2028)와 BRAVIA JV(2027.4)의 마진 점프 · 피지컬 AI(차량·로봇)發 센서 신수요 + TSMC 팹라이트 · AI 음악 라이선싱 신시장 · 애니메 글로벌 주류화(귀멸 후속 2편) · 차기 중기계획(2027)에서 센서 성장 복귀·PS6 로드맵 공개 · 복합기업 디스카운트 해소형 리레이팅</div>
+    <div class="gcard g-t"><b class="gt">Threat 위협</b>
+    메모리 크런치 2027~28 지속 · 삼성의 애플向 CIS 진입 · 엔화 급반전(개입·BOJ) · 일본 금리 추가 상승(할인율) · 관세·지정학 확전 · 콘솔 소비자 이탈(가격 인상 피로) · AI 생성 콘텐츠의 장기적 IP 가치 교란</div>
+  </div>
+</section>
+
+<!-- ================= 14. 경영진 및 자본 배분 ================= -->
+<section class="sec" id="s14">
+  <h2><span class="secnum">14</span>경영진 및 자본 배분 — 돈을 맡길 만한 손인가</h2>
+  <p class="seclead">토토키 체제의 성격 · ¥5.7조 배분의 성적표 · 약속 대비 실행</p>
+  <p><strong>토토키 히로키 CEO(2025.4~)</strong>는 소니은행 창업 멤버 출신의 재무통으로, CFO 시절부터 금융 스핀오프를 직접 설계한 인물이다. 취임 1년 차에 SFGI 분리·TCL 합작·TSMC 합작·AFEELA 정리·디스크 폐지라는 다섯 건의 대형 구조 결정을 집행했는데, 방향이 전부 하나로 수렴한다 — <strong>"IP는 안으로, 자본집약 제조는 밖으로, 남는 자본은 주주에게"</strong>. "지금까지는 전부 자체 제작이었지만 앞으로는 파트너와 함께"라는 팹라이트 발언이 이 철학의 요약이다. <strong>요시다 켄이치로 회장</strong>(2018~25 CEO)은 게임·음악·센서 3축과 'Kando(감동)' 경영을 확립하고 EMI 출판·Crunchyroll 인수를 이끈 뒤 2026년 4월 대표집행역에서 물러나 세대교체를 마쳤다 — 전략의 연속성과 리더십 교체가 동시에 확보된 드문 사례다.</p>
+  <p>자본 배분은 3년 ¥5.7조(주주환원 1.8 / 전략투자 1.8 / CAPEX 1.8)로 상향된 상태이며, 트랙 레코드는 양면을 정직하게 봐야 한다. <strong>성공</strong>: 음악 카탈로그 $60억+(퀸·MJ 등 — 스트리밍·AI 시대의 핵심 자산화), Crunchyroll $11.75억(2021 — 유료 5백만대에서 2,100만으로), KADOKAWA ¥500억(원작 상류 확보), EMI 출판(세계 1위 지위의 원천). <strong>실패</strong>: Bungie $36억(2022)은 ¥1,201억 감손으로 라이브서비스 베팅의 좌초를, AFEELA는 −¥449억으로 모빌리티 옵션의 소멸을 각각 확정했다. 집계하면 '콘텐츠 IP를 사는 데는 탁월, 신사업 플랫폼을 사는 데는 취약'한 패턴이며, 최근의 배분이 전자(카탈로그·애니메·센서 JV)로 집중되고 있다는 점은 학습의 증거로 읽을 수 있다. 거버넌스는 사외이사 중심 이사회[일반], SBC 희석 상쇄를 명시한 자사주 정책이며, 내부자 지분은 일본 대기업 통례대로 미미하다[세부 미확인]. 약속 대비 실행은 4차 중기계획(FY2021~23) 달성, 5차 중기계획 초과 진행으로 <strong>신뢰도 높음</strong>으로 평가한다.</p>
+</section>
+
+<!-- ================= 15. 종합 판단 및 체크포인트 ================= -->
+<section class="sec" id="s15">
+  <h2><span class="secnum">15</span>종합 판단 및 체크포인트 — 무엇을 보고 생각을 갱신할 것인가</h2>
+  <p class="seclead">분석의 종합 · 모니터링 지표 · 판단이 바뀌는 조건 · 한계와 가정</p>
+
+  <h3>15.1 종합</h3>
+  <p>소니는 80년에 걸친 변태를 사실상 완료한 회사다. 남은 것은 <strong>세계 1~2위 포지션 네 개(게임 플랫폼·음악 출판/음반·애니메 풀스택·CIS)</strong>와, 그것들을 관통해 IP를 다중 화폐화하는 구조이고, 내보낸 것은 저마진 하드웨어와 금융이다. FY2025는 ¥2,080억의 감손 속에서도 사상 최대 실적으로 그 체질을 증명했고, FY2026 가이던스는 '매출 −1%, 이익 +11%'로 성장의 엔진이 믹스임을 재확인했다. 한편 주가는 섹터 공통 역풍(메모리·콘솔 인플레)에 −31% 조정되어, <strong>정체가치와 거의 같은 값 — 내재 CAP 약 0~4년, 해석표상 '매우 비관적' 구간</strong> — 에 놓여 있다. 이 가격은 소니의 해자 구성과 정합하지 않지만, 그 비관에는 검증 가능한 이유(메모리 2027 지속 여부, GTA6 실현, 엔 반전)가 붙어 있다. 따라서 이 종목의 향후 1년은 밸류에이션 논쟁이 아니라 <strong>이벤트 검증의 시간표</strong>이며, 아래 체크포인트가 그 시간표다.</p>
+
+  <h3>15.2 분기별 모니터링 지표 (매 결산 확인)</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>#</th><th>지표</th><th>확인 포인트</th><th>기준선 (FY2025~26 초)</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>메모리 영향액</td><td>회사 공시 영향이 계획 내인가</td><td class="num">FY2026 계획 −¥300억</td></tr>
+      <tr><td>2</td><td>PS5 출하 · PSN MAU · 디지털 비중</td><td>하드 축소 속 네트워크 지표 유지 여부</td><td class="num">연 ~16M / 1.25~1.32억 / 85%</td></tr>
+      <tr><td>3</td><td>I&amp;SS 모바일·차량 매출, 대형고객 코멘트</td><td>삼성 이원화의 실적 침투 여부</td><td class="num">FY2026E 매출 ¥2,070B</td></tr>
+      <tr><td>4</td><td>Crunchyroll 유료 가입자</td><td>넷플릭스 공세 속 성장 지속</td><td class="num">2,100만 ('26.5)</td></tr>
+      <tr><td>5</td><td>Music 스트리밍 성장률</td><td>산업(+6.4%) 대비 초과 여부</td><td class="num">음반 +9% / 출판 +14% (USD)</td></tr>
+      <tr><td>6</td><td>자사주 집행 속도 · 주식 수</td><td>¥5,000억 한도의 실제 소진</td><td class="num">5월 ¥673억 기집행 / 58.9억 주</td></tr>
+      <tr><td>7</td><td>회사 전제 환율 vs 실세</td><td>엔고 반전 시 가이던스 여파 [전제 환율 미확인 — 어닝콜 확인]</td><td class="num">실세 USD/JPY 161</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>15.3 판단 갱신의 분기점</h3>
+  <div class="grid2">
+    <div class="gcard g-o"><b class="gt">기본→강세 전환의 증거</b>
+    ① 8/5 Q1에서 메모리 영향이 계획 내 + 이익 사수 확인 ② 11월 GTA6 이후 분기(2027.2 발표)에서 하드·수수료·PS Plus 동반 서프라이즈 ③ 차기 중기계획(2027)에서 센서 성장 복귀 수치와 마진 목표 상향 ④ Crunchyroll 2,500만 접근 — 이 조합이면 강세 경로(마진 15%대, 주당 ¥4,700~5,100대)의 확률이 실질화된다.</div>
+    <div class="gcard g-t"><b class="gt">기본→약세 전환·재검토 트리거</b>
+    ① 메모리 영향이 −¥300억을 크게 이탈하거나 <u>소프트·구독 매출까지 침식</u>(경영진이 이미 파급 가능성 언급 — 최우선 감시) ② GTA6 3차 연기 ③ 급격한 엔고(개입·BOJ)와 가이던스 하향 동시 발생 ④ 삼성의 애플向 센서 실공급 확인 ⑤ ROIC 2년 연속 하락, 또는 내재 CAP가 진입 시점 대비 +50% 이상 급팽창(기대 과열) — 이 경우 약세 밴드(¥2,550~2,850)를 유효 하한으로 재설정.</div>
+  </div>
+
+  <h3>15.4 한계와 가정 — 이 보고서를 읽을 때의 주의</h3>
+  <div class="box box-red"><span class="bt">모델·데이터의 한계 (정직 고지)</span>
+  <b>모델 가정의 취약점:</b> ① 마진 14.5% 정점 가정은 과거 개선 추세의 보수적 외삽이지만, 메모리·관세가 구조화되면 약세 경로(12%대)가 현실이 된다 ② 순투자 연 ¥450B는 CAPEX·D&amp;A 세부(20-F 미반영)를 근사한 값으로, ±¥100B당 주당 ∓¥180의 영향 ③ JPY 할인율 6.68%를 채택했으며 USD 관점(≈7.9%)에서는 모든 가치가 하향된다 — 통화 관점 자체가 판단 변수 ④ 비영업자산 중 SFGI·KADOKAWA는 시가 추정치, FromSoftware 지분은 비상장이라 0으로 보수 처리. <b>데이터 상충(원자료 15건 중 주요):</b> 52주 고가 ¥4,776의 정확한 날짜 미확인(주가 차트는 개략 궤적) · FY2023 계속사업 실적은 공시 성장률 역산치 [파생] · CIS 점유율은 기관별 42~50%대 분산으로 42~45% 채택 · OCF ¥1,945.6~1,966.3B 소폭 상충 · PS5 연간 출하 "약 1,600만 대(±)" · 직원 수 9.5만~11.3만(스핀오프 전후차 추정) · 스크리너상 배당수익률 6.93%는 SFGI 현물배당 포함 왜곡(실질 ~1.06%) · Q1 컨센 EPS는 "¥44 내외 [해석]" · FY2026 회사 전제 환율 미확인. <b>신뢰도(베이지안):</b> 실적·가이던스·구조개편 사실관계 ~95%, 시세·금리 ~90%, 세그먼트 KPI ~90%, 피어 멀티플 ~80%, 자체 모델 산출값은 가정 의존적이므로 '정밀한 예측'이 아닌 '기대치 해부 도구'로만 사용할 것(~70%). <b>이 결론이 바뀌는 새 증거:</b> 8/5 Q1의 메모리 실적치, GTA6 이후 분기 실적, 삼성 센서 공급의 사실 확인, 엔/금리의 급변 — §15.3의 트리거가 곧 본 보고서의 반증 조건이다.</div>
+</section>
+
+</div><!-- /wrap -->
+
+<div class="foot">
+  <div class="wrap">
+    <p><b>SONY GROUP (도쿄 6758 · NYSE SONY) 기업 분석</b> — 기준일 2026년 7월 5일 · 기준 주가 ¥3,292 (2026.7.3 종가)</p>
+    <p>본 문서는 첨부된 리서치 데이터(2026.7.5 수집: 회사 6-K·결산자료·어닝콜, IFPI, Yole, Investing/Yahoo/MarketScreener 시세·컨센서스, THR·Variety·CNBC 등 보도)와 자체 DCF/CAP 역산 모델에 기반한 분석 자료이며, 특정 매매 행동의 권유가 아니라 독자의 독립적 의사결정을 돕는 이해 자료입니다. [추정]·[파생]·[상충] 표기는 각각 추정치·계산 파생치·출처 간 불일치를 뜻합니다.</p>
+  </div>
+</div>
+</body>
+</html>
