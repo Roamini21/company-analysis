@@ -107,6 +107,13 @@
   .item.active{background:var(--accent-tint);color:#fff;font-weight:500}
   .item.active .marker{transform:translateY(-50%) scaleY(1)}
   .item .sub{display:block;font-family:var(--mono);font-size:10px;color:var(--ink-muted);margin-top:2px;letter-spacing:.03em}
+  .item .nm{display:inline}
+  .item .hit{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--ink);background:var(--accent);padding:1px 5px;border-radius:4px;vertical-align:middle}
+  .item .snip{display:block;margin-top:5px;font-size:11.5px;line-height:1.45;color:var(--ink-muted);font-family:var(--sans)}
+  .item .snip mark{background:rgba(194,153,46,.32);color:var(--ink-text);border-radius:2px;padding:0 1px}
+  .item.active .snip{color:var(--ink-text)}
+  .idxbar{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--ink-muted);padding:9px 4px 0;min-height:12px;display:flex;align-items:center;gap:7px}
+  .idxbar.working::before{content:"";width:8px;height:8px;border:1.5px solid var(--line-d);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;display:inline-block;flex:0 0 auto}
 
   .side-foot{
     padding:12px 20px;border-top:1px solid var(--line-d);
@@ -193,7 +200,8 @@
       <div class="countline"><b id="count">0</b><span>기업 등록됨</span></div>
     </div>
     <div class="searchwrap">
-      <input class="search" id="search" type="text" placeholder="기업 검색…" autocomplete="off" spellcheck="false">
+      <input class="search" id="search" type="text" placeholder="기업명·본문 검색…" autocomplete="off" spellcheck="false">
+      <div class="idxbar" id="indexStatus"></div>
     </div>
     <nav class="list" id="list" aria-label="기업 목록"></nav>
     <div class="side-foot">
@@ -287,8 +295,11 @@ const CONFIG = {
 /* ============================================================ */
 
 const $ = (id)=>document.getElementById(id);
-let ITEMS = [];           // {file, path, href, group, name}
+let ITEMS = [];           // {file, path, href, group, name, sha}
 let activePath = null;
+let INDEX = {};           // path -> { sha, text }  (report body text for full-text search)
+let indexing = false;
+let rerenderPending = false;
 
 function detectRepo(){
   if(CONFIG.user && CONFIG.repo) return {user:CONFIG.user, repo:CONFIG.repo};
@@ -371,7 +382,7 @@ async function loadList(){
     .map(x=>{
       const meta = parseName(x.name);
       const href = x.path.split("/").map(encodeURIComponent).join("/");
-      return { file:x.name, path:x.path, href, group:meta.group, name:meta.name };
+      return { file:x.name, path:x.path, href, group:meta.group, name:meta.name, sha:x.sha };
     })
     .sort((a,b)=> a.name.localeCompare(b.name, "ko"));
 
@@ -382,6 +393,7 @@ async function loadList(){
   if(files.length===0){ renderList(); showOnly("emptyPanel"); return; }
 
   renderList();
+  buildIndex();
 
   // restore last viewed if still present
   const last = lsGet("lastPath:"+target.repo);
@@ -397,18 +409,89 @@ function failure(title,msg){
   showOnly("errorPanel");
 }
 
+function buildIndex(){
+  if(indexing) return;
+  indexing = true;
+  const items = ITEMS.slice();
+  const total = items.length;
+  let done = 0;
+  const setProg = ()=>{
+    const el = $("indexStatus"); if(!el) return;
+    if(done>=total){ el.textContent = total ? ("본문 검색 준비됨 · " + total) : ""; el.classList.remove("working"); }
+    else { el.textContent = "본문 색인 " + done + " / " + total; el.classList.add("working"); }
+  };
+  setProg();
+  const fetchOne = async (it)=>{
+    const cur = INDEX[it.path];
+    if(cur && cur.sha===it.sha){ done++; setProg(); return; }
+    const ck = "idx:" + it.sha;
+    const cached = lsGet(ck);
+    if(cached!=null){ INDEX[it.path] = {sha:it.sha, text:cached}; done++; setProg(); scheduleRerender(); return; }
+    try{
+      const r = await fetch(it.href);
+      if(r.ok){ const text = extractText(await r.text()); INDEX[it.path] = {sha:it.sha, text}; if(text.length<=120000){ lsSet(ck, text); } }
+    }catch(e){}
+    done++; setProg(); scheduleRerender();
+  };
+  let i = 0;
+  const worker = async ()=>{ while(i < items.length){ await fetchOne(items[i++]); } };
+  const n = Math.min(5, items.length) || 0;
+  const ws = []; for(let w=0; w<n; w++) ws.push(worker());
+  Promise.all(ws).then(()=>{ indexing = false; setProg(); scheduleRerender(); });
+}
+
+function extractText(html){
+  try{
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    doc.querySelectorAll("script,style,noscript").forEach(n=>n.remove());
+    let t = ((doc.body ? doc.body.textContent : doc.textContent) || "").replace(/\s+/g," ").trim();
+    return t.length>300000 ? t.slice(0,300000) : t;
+  }catch(e){ return ""; }
+}
+
+function scheduleRerender(){
+  if(rerenderPending) return;
+  rerenderPending = true;
+  requestAnimationFrame(()=>{ rerenderPending = false; if($("search").value.trim()) renderList(); });
+}
+
+function makeSnippet(text, pos, len){
+  const R = 40;
+  const start = Math.max(0, pos - R), end = Math.min(text.length, pos + len + R);
+  const seg = text.slice(start, end), rel = pos - start;
+  return (start>0?"…":"") + escapeHtml(seg.slice(0,rel)) + "<mark>" + escapeHtml(seg.slice(rel,rel+len)) + "</mark>" + escapeHtml(seg.slice(rel+len)) + (end<text.length?"…":"");
+}
+
+const matchInfo = {};
 function renderList(){
   const q = $("search").value.trim().toLowerCase();
+  const tokens = q ? q.split(/\s+/).filter(Boolean) : [];
   const list = $("list");
   list.innerHTML = "";
+  for(const k in matchInfo) delete matchInfo[k];
 
   let items = ITEMS;
-  if(q){
-    items = items.filter(it =>
-      it.name.toLowerCase().includes(q) ||
-      (it.group && it.group.toLowerCase().includes(q)) ||
-      it.file.toLowerCase().includes(q)
-    );
+  if(tokens.length){
+    items = ITEMS.filter(it=>{
+      const hay = (it.name + " " + (it.group||"") + " " + it.file).toLowerCase();
+      const text = (INDEX[it.path] && INDEX[it.path].text) || "";
+      const low = text.toLowerCase();
+      let contentOnly = false;
+      for(const tk of tokens){
+        const inName = hay.includes(tk);
+        if(!inName && !low.includes(tk)) return false;
+        if(!inName) contentOnly = true;
+      }
+      if(contentOnly){
+        for(const tk of tokens){
+          if(!hay.includes(tk)){
+            const p = low.indexOf(tk);
+            if(p>-1){ matchInfo[it.path] = makeSnippet(text, p, tk.length); break; }
+          }
+        }
+      }
+      return true;
+    });
   }
 
   if(items.length===0){
@@ -429,7 +512,10 @@ function renderList(){
     b.dataset.path = it.path;
     b.style.animationDelay = Math.min(rendered*22, 320) + "ms";
     rendered++;
-    b.innerHTML = `<span class="marker"></span>` + escapeHtml(it.name);
+    let inner = `<span class="marker"></span><span class="nm">` + escapeHtml(it.name) + `</span>`;
+    const snip = matchInfo[it.path];
+    if(snip){ inner += `<span class="hit">본문</span><span class="snip">` + snip + `</span>`; }
+    b.innerHTML = inner;
     b.addEventListener("click", ()=>{ select(it,true); closeNav(); });
     list.appendChild(b);
   };
