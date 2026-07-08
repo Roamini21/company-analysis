@@ -3,207 +3,152 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>기업 분석 아카이브</title>
+<title>Roa's Archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#17140f;
-    --ink-2:#211c14;
-    --paper:#f2ede1;
-    --paper-2:#fbf8f0;
-    --line:rgba(23,20,15,.12);
-    --line-d:rgba(242,237,225,.10);
-    --text:#1c1813;
-    --muted:#6f675a;
-    --ink-text:#efe8d8;
-    --ink-muted:#a99c85;
-    --accent:#c2992e;
-    --accent-2:#9a781f;
-    --accent-tint:rgba(194,153,46,.16);
-    --sidebar-w:316px;
+    --ink:#17140f; --ink-2:#211c14; --paper:#f2ede1; --paper-2:#fbf8f0;
+    --line:rgba(23,20,15,.12); --line-d:rgba(242,237,225,.10);
+    --text:#1c1813; --muted:#6f675a; --ink-text:#efe8d8; --ink-muted:#a99c85;
+    --accent:#c2992e; --accent-2:#9a781f; --accent-tint:rgba(194,153,46,.16);
+    --sidebar-w:320px;
     --serif:"Fraunces",Georgia,serif;
     --sans:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     --mono:"IBM Plex Mono",ui-monospace,monospace;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{
-    margin:0;
-    font-family:var(--sans);
-    color:var(--text);
-    background:var(--paper);
-    -webkit-font-smoothing:antialiased;
-    overflow:hidden;
-  }
-  /* faint paper grain */
+  body{margin:0;font-family:var(--sans);color:var(--text);background:var(--paper);-webkit-font-smoothing:antialiased;overflow:hidden}
   body::before{
     content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/></svg>");
   }
   .app{position:relative;z-index:1;display:flex;height:100vh;width:100vw}
 
-  /* ---------- Sidebar ---------- */
-  .sidebar{
-    width:var(--sidebar-w);flex:0 0 var(--sidebar-w);height:100%;
-    background:var(--ink);color:var(--ink-text);
-    display:flex;flex-direction:column;
-    border-right:1px solid #000;
-    box-shadow:inset -1px 0 0 var(--line-d);
-  }
-  .masthead{padding:26px 24px 18px;border-bottom:1px solid var(--line-d)}
-  .overline{
-    font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;
-    color:var(--accent);margin:0 0 10px;font-weight:500;
-  }
-  .wordmark{
-    font-family:var(--serif);font-weight:600;font-size:30px;line-height:1.02;
-    letter-spacing:-.01em;margin:0;color:var(--ink-text);
-    font-variation-settings:"opsz" 40;
-  }
-  .submark{
-    font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-muted);
-    margin:9px 0 0;text-transform:uppercase;
-  }
-  .countline{
-    display:flex;align-items:baseline;gap:8px;margin-top:16px;
-    font-family:var(--mono);font-size:11px;color:var(--ink-muted);letter-spacing:.05em;
-  }
+  /* Sidebar */
+  .sidebar{width:var(--sidebar-w);flex:0 0 var(--sidebar-w);height:100%;background:var(--ink);color:var(--ink-text);display:flex;flex-direction:column;border-right:1px solid #000;box-shadow:inset -1px 0 0 var(--line-d)}
+  .masthead{padding:24px 24px 16px;border-bottom:1px solid var(--line-d)}
+  .overline{font-family:var(--mono);font-size:10.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--accent);margin:0 0 10px;font-weight:500}
+  .wordmark{font-family:var(--serif);font-weight:600;font-size:30px;line-height:1.02;letter-spacing:-.01em;margin:0;color:var(--ink-text);font-variation-settings:"opsz" 40}
+  .submark{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ink-muted);margin:9px 0 0;text-transform:uppercase}
+  .countline{display:flex;align-items:baseline;gap:8px;margin-top:15px;font-family:var(--mono);font-size:11px;color:var(--ink-muted);letter-spacing:.05em}
   .countline b{color:var(--accent);font-size:13px;font-weight:500}
 
-  .searchwrap{padding:14px 18px 6px}
-  .search{
-    width:100%;background:var(--ink-2);border:1px solid var(--line-d);
-    border-radius:9px;padding:10px 12px 10px 34px;color:var(--ink-text);
-    font-family:var(--sans);font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23a99c85' stroke-width='1.6' stroke-linecap='round'><circle cx='7' cy='7' r='5'/><line x1='11' y1='11' x2='14.5' y2='14.5'/></svg>");
-    background-repeat:no-repeat;background-position:11px center;
-  }
+  .segwrap{padding:14px 18px 2px}
+  .seg{display:flex;width:100%;background:var(--ink-2);border:1px solid var(--line-d);border-radius:10px;padding:3px;gap:2px}
+  .seg button{flex:1;border:0;background:transparent;color:var(--ink-muted);font-family:var(--sans);font-size:12px;font-weight:500;padding:6px 4px;border-radius:7px;cursor:pointer;transition:background .15s,color .15s;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1.15}
+  .seg button .cnt{font-family:var(--mono);font-size:8.5px;opacity:.65;letter-spacing:.04em;margin-top:1px}
+  .seg button:hover{color:var(--ink-text)}
+  .seg button.on{background:var(--accent);color:#1a1509}
+  .seg button.on .cnt{opacity:.8}
+
+  .searchwrap{padding:12px 18px 4px}
+  .search{width:100%;background:var(--ink-2);border:1px solid var(--line-d);border-radius:9px;padding:10px 12px 10px 34px;color:var(--ink-text);font-family:var(--sans);font-size:13.5px;outline:none;transition:border-color .15s,box-shadow .15s;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23a99c85' stroke-width='1.6' stroke-linecap='round'><circle cx='7' cy='7' r='5'/><line x1='11' y1='11' x2='14.5' y2='14.5'/></svg>");background-repeat:no-repeat;background-position:11px center}
   .search::placeholder{color:var(--ink-muted);opacity:.8}
   .search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-tint)}
+  .idxbar{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--ink-muted);padding:9px 4px 0;min-height:12px;display:flex;align-items:center;gap:7px}
+  .idxbar.working::before{content:"";width:8px;height:8px;border:1.5px solid var(--line-d);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;display:inline-block;flex:0 0 auto}
 
-  .list{flex:1;overflow-y:auto;padding:8px 10px 20px;scrollbar-width:thin}
+  .list{flex:1;overflow-y:auto;padding:6px 10px 20px;scrollbar-width:thin}
   .list::-webkit-scrollbar{width:8px}
   .list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.10);border-radius:8px}
-  .group-h{
-    font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;
-    color:var(--ink-muted);padding:16px 12px 7px;display:flex;align-items:center;gap:10px;
-  }
+  .group-h{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-muted);padding:16px 12px 7px;display:flex;align-items:center;gap:10px}
   .group-h::after{content:"";flex:1;height:1px;background:var(--line-d)}
-  .item{
-    display:block;width:100%;text-align:left;border:0;background:transparent;cursor:pointer;
-    color:var(--ink-text);font-family:var(--sans);font-size:14.5px;font-weight:400;
-    padding:10px 12px;border-radius:8px;line-height:1.35;position:relative;
-    transition:background .14s,color .14s;
-    opacity:0;animation:rise .42s cubic-bezier(.2,.7,.3,1) forwards;
-  }
+  .item{display:block;width:100%;text-align:left;border:0;background:transparent;cursor:pointer;color:var(--ink-text);font-family:var(--sans);font-size:14.5px;font-weight:400;padding:10px 12px;border-radius:8px;line-height:1.35;position:relative;transition:background .14s,color .14s;opacity:0;animation:rise .42s cubic-bezier(.2,.7,.3,1) forwards}
   @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   .item:hover{background:rgba(255,255,255,.05)}
-  .item .marker{
-    position:absolute;left:0;top:50%;transform:translateY(-50%) scaleY(0);
-    width:3px;height:60%;background:var(--accent);border-radius:3px;transition:transform .18s;
-  }
+  .item .marker{position:absolute;left:0;top:50%;transform:translateY(-50%) scaleY(0);width:3px;height:60%;background:var(--accent);border-radius:3px;transition:transform .18s}
   .item.active{background:var(--accent-tint);color:#fff;font-weight:500}
   .item.active .marker{transform:translateY(-50%) scaleY(1)}
-  .item .sub{display:block;font-family:var(--mono);font-size:10px;color:var(--ink-muted);margin-top:2px;letter-spacing:.03em}
+  .item.ind{font-weight:500}
+  .item.ind .nm{color:#f4e7c4}
   .item .nm{display:inline}
+  .item .tbadge{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:8px;letter-spacing:.12em;padding:1px 5px;border-radius:4px;vertical-align:middle;border:1px solid var(--accent);color:var(--accent)}
   .item .hit{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--ink);background:var(--accent);padding:1px 5px;border-radius:4px;vertical-align:middle}
   .item .snip{display:block;margin-top:5px;font-size:11.5px;line-height:1.45;color:var(--ink-muted);font-family:var(--sans)}
   .item .snip mark{background:rgba(194,153,46,.32);color:var(--ink-text);border-radius:2px;padding:0 1px}
   .item.active .snip{color:var(--ink-text)}
-  .idxbar{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;color:var(--ink-muted);padding:9px 4px 0;min-height:12px;display:flex;align-items:center;gap:7px}
-  .idxbar.working::before{content:"";width:8px;height:8px;border:1.5px solid var(--line-d);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite;display:inline-block;flex:0 0 auto}
+  .empty-list{padding:30px 18px;font-family:var(--mono);font-size:11px;color:var(--ink-muted);letter-spacing:.05em;line-height:1.7;text-align:center}
 
-  .side-foot{
-    padding:12px 20px;border-top:1px solid var(--line-d);
-    display:flex;align-items:center;justify-content:space-between;
-    font-family:var(--mono);font-size:10.5px;color:var(--ink-muted);letter-spacing:.04em;
-  }
+  .side-foot{padding:12px 20px;border-top:1px solid var(--line-d);display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:10.5px;color:var(--ink-muted);letter-spacing:.04em}
   .refresh{background:none;border:0;color:var(--ink-muted);cursor:pointer;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:6px;transition:color .15s,background .15s}
   .refresh:hover{color:var(--accent);background:rgba(255,255,255,.05)}
   .refresh svg{transition:transform .5s}
   .refresh.spin svg{transform:rotate(360deg)}
 
-  /* ---------- Main ---------- */
+  /* Main */
   .main{flex:1;height:100%;display:flex;flex-direction:column;min-width:0;background:var(--paper)}
-  .topbar{
-    height:62px;flex:0 0 62px;display:flex;align-items:center;gap:14px;
-    padding:0 22px;border-bottom:1px solid var(--line);background:rgba(251,248,240,.7);backdrop-filter:blur(6px);
-  }
+  .topbar{height:62px;flex:0 0 62px;display:flex;align-items:center;gap:14px;padding:0 22px;border-bottom:1px solid var(--line);background:rgba(251,248,240,.7);backdrop-filter:blur(6px)}
   .menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:8px;width:38px;height:38px;cursor:pointer;align-items:center;justify-content:center;color:var(--text)}
-  .crumb{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .crumb{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
   .cur-title{font-family:var(--serif);font-size:21px;font-weight:600;letter-spacing:-.01em;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variation-settings:"opsz" 30}
   .top-actions{margin-left:auto;display:flex;gap:9px;align-items:center}
-  .btn{
-    font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
-    border:1px solid var(--line);background:var(--paper-2);color:var(--text);
-    padding:9px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
-    transition:border-color .15s,background .15s,color .15s;text-decoration:none;
-  }
+  .btn{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);background:var(--paper-2);color:var(--text);padding:9px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:border-color .15s,background .15s,color .15s;text-decoration:none}
   .btn:hover{border-color:var(--accent);color:var(--accent-2)}
-  .btn[disabled]{opacity:.4;pointer-events:none}
+  .btn[aria-disabled="true"]{opacity:.4;pointer-events:none}
   .btn svg{width:14px;height:14px}
 
   .stage{flex:1;position:relative;min-height:0;padding:18px}
-  .frame{
-    position:absolute;inset:18px;background:#fff;border:1px solid var(--line);border-radius:12px;
-    box-shadow:0 1px 2px rgba(23,20,15,.04),0 14px 40px -22px rgba(23,20,15,.30);overflow:hidden;
-  }
   iframe{width:100%;height:100%;border:0;display:block;background:#fff}
-
-  /* states */
-  .panel{
-    position:absolute;inset:18px;display:none;flex-direction:column;align-items:center;justify-content:center;
-    text-align:center;padding:40px;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;
-  }
-  .panel.show{display:flex}
-  .panel .ic{font-family:var(--serif);font-size:13px;letter-spacing:.3em;color:var(--accent);text-transform:uppercase;margin-bottom:18px;font-family:var(--mono)}
-  .panel h2{font-family:var(--serif);font-size:30px;font-weight:600;margin:0 0 12px;color:var(--text);letter-spacing:-.015em;max-width:18ch;line-height:1.12}
-  .panel p{font-size:14.5px;color:var(--muted);max-width:46ch;line-height:1.6;margin:0 auto 8px}
+  .panel,.loading{position:absolute;inset:18px;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .panel{padding:40px;background:var(--paper-2);border:1px solid var(--line);border-radius:12px}
+  .panel.show,.loading.show{display:flex}
+  .panel .ic{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--accent);text-transform:uppercase;margin-bottom:16px}
+  .panel .ic.err{color:#a23b2d}
+  .panel h2{font-family:var(--serif);font-size:30px;font-weight:600;margin:0 0 12px;color:var(--text);letter-spacing:-.015em;max-width:20ch;line-height:1.12}
+  .panel p{font-size:14.5px;color:var(--muted);max-width:48ch;line-height:1.6;margin:0 auto 8px}
   .panel code{font-family:var(--mono);font-size:12.5px;background:rgba(23,20,15,.06);padding:2px 7px;border-radius:5px;color:var(--accent-2)}
-  .steps{text-align:left;max-width:520px;margin:22px auto 0;display:flex;flex-direction:column;gap:14px;width:100%}
+  .steps{text-align:left;max-width:540px;margin:22px auto 0;display:flex;flex-direction:column;gap:14px;width:100%}
   .step{display:flex;gap:14px;align-items:flex-start}
   .step .n{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--accent);color:var(--accent-2);font-family:var(--mono);font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:1px}
   .step .t{font-size:13.5px;color:var(--text);line-height:1.55}
   .step .t b{font-weight:600}
-  .err{color:#a23b2d}
-
-  .loading{position:absolute;inset:18px;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px}
-  .loading.show{display:flex}
-  .spinner{width:30px;height:30px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp 0.8s linear infinite}
+  iframe#viewer{position:absolute;inset:18px;width:auto;height:auto;border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(23,20,15,.04),0 14px 40px -22px rgba(23,20,15,.30);overflow:hidden}
+  .spinner{width:30px;height:30px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite}
   @keyframes sp{to{transform:rotate(360deg)}}
-  .loading span{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+  .loading span{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:14px}
 
   .scrim{display:none}
   @media (max-width:860px){
-    :root{--sidebar-w:280px}
+    :root{--sidebar-w:284px}
     .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:40;transform:translateX(-100%);transition:transform .28s cubic-bezier(.2,.7,.3,1)}
     .app.nav-open .sidebar{transform:none;box-shadow:0 0 60px rgba(0,0,0,.5)}
     .menu-btn{display:inline-flex}
     .scrim{position:fixed;inset:0;background:rgba(10,8,5,.45);z-index:35;display:none}
     .app.nav-open .scrim{display:block}
     .cur-title{font-size:18px}
-    .stage,.frame,.panel,.loading{inset:10px}
+    .stage,.panel,.loading,iframe#viewer{inset:10px}
     .stage{padding:10px}
   }
-  .empty-list{padding:30px 18px;font-family:var(--mono);font-size:11px;color:var(--ink-muted);letter-spacing:.05em;line-height:1.7;text-align:center}
 </style>
 </head>
 <body>
 <div class="app" id="app">
   <aside class="sidebar">
     <div class="masthead">
-      <p class="overline" id="overline">Company Analysis Archive</p>
-      <h1 class="wordmark" id="wordmark">기업 분석 아카이브</h1>
+      <p class="overline" id="overline">Companies &amp; Industries</p>
+      <h1 class="wordmark" id="wordmark">Roa's Archive</h1>
       <p class="submark" id="repoLabel">—</p>
-      <div class="countline"><b id="count">0</b><span>기업 등록됨</span></div>
+      <div class="countline"><b id="count">0</b><span>건 등록됨</span></div>
     </div>
+
+    <div class="segwrap">
+      <div class="seg" id="seg">
+        <button data-f="전체" class="on"><span>전체</span><span class="cnt" id="cnt-all">0</span></button>
+        <button data-f="기업"><span>기업</span><span class="cnt" id="cnt-co">0</span></button>
+        <button data-f="산업"><span>산업</span><span class="cnt" id="cnt-in">0</span></button>
+      </div>
+    </div>
+
     <div class="searchwrap">
-      <input class="search" id="search" type="text" placeholder="기업명·본문 검색…" autocomplete="off" spellcheck="false">
+      <input class="search" id="search" type="text" placeholder="이름·본문 검색…" autocomplete="off" spellcheck="false">
       <div class="idxbar" id="indexStatus"></div>
     </div>
-    <nav class="list" id="list" aria-label="기업 목록"></nav>
+
+    <nav class="list" id="list" aria-label="분석 목록"></nav>
+
     <div class="side-foot">
       <span id="footStatus">대기 중</span>
       <button class="refresh" id="refresh" title="목록 새로고침">
@@ -221,7 +166,7 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
       <div>
-        <div class="crumb" id="crumb">선택된 기업</div>
+        <div class="crumb" id="crumb">선택된 분석</div>
         <div class="cur-title" id="curTitle">—</div>
       </div>
       <div class="top-actions">
@@ -233,44 +178,34 @@
     </div>
 
     <div class="stage">
-      <iframe id="viewer" title="기업 분석 뷰어" referrerpolicy="no-referrer" style="display:none"></iframe>
+      <iframe id="viewer" title="분석 뷰어" referrerpolicy="no-referrer" style="display:none"></iframe>
 
       <div class="loading" id="loading"><div class="spinner"></div><span>목록 불러오는 중…</span></div>
 
-      <!-- Select prompt -->
       <div class="panel" id="selectPanel">
         <div class="ic">Archive</div>
-        <h2>왼쪽에서 기업을 선택하세요</h2>
-        <p>등록된 모든 기업 분석이 왼쪽 목록에 탭처럼 정리됩니다. 항목을 클릭하면 이 영역에 해당 분석이 그대로 펼쳐집니다.</p>
+        <h2>왼쪽에서 항목을 선택하세요</h2>
+        <p>기업과 산업 분석이 섹터별로 정리됩니다. 위쪽 전체 · 기업 · 산업 버튼으로 종류를 걸러 보고, 검색창에서는 이름과 본문을 함께 찾을 수 있습니다.</p>
       </div>
 
-      <!-- No companies yet -->
       <div class="panel" id="emptyPanel">
         <div class="ic">Empty</div>
-        <h2>아직 등록된 기업이 없습니다</h2>
-        <p>분석 HTML 파일을 저장소의 <code id="folderCode">companies</code> 폴더에 올리면 자동으로 여기에 나타납니다.</p>
+        <h2>아직 등록된 분석이 없습니다</h2>
+        <p>기업 보고서는 <code>companies</code> 폴더에, 산업 보고서는 <code>industries</code> 폴더에 올리면 자동으로 여기에 나타납니다.</p>
         <div class="steps">
-          <div class="step"><div class="n">1</div><div class="t">GitHub 저장소에서 <b id="folderCode2">companies</b> 폴더로 이동합니다.</div></div>
-          <div class="step"><div class="n">2</div><div class="t"><b>Add file → Upload files</b> 를 눌러 Claude가 만든 HTML 파일을 끌어다 놓습니다.</div></div>
-          <div class="step"><div class="n">3</div><div class="t"><b>Commit changes</b> 후 이 페이지를 새로고침하면 새 탭이 생성됩니다.</div></div>
+          <div class="step"><div class="n">1</div><div class="t">저장소에 <b>companies</b>, <b>industries</b> 폴더를 두고 각 보고서를 종류에 맞게 올립니다.</div></div>
+          <div class="step"><div class="n">2</div><div class="t">파일 이름은 <b>섹터__이름.html</b> 형식으로. 여러 섹터에 걸치면 쉼표로 나열합니다 (예: <b>반도체, 디스플레이__삼성전자.html</b>).</div></div>
+          <div class="step"><div class="n">3</div><div class="t"><b>Commit</b> 후 이 페이지를 새로고침하면 섹터별로 정리되고, 산업분석이 각 섹터 맨 위에 놓입니다.</div></div>
         </div>
       </div>
 
-      <!-- Setup needed (not on github.io / not configured) -->
       <div class="panel" id="setupPanel">
         <div class="ic">Setup</div>
         <h2>호스팅 설정이 필요합니다</h2>
-        <p>이 대시보드는 GitHub Pages 위에서 동작할 때 폴더의 파일을 자동으로 읽어옵니다. 지금은 저장소 정보를 감지하지 못했습니다 (로컬 미리보기이거나 커스텀 도메인일 수 있습니다).</p>
+        <p>이 대시보드는 GitHub Pages 위에서 폴더의 파일을 자동으로 읽어옵니다. 지금은 저장소 정보를 감지하지 못했습니다 (로컬 미리보기이거나 커스텀 도메인일 수 있습니다).</p>
         <p>파일 상단의 <code>CONFIG</code> 에서 <code>user</code> 와 <code>repo</code> 를 직접 입력하면 어디서든 동작합니다.</p>
-        <div class="steps">
-          <div class="step"><div class="n">1</div><div class="t">GitHub에 <b>company-analysis</b> 같은 이름으로 공개(public) 저장소를 만듭니다.</div></div>
-          <div class="step"><div class="n">2</div><div class="t">이 <b>index.html</b> 을 저장소 최상위에 올리고, <b>companies</b> 폴더에 분석 파일들을 올립니다.</div></div>
-          <div class="step"><div class="n">3</div><div class="t"><b>Settings → Pages → Deploy from a branch → main / root</b> 로 게시합니다.</div></div>
-          <div class="step"><div class="n">4</div><div class="t"><code>https://[아이디].github.io/company-analysis/</code> 로 접속합니다.</div></div>
-        </div>
       </div>
 
-      <!-- Error / rate limit -->
       <div class="panel" id="errorPanel">
         <div class="ic err">Notice</div>
         <h2 id="errTitle">목록을 불러오지 못했습니다</h2>
@@ -282,24 +217,31 @@
 
 <script>
 /* ============================================================
-   설정 — 필요하면 이 두 줄만 채우세요.
-   비워두면 username.github.io 주소에서 자동으로 감지합니다.
+   설정 — 보통은 손댈 필요 없습니다.
+   - user / repo 를 비워두면 github.io 주소에서 자동 감지합니다.
+   - sources: 종류별 폴더. 기업은 companies, 산업은 industries.
+   - title / subtitle: 사이트 제목.
    ============================================================ */
 const CONFIG = {
-  user:   "",            // 예: "minjun"  (보통 자동 감지되므로 비워둬도 됨)
-  repo:   "",            // 예: "company-analysis"
-  folder: "companies",   // 분석 HTML 파일을 모아두는 폴더 이름
-  title:    "기업 분석 아카이브",
-  subtitle: "Company Analysis Archive"
+  user: "",
+  repo: "",
+  sources: [
+    { folder: "companies",  type: "기업" },
+    { folder: "industries", type: "산업" }
+  ],
+  title:    "Roa's Archive",
+  subtitle: "Companies & Industries"
 };
 /* ============================================================ */
 
 const $ = (id)=>document.getElementById(id);
-let ITEMS = [];           // {file, path, href, group, name, sha}
+let ITEMS = [];           // {file, path, href, sha, type, sectors:[], name}
 let activePath = null;
-let INDEX = {};           // path -> { sha, text }  (report body text for full-text search)
+let INDEX = {};           // path -> { sha, text }
 let indexing = false;
 let rerenderPending = false;
+let typeFilter = "전체";
+const NONE = "복합·기타";
 
 function detectRepo(){
   if(CONFIG.user && CONFIG.repo) return {user:CONFIG.user, repo:CONFIG.repo};
@@ -315,25 +257,40 @@ function detectRepo(){
 function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
 function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 
-function parseName(filename){
+function parseMeta(filename){
   let base = filename.replace(/\.html?$/i,"");
-  let group = null, name = base;
-  if(base.indexOf("__")>-1){
-    const parts = base.split("__");
-    group = parts.shift().trim();
-    name = parts.join("__").trim();
+  let sectors = [], name = base;
+  const di = base.indexOf("__");
+  if(di>-1){
+    const pre = base.slice(0, di);
+    name = base.slice(di+2);
+    sectors = pre.split(",").map(s=>s.replace(/_/g," ").replace(/\s+/g," ").trim()).filter(Boolean);
+    sectors = [...new Set(sectors)];
   }
-  const tidy = (s)=> s.replace(/[_\-]+/g," ").replace(/\s+/g," ").trim();
-  return { group: group ? tidy(group) : null, name: tidy(name) || base };
+  name = name.replace(/_/g," ").replace(/\s+/g," ").trim() || base;
+  return { sectors, name };
 }
 
 function showOnly(panelId){
-  ["selectPanel","emptyPanel","setupPanel","errorPanel"].forEach(p=>$(p).classList.toggle("show", p===panelId));
-  $("loading").classList.toggle("show", panelId==="loading");
-  if(panelId==="loading"){
-    ["selectPanel","emptyPanel","setupPanel","errorPanel"].forEach(p=>$(p).classList.remove("show"));
-  }
+  ["selectPanel","emptyPanel","setupPanel","errorPanel","loading"].forEach(p=>$(p).classList.toggle("show", p===panelId));
   $("viewer").style.display = (panelId==="viewer") ? "block" : "none";
+}
+
+function failure(title,msg){
+  $("errTitle").textContent = title;
+  $("errMsg").textContent = msg;
+  $("footStatus").textContent = "오류";
+  showOnly("errorPanel");
+}
+
+function updateCounts(){
+  const total = ITEMS.length;
+  const co = ITEMS.filter(i=>i.type==="기업").length;
+  const ind = ITEMS.filter(i=>i.type==="산업").length;
+  $("count").textContent = String(total);
+  $("cnt-all").textContent = total;
+  $("cnt-co").textContent = co;
+  $("cnt-in").textContent = ind;
 }
 
 async function loadList(){
@@ -344,71 +301,67 @@ async function loadList(){
   $("footStatus").textContent = "불러오는 중…";
   showOnly("loading");
 
-  const base = `https://api.github.com/repos/${target.user}/${target.repo}/contents`;
+  const apiBase = `https://api.github.com/repos/${target.user}/${target.repo}/contents`;
   const get = (path)=>{
     const segs = String(path||"").split("/").filter(Boolean).map(encodeURIComponent);
-    return fetch(segs.length ? base + "/" + segs.join("/") : base, {headers:{Accept:"application/vnd.github+json"}});
+    return fetch(segs.length ? apiBase + "/" + segs.join("/") : apiBase, {headers:{Accept:"application/vnd.github+json"}});
   };
-  let res;
-  try{
-    res = await get(CONFIG.folder);
-    // 폴더 이름의 대소문자/철자가 달라 404가 나면, 최상위에서 같은 이름의 폴더를 찾아 자동 매칭
+  async function listFolder(folderName){
+    let res = await get(folderName);
     if(res.status===404){
       const rootRes = await get("");
       if(rootRes.ok){
-        let rootData = [];
-        try{ rootData = await rootRes.json(); }catch(e){}
+        let rootData=[]; try{ rootData = await rootRes.json(); }catch(e){}
         if(Array.isArray(rootData)){
-          const want = CONFIG.folder.trim().toLowerCase();
-          const match = rootData.find(x=>x.type==="dir" && x.name.toLowerCase()===want);
-          if(match){ res = await get(match.name); }
+          const want = folderName.trim().toLowerCase();
+          const m = rootData.find(x=>x.type==="dir" && x.name.toLowerCase()===want);
+          if(m){ res = await get(m.name); }
         }
       }
     }
-  }catch(e){
-    return failure("네트워크 오류", "GitHub에 연결하지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.");
+    return res;
   }
 
-  if(res.status===404){ ITEMS=[]; renderList(); showOnly("emptyPanel"); $("count").textContent="0"; $("footStatus").textContent="기업 0"; return; }
-  if(res.status===403){ return failure("잠시 후 다시 시도하세요", "GitHub의 시간당 조회 한도(비로그인 60회)에 도달했습니다. 약 1시간 뒤 자동으로 풀립니다."); }
-  if(!res.ok){ return failure("불러오기 실패", "GitHub 응답 코드 " + res.status + ". 저장소 이름과 폴더 이름을 확인해 주세요."); }
+  let all = [], sawAny=false, sawRate=false, netErr=false;
+  for(const src of CONFIG.sources){
+    let res;
+    try{ res = await listFolder(src.folder); }
+    catch(e){ netErr = true; continue; }
+    if(res.status===404) continue;                 // 폴더가 아직 없음 — 정상
+    if(res.status===403){ sawRate = true; continue; }
+    if(!res.ok) continue;
+    let data; try{ data = await res.json(); }catch(e){ continue; }
+    if(!Array.isArray(data)) continue;
+    sawAny = true;
+    data.filter(x=>x.type==="file" && /\.html?$/i.test(x.name) && x.name.toLowerCase()!=="index.html")
+        .forEach(x=>{
+          const meta = parseMeta(x.name);
+          let sectors = meta.sectors;
+          if(src.type==="산업" && sectors.length===0) sectors = [meta.name];   // 산업 파일은 이름 자체를 섹터로
+          const href = x.path.split("/").map(encodeURIComponent).join("/");
+          all.push({ file:x.name, path:x.path, href, sha:x.sha, type:src.type, sectors, name:meta.name });
+        });
+  }
 
-  let data;
-  try{ data = await res.json(); }catch(e){ return failure("응답 해석 실패","데이터 형식이 올바르지 않습니다."); }
-  if(!Array.isArray(data)){ return failure("폴더가 아닙니다", `"${CONFIG.folder}" 가 폴더가 아닌 것 같습니다.`); }
+  if(netErr && !sawAny) return failure("네트워크 오류","GitHub에 연결하지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.");
+  if(sawRate && !sawAny) return failure("잠시 후 다시 시도하세요","GitHub의 시간당 조회 한도(비로그인 60회)에 도달했습니다. 약 1시간 뒤 자동으로 풀립니다.");
 
-  const files = data
-    .filter(x=>x.type==="file" && /\.html?$/i.test(x.name) && x.name.toLowerCase()!=="index.html")
-    .map(x=>{
-      const meta = parseName(x.name);
-      const href = x.path.split("/").map(encodeURIComponent).join("/");
-      return { file:x.name, path:x.path, href, group:meta.group, name:meta.name, sha:x.sha };
-    })
-    .sort((a,b)=> a.name.localeCompare(b.name, "ko"));
+  all.sort((a,b)=> a.name.localeCompare(b.name,"ko"));
+  ITEMS = all;
+  updateCounts();
 
-  ITEMS = files;
-  $("count").textContent = String(files.length);
-  $("footStatus").textContent = "기업 " + files.length;
+  if(all.length===0){ renderList(); showOnly("emptyPanel"); $("footStatus").textContent="항목 0"; return; }
 
-  if(files.length===0){ renderList(); showOnly("emptyPanel"); return; }
-
+  $("footStatus").textContent = "항목 " + all.length;
   renderList();
   buildIndex();
 
-  // restore last viewed if still present
   const last = lsGet("lastPath:"+target.repo);
-  const restore = files.find(f=>f.path===last);
-  if(restore){ select(restore, false); }
-  else { showOnly("selectPanel"); }
+  const restore = all.find(f=>f.path===last);
+  if(restore){ select(restore, false); } else { showOnly("selectPanel"); }
 }
 
-function failure(title,msg){
-  $("errTitle").textContent = title;
-  $("errMsg").textContent = msg;
-  $("footStatus").textContent = "오류";
-  showOnly("errorPanel");
-}
-
+/* ---- background full-text indexing ---- */
 function buildIndex(){
   if(indexing) return;
   indexing = true;
@@ -462,6 +415,7 @@ function makeSnippet(text, pos, len){
   return (start>0?"…":"") + escapeHtml(seg.slice(0,rel)) + "<mark>" + escapeHtml(seg.slice(rel,rel+len)) + "</mark>" + escapeHtml(seg.slice(rel+len)) + (end<text.length?"…":"");
 }
 
+/* ---- rendering ---- */
 const matchInfo = {};
 function renderList(){
   const q = $("search").value.trim().toLowerCase();
@@ -470,10 +424,11 @@ function renderList(){
   list.innerHTML = "";
   for(const k in matchInfo) delete matchInfo[k];
 
-  let items = ITEMS;
+  let items = (typeFilter==="전체") ? ITEMS : ITEMS.filter(it=>it.type===typeFilter);
+
   if(tokens.length){
-    items = ITEMS.filter(it=>{
-      const hay = (it.name + " " + (it.group||"") + " " + it.file).toLowerCase();
+    items = items.filter(it=>{
+      const hay = (it.name + " " + it.sectors.join(" ") + " " + it.file + " " + it.type).toLowerCase();
       const text = (INDEX[it.path] && INDEX[it.path].text) || "";
       const low = text.toLowerCase();
       let contentOnly = false;
@@ -484,10 +439,7 @@ function renderList(){
       }
       if(contentOnly){
         for(const tk of tokens){
-          if(!hay.includes(tk)){
-            const p = low.indexOf(tk);
-            if(p>-1){ matchInfo[it.path] = makeSnippet(text, p, tk.length); break; }
-          }
+          if(!hay.includes(tk)){ const p = low.indexOf(tk); if(p>-1){ matchInfo[it.path] = makeSnippet(text,p,tk.length); break; } }
         }
       }
       return true;
@@ -495,62 +447,51 @@ function renderList(){
   }
 
   if(items.length===0){
-    const d = document.createElement("div");
-    d.className="empty-list";
-    d.textContent = q ? "검색 결과가 없습니다" : "표시할 기업이 없습니다";
-    list.appendChild(d);
-    return;
+    const d=document.createElement("div"); d.className="empty-list";
+    d.textContent = (q||typeFilter!=="전체") ? "해당하는 항목이 없습니다" : "표시할 항목이 없습니다";
+    list.appendChild(d); return;
   }
 
-  // group only if at least one explicit group exists
-  const hasGroups = items.some(it=>it.group);
-  let rendered = 0;
+  // group by sector — a multi-sector item appears under each of its sectors
+  const groups = {};
+  items.forEach(it=>{
+    const secs = it.sectors.length ? it.sectors : [NONE];
+    secs.forEach(s=>{ (groups[s]=groups[s]||[]).push(it); });
+  });
+  const order = Object.keys(groups).sort((a,b)=> a===NONE?1 : b===NONE?-1 : a.localeCompare(b,"ko"));
 
+  let rendered = 0;
   const renderItem = (it)=>{
-    const b = document.createElement("button");
-    b.className = "item" + (it.path===activePath ? " active":"");
+    const b=document.createElement("button");
+    b.className = "item" + (it.type==="산업"?" ind":"") + (it.path===activePath?" active":"");
     b.dataset.path = it.path;
-    b.style.animationDelay = Math.min(rendered*22, 320) + "ms";
-    rendered++;
-    let inner = `<span class="marker"></span><span class="nm">` + escapeHtml(it.name) + `</span>`;
+    b.style.animationDelay = Math.min(rendered*20, 300)+"ms"; rendered++;
+    let inner = `<span class="marker"></span><span class="nm">`+escapeHtml(it.name)+`</span>`;
+    if(it.type==="산업") inner += `<span class="tbadge">산업</span>`;
     const snip = matchInfo[it.path];
-    if(snip){ inner += `<span class="hit">본문</span><span class="snip">` + snip + `</span>`; }
+    if(snip) inner += `<span class="hit">본문</span><span class="snip">`+snip+`</span>`;
     b.innerHTML = inner;
     b.addEventListener("click", ()=>{ select(it,true); closeNav(); });
     list.appendChild(b);
   };
 
-  if(hasGroups){
-    const groups = {};
-    const order = [];
-    items.forEach(it=>{
-      const g = it.group || "미분류";
-      if(!groups[g]){ groups[g]=[]; order.push(g); }
-      groups[g].push(it);
+  order.forEach(sec=>{
+    const arr = groups[sec].slice().sort((a,b)=>{
+      if((a.type==="산업")!==(b.type==="산업")) return a.type==="산업"?-1:1;   // 산업분석을 섹터 맨 위로
+      return a.name.localeCompare(b.name,"ko");
     });
-    order.sort((a,b)=> a==="미분류" ? 1 : b==="미분류" ? -1 : a.localeCompare(b,"ko"));
-    order.forEach(g=>{
-      const h = document.createElement("div");
-      h.className="group-h";
-      h.textContent = g;
-      list.appendChild(h);
-      groups[g].forEach(renderItem);
-    });
-  } else {
-    items.forEach(renderItem);
-  }
+    const h=document.createElement("div"); h.className="group-h"; h.textContent=sec;
+    list.appendChild(h);
+    arr.forEach(renderItem);
+  });
 }
 
 function select(it, persist){
   activePath = it.path;
-  // update active styling
-  document.querySelectorAll(".item").forEach(el=>{
-    el.classList.toggle("active", el.dataset.path===it.path);
-  });
+  document.querySelectorAll(".item").forEach(el=>{ el.classList.toggle("active", el.dataset.path===it.path); });
   $("curTitle").textContent = it.name;
-  $("crumb").textContent = it.group ? it.group : "기업 분석";
-  const v = $("viewer");
-  v.src = it.href;
+  $("crumb").textContent = it.type + (it.sectors.length ? "  ·  " + it.sectors.join(", ") : "");
+  $("viewer").src = it.href;
   showOnly("viewer");
   const openTab = $("openTab");
   openTab.href = it.href;
@@ -560,26 +501,24 @@ function select(it, persist){
 
 function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-/* nav (mobile) */
+function setFilter(f){
+  typeFilter = f;
+  document.querySelectorAll("#seg button").forEach(b=>b.classList.toggle("on", b.dataset.f===f));
+  renderList();
+}
+
 function openNav(){ $("app").classList.add("nav-open"); }
 function closeNav(){ $("app").classList.remove("nav-open"); }
 
-/* init */
 function init(){
   document.title = CONFIG.title;
   $("wordmark").textContent = CONFIG.title;
   $("overline").textContent = CONFIG.subtitle;
-  $("folderCode").textContent = CONFIG.folder;
-  $("folderCode2").textContent = CONFIG.folder;
-
+  document.querySelectorAll("#seg button").forEach(b=> b.addEventListener("click", ()=> setFilter(b.dataset.f)) );
   $("search").addEventListener("input", renderList);
   $("menuBtn").addEventListener("click", openNav);
   $("scrim").addEventListener("click", closeNav);
-  $("refresh").addEventListener("click", ()=>{
-    const r=$("refresh"); r.classList.add("spin"); setTimeout(()=>r.classList.remove("spin"),600);
-    loadList();
-  });
-
+  $("refresh").addEventListener("click", ()=>{ const r=$("refresh"); r.classList.add("spin"); setTimeout(()=>r.classList.remove("spin"),600); loadList(); });
   loadList();
 }
 document.addEventListener("DOMContentLoaded", init);
