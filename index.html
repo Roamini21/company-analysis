@@ -105,7 +105,8 @@
   .step .n{flex:0 0 26px;height:26px;border-radius:50%;border:1px solid var(--accent);color:var(--accent-2);font-family:var(--mono);font-size:12px;display:flex;align-items:center;justify-content:center;margin-top:1px}
   .step .t{font-size:13.5px;color:var(--text);line-height:1.55}
   .step .t b{font-weight:600}
-  iframe#viewer{position:absolute;inset:18px;width:auto;height:auto;border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(23,20,15,.04),0 14px 40px -22px rgba(23,20,15,.30);overflow:hidden}
+  .frame{position:absolute;inset:18px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(23,20,15,.04),0 14px 40px -22px rgba(23,20,15,.30);overflow:hidden;display:none}
+  iframe#viewer{width:100%;height:100%;border:0;display:block;background:#fff}
   .spinner{width:30px;height:30px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:sp .8s linear infinite}
   @keyframes sp{to{transform:rotate(360deg)}}
   .loading span{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:14px}
@@ -119,7 +120,7 @@
     .scrim{position:fixed;inset:0;background:rgba(10,8,5,.45);z-index:35;display:none}
     .app.nav-open .scrim{display:block}
     .cur-title{font-size:18px}
-    .stage,.panel,.loading,iframe#viewer{inset:10px}
+    .stage,.panel,.loading,.frame{inset:10px}
     .stage{padding:10px}
   }
 </style>
@@ -178,7 +179,7 @@
     </div>
 
     <div class="stage">
-      <iframe id="viewer" title="분석 뷰어" referrerpolicy="no-referrer" style="display:none"></iframe>
+      <div class="frame" id="frame"><iframe id="viewer" title="분석 뷰어" referrerpolicy="no-referrer"></iframe></div>
 
       <div class="loading" id="loading"><div class="spinner"></div><span>목록 불러오는 중…</span></div>
 
@@ -273,7 +274,7 @@ function parseMeta(filename){
 
 function showOnly(panelId){
   ["selectPanel","emptyPanel","setupPanel","errorPanel","loading"].forEach(p=>$(p).classList.toggle("show", p===panelId));
-  $("viewer").style.display = (panelId==="viewer") ? "block" : "none";
+  $("frame").style.display = (panelId==="viewer") ? "block" : "none";
 }
 
 function failure(title,msg){
