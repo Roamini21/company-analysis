@@ -1,0 +1,2236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>머신비전 산업 분석 — 로봇의 눈, 그리고 시각 피질로의 가치 이동</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DESIGN SYSTEM — "Depth Readout" : 머신비전 산업 보고서
+   전략: 밝은 데이터시트 본문 + 어두운 센서 뷰포트 패널 + 뎁스맵 컬러
+   원칙: 배경색 지정 요소는 글자색까지 자족적으로 지정
+   ============================================================ */
+:root{
+  /* base */
+  --bg:#F4F6F8; --surface:#FFFFFF; --surface-2:#EDF1F4; --surface-3:#E4EAEF;
+  --ink:#16202B; --ink-2:#43525F; --ink-3:#6A7885; --line:#D8DEE5; --line-2:#C7D0D8;
+  /* accents */
+  --accent:#0E7FB0; --accent-deep:#0A5F86; --accent-soft:#E6F1F7;
+  --signal:#EE7C11; --signal-deep:#B4560A; --signal-soft:#FBF0E2;
+  /* dark panel (sensor viewport) */
+  --panel:#0C1826; --panel-2:#132538; --panel-3:#1B3149;
+  --panel-ink:#E9EFF5; --panel-ink-2:#A6BBCE; --panel-ink-3:#7791A9; --panel-line:#24384F;
+  /* depth colormap (far→near) — 뎁스센싱 고유 시각언어 */
+  --d1:#2C3C93; --d2:#1E7FC4; --d3:#12A6A0; --d4:#5FB63F; --d5:#E0B105; --d6:#EE7C11; --d7:#C33A2B;
+  /* semantic */
+  --pos:#1C9366; --pos-soft:#E4F3EC; --neg:#C33A2B; --neg-soft:#FBEAE7;
+  --warn:#D99406; --warn-soft:#FBF2DE; --neutral:#6A7885;
+  /* fonts */
+  --disp:'Space Grotesk',system-ui,sans-serif;
+  --body:'Inter','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  --mono:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
+  --maxw:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{overflow-x:hidden}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--body);font-size:16.5px;line-height:1.72;
+  font-weight:400;letter-spacing:-0.002em;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+::selection{background:var(--accent);color:#fff}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:600;line-height:1.18;letter-spacing:-0.02em;color:var(--ink)}
+p{margin:0 0 1.05em}
+a{color:var(--accent-deep);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:normal;background:linear-gradient(transparent 62%,rgba(238,124,17,.22) 62%);padding:0 .05em}
+small{font-size:.82em}
+sup{font-size:.7em;line-height:0}
+
+/* ---------- layout ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+.wrap-wide{max-width:1320px;margin:0 auto;padding:0 26px}
+section{padding:0}
+.rule{height:1px;background:var(--line);border:0;margin:0}
+
+/* ---------- eyebrow / labels ---------- */
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent-deep);margin:0 0 14px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:26px;height:2px;background:var(--signal);display:inline-block}
+.eyebrow.on-dark{color:#6FC4E8}
+.eyebrow.on-dark::before{background:var(--signal)}
+
+/* ============================================================
+   HEADER / NAV
+   ============================================================ */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(12,24,38,.94);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--panel-line);color:var(--panel-ink)}
+.topbar-inner{max-width:1320px;margin:0 auto;padding:9px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{font-family:var(--disp);font-weight:600;font-size:14.5px;color:var(--panel-ink);
+  white-space:nowrap;display:flex;align-items:center;gap:9px;letter-spacing:-.01em}
+.brand .dot{width:9px;height:9px;border-radius:50%;
+  background:radial-gradient(circle at 32% 32%,#6FC4E8,var(--accent) 55%,var(--d1));box-shadow:0 0 8px rgba(30,127,196,.7);flex:none}
+.brand .sub{font-family:var(--mono);font-size:10.5px;font-weight:500;color:var(--panel-ink-3);letter-spacing:.04em}
+.nav{display:flex;flex-wrap:wrap;gap:5px;margin-left:auto;align-items:center}
+.nav a{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.02em;
+  color:var(--panel-ink-2);text-decoration:none;padding:4px 8px;border-radius:5px;
+  white-space:nowrap;transition:background .15s,color .15s;border:1px solid transparent}
+.nav a:hover{background:var(--panel-3);color:#fff;border-color:var(--panel-line)}
+.nav a .n{color:#6FC4E8;font-weight:700}
+
+/* ============================================================
+   HERO — 센서 뷰포트 + 가치 이동 시그니처
+   ============================================================ */
+.hero{background:var(--panel);color:var(--panel-ink);position:relative;overflow:hidden;
+  border-bottom:1px solid var(--panel-line)}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(111,196,232,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(111,196,232,.045) 1px,transparent 1px);
+  background-size:38px 38px;mask-image:radial-gradient(ellipse 90% 75% at 72% 30%,#000 30%,transparent 78%)}
+.hero-inner{max-width:1320px;margin:0 auto;padding:74px 26px 66px;position:relative;z-index:2}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:52px;align-items:center}
+.hero h1{font-size:clamp(30px,4.4vw,52px);font-weight:700;color:#fff;margin:0 0 22px;line-height:1.08;letter-spacing:-.028em}
+.hero h1 .hl{color:#6FC4E8}
+.hero h1 .hl2{color:var(--signal)}
+.hero-lede{font-size:clamp(16px,1.5vw,18.5px);color:var(--panel-ink-2);max-width:44ch;margin:0 0 28px;line-height:1.62}
+.hero-lede strong{color:#DCE7F0;font-weight:600}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px 26px;font-family:var(--mono);font-size:12px;color:var(--panel-ink-3)}
+.hero-meta b{color:#6FC4E8;font-weight:600}
+.thesis{margin-top:30px;padding:18px 22px;border-left:3px solid var(--signal);
+  background:rgba(238,124,17,.09);border-radius:0 10px 10px 0}
+.thesis .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--signal);font-weight:600;display:block;margin-bottom:7px}
+.thesis p{margin:0;font-size:15.5px;color:#EAF1F7;line-height:1.55;font-weight:500}
+.thesis p .k{color:#6FC4E8;font-weight:600}
+
+/* hero side viz : 눈→시각피질 */
+.eyecortex{background:var(--panel-2);border:1px solid var(--panel-line);border-radius:16px;padding:24px 24px 20px;box-shadow:0 24px 60px -30px rgba(0,0,0,.8)}
+.eyecortex h4{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--panel-ink-2);margin:0 0 4px;font-weight:600}
+.eyecortex .cap{font-size:12px;color:var(--panel-ink-3);margin:0 0 16px}
+
+/* ============================================================
+   PART SECTIONS
+   ============================================================ */
+.part{padding:66px 0 12px;scroll-margin-top:64px}
+.part-head{display:flex;gap:22px;align-items:flex-start;margin-bottom:30px}
+.part-num{font-family:var(--disp);font-weight:700;font-size:clamp(40px,6vw,66px);line-height:.82;
+  color:transparent;-webkit-text-stroke:1.5px var(--accent);flex:none;letter-spacing:-.04em;padding-top:2px}
+.part-titlewrap{flex:1;min-width:0}
+.part-kicker{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--signal-deep);margin-bottom:8px}
+.part-title{font-size:clamp(23px,3vw,33px);font-weight:600;margin:0;letter-spacing:-.022em}
+.part-dial{display:inline-flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.dialtag{font-family:var(--mono);font-size:10.5px;font-weight:500;padding:2px 8px;border-radius:20px;
+  border:1px solid var(--line-2);color:var(--ink-2);background:var(--surface)}
+.dialtag.heart{border-color:var(--signal);color:var(--signal-deep);background:var(--signal-soft)}
+
+h3.sub{font-size:20.5px;margin:38px 0 12px;font-weight:600;color:var(--ink);
+  padding-left:14px;border-left:3px solid var(--accent);letter-spacing:-.02em}
+h4.subsub{font-size:16.5px;margin:26px 0 8px;font-weight:600;color:var(--accent-deep);font-family:var(--body);letter-spacing:-.01em}
+
+.lead{font-size:18.5px;line-height:1.66;color:var(--ink);font-weight:400}
+.lead strong{font-weight:600}
+
+/* ---------- data lineage inline markers ---------- */
+.mk{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.02em;
+  padding:1px 6px;border-radius:4px;vertical-align:middle;white-space:nowrap;line-height:1.5;display:inline-block}
+.mk-est{background:var(--warn-soft);color:#7A4E06;border:1px solid #EAC974}
+.mk-der{background:#EAEDFA;color:#2C3080;border:1px solid #BFC5EE}
+.mk-con{background:var(--neg-soft);color:#8A2517;border:1px solid #E7B0A7}
+
+/* ---------- callout boxes ---------- */
+.box{border-radius:12px;padding:18px 22px;margin:22px 0;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink)}
+.box p{margin:0 0 .7em;color:inherit}.box p:last-child{margin:0}
+.box .box-lbl{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.box.insight{background:var(--accent-soft);border-color:#BCDCEB;color:#0C2A3A}
+.box.insight .box-lbl{color:var(--accent-deep)}
+.box.insight strong{color:#08283A}
+.box.thesis-box{background:linear-gradient(180deg,#0C1826,#122336);border-color:#24384F;color:#E9EFF5}
+.box.thesis-box .box-lbl{color:var(--signal)}
+.box.thesis-box strong{color:#fff}.box.thesis-box em{color:#6FC4E8;background:none;font-weight:600}
+.box.conflict{background:var(--neg-soft);border-color:#E7B0A7;color:#5C1A0F}
+.box.conflict .box-lbl{color:#A02C1A}.box.conflict strong{color:#3E1109}
+.box.derived{background:#EBEEFA;border-color:#C4CAEE;color:#252A63}
+.box.derived .box-lbl{color:#333AA0}.box.derived strong{color:#1B1F52}
+.box.estimate{background:var(--warn-soft);border-color:#EAC974;color:#573B08}
+.box.estimate .box-lbl{color:#8A5A06}.box.estimate strong{color:#3F2B05}
+.box.warn{background:var(--signal-soft);border-color:#EFCB99;color:#5C3608}
+.box.warn .box-lbl{color:var(--signal-deep)}.box.warn strong{color:#3F2606}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:12px;
+  background:var(--surface);position:relative;-webkit-overflow-scrolling:touch}
+.tw::after{content:"";position:absolute;top:0;right:0;bottom:10px;width:26px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9));opacity:0;transition:opacity .2s}
+.tw.scrollable::after{opacity:1}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px;color:var(--ink)}
+caption{text-align:left;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);
+  padding:12px 16px 0;caption-side:top;font-weight:500}
+thead th{background:var(--panel);color:var(--panel-ink);font-family:var(--body);font-weight:600;
+  text-align:left;padding:11px 14px;font-size:12.5px;letter-spacing:.01em;position:sticky;top:0;vertical-align:bottom;
+  border-bottom:2px solid var(--panel-3);line-height:1.35}
+thead th small{color:var(--panel-ink-3);font-weight:400;display:block;font-size:10.5px}
+tbody td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5;color:var(--ink)}
+tbody tr:nth-child(even){background:var(--surface-2)}
+tbody tr:hover{background:var(--accent-soft)}
+tbody tr:last-child td{border-bottom:0}
+th.num,td.num{text-align:right;font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+td strong{color:var(--ink)}
+tr.hl{background:var(--signal-soft)!important}
+tr.hl td{color:#4A2E06;font-weight:500}tr.hl td strong{color:#3F2606}
+tr.total{background:var(--panel-2)!important}
+tr.total td{color:var(--panel-ink);font-weight:600;border-bottom:0}
+.tag{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:5px;white-space:nowrap;display:inline-block;line-height:1.5}
+.tag.lead{background:#0C2A3A;color:#6FC4E8}
+.tag.chal{background:var(--accent-soft);color:var(--accent-deep);border:1px solid #BCDCEB}
+.tag.niche{background:var(--surface-3);color:var(--ink-2);border:1px solid var(--line-2)}
+.tag.disr{background:var(--signal-soft);color:var(--signal-deep);border:1px solid #EFCB99}
+.tag.cn{background:#FBEAE7;color:#8A2517;border:1px solid #E7B0A7}
+
+/* directional badges */
+.dir{font-family:var(--mono);font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap;display:inline-block;line-height:1.6}
+.dir.up{background:var(--pos-soft);color:#12704B}
+.dir.upmid{background:#E8F2E5;color:#3B6B1E}
+.dir.mix{background:var(--warn-soft);color:#8A5A06}
+.dir.down{background:var(--neg-soft);color:#8A2517}
+.dir.neu{background:var(--surface-3);color:var(--ink-2)}
+
+/* ---------- figures / charts ---------- */
+figure{margin:26px 0}
+.chart-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 22px 16px;overflow:hidden}
+.chart-card.dark{background:var(--panel);border-color:var(--panel-line)}
+.chart-title{font-family:var(--disp);font-weight:600;font-size:16.5px;color:var(--ink);margin:0 0 3px;letter-spacing:-.015em}
+.chart-card.dark .chart-title{color:#fff}
+.chart-sub{font-size:13px;color:var(--ink-2);margin:0 0 16px}
+.chart-card.dark .chart-sub{color:var(--panel-ink-2)}
+figcaption{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:12px;line-height:1.5}
+.chart-card.dark figcaption{color:var(--panel-ink-3)}
+svg.chart{display:block;width:100%;height:auto;overflow:visible}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-size:12.5px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:12px;height:12px;border-radius:3px;flex:none;display:inline-block}
+.chart-card.dark .legend{color:var(--panel-ink-2)}
+
+/* ---------- stat grid ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:24px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.stat.sig::before{background:var(--signal)}
+.stat .v{font-family:var(--disp);font-weight:700;font-size:27px;color:var(--ink);line-height:1;letter-spacing:-.02em;margin-bottom:6px}
+.stat .v .u{font-size:15px;color:var(--ink-2);font-weight:500}
+.stat .k{font-size:12.5px;color:var(--ink-2);line-height:1.4}
+.stat .src{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:7px;display:block}
+
+/* ---------- ranking ladder ---------- */
+.ladder{margin:24px 0;counter-reset:rk}
+.rung{display:flex;gap:16px;align-items:flex-start;padding:16px 18px;border:1px solid var(--line);
+  border-radius:12px;margin-bottom:10px;background:var(--surface);position:relative}
+.rung .rk{counter-increment:rk;font-family:var(--disp);font-weight:700;font-size:22px;
+  color:#fff;background:var(--accent);width:34px;height:34px;border-radius:9px;display:flex;
+  align-items:center;justify-content:center;flex:none;letter-spacing:-.02em}
+.rung .rk::before{content:counter(rk)}
+.rung.top .rk{background:linear-gradient(135deg,var(--signal),var(--signal-deep))}
+.rung.top{border-color:#EFCB99;background:linear-gradient(180deg,var(--signal-soft),#fff)}
+.rung .body{flex:1;min-width:0}
+.rung .body h5{font-family:var(--disp);font-size:16px;font-weight:600;margin:0 0 4px;color:var(--ink)}
+.rung .body p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.5}
+.rung .body p strong{color:var(--ink)}
+
+/* ---------- flow / value chain ---------- */
+.vc-legend{display:flex;flex-wrap:wrap;gap:10px 20px;margin:16px 0 4px;font-size:12.5px;color:var(--ink-2)}
+.vc-legend span{display:inline-flex;align-items:center;gap:7px}
+.vc-legend i{width:14px;height:14px;border-radius:4px;display:inline-block}
+
+/* two-col */
+.cols2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;margin:22px 0}
+.cols2 > .box,.cols2 > .chart-card{margin:0}
+.cols2 > *{min-width:0}
+.box,.box p,.box-lbl,.box li,.stat,.rung .body{overflow-wrap:anywhere;word-break:break-word}
+
+/* pill list */
+ul.clean{list-style:none;padding:0;margin:16px 0}
+ul.clean li{position:relative;padding:6px 0 6px 26px;border-bottom:1px solid var(--line);color:var(--ink);line-height:1.55}
+ul.clean li:last-child{border-bottom:0}
+ul.clean li::before{content:"";position:absolute;left:4px;top:14px;width:8px;height:8px;border-radius:2px;background:var(--accent);transform:rotate(45deg)}
+ul.clean li strong{color:var(--ink)}
+ul.num{counter-reset:li;list-style:none;padding:0;margin:16px 0}
+ul.num li{position:relative;padding:8px 0 8px 40px;border-bottom:1px solid var(--line);line-height:1.55;color:var(--ink);counter-increment:li}
+ul.num li:last-child{border-bottom:0}
+ul.num li::before{content:counter(li);position:absolute;left:0;top:8px;font-family:var(--mono);font-weight:700;
+  font-size:12px;color:#fff;background:var(--accent-deep);width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+
+/* section divider band (dark) */
+.band{background:var(--panel);color:var(--panel-ink);padding:52px 0;margin-top:56px;border-top:1px solid var(--panel-line);border-bottom:1px solid var(--panel-line);position:relative;overflow:hidden}
+.band::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(90deg,rgba(111,196,232,.05) 1px,transparent 1px);background-size:44px 100%;
+  mask-image:linear-gradient(90deg,transparent,#000 40%,#000 60%,transparent)}
+.band .wrap{position:relative;z-index:2}
+.band h2{color:#fff}
+.band .eyebrow{color:#6FC4E8}
+.band p{color:var(--panel-ink-2)}
+.band strong{color:#DCE7F0}
+
+/* footer */
+.foot{background:var(--panel);color:var(--panel-ink-2);padding:44px 0 40px;border-top:1px solid var(--panel-line);font-size:13.5px}
+.foot h4{color:#fff;font-size:15px;margin:0 0 12px}
+.foot .src-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;margin-top:8px}
+.foot .src-grid h5{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#6FC4E8;margin:0 0 8px;font-weight:600}
+.foot .src-grid p{font-size:12px;color:var(--panel-ink-3);line-height:1.6;margin:0}
+.foot .note{margin-top:26px;padding-top:20px;border-top:1px solid var(--panel-line);font-size:12px;color:var(--panel-ink-3)}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:34px}
+  .cols2{grid-template-columns:minmax(0,1fr)}
+  .hero-inner{padding:54px 22px 48px}
+  body{font-size:16px}
+}
+@media(max-width:640px){
+  .wrap,.wrap-wide{padding:0 18px}
+  .part-head{gap:14px}
+  .part{padding:48px 0 8px}
+  .stat .v{font-size:23px}
+  .nav{display:none}
+  table{font-size:13px}
+  .lead{font-size:16.5px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media print{.topbar{position:static}.hero,.band,.foot{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<!-- ===================== TOP NAV ===================== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="dot"></span>머신비전 산업 분석<span class="sub">ROBOT&nbsp;EYE&nbsp;→&nbsp;VISUAL&nbsp;CORTEX</span></div>
+    <nav class="nav">
+      <a href="#summary"><span class="n">00</span> 요약</a>
+      <a href="#def"><span class="n">01</span> 정의</a>
+      <a href="#tech"><span class="n">02</span> 작동원리</a>
+      <a href="#chain"><span class="n">03</span> 가치사슬</a>
+      <a href="#market"><span class="n">04</span> 시장</a>
+      <a href="#dream"><span class="n">05</span> 꿈</a>
+      <a href="#structure"><span class="n">06</span> 구조</a>
+      <a href="#players"><span class="n">07</span> 지형</a>
+      <a href="#roadmap"><span class="n">08</span> 로드맵</a>
+      <a href="#policy"><span class="n">09</span> 정책</a>
+      <a href="#risk"><span class="n">10</span> 리스크</a>
+      <a href="#invest"><span class="n">11</span> 투자</a>
+      <a href="#limits"><span class="n">12</span> 한계</a>
+      <a href="#monitor"><span class="n">13</span> 모니터링</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow on-dark">Industry Deep-Dive · 2026.07.08 기준</div>
+        <h1>로봇의 <span class="hl">눈</span>,<br>그리고 <span class="hl2">시각 피질</span>로의<br>가치 이동</h1>
+        <p class="hero-lede">머신비전은 <strong>~$14–16B의 성숙한 공장 검사 산업</strong>이지만, 딥러닝과 피지컬 AI가 붙으며 "모든 로봇·자율기계의 인지 계층"으로 확장 중이다. 이 보고서는 <strong>이익이 사슬 어디에 고이는가</strong>를 축으로 그 지형을 해부한다.</p>
+        <div class="hero-meta">
+          <span>코어 MV <b>$14–16B</b> · CAGR 7–9%</span>
+          <span>이미지센서 <b>$23–26B</b></span>
+          <span>"꿈" TAM <b>$38B–$5T</b> 시나리오</span>
+        </div>
+        <div class="thesis">
+          <span class="lbl">관통 명제 (Core Thesis)</span>
+          <p>"<span class="k">눈</span>(센서·카메라) 하드웨어는 범용화 압력을 받고, 가치는 <span class="k">'시각 피질'</span>(AI·컴퓨트·데이터)로 이동한다."</p>
+        </div>
+      </div>
+      <div>
+        <div class="eyecortex">
+          <h4>가치 이동 지도 // 영업이익률 실측</h4>
+          <p class="cap">매출 리더 ≠ 이익 리더. 통합·직판(키엔스)만 51%, 원센서·카메라 계층은 10–17%대에 머문다.</p>
+          <!-- HERO SVG: 눈→피질 value migration bars -->
+          <svg class="chart" viewBox="0 0 440 300" role="img" aria-label="가치사슬 단계별 영업이익률 비교">
+            <defs>
+              <linearGradient id="gEye" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#1E7FC4"/><stop offset="1" stop-color="#12A6A0"/>
+              </linearGradient>
+              <linearGradient id="gCortex" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#E0B105"/><stop offset="1" stop-color="#EE7C11"/>
+              </linearGradient>
+            </defs>
+            <!-- axis baseline -->
+            <line x1="150" y1="24" x2="150" y2="256" stroke="#24384F" stroke-width="1"/>
+            <text x="150" y="278" fill="#7791A9" font-family="'JetBrains Mono',monospace" font-size="10" text-anchor="start">영업이익률 →</text>
+            <!-- gridlines -->
+            <g font-family="'JetBrains Mono',monospace" font-size="9" fill="#7791A9">
+              <line x1="248" y1="24" x2="248" y2="256" stroke="#1B3149" stroke-width="1" stroke-dasharray="3 4"/>
+              <line x1="346" y1="24" x2="346" y2="256" stroke="#1B3149" stroke-width="1" stroke-dasharray="3 4"/>
+            </g>
+            <text x="248" y="18" fill="#7791A9" font-family="'JetBrains Mono',monospace" font-size="9" text-anchor="middle">25%</text>
+            <text x="346" y="18" fill="#7791A9" font-family="'JetBrains Mono',monospace" font-size="9" text-anchor="middle">50%</text>
+            <!-- bars: scale 150px=0, 346px=50% => 3.92px per % -->
+            <!-- Keyence 51% -->
+            <g>
+              <rect x="150" y="36" width="200" height="26" rx="4" fill="url(#gCortex)"/>
+              <text x="146" y="53" text-anchor="end" fill="#E9EFF5" font-family="'Inter',sans-serif" font-size="12" font-weight="600">키엔스</text>
+              <text x="356" y="53" fill="#EE7C11" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700">51.0%</text>
+            </g>
+            <!-- Teledyne DI 16.7% -->
+            <g>
+              <rect x="150" y="82" width="65" height="24" rx="4" fill="url(#gEye)"/>
+              <text x="146" y="98" text-anchor="end" fill="#A6BBCE" font-family="'Inter',sans-serif" font-size="11.5">Teledyne DI</text>
+              <text x="221" y="98" fill="#6FC4E8" font-family="'JetBrains Mono',monospace" font-size="11.5" font-weight="700">16.7%</text>
+            </g>
+            <!-- Cognex 16.3% -->
+            <g>
+              <rect x="150" y="126" width="64" height="24" rx="4" fill="url(#gEye)"/>
+              <text x="146" y="142" text-anchor="end" fill="#A6BBCE" font-family="'Inter',sans-serif" font-size="11.5">Cognex</text>
+              <text x="220" y="142" fill="#6FC4E8" font-family="'JetBrains Mono',monospace" font-size="11.5" font-weight="700">16.3%</text>
+            </g>
+            <!-- Sony I&SS ~16% -->
+            <g>
+              <rect x="150" y="170" width="63" height="24" rx="4" fill="url(#gEye)"/>
+              <text x="146" y="186" text-anchor="end" fill="#A6BBCE" font-family="'Inter',sans-serif" font-size="11.5">Sony I&amp;SS</text>
+              <text x="219" y="186" fill="#6FC4E8" font-family="'JetBrains Mono',monospace" font-size="11.5" font-weight="700">~16%</text>
+            </g>
+            <!-- commodity qualitative -->
+            <g>
+              <rect x="150" y="214" width="24" height="24" rx="4" fill="#1B3149" stroke="#24384F"/>
+              <text x="146" y="230" text-anchor="end" fill="#7791A9" font-family="'Inter',sans-serif" font-size="11.5">범용 카메라·조명</text>
+              <text x="182" y="230" fill="#7791A9" font-family="'JetBrains Mono',monospace" font-size="10.5">최하 · 정성</text>
+            </g>
+            <!-- bracket -->
+            <path d="M382 82 q7 0 7 8 v40 q0 8 7 8 q-7 0 -7 8 v40 q0 8 -7 8" fill="none" stroke="#24384F" stroke-width="1"/>
+            <text x="404" y="150" fill="#7791A9" font-family="'JetBrains Mono',monospace" font-size="9" transform="rotate(90 404 150)" text-anchor="middle">원센서·카메라 계층 10–17%</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FRAMING NOTE ===================== -->
+<section class="wrap" style="padding-top:44px">
+  <div class="box insight">
+    <div class="box-lbl"><span>◎ 프레이밍 · 범위 경계 (혼동 방지)</span></div>
+    <p>입력 "머신비전 산업"은 <strong>산업(industry)</strong>을 지칭하나 "로봇의 눈" 프레이밍은 기술 테마에 걸친다. 본 보고서는 <strong>산업 모드를 주(主)로, 기술·"꿈" 편향을 강(强)하게</strong> 적용한다. 즉 가치사슬·이익 풀·플레이어 지형을 산업 모드로 매핑하되(파트 3·6·7), 기술 원리(파트 2)와 "꿈"(파트 5)에서는 <strong>로봇 인지(embodied perception) 프론티어</strong>를 논문 수준으로 깊게 다룬다.</p>
+  </div>
+  <h4 class="subsub" style="margin-top:24px">범위 3중 구조 — 이 세 층위를 혼동하지 않는 것이 이 산업 이해의 출발점</h4>
+  <div class="tw">
+    <table>
+      <caption>표. 머신비전 "눈"의 3중 범위 — 규모와 성격이 판이하다</caption>
+      <thead>
+        <tr><th style="min-width:180px">범위 층위</th><th style="min-width:220px">정의</th><th style="min-width:150px">대표 플레이어</th><th class="num">시장 규모</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>① 협의 산업용 머신비전</strong><br><small style="color:var(--ink-3)">Industrial Machine Vision</small></td><td>공장 검사·측정·안내·식별</td><td>Cognex · Keyence · MVTec</td><td class="num">~$14–16B</td></tr>
+        <tr><td><strong>② 물리적 "눈" = 이미지센서</strong><br><small style="color:var(--ink-3)">CMOS Image Sensor</small></td><td>스마트폰·자동차·산업 전반의 빛→전기 변환</td><td>Sony · Samsung · OmniVision</td><td class="num">~$23–26B</td></tr>
+        <tr class="hl"><td><strong>③ 로봇의 눈 = 임바디드 인지 스택</strong><br><small>Embodied Cognition Stack</small></td><td>3D 깊이센싱 + 컴퓨트 + VLA 모델 + 데이터 플라이휠</td><td>NVIDIA · RealSense · Mobileye · Figure</td><td class="num">니치→"꿈"</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:13.5px;color:var(--ink-2);margin-top:6px">스마트폰 물량 때문에 물리적 "눈"(②)이 협의 머신비전(①)보다 크며, "꿈"이 사는 곳은 ③이다. 세 층위는 기술·이익 구조·경쟁 지형이 모두 다르다.</p>
+</section>
+
+<!-- ===================== PART 0 : EXEC SUMMARY ===================== -->
+<section class="part" id="summary">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">00</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Executive Summary</div>
+        <h2 class="part-title">핵심 요약</h2>
+        <div class="part-dial"><span class="dialtag">★ 공통</span></div>
+      </div>
+    </div>
+
+    <p class="lead">머신비전은 <strong>카메라(이미지센서)·광학·조명·컴퓨트·소프트웨어를 결합해 기계가 이미지를 획득·해석·판단하게 하는 산업</strong>이며, "로봇의 눈" 프레이밍에서는 공장 검사를 넘어 <strong>자율주행·휴머노이드의 인지 계층(perception layer of Physical AI)</strong>으로 확장 중이다.</p>
+
+    <div class="box thesis-box">
+      <div class="box-lbl"><span>▶ 본질과 투자 매력</span></div>
+      <p>산업용 머신비전은 ~$14–16B(2025)의 성숙·저성장(7–9%) 코어를 가지되, <strong>AI 딥러닝의 "제2 혁명"</strong>과 <strong>임바디드 AI("피지컬 AI")</strong>라는 두 성장 벡터가 붙으며 리레이팅되고 있다. 코어에서 이익은 <em>통합 시스템+소프트웨어+애플리케이션 전문성+직판</em>(키엔스형, 영업이익률 51%)에 고이고, 원센서·카메라(Sony·Cognex·Teledyne, 10–17%)에는 덜 고인다. "로봇의 눈" 프론티어에서는 <strong>가치가 센서 하드웨어에서 '시각 피질'(NVIDIA 컴퓨트 + VLA 파운데이션 모델 + 로봇 시연 데이터 플라이휠)으로 이동</strong> 중이며, 이것이 투자 관점의 핵심 축이다.</p>
+    </div>
+
+    <h3 class="sub">결론 미리보기</h3>
+    <div class="stats">
+      <div class="stat"><div class="v">$14–16B<span class="u"></span></div><div class="k">코어 MV 시장 (2025) → 2030 $20–25B, CAGR 7–9%</div><span class="src">다수기관 수렴 · <span class="mk mk-con">상충</span></span></div>
+      <div class="stat"><div class="v">43.4<span class="u">%</span></div><div class="k">이미지센서(CIS) Sony 점유율 — 상위 5사 83% 과점</div><span class="src">GMI 2025</span></div>
+      <div class="stat sig"><div class="v">51.0<span class="u">%</span></div><div class="k">키엔스 영업이익률 — 원센서 계층(10–17%) 압도</div><span class="src">Keyence FY2025</span></div>
+      <div class="stat sig"><div class="v">$27.6B</div><div class="k">2025 피지컬 AI·로봇 VC 유입 (사상 최대)</div><span class="src">aifundingtracker</span></div>
+    </div>
+
+    <div class="tw">
+      <table>
+        <caption>표 0-1. 결론 미리보기 — 6개 축 압축</caption>
+        <thead><tr><th style="min-width:130px">축</th><th style="min-width:420px">핵심 판정</th></tr></thead>
+        <tbody>
+          <tr><td><strong>시장 규모</strong></td><td>코어 MV 2025 ≈ $14–16B → 2030 ≈ $20–25B (CAGR 7–9%). 3D MV는 14%+ 고성장. 이미지센서 ~$23–26B. "꿈"(휴머노이드)은 $38B(2035, GS)~$5T(2050, MS) 시나리오.</td></tr>
+          <tr><td><strong>산업 구조</strong></td><td>상위 10사 &gt;85% 과점(반도체 MV 기준). 코어는 일·미·독 리더 + 중국 급부상(부품 국산화 70%+). 이미지센서는 일·한 과점(Sony 43% · 삼성 20%).</td></tr>
+          <tr class="hl"><td><strong>이익이 고이는 구간</strong></td><td>① 통합 시스템+소프트웨어(키엔스형, 50%+), ② 고급 광학/렌즈(진입장벽 높음, 일·독 과점), ③ 인지 컴퓨트/AI(NVIDIA·파운데이션 모델 — 로봇 프론티어의 진짜 풀). <strong>범용화 구간</strong>: 표준 카메라·범용 센서.</td></tr>
+          <tr><td><strong>꿈</strong></td><td>"기계가 사람처럼 보고 행동한다(embodied AI)". 자릿수 임팩트는 크나 <strong>possible→plausible</strong> 단계.</td></tr>
+          <tr><td><strong>핵심 리스크</strong></td><td>(a) 센서·카메라 범용화, (b) 오픈소스+파운데이션 모델의 상용 비전 SW 해자 침식, (c) 가치의 데이터·AI 계층 이탈 → 하드웨어 순수주 업사이드 소외, (d) 중국 저가 경쟁, (e) 경기민감(자동차·반도체 CapEx 사이클).</td></tr>
+          <tr><td><strong>구조적 매력 순위</strong></td><td><strong>인지 AI·컴퓨트 &gt; 고급 광학/전문 3D SW &gt; 통합 시스템 &gt; 이미지센서 &gt; 범용 카메라/조명.</strong> (근거는 파트 11)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== PART 1 : DEFINITION ===================== -->
+<section class="part" id="def">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">01</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Definition & Scope</div>
+        <h2 class="part-title">정의와 범위</h2>
+        <div class="part-dial"><span class="dialtag">★ 공통</span></div>
+      </div>
+    </div>
+
+    <h3 class="sub">1.1 정확한 정의와 경계</h3>
+    <p><strong>머신비전(Machine Vision, MV)</strong>은 자동 검사·공정 제어·로봇 안내를 위해 이미지 기반 자동 분석을 수행하는 기술·시스템으로, 산업 자동화의 핵심 서브시스템이다. <strong>컴퓨터비전(Computer Vision, CV)</strong>과의 구분이 중요하다 — CV는 시각 정보를 해석하는 <em>AI 학문 분야 전반</em>(이미지 인식·얼굴 인식 등, ~$43B 시장)이고, MV는 그 CV를 <em>산업 현장(공장·물류·검사)에 내장·결정론적으로 구현한 응용 산업</em>이다. 로봇 프레이밍에서는 이 둘의 경계가 흐려진다.</p>
+
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--pos)"><span>◐ 범위에 포함</span></div>
+        <p>산업 카메라, 이미지센서, 렌즈/광학, 조명, 프레임그래버, 비전 프로세서/산업용 PC, 비전 소프트웨어, 3D 깊이 센싱, 스마트카메라, 임베디드/엣지 비전.</p>
+      </div>
+      <div class="box">
+        <div class="box-lbl" style="color:var(--ink-2)"><span>◑ 경계 이슈 (인접·제외)</span></div>
+        <p><strong>반도체 검사·계측</strong>(KLA): MV 원리를 쓰나 별도 산업 — <em>인접 최고부가 응용</em>으로만. <strong>감시카메라(CCTV)</strong>: Hikvision·Dahua 본류, 별개 시장. <strong>의료 영상</strong>: 인접. <strong>자율주행 인지</strong>: "로봇의 눈"으로 핵심 편입(Mobileye).</p>
+      </div>
+    </div>
+
+    <h3 class="sub">1.2 하위 세그먼트 분류 체계</h3>
+    <div class="tw">
+      <table>
+        <caption>표 1-1. 머신비전 세그먼트 분류 — 성장·마진이 갈리는 축</caption>
+        <thead><tr><th style="min-width:120px">분류축</th><th style="min-width:340px">구성 (2024 점유·성장 특성)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>오퍼링별</strong></td><td>하드웨어(~61–68% 점유) / <em>소프트웨어(최고 성장, CAGR 13%+)</em> / 서비스</td></tr>
+          <tr><td><strong>하드웨어 구성</strong></td><td>카메라 · 광학/렌즈 · 프레임그래버 · 프로세서 · LED 조명 · 기타</td></tr>
+          <tr><td><strong>제품 유형</strong></td><td>PC 기반(최대 점유, 고성능/멀티카메라) vs 스마트카메라(최고 성장, 올인원/엣지)</td></tr>
+          <tr class="hl"><td><strong>비전 유형</strong></td><td>1D / 2D(~66–67% 점유) / <em>3D(고성장 14%+)</em> / 하이퍼·멀티스펙트럴(니치, 고마진)</td></tr>
+          <tr><td><strong>카메라 형태</strong></td><td>에어리어스캔(~45–72%) / 라인스캔(~28–42%)</td></tr>
+          <tr><td><strong>응용</strong></td><td>품질검사(최대) · 측정/게이징 · 안내(guidance) · 식별(OCR/바코드)</td></tr>
+          <tr><td><strong>배치</strong></td><td>온프레미스 / 엣지·임베디드 / 클라우드</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">1.3 산업 분류와 인접 산업</h3>
+    <p>GICS상 명확한 단일 코드가 없다 — <strong>산업재(Industrials)/정보기술(IT)</strong>의 경계에 걸친다. Cognex·Keyence는 "전자정밀장비/FA", Sony는 "기술 하드웨어", NVIDIA는 "반도체"로 분류된다. 인접 산업으로는 팩토리 오토메이션(FA)/산업로봇(ABB·FANUC·KUKA·Universal Robots), 반도체 장비(KLA), 이미지센서(반도체), 자율주행(자동차부품/반도체), 임바디드 AI(소프트웨어)가 있다. <strong>이 분류의 모호함 자체가 투자 함의를 갖는다</strong> — 순수 MV 노출을 원하면 Cognex·키엔스를, "로봇의 눈" 노출을 원하면 반도체(NVIDIA)·자동차부품(Mobileye)을 봐야 한다.</p>
+
+    <h3 class="sub">1.4 역사와 진화 — 두 번의 혁명</h3>
+    <p>머신비전의 40년사는 <strong>두 번의 패러다임 전환</strong>으로 요약된다: 룰 기반 패턴매칭의 성숙, 그리고 딥러닝이라는 "제2 혁명". 그리고 지금은 <em>세 번째 전환(임바디드 AI)</em>의 초입이다.</p>
+
+    <!-- history timeline -->
+    <figure>
+      <div class="chart-card dark">
+        <p class="chart-title">머신비전 40년 진화 — 룰 기반 → 딥러닝 → 임바디드 AI</p>
+        <p class="chart-sub">두 번의 완료된 혁명과 세 번째 전환의 초입</p>
+        <svg class="chart" viewBox="0 0 960 260" role="img" aria-label="머신비전 역사 연대기">
+          <!-- baseline -->
+          <line x1="40" y1="150" x2="920" y2="150" stroke="#24384F" stroke-width="2"/>
+          <!-- era bands -->
+          <rect x="40" y="146" width="300" height="8" fill="#1E7FC4" opacity="0.35"/>
+          <rect x="340" y="146" width="330" height="8" fill="#12A6A0" opacity="0.55"/>
+          <rect x="670" y="146" width="250" height="8" fill="#EE7C11" opacity="0.7"/>
+          <text x="190" y="192" fill="#6FC4E8" font-family="'JetBrains Mono',monospace" font-size="11" text-anchor="middle" font-weight="600">룰 기반 시대</text>
+          <text x="505" y="192" fill="#3FC7BE" font-family="'JetBrains Mono',monospace" font-size="11" text-anchor="middle" font-weight="600">딥러닝 = 제2 혁명</text>
+          <text x="795" y="192" fill="#F0932B" font-family="'JetBrains Mono',monospace" font-size="11" text-anchor="middle" font-weight="600">임바디드 AI 전환</text>
+          <!-- nodes above -->
+          <g font-family="'Inter',sans-serif" font-size="11" fill="#A6BBCE">
+            <!-- 1982 -->
+            <circle cx="80" cy="150" r="5" fill="#1E7FC4"/><line x1="80" y1="150" x2="80" y2="70" stroke="#24384F" stroke-width="1"/>
+            <text x="80" y="60" text-anchor="middle" fill="#6FC4E8" font-family="'JetBrains Mono',monospace" font-weight="700" font-size="12">1982</text>
+            <text x="80" y="46" text-anchor="middle">Cognex 창업</text>
+            <text x="80" y="33" text-anchor="middle">세계 최초 산업 OCR</text>
+            <!-- 2006 -->
+            <circle cx="285" cy="150" r="5" fill="#1E7FC4"/><line x1="285" y1="150" x2="285" y2="104" stroke="#24384F" stroke-width="1"/>
+            <text x="285" y="94" text-anchor="middle" fill="#6FC4E8" font-family="'JetBrains Mono',monospace" font-weight="700" font-size="12">2006</text>
+            <text x="285" y="80" text-anchor="middle">GigE Vision 표준</text>
+            <!-- 2015 mid-2010s DL -->
+            <circle cx="420" cy="150" r="6" fill="#12A6A0"/><line x1="420" y1="150" x2="420" y2="70" stroke="#24384F" stroke-width="1"/>
+            <text x="420" y="60" text-anchor="middle" fill="#3FCFC6" font-family="'JetBrains Mono',monospace" font-weight="700" font-size="12">2015~16</text>
+            <text x="420" y="46" text-anchor="middle">딥러닝 검사(ViDi·HALCON)</text>
+            <text x="420" y="33" text-anchor="middle">RealSense 3D 첫 제품</text>
+            <!-- 2023 VLA -->
+            <circle cx="700" cy="150" r="6" fill="#EE7C11"/><line x1="700" y1="150" x2="700" y2="104" stroke="#24384F" stroke-width="1"/>
+            <text x="700" y="94" text-anchor="middle" fill="#F0932B" font-family="'JetBrains Mono',monospace" font-weight="700" font-size="12">2023</text>
+            <text x="700" y="80" text-anchor="middle">RT-1/RT-2 (VLA 모델 시작)</text>
+            <!-- 2025 -->
+            <circle cx="880" cy="150" r="7" fill="#EE7C11"/><line x1="880" y1="150" x2="880" y2="70" stroke="#24384F" stroke-width="1"/>
+            <text x="880" y="60" text-anchor="middle" fill="#F0932B" font-family="'JetBrains Mono',monospace" font-weight="700" font-size="12">2025</text>
+            <text x="880" y="46" text-anchor="middle">RealSense 분사·NVIDIA</text>
+            <text x="880" y="33" text-anchor="middle">휴머노이드 VC $27.6B</text>
+          </g>
+          <!-- below marks -->
+          <g font-family="'Inter',sans-serif" font-size="10.5" fill="#7791A9">
+            <circle cx="150" cy="150" r="4" fill="#1E7FC4" opacity="0.7"/><text x="150" y="224" text-anchor="middle">CCD→CMOS 전환</text>
+            <circle cx="550" cy="150" r="4" fill="#12A6A0" opacity="0.8"/><text x="550" y="224" text-anchor="middle">AI 검사 양산 진입</text>
+            <circle cx="800" cy="150" r="5" fill="#EE7C11" opacity="0.85"/><text x="800" y="224" text-anchor="middle">π0·GR00T·Helix 휴머노이드</text>
+          </g>
+        </svg>
+        <figcaption>그림 1-1. 머신비전 진화 연대기. 출처: Cognex·Wikipedia·AIA/A3·NVIDIA·리서치 데이터 종합. 룰 기반(1980s~) → 딥러닝(2015~) → 임바디드 AI(2023~)의 3단 전환.</figcaption>
+      </div>
+    </figure>
+
+    <h3 class="sub">1.5 "왜 지금인가" (Why Now) — 5개 동인</h3>
+    <p>성숙 산업이 다시 주목받는 이유는 하나가 아니라 다섯 동인의 동시 발화다. 특히 5번째 동인이 "코어 검사 산업"을 "피지컬 AI 인지 계층"으로 재프레이밍한다.</p>
+    <ul class="num">
+      <li><strong>노동력 위기 + 리쇼어링</strong> — 선진국 제조 인력난·고령화로 자동화 검사가 필수화. "인건비 상승 + 숙련공 부족"이 반복 인용되는 1순위 동인.</li>
+      <li><strong>딥러닝의 상용 성숙</strong> — 신경망 검사가 연구실→양산 라인 진입. AI 기반 카메라 불량 인식률 99%+ 달성 사례(2023).</li>
+      <li><strong>품질 무결점 요구</strong> — EV 배터리·반도체는 단일 결함 무관용 → 통계 샘플링에서 <em>100% 인라인 검사</em>로 전환.</li>
+      <li><strong>EV/배터리·반도체 자본지출</strong> — 배터리 라인 GWh당 ~$1M MV 수요 <span class="mk mk-der">파생</span>; 반도체 팹 증설.</li>
+      <li><strong>피지컬 AI "챗GPT 모먼트"</strong> — NVIDIA·투자자·기업(Amazon·BMW·Mercedes)이 실제 배치 시작 → "로봇의 눈" 수요의 새 S커브 개시 기대.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- HEART BAND -->
+<section class="band">
+  <div class="wrap">
+    <div class="eyebrow">The Heart · 심장 파트 (2·3·4·5)</div>
+    <h2 style="font-size:clamp(24px,3.4vw,36px);margin:0 0 14px;max-width:20ch">작동 원리 → 가치사슬 → 시장 → 꿈</h2>
+    <p style="max-width:60ch;font-size:16px">이 네 파트가 보고서의 심장이다. <strong>기계가 어떻게 보는가(파트 2)</strong>를 논문 수준으로 해부한 뒤, <strong>그 사슬 어디에서 이익이 고이는가(파트 3)</strong>를 매핑하고, <strong>시장이 어디까지 커지는가(파트 4)</strong>와 <strong>무엇을 꿈으로 파는가(파트 5)</strong>로 잇는다. 관통 명제는 계속 반복된다 — 눈은 범용화, 가치는 시각 피질로.</p>
+  </div>
+</section>
+
+<!-- ===================== PART 2 : TECH ===================== -->
+<section class="part" id="tech">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">02</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">How It Works · 기술·과학적 기반</div>
+        <h2 class="part-title">작동 원리</h2>
+        <div class="part-dial"><span class="dialtag heart">♥ 심장 1</span><span class="dialtag">★ 공통</span><span class="dialtag">▲ 기술모드 최대 심도</span></div>
+      </div>
+    </div>
+
+    <p class="lead">머신비전 시스템은 <strong>빛을 제어(조명)하고 → 모아서(렌즈) → 전기신호로 바꾼 뒤(센서) → 디지털화하고(프레임그래버) → 연산해(프로세서) → 판단(소프트웨어)</strong>하는 물리-알고리즘 파이프라인이다. 각 단이 독립 KPI를 갖고, 이 KPI들이 경쟁력과 이익 풀 위치를 결정한다.</p>
+
+    <h3 class="sub">2.1 시스템 아키텍처 — 신호·데이터 흐름</h3>
+    <figure>
+      <div class="chart-card">
+        <p class="chart-title">표준 자동 검사 파이프라인 — 7단 신호 체인</p>
+        <p class="chart-sub">각 단은 독립 KPI와 독립 공급사슬을 갖는다. 통신 인터페이스(GenICam·GigE 등)가 각 단을 연결.</p>
+        <svg class="chart" viewBox="0 0 960 250" role="img" aria-label="머신비전 7단계 파이프라인">
+          <defs>
+            <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L8 4.5 L0 9 z" fill="#0A5F86"/></marker>
+          </defs>
+          <!-- 7 stages -->
+          <g font-family="'Inter',sans-serif">
+            <!-- helper: each box 118 wide, y=54 h=76 -->
+            <!-- 1 조명 -->
+            <rect x="14" y="54" width="118" height="82" rx="10" fill="#E6F1F7" stroke="#BCDCEB"/>
+            <text x="73" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#0A5F86">① 조명</text>
+            <text x="73" y="97" text-anchor="middle" font-size="10" fill="#43525F">광원·대비 확보</text>
+            <text x="73" y="112" text-anchor="middle" font-size="9" fill="#6A7885">LED·동축·UV·IR</text>
+            <text x="73" y="126" text-anchor="middle" font-size="8.5" fill="#B4560A" font-family="'JetBrains Mono',monospace">범용화↑</text>
+            <!-- 2 렌즈 -->
+            <rect x="142" y="54" width="118" height="82" rx="10" fill="#FBF0E2" stroke="#EFCB99"/>
+            <text x="201" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#B4560A">② 렌즈</text>
+            <text x="201" y="97" text-anchor="middle" font-size="10" fill="#43525F">광학·신호 전송</text>
+            <text x="201" y="112" text-anchor="middle" font-size="9" fill="#6A7885">텔레센트릭·액체</text>
+            <text x="201" y="126" text-anchor="middle" font-size="8.5" fill="#B4560A" font-family="'JetBrains Mono',monospace">고부가 병목</text>
+            <!-- 3 카메라/센서 -->
+            <rect x="270" y="54" width="118" height="82" rx="10" fill="#FBF0E2" stroke="#EFCB99"/>
+            <text x="329" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#B4560A">③ 카메라/센서</text>
+            <text x="329" y="97" text-anchor="middle" font-size="10" fill="#43525F">빛→전기 "눈"</text>
+            <text x="329" y="112" text-anchor="middle" font-size="9" fill="#6A7885">CMOS 스택형 BSI</text>
+            <text x="329" y="126" text-anchor="middle" font-size="8.5" fill="#0A5F86" font-family="'JetBrains Mono',monospace">과점(Sony)</text>
+            <!-- 4 프레임그래버 -->
+            <rect x="398" y="54" width="118" height="82" rx="10" fill="#EDF1F4" stroke="#C7D0D8"/>
+            <text x="457" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#16202B">④ 프레임그래버</text>
+            <text x="457" y="97" text-anchor="middle" font-size="10" fill="#43525F">A-D·무손실 캡처</text>
+            <text x="457" y="112" text-anchor="middle" font-size="9" fill="#6A7885">CoaXPress 필수</text>
+            <!-- 5 프로세서 -->
+            <rect x="526" y="54" width="118" height="82" rx="10" fill="#E6F1F7" stroke="#BCDCEB"/>
+            <text x="585" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#0A5F86">⑤ 프로세서</text>
+            <text x="585" y="97" text-anchor="middle" font-size="10" fill="#43525F">산업PC·엣지AI</text>
+            <text x="585" y="112" text-anchor="middle" font-size="9" fill="#6A7885">GPU/FPGA/SoC</text>
+            <text x="585" y="126" text-anchor="middle" font-size="8.5" fill="#0A5F86" font-family="'JetBrains Mono',monospace">가치↑(NVIDIA)</text>
+            <!-- 6 소프트웨어 -->
+            <rect x="654" y="54" width="118" height="82" rx="10" fill="#FBF0E2" stroke="#EFCB99"/>
+            <text x="713" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#B4560A">⑥ 소프트웨어</text>
+            <text x="713" y="97" text-anchor="middle" font-size="10" fill="#43525F">알고리즘·AI</text>
+            <text x="713" y="112" text-anchor="middle" font-size="9" fill="#6A7885">HALCON·ViDi</text>
+            <text x="713" y="126" text-anchor="middle" font-size="8.5" fill="#B4560A" font-family="'JetBrains Mono',monospace">지능계층·최고성장</text>
+            <!-- 7 출력 -->
+            <rect x="782" y="54" width="118" height="82" rx="10" fill="#0C1826" stroke="#24384F"/>
+            <text x="841" y="78" text-anchor="middle" font-size="12" font-weight="600" fill="#E9EFF5">⑦ 출력</text>
+            <text x="841" y="97" text-anchor="middle" font-size="10" fill="#A6BBCE">양/불 · PLC 제어</text>
+            <text x="841" y="112" text-anchor="middle" font-size="9" fill="#7791A9">EtherNet/IP</text>
+          </g>
+          <!-- arrows -->
+          <g stroke="#0A5F86" stroke-width="1.6" marker-end="url(#arrow)">
+            <line x1="132" y1="95" x2="140" y2="95"/><line x1="260" y1="95" x2="268" y2="95"/>
+            <line x1="388" y1="95" x2="396" y2="95"/><line x1="516" y1="95" x2="524" y2="95"/>
+            <line x1="644" y1="95" x2="652" y2="95"/><line x1="772" y1="95" x2="780" y2="95"/>
+          </g>
+          <!-- value migration annotation -->
+          <text x="480" y="34" text-anchor="middle" font-family="'Inter',sans-serif" font-size="12.5" font-weight="600" fill="#B4560A">가치 이동 방향 → 렌즈·센서·프로세서·SW(고부가) / 조명·프레임그래버(범용화)</text>
+          <path d="M14 168 H900" stroke="#D8DEE5" stroke-width="1" stroke-dasharray="2 4"/>
+          <text x="14" y="188" font-family="'JetBrains Mono',monospace" font-size="10" fill="#6A7885">통신 인터페이스 계층: GenICam(공통 API) · GigE Vision · CoaXPress · USB3 Vision · Camera Link · MIPI CSI-2</text>
+          <text x="14" y="208" font-family="'JetBrains Mono',monospace" font-size="10" fill="#6A7885">→ 공동 표준화·거버넌스(G3) = 하드웨어 상호운용·범용화. 가치는 SW·알고리즘·통합으로 이동.</text>
+        </svg>
+        <figcaption>그림 2-1. 표준 머신비전 파이프라인. 출처: Wikipedia·LR-Link·Emergent Vision·FRAMOS·AMD. 색상: 주황=고부가 병목/지능계층, 청색=과점/가치상승, 회색=범용화 압력.</figcaption>
+      </div>
+    </figure>
+
+    <div class="box insight">
+      <div class="box-lbl"><span>◎ 왜 중요한가 (투자 함의)</span></div>
+      <p>7단 중 <strong>이익이 고이는 단</strong>은 정해져 있다: ② 고급 렌즈(진입장벽), ③ 이미지센서(과점), ⑤ 프로세서/AI가속(NVIDIA), ⑥ 소프트웨어(지능계층). 반대로 <strong>① 조명·④ 프레임그래버</strong>는 범용화 압력을 받는다. 인터페이스가 공동 표준화되면서 하드웨어 상호운용이 쉬워질수록 <strong>가치는 SW·알고리즘·통합으로 이동</strong>한다 — 이것이 관통 명제의 물리적 근거다.</p>
+    </div>
+
+    <h3 class="sub">2.2 이미지센서 원리 — 물리적 "눈"</h3>
+    <p><strong>CMOS가 CCD를 완전히 대체</strong>했다(저전력·저비용·확장성·집적성). 센서 구조는 전면조사(FSI, ~47%)에서 <em>후면조사(BSI, ~53%, 2025)</em>를 거쳐 <em>스택형 BSI(적층)</em>로 진화하며 저조도·저노이즈·고DR을 개선해 왔다. 결정적 변화는 <strong>연산 사진(computational photography)이 가치를 광학→픽셀→알고리즘으로 이동</strong>시킨 것이다(Mordor). Sony LYT-828(하이브리드 프레임-HDR 온다이), OmniVision OV50X(110dB 단일노출 HDR)처럼 센서 자체에 로직·AI가 스택되며, Apple Deep Fusion·Google Night Sight 같은 알고리즘이 고DR·저리드노이즈 프리미엄을 창출한다. <strong>센서 안에서도 가치가 하드웨어에서 알고리즘으로 이동</strong>하는 축소판이 진행 중이다.</p>
+
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--accent-deep)"><span>▤ 셔터 · 산업용 센서</span></div>
+        <p><strong>글로벌셔터</strong>는 고속 이동체를 왜곡 없이 촬영(롤링셔터 대비). OmniVision 9MP 글로벌셔터 산업 MV 센서(2024), 1.5MP 글로벌셔터 자동차 DMS(2025). 산업용 예: Sony IMX925(스택형, 394fps, 24.55MP), IMX828(2025, 자동차 최초 MIPI APHY 내장), Canon 410MP(감시/의료/산업), Gpixel/Teledyne 과학·산업용.</p>
+      </div>
+      <div class="box warn">
+        <div class="box-lbl"><span>⚠ 공급 병목 (진짜 리스크)</span></div>
+        <p>이미지센서가 2025년 300mm 웨이퍼 스타트 <strong>18만장/월</strong> 소비, <strong>수요가 공급 8% 초과</strong>, 자동차급 가격 +12%(2025초). Sony ¥200B(~$1.34B) 구마모토 팹 +4만장/월 증설(2026말 도착), TSMC 파트너십. <strong>파운드리 병목이 CIS의 실질 리스크</strong> — 첨단 수출통제가 아니라 성숙노드 웨이퍼 캐파.</p>
+      </div>
+    </div>
+
+    <h3 class="sub">2.3 3D 비전 기술 노선 대결표 — 로봇의 눈의 핵심</h3>
+    <p>3D 깊이 획득은 근본적으로 <strong>시간영역(time-domain)</strong> vs <strong>공간영역(spatial-domain)</strong>으로 갈린다(Zivid). 어느 노선도 "정답"이 아니며, 로봇은 근거리 고해상 깊이(조작용)와 광각 주변 감지(안전용)를 병행 요구해 <em>하이브리드</em>가 표준이 되어간다. 노선 선택은 곧 부품 공급사슬과 이익 구조의 선택이다.</p>
+    <div class="tw">
+      <table>
+        <caption>표 2-1. 3D 비전 5대 노선 대결 — 같은 문제(깊이 획득)를 다르게 푸는 노선들</caption>
+        <thead>
+          <tr><th style="min-width:110px">노선</th><th style="min-width:90px">원리 계열</th><th style="min-width:170px">장점</th><th style="min-width:170px">단점</th><th style="min-width:190px">대표 응용/플레이어</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>스테레오 비전</strong></td><td>공간</td><td>저가 범용 카메라, 주변광 동작, 능동 투사 불요, 옥외 강함</td><td>저텍스처/균일 표면 취약, 연산 부담</td><td>로봇 인지 (RealSense·Stereolabs ZED), UBTECH 패시브 양안</td></tr>
+          <tr><td><strong>구조광</strong></td><td>공간</td><td>근거리 고정밀·고해상도, 무텍스처 표면 가능</td><td>밝은/주변광 취약, 이동체 부적합, 반사/투명 왜곡</td><td>FaceID·3D스캔·산업 정밀검사 (Orbbec·Photoneo·Zivid)</td></tr>
+          <tr class="hl"><td><strong>ToF (비행시간)</strong></td><td>시간</td><td>고속 실시간, 장거리, 대범위, 텍스처/광/정렬 둔감, 컴팩트</td><td>저공간해상도(급속 개선중)</td><td>로봇/AMR·로봇청소기·제스처·자동차 (onsemi Hyperlux ID 30m, STMicro, Cube-eye)</td></tr>
+          <tr><td><strong>LiDAR</strong></td><td>시간</td><td>초장거리, 고정밀 내비게이션</td><td>고가, 부피, 이동부품(일부)</td><td>AV·로봇 내비게이션·휴머노이드 SLAM</td></tr>
+          <tr><td><strong>레이저 삼각측량</strong></td><td>공간</td><td>인라인 고정밀 프로파일</td><td>라인스캔 방식</td><td>산업 인라인 3D (Teledyne Z-Trak, LMI)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink-2)"><strong>하이브리드</strong>: 스테레오 + IR 도트 프로젝터(저텍스처 보완), RGB-D(RGB + 깊이 통합). <strong>로봇 요구</strong>: 근거리 고해상 깊이(0.3~1.0m, 조작) + 광각 주변(발밑 위험). 아이인핸드(eye-in-hand) 카메라 증가 추세. → 3D는 <em>단일 승자 없는 다노선 병존</em>이 지속되며, 이는 전문 3D SW·통합 역량의 가치를 높인다.</p>
+
+    <h3 class="sub">2.4 핵심 성능 지표(KPI) — 경쟁력을 가르는 축</h3>
+    <p>머신비전에서 경쟁력은 몇 개의 KPI로 압축된다. 이 KPI들이 세그먼트별 마진과 진입장벽을 규정한다.</p>
+    <div class="tw">
+      <table>
+        <caption>표 2-2. 머신비전 핵심 KPI</caption>
+        <thead><tr><th style="min-width:130px">KPI</th><th style="min-width:200px">범위/수치</th><th style="min-width:200px">경쟁 의미</th></tr></thead>
+        <tbody>
+          <tr><td><strong>해상도(MP)</strong></td><td>0.3MP(31%) ~ 20MP+(9%)</td><td>작아지는 검사 대상 인식. 렌즈 병목 유발.</td></tr>
+          <tr><td><strong>프레임레이트(fps)</strong></td><td>&gt;125fps 최고성장, 라인스캔 최대 400kHz</td><td>고속 라인 대응. CoaXPress 필요.</td></tr>
+          <tr><td><strong>다이내믹레인지(dB)</strong></td><td>110dB 단일노출(OV50X)</td><td>HDR — 반사·역광 표면.</td></tr>
+          <tr><td><strong>깊이 정확도(3D)</strong></td><td>서브밀리미터~µm, 1µm 이하 단차(iFocus)</td><td>정밀 측정·빈피킹.</td></tr>
+          <tr class="hl"><td><strong>스펙트럼</strong></td><td>가시광/NIR/<em>SWIR</em>/UV/X선/하이퍼스펙트럴</td><td>SWIR(배터리·반도체 오염, Teledyne Kaleido) = 니치 고마진.</td></tr>
+          <tr><td><strong>글로벌셔터</strong></td><td>유/무</td><td>이동체 왜곡 제거.</td></tr>
+          <tr><td><strong>임베디드 처리</strong></td><td>1MP@150fps, IP67, &lt;45cm³</td><td>엣지AI 스마트카메라.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">2.5 소프트웨어·AI 계층 — "지능 계층" (최고 성장)</h3>
+    <p>소프트웨어는 머신비전에서 <strong>최고 성장 세그먼트(CAGR 13%+)</strong>이자 이익 풀이 이동하는 방향이다. 상용 시장은 사실상 <strong>2대 플랫폼</strong>이 지배한다.</p>
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--accent-deep)"><span>◆ MVTec HALCON (독일)</span></div>
+        <p><strong>2,100+ 연산자</strong>, 하드웨어 독립(GenICam/GigE Vision, 5배 많은 디바이스 지원), 강력한 3D + 딥러닝(분류/시맨틱 분할/객체검출/OCR), Win/Mac/Linux/임베디드, GPU가속(OpenVINO·TensorRT). <em>알고리즘 깊이·3D·유연성 우위</em>. Siemens 라인·복잡 검사에서 선호. MERLIC(노코드).</p>
+      </div>
+      <div class="box">
+        <div class="box-lbl" style="color:var(--signal-deep)"><span>◆ Cognex VisionPro + ViDi + In-Sight</span></div>
+        <p>EtherNet/IP(Rockwell/Allen-Bradley) 통합 용이, QuickBuild 플로우 개발환경, ViDi 표면검사 성숙. <em>미국 브랜드·직판 강점</em>. (2007 Cognex가 MVTec PatMax 특허소송 → 2010 패소, HALCON 비침해 확정 → HALCON 자유 사용.)</p>
+      </div>
+    </div>
+    <p>기타 상용: Zebra(Aurora/구 Adaptive Vision), Omron, Matrox Imaging. 한국: SuaKIT(Cognex 인수), Laon People NAVI, Cyth. <strong>오픈소스</strong>: OpenCV(무료, 강력하나 산업 필드버스/PLC 통합 부재), 딥러닝 프레임워크(PyTorch·TF·YOLO·ONNX), 그리고 <em>파운데이션 모델</em>(Depth Anything 3, SAM 등).</p>
+
+    <div class="box thesis-box">
+      <div class="box-lbl"><span>▶ 딥러닝 = "제2 혁명" & 경쟁 긴장</span></div>
+      <p>룰 기반은 정의된 형상에 강하고, 딥러닝은 <strong>무정형(흠집·자연변이·수용가능 편차)</strong>에 강하다 — 상호보완이다. 사전학습망 제공으로 소량 태깅 이미지 미세조정이 가능해졌으나, <em>고객 이미지가 학습 불가</em>한 데이터 소유권 문제가 통합사 제약이다. 핵심 긴장: <strong>상용 SW 해자(산업 통합·결정론·지원)</strong> vs <strong>오픈소스+파운데이션 모델</strong>. 파운데이션 모델이 발전하면 클래식 비전 SW 해자를 침식할 위험이 있다(파트 10의 최대 리스크 중 하나).</p>
+    </div>
+
+    <h3 class="sub">2.6 인터페이스·표준 생태계 — 전략적 통제점</h3>
+    <p>표준의 구조가 이익 구조를 규정한다. <strong>GenICam(EMVA)</strong>은 하드웨어 인터페이스 종류와 무관한 <em>공통 소프트웨어 API</em>로, 모든 G3 표준의 "접착제"다. 하드웨어 인터페이스가 공동 표준화·거버넌스될수록 하드웨어 계층은 상호운용·범용화되고, 가치는 SW·알고리즘·통합으로 이동한다.</p>
+    <div class="tw">
+      <table>
+        <caption>표 2-3. 하드웨어 인터페이스 표준 — 공동 거버넌스가 하드웨어를 범용화한다</caption>
+        <thead><tr><th style="min-width:130px">표준 (도입)</th><th style="min-width:170px">특성</th><th style="min-width:180px">용도</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Camera Link</strong> (2000)</td><td>고속, 프레임그래버 필요, 케이블 짧음</td><td>고속 산업 디폴트</td></tr>
+          <tr><td><strong>GigE Vision</strong> (2006)</td><td>이더넷, 저가·장거리(100m), PoE, 2.5/5/10G</td><td>2D 준표준, 벤더 다양성 최고</td></tr>
+          <tr><td><strong>USB3 Vision</strong> (2013)</td><td>플러그앤플레이, 5Gb/s, 단거리(1~5m)</td><td>단일카메라, 단순</td></tr>
+          <tr><td><strong>CoaXPress</strong> (2010, JIIA)</td><td>초고대역, 프레임그래버 필요</td><td>반도체·인쇄검사, 고해상·고fps</td></tr>
+          <tr><td><strong>MIPI CSI-2</strong></td><td>저지연·저전력</td><td>임베디드 비전(스마트폰·보드)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink-2)"><strong>표준기구</strong>: A3(미, 구 AIA)·EMVA(유럽)·JIIA(일본)·VDMA/CMVU. G3 글로벌 조율(2009). <strong>OPC Machine Vision(VDI/VDE/VDMA 2632)</strong>이 비전↔MES/SCADA(OPC UA)를 연결한다.</p>
+
+    <h3 class="sub">2.7 로봇의 눈 AI 프론티어 — VLA(비전-언어-액션) 모델</h3>
+    <p>로봇 인지의 패러다임이 바뀌고 있다. 전통 파이프라인(인지→기호 라벨→플래너→행동, 수작업 인터페이스)을 <strong>엔드투엔드 통합</strong>이 대체한다. <strong>VLA</strong>는 ① 카메라 시각관측 + ② 언어 지시 + ③ 고유감각(관절위치/속도/말단자세)을 받아 <em>모터 행동</em>을 직접 출력한다.</p>
+    <figure>
+      <div class="chart-card dark">
+        <p class="chart-title">VLA 모델 진화 & 이중 시스템(System 1/2) 구조</p>
+        <p class="chart-sub">RT-1(2023)에서 2025 양산 휴머노이드 두뇌까지 — 카너먼 "빠른/느린 사고" 대응</p>
+        <svg class="chart" viewBox="0 0 960 300" role="img" aria-label="VLA 모델 진화 및 이중 시스템">
+          <!-- evolution timeline top -->
+          <line x1="40" y1="56" x2="920" y2="56" stroke="#24384F" stroke-width="1.5"/>
+          <g font-family="'JetBrains Mono',monospace" font-size="11" fill="#6FC4E8" font-weight="700">
+            <circle cx="90" cy="56" r="5" fill="#1E7FC4"/><text x="90" y="42" text-anchor="middle">RT-1</text><text x="90" y="76" text-anchor="middle" fill="#7791A9" font-size="9" font-weight="400">2023</text>
+            <circle cx="255" cy="56" r="5" fill="#1E7FC4"/><text x="255" y="42" text-anchor="middle">RT-2</text><text x="255" y="76" text-anchor="middle" fill="#7791A9" font-size="9" font-weight="400">웹지식→로봇팔</text>
+            <circle cx="440" cy="56" r="5" fill="#12A6A0"/><text x="440" y="42" text-anchor="middle">OpenVLA 7B</text><text x="440" y="76" text-anchor="middle" fill="#7791A9" font-size="9" font-weight="400">2024 오픈</text>
+            <circle cx="700" cy="56" r="7" fill="#EE7C11"/><text x="700" y="42" text-anchor="middle" fill="#F0932B">π0·GR00T·Helix</text><text x="700" y="76" text-anchor="middle" fill="#F0932B" font-size="9" font-weight="400">2025 양산 휴머노이드</text>
+            <circle cx="895" cy="56" r="5" fill="#EE7C11"/><text x="895" y="42" text-anchor="middle" fill="#F0932B">GR00T N2</text><text x="895" y="76" text-anchor="middle" fill="#7791A9" font-size="9" font-weight="400">2026</text>
+          </g>
+          <!-- dual system boxes -->
+          <rect x="120" y="120" width="330" height="130" rx="12" fill="#132538" stroke="#24384F"/>
+          <text x="285" y="146" text-anchor="middle" font-family="'Inter',sans-serif" font-size="14" font-weight="600" fill="#6FC4E8">System 2 — 느린 사고</text>
+          <text x="285" y="170" text-anchor="middle" font-family="'Inter',sans-serif" font-size="12" fill="#A6BBCE">VLM (계획·인지·추론)</text>
+          <text x="285" y="192" text-anchor="middle" font-family="'Inter',sans-serif" font-size="11" fill="#7791A9">저빈도, 고수준, 언어·시각 이해</text>
+          <text x="285" y="226" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#7791A9">"무엇을 할지" 결정</text>
+
+          <rect x="510" y="120" width="330" height="130" rx="12" fill="#1B3149" stroke="#2C4A68"/>
+          <text x="675" y="146" text-anchor="middle" font-family="'Inter',sans-serif" font-size="14" font-weight="600" fill="#F0932B">System 1 — 빠른 사고</text>
+          <text x="675" y="170" text-anchor="middle" font-family="'Inter',sans-serif" font-size="12" fill="#DCE7F0">액션 전문가 (저수준 제어)</text>
+          <text x="675" y="192" text-anchor="middle" font-family="'Inter',sans-serif" font-size="11" fill="#A6BBCE">고빈도(50Hz+), 디퓨전/트랜스포머 디코더</text>
+          <text x="675" y="226" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#A6BBCE">"어떻게 움직일지" 실행</text>
+          <!-- arrow between -->
+          <path d="M450 185 L508 185" stroke="#EE7C11" stroke-width="2" marker-end="url(#arrow2)"/>
+          <defs><marker id="arrow2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L8 4.5 L0 9 z" fill="#EE7C11"/></marker></defs>
+        </svg>
+        <figcaption>그림 2-2. VLA 모델 진화와 System 1/2 구조. 출처: arXiv VLA survey(2505.04769)·NVIDIA·Physical Intelligence·Figure·리서치 데이터.</figcaption>
+      </div>
+    </figure>
+
+    <div class="box thesis-box">
+      <div class="box-lbl"><span>▶ 결정적 통찰 (로봇의 눈 투자 함의)</span></div>
+      <p>"<strong>모델보다 데이터 플라이휠에 먼저 투자하라</strong> — 모델 아키텍처는 6개월마다 바뀌지만, 텔레오퍼레이션 리그·에피소드 메타데이터·자동 평가 하니스는 <em>수년간 복리로 쌓인다</em>"(internet-pros). 로봇 시연 데이터는 비싸고 희소하며 분포편향(로봇 형태·환경·과제별)이 심하다. → <strong>로봇의 눈에서 해자는 카메라가 아니라 데이터·시뮬레이션·컴퓨트다.</strong></p>
+    </div>
+    <div class="box conflict">
+      <div class="box-lbl"><span>◭ 미해결 (Rule 4 — 확신도 낮은 지점)</span></div>
+      <p>"베팅은 확정 안 됨 — 로봇은 여전히 뻣뻣·취약·문자적, 데이터 희소, 안전 비공식, 실세계 롤아웃 비용이 LLM 순전파보다 <strong>수 자릿수 높음</strong>"(internet-pros). 이 프론티어는 possible→plausible 단계이며 probable이 아니다(파트 5 상술).</p>
+    </div>
+
+    <h3 class="sub">2.8 기술 세대 구분</h3>
+    <div class="tw">
+      <table>
+        <caption>표 2-4. 현행 vs 차세대 기술 세대와 전환 병목</caption>
+        <thead><tr><th style="min-width:100px">계층</th><th style="min-width:180px">현행 세대</th><th style="min-width:180px">차세대</th></tr></thead>
+        <tbody>
+          <tr><td><strong>검사 SW</strong></td><td>2D 룰기반 + 딥러닝</td><td>온센서 AI(엣지 추론)</td></tr>
+          <tr><td><strong>센서</strong></td><td>스택형 BSI</td><td>SWIR/하이퍼스펙트럴 확산</td></tr>
+          <tr><td><strong>3D</strong></td><td>구조광/ToF/스테레오 병존</td><td>3D 실시간·고해상·저가 융합</td></tr>
+          <tr class="hl"><td><strong>로봇 인지</strong></td><td>RGB-D + 초기 VLA</td><td>VLA 일반화, 능동비전(EyeVLA), 월드 파운데이션 모델(Cosmos)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink-2)"><strong>세대 전환 병목</strong>: (a) 3D 실시간·고해상·저가 동시 달성, (b) 로봇 시연 데이터 부족, (c) 엣지 컴퓨트 전력·지연, (d) 안전·신뢰성 검증.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<style>
+/* value chain component */
+.vchain{margin:24px 0}
+.vtier{border:1px solid var(--line);border-radius:14px;margin-bottom:14px;overflow:hidden;background:var(--surface)}
+.vtier-head{padding:11px 18px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;color:#fff}
+.vtier-head .desc{font-family:var(--body);font-weight:400;font-size:12px;opacity:.85;letter-spacing:0}
+.vtier.up .vtier-head{background:linear-gradient(90deg,#0A5F86,#0E7FB0)}
+.vtier.mid .vtier-head{background:linear-gradient(90deg,#B4560A,#EE7C11)}
+.vtier.down .vtier-head{background:linear-gradient(90deg,#132538,#1B3149)}
+.vnodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:1px;background:var(--line)}
+.vnode{background:var(--surface);padding:13px 15px}
+.vnode h5{font-family:var(--disp);font-size:14px;font-weight:600;margin:0 0 3px;color:var(--ink);display:flex;align-items:center;gap:7px}
+.vnode .pp{width:8px;height:8px;border-radius:50%;flex:none}
+.vnode .who{font-size:11.5px;color:var(--ink-2);line-height:1.45;margin:2px 0 4px}
+.vnode .char{font-family:var(--mono);font-size:10px;color:var(--ink-3);line-height:1.4}
+.pp-hot{background:#C33A2B}.pp-warm{background:#EE7C11}.pp-mid{background:#E0B105}.pp-cool{background:#1E7FC4}.pp-cold{background:#8FA3B5}
+.vflow{text-align:center;color:var(--ink-3);font-family:var(--mono);font-size:18px;margin:-4px 0 10px}
+</style>
+
+<!-- ===================== PART 3 : VALUE CHAIN & PROFIT POOL ===================== -->
+<section class="part" id="chain">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">03</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Value Chain & Profit Pool · 이 프로젝트의 시그니처</div>
+        <h2 class="part-title">가치사슬과 이익 풀</h2>
+        <div class="part-dial"><span class="dialtag heart">♥ 심장 2</span><span class="dialtag">◆ 산업모드 최대 심도</span><span class="dialtag">★ 공통</span></div>
+      </div>
+    </div>
+
+    <p class="lead">머신비전의 투자 관점은 이 한 질문으로 압축된다: <strong>매출이 아니라 이익이 사슬 어디에 고이는가.</strong> 결론부터 — 이익은 <em>통합 시스템+소프트웨어+직판</em>(키엔스형)과 <em>고급 광학·전문 3D SW</em>, 그리고 로봇 프론티어의 <em>인지 컴퓨트/AI</em>에 고이고, 범용 카메라·조명에는 거의 고이지 않는다.</p>
+
+    <h3 class="sub">3.1 전 사슬 매핑 — 후방 → 산업 → 전방</h3>
+    <div class="vc-legend">
+      <span><i class="pp-hot" style="border-radius:50%"></i> 이익 풀 최상 (로봇 프론티어)</span>
+      <span><i class="pp-warm" style="border-radius:50%"></i> 높음 (통합·SW·고급광학)</span>
+      <span><i class="pp-mid" style="border-radius:50%"></i> 중간 (과점 센서)</span>
+      <span><i class="pp-cool" style="border-radius:50%"></i> 가치 상승 중 (컴퓨트)</span>
+      <span><i class="pp-cold" style="border-radius:50%"></i> 범용화 (저마진)</span>
+    </div>
+    <div class="vchain">
+      <!-- UPSTREAM -->
+      <div class="vtier up">
+        <div class="vtier-head"><span>▽ 후방 (UPSTREAM)</span><span class="desc">원가·변동성 측면</span></div>
+        <div class="vnodes">
+          <div class="vnode"><h5><span class="pp pp-cold"></span>웨이퍼/파운드리</h5><div class="who">TSMC · Sony · 삼성 · GalaxyCore</div><div class="char">성숙노드(22~180nm), 수출통제 무관, 300mm 타이트</div></div>
+          <div class="vnode"><h5><span class="pp pp-mid"></span>이미지센서(CIS)</h5><div class="who">Sony 43% · 삼성 20% · OmniVision 11%</div><div class="char">과점(상위5 83%), 자본집약, 스택형 BSI 장벽</div></div>
+          <div class="vnode"><h5><span class="pp pp-warm"></span>광학/렌즈</h5><div class="who">Kowa · Computar · Nikon · Zeiss · Moritex(→Cognex) + 중 OPT</div><div class="char">높은 진입장벽, 텔레센트릭, 픽셀 미세화로 병목화</div></div>
+          <div class="vnode"><h5><span class="pp pp-cold"></span>조명(LED)</h5><div class="who">다수 (중국 국산화 90%)</div><div class="char">진입장벽 낮음, 범용화</div></div>
+          <div class="vnode"><h5><span class="pp pp-cool"></span>프레임그래버/프로세서</h5><div class="who">Euresys · Matrox · AMD/Xilinx · NVIDIA</div><div class="char">GPU/엣지AI로 가치 상승</div></div>
+          <div class="vnode"><h5><span class="pp pp-hot"></span>컴퓨트/AI칩 (로봇)</h5><div class="who">NVIDIA(Jetson Thor) · Qualcomm · 자체</div><div class="char">로봇 프론티어 최대 풀</div></div>
+        </div>
+      </div>
+      <div class="vflow">↓</div>
+      <!-- MIDSTREAM -->
+      <div class="vtier mid">
+        <div class="vtier-head"><span>◇ 산업 자체 (MIDSTREAM)</span><span class="desc">머신비전 코어</span></div>
+        <div class="vnodes">
+          <div class="vnode"><h5><span class="pp pp-cold"></span>산업 카메라</h5><div class="who">Basler · Teledyne DALSA · Hikrobot·Huaray(중 급부상) · IDS · JAI</div><div class="char">범용화 압력, 중국 저가</div></div>
+          <div class="vnode"><h5><span class="pp pp-warm"></span>비전 소프트웨어</h5><div class="who">MVTec HALCON · Cognex VisionPro/ViDi · Zebra</div><div class="char">지능계층, 최고 성장(CAGR 13%+)</div></div>
+          <div class="vnode"><h5><span class="pp pp-warm"></span>스마트카메라/센서</h5><div class="who">Keyence · Cognex In-Sight · Omron · SICK</div><div class="char">올인원 통합, 직판 프리미엄</div></div>
+          <div class="vnode"><h5><span class="pp pp-warm"></span>3D 비전 시스템</h5><div class="who">Keyence(3D ~55%) · Zivid · Photoneo(→Zebra) · Mech-Mind(중)</div><div class="char">깊이·빈피킹, 고성장 14%+</div></div>
+          <div class="vnode"><h5><span class="pp pp-hot"></span>로봇 인지 모듈</h5><div class="who">RealSense(AMR 60%/휴머노이드 80%) · Stereolabs · Orbbec</div><div class="char">깊이카메라·SLAM, 꿈의 벡터</div></div>
+        </div>
+      </div>
+      <div class="vflow">↓</div>
+      <!-- DOWNSTREAM -->
+      <div class="vtier down">
+        <div class="vtier-head"><span>△ 전방 (DOWNSTREAM)</span><span class="desc">수요처 · 최종 소비</span></div>
+        <div class="vnodes">
+          <div class="vnode"><h5>자동차/EV 조립 <span class="char" style="color:var(--accent-deep)">~24–26%</span></h5><div class="who">최대 수요. 배터리 100% 인라인 검사</div></div>
+          <div class="vnode"><h5>전자·반도체 <span class="char" style="color:var(--accent-deep)">~22%</span></h5><div class="who">최고성장. 웨이퍼/PCB/SMT</div></div>
+          <div class="vnode"><h5>식품·포장 <span class="char" style="color:var(--accent-deep)">~18%</span></h5><div class="who">대형 안정</div></div>
+          <div class="vnode"><h5>제약·생명과학 <span class="char" style="color:var(--accent-deep)">~12%</span></h5><div class="who">규제 준수(일련번호·바이알), 최고 CAGR 중 하나</div></div>
+          <div class="vnode"><h5>물류·소매</h5><div class="who">바코드·분류·이커머스 (Cognex 성장축)</div></div>
+          <div class="vnode"><h5 style="color:var(--signal-deep)">로봇/휴머노이드 <span class="char" style="color:var(--signal-deep)">신흥</span></h5><div class="who">신규 로봇셀 3D 39%. <strong style="color:var(--signal-deep)">꿈의 벡터</strong></div></div>
+        </div>
+      </div>
+    </div>
+    <figcaption style="font-family:var(--mono);font-size:11.5px;color:var(--ink-3);margin-top:4px">그림 3-1. 머신비전 가치사슬 지도. 색점 = 이익 풀 강도. 출처: 리서치 데이터(EqualOcean·Yole·각사 IR·GMI) 종합. 전방 점유율은 2024 단위기준.</figcaption>
+
+    <h3 class="sub">3.2 이익 풀 지도 — 매출 ≠ 이익 (시그니처 분석)</h3>
+    <p>세 개의 데이터 포인트가 이익 풀의 위치를 확정한다.</p>
+    <ul class="clean">
+      <li><strong>가치 집중도 (EqualOcean)</strong>: "3D 비전의 핵심 가치는 <em>상류(상류 컴포넌트 + 소프트웨어)</em>에 집중, 전체 가치의 <strong>80% 차지</strong>, 기술장벽 최고." 중국 국산화율은 카메라·조명 90%이나 <em>고급 렌즈·소프트웨어는 여전히 해외 giants</em>. → 이익은 상류 광학·SW에 고임.</li>
+      <li><strong>영업이익률 실측</strong>: 키엔스 <strong>51%</strong> ≫ Cognex 16% ≈ Teledyne DI 17% ≈ Sony I&SS 16%. 원센서·카메라 = 10–17%, 통합 시스템+SW+직판 = 50%+.</li>
+      <li><strong>통합 병목</strong>: 42% 프로젝트가 숙련 비전 엔지니어 부족으로 평균 <strong>8주 지연</strong> → 시스템 통합·애플리케이션 전문성이 해자(키엔스 직판 모델의 원천).</li>
+    </ul>
+
+    <figure>
+      <div class="chart-card">
+        <p class="chart-title">이익 풀 지도 — 매출 규모 vs 영업이익률</p>
+        <p class="chart-sub">키엔스(팹리스+직판)만 51% 고지에 홀로 선다. 원센서·카메라 계층은 10–17% 밴드에 밀집.</p>
+        <svg class="chart" viewBox="0 0 900 480" role="img" aria-label="매출 대비 영업이익률 산점도">
+          <!-- axes -->
+          <line x1="90" y1="410" x2="850" y2="410" stroke="#43525F" stroke-width="1.5"/>
+          <line x1="90" y1="40" x2="90" y2="410" stroke="#43525F" stroke-width="1.5"/>
+          <!-- y gridlines & labels : margin 0..55%, plot 410(0)->50(55) => 6.545px per % -->
+          <g font-family="'JetBrains Mono',monospace" font-size="11" fill="#6A7885">
+            <line x1="90" y1="410" x2="850" y2="410" stroke="#D8DEE5"/><text x="82" y="414" text-anchor="end">0%</text>
+            <line x1="90" y1="344" x2="850" y2="344" stroke="#EDF1F4"/><text x="82" y="348" text-anchor="end">10%</text>
+            <line x1="90" y1="279" x2="850" y2="279" stroke="#EDF1F4"/><text x="82" y="283" text-anchor="end">20%</text>
+            <line x1="90" y1="213" x2="850" y2="213" stroke="#EDF1F4"/><text x="82" y="217" text-anchor="end">30%</text>
+            <line x1="90" y1="148" x2="850" y2="148" stroke="#EDF1F4"/><text x="82" y="152" text-anchor="end">40%</text>
+            <line x1="90" y1="82" x2="850" y2="82" stroke="#EDF1F4"/><text x="82" y="86" text-anchor="end">50%</text>
+          </g>
+          <text x="30" y="230" transform="rotate(-90 30 230)" text-anchor="middle" font-family="'Inter',sans-serif" font-size="13" font-weight="600" fill="#16202B">영업이익률 (FY2025)</text>
+          <!-- x labels : revenue USD B, plot 90($0)->850($11), => ~69px per $B -->
+          <g font-family="'JetBrains Mono',monospace" font-size="11" fill="#6A7885" text-anchor="middle">
+            <text x="159" y="430">$1B</text><text x="297" y="430">$3B</text><text x="504" y="430">$6B</text><text x="711" y="430">$9B</text><text x="835" y="430">$11B</text>
+          </g>
+          <text x="470" y="458" text-anchor="middle" font-family="'Inter',sans-serif" font-size="13" font-weight="600" fill="#16202B">매출 규모 (USD, 순수/세그먼트 기준)</text>
+
+          <!-- 10-17% commodity band highlight -->
+          <rect x="90" y="298" width="760" height="66" fill="#1E7FC4" opacity="0.07"/>
+          <text x="840" y="334" text-anchor="end" font-family="'JetBrains Mono',monospace" font-size="10" fill="#0A5F86">원센서·카메라 밴드 10–17%</text>
+
+          <!-- points: x=90+rev*69.09 ; y=410-margin*6.545 -->
+          <!-- Keyence rev 7.9 margin 51 -> x=90+545.8=636 y=410-333.8=76 -->
+          <g>
+            <circle cx="636" cy="76" r="15" fill="#EE7C11" opacity="0.9" stroke="#B4560A" stroke-width="2"/>
+            <text x="636" y="52" text-anchor="middle" font-family="'Inter',sans-serif" font-size="13" font-weight="700" fill="#B4560A">키엔스</text>
+            <text x="636" y="100" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#B4560A">$7.9B · 51.0%</text>
+          </g>
+          <!-- Sony I&SS rev ~10 margin 16 -> x=90+690.9=781 y=410-104.7=305 -->
+          <g>
+            <circle cx="781" cy="305" r="13" fill="#1E7FC4" opacity="0.85" stroke="#0A5F86" stroke-width="1.5"/>
+            <text x="781" y="286" text-anchor="middle" font-family="'Inter',sans-serif" font-size="12" font-weight="600" fill="#0A5F86">Sony I&amp;SS</text>
+            <text x="781" y="337" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#0A5F86">~$10B급 · ~16%</text>
+          </g>
+          <!-- Teledyne DI rev 3.16 margin 16.7 -> x=90+218.3=308 y=410-109.3=301 -->
+          <g>
+            <circle cx="308" cy="301" r="11" fill="#12A6A0" opacity="0.85" stroke="#0A6B66" stroke-width="1.5"/>
+            <text x="308" y="283" text-anchor="middle" font-family="'Inter',sans-serif" font-size="11.5" font-weight="600" fill="#0A6B66">Teledyne DI</text>
+            <text x="308" y="333" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#0A6B66">$3.16B · 16.7%</text>
+          </g>
+          <!-- Cognex rev 1.0 margin 16.3 -> x=90+69.09=159 y=410-106.7=303 -->
+          <g>
+            <circle cx="159" cy="303" r="9" fill="#1E7FC4" opacity="0.85" stroke="#0A5F86" stroke-width="1.5"/>
+            <text x="159" y="286" text-anchor="middle" font-family="'Inter',sans-serif" font-size="11.5" font-weight="600" fill="#0A5F86">Cognex</text>
+            <text x="159" y="335" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#0A5F86">$1.0B · 16.3%</text>
+          </g>
+          <!-- Mobileye annotation (negative GAAP) -->
+          <g>
+            <circle cx="222" cy="410" r="8" fill="#C33A2B" opacity="0.55" stroke="#9A2C1F" stroke-width="1.5"/>
+            <text x="222" y="400" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#9A2C1F">Mobileye</text>
+          </g>
+          <path d="M222 410 q40 -20 40 -40" fill="none" stroke="#9A2C1F" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="270" y="368" font-family="'Inter',sans-serif" font-size="10.5" fill="#9A2C1F">$1.89B · GAAP 적자(개선중),</text>
+          <text x="270" y="382" font-family="'Inter',sans-serif" font-size="10.5" fill="#9A2C1F">비GAAP 흑자 — AV 인지 프론티어</text>
+        </svg>
+        <figcaption>그림 3-2. 이익 풀 지도. 매출은 순수/세그먼트 기준(Sony I&SS·Teledyne DI는 그룹 세그먼트). 출처: Keyence FY2025·Cognex/Teledyne/Sony/Mobileye SEC·IR. <span class="mk mk-con">상충</span> Sony I&SS 매출은 그룹 픽처부문(¥1,505.9B) 기준 근사.</figcaption>
+      </div>
+    </figure>
+
+    <div class="box thesis-box">
+      <div class="box-lbl"><span>▶ 핵심 이익 풀 통찰 (Rule 3 집단중심 사고 교정)</span></div>
+      <p>영어권 자료는 Cognex를 "the global leader"라 칭하나, <strong>키엔스가 매출 ~8배·이익률 ~3배</strong>다. 원센서·카메라 계층(Sony 16% · Cognex 16% · Teledyne DI 17%)은 10–17% 밴드에 밀집하고, <em>키엔스 통합모델만 51%</em>에 홀로 선다. 그 차이의 원천은 <strong>팹리스 + 애플리케이션 엔지니어 직판 + 가격결정력</strong>이다. 매출 리더(Sony $10B급, 키엔스 $7.9B)와 이익률 리더(키엔스 압도)가 다르다는 것 — 이것이 이 산업을 볼 때 매출이 아니라 이익 풀을 봐야 하는 이유다.</p>
+    </div>
+
+    <h4 class="subsub">이익 풀 단계별 순위 <span class="mk mk-est">추정</span> — 근거: 실측 마진 + 가치 집중도</h4>
+    <div class="ladder">
+      <div class="rung top">
+        <div class="rk"></div>
+        <div class="body"><h5>인지 컴퓨트/AI 계층 <span style="font-family:var(--mono);font-size:11px;color:var(--signal-deep);font-weight:600">로봇 프론티어</span></h5>
+          <p>NVIDIA Jetson+Isaac+GR00T, VLA 파운데이션 모델. 로봇 프론티어에서 <strong>가장 크고 확장적인 풀</strong> — 데이터 플라이휠·풀스택 락인. (단, MV 코어에서는 아직 매출 기여 미소.)</p></div>
+      </div>
+      <div class="rung">
+        <div class="rk"></div>
+        <div class="body"><h5>통합 시스템 + 애플리케이션 SW + 직판 <span style="font-family:var(--mono);font-size:11px;color:var(--accent-deep);font-weight:600">키엔스형</span></h5>
+          <p><strong>51% 영업이익률</strong>. 코어 MV 최대 실현 풀. 팹리스 자본효율 + 가격결정력.</p></div>
+      </div>
+      <div class="rung">
+        <div class="rk"></div>
+        <div class="body"><h5>고급 광학/렌즈 + 전문 3D 소프트웨어</h5>
+          <p>높은 진입장벽, 일·독 과점, 픽셀 미세화로 병목화. Cognex의 Moritex 인수($275M)는 이 풀 확보 시도.</p></div>
+      </div>
+      <div class="rung">
+        <div class="rk"></div>
+        <div class="body"><h5>이미지센서(CIS)</h5>
+          <p>~16% 마진, 과점(Sony 43%)이나 자본집약·스마트폰 ASP 압력·공급사이클.</p></div>
+      </div>
+      <div class="rung">
+        <div class="rk"></div>
+        <div class="body"><h5>범용 카메라/조명/프레임그래버</h5>
+          <p>범용화·중국 저가 압력, <strong>마진 최하</strong>.</p></div>
+      </div>
+    </div>
+
+    <h3 class="sub">3.3 단계별 교섭력 — 왜 특정 단계가 더 많은 가치를 잡나</h3>
+    <div class="tw">
+      <table>
+        <caption>표 3-1. 단계별 교섭력의 원천</caption>
+        <thead><tr><th style="min-width:120px">플레이어</th><th style="min-width:120px">교섭력</th><th style="min-width:280px">원천</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>키엔스</strong></td><td><span class="dir up">매우 강</span></td><td>애플리케이션 엔지니어의 <em>컨설팅형 직판</em> + <em>팹리스</em>(CapEx/매출 ~1.4%) → 가격결정력 + 자본효율. 35만+ 애플리케이션·110개국. "브랜드가 아니라 솔루션을 판다".</td></tr>
+          <tr class="hl"><td><strong>NVIDIA</strong></td><td><span class="dir up">매우 강</span></td><td>컴퓨트 + Isaac Sim/Lab + GR00T + Cosmos + Omniverse <em>풀스택 락인</em>. 로봇사들이 Jetson+Isaac에 종속(Boston Dynamics·Figure·Agility·KUKA·FANUC).</td></tr>
+          <tr><td><strong>고급 렌즈</strong></td><td><span class="dir upmid">강</span></td><td>광학 설계·제조 노하우(50년+, Moritex) → 대체 곤란. 픽셀 미세화가 렌즈를 병목으로 만들어 교섭력 상승.</td></tr>
+          <tr><td><strong>Sony (CIS)</strong></td><td><span class="dir upmid">강</span></td><td>스택형 BSI 기술 + 스마트폰/자동차 OEM 관계 → 1위. 단 스마트폰 ASP 압력·삼성 수직통합·중국 추격.</td></tr>
+          <tr><td>범용 카메라·조명</td><td><span class="dir down">약</span></td><td>중국 국산화 90%, 저가 경쟁.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">3.4 전략적 통제점 — 이익을 잡게 하는 구조적 지점</h3>
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--accent-deep)"><span>◈ 표준/IP</span></div>
+        <p>GenICam·GigE Vision(공동 거버넌스 → 하드웨어 범용화). PatMax(Cognex)·HALCON 알고리즘 IP. VLA 파운데이션 모델 IP.</p>
+      </div>
+      <div class="box thesis-box">
+        <div class="box-lbl"><span>◈ 데이터 — 최강 통제점</span></div>
+        <p><strong>로봇 시연 데이터 플라이휠</strong>: Tesla FSD 페타바이트 영상·occupancy net; Figure/Physical Intelligence 텔레오퍼레이션·인간영상; Mobileye REM <em>700만+ 차량 크라우드소싱 매핑</em>. <strong>파운데이션 모델은 6개월마다 바뀌나 데이터는 복리.</strong></p>
+      </div>
+      <div class="box">
+        <div class="box-lbl" style="color:var(--accent-deep)"><span>◈ 유통 지배</span></div>
+        <p>키엔스 직판, Cognex 채널+직판. PLC 통합(EtherNet/IP·PROFINET) 락인 — 한번 통합되면 교체 비용이 높다.</p>
+      </div>
+      <div class="box">
+        <div class="box-lbl" style="color:var(--accent-deep)"><span>◈ 풀스택 락인</span></div>
+        <p>NVIDIA 컴퓨트+SW+모델. 로봇사 수직통합(자체 AI+HW, Tesla·Figure). 단일 노드가 아닌 스택 전체를 잡는다.</p>
+      </div>
+    </div>
+
+    <h3 class="sub">3.5 생태계 지도 & 수직통합 동학</h3>
+    <p><strong>보완재</strong>: 산업로봇(FANUC·ABB·KUKA·UR), PLC(Siemens·Rockwell), MES/SCADA, 엣지AI 가속기. 수직통합은 <em>이익 풀을 향해</em> 일어난다 — 카메라사가 광학·SW로, 로봇사가 센서·컴퓨트·데이터로 통합한다.</p>
+    <div class="tw">
+      <table>
+        <caption>표 3-2. 수직통합 사례 — 누가 어느 방향으로 통합하는가</caption>
+        <thead><tr><th style="min-width:110px">주체</th><th style="min-width:340px">통합 방향과 의미</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Cognex</strong></td><td>→ Moritex(광학, 2023 $275M) · SuaKIT(딥러닝). <em>고급 광학·SW 이익 풀 확보 시도.</em></td></tr>
+          <tr><td><strong>Teledyne</strong></td><td>→ DALSA·FLIR·e2v·Adimec(2024) 이미징 롤업. <em>이미징 전 스펙트럼 통합.</em></td></tr>
+          <tr><td><strong>Zebra</strong></td><td>→ Photoneo(2025, 구조광 3D) · 구 Adaptive Vision. <em>바코드→MV/3D 확장.</em></td></tr>
+          <tr><td><strong>Sony</strong></td><td>→ 센서+연산 온다이 통합, TSMC 파트너십. <em>픽셀+알고리즘 결합.</em></td></tr>
+          <tr class="hl"><td><strong>로봇사</strong></td><td>→ 센서+컴퓨트+AI+데이터 <em>풀스택</em>(Figure Helix 자체개발, OpenAI 결별). <em>가치 전체를 내재화.</em></td></tr>
+          <tr><td><strong>NVIDIA</strong></td><td>→ RealSense·Hugging Face LeRobot 협업으로 <em>생태계 확장</em>(락인 강화).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== PART 4 : MARKET SIZE ===================== -->
+<section class="part" id="market">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">04</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Market Size & Growth</div>
+        <h2 class="part-title">시장 규모와 성장</h2>
+        <div class="part-dial"><span class="dialtag heart">♥ 심장 3</span><span class="dialtag">◆ 산업모드</span><span class="dialtag">★ 공통</span></div>
+      </div>
+    </div>
+
+    <p class="lead">코어 산업용 머신비전은 <strong>2025 ≈ $14–16B → 2030 ≈ $20–25B(CAGR 7–9%)</strong>의 성숙 성장 시장이다. 단, 조사기관 간 정의 차이로 <em>2~3배 편차</em>가 존재한다 — 이 편차 자체를 이해하는 것이 시장 규모 해석의 핵심이다.</p>
+
+    <div class="box conflict">
+      <div class="box-lbl"><span>◭ [상충] 채택 기준 — 정의 차이가 5배 편차를 만든다</span></div>
+      <p>다수 기관이 2025년 <strong>$14–16B, CAGR 7–9%</strong>에 수렴한다. Grand View($20–42B, 13%)는 정의가 광범위한 <em>상단 아웃라이어</em>, Yole($7–8B, 2.1%)은 <em>카메라/이미징 컴포넌트 중심 협의 정의</em>로 하단이다. → 본문은 <strong>"핵심 정의(시스템) 2025 ≈ $14–16B, 2030 ≈ $20–25B, CAGR 7–9%"</strong>를 중앙값으로 채택하고, 범위와 정의 차이를 병기한다.</p>
+    </div>
+
+    <h3 class="sub">4.1 TAM/SAM/SOM — 현재 → 5년 → 10년</h3>
+    <figure>
+      <div class="chart-card">
+        <p class="chart-title">코어 MV 시장 규모 2025 추정치 — 조사기관 간 [상충]</p>
+        <p class="chart-sub">정의(시스템 vs 이미징 컴포넌트)에 따라 $7.8B~$22.6B로 벌어진다. 채택 밴드 $14–16B 강조.</p>
+        <svg class="chart" viewBox="0 0 900 400" role="img" aria-label="조사기관별 2025 머신비전 시장 규모">
+          <!-- adopted band -->
+          <rect x="255" y="30" width="55" height="330" fill="#EE7C11" opacity="0.10"/>
+          <text x="282" y="24" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#B4560A" font-weight="700">채택 $14–16B</text>
+          <!-- x axis: $0..$24B, plot 200(0)->860(24) => 27.5px per $B -->
+          <line x1="200" y1="360" x2="860" y2="360" stroke="#43525F" stroke-width="1.5"/>
+          <g font-family="'JetBrains Mono',monospace" font-size="10" fill="#6A7885" text-anchor="middle">
+            <text x="200" y="378">$0</text><text x="337" y="378">$5B</text><text x="475" y="378">$10B</text><text x="612" y="378">$15B</text><text x="750" y="378">$20B</text><text x="860" y="378">$24B</text>
+            <line x1="337" y1="30" x2="337" y2="360" stroke="#EDF1F4"/><line x1="475" y1="30" x2="475" y2="360" stroke="#EDF1F4"/>
+            <line x1="612" y1="30" x2="612" y2="360" stroke="#EDF1F4"/><line x1="750" y1="30" x2="750" y2="360" stroke="#EDF1F4"/>
+          </g>
+          <!-- bars : y start 42, h 34, gap 12 ; width = val*27.5 -->
+          <g font-family="'Inter',sans-serif" font-size="12">
+            <!-- Grand View 22.62 (outlier high) -->
+            <rect x="200" y="42" width="622" height="30" rx="4" fill="#8FA3B5"/>
+            <text x="196" y="62" text-anchor="end" fill="#43525F" font-weight="500">Grand View</text>
+            <text x="814" y="62" text-anchor="end" fill="#16202B" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="600">$22.62B · 광의</text>
+            <!-- BCC 15.9 -->
+            <rect x="200" y="88" width="437" height="30" rx="4" fill="#1E7FC4"/>
+            <text x="196" y="108" text-anchor="end" fill="#43525F" font-weight="500">BCC Research</text>
+            <text x="643" y="108" fill="#0A5F86" font-family="'JetBrains Mono',monospace" font-size="11">$15.9B</text>
+            <!-- M&M 15.83 -->
+            <rect x="200" y="134" width="435" height="30" rx="4" fill="#1E7FC4"/>
+            <text x="196" y="154" text-anchor="end" fill="#43525F" font-weight="500">MarketsandMarkets</text>
+            <text x="641" y="154" fill="#0A5F86" font-family="'JetBrains Mono',monospace" font-size="11">$15.83B</text>
+            <!-- Mordor 13.95 -->
+            <rect x="200" y="180" width="384" height="30" rx="4" fill="#12A6A0"/>
+            <text x="196" y="200" text-anchor="end" fill="#43525F" font-weight="500">Mordor Intelligence</text>
+            <text x="590" y="200" fill="#0A6B66" font-family="'JetBrains Mono',monospace" font-size="11">$13.95B</text>
+            <!-- SNS 13.78 -->
+            <rect x="200" y="226" width="379" height="30" rx="4" fill="#12A6A0"/>
+            <text x="196" y="246" text-anchor="end" fill="#43525F" font-weight="500">SNS Insider</text>
+            <text x="585" y="246" fill="#0A6B66" font-family="'JetBrains Mono',monospace" font-size="11">$13.78B</text>
+            <!-- Fortune 12.56 -->
+            <rect x="200" y="272" width="345" height="30" rx="4" fill="#12A6A0"/>
+            <text x="196" y="292" text-anchor="end" fill="#43525F" font-weight="500">Fortune Business Ins.</text>
+            <text x="551" y="292" fill="#0A6B66" font-family="'JetBrains Mono',monospace" font-size="11">$12.56B</text>
+            <!-- Yole 7.8 (narrow) -->
+            <rect x="200" y="318" width="215" height="30" rx="4" fill="#2C3C93"/>
+            <text x="196" y="338" text-anchor="end" fill="#43525F" font-weight="500">Yole (협의)</text>
+            <text x="421" y="338" fill="#2C3C93" font-family="'JetBrains Mono',monospace" font-size="11">$7.8B(2029)·이미징</text>
+          </g>
+        </svg>
+        <figcaption>그림 4-1. 코어 MV 2025 시장 규모 조사기관 비교. 출처: 각사 리포트(리서치 데이터 표 A). 청색·청록=시스템 정의($14–16B 수렴), 회색=광의 아웃라이어, 남색=협의(이미징) 하단.</figcaption>
+      </div>
+    </figure>
+
+    <figure>
+      <div class="chart-card">
+        <p class="chart-title">"눈" 생태계 시장 규모 비교 (2024–25) — 코어 MV는 큰 그림의 일부</p>
+        <p class="chart-sub">스마트폰 물량 때문에 이미지센서가 코어 MV보다 크고, 컴퓨터비전(광의 AI)이 최상위. 3D MV는 작지만 14%+ 고성장.</p>
+        <svg class="chart" viewBox="0 0 900 340" role="img" aria-label="인접 시장 규모 비교">
+          <line x1="170" y1="300" x2="860" y2="300" stroke="#43525F" stroke-width="1.5"/>
+          <!-- x $0..$45B, plot 170(0)->860(45) => 15.33px per $B -->
+          <g font-family="'JetBrains Mono',monospace" font-size="10" fill="#6A7885" text-anchor="middle">
+            <text x="170" y="318">$0</text><text x="323" y="318">$10B</text><text x="477" y="318">$20B</text><text x="630" y="318">$30B</text><text x="783" y="318">$40B</text>
+            <line x1="323" y1="30" x2="323" y2="300" stroke="#EDF1F4"/><line x1="477" y1="30" x2="477" y2="300" stroke="#EDF1F4"/>
+            <line x1="630" y1="30" x2="630" y2="300" stroke="#EDF1F4"/><line x1="783" y1="30" x2="783" y2="300" stroke="#EDF1F4"/>
+          </g>
+          <g font-family="'Inter',sans-serif" font-size="12.5">
+            <!-- Computer Vision 42.88 -->
+            <rect x="170" y="42" width="657" height="34" rx="4" fill="#2C3C93"/>
+            <text x="166" y="64" text-anchor="end" fill="#16202B" font-weight="600">컴퓨터비전(광의 AI)</text>
+            <text x="833" y="64" fill="#2C3C93" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">$42.88B</text>
+            <!-- Image sensor 23.2 -->
+            <rect x="170" y="90" width="356" height="34" rx="4" fill="#1E7FC4"/>
+            <text x="166" y="112" text-anchor="end" fill="#16202B" font-weight="600">이미지센서(CIS)</text>
+            <text x="532" y="112" fill="#0A5F86" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">$23.2B</text>
+            <!-- Core MV 15 -->
+            <rect x="170" y="138" width="230" height="34" rx="4" fill="#EE7C11"/>
+            <text x="166" y="160" text-anchor="end" fill="#16202B" font-weight="600">코어 머신비전</text>
+            <text x="406" y="160" fill="#B4560A" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">~$15B</text>
+            <!-- 3D MV 7.16 -->
+            <rect x="170" y="186" width="110" height="34" rx="4" fill="#12A6A0"/>
+            <text x="166" y="208" text-anchor="end" fill="#16202B" font-weight="600">3D 머신비전</text>
+            <text x="286" y="208" fill="#0A6B66" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">$7.16B ·CAGR 14%+</text>
+            <!-- Humanoid 2.92 (2025) -->
+            <rect x="170" y="234" width="45" height="34" rx="4" fill="#C33A2B"/>
+            <text x="166" y="256" text-anchor="end" fill="#16202B" font-weight="600">휴머노이드(2025)</text>
+            <text x="221" y="256" fill="#9A2C1F" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">$2.92B ·"꿈"</text>
+          </g>
+        </svg>
+        <figcaption>그림 4-2. 인접 시장 규모(2024–25 기준). 출처: Statista·Yole·리서치 데이터 종합. 휴머노이드는 현재 작으나 CAGR 39%+로 "꿈"의 벡터.</figcaption>
+      </div>
+    </figure>
+
+    <div class="stats">
+      <div class="stat"><div class="v">$7.16B<span class="u">→$15.6B</span></div><div class="k">3D 머신비전 (2024→2030), CAGR <strong>14.3%</strong></div><span class="src">Grand View</span></div>
+      <div class="stat"><div class="v">$23.2B<span class="u">→$30.1B</span></div><div class="k">이미지센서 (2024→2030), CAGR ~7–8%</div><span class="src">Yole</span></div>
+      <div class="stat sig"><div class="v">~$0.7–2.8B</div><div class="k">로봇 인지 HW 파생 TAM (2035) <span class="mk mk-der">파생</span></div><span class="src">140만대×비전HW $500–2,000 <span class="mk mk-est">추정</span></span></div>
+      <div class="stat sig"><div class="v">$38B<span class="u">/$5T</span></div><div class="k">휴머노이드 TAM: $38B(2035,GS) / $5T(2050,MS) <span class="mk mk-con">상충</span></div><span class="src">시나리오</span></div>
+    </div>
+    <div class="box derived">
+      <div class="box-lbl"><span>◇ [파생] SOM 계산 — 로봇 인지 하드웨어는 작다</span></div>
+      <p>140만 휴머노이드(2035, GS) × 대당 비전HW $500~2,000 <span class="mk mk-est">추정</span> = <strong>~$0.7–2.8B</strong> 비전HW TAM(2035). 이미지센서 $30B 대비 작으나 고성장. <strong>진짜 풀은 하드웨어가 아닌 인지 SW/컴퓨트</strong>다 — 로봇의 눈에서 하드웨어 순수 노출은 규모가 제한적임을 수치가 말한다.</p>
+    </div>
+
+    <h3 class="sub">4.2 성장 동인 분해 — P·Q·믹스</h3>
+    <p>성장이 어디서 오는지를 분해하면 투자 함의가 선명해진다. 성장은 주로 <strong>Q(물량) + 믹스(고부가화)</strong>에서 오고, <strong>P(하드웨어 가격)는 디플레이션</strong>이다. → 가치는 SW·솔루션·AI로 이동한다.</p>
+    <div class="tw">
+      <table>
+        <caption>표 4-1. 성장 동인 분해</caption>
+        <thead><tr><th style="min-width:90px">동인</th><th style="min-width:100px">방향</th><th style="min-width:300px">내용</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>Q (물량)</strong></td><td><span class="dir up">주 동력</span></td><td>검사 대상 100% 인라인화(샘플링→전수), 로봇셀당 카메라 증가, 자동차당 카메라 수 증가(평균 ~3대/차, 236M 자동차 카메라모듈 2023), 신규 응용(로봇·물류).</td></tr>
+          <tr class="hl"><td><strong>믹스 (고부가)</strong></td><td><span class="dir up">마진 개선</span></td><td>2D→3D(14% CAGR), 표준→AI SW(최고 성장, "지능 계층"), 가시광→SWIR/하이퍼스펙트럴, 범용→스마트카메라/엣지AI.</td></tr>
+          <tr><td><strong>P (가격)</strong></td><td><span class="dir mix">혼재</span></td><td>하드웨어는 하락 압력(중국 저가, 범용화, Mobileye EyeQ ASP −$0.50/개). SW/솔루션은 프리미엄.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">4.3 S커브 위치 — 층위마다 다르다</h3>
+    <p>이 산업의 핵심은 <strong>여러 S커브가 서로 다른 위치에 병존</strong>한다는 것이다. 코어는 성숙하나, 3D·AI·로봇은 각기 다른 성장 단계에 있다. 이 이중구조가 "성숙 저성장 코어 + 고성장 옵션"이라는 밸류에이션 패턴의 근거다.</p>
+    <figure>
+      <div class="chart-card">
+        <p class="chart-title">머신비전 층위별 S커브 위치</p>
+        <p class="chart-sub">코어(성숙 성장) → 3D(성장) → AI 비전(성장 초·중기) → 로봇의 눈(도입기)</p>
+        <svg class="chart" viewBox="0 0 900 400" role="img" aria-label="S커브 상 층위별 위치">
+          <!-- axes -->
+          <line x1="70" y1="350" x2="860" y2="350" stroke="#43525F" stroke-width="1.5"/>
+          <line x1="70" y1="40" x2="70" y2="350" stroke="#43525F" stroke-width="1.5"/>
+          <text x="465" y="388" text-anchor="middle" font-family="'Inter',sans-serif" font-size="13" font-weight="600" fill="#16202B">시간 · 성숙도 →</text>
+          <text x="28" y="195" transform="rotate(-90 28 195)" text-anchor="middle" font-family="'Inter',sans-serif" font-size="13" font-weight="600" fill="#16202B">시장 침투 / 매출</text>
+          <!-- stage labels bottom -->
+          <g font-family="'JetBrains Mono',monospace" font-size="10" fill="#8FA3B5" text-anchor="middle">
+            <text x="200" y="335">도입기</text><text x="400" y="335">성장기</text><text x="600" y="335">성숙기</text><text x="790" y="335">쇠퇴</text>
+            <line x1="300" y1="45" x2="300" y2="350" stroke="#EDF1F4" stroke-dasharray="3 4"/>
+            <line x1="500" y1="45" x2="500" y2="350" stroke="#EDF1F4" stroke-dasharray="3 4"/>
+            <line x1="700" y1="45" x2="700" y2="350" stroke="#EDF1F4" stroke-dasharray="3 4"/>
+          </g>
+          <!-- S curve path -->
+          <path d="M70 340 C 250 335, 330 300, 430 180 S 620 60, 860 52" fill="none" stroke="#1E7FC4" stroke-width="3"/>
+          <!-- position markers -->
+          <!-- 로봇의 눈 : 도입기 x~200 -->
+          <circle cx="200" cy="322" r="9" fill="#EE7C11" stroke="#B4560A" stroke-width="2"/>
+          <line x1="200" y1="313" x2="200" y2="130" stroke="#EE7C11" stroke-width="1" stroke-dasharray="3 3"/>
+          <rect x="120" y="96" width="200" height="34" rx="7" fill="#FBF0E2" stroke="#EFCB99"/>
+          <text x="220" y="112" text-anchor="middle" font-family="'Inter',sans-serif" font-size="11.5" font-weight="700" fill="#B4560A">로봇의 눈 (임바디드 AI)</text>
+          <text x="220" y="125" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#B4560A">early adopter · 캐즘 앞</text>
+          <!-- AI 비전 : 성장 초중기 x~380 -->
+          <circle cx="380" cy="230" r="8" fill="#12A6A0" stroke="#0A6B66" stroke-width="2"/>
+          <rect x="300" y="188" width="160" height="34" rx="7" fill="#E4F3EC" stroke="#B6DEC9"/>
+          <text x="380" y="204" text-anchor="middle" font-family="'Inter',sans-serif" font-size="11.5" font-weight="700" fill="#0A6B66">AI/딥러닝 비전</text>
+          <text x="380" y="217" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#0A6B66">성장 초·중기 · SW 최고성장</text>
+          <!-- 3D : 성장기 x~490 -->
+          <circle cx="490" cy="158" r="8" fill="#5FB63F" stroke="#3B7B22" stroke-width="2"/>
+          <rect x="440" y="112" width="150" height="34" rx="7" fill="#EDF6E7" stroke="#C7E3B5"/>
+          <text x="515" y="128" text-anchor="middle" font-family="'Inter',sans-serif" font-size="11.5" font-weight="700" fill="#3B7B22">3D 비전</text>
+          <text x="515" y="141" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#3B7B22">성장기 · CAGR 14%+</text>
+          <!-- 코어 MV : 성숙기 x~640 -->
+          <circle cx="640" cy="90" r="9" fill="#0A5F86" stroke="#083F58" stroke-width="2"/>
+          <rect x="600" y="52" width="220" height="34" rx="7" fill="#E6F1F7" stroke="#BCDCEB"/>
+          <text x="710" y="68" text-anchor="middle" font-family="'Inter',sans-serif" font-size="11.5" font-weight="700" fill="#0A5F86">코어 산업용 MV</text>
+          <text x="710" y="81" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#0A5F86">성숙 성장 · CAGR 7–9% · 대형채택 72%</text>
+        </svg>
+        <figcaption>그림 4-3. 층위별 S커브 위치 <span class="mk mk-est">추정</span>(침투율·CAGR 근거). 출처: 리서치 데이터. 코어는 중소기업(49% 초기비용 장벽)·신흥국 침투 여력 잔존.</figcaption>
+      </div>
+    </figure>
+
+    <h3 class="sub">4.4 지역별 분포 — 아시아 무게중심</h3>
+    <div class="tw">
+      <table>
+        <caption>표 4-2. 지역별 시장 (2024, <span class="mk mk-con">상충</span> 정의차 존재)</caption>
+        <thead><tr><th style="min-width:90px">지역</th><th class="num">점유</th><th class="num">CAGR</th><th style="min-width:220px">특성</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>아시아태평양</strong></td><td class="num">~40–44%</td><td class="num">9%+</td><td>최대·최고성장. 전자·반도체·EV 제조 기반. 중·일·한·대만. 중국 최대 CIS 수요국(~41%).</td></tr>
+          <tr><td>북미</td><td class="num">~20–32%</td><td class="num">12%+</td><td>미국 최고 CAGR. 스마트팩토리·AI 투자.</td></tr>
+          <tr><td>유럽</td><td class="num">~21%</td><td class="num">7.3%</td><td>정밀제조(독·스위스·오스트리아·북유럽).</td></tr>
+          <tr><td>한국</td><td class="num">$268.7M</td><td class="num">6.95%</td><td>$268.7M(2024)→$492M(2033). 소형이나 반도체·디스플레이·배터리 수요처로 전략적.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box insight">
+      <div class="box-lbl"><span>◎ Rule 3 집단중심 사고 — 무게중심 확인</span></div>
+      <p>영어 자료의 미국 중심 디폴트와 달리, MV 시장의 무게중심은 <strong>아시아태평양(~40–44%)</strong>이다. 이미지센서는 일·한(Sony·삼성), 카메라·부품은 중국 급부상, 코어 이익은 일본(키엔스)이 잡는다. 로봇 인지 컴퓨트만 미국(NVIDIA·RealSense) 중심이다.</p>
+    </div>
+
+    <h3 class="sub">4.5 비용곡선(학습곡선) — 조건부 (프레임워크 회의주의 준수)</h3>
+    <p><strong>적용 대상</strong>: 이미지센서(반도체 = 무어/라이트 법칙 궤적), 휴머노이드 로봇 HW(제조원가 2022→2023 ~40% 하락: $50~250K→$30~150K; 모건스탠리 ASP $200K→$50K 선진/$15K 중국공급 by 2050).</p>
+    <div class="box warn">
+      <div class="box-lbl"><span>⚠ 회의주의 (명시)</span></div>
+      <p>"메커니즘(인과)은 단정하지 않되, 반도체·하드웨어에서 <strong>비용 궤적 예측 도구</strong>로는 유효." 곡선은 물리·규제 한계(서브 1µm 픽셀 열노이즈 배증)에서 꺾인다. <strong>함의</strong>: 로봇 HW 원가 급락 → 채택 가속 → 비전HW 물량 확대. 단, 센서 가격 하락은 하드웨어 순수주 마진 압박이다(양날의 칼).</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== PART 5 : THE DREAM ===================== -->
+<section class="part" id="dream">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">05</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">The Dream & Growth Narrative · 시장 자금이 선호하는 것</div>
+        <h2 class="part-title">산업의 "꿈"</h2>
+        <div class="part-dial"><span class="dialtag heart">♥ 심장 4</span><span class="dialtag">★ 공통</span></div>
+      </div>
+    </div>
+
+    <div class="box thesis-box">
+      <div class="box-lbl"><span>▶ 꿈의 정의 (한 문장)</span></div>
+      <p style="font-size:17px;line-height:1.55">"기계가 사람처럼 세상을 보고(perception), 이해하고, 스스로 행동한다 — 머신비전이 <strong>공장 검사 도구에서 모든 로봇·자율기계의 '눈과 시각 피질'로 승격</strong>된다(perception layer of Physical AI)."</p>
+    </div>
+
+    <h3 class="sub">5.2 꿈의 크기 — 자릿수 임팩트</h3>
+    <p>코어 MV($14–16B, 2025)는 성숙 저성장이다. 꿈은 이를 <strong>몇 배~수십 배로 리레이팅</strong>한다. 단, 결정적 반전이 있다 — <em>임팩트는 크지만 가치 포획은 센서 하드웨어가 아니라 AI·데이터·컴퓨트에서 일어난다.</em></p>
+    <div class="stats">
+      <div class="stat sig"><div class="v">$38B<span class="u"></span></div><div class="k">휴머노이드 TAM 2035 (GS, 출하 140만대)</div><span class="src">$6B→$38B 상향, "확정 아님"</span></div>
+      <div class="stat sig"><div class="v">$5T</div><div class="k">휴머노이드 TAM 2050 (MS, 서비스 포함, 설치 ~10억)</div><span class="src">극단 시나리오</span></div>
+      <div class="stat"><div class="v">$50B<span class="u">→$200B</span></div><div class="k">로봇 시장 자체 (6년, RealSense 인용)</div><span class="src">RealSense/BusinessWire</span></div>
+      <div class="stat"><div class="v">$14B</div><div class="k">Skild AI 밸류(몸통 없는 AI 두뇌) — "몸통만큼 가치"</div><span class="src">aifundingtracker</span></div>
+    </div>
+    <div class="box derived">
+      <div class="box-lbl"><span>◇ [파생] 핵심 반전 — 진짜 큰 풀은 하드웨어가 아니다</span></div>
+      <p>로봇 인지 하드웨어 파생 TAM(2035): 140만대 × 비전HW $500~2,000 <span class="mk mk-est">추정</span> ≈ <strong>$0.7–2.8B(하드웨어는 작다)</strong>. 반면 진짜 큰 풀 = 인지 AI/컴퓨트/데이터: "AI 두뇌가 몸통만큼 가치 있다 — 투자자가 <em>몸통 없는 AI 두뇌에 $10억+ 수표</em>"(Skild AI $14B, Physical Intelligence $5.6B). <strong>꿈의 임팩트는 수십 배 스토리이나, 가치 포획은 AI·데이터·컴퓨트 계층에서.</strong></p>
+    </div>
+
+    <h3 class="sub">5.3 꿈의 신선도 — 증거 기반 (과대광고 사이클 마커 대체)</h3>
+    <p>Gartner 하이프사이클 위치 마커는 예측 신뢰도가 낮아 사용하지 않는다. 대신 <strong>자금 유입·밸류에이션·뉴스량의 실측 추이</strong>로 신선도를 판정한다. 판정: <strong>신선(새로 부상 중) + 과열 징후 병존.</strong></p>
+    <figure>
+      <div class="chart-card dark">
+        <p class="chart-title">피지컬 AI·로봇 VC 유입 — 2025 사상 최대 $27.6B</p>
+        <p class="chart-sub">2021 피크($13.1B) → 딥 → 2025 명백한 재가속. "새로 부상 중인" 내러티브의 실측 증거.</p>
+        <svg class="chart" viewBox="0 0 900 360" role="img" aria-label="로봇 VC 유입 추이">
+          <line x1="90" y1="300" x2="850" y2="300" stroke="#24384F" stroke-width="1.5"/>
+          <!-- y $0..$30B plot 300(0)->40(30) => 8.667px per $B -->
+          <g font-family="'JetBrains Mono',monospace" font-size="10" fill="#7791A9">
+            <line x1="90" y1="300" x2="850" y2="300" stroke="#1B3149"/><text x="82" y="304" text-anchor="end">$0</text>
+            <line x1="90" y1="213" x2="850" y2="213" stroke="#132538"/><text x="82" y="217" text-anchor="end">$10B</text>
+            <line x1="90" y1="127" x2="850" y2="127" stroke="#132538"/><text x="82" y="131" text-anchor="end">$20B</text>
+            <line x1="90" y1="40" x2="850" y2="40" stroke="#132538"/><text x="82" y="44" text-anchor="end">$30B</text>
+          </g>
+          <!-- trend line peak->trough->new high -->
+          <path d="M180 187 Q 340 250, 470 245 T 760 61" fill="none" stroke="#EE7C11" stroke-width="2.5" stroke-dasharray="1 0"/>
+          <!-- 2021 peak bar (13.1) -->
+          <rect x="150" y="187" width="60" height="113" rx="4" fill="#1E7FC4" opacity="0.8"/>
+          <text x="180" y="177" text-anchor="middle" fill="#6FC4E8" font-family="'JetBrains Mono',monospace" font-size="12" font-weight="700">$13.1B</text>
+          <text x="180" y="320" text-anchor="middle" fill="#A6BBCE" font-family="'Inter',sans-serif" font-size="12">2021 (피크)</text>
+          <!-- trough illustrative -->
+          <text x="470" y="270" text-anchor="middle" fill="#7791A9" font-family="'JetBrains Mono',monospace" font-size="10">↓ 딥 (조정기)</text>
+          <!-- 2025 record bar (27.6) -->
+          <rect x="730" y="61" width="60" height="239" rx="4" fill="#EE7C11"/>
+          <text x="760" y="51" text-anchor="middle" fill="#F0932B" font-family="'JetBrains Mono',monospace" font-size="13" font-weight="700">$27.6B</text>
+          <text x="760" y="320" text-anchor="middle" fill="#DCE7F0" font-family="'Inter',sans-serif" font-size="12" font-weight="600">2025 (사상 최대)</text>
+          <text x="470" y="340" text-anchor="middle" fill="#7791A9" font-family="'Inter',sans-serif" font-size="11">※ 2021·2025는 실측치. 중간 연도(딥)는 정성 표기(정확 수치 미확보).</text>
+        </svg>
+        <figcaption>그림 5-1. 로봇·피지컬 AI VC 유입. 출처: Axios/aifundingtracker. 2배+ 재가속은 "이미 소비된 이야기"가 아닌 "새로 부상 중"임을 시사.</figcaption>
+      </div>
+    </figure>
+
+    <div class="tw">
+      <table>
+        <caption>표 5-1. 밸류에이션 급등 (실측) — 과열 징후 병존</caption>
+        <thead><tr><th style="min-width:160px">기업</th><th style="min-width:220px">밸류에이션 궤적</th><th class="num">배수/기간</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>Figure</strong></td><td>$2.6B(2024.2) → $39B(2025.9)</td><td class="num">15배 / 18개월</td></tr>
+          <tr><td><strong>Skild AI</strong></td><td>$4.5B → $14B</td><td class="num">3배 / 7개월</td></tr>
+          <tr><td><strong>Physical Intelligence</strong></td><td>$5.6B → $11B+ 협의</td><td class="num">2배 / 4개월</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink-2)"><strong>뉴스·리포트 급증</strong>: NVIDIA "챗GPT 모먼트 for robotics"(Jensen Huang), GTC 로봇 전시, Omdia "휴머노이드 비전 = 피지컬 AI 인지 계층" 리포트(2026.6), 다수 학회(ICRA·GTC). → 판정 <strong>신선</strong>. 단 밸류에이션 15배/18개월은 <em>과열 징후</em>.</p>
+
+    <h3 class="sub">5.4 3P 검증 — possible → plausible → probable</h3>
+    <p>꿈을 냉정하게 3단계로 검증하면, 대부분 <strong>possible→plausible 단계</strong>에 있고 <strong>probable에는 미도달</strong>이다.</p>
+    <figure>
+      <div class="chart-card">
+        <p class="chart-title">3P 검증 게이지 — 어디까지 왔나</p>
+        <svg class="chart" viewBox="0 0 900 220" role="img" aria-label="3P 검증 단계">
+          <!-- track -->
+          <rect x="60" y="90" width="780" height="40" rx="20" fill="#EDF1F4"/>
+          <!-- filled to plausible (~62%) -->
+          <rect x="60" y="90" width="480" height="40" rx="20" fill="url(#g3p)"/>
+          <defs><linearGradient id="g3p" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5FB63F"/><stop offset="0.6" stop-color="#E0B105"/><stop offset="1" stop-color="#EE7C11"/></linearGradient></defs>
+          <!-- markers -->
+          <g font-family="'Inter',sans-serif">
+            <circle cx="200" cy="110" r="14" fill="#5FB63F" stroke="#fff" stroke-width="3"/><text x="200" y="115" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">✓</text>
+            <text x="200" y="66" text-anchor="middle" font-size="14" font-weight="700" fill="#3B7B22">Possible</text>
+            <text x="200" y="168" text-anchor="middle" font-size="10.5" fill="#43525F">VLA 양산 시연</text>
+            <text x="200" y="184" text-anchor="middle" font-size="10.5" fill="#43525F">(Helix·GR00T·π0)</text>
+
+            <circle cx="470" cy="110" r="14" fill="#E0B105" stroke="#fff" stroke-width="3"/><text x="470" y="116" text-anchor="middle" fill="#fff" font-size="15" font-weight="700">◐</text>
+            <text x="470" y="66" text-anchor="middle" font-size="14" font-weight="700" fill="#9A7A04">Plausible</text>
+            <text x="470" y="168" text-anchor="middle" font-size="10.5" fill="#43525F">산업·물류 상업 배치 시작</text>
+            <text x="470" y="184" text-anchor="middle" font-size="10.5" fill="#43525F">범용성 미입증 · 진행 중</text>
+
+            <circle cx="740" cy="110" r="14" fill="#fff" stroke="#C33A2B" stroke-width="3"/><text x="740" y="116" text-anchor="middle" fill="#C33A2B" font-size="15" font-weight="700">✕</text>
+            <text x="740" y="66" text-anchor="middle" font-size="14" font-weight="700" fill="#9A2C1F">Probable</text>
+            <text x="740" y="168" text-anchor="middle" font-size="10.5" fill="#9A2C1F">미도달 — 범용성 미입증</text>
+            <text x="740" y="184" text-anchor="middle" font-size="10.5" fill="#9A2C1F">데이터 희소·안전 비공식</text>
+          </g>
+        </svg>
+        <figcaption>그림 5-2. 3P 검증. 출처: GS·리서치 데이터. Tesla Optimus는 Q1'26 여전히 R&D/학습 단계, 공장 생산작업 미수행. Unitree 5,500대 출하(2025)는 plausible 진입의 방증이나 범용성 아님.</figcaption>
+      </div>
+    </figure>
+
+    <h3 class="sub">5.5 증거화 일정 — 꿈을 숫자로 바꾸는 마일스톤</h3>
+    <div class="tw">
+      <table>
+        <caption>표 5-2. 증거화 마일스톤</caption>
+        <thead><tr><th style="min-width:80px">시점</th><th style="min-width:360px">마일스톤 (수주·양산·규제·데모)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>2025</strong></td><td>RealSense 분사·NVIDIA 협업, Figure Series C·Figure 03(가정용), Unitree 5,500대, 다수 휴머노이드 $1B 라운드(UBTECH·Figure).</td></tr>
+          <tr class="hl"><td><strong>2026</strong></td><td>NVIDIA GR00T N2, Jetson Thor 양산, Mobileye EyeQ6 High 양산·로보택시(VW ID.Buzz) 미국 배치, Boston Dynamics 신형 Atlas(Jetson Thor), Unitree 1~2만대 목표, Figure BotQ 스케일업, 1X NEO 가정용 프리오더 $20K.</td></tr>
+          <tr><td><strong>2030+</strong></td><td>GS 25만대(2030 베이스라인)→100만대(2030년대 중반). 가정용 대량채택은 2세대 역량(안전·감성·저가) 필요, ~10년.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">5.6 선례 비교 — 같은 유형의 리레이팅</h3>
+    <div class="tw">
+      <table>
+        <caption>표 5-3. 유사 리레이팅 선례와 교훈</caption>
+        <thead><tr><th style="min-width:150px">선례</th><th style="min-width:320px">전개와 교훈</th></tr></thead>
+        <tbody>
+          <tr><td><strong>자율주행 (2016~2021)</strong></td><td>Mobileye 등 인지칩 리레이팅. 그러나 완전자율 지연 → <em>과대기대 후 현실화 조정</em> 선례. Mobileye 2023 $2.1B 피크→2024 $1.65B(재고조정).</td></tr>
+          <tr class="hl"><td><strong>스마트폰 카메라 (2010년대)</strong></td><td>Sony 센서 가치 상승했으나 <strong>최대 가치는 Apple/Qualcomm(SoC·SW)</strong>이 포획 — "눈보다 두뇌" 선례. <em>이 산업의 관통 명제와 정확히 일치.</em></td></tr>
+          <tr><td><strong>AI 인프라 (2023~)</strong></td><td>NVIDIA GPU 리레이팅. 피지컬 AI가 "다음 층".</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box insight">
+      <div class="box-lbl"><span>◎ 함의</span></div>
+      <p>리레이팅 시 <strong>인지 SW/컴퓨트/데이터 계층이 멀티플 확장</strong>을 누리고, 센서 하드웨어는 상대적으로 덜 누린다. 스마트폰 선례("눈보다 두뇌")가 로봇에서 반복될 개연성이 높다.</p>
+    </div>
+
+    <h3 class="sub">5.7 자금 흐름 & 5.8 꿈의 사망 조건</h3>
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--pos)"><span>▲ 자금 유입 (기관·전략)</span></div>
+        <p><strong>VC</strong>: 2025 $27.6B(사상 최대). Figure·Skild·Physical Intelligence·1X·Apptronik에 $10억+ 라운드. <strong>전략적 투자자</strong>: NVIDIA·Intel Capital·Microsoft·Samsung·LG·Qualcomm·Bezos·SoftBank·Google 대거 참여. <strong>기업 실배치</strong>: Amazon(BlueJay)·BMW·Mercedes·GXO·John Deere. 공개시장: NVIDIA(피지컬 AI 스토리), Cognex(꿈 프리미엄), 로봇 ETF 다수.</p>
+      </div>
+      <div class="box conflict">
+        <div class="box-lbl"><span>▼ 내러티브를 죽이는 것</span></div>
+        <p>휴머노이드 상업 배치 반복 실패/안전 사고 → 신뢰 붕괴. VLA가 실세계 일반화 벽에 부딪혀 "데모용" 판정. 중국 저가 공세로 마진 소멸. 자율주행식 "영원한 5년 후" 반복 → 자금 이탈. 금리/거시 충격으로 장기 스토리주 디레이팅. <strong>센서 완전 범용화</strong> → 하드웨어 순수주 무매력화.</p>
+      </div>
+    </div>
+    <div class="box warn">
+      <div class="box-lbl"><span>⚠ 5.9 기술 수용 생애주기·캐즘 (Rogers/Moore — 조건부)</span></div>
+      <p>코어 산업용 MV는 <strong>초기 다수~후기 다수</strong> 진입(대형 채택률 72%). 로봇의 눈/임바디드 AI는 <strong>혁신가·초기 수용자</strong> 단계로 <em>캐즘 앞</em>이다 — 산업/물류 특정 과제는 넘는 중, 범용·가정용은 캐즘 전. (사이클 초기에만 유효한 렌즈로 조건부 사용.)</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== PART 6 : STRUCTURE ===================== -->
+<section class="part" id="structure">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">06</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Industry Structure & Competitive Dynamics</div>
+        <h2 class="part-title">산업 구조와 경쟁 역학</h2>
+        <div class="part-dial"><span class="dialtag">◆ 산업모드</span></div>
+      </div>
+    </div>
+
+    <p class="lead">머신비전 코어는 <strong>과점(상위 10사 &gt;85%, 반도체 MV 기준) + 파편화 롱테일(중국 신규 다수)</strong>의 이중 구조다. CIS·컴퓨트 계층은 훨씬 더 집중되어 있다(Sony 43%, NVIDIA 준독점).</p>
+
+    <h3 class="sub">6.1 포터의 5 Forces (산업 레벨)</h3>
+    <figure>
+      <div class="chart-card">
+        <p class="chart-title">포터 5 Forces — 계층에 따라 힘의 강도가 갈린다</p>
+        <p class="chart-sub">범용 하드웨어는 경쟁 심하고, 고급 광학·SW·CIS·인지AI는 높은 장벽으로 보호</p>
+        <svg class="chart" viewBox="0 0 900 470" role="img" aria-label="포터의 5 Forces 다이어그램">
+          <!-- center -->
+          <rect x="325" y="195" width="250" height="80" rx="12" fill="#0C1826" stroke="#24384F"/>
+          <text x="450" y="228" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="15" font-weight="600" fill="#fff">기존 경쟁</text>
+          <text x="450" y="252" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="11" fill="#EE7C11" font-weight="700">중~강</text>
+          <!-- top: 신규진입 -->
+          <rect x="335" y="30" width="230" height="72" rx="12" fill="#FBF2DE" stroke="#EAC974"/>
+          <text x="450" y="58" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="600" fill="#8A5A06">신규 진입 위협</text>
+          <text x="450" y="78" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#8A5A06" font-weight="700">중</text>
+          <text x="450" y="94" text-anchor="middle" font-family="'Inter',sans-serif" font-size="9.5" fill="#7A5306">하드웨어 진입 용이 / 고급 광학·SW·CIS·AI 장벽</text>
+          <!-- bottom: 대체재 -->
+          <rect x="335" y="368" width="230" height="72" rx="12" fill="#FBF2DE" stroke="#EAC974"/>
+          <text x="450" y="396" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="600" fill="#8A5A06">대체재 위협</text>
+          <text x="450" y="416" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#8A5A06" font-weight="700">중</text>
+          <text x="450" y="432" text-anchor="middle" font-family="'Inter',sans-serif" font-size="9.5" fill="#7A5306">파운데이션 모델/오픈소스가 상용 SW 위협</text>
+          <!-- left: 공급자 -->
+          <rect x="30" y="199" width="230" height="72" rx="12" fill="#E6F1F7" stroke="#BCDCEB"/>
+          <text x="145" y="227" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="600" fill="#0A5F86">공급자 교섭력</text>
+          <text x="145" y="247" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#B4560A" font-weight="700">중~강</text>
+          <text x="145" y="263" text-anchor="middle" font-family="'Inter',sans-serif" font-size="9.5" fill="#0A5F86">CIS·고급렌즈 과점 · NVIDIA 준독점</text>
+          <!-- right: 구매자 -->
+          <rect x="640" y="199" width="230" height="72" rx="12" fill="#E6F1F7" stroke="#BCDCEB"/>
+          <text x="755" y="227" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="13.5" font-weight="600" fill="#0A5F86">구매자 교섭력</text>
+          <text x="755" y="247" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#0A5F86" font-weight="700">중</text>
+          <text x="755" y="263" text-anchor="middle" font-family="'Inter',sans-serif" font-size="9.5" fill="#0A5F86">대형 제조사 분할발주 · 중소기업은 약</text>
+          <!-- connectors -->
+          <g stroke="#C7D0D8" stroke-width="1.5">
+            <line x1="450" y1="102" x2="450" y2="195"/><line x1="450" y1="275" x2="450" y2="368"/>
+            <line x1="260" y1="235" x2="325" y2="235"/><line x1="575" y1="235" x2="640" y2="235"/>
+          </g>
+        </svg>
+        <figcaption>그림 6-1. 포터 5 Forces(산업 레벨). 출처: 리서치 데이터. 중국 시장은 "표준화 가격경쟁 + 고급 AI 이분화"(Omdia). 정태적 프레임이므로 아래 SCP·동태로 보완.</figcaption>
+      </div>
+    </figure>
+    <div class="box warn">
+      <div class="box-lbl"><span>⚠ 프레임워크 한계</span></div>
+      <p>5 Forces는 정태적 스냅샷이다. 이 산업의 핵심 동학(가치의 AI·데이터 계층 이동, 파운데이션 모델의 SW 침식)은 <em>시간축 위의 전환</em>이라 5 Forces로 완전히 포착되지 않는다. SCP·크리스텐슨 파괴(파트 10)와 함께 읽어야 한다.</p>
+    </div>
+
+    <h3 class="sub">6.2–6.5 SCP · 집중도 · 경쟁 방식 · 진입장벽</h3>
+    <div class="tw">
+      <table>
+        <caption>표 6-1. 구조-행동-성과(SCP) & 집중도</caption>
+        <thead><tr><th style="min-width:90px">계층</th><th style="min-width:150px">집중도(HHI 정성)</th><th style="min-width:150px">경쟁 방식</th><th style="min-width:170px">성과(마진)</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>CIS</strong></td><td>매우 집중(상위5 83%, Sony 43%)</td><td>스택형 BSI·DR·저노이즈 + 제조규모 + OEM</td><td>~16% (Sony)</td></tr>
+          <tr><td><strong>코어 MV</strong></td><td>중집중(상위10 85%)이나 세그먼트·지역 파편화</td><td>기술·애플리케이션 전문성·통합(키엔스) / 브랜드·채널(Cognex) / 가격(중국)</td><td>10~51% (통합/직판이 결정)</td></tr>
+          <tr class="hl"><td><strong>로봇 컴퓨트</strong></td><td>NVIDIA 준독점 → 극히 집중</td><td>생태계·풀스택·데이터 플라이휠</td><td>고마진(추정)</td></tr>
+          <tr><td><strong>로봇 깊이카메라</strong></td><td>RealSense 지배(AMR 60%/휴머노이드 80%)이나 소규모</td><td>NVIDIA 협업·통합</td><td>니치</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink-2)"><strong>진입장벽 높음</strong>: CIS(자본·팹·스택기술), 고급 광학(50년 노하우), 컴퓨트/AI(NVIDIA CUDA·생태계), 데이터(플라이휠), 애플리케이션 전문성(엔지니어 부족). <strong>진입장벽 낮음</strong>: 범용 카메라·조명(중국 90% 국산화). <strong>퇴출장벽</strong>: 장수명 제품·고객 락인(PLC 통합)·R&D 매몰비용.</p>
+
+    <h3 class="sub">6.6 경기민감성 vs 구조적 성장 — 이중구조</h3>
+    <div class="box insight">
+      <div class="box-lbl"><span>◎ 핵심 구조</span></div>
+      <p><strong>경기민감</strong>: 자동차·반도체·전자 자본지출 사이클에 민감(Cognex 자동차 약세, Mobileye 2024 재고조정 −20%). 산업 CapEx 연동. <strong>구조적</strong>: 노동력 위기·리쇼어링·품질 무결점·EV/배터리·로봇이 장기 동력. → <em>경기민감 코어 + 구조적 성장 벡터(3D·AI·로봇)의 이중구조</em>가 이 산업의 성격이다. 사이클 저점이 구조적 성장주를 싸게 살 기회가 될 수 있으나, 타이밍은 별개 문제다.</p>
+    </div>
+
+    <h3 class="sub">6.7 산업 경제학 — ROIC 격차가 이익 풀의 재무적 증거</h3>
+    <div class="tw">
+      <table>
+        <caption>표 6-2. 산업 경제학 — 단계별 ROIC 격차</caption>
+        <thead><tr><th style="min-width:110px">항목</th><th style="min-width:340px">내용</th></tr></thead>
+        <tbody>
+          <tr><td><strong>원가구조</strong></td><td>하드웨어(센서·광학·조명·프로세서) + SW 개발 + 통합/엔지니어링 인건비. 키엔스는 팹리스로 제조원가 외주화.</td></tr>
+          <tr><td><strong>마진구조</strong></td><td>총이익률 67~84%(SW/솔루션 높음), 영업이익률 10~51%(통합/직판이 결정).</td></tr>
+          <tr><td><strong>자본집약</strong></td><td>CIS·팹은 고자본(Sony ¥200B 팹). 키엔스는 저자본(팹리스, CapEx/매출 ~1.4%). Cognex도 저자본.</td></tr>
+          <tr class="hl"><td><strong>ROIC</strong></td><td>키엔스 매우 높음(자기자본비율 <strong>94.5%</strong>, 무차입, FCF 강력). Cognex 낮음(<strong>6.15%</strong>, "과거 베팅 부진"·성장 정체). → <em>단계별 ROIC 격차 = 이익 풀 위치의 재무적 증거.</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== PART 7 : PLAYERS ===================== -->
+<section class="part" id="players">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">07</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Competitive Landscape · 기업 분석으로 가는 다리</div>
+        <h2 class="part-title">경쟁 지형 — 플레이어 지도</h2>
+        <div class="part-dial"><span class="dialtag">◆ 산업모드</span><span class="dialtag">★ 공통</span></div>
+      </div>
+    </div>
+
+    <div class="box insight">
+      <div class="box-lbl"><span>◎ Rule 3 집단중심 사고 감사 — 무게중심은 다극·아시아 편중</span></div>
+      <p>영어 자료는 "Cognex = global leader" 디폴트이나, <strong>키엔스가 매출 8배·이익률 3배</strong>다. 이미지센서는 <strong>일·한(Sony·삼성)</strong>, 카메라·부품은 <strong>중국 급부상</strong>, 로봇 인지 컴퓨트는 <strong>미국(NVIDIA)</strong>, 로봇 깊이는 미국(RealSense). 층위마다 리더의 국적이 다르다.</p>
+    </div>
+
+    <h3 class="sub">7.1 세그먼트·국가별 주요 기업</h3>
+    <h4 class="subsub">이미지센서 (물리적 "눈") — 일·한 과점</h4>
+    <figure>
+      <div class="chart-card">
+        <p class="chart-title">CIS 시장 점유율 (2025, 가치 기준) — 상위 5사 83.1% 과점</p>
+        <svg class="chart" viewBox="0 0 440 440" role="img" aria-label="이미지센서 점유율 도넛" style="max-width:380px;margin:0 auto">
+          <g transform="rotate(-90 220 220)">
+            <circle cx="220" cy="220" r="120" fill="none" stroke="#EDF1F4" stroke-width="52"/>
+            <!-- Sony 43.4 -->
+            <circle cx="220" cy="220" r="120" fill="none" stroke="#EE7C11" stroke-width="52" stroke-dasharray="327.2 426.78" stroke-dashoffset="0"/>
+            <!-- Samsung 20.2 -->
+            <circle cx="220" cy="220" r="120" fill="none" stroke="#1E7FC4" stroke-width="52" stroke-dasharray="152.3 601.68" stroke-dashoffset="-327.2"/>
+            <!-- OmniVision 10.8 -->
+            <circle cx="220" cy="220" r="120" fill="none" stroke="#12A6A0" stroke-width="52" stroke-dasharray="81.4 672.58" stroke-dashoffset="-479.5"/>
+            <!-- STMicro 5.1 -->
+            <circle cx="220" cy="220" r="120" fill="none" stroke="#5FB63F" stroke-width="52" stroke-dasharray="38.5 715.48" stroke-dashoffset="-560.9"/>
+            <!-- onsemi 3.6 -->
+            <circle cx="220" cy="220" r="120" fill="none" stroke="#E0B105" stroke-width="52" stroke-dasharray="27.1 726.88" stroke-dashoffset="-599.4"/>
+            <!-- Others 16.9 -->
+            <circle cx="220" cy="220" r="120" fill="none" stroke="#8FA3B5" stroke-width="52" stroke-dasharray="127.4 626.58" stroke-dashoffset="-626.5"/>
+          </g>
+          <text x="220" y="210" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="30" font-weight="700" fill="#16202B">83.1%</text>
+          <text x="220" y="236" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="12" fill="#6A7885">상위 5사 과점</text>
+        </svg>
+        <div class="legend" style="justify-content:center">
+          <span><i style="background:#EE7C11"></i> Sony 43.4% <small style="color:var(--ink-3)">(일본)</small></span>
+          <span><i style="background:#1E7FC4"></i> Samsung 20.2% <small style="color:var(--ink-3)">(한국)</small></span>
+          <span><i style="background:#12A6A0"></i> OmniVision 10.8% <small style="color:var(--ink-3)">(미/중)</small></span>
+          <span><i style="background:#5FB63F"></i> STMicro 5.1%</span>
+          <span><i style="background:#E0B105"></i> onsemi 3.6%</span>
+          <span><i style="background:#8FA3B5"></i> 기타 16.9%</span>
+        </div>
+        <figcaption>그림 7-1. CIS 점유율(2025, GMI). <span class="mk mk-con">상충</span> GMI 문서 "Sony 43.4%"와 "63.6%" 병기 → 43~45% 채택(Yole·Mordor 교차). 신뢰도 ≈85%. 중국은 세계 최대 CIS 수요국(~41%, 수요처 기준).</figcaption>
+      </div>
+    </figure>
+
+    <div class="tw">
+      <table>
+        <caption>표 7-1. 코어 산업용 머신비전 주요 기업</caption>
+        <thead><tr><th style="min-width:130px">기업 (티커)</th><th style="min-width:70px">국적</th><th style="min-width:90px">포지션</th><th style="min-width:210px">역할·차별화</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>Keyence</strong> (6861.T)</td><td>일본</td><td><span class="tag lead">이익 리더</span></td><td>스마트센서·비전·3D. 51% 마진. 3D ~55% 글로벌 점유(2022).</td></tr>
+          <tr><td><strong>Cognex</strong> (CGNX)</td><td>미국</td><td><span class="tag chal">기술 리더 자칭</span></td><td>비전 SW(VisionPro/ViDi)·In-Sight·바코드·물류. OneVision 클라우드 AI.</td></tr>
+          <tr><td>Teledyne DALSA (TDY)</td><td>미/캐</td><td><span class="tag chal">도전자</span></td><td>카메라·라인스캔·3D·SWIR. 이미징 롤업.</td></tr>
+          <tr><td>Basler (BSL.DE)</td><td>독일</td><td><span class="tag niche">순수 카메라</span></td><td>순수 카메라 리더.</td></tr>
+          <tr><td>Omron (6645.T)</td><td>일본</td><td><span class="tag chal">도전자</span></td><td>센싱+MV+FA.</td></tr>
+          <tr><td>Zebra (ZBRA)</td><td>미국</td><td><span class="tag chal">도전자</span></td><td>바코드→MV/3D(Photoneo 인수).</td></tr>
+          <tr><td><strong>MVTec</strong> (비상장)</td><td>독일</td><td><span class="tag lead">SW 리더</span></td><td>HALCON. 하드웨어 독립.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--neg)"><span>◆ 중국 (Rule 3 필수 — 급부상)</span></div>
+        <p><strong>Hikrobot</strong>(海康机器人, Hikvision 자회사): 카메라·MV·AMR "괄목할 부상"(Yole). <strong>Huaray</strong>(华睿, Dahua 자회사): 카메라 급부상. <strong>Mech-Mind</strong>(梅卡曼德): 3D 비전·로봇 안내. OPT(奥普特)·Daheng·Luster(凌云光)·Tianzhun(天准). CIS: SmartSens·GalaxyCore. → 부품 국산화 &gt;70%(카메라·조명 90%), <em>고급 렌즈·SW는 해외 의존</em>. 시장 이분화(표준 가격경쟁 vs 고급 AI).</p>
+      </div>
+      <div class="box">
+        <div class="box-lbl" style="color:var(--accent-deep)"><span>◆ 한국</span></div>
+        <p><strong>Vieworks</strong>(뷰웍스, 100120.KQ): 수직통합(센서·렌즈·회로·SW), 고해상 산업카메라, 디스플레이/반도체 검사, TDI 라인스캔(VTDI). Samsung·SK Hynix·LG Innotek(CIS·카메라모듈). iCore(아이코어)·Meerecompany(Cube-eye ToF)·Luxolis·SuaKIT·Laon People(부품·3D·딥러닝 SW).</p>
+      </div>
+    </div>
+
+    <h4 class="subsub">로봇의 눈 — 인지 컴퓨트·깊이·AI (프론티어)</h4>
+    <div class="tw">
+      <table>
+        <caption>표 7-2. 로봇 인지 프론티어 플레이어</caption>
+        <thead><tr><th style="min-width:150px">기업 (티커)</th><th style="min-width:340px">포지션</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>NVIDIA</strong> (NVDA)</td><td><strong>컴퓨트/두뇌 지배.</strong> Jetson Thor + Isaac + GR00T + Cosmos + Omniverse + Holoscan 풀스택.</td></tr>
+          <tr class="hl"><td><strong>RealSense</strong> (비상장, 분사)</td><td><strong>로봇 깊이카메라 지배.</strong> AMR 60%/휴머노이드 80%. NVIDIA 협업. 시리즈A $50M.</td></tr>
+          <tr><td><strong>Mobileye</strong> (MBLY)</td><td>카메라 기반 ADAS/AV 인지칩(EyeQ). &gt;2억대 탑재.</td></tr>
+          <tr><td>Stereolabs·Orbbec·Luxonis·Photoneo·Zivid</td><td>3D/깊이 카메라.</td></tr>
+          <tr><td><strong>Physical Intelligence·Skild·Figure·Tesla·Google DeepMind</strong></td><td>VLA 파운데이션 모델/휴머노이드 두뇌·데이터.</td></tr>
+          <tr><td>Unitree·UBTECH·1X·Apptronik·Agility·Boston Dynamics</td><td>휴머노이드 바디(비전 통합).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">7.2 포지셔닝 맵 — 가치사슬 위치 × 해자/마진</h3>
+    <p>이 2D 맵은 관통 명제를 시각화한다: <strong>가치사슬 오른쪽(AI·SW·컴퓨트)으로 갈수록, 그리고 위쪽(해자·마진)으로 갈수록 구조적으로 유리</strong>하다. 위치는 리서치 데이터의 정성 판정에 기반한다 <span class="mk mk-est">추정</span>.</p>
+    <figure>
+      <div class="chart-card">
+        <p class="chart-title">경쟁 포지셔닝 2D 맵 — 가치가 오른쪽 위로 이동한다</p>
+        <p class="chart-sub">X축: 하드웨어 ←→ AI/SW/컴퓨트 · Y축: 해자·마진 강도 (정성 배치)</p>
+        <svg class="chart" viewBox="0 0 900 500" role="img" aria-label="경쟁 포지셔닝 2D 버블맵">
+          <!-- quadrant bg -->
+          <rect x="70" y="40" width="790" height="390" fill="#FAFBFC"/>
+          <!-- migration arrow -->
+          <defs><linearGradient id="gmig" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1E7FC4" stop-opacity="0.15"/><stop offset="1" stop-color="#EE7C11" stop-opacity="0.22"/></linearGradient>
+          <marker id="amig" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M0 0 L11 6 L0 12 z" fill="#EE7C11"/></marker></defs>
+          <path d="M120 400 L820 90" stroke="url(#gmig)" stroke-width="34" stroke-linecap="round" marker-end="url(#amig)" opacity="0.6"/>
+          <text x="470" y="250" text-anchor="middle" font-family="'Inter',sans-serif" font-size="12" font-weight="600" fill="#B4560A" transform="rotate(-24 470 250)">가치 이동 방향 →</text>
+          <!-- axes -->
+          <line x1="70" y1="430" x2="860" y2="430" stroke="#43525F" stroke-width="1.5"/>
+          <line x1="70" y1="40" x2="70" y2="430" stroke="#43525F" stroke-width="1.5"/>
+          <text x="465" y="466" text-anchor="middle" font-family="'Inter',sans-serif" font-size="12.5" font-weight="600" fill="#16202B">하드웨어 ← 가치사슬 위치 → AI·소프트웨어·컴퓨트·데이터</text>
+          <text x="28" y="235" transform="rotate(-90 28 235)" text-anchor="middle" font-family="'Inter',sans-serif" font-size="12.5" font-weight="600" fill="#16202B">해자·마진 강도 →</text>
+          <!-- bubbles: (x,y,r,fill,label,sub) -->
+          <!-- NVIDIA top-right -->
+          <circle cx="800" cy="85" r="30" fill="#EE7C11" opacity="0.9" stroke="#B4560A" stroke-width="2"/>
+          <text x="800" y="90" text-anchor="middle" font-family="'Inter',sans-serif" font-size="12" font-weight="700" fill="#fff">NVIDIA</text>
+          <text x="800" y="130" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="9" fill="#B4560A">컴퓨트 준독점</text>
+          <!-- Keyence high margin, mid-left (integrated system+SW) -->
+          <circle cx="430" cy="105" r="27" fill="#EE7C11" opacity="0.85" stroke="#B4560A" stroke-width="2"/>
+          <text x="430" y="102" text-anchor="middle" font-family="'Inter',sans-serif" font-size="12" font-weight="700" fill="#fff">키엔스</text>
+          <text x="430" y="115" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="#fff">51%</text>
+          <!-- MVTec SW right-mid-high -->
+          <circle cx="620" cy="150" r="20" fill="#12A6A0" opacity="0.85" stroke="#0A6B66" stroke-width="1.5"/>
+          <text x="620" y="154" text-anchor="middle" font-family="'Inter',sans-serif" font-size="10.5" font-weight="600" fill="#fff">MVTec</text>
+          <!-- Cognex mid -->
+          <circle cx="500" cy="235" r="19" fill="#1E7FC4" opacity="0.85" stroke="#0A5F86" stroke-width="1.5"/>
+          <text x="500" y="239" text-anchor="middle" font-family="'Inter',sans-serif" font-size="10.5" font-weight="600" fill="#fff">Cognex</text>
+          <!-- Sony CIS mid-left high-ish (oligopoly but capital) -->
+          <circle cx="255" cy="180" r="24" fill="#1E7FC4" opacity="0.85" stroke="#0A5F86" stroke-width="1.5"/>
+          <text x="255" y="184" text-anchor="middle" font-family="'Inter',sans-serif" font-size="11" font-weight="600" fill="#fff">Sony</text>
+          <!-- Mobileye AV -->
+          <circle cx="610" cy="290" r="18" fill="#5FB63F" opacity="0.8" stroke="#3B7B22" stroke-width="1.5"/>
+          <text x="610" y="294" text-anchor="middle" font-family="'Inter',sans-serif" font-size="10" font-weight="600" fill="#fff">Mobileye</text>
+          <!-- RealSense robot depth niche right-mid -->
+          <circle cx="700" cy="230" r="17" fill="#5FB63F" opacity="0.8" stroke="#3B7B22" stroke-width="1.5"/>
+          <text x="700" y="234" text-anchor="middle" font-family="'Inter',sans-serif" font-size="9" font-weight="600" fill="#fff">RealSense</text>
+          <!-- Basler low-left -->
+          <circle cx="200" cy="340" r="15" fill="#8FA3B5" opacity="0.85"/>
+          <text x="200" y="344" text-anchor="middle" font-family="'Inter',sans-serif" font-size="9.5" font-weight="600" fill="#fff">Basler</text>
+          <!-- China cheap bottom-left -->
+          <circle cx="140" cy="385" r="19" fill="#C33A2B" opacity="0.75" stroke="#9A2C1F" stroke-width="1.5"/>
+          <text x="140" y="382" text-anchor="middle" font-family="'Inter',sans-serif" font-size="9" font-weight="600" fill="#fff">중국 저가</text>
+          <text x="140" y="394" text-anchor="middle" font-family="'Inter',sans-serif" font-size="8" font-weight="500" fill="#fff">Hikrobot·Huaray</text>
+        </svg>
+        <figcaption>그림 7-2. 경쟁 포지셔닝 맵 <span class="mk mk-est">추정</span>(리서치 데이터 정성 판정 배치). 버블 크기 = 대략적 규모/영향력. 오른쪽 위 = 구조적 유리(파트 11 순위와 연결).</figcaption>
+      </div>
+    </figure>
+
+    <h3 class="sub">7.3 투자 가능 유니버스 지도 (상장 티커)</h3>
+    <div class="tw">
+      <table>
+        <caption>표 7-3. 투자 가능 유니버스 — 국가별</caption>
+        <thead><tr><th style="min-width:80px">지역</th><th style="min-width:360px">상장 티커</th></tr></thead>
+        <tbody>
+          <tr><td><strong>미국</strong></td><td>CGNX(Cognex) · TDY(Teledyne) · MBLY(Mobileye) · NVDA(NVIDIA) · ON(onsemi) · ZBRA(Zebra)</td></tr>
+          <tr><td><strong>일본</strong></td><td>6861(Keyence) · 6758(Sony) · 6645(Omron) · Canon · Panasonic</td></tr>
+          <tr><td><strong>한국</strong></td><td>005930(삼성) · 000660(SK하이닉스) · 011070(LG이노텍) · 100120(Vieworks)</td></tr>
+          <tr><td><strong>유럽</strong></td><td>STM(STMicro) · BSL.DE(Basler) · Jenoptik · ams-OSRAM</td></tr>
+          <tr><td><strong>중국</strong></td><td>603501(Will/OmniVision) · 002415(Hikvision) · 002236(Dahua) · 688686(OPT)</td></tr>
+          <tr><td><strong>비상장</strong></td><td>RealSense · MVTec · Figure · Physical Intelligence · Skild · Orbbec · Mech-Mind · Zivid · Photoneo(Zebra 산하)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box insight">
+      <div class="box-lbl"><span>◎ 다리의 시작점 (파트 11에서 완성)</span></div>
+      <p>깊게 볼 후보: <strong>키엔스</strong>(이익 풀 정점) · <strong>NVIDIA</strong>(로봇 컴퓨트 락인) · <strong>Sony</strong>(CIS 리더·자동차 확대) · <strong>Cognex</strong>(코어 순수주·꿈 프리미엄) · <strong>Mobileye</strong>(AV 인지 옵션) · <strong>Vieworks</strong>(한국 고해상 검사).</p>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== PART 8 : ROADMAP ===================== -->
+<section class="part" id="roadmap">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">08</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Tech Roadmap & Innovation</div>
+        <h2 class="part-title">기술 로드맵과 혁신 동향</h2>
+        <div class="part-dial"><span class="dialtag">▲ 기술모드</span></div>
+      </div>
+    </div>
+
+    <p class="lead">기술 로드맵은 세 방향으로 수렴한다: <strong>센서 안으로 지능이 들어가고(온다이 AI)</strong>, <strong>3D가 실시간·고해상·저가를 동시 달성</strong>하려 하며, <strong>VLA 파운데이션 모델이 일반화</strong>된다. 병목은 데이터·엣지 전력·안전이다.</p>
+
+    <h3 class="sub">8.1 차세대 방향과 병목</h3>
+    <ul class="clean">
+      <li><strong>온센서/온다이 AI</strong> — 센서 내 추론(Sony·OmniVision 스택형 + 로직). 엣지 저지연.</li>
+      <li><strong>3D 실시간·고해상·저가 동시</strong> — 구조광/ToF/스테레오 융합, 패시브 양안(UBTECH).</li>
+      <li><strong>SWIR/하이퍼스펙트럴</strong> — 배터리·반도체·식품 오염·재료 이상. Teledyne Kaleido SWIR.</li>
+      <li><strong>VLA 파운데이션 모델 일반화</strong> — System 1/2, 소형 증류 모델(50Hz 추론 비용 절감).</li>
+      <li><strong>능동 비전</strong> — EyeVLA(회전/줌 로봇 안구, 강화학습), Depth Anything 3, occupancy network.</li>
+      <li><strong>월드 파운데이션 모델</strong> — NVIDIA Cosmos(합성 데이터), 시뮬레이션(Isaac Sim/Lab, MuJoCo, Genesis).</li>
+    </ul>
+    <p style="font-size:13.5px;color:var(--ink-2)"><strong>병목</strong>: 로봇 시연 데이터 부족, 엣지 컴퓨트 전력/지연, 안전·신뢰성, 3D 반사/투명 표면.</p>
+
+    <h3 class="sub">8.4 핵심 기술 TRL — 성숙도 판정</h3>
+    <p>코어 검사 기술은 TRL 8~9(완전 상용)인 반면, <strong>VLA 휴머노이드 인지는 TRL 4~6(프로토타입~초기 파일럿)</strong>에 머문다. 이 격차가 "꿈"의 3P 판정(possible→plausible)과 정확히 일치한다.</p>
+    <figure>
+      <div class="chart-card">
+        <p class="chart-title">핵심 기술 TRL(성숙도 1–9) <span style="font-size:11px;color:var(--ink-3);font-family:'JetBrains Mono',monospace">추정</span></p>
+        <p class="chart-sub">검사 기술은 성숙(8–9), 로봇 인지 프론티어는 초기(3–6)</p>
+        <svg class="chart" viewBox="0 0 900 460" role="img" aria-label="기술별 TRL 수평 막대">
+          <!-- x scale TRL 1..9, plot 250(0)->860(9) => 67.8px per level -->
+          <line x1="250" y1="420" x2="860" y2="420" stroke="#43525F" stroke-width="1.5"/>
+          <g font-family="'JetBrains Mono',monospace" font-size="10" fill="#8FA3B5" text-anchor="middle">
+            <text x="250" y="438">0</text>
+            <text x="453" y="438">3 (프로토타입)</text><line x1="453" y1="30" x2="453" y2="420" stroke="#EDF1F4" stroke-dasharray="3 4"/>
+            <text x="657" y="438">6 (파일럿)</text><line x1="657" y1="30" x2="657" y2="420" stroke="#EDF1F4" stroke-dasharray="3 4"/>
+            <text x="860" y="438">9 (상용)</text><line x1="860" y1="30" x2="860" y2="420" stroke="#EDF1F4" stroke-dasharray="3 4"/>
+          </g>
+          <!-- bars : y start 40, h 28, gap 12 ; width=trl*67.8 -->
+          <g font-family="'Inter',sans-serif" font-size="12">
+            <!-- 2D rule 9 -->
+            <rect x="250" y="40" width="610" height="26" rx="4" fill="#0A5F86"/><text x="246" y="58" text-anchor="end" fill="#16202B">2D 룰기반 MV</text><text x="850" y="58" text-anchor="end" fill="#fff" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">9</text>
+            <!-- BSI 9 -->
+            <rect x="250" y="80" width="610" height="26" rx="4" fill="#0A5F86"/><text x="246" y="98" text-anchor="end" fill="#16202B">CMOS 스택형 BSI 센서</text><text x="850" y="98" text-anchor="end" fill="#fff" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">9</text>
+            <!-- DL inspect 8.5 -->
+            <rect x="250" y="120" width="576" height="26" rx="4" fill="#1E7FC4"/><text x="246" y="138" text-anchor="end" fill="#16202B">딥러닝 산업 검사(HALCON/ViDi)</text><text x="816" y="138" text-anchor="end" fill="#fff" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">8~9</text>
+            <!-- 3D 8 -->
+            <rect x="250" y="160" width="542" height="26" rx="4" fill="#1E7FC4"/><text x="246" y="178" text-anchor="end" fill="#16202B">3D 비전(구조광/ToF/스테레오)</text><text x="782" y="178" text-anchor="end" fill="#fff" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">7~9</text>
+            <!-- ADAS L2+ 8 -->
+            <rect x="250" y="200" width="542" height="26" rx="4" fill="#1E7FC4"/><text x="246" y="218" text-anchor="end" fill="#16202B">카메라 L2+ ADAS(Mobileye)</text><text x="782" y="218" text-anchor="end" fill="#fff" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">8</text>
+            <!-- SWIR 7 -->
+            <rect x="250" y="240" width="475" height="26" rx="4" fill="#12A6A0"/><text x="246" y="258" text-anchor="end" fill="#16202B">SWIR/하이퍼스펙트럴</text><text x="715" y="258" text-anchor="end" fill="#fff" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">6~8</text>
+            <!-- L4 robotaxi 6.5 -->
+            <rect x="250" y="280" width="441" height="26" rx="4" fill="#E0B105"/><text x="246" y="298" text-anchor="end" fill="#16202B">완전자율(L4/L5) 로보택시</text><text x="681" y="298" text-anchor="end" fill="#fff" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">6~7</text>
+            <!-- VLA humanoid 5 -->
+            <rect x="250" y="320" width="339" height="26" rx="4" fill="#EE7C11"/><text x="246" y="338" text-anchor="end" fill="#B4560A" font-weight="600">VLA 휴머노이드 인지</text><text x="579" y="338" text-anchor="end" fill="#fff" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">4~6</text>
+            <!-- active vision 4 -->
+            <rect x="250" y="360" width="271" height="26" rx="4" fill="#C33A2B"/><text x="246" y="378" text-anchor="end" fill="#9A2C1F" font-weight="600">능동비전·월드모델</text><text x="511" y="378" text-anchor="end" fill="#fff" font-family="'JetBrains Mono',monospace" font-size="11" font-weight="700">3~5</text>
+          </g>
+        </svg>
+        <figcaption>그림 8-1. 핵심 기술 TRL <span class="mk mk-est">추정</span>. 출처: 리서치 데이터 판정. 검사(청색)는 성숙, 로봇 프론티어(주황·적색)는 초기 — 투자 시점 판단의 핵심 좌표.</figcaption>
+      </div>
+    </figure>
+
+    <h3 class="sub">8.3 최근 돌파 (1차 자료 우선)</h3>
+    <div class="tw">
+      <table>
+        <caption>표 8-1. 최근 기술 돌파</caption>
+        <thead><tr><th style="min-width:100px">기업</th><th style="min-width:340px">돌파</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Sony</strong></td><td>IMX925(스택형 394fps 산업), IMX828(2025, 자동차 최초 MIPI APHY), LYT-828/818.</td></tr>
+          <tr><td><strong>onsemi</strong></td><td>Hyperlux ID(2025.3, 실시간 iToF 30m 산업).</td></tr>
+          <tr><td><strong>OmniVision</strong></td><td>OV50X(110dB HDR), 9MP 글로벌셔터 산업(2024).</td></tr>
+          <tr><td><strong>Cognex</strong></td><td>OneVision(2025, 클라우드 AI MV), DataMan 290/390, In-Sight 3800/L38.</td></tr>
+          <tr class="hl"><td><strong>NVIDIA</strong></td><td>GR00T N1(2025.3)/N1.6/N1.7/N2, Jetson Thor(2025), Isaac GR00T Reference Humanoid(Unitree H2+Sharpa hands, 2026).</td></tr>
+          <tr><td><strong>Mobileye</strong></td><td>EyeQ6 High(10x fps vs EyeQ5), imaging radar, EyeQ8 개발 개시("mind-off").</td></tr>
+          <tr><td><strong>Zebra·Teledyne</strong></td><td>Photoneo 구조광 3D 통합(2025) · Kaleido SWIR·Z-Trak 3D·BOA 3 AI 스마트카메라.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub">8.5 표준 전쟁과 함의</h3>
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--accent-deep)"><span>◈ 인터페이스 & 로봇 컴퓨트</span></div>
+        <p>인터페이스(GigE Vision·CoaXPress·USB3·Camera Link HS·MIPI CSI-2)는 공동 거버넌스(G3)로 <em>하드웨어 범용화</em>. 반면 로봇 컴퓨트는 <strong>NVIDIA Jetson/Isaac/CUDA 사실상 표준화</strong> vs 대안(Qualcomm, 자체) — 락인 심화.</p>
+      </div>
+      <div class="box">
+        <div class="box-lbl" style="color:var(--signal-deep)"><span>◈ VLA 오픈 vs 폐쇄 / 센서 노선</span></div>
+        <p>OpenVLA·Hugging Face LeRobot(오픈) vs Figure Helix(폐쇄). NVIDIA GR00T는 오픈+상용 라이선스. <strong>카메라 중심(Tesla/Mobileye) vs 센서퓨전(LiDAR+radar+카메라)</strong> 노선 대립 — 노선 전환 시 특정 센서 플레이어 타격.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== PART 9 : POLICY ===================== -->
+<section class="part" id="policy">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">09</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Regulation · Policy · Geopolitics</div>
+        <h2 class="part-title">규제·정책·지정학</h2>
+        <div class="part-dial"><span class="dialtag">◆ 산업모드</span></div>
+      </div>
+    </div>
+
+    <p class="lead">머신비전에서 규제는 종종 <strong>수요를 규정</strong>한다(자동차 안전 의무화가 차량당 카메라 수를 늘린다). 그리고 반전 포인트 — <strong>CIS는 첨단 반도체와 달리 수출통제에 면역</strong>이라, 지정학이 오히려 안정 요인이다.</p>
+
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--accent-deep)"><span>◈ 수요를 규정하는 규제</span></div>
+        <p><strong>자동차 안전 의무화</strong>: 미 NHTSA 후방카메라 의무(전 신차), 보행자 안전·충돌회피 강화 → 차량당 이미징 모듈 증가. EU 카메라 기반 ADAS 요구. → 자동차 CIS CAGR 9.4%. <strong>제품 책임/품질</strong>(EU): 고해상 센서·AI 분류기 투자 유인. <strong>의료기기</strong>(FDA AI 가이던스). <strong>로봇 안전</strong>: 인간-로봇 협업 규정(휴머노이드 배치 전제, 아직 비공식).</p>
+      </div>
+      <div class="box">
+        <div class="box-lbl" style="color:var(--signal-deep)"><span>◈ 정부 정책·보조금</span></div>
+        <p><strong>중국 "Made in China 2025/2026"</strong>: 자동화·국산화 국가전략 → MV 부품 국산화 70%+ 견인. <strong>미국</strong>: CHIPS Act, 리쇼어링, NVIDIA 주도 "재산업화 with Physical AI". <strong>한국</strong>: 스마트팩토리 MV/AOI 실증·보조금, 산업 AI용 <em>공통 결함 데이터셋 구축·표준화</em>(정부 주도, Vieworks 제언). <strong>인도</strong>: "Make in India". </p>
+      </div>
+    </div>
+
+    <div class="box thesis-box">
+      <div class="box-lbl"><span>▶ 9.3 지정학 — CIS의 수출통제 면역 (핵심)</span></div>
+      <p>"US-China 무역전쟁의 CIS 영향 <strong>제한적</strong> — CIS는 <em>성숙노드(22~180nm)</em> 사용, 첨단 수출통제 대상 아님"(Yole). 중국 CIS 공급사(SmartSens·GalaxyCore) 하이브리드 전략으로 공급망 안정. → <strong>MV/CIS는 첨단 반도체 대비 지정학 리스크 낮음.</strong> 단, 진짜 리스크는 <em>300mm 웨이퍼 공급 제약</em>(수요가 공급 8% 초과, 자동차급 +12%)과 <strong>로봇 두뇌 컴퓨트</strong>(NVIDIA GPU는 수출통제 영향권 → 중국 로봇사 컴퓨트 조달 리스크·자체칩 유인)다.</p>
+    </div>
+
+    <h3 class="sub">9.4–9.5 ESG & 결정적 산업 여부</h3>
+    <ul class="clean">
+      <li><strong>ESG</strong> — 지속가능성이 카메라 업그레이드 결정의 33%에 영향, 저전력 센서 지정 29%.</li>
+      <li><strong>사이버보안</strong> — 네트워크 연결 비전(35만 카메라 중 9% 침입 시도) → 보안 프로토콜·VLAN 업그레이드(설치당 ~$1,200).</li>
+      <li><strong>정책 결정적 영역</strong> — 반도체·배터리·자동차 MV(안전 의무화·품질 규제가 수요 규정). CIS(수출통제 면역이 안정 요인). 로봇 프론티어(안전·노동·데이터 규제가 배치 속도 좌우, 형성 중).</li>
+    </ul>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== PART 10 : RISK ===================== -->
+<section class="part" id="risk">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">10</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Risks & Disruption</div>
+        <h2 class="part-title">리스크와 파괴 요인</h2>
+        <div class="part-dial"><span class="dialtag">★ 공통</span></div>
+      </div>
+    </div>
+
+    <p class="lead">이 산업의 <strong>최대 고유 리스크는 "가치 이탈"</strong>이다 — 센서·카메라 순수주를 사도 로봇/피지컬 AI 업사이드를 못 잡을 수 있다. 업사이드는 NVIDIA·파운데이션 모델·수직통합 로봇사·데이터 소유자에게 간다.</p>
+
+    <h3 class="sub">10.1 대체·기술 전환 위협 (크리스텐슨 — 사후 과잉적용 경계)</h3>
+    <ul class="clean">
+      <li><strong>파운데이션 모델/오픈소스가 상용 비전 SW 침식</strong> — OpenCV + SAM/Depth Anything이 클래식 비전 SW(HALCON·VisionPro) 해자 잠식 가능. 방어선 = 산업 통합(PLC·필드버스)·결정론·지원·데이터.</li>
+      <li><strong>카메라 중심 vs 센서퓨전/LiDAR</strong> — 노선 전환 시 특정 센서 플레이어 타격.</li>
+      <li><strong>범용 센서의 로봇 인지 진입</strong> — 스마트폰급 저가 센서가 로봇에 충분해지면 전용 로봇 센서(고마진) 무력화.</li>
+    </ul>
+    <div class="box warn">
+      <div class="box-lbl"><span>⚠ 회의주의 (프레임워크 한계)</span></div>
+      <p>크리스텐슨 파괴는 <em>사후 과잉적용</em> 위험이 크다 — 상용 SW/전용 센서가 실제로 파괴될지는 통합·안전·데이터 해자에 달렸다. <strong>단정 금지.</strong></p>
+    </div>
+
+    <div class="box thesis-box">
+      <div class="box-lbl"><span>▶ 10.4 가치 이탈 리스크 — 이 산업 고유 최대 리스크</span></div>
+      <p>가치가 하드웨어→AI/데이터/컴퓨트로 이동한다: "몸통 없는 AI에 $10억+ 수표", "가치가 광학→픽셀→알고리즘으로". <strong>센서·카메라 순수주를 사도 로봇/피지컬 AI 업사이드를 못 잡을 수 있다.</strong> 게다가 <em>Tesla식 데이터 플라이휠 독점</em>이 승부처면 데이터 없는 하드웨어 공급사는 소외된다. → 투자 시 "이 기업이 가치 이동의 수혜/피해 어느 쪽인가"를 반드시 판정해야 한다.</p>
+    </div>
+
+    <h3 class="sub">10.2–10.3 범용화 · 수요 리스크</h3>
+    <div class="cols2">
+      <div class="box conflict">
+        <div class="box-lbl"><span>▼ 범용화·중국 저가</span></div>
+        <p>카메라·조명 국산화 90%, Hikrobot·Huaray·SmartSens·GalaxyCore·Unitree(R1 $5,900)가 가격 파괴. 서구 하드웨어 순수주 마진 압박. 센서 ASP 하락(Mobileye EyeQ −$0.50/개). 표준 카메라·조명·프레임그래버는 이미 범용화.</p>
+      </div>
+      <div class="box conflict">
+        <div class="box-lbl"><span>▼ 수요 리스크</span></div>
+        <p><strong>경기민감</strong>: Cognex 자동차 약세, Mobileye 2024 재고조정 −20%(2.1B→1.65B). <strong>중소기업 미침투</strong>: 49%가 초기비용 장벽(고해상 카메라 +38%, 통합 +42%, 숙련공 부족 51%). <strong>꿈 지연</strong>: 휴머노이드가 "영원한 5년 후"가 될 위험(자율주행 선례).</p>
+      </div>
+    </div>
+
+    <h3 class="sub">10.5 리스크별 발생확률 · 시장가격 반영도</h3>
+    <div class="tw">
+      <table>
+        <caption>표 10-1. 리스크 매트릭스 <span class="mk mk-est">추정</span> — "미반영" 리스크가 진짜 위험</caption>
+        <thead><tr><th style="min-width:170px">리스크</th><th style="min-width:110px">발생확률</th><th style="min-width:230px">시장가격 반영도</th></tr></thead>
+        <tbody>
+          <tr><td>중국 저가 범용화</td><td><span class="dir down">높음 ~70%</span></td><td>부분 반영(중국주 저평가, 서구주 프리미엄엔 미반영)</td></tr>
+          <tr class="hl"><td>파운데이션 모델의 SW 침식</td><td><span class="dir mix">중 ~40%</span></td><td><strong>미반영</strong>(상용 SW 프리미엄 유지)</td></tr>
+          <tr class="hl"><td>가치의 AI/데이터 이탈</td><td><span class="dir down">높음 ~65%</span></td><td>부분(NVIDIA 프리미엄엔 반영, 센서주엔 미반영)</td></tr>
+          <tr><td>경기·CapEx 사이클</td><td><span class="dir down">높음(반복)</span></td><td>대체로 반영</td></tr>
+          <tr class="hl"><td>휴머노이드 지연</td><td><span class="dir mix">중~높음</span></td><td><strong>미반영</strong>(꿈 프리미엄 과열, Figure 15배/18개월)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink-2)">핵심: <strong>확률이 높은데 가격에 미반영된 리스크</strong>(SW 침식·가치 이탈·휴머노이드 지연)가 진짜 위험이다. 반대로 경기 사이클은 이미 반영되어 있어 저점이 기회일 수 있다.</p>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- BAND before investment -->
+<section class="band">
+  <div class="wrap">
+    <div class="eyebrow">Investment Layer · 투자 관점 종합</div>
+    <h2 style="font-size:clamp(24px,3.4vw,34px);margin:0 0 14px;max-width:24ch">이익 풀 지도를 투자 순위로 번역한다</h2>
+    <p style="max-width:62ch;font-size:16px">순위는 <strong>단호하게</strong>, 타이밍은 <strong>과신하지 않는다</strong>. 아래는 구조적·상대적 매력도 순위이지 "지금 사라"는 진입 타이밍 콜이 아니다. 근거 = 이익 풀 위치 + 해자 + 성장 여력 + 진입장벽.</p>
+  </div>
+</section>
+
+<!-- ===================== PART 11 : INVESTMENT ===================== -->
+<section class="part" id="invest">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">11</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Investment Synthesis · 어디에 기회가 있는가</div>
+        <h2 class="part-title">투자 관점 종합</h2>
+        <div class="part-dial"><span class="dialtag">★ 공통</span></div>
+      </div>
+    </div>
+
+    <p class="lead"><strong>이익이 고이는 곳</strong>: ① 인지 컴퓨트/AI(NVIDIA), ② 통합 시스템+SW+직판(키엔스), ③ 고급 광학/전문 3D SW, ④ 데이터 플라이휠 소유자. <strong>안 고이는 곳</strong>: 범용 카메라·조명·프레임그래버·범용 센서.</p>
+
+    <h3 class="sub">11.2 하위 섹터·구간 구조적 매력도 순위 (매수 강도)</h3>
+    <div class="ladder">
+      <div class="rung top">
+        <div class="rk"></div>
+        <div class="body"><h5>인지 컴퓨트·AI 플랫폼 (NVIDIA)</h5>
+          <p>풀스택 락인, 데이터·생태계 해자, 로봇 프론티어 최대 풀, 준독점. <strong>가장 구조적으로 유리.</strong> 단, MV 코어 순수 노출은 아님 — 반도체 대형주.</p></div>
+      </div>
+      <div class="rung">
+        <div class="rk"></div>
+        <div class="body"><h5>통합 시스템 + 애플리케이션 SW + 직판 (키엔스)</h5>
+          <p>51% 마진, 무차입·고ROIC, 팹리스 자본효율, 가격결정력, 3D 리더. <strong>코어 MV 최고.</strong></p></div>
+      </div>
+      <div class="rung">
+        <div class="rk"></div>
+        <div class="body"><h5>고급 광학/렌즈 + 전문 3D 비전 SW (MVTec·고급 렌즈·Zivid/Photoneo)</h5>
+          <p>높은 진입장벽(50년 노하우), 픽셀 미세화로 병목 강화, SW "지능 계층" 최고 성장. 다수 비상장/사모.</p></div>
+      </div>
+      <div class="rung">
+        <div class="rk"></div>
+        <div class="body"><h5>로봇 인지 하드웨어 순수 지배자 (RealSense·Mobileye)</h5>
+          <p>니치 지배(AMR 60%/휴머노이드 80%; AV 인지)이나 시장 규모 작고 ASP 압력·가치 이탈 위험. <strong>옵션성 높으나 변동성.</strong></p></div>
+      </div>
+      <div class="rung">
+        <div class="rk"></div>
+        <div class="body"><h5>이미지센서 리더 (Sony·삼성)</h5>
+          <p>과점·기술장벽이나 자본집약·스마트폰 ASP 사이클·중국 추격. <strong>안정적이나 폭발력 제한.</strong></p></div>
+      </div>
+      <div class="rung">
+        <div class="rk"></div>
+        <div class="body"><h5>범용 카메라/조명/부품</h5>
+          <p>범용화·중국 저가. <strong>구조적 최하위.</strong></p></div>
+      </div>
+    </div>
+
+    <h3 class="sub">11.3 통상 밸류에이션 방식 & 섹터 멀티플 역산</h3>
+    <div class="tw">
+      <table>
+        <caption>표 11-1. 실측 멀티플 — Cognex의 "꿈 프리미엄"</caption>
+        <thead><tr><th style="min-width:120px">기업</th><th class="num">P/E</th><th class="num">EV/EBITDA</th><th style="min-width:180px">해석</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>Keyence</strong></td><td class="num">~31</td><td class="num">P/S ~12</td><td>실적(51% 마진·고성장)이 멀티플 뒷받침 — "실적 기반".</td></tr>
+          <tr class="hl"><td><strong>Cognex</strong></td><td class="num">~37–42x<br><small>(선행)</small></td><td class="num">~32–49x</td><td>하드웨어 중앙값 16x의 <strong>2~3배 프리미엄</strong>. ROIC 6.15%·5년 매출 정체 → 상당한 "꿈" 프리미엄(옵션 가치).</td></tr>
+          <tr><td>하드웨어 중앙값</td><td class="num">—</td><td class="num">~16x</td><td>순수 하드웨어 기준선.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box insight">
+      <div class="box-lbl"><span>◎ 역산 (정성) — 섹터 컨텍스트 (기업 프로젝트 CAP 입력용)</span></div>
+      <p>Cognex의 EV/EBITDA ~32–49x는 하드웨어 평균의 2~3배 → 시장이 <strong>AI/로봇 성장·마진 회복을 강하게 프라이싱</strong>한다. 그러나 ROIC 6%·5년 정체를 감안하면 <em>기대가 선반영</em>됐다. 키엔스는 실적이 멀티플을 뒷받침(더 정당화 용이). → 코어 MV는 "성숙 저성장 코어 + 고성장 3D/AI/로봇 옵션"의 이중 구조로, <strong>순수 하드웨어는 하드웨어 멀티플, 통합/SW/컴퓨트는 프리미엄 멀티플</strong>이 합리적이다.</p>
+    </div>
+
+    <h3 class="sub">11.4 승자·패자를 가르는 KPI</h3>
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--pos)"><span>▲ 승자 요건</span></div>
+        <p>(a) 통합/애플리케이션 전문성(엔지니어·직판), (b) SW/AI 알고리즘 IP, (c) <strong>데이터 플라이휠 소유</strong>, (d) 컴퓨트/생태계 락인, (e) 고급 광학/센서 기술장벽, (f) 자본효율(팹리스).</p>
+      </div>
+      <div class="box">
+        <div class="box-lbl" style="color:var(--neg)"><span>▼ 패자 요건</span></div>
+        <p>범용 하드웨어 순수 의존, 중국 저가 노출, 데이터·AI 무소유, 가격결정력 부재.</p>
+      </div>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink-2)"><strong>추적 KPI</strong>: 영업이익률·ROIC(이익 풀 위치), SW/서비스 매출 비중(믹스), 3D·AI 제품 비중, 신규 응용(로봇·물류) 수주, 자동차/반도체 CapEx 사이클, 중국 국산화율·ASP, 로봇 배치 대수·데이터 규모.</p>
+
+    <h3 class="sub">11.6 기업 분석 프로젝트로 핸드오프</h3>
+    <div class="tw">
+      <table>
+        <caption>표 11-2. 깊게 볼 기업 + 볼 관점 — 기업 분석 프로젝트로 넘김</caption>
+        <thead><tr><th style="min-width:130px">기업 (티커)</th><th style="min-width:360px">볼 관점</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>Keyence</strong> (6861.T)</td><td>51% 마진·팹리스·직판의 지속가능성, 3D/AI 확장, 밸류에이션(P/E 31의 정당성), 중국 리스크. <em>코어 이익 풀 정점.</em></td></tr>
+          <tr class="hl"><td><strong>NVIDIA</strong> (NVDA)</td><td>로봇 컴퓨트 락인의 지속성, 피지컬 AI TAM 실현 속도, GR00T/Isaac 생태계 해자, 밸류에이션. <em>로봇 두뇌 지배.</em></td></tr>
+          <tr><td><strong>Sony</strong> (6758.T)</td><td>I&SS SOTP, 자동차 센서 점유 확대, 팹 증설·TSMC, 스마트폰 ASP 사이클. <em>CIS 리더.</em></td></tr>
+          <tr><td><strong>Cognex</strong> (CGNX)</td><td>꿈 프리미엄(EV/EBITDA 32~49x) vs ROIC 6% 괴리, AI(OneVision)·물류 성장, 마진 회복, 자동차 회복. <em>코어 순수주 리레이팅 논쟁.</em></td></tr>
+          <tr><td><strong>Mobileye</strong> (MBLY)</td><td>카메라 중심 AV 인지의 옵션 가치, EyeQ6/로보택시 실현, 중국 ASP 압력, Intel 지분 오버행. <em>AV 인지 옵션.</em></td></tr>
+          <tr><td><strong>Vieworks</strong> (100120.KQ)</td><td>반도체·디스플레이·배터리 검사 수직통합, 고해상 카메라 경쟁력, 국내 정책 수혜. <em>한국 검사 순수주.</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== IMPACT BRIDGE ===================== -->
+<section class="part" id="bridge">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">→</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Company Impact Bridge · 티커 단위</div>
+        <h2 class="part-title">기업 임팩트 다리</h2>
+      </div>
+    </div>
+    <p class="lead">"로봇의 눈" 부상과 코어 MV 성숙이 각 기업에 미칠 <strong>방향·자릿수(정성)</strong>. 이 다리를 건너 기업 분석 프로젝트로 넘어간다.</p>
+    <div class="tw">
+      <table>
+        <caption>표. 기업 임팩트 — 수혜·피해·중립</caption>
+        <thead><tr><th style="min-width:150px">티커/기업</th><th style="min-width:110px">방향</th><th style="min-width:300px">자릿수·논리</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>NVDA</strong> (NVIDIA)</td><td><span class="dir up">수혜(강)</span></td><td>로봇 컴퓨트/두뇌 지배 → 피지컬 AI TAM 최대 포획. 매출 기여는 로봇이 아직 소액이나 옵션 가치 큼.</td></tr>
+          <tr class="hl"><td><strong>6861.T</strong> (Keyence)</td><td><span class="dir up">수혜(중)</span></td><td>3D·AI 확장, 로봇 안내 수요. 코어 성숙이나 이익 풀 정점 유지.</td></tr>
+          <tr><td><strong>6758.T</strong> (Sony)</td><td><span class="dir up">수혜(중)</span></td><td>로봇·자동차·산업 센서 수요 증가. 단 스마트폰 의존·범용화로 자릿수 제한.</td></tr>
+          <tr><td><strong>MBLY</strong> (Mobileye)</td><td><span class="dir mix">수혜/중립(변동)</span></td><td>AV 인지 옵션 크나 경쟁·중국 ASP·타이밍 리스크.</td></tr>
+          <tr><td><strong>CGNX</strong> (Cognex)</td><td><span class="dir mix">수혜/중립(양면)</span></td><td>물류·AI·로봇 성장 수혜 vs 가치 이탈·꿈 선반영 리스크. 리레이팅 논쟁.</td></tr>
+          <tr><td><strong>STM · ON</strong></td><td><span class="dir upmid">수혜(약)</span></td><td>자동차 ToF/센서 수요. 니치.</td></tr>
+          <tr><td><strong>100120.KQ</strong> (Vieworks)</td><td><span class="dir up">수혜(중, 국내)</span></td><td>반도체·배터리·디스플레이 검사 CapEx.</td></tr>
+          <tr><td><strong>603501.SH</strong> (OmniVision)</td><td><span class="dir mix">혼재</span></td><td>자동차/로봇 센서 수혜 vs 중국 경쟁·ASP.</td></tr>
+          <tr><td><strong>TDY</strong> (Teledyne)</td><td><span class="dir neu">중립~수혜(약)</span></td><td>이미징 광범위, MV는 일부. SWIR·3D 성장.</td></tr>
+          <tr><td><strong>ZBRA</strong> (Zebra)</td><td><span class="dir upmid">수혜(약)</span></td><td>물류 MV·3D(Photoneo).</td></tr>
+          <tr><td>범용 카메라/조명/중국 저가</td><td><span class="dir down">피해/압박</span></td><td>범용화·마진 소멸.</td></tr>
+          <tr><td><strong>하드웨어 순수주 일반</strong></td><td><span class="dir mix">양면 리스크</span></td><td>가치가 AI/데이터로 이탈 시 업사이드 소외.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== PART 12 : LIMITS ===================== -->
+<section class="part" id="limits">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">12</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Limitations & Assumptions · 비판적 사고 Rule 4</div>
+        <h2 class="part-title">한계와 가정</h2>
+        <div class="part-dial"><span class="dialtag">★ 공통</span></div>
+      </div>
+    </div>
+
+    <h3 class="sub">12.1 이 분석이 의존하는 핵심 가정</h3>
+    <ul class="num">
+      <li><strong>가치 이동 명제</strong> — "센서 하드웨어 범용화, 가치는 AI·컴퓨트·데이터로 이동"이 지속된다는 가정. <em>반증 가능</em>: 전용 고성능 센서가 계속 프리미엄을 지키거나, 하드웨어가 병목으로 남을 수 있음.</li>
+      <li><strong>꿈의 실현 궤적</strong> — 피지컬 AI/휴머노이드가 possible→plausible→probable로 진전한다는 가정. <em>자율주행식 지연 시 무효.</em></li>
+      <li><strong>시장 규모의 정의 일관성</strong> — 코어 MV $14–16B(2025)를 중앙값으로 채택. <em>정의(시스템 vs 이미징)에 따라 2~3배 변동.</em></li>
+    </ul>
+
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--warn)"><span>◑ 12.2 확신도 낮은 지점</span></div>
+        <p><strong>이익 풀 단계별 정량</strong>: 단계별 이익률/규모는 실측 마진(키엔스 51% 등) + EqualOcean "상류 80% 가치"에 기반한 <em>정성·추정</em>. 정밀 이익 풀 수치 미확보. <strong>로봇 비전 HW TAM</strong>: 대당 $500~2,000은 추정, 정확 BOM 미확보. <strong>비상장 재무</strong>: RealSense·MVTec·Figure·Physical Intelligence 정확 매출·마진 미확보. <strong>Basler·중국·한국 세부 재무</strong> 일부 미확보.</p>
+      </div>
+      <div class="box conflict">
+        <div class="box-lbl"><span>◭ 12.3 이 결론이 틀릴 수 있는 조건</span></div>
+        <p>전용 고성능 센서가 로봇에서 프리미엄 지속 → "하드웨어 범용화" 명제 무효. 파운데이션 모델이 산업 검사 SW를 빠르게 대체 → HALCON/VisionPro 해자·키엔스 SW 프리미엄 붕괴. 휴머노이드 상업화 실패/지연 → 꿈 프리미엄 붕괴. 중국이 고급 렌즈·SW·CIS까지 국산화 → 상류 이익 풀 잠식.</p>
+      </div>
+    </div>
+
+    <h3 class="sub">12.4 다음 검증 단계</h3>
+    <ul class="clean">
+      <li>단계별 이익 풀 <strong>정량화</strong>(각 단계 매출·이익률 추정치 확보).</li>
+      <li>로봇 1대당 비전 시스템 <strong>BOM 분해</strong>(카메라 수·깊이센서·컴퓨트 원가).</li>
+      <li>비상장 핵심주(RealSense·MVTec) 재무 추정.</li>
+      <li>Basler·Hikvision/Hikrobot·OPT·Vieworks 정확 매출·MV 세그먼트.</li>
+      <li>KLA 등 반도체 검사(인접 최고부가) 규모·마진 확인.</li>
+      <li>Yole "Status of CIS 2025" 및 "Imaging for Industrial MV" 원문 수치.</li>
+      <li>파운데이션 모델의 산업 검사 침투 실증 사례.</li>
+    </ul>
+
+    <h3 class="sub">12.5 데이터 상충 목록</h3>
+    <div class="tw">
+      <table>
+        <caption>표 12-1. [상충] 항목 모음 — 채택 기준 명시</caption>
+        <thead><tr><th style="min-width:130px">항목</th><th style="min-width:280px">상충 내용</th><th style="min-width:130px">채택</th></tr></thead>
+        <tbody>
+          <tr><td><strong>코어 MV 시장</strong></td><td>Yole $6.9–7.8B(협의) vs M&M/BCC/Mordor $14–16B(2025) vs Grand View $20–42B(광의)</td><td class="num">$14–16B(2025) 중앙값</td></tr>
+          <tr><td><strong>CIS 점유율</strong></td><td>Sony "43.4%" vs "63.6%" (GMI 내부 병기)</td><td class="num">43–45%</td></tr>
+          <tr><td><strong>이미지센서 규모</strong></td><td>Yole $23.2B(2024) vs GMI $25.6B vs Mordor $30.94B vs Research Nester $33.6B</td><td class="num">CIS ~$23–26B(2024–25)</td></tr>
+          <tr><td><strong>휴머노이드 시장</strong></td><td>$2.92B(2025) vs $38B(2035,GS) vs $5T(2050,MS)</td><td class="num">시나리오로 제시</td></tr>
+          <tr><td><strong>산업 렌즈 시장</strong></td><td>$4.7B(2025) vs $7.1B(2022)→$19.9B(2032) vs $6.77B(2035)</td><td class="num">범위로 제시</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ===================== PART 13 : MONITORING ===================== -->
+<section class="part" id="monitor">
+  <div class="wrap">
+    <div class="part-head">
+      <div class="part-num">13</div>
+      <div class="part-titlewrap">
+        <div class="part-kicker">Checkpoints & Monitoring</div>
+        <h2 class="part-title">체크포인트와 모니터링</h2>
+        <div class="part-dial"><span class="dialtag">★ 공통</span></div>
+      </div>
+    </div>
+
+    <h3 class="sub">13.1 추적 핵심 지표 (선행지표 포함)</h3>
+    <div class="cols2">
+      <div class="box">
+        <div class="box-lbl" style="color:var(--accent-deep)"><span>◈ 선행지표</span></div>
+        <p>자동차·반도체·배터리 <strong>CapEx 사이클</strong>, 산업로봇 설치 대수(IFR), 신규 비전-로봇셀 수(2024 78,000셀), 휴머노이드 출하·배치 대수, 로봇 VC 유입액.</p>
+      </div>
+      <div class="box">
+        <div class="box-lbl" style="color:var(--accent-deep)"><span>◈ 이익 풀 / 가격·경쟁</span></div>
+        <p>각사 영업이익률·ROIC, SW/서비스 매출 비중, 3D·AI 제품 비중. 센서 ASP, 중국 국산화율, 중국주 vs 서구주 점유 이동. 300mm 웨이퍼 공급, 자동차급 센서 가격.</p>
+      </div>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink-2)"><strong>로봇 프론티어</strong>: VLA 모델 벤치마크(MolmoSpaces·RoboArena), 데이터셋 규모, RealSense/NVIDIA 채택.</p>
+
+    <h3 class="sub">13.2 촉매 캘린더 & 13.3 논지 변경 트리거</h3>
+    <div class="tw">
+      <table>
+        <caption>표 13-1. 촉매 캘린더 (2026)</caption>
+        <thead><tr><th style="min-width:110px">범주</th><th style="min-width:360px">일정</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><strong>양산·배치</strong></td><td>NVIDIA GR00T N2·Jetson Thor 양산, Mobileye EyeQ6 High 양산·로보택시(VW) 미국 배치, Boston Dynamics 신형 Atlas, Unitree 1~2만대, Figure BotQ 스케일업, 1X NEO 가정용, Sony 구마모토 팹 가동(말).</td></tr>
+          <tr><td><strong>학회</strong></td><td>NVIDIA GTC(3월) · ICRA · Automate(A3) · Vision(독일) · Image Sensors Asia · ISSCC/IEDM/VLSI(센서) · NeurIPS/CVPR(비전 AI).</td></tr>
+          <tr><td><strong>실적</strong></td><td>키엔스 · Cognex · Sony I&SS · Mobileye · NVIDIA (각 분기).</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box thesis-box">
+      <div class="box-lbl"><span>▶ 논지 변경 트리거 (이것이 바뀌면 결론을 수정한다)</span></div>
+      <p>① 파운데이션 모델의 산업 검사 상용 침투 가속 → SW 해자 재평가. ② 휴머노이드 상업 실패/사고 → 꿈 프리미엄 붕괴. ③ 중국의 고급 렌즈·SW·CIS 국산화 돌파 → 상류 이익 풀 재평가. ④ 전용 센서의 로봇 프리미엄 지속 입증 → "가치 이동" 명제 수정. ⑤ Cognex·Keyence 마진/성장 급변 → 코어 이익 풀 재판정.</p>
+    </div>
+    <p style="font-size:13.5px;color:var(--ink-2)"><strong>분기</strong>: 코어 MV 실적(자동차·반도체·물류 방향), CIS 점유·ASP, 로봇 배치·VC. <strong>연간</strong>: Yole CIS/Industrial MV 리포트, IFR 로봇 통계, 시장조사사 MV/휴머노이드 갱신, 휴머노이드 상업화 진전(3P 재판정).</p>
+
+    <div class="box insight" style="margin-top:34px">
+      <div class="box-lbl"><span>◎ 최종 요약 — 한 문장으로</span></div>
+      <p>머신비전은 <strong>성숙 코어(검사) + 고성장 옵션(3D·AI·로봇)</strong>의 이중 산업이며, 이익은 <strong>통합·SW·고급광학·인지 컴퓨트</strong>에 고이고 범용 하드웨어에는 고이지 않는다. "로봇의 눈" 꿈은 크지만(possible→plausible), 그 가치는 센서가 아니라 <strong>시각 피질(AI·데이터·컴퓨트)</strong>에서 포획된다. 구조적 순위는 <em>인지 AI·컴퓨트 &gt; 통합 시스템 &gt; 고급 광학/3D SW &gt; 로봇 인지 HW &gt; 이미지센서 &gt; 범용 부품</em>이다. 깊게 볼 기업은 키엔스·NVIDIA·Sony·Cognex·Mobileye·Vieworks — 기업 분석 프로젝트로 넘긴다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER / SOURCES ===================== -->
+<footer class="foot">
+  <div class="wrap">
+    <h4>출처 목록 (주요 — 발행처 · 문서 · 시점)</h4>
+    <div class="src-grid">
+      <div>
+        <h5>시장 규모</h5>
+        <p>MarketsandMarkets · Grand View Research · BCC Research(2026.1) · Mordor Intelligence · Yole Group("Imaging for Industrial MV 2024", "Status of CIS 2025") · Statista(Computer Vision) · Fortune Business Insights · SNS Insider · GM Insights · Research Nester · IMARC(South Korea MV).</p>
+      </div>
+      <div>
+        <h5>기업 재무 (1차)</h5>
+        <p>Keyence FY2025 Results(2026.4.24) · Cognex SEC 8-K/10-Q(Q1~Q4 2025) · Teledyne SEC ARS FY2025 · Sony SEC 20-F/6-K FY2025 · Mobileye SEC 8-K/10-Q FY2025 · EDINET · stockanalysis/GuruFocus/StockStory.</p>
+      </div>
+      <div>
+        <h5>기술</h5>
+        <p>Wikipedia(Machine vision, VLA) · LR-Link · Emergent Vision · FRAMOS · AMD · Zivid · Orbbec · Namuga · arXiv(VLA survey 2505.04769; Humanoid Occupancy 2507.20217) · MVTec · A3/Automate · Edmund Optics · internet-pros · LearnOpenCV.</p>
+      </div>
+      <div>
+        <h5>로봇 · 꿈 · 자금</h5>
+        <p>Goldman Sachs($38B by 2035) · Morgan Stanley($5T by 2050) · RoboZaps · Intel Capital/BusinessWire(RealSense) · NVIDIA Newsroom(Jetson Thor·Isaac·GR00T) · Figure.ai/Sacra($39B) · Axios/aifundingtracker($27.6B) · Omdia.</p>
+      </div>
+      <div>
+        <h5>중국 · 한국 · 정책</h5>
+        <p>EqualOcean("상류 80% 가치", 국산화율, 키엔스 3D 55%) · ARC Advisory · GGII/Hongjing(배터리 GWh당 $1M) · 테크월드뉴스/헬로티/EPNC(뷰웍스) · IMARC(한국 시장) · Yole(수출통제 면역).</p>
+      </div>
+    </div>
+    <div class="note">
+      <p><strong>데이터 계보 마커</strong>: <span class="mk mk-est">추정</span> 직접 출처 없이 논리로 추정 · <span class="mk mk-der">파생</span> 여러 출처 수치를 계산해 도출 · <span class="mk mk-con">상충</span> 출처 간 값 상이(범위·채택 기준 명시). 마커 없는 숫자 = 출처 분명한 실측치.</p>
+      <p style="margin-top:10px">시장조사사(Grand View·MarketsandMarkets·Mordor·GM Insights 등)는 2차 자료로 [상충]이 크다 — 정의·기준연도 확인 필수. 1차(SEC·IR·Yole·학회·특허)를 우선했다. 비상장·미확보 항목은 파트 12에 명시. 작성 기준일 2026년 7월 8일. 이 보고서는 리서치 데이터 문서(1단계 산출물)만을 원재료로 작성되었으며, 데이터 문서에 없는 사실은 지어내지 않고 공백·불확실로 표기했다.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function upd(el){
+    var over = el.scrollWidth > el.clientWidth + 2;
+    var atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
+    el.classList.toggle('scrollable', over && !atEnd);
+  }
+  var tws = document.querySelectorAll('.tw');
+  function updAll(){ tws.forEach(upd); }
+  tws.forEach(function(el){ el.addEventListener('scroll', function(){ upd(el); }, {passive:true}); });
+  window.addEventListener('resize', updAll, {passive:true});
+  updAll();
+})();
+</script>
+</body>
+</html>
