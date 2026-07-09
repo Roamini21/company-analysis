@@ -453,15 +453,8 @@ function renderList(){
     list.appendChild(d); return;
   }
 
-  // group by sector — a multi-sector item appears under each of its sectors
-  const groups = {};
-  items.forEach(it=>{
-    const secs = it.sectors.length ? it.sectors : [NONE];
-    secs.forEach(s=>{ (groups[s]=groups[s]||[]).push(it); });
-  });
-  const order = Object.keys(groups).sort((a,b)=> a===NONE?1 : b===NONE?-1 : a.localeCompare(b,"ko"));
-
   let rendered = 0;
+  const byName = (a,b)=> ((a.type==="산업")!==(b.type==="산업")) ? (a.type==="산업"?-1:1) : a.name.localeCompare(b.name,"ko");
   const renderItem = (it)=>{
     const b=document.createElement("button");
     b.className = "item" + (it.type==="산업"?" ind":"") + (it.path===activePath?" active":"");
@@ -475,15 +468,27 @@ function renderList(){
     b.addEventListener("click", ()=>{ select(it,true); closeNav(); });
     list.appendChild(b);
   };
+  const header = (txt)=>{ const h=document.createElement("div"); h.className="group-h"; h.textContent=txt; list.appendChild(h); };
 
+  // 검색 중: 이름·파일명 일치는 위, 본문에서만 걸린 것은 아래
+  if(tokens.length){
+    const nameM = items.filter(it=>!matchInfo[it.path]).sort(byName);
+    const bodyM = items.filter(it=>matchInfo[it.path]).sort(byName);
+    if(nameM.length){ header("이름 일치 · " + nameM.length); nameM.forEach(renderItem); }
+    if(bodyM.length){ header("본문 일치 · " + bodyM.length); bodyM.forEach(renderItem); }
+    return;
+  }
+
+  // 탐색 모드: 섹터별 그룹 (다중 섹터 항목은 각 섹터에 표시)
+  const groups = {};
+  items.forEach(it=>{
+    const secs = it.sectors.length ? it.sectors : [NONE];
+    secs.forEach(s=>{ (groups[s]=groups[s]||[]).push(it); });
+  });
+  const order = Object.keys(groups).sort((a,b)=> a===NONE?1 : b===NONE?-1 : a.localeCompare(b,"ko"));
   order.forEach(sec=>{
-    const arr = groups[sec].slice().sort((a,b)=>{
-      if((a.type==="산업")!==(b.type==="산업")) return a.type==="산업"?-1:1;   // 산업분석을 섹터 맨 위로
-      return a.name.localeCompare(b.name,"ko");
-    });
-    const h=document.createElement("div"); h.className="group-h"; h.textContent=sec;
-    list.appendChild(h);
-    arr.forEach(renderItem);
+    header(sec);
+    groups[sec].slice().sort(byName).forEach(renderItem);
   });
 }
 
