@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>덱스터러스 핸드(로봇 손) 기술·산업 분석 보고서</title>
+<style>
+/* ===== 보고서 UI 통일 시스템 v1 — 수정 금지 ===== */
+:root{
+  --bg-page:#FFFFFF; --bg-soft:#F6F8FA;
+  --brand:#0F2B46; --brand-2:#1E4265;
+  --ink:#1A202C; --ink-2:#4A5568; --ink-3:#718096;
+  --line:#E2E8F0; --line-2:#CBD5E1;
+  --accent:#2563EB; --accent-soft:#EFF6FF;
+  --pos:#047857; --pos-soft:#ECFDF5;
+  --neg:#DC2626; --neg-soft:#FEF2F2;
+  --warn:#B45309; --warn-soft:#FFFBEB;
+  --gold:#B7791F; --gold-soft:#FEF3C7;
+  --c1:#2563EB; --c2:#7C3AED; --c3:#059669; --c4:#D97706;
+  --c5:#DC2626; --c6:#0891B2; --c7:#DB2777; --c8:#64748B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+    "Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  background:var(--bg-page); color:var(--ink);
+  font-size:15px; line-height:1.7; word-break:keep-all;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px 80px;}
+p{margin:0 0 12px; color:var(--ink);}
+strong{color:var(--ink);font-weight:700;}
+a{color:var(--accent);text-decoration:none;}
+ul,ol{margin:0 0 12px 22px;} li{margin:4px 0;color:var(--ink);}
+
+/* --- 표지 밴드 (어두운 배경 허용 위치 1) --- */
+/* 배경은 전체 폭, 좌우 패딩 계산식이 내용을 본문(.wrap)과 같은 1040px
+   중앙선에 자동 정렬한다. 내부 래퍼 div가 전혀 필요 없다 — 이 패딩
+   공식을 절대 단순 숫자(예: 32px)로 바꾸지 말 것. */
+.cover{background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  color:#FFFFFF;padding:44px max(28px,calc((100% - 1040px)/2 + 28px));
+  border-radius:0 0 18px 18px;margin-bottom:36px;}
+.cover h1{font-size:27px;font-weight:800;color:#FFFFFF;margin:6px 0 10px;}
+.cover .sub{color:#C9D6E4;font-size:14px;}
+.cover .meta{color:#9FB3C8;font-size:12.5px;margin-top:14px;}
+.cover .kpis{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+.cover .kpi{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);
+  border-radius:10px;padding:10px 14px;min-width:130px;}
+.cover .kpi .k{font-size:11.5px;color:#9FB3C8;}
+.cover .kpi .v{font-size:18px;font-weight:800;color:#FFFFFF;}
+.cover .kpi .v.up{color:#6EE7B7;} .cover .kpi .v.down{color:#FCA5A5;}
+
+/* --- 목차 --- */
+.toc{background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;
+  padding:18px 22px;margin:0 0 40px;}
+.toc .t{font-weight:800;color:var(--brand);font-size:14px;margin-bottom:10px;}
+.toc ol{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0;}
+.toc li{white-space:nowrap;font-size:13.5px;}
+.toc a{color:var(--ink-2);}
+
+/* --- 섹션 --- */
+section{margin:56px 0 0;}
+h2{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:800;
+  color:var(--brand);border-bottom:2px solid var(--brand);
+  padding-bottom:10px;margin:0 0 20px;}
+h2 .no{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:var(--brand);
+  color:#FFFFFF;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;}
+h3{font-size:16.5px;font-weight:700;color:var(--ink);margin:28px 0 12px;}
+.lead{font-size:15.5px;color:var(--ink);background:var(--accent-soft);
+  border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+  padding:14px 16px;margin:0 0 16px;}
+.lead *{color:var(--ink);}
+
+/* --- 콜아웃 (배경+글자색 자급) --- */
+.co{border-radius:10px;padding:16px 18px;margin:16px 0;border:1px solid;}
+.co .ct{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.co p,.co li{font-size:14px;margin-bottom:6px;}
+.co-key{background:var(--accent-soft);border-color:#BFDBFE;}
+.co-key,.co-key *{color:#1E3A8A;}
+.co-pos{background:var(--pos-soft);border-color:#A7F3D0;}
+.co-pos,.co-pos *{color:#065F46;}
+.co-neg{background:var(--neg-soft);border-color:#FECACA;}
+.co-neg,.co-neg *{color:#991B1B;}
+.co-warn{background:var(--warn-soft);border-color:#FDE68A;}
+.co-warn,.co-warn *{color:#92400E;}
+.co-note{background:var(--bg-soft);border-color:var(--line);}
+.co-note,.co-note *{color:var(--ink-2);}
+
+/* --- 배지 (데이터 계보·확신도) --- */
+.bd{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;
+  padding:2px 7px;vertical-align:1px;margin:0 2px;}
+.bd-est{background:var(--warn-soft);color:#92400E;border:1px solid #FDE68A;}
+.bd-drv{background:var(--accent-soft);color:#1E40AF;border:1px solid #BFDBFE;}
+.bd-cfl{background:var(--neg-soft);color:#991B1B;border:1px solid #FECACA;}
+.bd-conf{background:var(--bg-soft);color:var(--ink-2);border:1px solid var(--line-2);}
+
+/* --- KPI 카드 그리드 --- */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;margin:16px 0;}
+.kcard{background:#FFFFFF;border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;}
+.kcard .k{font-size:12px;color:var(--ink-3);}
+.kcard .v{font-size:20px;font-weight:800;color:var(--ink);margin-top:2px;}
+.kcard .v.up{color:var(--pos);} .kcard .v.down{color:var(--neg);}
+.kcard .d{font-size:11.5px;color:var(--ink-3);margin-top:2px;}
+
+/* --- 표 --- */
+.twrap{overflow-x:auto;margin:16px 0;border:1px solid var(--line);
+  border-radius:10px;
+  background:
+    linear-gradient(to right,#FFF 30%,rgba(255,255,255,0)),
+    linear-gradient(to left,#FFF 30%,rgba(255,255,255,0)) 100% 0,
+    radial-gradient(farthest-side at 0 50%,rgba(15,43,70,.14),transparent),
+    radial-gradient(farthest-side at 100% 50%,rgba(15,43,70,.14),transparent) 100% 0;
+  background-repeat:no-repeat;background-size:60px 100%,60px 100%,16px 100%,16px 100%;
+  background-attachment:local,local,scroll,scroll;}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:#FFFFFF;}
+caption{caption-side:top;text-align:left;font-weight:800;color:var(--brand);
+  font-size:14px;padding:12px 14px 8px;}
+th{background:var(--brand);color:#FFFFFF;font-weight:700;font-size:12.5px;
+  padding:10px 12px;text-align:left;white-space:nowrap;}
+td{padding:9px 12px;border-top:1px solid var(--line);color:var(--ink);
+  vertical-align:top;}
+tbody tr:nth-child(even) td{background:#F8FAFC;}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+td .up{color:var(--pos);font-weight:700;} td .down{color:var(--neg);font-weight:700;}
+tr.hl td{background:var(--gold-soft);color:#78350F;font-weight:700;}
+tr.total td{background:var(--accent-soft);color:#1E3A8A;font-weight:800;
+  border-top:2px solid var(--line-2);}
+.wide{min-width:860px;}
+
+/* --- 그림(figure) --- */
+figure{margin:24px 0;}
+.fig-t{font-weight:800;color:var(--ink);font-size:14.5px;margin-bottom:10px;}
+.fig-box{background:#FFFFFF;border:1px solid var(--line);border-radius:12px;
+  padding:16px;}
+figcaption{font-size:12px;color:var(--ink-3);margin-top:8px;line-height:1.6;}
+figure img{max-width:100%;height:auto;border-radius:8px;display:block;}
+svg{max-width:100%;height:auto;display:block;}
+svg text{font-family:inherit;}
+
+/* --- 범례 (차트 외부 HTML 범례) --- */
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 2px 0;}
+.legend .li{display:flex;align-items:center;gap:6px;font-size:12.5px;
+  color:var(--ink-2);white-space:nowrap;}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto;}
+
+/* --- 이벤트 마커 범례 표 (주가 차트용) --- */
+.evt{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px;}
+.evt td{padding:6px 10px;border-top:1px solid var(--line);color:var(--ink);}
+.evt .n{width:30px;font-weight:800;color:#FFFFFF;text-align:center;}
+.evt .n span{display:inline-block;width:20px;height:20px;line-height:20px;
+  border-radius:50%;background:var(--brand);font-size:11.5px;}
+.evt .up{color:var(--pos);font-weight:700;} .evt .down{color:var(--neg);font-weight:700;}
+
+/* --- Bull/Bear 2열 --- */
+.bb{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+.bb .col{border-radius:12px;padding:16px 18px;border:1px solid;}
+.bb .bull{background:var(--pos-soft);border-color:#A7F3D0;}
+.bb .bull,.bb .bull *{color:#065F46;}
+.bb .bear{background:var(--neg-soft);border-color:#FECACA;}
+.bb .bear,.bb .bear *{color:#991B1B;}
+.bb .ct{font-weight:800;font-size:14px;margin-bottom:8px;}
+
+/* --- SWOT 4분면 --- */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+.swot .q{border-radius:12px;padding:14px 16px;border:1px solid;}
+.swot .s{background:var(--pos-soft);border-color:#A7F3D0;} .swot .s,.swot .s *{color:#065F46;}
+.swot .w{background:var(--neg-soft);border-color:#FECACA;} .swot .w,.swot .w *{color:#991B1B;}
+.swot .o{background:var(--accent-soft);border-color:#BFDBFE;} .swot .o,.swot .o *{color:#1E3A8A;}
+.swot .t{background:var(--warn-soft);border-color:#FDE68A;} .swot .t,.swot .t *{color:#92400E;}
+.swot .qt{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.swot ul{margin:0 0 0 18px;} .swot li{font-size:13.5px;margin:3px 0;}
+
+/* --- 푸터 --- */
+.foot{margin-top:64px;border-top:1px solid var(--line);padding-top:16px;
+  font-size:12px;color:var(--ink-3);line-height:1.7;}
+
+/* --- 반응형 --- */
+@media (max-width:640px){
+  .wrap{padding:0 16px 60px;}
+  .cover{padding:30px 16px;} .cover h1{font-size:22px;}
+  .bb,.swot{grid-template-columns:1fr;}
+  h2{font-size:19px;}
+}
+@media print{
+  .cover{border-radius:0;} body{font-size:13px;}
+}
+/* ===== 확장(§0-2 허용 범위: 토큰만 사용한 최소 추가 — 영상 썸네일 링크) ===== */
+.vlink{position:relative;display:block;border-radius:8px;overflow:hidden;background:var(--bg-soft);}
+.vlink img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover;}
+.vlink .play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  background:var(--brand);color:#FFFFFF;font-weight:700;font-size:13px;
+  padding:10px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.35);white-space:nowrap;}
+/* 확장: 6열+ 밀도 표용 폭 유틸 — §표 규격 준수, 오버플로는 .twrap 스크롤로 처리 */
+.wide-xl{min-width:1240px;}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="sub">기술·산업 분석 보고서 · 휴머노이드 로봇 핵심 모듈 / 피지컬 AI · 글로벌</div>
+  <h1>덱스터러스 핸드 — 휴머노이드의 "마지막 1cm", 손끝에서 결판나는 범용성 전쟁</h1>
+  <div class="kpis">
+    <div class="kpi"><div class="k">2030 시장 전망</div><div class="v up">$30억~$52억+</div></div>
+    <div class="kpi"><div class="k">휴머노이드 BOM 비중</div><div class="v">17~19% → 30%</div></div>
+    <div class="kpi"><div class="k">자유도 경쟁 최전선</div><div class="v">25 DoF 전(全)능동</div></div>
+    <div class="kpi"><div class="k">손 1개당 마이크로 모터</div><div class="v">17~25개</div></div>
+    <div class="kpi"><div class="k">코어리스 모터 3강 점유</div><div class="v">~85%</div></div>
+    <div class="kpi"><div class="k">촉각 기술 노선</div><div class="v down">4개 · 미수렴</div></div>
+  </div>
+  <div class="meta">기준일: 2026-07-13 · 프레이밍: "덱스터러스 핸드"는 기술이자 하위 산업 — 본 보고서는 기술 해부에 무게를 싣되 시장·기업·투자까지 잇는 통합 구조를 따른다 · 데이터 출처 약 40개 · [추정]·[파생]·[상충] 표기 · 모든 수치 출처·시점 병기</div>
+</div>
+<div class="wrap">
+
+<nav class="toc">
+  <div class="t">목차</div>
+  <ol>
+    <li><a href="#s0">0. 핵심 요약</a></li>
+    <li><a href="#s1">1. 정의와 범위·역사</a></li>
+    <li><a href="#s2">2. 작동 원리 — 기술 해부</a></li>
+    <li><a href="#s3">3. 가치사슬과 이익 풀</a></li>
+    <li><a href="#s4">4. 시장 규모와 성장</a></li>
+    <li><a href="#s5">5. "꿈"과 내러티브</a></li>
+    <li><a href="#s6">6. 산업 구조와 경쟁 역학</a></li>
+    <li><a href="#s7">7. 경쟁 지형 — 플레이어 지도</a></li>
+    <li><a href="#s8">8. 기술 로드맵과 TRL</a></li>
+    <li><a href="#s9">9. 규제·정책·지정학</a></li>
+    <li><a href="#s10">10. 리스크와 파괴 요인</a></li>
+    <li><a href="#s11">11. 투자 관점 종합</a></li>
+    <li><a href="#s12">12. 한계와 가정</a></li>
+    <li><a href="#s13">13. 체크포인트와 모니터링</a></li>
+  </ol>
+</nav>
+<section id="s0">
+<h2><span class="no">0</span>핵심 요약 (Executive Summary)</h2>
+<p class="lead"><strong>한 문장 요약:</strong> 덱스터러스 핸드(다지 로봇 손)는 휴머노이드의 <strong>단일 최대 원가 품목(정기 BOM의 17~19%)이자 마지막 기술 병목</strong>으로, "다리는 로봇을 데려다주고 손이 일을 한다"는 산업 합의 위에서 2026년을 기점으로 연구용 틈새(2024년 수만 개)에서 양산 부품 산업(2030년 전망 $30억~$52억+, 낙관 시 ¥900억)으로 상전이하는 중이다 — 그리고 그 상전이의 신호탄이 나흘 전(2026-07-09) 1X가 공개한 25자유도 전능동 손이다.</p>
+
+<p>왜 손인가. 이족보행은 시뮬레이션 강화학습으로 사실상 풀렸고, 두뇌(VLA)는 급진전 중이다. 남은 것은 <strong>물리 세계와의 접촉면</strong>이다. 머스크는 손을 "옵티머스 엔지니어링 난이도의 60%, Cybertruck보다 어려운 문제"라 불렀고, 실제로 테슬라는 2025년 중반(6월 조달 중단 개시 보도)부터 손·팔 재설계 때문에 옵티머스 생산 자체를 중단했고(수백 대의 손 없는 몸체가 공장에 적체), 2026년 4월 19일에는 막 공개된 손 특허 설계마저 "이미 바꿨다 — 이건 실제로 작동하지 않았다"(머스크 X)며 폐기를 공언했다. 모건스탠리는 2026년 3월 리포트에서 <strong>"2026년 = 핸드 산업화 돌파 원년"</strong>을 선언하며 운동 능력이 아니라 조작 능력이 휴머노이드 상업화의 관문임을 명시했다. 1X 창업자 뵈르니치의 표현이 이 산업의 테제다: <strong>"휴머노이드 베팅은 손끝에서 결판난다."</strong></p>
+
+<div class="kgrid">
+  <div class="kcard"><div class="k">기술의 현재 좌표</div><div class="v">HW 천장 돌파 선언</div><div class="d">1X 25 DoF 전능동+전단 촉각(7/9) — 단, 검증은 이제 시작</div></div>
+  <div class="kcard"><div class="k">병목의 실증</div><div class="v">테슬라 재설계 반복</div><div class="d">'25-06~ 생산 중단 → '26-04 특허 설계 폐기 공언</div></div>
+  <div class="kcard"><div class="k">노선 수렴도</div><div class="v down">3×4 미수렴</div><div class="d">구동 3노선 × 촉각 4노선 공존(MS)</div></div>
+  <div class="kcard"><div class="k">물량 리더</div><div class="v">중국 전문기업</div><div class="d">Inspire 연 1만 대('25 GGII 1위) · Linkerbot 월 4,000+</div></div>
+  <div class="kcard"><div class="k">부품 과점</div><div class="v">코어리스 3강 85%</div><div class="d">Maxon·Faulhaber·Portescap — 국산화 격전지</div></div>
+  <div class="kcard"><div class="k">자본 온도</div><div class="v up">전문기업 리레이팅</div><div class="d">Linkerbot $3.0B→$6B 목표 · Paxini ¥100억+</div></div>
+</div>
+
+<h3>결론 미리보기</h3>
+<p><strong>① 기술:</strong> 손의 3대 서브시스템(구동·전동·감지) 중 구동은 "코어리스 vs 슬로티드 BLDC" 전환 논쟁, 전동은 "텐던 vs 링키지 vs 스크류 vs 직구동"의 4파전, 감지는 "압저항·정전용량·자기·비전촉각"의 4파전으로 <strong>어느 층위도 노선이 수렴하지 않았다</strong> — 이 미수렴이 기술 리스크이자 투자 기회의 원천이다. 1X의 7/9 발표가 중요한 이유는 성능 숫자보다 설계 철학에 있다: 기어비를 100~200:1에서 5~15:1로 낮춰 <strong>모든 관절을 "쓰기 전용(write-only)"에서 "읽기-쓰기(read-write)" 장치로</strong> 바꿨다(역구동·힘 투명성). <strong>② 시장:</strong> 2030년 전망은 정의에 따라 $30억(광의·완만)에서 $52억+(휴머노이드 다지, CAGR 64.6%), 중국계 낙관치는 ¥879.7억까지 갈라진다 <span class="bd bd-cfl">상충</span>. 확실한 것은 방향 — 휴머노이드 1대당 손 2개, 손당 모터 17~25개·촉각 채널 수백~수천 개라는 <strong>"대수 × 대당 콘텐츠" 이중 성장 산식</strong>이다. <strong>③ 이익 풀:</strong> 현재 이익은 모듈(전문기업 단가 ¥5만~10만, Shadow $12만)과 상류 부품(코어리스 과점)에 고이며, OEM 인하우스화(테슬라·1X·Figure)가 외판 시장의 상한을 누른다. <strong>④ 구조적 매력 순위(11장):</strong> <strong>촉각 감지 스택 &gt; 마이크로 구동 체인(모터·스크류·전기실린더) &gt; 핸드 모듈 전문기업 &gt; 텐던·소재 &gt; OEM 인하우스</strong>. <strong>⑤ 핵심 리스크:</strong> DoF 인플레이션(수동 관절 끼워 세기), 내구성 미검증(텐던 마모), 헤드 OEM 수직통합에 의한 외판 시장 잠식, 그리고 "하드웨어는 충분, 병목은 소프트웨어"라는 왕싱싱(Unitree)의 정면 반론.</p>
+
+<div class="co co-key"><div class="ct">이 보고서를 관통하는 한 가지 긴장</div>
+<p>1X는 "하드웨어 천장은 사라졌고 이제 데이터만이 장벽"이라 선언했고, 왕싱싱은 "하드웨어는 이미 기본적으로 충분하며 병목은 임바디드 대모델"이라 말한다. 두 주장은 결이 같아 보이지만 투자 함의는 정반대다 — 전자가 맞으면 <strong>손 하드웨어 차별화의 프리미엄은 짧고</strong>(모두가 곧 좋은 손을 갖게 됨) 데이터·모델로 가치가 이동하며, 후자가 맞으면 애초에 손 스펙 경쟁 자체가 과대평가다. 본 보고서의 판정: 두 발언 모두 "충분한 손"의 기준을 자사가 이미 통과했다는 전제를 깔고 있으며, <strong>테슬라의 생산 중단 사태가 보여주듯 "만들 수 있는 손"과 "양산·내구가 되는 손" 사이의 간극이 아직 산업의 실질 병목</strong>이다. 이 간극이 닫히는 속도(양산 수율·사이클 수명·현장 고장률)가 이 섹터의 진짜 추적 지표다.</p></div>
+</section>
+
+<section id="s1">
+<h2><span class="no">1</span>정의와 범위 · 역사와 진화 · 왜 지금인가</h2>
+<p class="lead"><strong>핵심 결론:</strong> 덱스터러스 핸드는 그리퍼(집게)의 상위 호환이 아니라 <strong>다른 종(種)의 제품</strong>이다 — 그리퍼가 "집는 도구"라면 핸드는 "도구를 쓰는 도구"이며, 인간 환경의 수만 가지 물체·도구·인터페이스를 개조 없이 그대로 다루기 위해 지불하는 복잡성이다. 50년 역사에서 손은 늘 "가능하지만 비싸고 약한" 물건이었고, 2024~26년의 세 가지 사건(테슬라 병목 실증 → 중국 전문기업 양산 돌파 → 1X 전능동+촉각 선언)이 이를 산업으로 바꿨다.</p>
+
+<h3>1.1 정의와 경계 — 무엇을 포함하고 무엇을 빼는가</h3>
+<p>이 보고서의 <strong>덱스터러스 핸드(多指 灵巧手)</strong>는 "3지 이상·다관절·독립 제어 가능한 자유도를 갖추고, 파지(grasp)를 넘어 손안 조작(in-hand manipulation)·도구 사용·미세 조작을 목표로 설계된 로봇 말단장치"로 정의한다. 포함: 휴머노이드 탑재용 5지·4지 손, 독립 판매되는 연구·산업용 다지 손, 의수 기술의 로봇 전용(PSYONIC류), 손과 일체화된 촉각 서브시스템. 제외: 2지 평행 그리퍼·진공 흡착(산업 자동화의 주류이나 동학이 다름 — 단 6장의 "대체재"로는 다룸), 팔(arm) 자체, 외골격. 주의할 경계 이슈가 둘 있다. (a) <strong>통계 정의의 분열:</strong> 조사기관마다 2지 그리퍼 포함 여부가 달라 2030년 시장 전망이 $30억(東吳·Statista, 광의)과 $52억+(궈타이하이통·QYR, 휴머노이드 다지 협의)로 갈라진다 — 4장에서 정의별로 분리해 다룬다. (b) <strong>DoF 인플레이션:</strong> 업계 스펙표의 자유도에는 스프링으로 따라 움직일 뿐 구동·감지가 안 되는 수동 관절이 섞여 있다. 1X 제품총괄 슬리퍼의 지적 — "많은 회사가 광고하는 22 DoF의 다수는 스프링 장착 수동 관절"(Forbes, 2026-06) — 대로, 본 보고서는 가능한 한 <strong>능동(actuated) DoF</strong> 기준으로 비교한다.</p>
+
+<h3>1.2 하위 세그먼트 분류</h3>
+<div class="twrap"><table>
+<caption>표 1. 덱스터러스 핸드 세그먼트 — 용도 × 설계 철학 매트릭스</caption>
+<thead><tr><th>세그먼트</th><th>요구 스펙</th><th>대표 제품</th><th>가격대(2026)</th><th>상업화 단계</th></tr></thead>
+<tbody>
+<tr><td>휴머노이드 탑재(OEM 인하우스)</td><td>양산성·내구·원가가 성능만큼 중요</td><td>1X NEO Hands, 테슬라 Gen3, Figure 03 핸드</td><td class="num">비매품(BOM 내재)</td><td>1X 연 1만 개 라인 가동 — 인하우스 양산 개막</td></tr>
+<tr><td>범용 모듈(외판 — 볼륨)</td><td>가격·납기·SDK·호환성</td><td>Inspire RH56 계열, Linkerbot Linker Hand</td><td class="num">$6,500~ / ¥5만~10만</td><td>유일하게 "지금 사서 쓰는" 구간 — 연 1만 대급 출하</td></tr>
+<tr><td>범용 모듈(외판 — 하이엔드)</td><td>능동 DoF·촉각·연구 재현성</td><td>Shadow Hand, Allegro V5, Sharpa Wave, Paxini DexH13</td><td class="num">수만$~€11만+</td><td>연구 표준 → 산업 파일럿 확장 중</td></tr>
+<tr><td>촉각 서브시스템</td><td>해상도·다축력·내구·단가</td><td>Paxini ITPU, GelSight 계열, Meta DIGIT, NVE 자기센서</td><td class="num">채널당 수$~수백$ <span class="bd bd-est">추정</span></td><td>노선 4파전 — 표준 미형성</td></tr>
+<tr><td>의수 겸용</td><td>경량·저소음·안전·인체 적합</td><td>PSYONIC Ability Hand, OYMotion, BrainCo</td><td class="num">의수 시장 준거</td><td>의수 매출로 현금 창출하며 로봇 확장</td></tr>
+<tr><td>극단 생체모사(탐색)</td><td>인간 근골격 재현</td><td>Clone(수압 인공근육), Sanctuary(마이크로 유압)</td><td class="num">비공개</td><td>연구·데모 — 상업화 전 단계</td></tr>
+</tbody></table></div>
+<figcaption>출처: 각사 공표 가격(Inspire 미국 소매 $6,500~, Shadow €11만+, 국산 집성상 ¥5만~10만 — 艾邦 2026-04)·본문 7장. 가격 스펙트럼이 약 20배에 달하는 것 자체가 시장 미성숙의 지표다.</figcaption>
+
+<h3>1.3 역사 — "50년 동안 가능했지만, 산업이 아니었다"</h3>
+<p>다지 로봇 손의 계보는 길다. <strong>1기(1970s~90s, 운동학의 증명):</strong> 오카다 핸드(일본, 1974)와 Utah/MIT Hand(1980s, 텐던 32개·공압)가 다지 손의 운동학을 증명했고, Salisbury Hand(스탠퍼드)가 파지 이론의 기초를 놓았다. <strong>2기(1990s~2010s, 집적과 감지):</strong> 독일 DLR-I/II가 관절 토크·촉각·온도까지 25개 센서를 집적하며 "느끼는 손"의 원형을 만들었고(당시 이미 지금의 과제를 전부 제시), Shadow Dexterous Hand(영국)가 텐던 5지 인간 등가 손의 상용 정점을, Allegro Hand(한국 KITECH→원익로보틱스, 2011~)가 "Shadow의 1/5 가격"으로 연구 표준 플랫폼 자리를 잡았다. 이 시기의 결론은 냉정했다 — 만들 수는 있으나 <strong>비싸고(수만~십수만 달러), 약하고(내구), 쓸 두뇌가 없었다.</strong> <strong>3기(2018~, 학습의 도래):</strong> OpenAI가 Shadow Hand로 큐브 손안 조작을 시뮬레이션 도메인 랜덤라이제이션만으로 학습시키며(2018~19) "손 제어는 코딩이 아니라 학습의 문제"임을 입증했다 — 이 논문이 오늘날 모든 손 학습 파이프라인의 기점이다. 이후 LEAP Hand(2023)가 저가 오픈소스로 연구 진입장벽을 허물고, MIT GelSight 계보(GelSlim→Meta DIGIT→GelSight360)가 비전 촉각을 상용 문턱까지 끌어올렸다. <strong>4기(2024~, 산업화):</strong> 휴머노이드 자본이 유입되며 손이 처음으로 "양산 부품"으로 정의된다 — Inspire가 2024년 약 2,000대에서 2025년 연 1만 대를 돌파(글로벌 동종 연간 기록)하고, 테슬라 Gen3가 11→22 DoF로 점프하다 생산 중단 사태를 겪고, 1X가 2026년 7월 "전능동 25 DoF + 인하우스 연 1만 개 라인"으로 응수했다.</p>
+
+<h3>1.4 왜 지금인가 — 나흘 전의 사건이 상징하는 것</h3>
+<p><strong>(1) 병목의 공인:</strong> 테슬라의 2025년 생산 중단(손·팔 재설계)은 "손이 병목"이라는 명제를 업계 소문에서 <strong>공개된 산업 사실</strong>로 바꿨다. Gen3 프로그램에서 가장 늦게까지 설계가 흔들리는 품목이 손이다 — 2026년 2월에야 신형 손 데모('This bot got hands')가 공개됐고, 4월 19일에는 방금 공개된 특허 설계마저 "실물에서 작동하지 않아 이미 바꿨다"(머스크 X — 롤링 접촉 관절의 실기 실패)고 폐기가 공언됐다. V3 공개는 두 차례 밀려 7월 말~8월이다. <strong>(2) 산업화 원년 선언:</strong> 모건스탠리(2026-03)가 "2026 핸드 산업화 돌파 원년"을 공식화하고 3대 장벽(하드웨어 집적·데이터 희소·SW 적합)과 노선 지도를 제시하며 기관 자금의 프레임이 깔렸다 — 중국 전문기업들의 2026년 캐파 목표가 전년의 10배(Linkerbot 5~10천→5만~10만)로 뛴 것이 산업 측의 화답이다. <strong>(3) 기술 문턱의 통과 선언:</strong> 1X의 7월 9일 발표는 세 가지를 한 번에 주장했다 — 전 관절 능동+힘제어(스프링 관절 0), 전단력까지 읽는 촉각(미끄러지는 와인잔을 잡는 그 데모), 그리고 <strong>연 1만 개 인하우스 양산</strong>. 공개 3일 만에 X 조회 1,100만(보도 집계)이라는 반응은 이 주제가 기술 커뮤니티를 넘어 대중·자본의 관심사로 넘어왔음을 보여준다. 이 세 흐름이 겹치는 지점 — 그것이 지금 이 보고서를 쓰는 이유다.</p>
+<div class="co co-note"><div class="ct">용어 한 줄 정의(이후 반복 설명 없음)</div>
+<p><strong>DoF(자유도)</strong>: 독립적으로 움직일 수 있는 관절 축 수 — 능동(모터 구동)과 수동(스프링 연동) 구분 필수. <strong>손안 조작(in-hand manipulation)</strong>: 잡은 물체를 손 안에서 회전·이동시키는 것 — 재파지 없이. <strong>언더액추에이션(欠驱动)</strong>: 모터 수 &lt; 자유도 수 — 한 모터가 여러 관절을 연동 구동. <strong>백드라이브(역구동)</strong>: 외력으로 관절이 밀리는 성질 — 접촉력을 모터 전류로 "느끼는" 전제. <strong>QDD(준직접구동)</strong>: 저감속비로 백드라이브·힘제어를 살린 구동. <strong>전단력(shear)</strong>: 접촉면에 평행한 힘 — 미끄러짐 감지의 물리량. <strong>전기실린더(電缸)</strong>: 모터+감속기+스크류+센서를 원통에 집적한 직선 구동 모듈.</p></div>
+</section>
+<section id="s2">
+<h2><span class="no">2</span>작동 원리 — 기술 해부 (심장 파트)</h2>
+<p class="lead"><strong>핵심 결론:</strong> 손은 <strong>구동(어떤 모터로) × 전동(어떻게 힘을 전달해) × 감지(무엇을 느끼며)</strong>의 3층 시스템이며, 세 층 모두 기술 노선이 수렴하지 않았다. 성능의 최전선은 자유도 숫자가 아니라 <strong>"관절이 힘을 낼 뿐 아니라 힘을 읽을 수 있는가"(read-write)</strong>로 이동했다 — 1X가 기어비를 통념의 1/10~1/40(5~15:1)로 낮춰 얻은 것이 바로 이것이고, 테슬라가 2025년에 무너진 곳도 정확히 이 3층의 집적(과열·파지력·관절 수명)이었다.</p>
+
+<h3>2.1 시스템 해부 — 인간 손을 공학으로 번역하면</h3>
+<p>인간 손은 약 27자유도, 34개의 근육(다수는 전완에 위치), 손끝 1cm²당 수백 개의 기계수용체를 갖는다. 공학 번역의 난점은 <strong>패키징</strong>이다: 손 크기 안에 20개 이상의 구동계를 넣으면 무겁고 뜨거워지고, 밖(전완)으로 빼면 텐던이라는 까다로운 전달 문제가 생긴다. 현행 설계는 이 트레이드오프 위의 서로 다른 좌표들이다.</p>
+<figure>
+  <div class="fig-t">덱스터러스 핸드 구동 사슬 해부 — 모터에서 손끝 촉각까지, 각 층의 노선과 대표 주자</div>
+  <div class="fig-box">
+  <svg viewBox="0 0 1000 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="핸드 구동 사슬 해부도">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#CBD5E1"/></marker></defs>
+    <rect x="70" y="50" width="200" height="200" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+    <text x="170" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#1E3A8A">① 구동 (모터)</text>
+    <text x="170" y="102" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E40AF">코어리스(무철심)</text>
+    <text x="170" y="118" text-anchor="middle" font-size="11" fill="#1E40AF">무코깅·고응답 — 손가락 표준</text>
+    <text x="170" y="134" text-anchor="middle" font-size="11" fill="#1E40AF">Maxon·Faulhaber·Portescap ~85%</text>
+    <text x="170" y="158" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E40AF">슬로티드 BLDC(유치조)</text>
+    <text x="170" y="174" text-anchor="middle" font-size="11" fill="#1E40AF">저가·고토크 — 테슬라 3세대</text>
+    <text x="170" y="190" text-anchor="middle" font-size="11" fill="#1E40AF">일부 코어리스 대체 관찰(東吳)</text>
+    <text x="170" y="214" text-anchor="middle" font-size="11" fill="#1E40AF">손당 17~25개 · NdFeB 자석</text>
+    <text x="170" y="232" text-anchor="middle" font-size="11" fill="#1E40AF">배치: 손 내장 / 전완 외장 / 혼합</text>
+    <rect x="302" y="50" width="200" height="200" rx="10" fill="#ECFDF5" stroke="#A7F3D0"/>
+    <text x="402" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#065F46">② 전동 (변속·전달)</text>
+    <text x="402" y="102" text-anchor="middle" font-size="11.5" font-weight="700" fill="#065F46">텐던(腱绳)</text>
+    <text x="402" y="118" text-anchor="middle" font-size="11" fill="#065F46">1X·테슬라·Shadow — 전완 이전 가능</text>
+    <text x="402" y="140" text-anchor="middle" font-size="11.5" font-weight="700" fill="#065F46">링키지(连杆)</text>
+    <text x="402" y="156" text-anchor="middle" font-size="11" fill="#065F46">Inspire — 강성·고부하·컴팩트</text>
+    <text x="402" y="178" text-anchor="middle" font-size="11.5" font-weight="700" fill="#065F46">마이크로 스크류·전기실린더</text>
+    <text x="402" y="194" text-anchor="middle" font-size="11" fill="#065F46">직선 정밀 — 因时 電缸의 심장</text>
+    <text x="402" y="216" text-anchor="middle" font-size="11.5" font-weight="700" fill="#065F46">기어·웜 / 직구동</text>
+    <text x="402" y="232" text-anchor="middle" font-size="11" fill="#065F46">셀프락·고가 / AGILINK 전직구동</text>
+    <rect x="534" y="50" width="200" height="200" rx="10" fill="#FFFBEB" stroke="#FDE68A"/>
+    <text x="634" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#92400E">③ 관절·구조</text>
+    <text x="634" y="102" text-anchor="middle" font-size="11" fill="#92400E">자유도 15~25 (능동 기준)</text>
+    <text x="634" y="118" text-anchor="middle" font-size="11" fill="#92400E">풀구동: 관절별 독립 (1X 22)</text>
+    <text x="634" y="134" text-anchor="middle" font-size="11" fill="#92400E">언더: 모터 6~11개 연동 (볼륨형)</text>
+    <text x="634" y="158" text-anchor="middle" font-size="11.5" font-weight="700" fill="#92400E">핵심 수치 (1X 공식)</text>
+    <text x="634" y="174" text-anchor="middle" font-size="11" fill="#92400E">엄지 3.5Nm · MCP 2.6Nm</text>
+    <text x="634" y="190" text-anchor="middle" font-size="11" fill="#92400E">지선단 45N · 손목 17.75Nm</text>
+    <text x="634" y="206" text-anchor="middle" font-size="11" fill="#92400E">±0.2mm · IP68 · 200만 사이클</text>
+    <text x="634" y="228" text-anchor="middle" font-size="11" fill="#92400E">소재: 합금·복합재+소프트 외피</text>
+    <rect x="766" y="50" width="194" height="200" rx="10" fill="#FEF2F2" stroke="#FECACA"/>
+    <text x="863" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#991B1B">④ 감지 (촉각·고유수용)</text>
+    <text x="863" y="102" text-anchor="middle" font-size="11" fill="#991B1B">관절: 엔코더·전류(토크 역산)</text>
+    <text x="863" y="118" text-anchor="middle" font-size="11" fill="#991B1B">손끝: 촉각 4노선(§2.4)</text>
+    <text x="863" y="140" text-anchor="middle" font-size="11.5" font-weight="700" fill="#991B1B">읽어야 할 물리량</text>
+    <text x="863" y="156" text-anchor="middle" font-size="11" fill="#991B1B">법선력 · 접촉 위치</text>
+    <text x="863" y="172" text-anchor="middle" font-size="11" fill="#991B1B">전단력(미끄럼) · 진동·질감</text>
+    <text x="863" y="196" text-anchor="middle" font-size="11" fill="#991B1B">1X: 폴리머 몰딩 지문 촉각</text>
+    <text x="863" y="212" text-anchor="middle" font-size="11" fill="#991B1B">Paxini: 3,420채널+손눈 카메라</text>
+    <text x="863" y="230" text-anchor="middle" font-size="11" fill="#991B1B">비전촉각: GelSight 계보</text>
+    <line x1="270" y1="150" x2="302" y2="150" stroke="#CBD5E1" stroke-width="2.5" marker-end="url(#ah)"/>
+    <line x1="502" y1="150" x2="534" y2="150" stroke="#CBD5E1" stroke-width="2.5" marker-end="url(#ah)"/>
+    <line x1="734" y1="150" x2="766" y2="150" stroke="#CBD5E1" stroke-width="2.5" marker-end="url(#ah)"/>
+    <rect x="180" y="300" width="640" height="88" rx="10" fill="#F6F8FA" stroke="#E2E8F0"/>
+    <text x="500" y="328" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">"read-write" 판별식 — 이 사슬을 거꾸로 거슬러 힘이 모터까지 돌아오는가</text>
+    <text x="500" y="350" text-anchor="middle" font-size="12" fill="#4A5568">기어비 100~200:1(통념): 마찰이 접촉력을 삼킴 → 손은 자기 관절로는 "무감각" → 외부 센서로 추론(write-only)</text>
+    <text x="500" y="370" text-anchor="middle" font-size="12" fill="#4A5568">기어비 5~15:1(1X QDD): 전 관절 역구동 → 밀면 밀리고, 얼마나 밀렸는지 보고 → 관절 자체가 센서(read-write)</text>
+    <text x="500" y="424" text-anchor="middle" font-size="12" fill="#4A5568">전력·연산: 손끝 촉각 1000Hz(Paxini)~고해상 이미지(비전촉각 30Hz)의 스트림을 손목 아래에서 전처리 — 배선·발열이 숨은 설계 변수</text>
+    <text x="500" y="446" text-anchor="middle" font-size="12" fill="#4A5568">패키징 3택: 모터 손 내장(정밀·비대) / 전완 외장+텐던(경량 손끝·전달 난도) / 혼합(주력 내장+보조 외장) — 東吳 분류</text>
+    <text x="500" y="490" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">테슬라 2025 사태의 위치: ①과열(구동) ②약한 파지(전동 효율) ③관절 고장(구조·내구) — 3층이 동시에 무너진 집적 실패였다</text>
+    <text x="500" y="512" text-anchor="middle" font-size="11.5" fill="#718096">출처 표기: The Information·TechSpot 보도(2025), 1X 공식 기술 페이지(2026-07-09), 東吳증권 분해(2025-06)</text>
+  </svg>
+  </div>
+  <figcaption>그림 1. 핸드 구동 사슬 해부도 | 출처: 1x.tech 'NEO's Hands'(2026-07-09), 東吳증권 핸드 심도보고(2025-06-26), MS 핸드 리포트 요약(2026-03), 장성증권(2024-02). 수치는 각사 공식 공표치.</figcaption>
+</figure>
+
+<h3>2.2 구동 — 코어리스의 왕좌와 슬로티드의 도전</h3>
+<p>손가락 구동의 표준은 <strong>코어리스(무철심·空心杯) DC 모터</strong>다. 철심을 없앤 컵형 권선 로터는 관성이 작아 응답이 빠르고 코깅(자석-철심 인력에 의한 울컥거림)이 없어 미세 힘 제어에 유리하다 — 대신 권선 설계와 와인딩 장비가 장벽이라 Maxon·Faulhaber·Portescap 3강이 글로벌 약 85%를 과점해 왔고(头豹, 2024), 하이엔드는 유럽·중저가는 중국(鸣志·鼎智·兆威·江苏雷利 등)이라는 이중 구조가 형성돼 있다. 흥미로운 것은 <strong>역방향 전환 신호</strong>다: 東吳증권의 분해에 따르면 테슬라 3세대 손은 일부 코어리스를 <strong>슬로티드(유치조) BLDC</strong>로 교체했다 — 코깅을 감수하는 대신 동일 체적에서 토크와 원가를 얻는 선택으로, "정밀의 코어리스 vs 양산의 슬로티드"라는 노선 논쟁을 열었다. 화신증권이 "핸드는 Gen3 최대의 변화이며 마이크로 모터는 병가필쟁(兵家必爭)의 땅"이라 쓴 배경이다. 어느 쪽이든 손당 모터 17~25개(테슬라 팔당 25, 1X 능동 22)와 모터당 NdFeB 자석이라는 <strong>물량 산식은 동일</strong>하다 — 휴머노이드 100만 대 시대면 손 모터만 연 3,400만~5,000만 개 <span class="bd bd-drv">파생: 100만 대 × 손 2개 × 모터 17~25개</span>다. 마이크로 모터 산업 전체를 다시 그리는 규모다.</p>
+
+<h3>2.3 전동 — 4방식의 트레이드오프, 그리고 1X와 테슬라가 같은 답에 도달한 이유</h3>
+<div class="twrap"><table class="wide-xl">
+<caption>표 2. 전동(변속·전달) 4방식 대결표 — 같은 문제(작은 모터로 손가락을 정밀하게)를 푸는 네 가지 답</caption>
+<thead><tr><th>방식</th><th>원리</th><th>강점</th><th>약점</th><th>대표 채택</th><th>공급 체인(중국 예)</th></tr></thead>
+<tbody>
+<tr><td><strong>텐던(腱绳)</strong></td><td>전완·손바닥의 모터가 케이블로 손가락을 당김(인간 근-건 모사)</td><td>손끝 초경량(관성↓)·모터를 밖으로(발열·패키징 해방)·유연</td><td>장력 관리·마찰·늘어짐·마모 — 전통적 "정비 악몽"</td><td>1X(폴리머 텐던, QDD 5~15:1), 테슬라 Gen3(손가락당 케이블 3개, 손목 수직 스택 특허), Shadow</td><td>大业股份·南山智尚(UHMWPE급 소재, 東吳)</td></tr>
+<tr><td><strong>링키지(连杆)</strong></td><td>강체 링크 기구로 회전→굴곡 변환</td><td>고강성·고부하·백래시 관리 용이·컴팩트</td><td>작업공간 제한·원거리 전달 곤란·유연성 열위</td><td>Inspire(전기실린더+링키지 — "링키지파"), 다수 볼륨형</td><td>因时 내재(電缸)·福达股份</td></tr>
+<tr><td><strong>마이크로 스크류</strong></td><td>모터 회전→나사 직선 추력(전기실린더의 심장)</td><td>고정밀·셀프락 경향·힘 밀도</td><td>속도·역구동 제한·정밀 가공 원가</td><td>因时 電缸(감속기+코어리스+스크류+센서 일체), 테슬라(웜→스크류 진화)</td><td>浙江荣泰·北特·五洲新春·震裕(東吳 추천 라인)</td></tr>
+<tr><td><strong>직구동/저감속(QDD)</strong></td><td>고토크 모터를 관절에 직결 또는 극저감속</td><td>완전 역구동 = 관절이 곧 힘센서·기계 단순</td><td>모터 크기·발열·토크밀도 요구 극대</td><td>AGILINK OmniHand 3(전직구동 기함), 1X(텐던+QDD 하이브리드)</td><td>고토크밀도 마이크로 모터 체인 전반</td></tr>
+</tbody></table></div>
+<figcaption>출처: 東吳증권 4분류(2025-06), 1x.tech(2026-07), 테슬라 특허 분석(ilovetesla·basenor, 2026-03~04), 36kr AGILINK(2026-06). 실제 제품은 혼합 채택이 일반적(테슬라 = 유성기어+스크류+텐던 3단).</figcaption>
+<p>주목할 수렴이 하나 있다. 서로 원수처럼 경쟁하는 1X와 테슬라가 <strong>"모터는 전완으로, 손가락은 텐던으로"</strong>라는 같은 아키텍처에 도달했다는 점이다. 이유는 물리다 — 손끝 관성이 작아야 빠르고 안전하며, 25개 모터의 발열은 손 안에서 처리할 수 없다. 차이는 그다음이다: 테슬라가 (특허 기준) 유성기어박스+스크류를 거쳐 텐던을 당기는 다단 구성(정밀·복잡 — 단 이 특허의 롤링 접촉 관절은 '26-04 "실기에서 실패"로 폐기 공언)인 반면, 1X는 감속 자체를 5~15:1로 최소화해 <strong>역구동성을 시스템 철학으로</strong> 삼았다("force transparency" — 힘이 나가고 정보가 돌아온다). 전자는 위치 정밀에, 후자는 힘 인지에 베팅한 것이며, 접촉이 지배하는 실세계 조작에서는 후자가 학습 데이터 품질(관절이 곧 센서)까지 얻는다는 것이 1X의 논리다. 풀구동 vs 언더액추에이션의 선택도 같은 축 위에 있다 — 볼륨 시장은 모터 6~11개의 언더로 원가를 잡고(정밀 희생), 프런티어는 관절별 독립 구동으로 간다. 1X가 "22 전능동·수동 관절 0"을 굳이 명시한 것은 이 지점을 겨냥한 마케팅이자 기술 선언이다.</p>
+<h3>2.4 감지 — 촉각 4노선: 손의 승부는 결국 "느끼는 능력"에서 갈린다</h3>
+<p>파지 실패의 대부분은 힘을 못 내서가 아니라 <strong>못 느껴서</strong> 일어난다. 젖은 유리잔이 미끄러지기 시작하는 순간을 알려주는 물리량이 전단력(shear)인데, humanoid.guide의 지적대로 "전단 감지는 대부분의 로봇 손이 아직 생략하는 부분"이다. 1X 신형 손의 와인잔 데모가 기술적으로 의미 있는 이유가 여기 있다 — 법선력·접촉 위치에 더해 전단력을 읽고 미끄러짐이 끝나기 전에 재파지한다(자사 공표). 촉각의 기술 노선은 넷으로 갈라져 있고, 모건스탠리조차 "행업 공식(共識) 부재"를 명시했다.</p>
+<figure>
+  <div class="fig-t">촉각 센서 4노선 — 해상도·내구·원가의 삼각형 위에서 아직 아무도 세 꼭짓점을 다 갖지 못했다</div>
+  <div class="fig-box">
+  <svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="촉각 4노선 비교">
+    <rect x="70" y="50" width="205" height="230" rx="10" fill="#F6F8FA" stroke="#E2E8F0"/>
+    <text x="172" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#0F2B46">압저항 (piezoresistive)</text>
+    <text x="172" y="102" text-anchor="middle" font-size="11.5" fill="#4A5568">압력→저항 변화</text>
+    <text x="172" y="126" text-anchor="middle" font-size="11.5" font-weight="700" fill="#047857">강점: 저가·공정 성숙 — 볼륨 주류</text>
+    <text x="172" y="146" text-anchor="middle" font-size="11.5" fill="#4A5568">약점: 감도·드리프트·다축 한계</text>
+    <text x="172" y="176" text-anchor="middle" font-size="11.5" fill="#4A5568">주자: 汉威·福莱신재 등(中)</text>
+    <text x="172" y="196" text-anchor="middle" font-size="11.5" fill="#4A5568">위치: 현 주력 채택 노선(MS)</text>
+    <text x="172" y="230" text-anchor="middle" font-size="11.5" fill="#718096">적합: 저가 언더액추에이티드</text>
+    <text x="172" y="248" text-anchor="middle" font-size="11.5" fill="#718096">볼륨 핸드의 기본 촉각</text>
+    <rect x="295" y="50" width="205" height="230" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+    <text x="397" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#1E3A8A">정전용량 (capacitive)</text>
+    <text x="397" y="102" text-anchor="middle" font-size="11.5" fill="#1E40AF">전극 간 커패시턴스 변화</text>
+    <text x="397" y="126" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E40AF">강점: 3축력·1g급 분해능·일관성</text>
+    <text x="397" y="146" text-anchor="middle" font-size="11.5" fill="#1E40AF">약점: 간섭 차폐·적층 공정</text>
+    <text x="397" y="176" text-anchor="middle" font-size="11.5" fill="#1E40AF">주자: 他山과기 등</text>
+    <text x="397" y="196" text-anchor="middle" font-size="11.5" fill="#1E40AF">위치: 정밀 요구 구간 부상(MS)</text>
+    <text x="397" y="230" text-anchor="middle" font-size="11.5" fill="#1E40AF">적합: 중~고가 산업 핸드의</text>
+    <text x="397" y="248" text-anchor="middle" font-size="11.5" fill="#1E40AF">지문·지복 정밀 촉각</text>
+    <rect x="520" y="50" width="205" height="230" rx="10" fill="#FFFBEB" stroke="#FDE68A"/>
+    <text x="622" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#92400E">자기·홀 (magnetic/Hall)</text>
+    <text x="622" y="102" text-anchor="middle" font-size="11.5" fill="#92400E">자석 변위→자기장 변화 감지</text>
+    <text x="622" y="126" text-anchor="middle" font-size="11.5" font-weight="700" fill="#92400E">강점: 감도·고주파 응답·내구(MS)</text>
+    <text x="622" y="146" text-anchor="middle" font-size="11.5" fill="#92400E">약점: 기술 장벽 최고·교정</text>
+    <text x="622" y="176" text-anchor="middle" font-size="11.5" fill="#92400E">주자: NVE(스핀트로닉스 GMR,</text>
+    <text x="622" y="192" text-anchor="middle" font-size="11.5" fill="#92400E">엔드이펙터 탑재 — CEO 발언) [주의]</text>
+    <text x="622" y="216" text-anchor="middle" font-size="11.5" fill="#92400E">Paxini ITPU 다차원 어레이</text>
+    <text x="622" y="234" text-anchor="middle" font-size="11.5" fill="#92400E">(1000Hz·0.01N·15종 촉각량)</text>
+    <text x="622" y="256" text-anchor="middle" font-size="11.5" fill="#92400E">위치: 프리미엄·고내구 승부처</text>
+    <rect x="745" y="50" width="215" height="230" rx="10" fill="#ECFDF5" stroke="#A7F3D0"/>
+    <text x="852" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#065F46">비전촉각 (visuotactile)</text>
+    <text x="852" y="102" text-anchor="middle" font-size="11.5" fill="#065F46">젤 변형을 내장 카메라로 촬영</text>
+    <text x="852" y="126" text-anchor="middle" font-size="11.5" font-weight="700" fill="#065F46">강점: 압도적 해상도(이미지급)</text>
+    <text x="852" y="146" text-anchor="middle" font-size="11.5" fill="#065F46">약점: 부피·연산·젤 마모</text>
+    <text x="852" y="176" text-anchor="middle" font-size="11.5" fill="#065F46">계보: MIT GelSight→GelSlim</text>
+    <text x="852" y="192" text-anchor="middle" font-size="11.5" fill="#065F46">→Meta DIGIT(저가)→360/Svelte</text>
+    <text x="852" y="216" text-anchor="middle" font-size="11.5" fill="#065F46">상용: Sharpa(320×240@30Hz)</text>
+    <text x="852" y="234" text-anchor="middle" font-size="11.5" fill="#065F46">Daimon·智元 지문·Paxini 하이브리드</text>
+    <text x="852" y="256" text-anchor="middle" font-size="11.5" fill="#065F46">위치: 연구 최전선→상용 초입</text>
+    <rect x="200" y="316" width="600" height="60" rx="10" fill="#F6F8FA" stroke="#E2E8F0"/>
+    <text x="500" y="342" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">제5의 길 — 촉각 센서 없이 "관절로 느끼기"</text>
+    <text x="500" y="363" text-anchor="middle" font-size="12" fill="#4A5568">QDD 역구동(1X)·순촉각 토크제어(DLR 2022 입증): 모터 전류가 곧 힘 센서 — 지문 촉각과 상보 결합이 현행 최적해</text>
+    <text x="500" y="410" text-anchor="middle" font-size="12" fill="#4A5568">융합 추세: Paxini DexH13 GEN2 = ITPU 1,140유닛·촉각 3,420채널 + 800만 화소 손눈 카메라 + 제로샷 포즈 — "시촉각 융합"이 사실상 차세대 표준 후보</text>
+    <text x="500" y="432" text-anchor="middle" font-size="12" fill="#4A5568">학습 인프라: 촉각 시뮬레이터 Tacto(Meta)·Taxim·TacSL(NVIDIA Isaac) — 촉각 sim-to-real이 열리며 데이터 병목 완화 시작</text>
+  </svg>
+  </div>
+  <figcaption>그림 2. 촉각 4노선 비교 | 출처: Morgan Stanley 핸드 리포트 3노선 분류(2026-03, 東方財富 요약)+비전촉각 추가, 각사 공표(Paxini WRC 2024·Sharpa arXiv 2025-10·1X 2026-07), 장성증권(2024-02). NVE 관련은 X 투자 게시 재인용으로 <span class="bd bd-est">주의: 홍보성 2차 출처</span>.</figcaption>
+</figure>
+
+<h3>2.5 핵심 성능 지표(KPI)와 스펙 대결표 — 무엇을 재야 하는가</h3>
+<div class="twrap"><table>
+<caption>표 3. 덱스터러스 핸드 KPI 정의 — 스펙시트를 읽는 법</caption>
+<thead><tr><th>KPI</th><th>정의·측정</th><th>왜 중요한가</th><th>함정</th></tr></thead>
+<tbody>
+<tr><td>능동 DoF</td><td>모터로 독립 구동되는 자유도</td><td>조작 다양성의 상한(인간 ~27)</td><td>수동 관절 끼워 세기(DoF 인플레) — 능동/총 병기 요구</td></tr>
+<tr><td>힘 제어 가능 관절 비율</td><td>토크·힘을 명령·측정 가능한 관절 수</td><td>read-write 여부 — 접촉 과업의 관건</td><td>위치제어만 되는 관절을 DoF로 포장</td></tr>
+<tr><td>파지력·지선단력</td><td>전손 파지(N)·손끝 굴곡력(N)</td><td>도구 사용·중량물(1X 45N/지, 케틀벨 9kg)</td><td>순간 피크 vs 연속 정격 혼용</td></tr>
+<tr><td>촉각 사양</td><td>축 수(법선/전단)·분해능·대역·채널</td><td>미끄럼 감지=전단, 재질=진동 대역</td><td>"촉각 탑재"만 표기하고 축·해상도 미공개</td></tr>
+<tr><td>속도·대역폭</td><td>개폐 시간·제어 주파수</td><td>낙하물 캐치·재파지 반응(1X "freaky fast")</td><td>무부하 속도만 제시</td></tr>
+<tr><td>내구(사이클)</td><td>정격 부하 반복 수명</td><td>산업 채택의 문턱 — 텐던의 아킬레스건</td><td>무부하 사이클·부위별 상이(1X 손목 200만은 손목 기준)</td></tr>
+<tr><td>환경 등급·유지보수</td><td>IP·식품안전·텐던 교체 주기</td><td>가정·식품·습식 환경(1X IP68 최초급)</td><td>—</td></tr>
+<tr><td>원가·중량</td><td>모듈 단가·손 질량</td><td>BOM 17~19%의 주인공 — 팔 관성에도 직결</td><td>단가 20배 스펙트럼: 등급 혼동 주의</td></tr>
+</tbody></table></div>
+
+<div class="twrap"><table class="wide-xl">
+<caption>표 4. 주요 핸드 스펙 대결표 (2026-07 기준, 공표치) — 이 표가 이 보고서의 시그니처다</caption>
+<thead><tr><th>핸드</th><th>DoF(능동)</th><th>구동·전동</th><th>촉각</th><th>공표 성능</th><th class="num">가격</th><th>비고</th></tr></thead>
+<tbody>
+<tr class="hl"><td><strong>1X NEO Hands</strong> (26-07-09)</td><td>25 전능동 (지·장 22+손목 3)</td><td>폴리머 텐던 · QDD 5~15:1 · 전 관절 역구동</td><td>지문 몰딩 — 법선+위치+<strong>전단</strong></td><td>엄지 3.5Nm·지선단 45N·±0.2mm·IP68·손목 200만 사이클</td><td class="num">비매 (NEO 내재)</td><td>연 1만 개 인하우스 라인 · "read-write" 선언</td></tr>
+<tr><td>Tesla Optimus Gen3</td><td>22 (中 분해: 주동 17) <span class="bd bd-cfl">상충</span></td><td>전완 25 액추에이터·텐던(지당 케이블 3) · 유성+스크류 다단 <span class="bd bd-cfl">폐기 공언된 특허 기준</span></td><td>지문 힘 피드백(계란·유리병 — 지문 센서는 長盈精密 공급 보도)</td><td>"3,000+ 과업" 주장 · 손가락당 4 DoF</td><td class="num">비매</td><td>'25 생산 중단 원인<br>'26-04 특허 설계 폐기 공언(롤링 관절 실기 실패)<br>현행 설계 미공개 · V3 공개 7말~8월</td></tr>
+<tr><td>Figure 03 핸드</td><td>미공개 (F02=16 · 2차 소스 20 <span class="bd bd-cfl">상충</span>)</td><td>인하우스</td><td>3g 감지 지문 촉각+손바닥 카메라</td><td>—(상세 미공개)</td><td class="num">비매</td><td>가정·양산 설계(25-10)</td></tr>
+<tr><td>Shadow Dexterous Hand</td><td>24관절·20 능동급</td><td>텐던(공압→전동 세대)</td><td>지문 촉각 옵션</td><td>인간 등가 운동학·손목 2 DoF</td><td class="num">€11만+</td><td>연구 정점 · OpenAI 큐브 플랫폼</td></tr>
+<tr><td>Wonik Allegro V5</td><td>16 능동(4지)</td><td>DC 토크제어</td><td>지문 360° 전방위 촉각</td><td>교체식 핑거팁 4종·합금+복합재</td><td class="num">Shadow의 ~1/5</td><td>연구 표준 플랫폼(ROS·Isaac 생태)</td></tr>
+<tr><td>Linkerbot Linker Hand</td><td>11~<strong>42</strong> 라인업(L20/L30/O30·R30)</td><td>링키지/텐던/직구동 3라인 병행</td><td>0.01N 력피드백</td><td>"Shadow 내구 10배·가격 1/20 미만" 자칭 · GS 조사 ASP 해외比 -50%</td><td class="num">¥5만~10만대</td><td>고자유도 점유 80%+ 자칭 · 월 4,000+대</td></tr>
+<tr><td>Inspire RH56/RH5DG2</td><td>6~13 (18관절)</td><td>마이크로 전기실린더+링키지</td><td>촉각형 12모듈(DFTP)</td><td>파지 60N+·수동부하 30kg·100만 사이클</td><td class="num">$6,500~(美 소매)</td><td>'25 연 1만 대 — 볼륨 1위 실측</td></tr>
+<tr><td>Paxini DexH13 GEN2</td><td>16 (주동 13)</td><td>코어리스 전동</td><td>ITPU <strong>1,140유닛·3,420채널</strong>(1000Hz·0.01N·15종)+800만 손눈 카메라</td><td>지선단 15N·정격 5kg·100만 사이클·제로샷 포즈</td><td class="num">비공개</td><td>촉각 풀스택의 대표작</td></tr>
+<tr><td>Sharpa Wave</td><td>22</td><td>전동</td><td>지문 비전촉각 320×240@30Hz</td><td>사과 깎기 시연</td><td class="num">비공개</td><td>arXiv 연구 플랫폼 채택(SaTA)</td></tr>
+<tr><td>AGILINK OmniHand 3 Ultra-M</td><td>고DoF(전직구동)</td><td>전(全)직구동 기함+텐던 병행</td><td>—</td><td>—</td><td class="num">비공개</td><td>AgiBot 분사('26-01) → 5개월 만에 유니콘</td></tr>
+</tbody></table></div>
+<figcaption>출처: 각사 공식 공표·투자설명 자료(1X 26-07-09, 테슬라 특허·실적 콜 분석 26-02~04, 艾邦 26-04, robotscope 26-06, humanoid.guide 26-04, WRC 전시 자료). 테슬라 능동 DoF는 자사 "22 DoF"와 中 증권 분해 "주동 17"이 병존 <span class="bd bd-cfl">상충: 능동/총 집계 기준 차 추정</span>. 빈칸은 미공개.</figcaption>
+
+<h3>2.6 소프트웨어·데이터 — 손이 어려운 진짜 이유</h3>
+<p>손 제어가 팔·다리보다 어려운 것은 자유도 수 때문만이 아니라 <strong>접촉의 물리</strong> 때문이다: 접촉은 불연속(붙었다 떨어짐)·고차원(수백 접점)·부분관측(가려짐)이라 고전 제어가 잘 안 통한다. 돌파는 학습에서 왔다 — OpenAI(2018~19)가 Shadow Hand 큐브 조작을 <strong>시뮬레이션+도메인 랜덤라이제이션만으로</strong> 실기 이전시킨 것이 기점이고, 이후 DLR이 카메라 없이 토크·촉각만으로 손안 조작을 학습(2022)시키며 "관절로 느끼기"의 가치를 입증했다. 현행 프런티어는 셋이다: ① <strong>촉각-비전 융합 정책</strong> — 촉각 신호를 손가락 좌표계에 공간 정박(SaTA, 2025)해야 성능이 나온다는 발견, Daimon×Galbot의 촉각 조작 벤치마크 RobOmni(2026) 같은 평가 인프라의 등장. ② <strong>촉각 sim-to-real</strong> — Tacto(Meta)·Taxim·TacSL(NVIDIA)로 촉각 이미지까지 시뮬레이션되기 시작. ③ <strong>VLA와의 접합</strong> — 파운데이션 모델(π0·Helix·GR00T)이 손끝 힘 스트림을 입력으로 삼기 시작한 단계로, 1X가 "하드웨어 천장 제거 → 이제 데이터가 유일한 장벽"이라 선언한 지점이 정확히 여기다: <strong>좋은 손의 진짜 가치는 스스로 만드는 고품질 접촉 데이터</strong>이며(역구동 관절 = 25채널 힘 로거), 손 양산 능력(1X 연 1만 개)이 곧 데이터 수집 능력이 된다. 이것이 이 산업에서 하드웨어와 AI가 분리 불가능한 이유다.</p>
+
+<figure>
+  <div class="fig-t">공식 영상 — 1X 'NEO's Hands': 와인잔·전단 촉각·전능동 25 DoF, 이 보고서의 출발점이 된 발표 (2026-07-09)</div>
+  <div class="fig-box"><a class="vlink" href="https://youtu.be/QRyXV3csReA" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/QRyXV3csReA/hqdefault.jpg" alt="1X NEO's Hands 공식 영상 썸네일" loading="lazy"><span class="play">&#9654;&nbsp; YouTube에서 공식 영상 재생</span></a></div>
+  <figcaption>영상 1. 1X 공식 'NEO's Hands — An API to the Physical World'. 와인잔 파지, 지갑 속 동전·나사 집기, 전구 설치, 지퍼, USB-C 삽입, 수어까지 — 전단 촉각과 힘 투명성의 시연. 공개 3일 만에 X 조회 1,100만. 썸네일 클릭 시 유튜브 재생. | 출처: 1X 공식 YouTube(QRyXV3csReA).</figcaption>
+</figure>
+
+<h3>2.7 기술 세대 구분</h3>
+<p><strong>1세대(현 볼륨, ~2025):</strong> 언더액추에이션 6~11 모터·압저항 기본 촉각·¥5만~10만 — 연구·POC 시장을 연 세대(Inspire·Linkerbot 볼륨의 주력). <strong>2세대(프런티어, 2025~27):</strong> 전능동 20+ DoF·전단 포함 다축 촉각·역구동 힘제어·IP등급·백만 사이클 — 1X가 정의를 선점했고 테슬라·Paxini·Allegro V5가 같은 층위. 세대의 관문은 스펙이 아니라 <strong>양산 수율과 현장 내구</strong>다. <strong>3세대(2028~):</strong> 전자피부 대면적화(손바닥·손등 전면 촉각), 시촉각 융합 표준화, 촉각 네이티브 VLA — 손이 "센서 어레이를 단 기계"에서 "감각 기관"으로 넘어가는 단계. 병목 순서는 ①내구·유지보수(텐던 마모가 최대 미지수) ②촉각 원가(채널당 단가) ③데이터(촉각 포함 조작 데이터셋) ④열·전력 패키징이다.</p>
+</section>
+<section id="s3">
+<h2><span class="no">3</span>가치사슬과 이익 풀</h2>
+<p class="lead"><strong>핵심 결론:</strong> 핸드의 사슬은 짧지만 가파르다 — <strong>이익은 ① 과점 부품(코어리스 3강 85%)과 ② 촉각처럼 장벽이 높은 감지 소자에 고이고</strong>, 모듈(완성 손)은 볼륨이 커질수록 가격전쟁(20배 가격 스펙트럼이 수렴하며 하향)에 노출되며, OEM 인하우스(테슬라·1X·Figure)는 이익이 아니라 본체 경쟁력으로 회수되는 비용센터다. 매출의 얼굴과 이익의 주인이 다른 구조 — 상위 산업(휴머노이드)과 동형(同型)이다.</p>
+
+<h3>3.1 사슬 전도(全圖)</h3>
+<figure>
+  <div class="fig-t">덱스터러스 핸드 가치사슬 — 소재에서 손끝 데이터까지 다섯 층위</div>
+  <div class="fig-box">
+  <svg viewBox="0 0 1000 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="핸드 가치사슬">
+    <defs><marker id="ac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#CBD5E1"/></marker></defs>
+    <rect x="70" y="50" width="150" height="330" rx="10" fill="#FFFBEB" stroke="#FDE68A"/>
+    <text x="145" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#92400E">① 소재</text>
+    <text x="145" y="104" text-anchor="middle" font-size="11" fill="#92400E">NdFeB 희토류 자석</text>
+    <text x="145" y="120" text-anchor="middle" font-size="11" fill="#92400E">(모터 17~25개/손)</text>
+    <text x="145" y="144" text-anchor="middle" font-size="11" fill="#92400E">UHMWPE 폴리머 텐던</text>
+    <text x="145" y="168" text-anchor="middle" font-size="11" fill="#92400E">촉각용 젤·엘라스토머</text>
+    <text x="145" y="192" text-anchor="middle" font-size="11" fill="#92400E">고강도 합금·복합재</text>
+    <text x="145" y="224" text-anchor="middle" font-size="11" font-weight="700" fill="#92400E">특성: 시황·지정학 노출</text>
+    <text x="145" y="242" text-anchor="middle" font-size="11" fill="#92400E">(희토류 통제 — 9장)</text>
+    <rect x="252" y="50" width="170" height="330" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+    <text x="337" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#1E3A8A">② 핵심 부품</text>
+    <text x="337" y="102" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E40AF">마이크로 모터</text>
+    <text x="337" y="118" text-anchor="middle" font-size="11" fill="#1E40AF">코어리스 3강 ~85% 과점</text>
+    <text x="337" y="134" text-anchor="middle" font-size="11" fill="#1E40AF">中: 鸣志·鼎智·兆威·雷利</text>
+    <text x="337" y="158" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E40AF">마이크로 스크류·감속기</text>
+    <text x="337" y="174" text-anchor="middle" font-size="11" fill="#1E40AF">浙江荣泰·北特·五洲新春·震裕</text>
+    <text x="337" y="198" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E40AF">촉각 소자·칩</text>
+    <text x="337" y="214" text-anchor="middle" font-size="11" fill="#1E40AF">Paxini ITPU·NVE GMR·GelSight계</text>
+    <text x="337" y="238" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E40AF">텐던·드라이버·엔코더</text>
+    <text x="337" y="254" text-anchor="middle" font-size="11" fill="#1E40AF">大业·南山智尚(텐던)</text>
+    <text x="337" y="286" text-anchor="middle" font-size="11" font-weight="700" fill="#1E40AF">이익 밀도 최고 구간</text>
+    <rect x="454" y="50" width="160" height="330" rx="10" fill="#F6F8FA" stroke="#E2E8F0"/>
+    <text x="534" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#0F2B46">③ 서브모듈</text>
+    <text x="534" y="104" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1A202C">마이크로 전기실린더</text>
+    <text x="534" y="120" text-anchor="middle" font-size="11" fill="#4A5568">감속기+모터+스크류+센서 일체</text>
+    <text x="534" y="136" text-anchor="middle" font-size="11" fill="#4A5568">— Inspire 원조·Linkerbot 내재</text>
+    <text x="534" y="160" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1A202C">촉각 모듈·지문 유닛</text>
+    <text x="534" y="176" text-anchor="middle" font-size="11" fill="#4A5568">센서+회로+외피 통합</text>
+    <text x="534" y="200" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1A202C">텐던 드라이브 유닛</text>
+    <text x="534" y="216" text-anchor="middle" font-size="11" fill="#4A5568">1X Tendon Drive류</text>
+    <text x="534" y="248" text-anchor="middle" font-size="11" fill="#4A5568">표준 인터페이스 부재 —</text>
+    <text x="534" y="264" text-anchor="middle" font-size="11" fill="#4A5568">모듈화가 차기 격전지</text>
+    <rect x="646" y="50" width="160" height="330" rx="10" fill="#FEF2F2" stroke="#FECACA"/>
+    <text x="726" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#991B1B">④ 핸드 모듈</text>
+    <text x="726" y="102" text-anchor="middle" font-size="11.5" font-weight="700" fill="#991B1B">전문기업(외판)</text>
+    <text x="726" y="118" text-anchor="middle" font-size="11" fill="#991B1B">Linkerbot·Inspire·Paxini</text>
+    <text x="726" y="134" text-anchor="middle" font-size="11" fill="#991B1B">Shadow·Allegro·Sharpa</text>
+    <text x="726" y="158" text-anchor="middle" font-size="11.5" font-weight="700" fill="#991B1B">OEM 인하우스</text>
+    <text x="726" y="174" text-anchor="middle" font-size="11" fill="#991B1B">1X·테슬라·Figure·智元→분사</text>
+    <text x="726" y="202" text-anchor="middle" font-size="11" fill="#991B1B">단가 ¥5만~10만(中)</text>
+    <text x="726" y="218" text-anchor="middle" font-size="11" fill="#991B1B">~€11만(Shadow) — 20배 격차</text>
+    <text x="726" y="246" text-anchor="middle" font-size="11" font-weight="700" fill="#991B1B">가격전쟁 개시 —</text>
+    <text x="726" y="262" text-anchor="middle" font-size="11" fill="#991B1B">백만 캐파 계획이 방아쇠</text>
+    <rect x="838" y="50" width="122" height="330" rx="10" fill="#ECFDF5" stroke="#A7F3D0"/>
+    <text x="899" y="78" text-anchor="middle" font-size="13" font-weight="800" fill="#065F46">⑤ 수요</text>
+    <text x="899" y="104" text-anchor="middle" font-size="11" fill="#065F46">휴머노이드 OEM</text>
+    <text x="899" y="120" text-anchor="middle" font-size="11" fill="#065F46">(대당 2개)</text>
+    <text x="899" y="144" text-anchor="middle" font-size="11" fill="#065F46">연구·교육 랩</text>
+    <text x="899" y="160" text-anchor="middle" font-size="11" fill="#065F46">(현 최대 실수요)</text>
+    <text x="899" y="184" text-anchor="middle" font-size="11" fill="#065F46">산업 자동화</text>
+    <text x="899" y="200" text-anchor="middle" font-size="11" fill="#065F46">(그리퍼 대체 상단)</text>
+    <text x="899" y="224" text-anchor="middle" font-size="11" fill="#065F46">의수·재활</text>
+    <text x="899" y="248" text-anchor="middle" font-size="11" fill="#065F46">+ 부산물: 접촉 데이터</text>
+    <text x="899" y="264" text-anchor="middle" font-size="11" fill="#065F46">(AI 학습 자산)</text>
+    <line x1="220" y1="215" x2="252" y2="215" stroke="#CBD5E1" stroke-width="2.5" marker-end="url(#ac)"/>
+    <line x1="422" y1="215" x2="454" y2="215" stroke="#CBD5E1" stroke-width="2.5" marker-end="url(#ac)"/>
+    <line x1="614" y1="215" x2="646" y2="215" stroke="#CBD5E1" stroke-width="2.5" marker-end="url(#ac)"/>
+    <line x1="806" y1="215" x2="838" y2="215" stroke="#CBD5E1" stroke-width="2.5" marker-end="url(#ac)"/>
+    <text x="500" y="420" text-anchor="middle" font-size="12" fill="#4A5568">수직 이동: OEM→인하우스(1X·테슬라·Figure) / 본체→분사(智元→AGILINK) / 촉각→핸드→본체 풀스택(Paxini) / 의수→로봇(PSYONIC·OYMotion)</text>
+    <text x="500" y="442" text-anchor="middle" font-size="12" fill="#4A5568">크로스오버 진입: AAC 瑞声(스마트폰 햅틱·음향) — 소비전자 정밀 양산 역량의 유입, 모듈 단가 하락을 가속할 변수</text>
+    <text x="500" y="478" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">한 줄 요약: 물량은 ④·⑤에서 만들어지고, 이익은 ②(과점 부품·촉각 소자)에서 걸러지며, 데이터라는 제2의 산출물이 ⑤에서 발생한다</text>
+    <text x="500" y="510" text-anchor="middle" font-size="11.5" fill="#718096">출처: 東吳(2025-06)·MS(2026-03)·艾邦(2026-04)·robotscope(2026-06)·각사 공표 종합</text>
+  </svg>
+  </div>
+  <figcaption>그림 3. 핸드 가치사슬 전도 | 본문 2·7장의 기업·기술 데이터를 사슬 위에 재배치.</figcaption>
+</figure>
+
+<h3>3.2 원가 분해 — 손 하나에 돈이 어떻게 들어가는가</h3>
+<div class="twrap"><table>
+<caption>표 5. 핸드 원가 구성과 구간별 공급 구조</caption>
+<thead><tr><th>구간</th><th>원가 비중</th><th>공급 구조</th><th>단가 방향</th></tr></thead>
+<tbody>
+<tr class="hl"><td>구동(모터+드라이버)</td><td>최대 블록 <span class="bd bd-est">추정 30~45%</span></td><td>코어리스 3강 85% 과점 + 中 추격 / 슬로티드 전환 논쟁</td><td>물량 급증 × 단가 하락 — 매출은 순증</td></tr>
+<tr><td>전동(스크류·감속·텐던)</td><td>두 번째 블록 <span class="bd bd-est">추정 20~30%</span></td><td>마이크로 스크류 정밀가공 장벽 / 텐던 소재 니치</td><td>정밀 가공 캐파가 병목 시 가격 방어</td></tr>
+<tr><td>감지(촉각·엔코더)</td><td>성능 등급별 편차 최대 <span class="bd bd-est">추정 10~25%</span></td><td>노선 4파전·표준 부재 — 프리미엄 형성 구간</td><td>채널 수 증가(수십→수천)로 대당 가치 상승</td></tr>
+<tr><td>구조·외피·조립</td><td>잔여</td><td>합금·복합재 가공 + 소프트 외피(1X 몰딩)</td><td>양산 설계(다이캐스팅화)로 하락</td></tr>
+<tr class="total"><td>모듈 합계</td><td>100%</td><td colspan="2">외판가 ¥5만~10만(中 볼륨)~€11만(Shadow) — 東吳: "감속기+스크류+텐던+센서 4개 부품의 원가 비중이 높다"</td></tr>
+</tbody></table></div>
+<figcaption>출처: 東吳증권 원가 서술(2025-06)·艾邦 단가(2026-04)·각사 공표. 세부 % 는 공개 BOM 부재로 본 보고서 구간 추정 <span class="bd bd-est">추정</span> — 상위 산업 보고서의 "핸드=휴머노이드 BOM 19%(BofA 2030E)·17%(中泰)"와 정합하도록 설정.</figcaption>
+
+<h3>3.3 이익 풀 지도</h3>
+<figure>
+  <div class="fig-t">이익 풀 지도(2030E 정상화 국면 추정) — 폭=핸드 생태계 매출 비중, 높이=영업이익률</div>
+  <div class="fig-box">
+  <svg viewBox="0 0 1000 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="핸드 이익 풀">
+    <line x1="70" y1="290" x2="960" y2="290" stroke="#CBD5E1" stroke-width="1.5"/>
+    <g stroke="#E2E8F0" stroke-width="1">
+      <line x1="70" y1="230" x2="960" y2="230"/><line x1="70" y1="170" x2="960" y2="170"/>
+      <line x1="70" y1="110" x2="960" y2="110"/><line x1="70" y1="350" x2="960" y2="350"/>
+    </g>
+    <g font-size="12" fill="#4A5568" text-anchor="end">
+      <text x="62" y="114">+30%</text><text x="62" y="174">+20%</text><text x="62" y="234">+10%</text>
+      <text x="62" y="294">0%</text><text x="62" y="354">-10%</text>
+    </g>
+    <rect x="70" y="242" width="80" height="48" fill="#D97706" opacity="0.85"/>
+    <text x="110" y="233" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">+8%</text>
+    <text x="110" y="315" text-anchor="middle" font-size="12" fill="#4A5568">소재</text>
+    <rect x="158" y="140" width="170" height="150" fill="#2563EB" opacity="0.9"/>
+    <text x="243" y="131" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">+25%</text>
+    <text x="243" y="315" text-anchor="middle" font-size="12" fill="#4A5568">마이크로 모터·구동</text>
+    <rect x="336" y="164" width="120" height="126" fill="#0891B2" opacity="0.9"/>
+    <text x="396" y="155" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">+21%</text>
+    <text x="396" y="315" text-anchor="middle" font-size="12" fill="#4A5568">스크류·감속·텐던</text>
+    <rect x="464" y="104" width="110" height="186" fill="#7C3AED" opacity="0.9"/>
+    <text x="519" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">+31%</text>
+    <text x="519" y="315" text-anchor="middle" font-size="12" fill="#4A5568">촉각 소자·칩</text>
+    <rect x="582" y="224" width="220" height="66" fill="#DC2626" opacity="0.8"/>
+    <text x="692" y="215" text-anchor="middle" font-size="12.5" font-weight="700" fill="#991B1B">+11% (범위 -10%~+25%)</text>
+    <text x="692" y="315" text-anchor="middle" font-size="12" fill="#4A5568">핸드 모듈(외판)</text>
+    <rect x="810" y="290" width="150" height="40" fill="#64748B" opacity="0.75"/>
+    <text x="885" y="352" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">비용센터(-)</text>
+    <text x="885" y="315" text-anchor="middle" font-size="12" fill="#FFFFFF" font-weight="700">OEM 인하우스</text>
+    <text x="500" y="395" text-anchor="middle" font-size="12" fill="#4A5568">현재 실측 앵커: 코어리스 3강 과점 마진 · Paxini 밸류 ¥100억+(촉각 프리미엄의 가격화) · Inspire "고성가비" 볼륨 전략 · 인하우스는 본체 원가로 흡수</text>
+    <text x="500" y="417" text-anchor="middle" font-size="12" fill="#4A5568">모듈 마진의 넓은 범위(-10~+25%)는 가격전쟁 강도의 함수 — Linkerbot 백만 캐파 계획·Xynova 진입·AAC 크로스오버가 하방 압력</text>
+  </svg>
+  </div>
+  <div class="legend">
+    <div class="li"><span class="sw" style="background:#D97706"></span>소재</div>
+    <div class="li"><span class="sw" style="background:#2563EB"></span>모터·구동</div>
+    <div class="li"><span class="sw" style="background:#0891B2"></span>전동 부품</div>
+    <div class="li"><span class="sw" style="background:#7C3AED"></span>촉각</div>
+    <div class="li"><span class="sw" style="background:#DC2626"></span>모듈(외판)</div>
+    <div class="li"><span class="sw" style="background:#64748B"></span>인하우스</div>
+  </div>
+  <figcaption>그림 4. 핸드 이익 풀 지도 — 구간별 비중·마진은 2030E 정상화 국면 <span class="bd bd-est">추정</span>(근거: 표 5 원가 구조 × 각 구간 경쟁 강도, 코어리스 과점·촉각 표준 부재 프리미엄·모듈 가격전쟁 개시를 반영). 정밀 실측치 부재 — 방향성 제시 목적.</figcaption>
+</figure>
+
+<h3>3.4 교섭력·통제점·수직통합</h3>
+<p><strong>교섭력:</strong> ① 부품→모듈: 코어리스 하이엔드는 3강이 갑(대체 인증에 수 분기) — PI 연구진의 진단대로 "설계 단순화 없이는 BOM $500 이하가 어렵고, 상류(Maxon·ST 등) 의존이 경성 제약"(36kr 재인용)이다. 단 슬로티드 전환·중국 추격이 침식 중. ② 모듈→OEM: 현재는 OEM이 갑(공급자 난립·POC 물량·자연 위협)이나, 예외가 둘 있다 — <strong>촉각처럼 대체 불가 성능</strong>(Paxini에 JD·본체 기업들이 몰리는 이유)과 <strong>검증된 볼륨 양산</strong>(Inspire 연 1만 대 실적). ③ 데이터의 역류: 손을 쓰는 쪽(OEM·연구소)이 접촉 데이터를 갖게 되므로, 모듈 전문기업은 "데이터 수집장 구축"(Linkerbot 천사 라운드 용처)으로 대응한다. <strong>전략적 통제점:</strong> (a) 코어리스 권선 설계·와인딩 장비(3강 85%의 원천), (b) 촉각 칩·소자 IP(Paxini ITPU류), (c) 마이크로 정밀가공(스크류 연삭), (d) <strong>내구 검증 실적</strong> — "백만 사이클"을 실증한 손이 희소한 지금, 사이클 데이터 자체가 장벽이다, (e) SDK·생태(Allegro가 성능이 아니라 ROS·시뮬 생태로 표준이 된 선례). <strong>수직통합:</strong> 방향이 넷이다 — OEM의 인하우스화(1X·테슬라·Figure: "손=차별화 심장"이라 외주 불가 판단), 본체의 분사(智元→AGILINK: 지분 67%를 쥔 채 손을 별도 자본시장 상품으로 — '분사이되 통제' 모델), 촉각의 풀스택화(Paxini: 소자→손→본체), 인접 산업의 크로스오버(AAC 瑞声: 스마트폰 햅틱 양산 역량, PSYONIC·OYMotion: 의수 현금흐름). 통합 방향의 다양성 자체가 <strong>"해자가 어느 층에 생길지 미확정"</strong>이라는 산업 단계의 증거다.</p>
+</section>
+<section id="s4">
+<h2><span class="no">4</span>시장 규모와 성장</h2>
+<p class="lead"><strong>핵심 결론:</strong> 핸드 시장 전망은 <strong>"정의"가 숫자를 지배한다</strong> — 그리퍼를 포함한 광의 시장은 2030년 $30억(CAGR 10%)의 완만한 그림이지만, 휴머노이드용 다지 핸드로 좁히면 같은 2030년이 $46억~$55억+(CAGR 40~65%), 중국계 낙관 시나리오는 ¥879.7억(≈$120억)까지 벌어진다 <span class="bd bd-cfl">상충</span>. 성장 산식은 명확하다 — <strong>Q(휴머노이드 대수×2) × P(단가 수렴·하락) × 믹스(촉각·전능동 침투로 대당 가치 상승)</strong>. 시장의 본질은 "휴머노이드 물량 전망에 대한 레버리지 파생상품"이다.</p>
+
+<h3>4.1 기관 전망 비교 — 분모가 다르면 결론이 10배 다르다</h3>
+<div class="twrap"><table class="wide-xl">
+<caption>표 6. 주요 기관 핸드 시장 전망 — 정의별 분리 <span class="bd bd-cfl">상충</span></caption>
+<thead><tr><th>기관(발표)</th><th>정의</th><th>2024~25 실측/추정</th><th>2030</th><th>CAGR</th><th>특기 사항</th></tr></thead>
+<tbody>
+<tr><td>東吳증권 (2025-06)</td><td>광의(2지 그리퍼 포함)</td><td>'24 $17.1억/76만 개 · '25E $19.2억/86만 개</td><td>$30.4억 / 141만 개</td><td>9.6%</td><td>광의라 완만 — 다지 전환의 '믹스 개선'이 숨어 있음</td></tr>
+<tr><td>Statista (재인용)</td><td>광의</td><td>'21 $11.6억</td><td>$30.4억</td><td>10.9%</td><td>東吳와 사실상 동일 궤적</td></tr>
+<tr><td>QYResearch (별도판)</td><td>다지 핸드</td><td>'23 $23.3억</td><td>$45.8억</td><td>11.9%</td><td>다지인데 완만 — 기존(연구·의수) 기반 연장선 해석</td></tr>
+<tr class="hl"><td>国泰海通 (2025-07-11, QYR 인용)</td><td>다지·휴머노이드 중심</td><td>—</td><td>글로벌 &gt;$50억</td><td>64.6%</td><td>'24 지역 비중 아태 37.9%·북미 32.6%·유럽 25.3% — 아시아 무게중심 명시</td></tr>
+<tr><td>GGII 高工 (2025~26, 재인용 종합)</td><td>핸드 대수(중국/글로벌 분리)</td><td>中 0.57만 只('24) → 1.92만('25 실측, +237%)</td><td>中 43만 只+ · 글로벌 34만 只+(휴머노이드용 32.5만)</td><td>中 '25-30 ~87% / 글로벌 '24-30 90%</td><td>재인용 간 中/글로벌 귀속 혼재 <span class="bd bd-cfl">상충</span> — GGII의 글로벌 휴머노이드 '로봇' 34만 台('30) 전망과 숫자가 우연히 겹쳐 혼동 빈발</td></tr>
+<tr><td>中泰증권 (2026 재인용)</td><td>휴머노이드 핸드</td><td>정기(整機) 원가의 ~17% = 최대 단품</td><td>&gt;¥400억 (≈$55억)</td><td>&gt;40%</td><td>BofA의 "2030 BOM 19%"와 정합 — 원가 비중 접근</td></tr>
+<tr><td>头豹 LeadLeo (재인용)</td><td>휴머노이드용</td><td>—</td><td>보수 ¥320.6억 / 낙관 ¥879.7억</td><td>81.2% / 109.3%</td><td>낙관치는 휴머노이드 대폭발 가정 — 상단 앵커</td></tr>
+<tr><td>국금증권 (재인용)</td><td>가치 비중</td><td>—</td><td>핸드 비중 &gt;30% 전망</td><td>—</td><td>촉각·전능동 침투 시 BOM 내 비중 상승 논리</td></tr>
+</tbody></table></div>
+<figcaption>출처: 東吳증권 심도보고(2025-06-26), 国泰海通(2025-07-11, BigQuant 요약), QYResearch·Statista·中泰·头豹·국금 각 재인용(출처는 데이터 문서 명기). 환산은 ¥7.3/$ 적용 <span class="bd bd-drv">파생</span>.</figcaption>
+
+<figure>
+  <div class="fig-t">2030년 전망 풋볼필드 — 정의가 좁아질수록(휴머노이드 전용) 숫자가 커진다: 이 시장은 '휴머노이드 콜옵션'이다</div>
+  <div class="fig-box">
+  <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="2030 핸드 시장 전망 풋볼필드">
+    <g stroke="#E2E8F0" stroke-width="1">
+      <line x1="197" y1="50" x2="197" y2="330"/><line x1="325" y1="50" x2="325" y2="330"/>
+      <line x1="452" y1="50" x2="452" y2="330"/><line x1="579" y1="50" x2="579" y2="330"/>
+      <line x1="706" y1="50" x2="706" y2="330"/><line x1="833" y1="50" x2="833" y2="330"/>
+    </g>
+    <line x1="70" y1="330" x2="960" y2="330" stroke="#CBD5E1" stroke-width="1.5"/>
+    <g font-size="12" fill="#4A5568" text-anchor="middle">
+      <text x="70" y="352">0</text><text x="197" y="352">$20억</text><text x="325" y="352">$40억</text>
+      <text x="452" y="352">$60억</text><text x="579" y="352">$80억</text><text x="706" y="352">$100억</text><text x="833" y="352">$120억</text>
+    </g>
+    <line x1="192" y1="50" x2="192" y2="330" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="192" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#2563EB">2025 실측(광의) $19.2억</text>
+    <rect x="263" y="76" width="8" height="18" rx="3" fill="#64748B"/>
+    <text x="285" y="90" font-size="12" fill="#1A202C">광의(그리퍼 포함): 東吳·Statista $30.4억</text>
+    <rect x="361" y="136" width="60" height="18" rx="4" fill="#2563EB" opacity="0.8"/>
+    <text x="435" y="150" font-size="12" fill="#1A202C">다지 협의: QYR $45.8억 ~ 国泰海通 $50억+</text>
+    <rect x="350" y="196" width="70" height="18" rx="4" fill="#7C3AED" opacity="0.8"/>
+    <text x="434" y="210" font-size="12" fill="#1A202C">휴머노이드 전용(中 증권): 头豹 보수 ¥320억 ~ 中泰 ¥400억+</text>
+    <rect x="825" y="256" width="8" height="18" rx="3" fill="#D97706"/>
+    <text x="812" y="270" text-anchor="end" font-size="12" fill="#1A202C">낙관 상단: 头豹 ¥879.7억(≈$120억)</text>
+    <rect x="844" y="296" width="8" height="18" rx="3" fill="#DC2626" opacity="0.7"/>
+    <text x="831" y="310" text-anchor="end" font-size="12" fill="#1A202C">파생 예시: 300만 대×핸드 ¥3만 = ¥900억 [파생]</text>
+  </svg>
+  </div>
+  <figcaption>그림 5. 2030년 전망 스펙트럼(달러 환산, ¥7.3/$) | 출처: 표 6. 하단 두 점은 휴머노이드 초낙관 가정의 앵커로, 본 보고서의 기본 시나리오는 협의 $46억~$55억 밴드다 <span class="bd bd-est">추정: 채택 기준은 12장</span>.</figcaption>
+</figure>
+
+<h3>4.2 성장 동인 분해 — P·Q·믹스</h3>
+<p><strong>Q(물량):</strong> 궁극 분모는 휴머노이드 출하 × 2다. 상위 산업 보고서의 물량 밴드(2025년 1.3만~1.7만 대 → 2030년 25만~120만 대)를 적용하면 휴머노이드용 핸드만 2030년 50만~240만 개 <span class="bd bd-drv">파생: 출하×2</span> — GGII의 글로벌 핸드 34만 只+·중국 43만 只+('30E) 전망과 방향이 정합한다. 단, 단기 실측은 냉정하다: '24→'25 휴머노이드 출하가 +650% 뛸 때 핸드는 +237%만 동행했고(탄성계수 0.36), 배치된 로봇 약 5,000대 중 다지 핸드 장착은 2,000대 미만 — 증분의 다수가 그리퍼였다(高工·36kr 집계, 2026-06). 실물량은 아직 연구·POC 중심(Inspire 연 1만 대, Linkerbot 월 4,000+대)으로, 상위 산업의 "연구·교육 74%" 구조를 그대로 물려받았다. <strong>P(가격):</strong> 20배 스펙트럼(¥5만~€11만)의 하단이 기준가가 되는 중이다 — Inspire가 2020년 ¥10만 미만으로 상용화 문턱을 연 뒤, Linkerbot이 "Shadow의 1/20 미만"을 표방하고 백만 대급 전기실린더 캐파를 계획하면서 가격전쟁 구도가 짜였다. AGILINK 슝쿤의 3층 구조 증언이 현 가격 지형을 요약한다 — 기초 6~10 DoF ¥수천~3만(공연·데모용), 중단 11~17 DoF ¥5만~10만+, 고단 20+ DoF ¥20만+(Sharpa·Shadow·테슬라급). 방향은 명확한 하락이나, <strong>믹스가 반대 방향으로 민다:</strong> 언더액추에이션(모터 6~11개)→전능동(17~25개), 기본 압저항→다축·전단 촉각(채널 수십→수천), IP등급·내구 사양화 — 대당 부품 콘텐츠가 늘어나는 고급화다. 결과적으로 <strong>모듈 ASP는 횡보~완만 하락, 대당 부품 매출은 증가</strong>라는 비대칭이 부품 체인에 유리하게 작동한다 <span class="bd bd-est">추정</span>. 참고로 국금증권의 "핸드 가치 비중 30%+" 전망은 이 믹스 효과(본체 원가는 학습곡선으로 하락, 핸드는 고급화로 방어)의 논리적 귀결이다.</p>
+
+<h3>4.3 S커브 위치와 촉각 하위시장</h3>
+<p><strong>S커브:</strong> 도입기 초입 — 침투율을 "휴머노이드의 다지 핸드 채택률"로 정의하면 프런티어 기종은 이미 100%(손 없는 휴머노이드는 없다)이고, "전능동+다축 촉각 사양의 채택률"로 정의하면 한 자릿수다. 즉 이 시장의 S커브는 보급이 아니라 <strong>사양 상향의 곡선</strong>이며, 변곡 트리거는 상위 산업과 동일하게 "페이백이 입증되는 순간"이다. <strong>촉각 하위시장:</strong> QYResearch의 로봇 촉각 시스템 전망은 2029년 $4.3억(CAGR 10.2%)에 불과한데(2024년 초 집계), Paxini 한 회사의 밸류에이션이 ¥100억(≈$14억)를 넘었다는 사실은 <strong>시장이 이 전망의 대폭 상향을 이미 선반영</strong>하고 있음을 뜻한다 — 촉각 채널 수가 손당 수십 개에서 수천 개(Paxini 단일 손 3,420채널)로 뛰는 사양 혁명이 반영되지 않은 구(舊)전망이라는 게 본 보고서의 판단이다 <span class="bd bd-est">추정</span>. 지역 분포는 아태 37.9%·북미 32.6%·유럽 25.3%(궈타이) — 생산·수요 모두 아시아 무게중심이 이미 데이터로 확인된다.</p>
+</section>
+<section id="s5">
+<h2><span class="no">5</span>이 기술의 "꿈"과 성장 내러티브 — 시장은 무엇을 사고 있는가</h2>
+<p class="lead"><strong>꿈의 정의(한 문장):</strong> "손이 풀리는 순간 휴머노이드의 범용성이 풀린다 — 핸드는 <strong>1조 달러 서사의 마지막 잠금장치를 쥔 부품</strong>이며, 그 열쇠를 만드는 자가 가치사슬의 병목 프리미엄을 갖는다." 1X 뵈르니치의 "휴머노이드 베팅은 손끝에서 결판난다"가 이 꿈의 공식 슬로건이고, 머스크의 "난이도의 60%"가 그 반증적 보증이다.</p>
+
+<h3>5.1 꿈의 크기와 신선도</h3>
+<p><strong>크기:</strong> 핸드 자체 시장은 2030년 $46억~$120억(표 6)으로 "부품치고 큰" 수준이지만, 이 꿈의 진짜 산수는 레버리지에 있다 — 휴머노이드 물량 전망이 1단위 상향될 때 핸드는 대수×2로 따라가고, 사양 상향(BOM 17~19%→30% 전망)이 곱해진다. 낙관 조합(2030년 300만 대 × 핸드 ¥3만)이면 ¥900억 <span class="bd bd-drv">파생: 雪球 예시 재계산</span> — 현재 휴머노이드용 핸드 실매출(수억 위안대 <span class="bd bd-est">추정: Inspire 1만 대×단가</span>) 대비 <strong>두 자릿수~세 자릿수 배</strong> 스토리다. <strong>신선도(증거 기반):</strong> 온도계 네 개가 모두 뜨겁다. ①대중 관심 — 1X 영상 3일 1,100만 뷰(X, 보도 집계)는 부품 발표로는 전례 없는 수치. ②자본 — 2026년 1분기에만 중국 핸드 융자가 약 ¥50억으로 2025년 연간을 70% 초과(高工 집계)했고, Linkerbot $3.0B→$6B 목표(로이터), Paxini ¥100억+, AGILINK 5개월 유니콘, Inspire ¥40억까지 <strong>상반기에 전문 4사가 동시 리레이팅</strong>됐다. ③기관 프레임 — MS "2026 산업화 원년" 리포트가 셀사이드 커버리지의 신호탄. ④수요 선언 — 테슬라 병목 공인·1X 인하우스 1만 개 라인. 판정: <strong>"새로 부상 중" 국면의 한가운데</strong> — 상위 산업(과열 정점 통과)보다 사이클상 6~12개월 젊다. 확신도: 중간~높음(~70%).</p>
+
+<h3>5.2 3P 검증과 증거화 일정</h3>
+<div class="twrap"><table>
+<caption>표 7. 3P 검증 — "손 문제 해결"이라는 명제의 입증 단계</caption>
+<thead><tr><th>명제</th><th>Possible</th><th>Plausible</th><th>Probable</th><th>판정 근거</th></tr></thead>
+<tbody>
+<tr><td>정밀 파지(취약물 포함)</td><td><span class="up">입증</span></td><td><span class="up">입증</span></td><td>진행 중</td><td>1X 와인잔·계란(테슬라)·OpenAI 큐브 — 데모는 완성, 현장 통계 미공개</td></tr>
+<tr><td>손안 조작·도구 사용</td><td><span class="up">입증</span></td><td>진행 중</td><td>미달</td><td>드라이버·전구·지퍼(1X)·사과 깎기(Sharpa) — 성공률·복구력 비공개</td></tr>
+<tr><td>전단 촉각의 상용 탑재</td><td><span class="up">입증</span></td><td><span class="up">입증(1X 선언)</span></td><td>미달</td><td>출하품 기준 세계 최초급 — 실사용 검증은 NEO 인도 후</td></tr>
+<tr><td>양산(연 1만+)</td><td><span class="up">입증</span></td><td><span class="up">입증</span></td><td>진행 중</td><td>Inspire 연 1만 대 실측·1X 라인 가동 — 수율·원가는 미공개</td></tr>
+<tr><td>산업급 내구(백만 사이클)</td><td><span class="up">입증(주장)</span></td><td>진행 중</td><td>미달</td><td>1X 손목 200만·Inspire 100만 자사 시험 — 제3자·현장 검증 부재</td></tr>
+<tr><td>경제성(그리퍼 대비)</td><td>부분</td><td>미달</td><td>미달</td><td>"다지가 꼭 필요한 과업"의 비중 자체가 미확정 — 10장 최대 쟁점</td></tr>
+</tbody></table></div>
+<p><strong>증거화 일정:</strong> 2026 H2 — 1X NEO 가정 인도분의 신형 손 탑재 여부와 초기 사용 리뷰(손 관련 고장·원격개입률이 핵심), 테슬라 V3 램프에서 손 조립 수율(2025년 중단의 재발 여부), Linkerbot의 "연 5만~10만 대" 목표 대비 실적 공개. 2026 말~2027 — Inspire·Paxini·Linkerbot의 IPO 움직임(중국 핸드 손익의 최초 공시가 될 것), 촉각 벤치마크(RobOmni류)의 순위표 정례화, MIIT 표준 체계 내 핸드·촉각 표준 포함 여부. 2027~28 — 전단 촉각의 2위권 확산(1X 사양 기준의 추종 여부), 전자피부 대면적 시제품.</p>
+
+<h3>5.3 선례와 사망 조건</h3>
+<p><strong>선례:</strong> 가장 가까운 유추는 <strong>스마트폰 카메라 모듈</strong>이다 — 완제품의 차별화 축이 특정 부품으로 이동하자(2010년대 카메라 군비경쟁), 모듈·소자 전문기업(라간정밀·서니옵티컬·LG이노텍류)이 완제품보다 높은 멀티플로 리레이팅됐고, 대당 탑재 수(1→3~4개)와 사양(화소·OIS)이 동시에 늘며 "대수 정체 후에도 성장"했다. 핸드의 대당 2개×채널 폭증 구조가 정확히 이 문법이다. 반면 경계 선례는 <strong>3D 터치·햅틱 과잉사양</strong> — 사용자가 체감 못 하는 사양은 원가 절감 1순위로 잘려나갔다. "전단 촉각이 페이백을 바꾸는가"가 입증되지 않으면 같은 운명이다 <span class="bd bd-est">추정: 정성 유추</span>. <strong>사망 조건:</strong> ①<strong>DoF 인플레 폭로전</strong> — 스펙 대 실측의 괴리가 공개 스캔들화되면 카테고리 전체 신뢰 훼손(1X가 먼저 공격 개시한 상태), ②<strong>내구 스캔들</strong> — 텐던 마모·관절 고장의 대규모 리콜(테슬라 2025의 소비자판 재연), ③<strong>OEM 전면 내재화</strong> — 테슬라·Figure에 이어 중국 헤드 OEM까지 자연(自研) 완료 시 외판 시장 소멸, ④<strong>"그리퍼로 충분" 실증</strong> — 대규모 배치 데이터가 "과업 90%는 2지+흡착으로 처리"를 보여주면 다지 프리미엄 붕괴, ⑤<strong>왕싱싱 테제의 승리</strong> — 손 하드웨어가 조기 커머디티화되고 가치가 전부 모델·데이터로 이동.</p>
+</section>
+
+<section id="s6">
+<h2><span class="no">6</span>산업 구조와 경쟁 역학</h2>
+<p class="lead"><strong>핵심 결론:</strong> 핸드 모듈 구간의 5 Forces는 <strong>본체 OEM보다도 비우호적</strong>이다 — 위로는 코어리스 3강 과점, 아래로는 "최대 고객이 잠재 최대 경쟁자"(인하우스화)라는 이중 협공. 그럼에도 전문기업 밸류가 치솟는 이유는 구조가 아니라 <strong>속도</strong>(지금 이 순간 손을 살 수 있는 곳이 그들뿐)에 있다. 속도 프리미엄은 구조 프리미엄보다 수명이 짧다.</p>
+<div class="twrap"><table>
+<caption>표 8. 5 Forces 판정 — 핸드 모듈(외판) 구간 기준</caption>
+<thead><tr><th>힘</th><th class="num">강도</th><th>근거</th><th>방향(→)</th></tr></thead>
+<tbody>
+<tr><td>공급자 교섭력</td><td class="num">높음</td><td>코어리스 3강 ~85%·정밀 스크류 가공 병목·촉각 소자 IP</td><td>中 국산화·슬로티드 전환으로 완만 침식</td></tr>
+<tr class="hl"><td>구매자 교섭력</td><td class="num">매우 높음</td><td>OEM이 사양 주도 + 언제든 내재화 카드(테슬라·1X·Figure 기실행)</td><td>촉각 등 대체불가 성능 보유 시 역전 — 유일한 탈출구</td></tr>
+<tr><td>신규 진입</td><td class="num">매우 높음</td><td>부품 조달 용이·의수(PSYONIC)·음향(AAC)·본체 분사(AGILINK) 3방향 유입</td><td>양산·내구 실증이 장벽화되며 점차 상승</td></tr>
+<tr><td>대체재</td><td class="num">높음</td><td>2지 그리퍼+흡착이 더 싸고 검증됨 — 대부분 산업 과업의 현역 챔피언</td><td>과업 데이터 축적이 판정할 것(10장)</td></tr>
+<tr><td>기존 경쟁</td><td class="num">격화 중</td><td>중국 전문 4사+연구 명가+OEM 인하우스 — 가격전쟁 개시(백만 캐파 계획)</td><td>세그먼트 분화(볼륨/하이엔드/촉각)로 부분 완화</td></tr>
+</tbody></table></div>
+<p><strong>집중도:</strong> 전체 HHI는 정의 분열로 무의미하다. 첫 공식 서열은 GGII의 2025 출하 랭킹이다 — ①Inspire(연 1만+, '24 손익분기 달성) ②공동 BrainCo·Linkerbot ③OYMotion ④雷赛智能 ⑤大寰. 세그먼트별로 보면 — 볼륨 외판은 Inspire(연 1만 대)가 실측 1위, 고자유도는 Linkerbot이 "80%+"를 자칭하나 자기보고다 <span class="bd bd-cfl">상충: 검증 불가</span>, 촉각 풀스택은 Paxini가 사실상 카테고리 창설자, 연구 하이엔드는 Shadow·Allegro 양강 관성. <strong>무엇으로 싸우는가:</strong> ①스펙 전선(능동 DoF·전단 촉각 — 1X가 판을 키움) ②가격 전선(¥5만 하방 경쟁) ③생태 전선(SDK·ROS·시뮬 지원 — Allegro가 성능 아닌 생태로 표준이 된 선례) ④데이터 전선(손+촉각 데이터셋 동봉 — Paxini 10만+ 장면 공개). <strong>산업 경제학:</strong> 모듈은 정밀 조립업(마진 중간·수율 게임), 촉각 소자는 반도체성(높은 마진·IP 장벽), 부품은 가동률 레버리지의 정밀기계업 — 자본집약도는 본체 대비 낮아 <strong>진입은 쉽고 생존은 어려운</strong> 전형적 구조다. 경기민감성은 본체 파생(β&gt;1)이되, 연구·의수 수요가 완충 역할을 한다.</p>
+</section>
+<section id="s7">
+<h2><span class="no">7</span>경쟁 지형 — 플레이어 지도</h2>
+<p class="lead"><strong>핵심 결론:</strong> 지형은 3층이다 — <strong>인하우스 프런티어(1X·테슬라·Figure: 최고 사양, 비매품)</strong>, <strong>중국 전문 4사(Linkerbot·Inspire·Paxini·AGILINK: 물량·자본의 현재 승자)</strong>, <strong>연구 명가(Shadow·Allegro: 표준의 관성)</strong>. 영어권 서사는 1X·테슬라 중심이지만, <strong>지금 손을 가장 많이 만들어 파는 회사는 베이징과 선전에 있다</strong> — 상위 산업과 동일한 미국-서사 vs 아시아-물량 비대칭이다.</p>
+
+<h3>7.1 전문기업(외판 모듈·촉각)</h3>
+<div class="twrap"><table class="wide-xl">
+<caption>표 9. 핸드 전문기업 (2026-07 기준)</caption>
+<thead><tr><th>기업</th><th>제품·노선</th><th>출하·캐파</th><th>자금·밸류</th><th>핵심 사실</th><th>분류</th></tr></thead>
+<tbody>
+<tr><td><strong>Linkerbot 灵心巧手</strong> (베이징)</td><td>Linker Hand 11~42 DoF · 텐던+링키지+직구동 3노선 병행</td><td>월 4,000+대(자칭 세계 유일)<br>'25 5~10천 대(GGII 공동 2위)<br>→ '26 목표 5만~10만 (월 1만 캐파 증설·4개 공장)</td><td>7개 라운드(앤트·홍삼·광발 등)<br>B+ 밸류 $3.0B('26-04-29)<br>→ 차기 $6B 목표(로이터 '26-05-04)</td><td>고자유도 점유 80%+ 자칭 <span class="bd bd-cfl">자기보고</span> · "Shadow 내구 10배·가격 1/20" 표방<br>LinkerSkillNet 데이터셋(자칭 세계 최대) · 고객 스탠퍼드·칭화·폭스콘·화웨이·BYD 등<br>단 "공개 대형 주문 미확인" 지적 병존(매체)</td><td>볼륨×고DoF 리더</td></tr>
+<tr><td><strong>Inspire 因时机器人</strong> (베이징, 2016)</td><td>RH56 계열 6~13 DoF · 마이크로 전기실린더+링키지</td><td>'24 ~2,000대<br>→ <strong>'25 연 1만 대 돌파</strong> (동종 세계 기록)</td><td>Series C · 밸류 ¥40억</td><td>電缸(감속기+코어리스+스크류+센서 일체) 원조 · 中 최초 상용 양산(2020) · '24 손익분기 달성(공개 흑자 신호 유일) · 美 소매 $6,500~ · 촉각형 100만 사이클 · '26 춘완 등장 · Unitree 개발자 문서 등재</td><td>볼륨 실측 1위</td></tr>
+<tr><td><strong>Paxini 帕西尼</strong> (선전)</td><td>DexH13/DexH5 · 촉각 풀스택(ITPU 칩→핸드→본체)</td><td>ITPU 1,140유닛·촉각 3,420채널<br>+800만 화소 손눈 카메라 (GEN2 공식)</td><td>JD·BYD 전략투자 → B ¥10억+('26-03) · 밸류 ¥100억+</td><td>1000Hz·0.01N·15종 촉각량 자체 칩 · 시촉각 융합 대표작 · 10만+ 상호작용 데이터셋 · 톈진 Super EID 데이터 공장(연 2억 조 목표)</td><td>촉각 카테고리 창설자</td></tr>
+<tr><td><strong>AGILINK 临界点</strong></td><td>OmniHand 3: Lite 16 DoF('26Q2 양산·오픈판 $300 목표)<br>Pro 19 · Ultra-T 텐던혼합(22+3 DoF·500g·부하자중비 10:1)<br>Ultra-M 직구동(ICRA '26)</td><td>누적 핸드 8,000+·그리퍼 1만+<br>1,000+대 상시 가동 (실조작 데이터 5만h+)</td><td>5개월 4라운드 · '26-06 근 ¥10억, 투후 $1B+ (智元 지분 67% 유지)</td><td>AgiBot 핸드 사업 분사('26-01) — "본체의 손 분사" 모델 1호 · 창업자 슝쿤(前 텐센트 Robotics X)</td><td>분사형 신흥</td></tr>
+<tr><td><strong>Shadow Robot</strong> (英)</td><td>Dexterous Hand · 텐던 5지(24관절·20능동급)</td><td>소량 수제작</td><td>—</td><td>€11만+ · 연구 정점 40년 · OpenAI 큐브 플랫폼 · DeepMind 협업(DEX-EE)</td><td>연구 명가</td></tr>
+<tr><td><strong>원익로보틱스</strong> (韓)</td><td>Allegro Hand V4→V5 · 16 능동 DoF 4지</td><td>연구 표준 플랫폼</td><td>원익 계열</td><td>Shadow의 ~1/5 가격 · V5: 지문 360° 전방위 촉각·교체식 핑거팁 · ROS·Isaac 생태 — 한국의 사실상 유일 자산</td><td>생태 표준</td></tr>
+<tr><td><strong>Sharpa</strong></td><td>Wave 22 DoF + 지문 비전촉각(320×240@30Hz)</td><td>—</td><td>—</td><td>사과 깎기 시연 · arXiv 연구 플랫폼 채택(SaTA '25-10)</td><td>비전촉각 프런티어</td></tr>
+<tr><td>기타</td><td colspan="5">BrainCo 强脑(GGII 공동 2위 — Revo 3: 세계 최초 20+DoF 전장 촉각+시촉각 오픈 생태 표방)·OYMotion 傲意(GGII 3위 — ROH-LiteS001 457g·¥1만 이내)·雷赛智能 Leadshine(GGII 4위 — DH116 11 DoF·주동 6, 코어리스·감속·엔코더 자체)·大寰 DH-Robotics(5위)·源升智能(Apex Hand, '26-04 Pre-A) · PSYONIC(美 — 의수 겸용, 시판 바이오닉 2배 속도) · Daimon 戴盟(비전촉각 — Galbot과 RobOmni 벤치마크)·他山(정전용량) · Xynova 曦诺未来('26-05 A라운드, 연내 1만+대 주문 주장) · Sanctuary(마이크로 유압)·Clone(수압 인공근육 — 극단 생체모사) · AAC 瑞声(스마트폰 햅틱의 크로스오버 진입) · 서방·일본 단품층: GelSight Inc(美 — 비전촉각 상용 원조·'26 공군 SBIR)·FingerVision(日 — 시촉각 센서·핸드)·Meltin MMI(日 — 텐던 원격조작 핸드)</td></tr>
+</tbody></table></div>
+
+<div class="co co-note"><div class="ct">표를 읽는 법 — 왜 상단이 전부 중국인가: 기술 격차가 아니라 "누가 팔 이유가 있나"의 분포</div>
+<p>외판(모듈 판매) 시장의 중국 집중은 네 가지 구조의 산물이다: ①<strong>수요 근접성</strong> — 손을 사줄 휴머노이드 OEM 140여 사와 국가 조달 mandate, 배치 로봇의 대다수가 중국에 있다, ②마이크로 부품 클러스터, ③자본 속도(Q1'26 핸드 융자 ≈¥50억), ④가격(GS 조사: ASP 해외 대비 -50%). <strong>미국이 표에 없는 이유는 기술이 없어서가 아니라 최상위 손이 인하우스에 잠겨 있어서다</strong> — 1X(25 전능동)·테슬라·Figure·BD는 손을 팔지 않으므로 7.2절에 있고, 판매형 전문층은 촉각 원천(GelSight Inc — '26 미 공군 SBIR 2단계 $250만으로 두께 15mm 미만·50fps 3D 힘지도·5만 파지 내구의 지문형 'Nano'를 휴머노이드 시장 명시 개발)과 의수(PSYONIC)에 특화돼 있다. <strong>일본은 외판 모듈층이 실제로 얇다</strong> — 자국 로봇 4강의 산업 수요가 그리퍼로 충족되는 실용주의, ASIMO 이후 휴머노이드 본체 부재로 인한 국내 수요처 소멸, 그리고 강점이 상류(NdFeB 자석 원천, 정밀 부품)에 특화된 구조 탓이다. 존재하는 일본 손 기술은 노선이 다르다: Meltin MMI(텐던 5지 — 원격조작 아바타·극한환경 노선), FingerVision(대학발 비전촉각 센서·핸드 — 산업 니치). 종합 판정: <strong>성능 정점(전능동·촉각 해상도)은 여전히 서방, 양산·가격·자본 속도는 중국</strong> — 격차의 실체는 기술이 아니라 상업화 좌표의 분업이다 <span class="bd bd-est">판정</span>. 확신도 높음 ~75%.</p></div>
+
+<h3>7.2 OEM 인하우스 — 비매품이지만 사양의 기준을 정한다</h3>
+<div class="twrap"><table>
+<caption>표 10. OEM 인하우스 핸드 — "손=차별화 심장" 진영</caption>
+<thead><tr><th>OEM</th><th>핸드 사양(요약)</th><th>양산 태세</th><th>전략 함의</th></tr></thead>
+<tbody>
+<tr class="hl"><td><strong>1X</strong></td><td>25 전능동·폴리머 텐던 QDD·전단 촉각·IP68</td><td>인하우스 연 1만 개 라인 가동, 수백 개 기생산</td><td>"손 양산 = 데이터 양산" 테제의 본산 — 외판 안 함, 사양 기준 제시자</td></tr>
+<tr><td><strong>Tesla</strong></td><td>22 DoF(中 분해 주동 17)·전완 25 액추·텐던(현행 설계는 미공개)</td><td>'25-06~ 생산 중단(재설계) → '26-02 신형 손 데모 → '26-04 특허 설계 폐기 공언 · 생산은 '26 여름 초저속 개시 계획(공개 7말~8월)</td><td>병목의 실증 사례 — 공급망 "non-existent" 발언이 부품 체인 기회의 근거</td></tr>
+<tr><td><strong>Figure</strong></td><td>03 핸드 DoF 미공개(F02=16·2차 20 <span class="bd bd-cfl">상충</span>)·3g 지문 촉각·손바닥 카메라</td><td>BotQ 라인 내재</td><td>가정·양산 지향의 절제된 사양 — "필요 충분 DoF" 노선</td></tr>
+<tr><td><strong>智元 AgiBot</strong></td><td>SkillHand 19 DoF(주동 12)·MEMS+시촉각 지문</td><td>→ AGILINK로 분사(지분 67% 유지)</td><td>인하우스→분사 전환: 손을 별도 자본시장 상품화한 첫 사례</td></tr>
+</tbody></table></div>
+
+<h3>7.3 부품 체인 — 진짜 과점은 여기 있다</h3>
+<div class="twrap"><table class="wide">
+<caption>표 11. 핸드 부품 공급 지형</caption>
+<thead><tr><th>부품</th><th>글로벌 리더</th><th>중국 추격</th><th>수급 포인트</th></tr></thead>
+<tbody>
+<tr class="hl"><td>코어리스 모터</td><td>Maxon(瑞)·Faulhaber(獨)·Portescap(瑞) — 합산 ~85%</td><td>鸣志(603728)·鼎智·兆威(003021)·江苏雷利(300660)·伟创(688698)</td><td>권선·와인딩 장비가 원천 장벽 · 하이엔드 유럽/볼륨 중국 이중구조 · 손당 17~25개</td></tr>
+<tr><td>슬로티드 BLDC(전환 노선)</td><td>—(범용 기술)</td><td>동일 中 체인 + 모터 범용 강자</td><td>테슬라 3세대 일부 채택(東吳) — 원가·토크 우선 시 코어리스 대체</td></tr>
+<tr><td>마이크로 스크류·감속</td><td>정밀 가공 명가(스위스·일본)</td><td>浙江荣泰·北特·五洲新春(603667)·震裕 — 東吳 추천 라인</td><td>연삭 캐파가 병목 후보 · 전기실린더의 심장</td></tr>
+<tr><td>텐던 소재</td><td>UHMWPE(다이니마급) 글로벌 화섬</td><td>大业股份·南山智尚</td><td>니치이나 1X·테슬라·Shadow 모두 수요자 — 마모 수명이 품질 지표</td></tr>
+<tr><td>촉각 소자·칩</td><td>GelSight Inc(美 — Nano 지문형·'26 공군 SBIR $250만)·Meta DIGIT(오픈)·FingerVision(日)·NVE(자기 GMR) <span class="bd bd-est">주의: NVE는 홍보성 2차 출처</span></td><td>Paxini ITPU·汉威(300007, 압저항)·敏芯(MEMS)·福莱신재·長盈精密(Optimus Gen3 지문 센서 공급 보도 — 대당 ¥8,000·'26 6만 대분 수주 주장)</td><td>4노선 미수렴 = 표준 선점 게임 · 채널 수 폭증이 물량 동인</td></tr>
+</tbody></table></div>
+
+<h3>7.4 포지셔닝 맵</h3>
+<figure>
+  <div class="fig-t">핸드 플레이어 포지셔닝 — 우상단(성능×양산 동시 달성)을 향한 세 갈래 경주: 인하우스는 위에서, 중국 볼륨은 오른쪽에서, 촉각은 대각선으로</div>
+  <div class="fig-box">
+  <svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="핸드 플레이어 버블 맵">
+    <line x1="70" y1="450" x2="960" y2="450" stroke="#CBD5E1" stroke-width="1.5"/>
+    <line x1="70" y1="450" x2="70" y2="40" stroke="#CBD5E1" stroke-width="1.5"/>
+    <line x1="515" y1="450" x2="515" y2="40" stroke="#E2E8F0" stroke-dasharray="4 4"/>
+    <line x1="70" y1="245" x2="960" y2="245" stroke="#E2E8F0" stroke-dasharray="4 4"/>
+    <text x="515" y="490" text-anchor="middle" font-size="12" fill="#4A5568">양산·가격 경쟁력 → (출하 실적·캐파·단가 종합, 0~10 상대평가)</text>
+    <text x="84" y="58" font-size="12" fill="#4A5568">성능(능동 DoF·촉각·힘제어) ↑</text>
+    <text x="280" y="72" text-anchor="middle" font-size="12" font-weight="700" fill="#718096">성능 프런티어 — 연구·인하우스</text>
+    <text x="770" y="72" text-anchor="middle" font-size="12" font-weight="700" fill="#B7791F">목표 지대 (성능×양산)</text>
+    <text x="770" y="430" text-anchor="middle" font-size="12" font-weight="700" fill="#718096">볼륨·가성비 — 中 양산형</text>
+    <circle cx="532.8" cy="60.5" r="20" fill="#0891B2" opacity="0.65"/><text x="533" y="32" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">1X NEO Hands</text>
+    <circle cx="497.2" cy="109.7" r="24" fill="#2563EB" opacity="0.6"/><text x="497" y="148" text-anchor="middle" font-size="12" fill="#1A202C">테슬라 Gen3</text>
+    <circle cx="426" cy="89.2" r="22" fill="#DC2626" opacity="0.6"/><text x="426" y="59" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">Paxini (¥100억+)</text>
+    <circle cx="203.5" cy="81" r="10" fill="#0891B2" opacity="0.65"/><text x="203" y="107" text-anchor="middle" font-size="12" fill="#1A202C">Shadow (€11만+)</text>
+    <circle cx="319.2" cy="122" r="9" fill="#DC2626" opacity="0.6"/><text x="319" y="105" text-anchor="middle" font-size="12" fill="#1A202C">Sharpa</text>
+    <circle cx="639.6" cy="130.2" r="14" fill="#DC2626" opacity="0.6"/><text x="639.6" y="162" text-anchor="middle" font-size="12" fill="#1A202C">AGILINK</text>
+    <circle cx="443.8" cy="171.2" r="18" fill="#2563EB" opacity="0.6"/><text x="444" y="203" text-anchor="middle" font-size="12" fill="#1A202C">Figure 03</text>
+    <circle cx="354.8" cy="179.4" r="10" fill="#059669" opacity="0.65"/><text x="355" y="207" text-anchor="middle" font-size="12" fill="#1A202C">Allegro·원익</text>
+    <circle cx="746.4" cy="146.6" r="26" fill="#DC2626" opacity="0.6"/><text x="746" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">Linkerbot ($3.0B)</text>
+    <circle cx="835.4" cy="228.6" r="16" fill="#DC2626" opacity="0.6"/><text x="835" y="259" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">Inspire (¥40억)</text>
+    <circle cx="693" cy="204" r="8" fill="#DC2626" opacity="0.55"/><text x="693" y="226" text-anchor="middle" font-size="11.5" fill="#4A5568">Xynova</text>
+    <circle cx="515" cy="212.2" r="9" fill="#2563EB" opacity="0.6"/><text x="515" y="237" text-anchor="middle" font-size="11.5" fill="#4A5568">PSYONIC</text>
+    <circle cx="212.4" cy="261.4" r="8" fill="#64748B" opacity="0.6"/><text x="212" y="285" text-anchor="middle" font-size="11.5" fill="#4A5568">Clone·Sanctuary</text>
+  </svg>
+  </div>
+  <div class="legend">
+    <div class="li"><span class="sw" style="background:#2563EB"></span>미국</div>
+    <div class="li"><span class="sw" style="background:#DC2626"></span>중국</div>
+    <div class="li"><span class="sw" style="background:#059669"></span>한국</div>
+    <div class="li"><span class="sw" style="background:#0891B2"></span>유럽·노르딕</div>
+    <div class="li"><span class="sw" style="background:#64748B"></span>탐색 노선 · 버블 크기 = 밸류·자본력 <span class="bd bd-est">추정</span></div>
+  </div>
+  <figcaption>그림 6. 포지셔닝 맵 — 두 축은 본 보고서 상대평가 <span class="bd bd-est">추정</span>(성능축: 능동 DoF·촉각 축수·힘제어 / 양산축: 출하 실적·캐파·단가). 인하우스(1X·테슬라·Figure)는 비매품이므로 "만약 외판한다면"의 가상 좌표. | 근거: 표 4·9~11.</figcaption>
+</figure>
+
+<figure>
+  <div class="fig-t">공식 영상 ② — Figure 03: 인하우스 절제 노선(3g 지문 촉각+손바닥 카메라 · DoF 미공개)의 대표 사례 (2025-10)</div>
+  <div class="fig-box"><a class="vlink" href="https://youtu.be/Eu5mYMavctM" target="_blank" rel="noopener"><img src="https://img.youtube.com/vi/Eu5mYMavctM/hqdefault.jpg" alt="Introducing Figure 03 공식 영상 썸네일" loading="lazy"><span class="play">&#9654;&nbsp; YouTube에서 공식 영상 재생</span></a></div>
+  <figcaption>영상 2. Figure 공식 'Introducing Figure 03' — 1X의 "최대 사양" 노선과 대비되는 "필요 충분 사양+양산 설계" 노선. 두 철학의 승부가 핸드 사양 경쟁의 핵심 관전 포인트다. 썸네일 클릭 시 유튜브 재생. | 출처: Figure 공식 YouTube.</figcaption>
+</figure>
+
+<h3>7.5 판정 — 투자 가능 유니버스</h3>
+<p><strong>리더(현재형):</strong> 볼륨 Inspire, 고자유도·자본 Linkerbot, 촉각 Paxini, 사양 기준 1X(비매). <strong>도전자:</strong> AGILINK(분사 모델)·Xynova·Sharpa. <strong>틈새:</strong> Shadow·원익(연구 생태), PSYONIC·OYMotion(의수 이중시장), 他山·Daimon(촉각 단품). <strong>파괴자:</strong> AAC 瑞声(소비전자 양산 원가의 침공 — 성공 시 모듈 가격 체계 붕괴), 그리고 역설적으로 <strong>OEM 인하우스 진영 전체</strong>(외판 시장의 천장). 상장 접근은 부품 체인(鸣志·兆威·五洲新春·汉威·NVE 등)이 사실상 유일한 직접 티켓이고, 전문기업은 전원 비상장 — <strong>Linkerbot·Inspire·Paxini의 IPO가 이 섹터 최대의 예정된 이벤트</strong>다(11장 핸드오프).</p>
+</section>
+<section id="s8">
+<h2><span class="no">8</span>기술 로드맵과 TRL</h2>
+<p class="lead"><strong>핵심 결론:</strong> 로드맵의 다음 3년은 <strong>"느끼는 손의 보급"</strong>이다 — 전단 촉각의 2위권 확산(1X가 출하 사양으로 기준선을 제시했고, 테슬라도 Gen3 지문 센서를 외부 조달 — 長盈精密 공급·대당 ¥8,000 보도), 전자피부의 대면적화, 그리고 촉각 데이터를 먹는 VLA. 성숙도의 최대 공백은 화려한 조작이 아니라 <strong>제3자 검증된 내구</strong>다 — 백만 사이클을 "주장"하는 손은 많지만 "실증"한 손은 아직 없다.</p>
+
+<figure>
+  <div class="fig-t">2018→2028+ 핸드 기술·양산 로드맵 — 위는 기술 마일스톤, 아래는 양산·자본(공언≠실현 주의)</div>
+  <div class="fig-box">
+  <svg viewBox="0 0 1000 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="핸드 로드맵 타임라인">
+    <line x1="70" y1="215" x2="960" y2="215" stroke="#CBD5E1" stroke-width="2"/>
+    <g font-size="12.5" font-weight="700" fill="#1A202C" text-anchor="middle">
+      <text x="130" y="245">2018~19</text><text x="290" y="245">2023</text><text x="430" y="245">2024</text>
+      <text x="565" y="245">2025</text><text x="705" y="245">2026</text><text x="870" y="245">2027~28+</text>
+    </g>
+    <g>
+      <circle cx="130" cy="215" r="5" fill="#7C3AED"/><circle cx="290" cy="215" r="5" fill="#7C3AED"/>
+      <circle cx="430" cy="215" r="5" fill="#7C3AED"/><circle cx="565" cy="215" r="5" fill="#7C3AED"/>
+      <circle cx="705" cy="215" r="5" fill="#7C3AED"/><circle cx="870" cy="215" r="5" fill="#64748B"/>
+    </g>
+    <g font-size="11.5" fill="#4A5568" text-anchor="middle">
+      <text x="130" y="120">OpenAI 큐브(Shadow)</text>
+      <text x="130" y="138">— 학습 시대 개막</text>
+      <text x="290" y="102">LEAP 저가 오픈</text>
+      <text x="290" y="120">Meta DIGIT</text>
+      <text x="290" y="138">촉각 시뮬 성립</text>
+      <text x="430" y="102">테슬라 Gen2 11 DoF</text>
+      <text x="430" y="120">Paxini 3,420채널</text>
+      <text x="430" y="138">(시촉각 융합)</text>
+      <text x="565" y="85">Gen3 22 DoF 점프</text>
+      <text x="565" y="103" font-weight="700">→ 생산 중단(병목)</text>
+      <text x="565" y="121">MS 3대 장벽 정식화</text>
+      <text x="565" y="139">SaTA 공간정박</text>
+      <text x="705" y="85" font-weight="700">1X 25 전능동</text>
+      <text x="705" y="103" font-weight="700">+전단 촉각(7/9)</text>
+      <text x="705" y="121">RobOmni 벤치마크</text>
+      <text x="705" y="139">"산업화 원년"(MS)</text>
+      <text x="870" y="102">전단 촉각 확산</text>
+      <text x="870" y="120">전자피부 대면적</text>
+      <text x="870" y="138">촉각 네이티브 VLA</text>
+    </g>
+    <g font-size="11.5" fill="#1A202C" text-anchor="middle">
+      <text x="130" y="290">연구 소량 수제</text>
+      <text x="130" y="308">(€10만+ 시대)</text>
+      <text x="430" y="290">Inspire ~2,000대</text>
+      <text x="430" y="308">국산 ¥10만 미만</text>
+      <text x="565" y="290" font-weight="700">Inspire 연 1만 돌파</text>
+      <text x="565" y="308">Linkerbot 월 1,000+</text>
+      <text x="705" y="290" font-weight="700">1X 연 1만 라인</text>
+      <text x="705" y="308">전문 4사 리레이팅</text>
+      <text x="705" y="326">테슬라 손 재설계 반복</text>
+      <text x="870" y="290">Linkerbot 5만~10만</text>
+      <text x="870" y="308">IPO 윈도 개막</text>
+      <text x="870" y="326">백만 캐파 계획</text>
+    </g>
+    <text x="500" y="35" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0F2B46">▲ 기술 마일스톤 (보라=실현, 회색=예정)</text>
+    <text x="500" y="380" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0F2B46">▼ 양산·자본 — 굵은 글씨가 실측 확인 항목</text>
+    <text x="500" y="408" text-anchor="middle" font-size="11.5" fill="#718096">2027 이후는 공언·전망. 테슬라 2025 사태가 보여주듯 이 분야의 일정은 미끄러진다 — 확률로 읽을 것.</text>
+  </svg>
+  </div>
+  <figcaption>그림 7. 핸드 로드맵 | 출처: 각사 공식 발표·보도(본문 각 절 명기). 2027+ 항목 <span class="bd bd-est">추정</span>.</figcaption>
+</figure>
+
+<div class="twrap"><table>
+<caption>표 12. 요소 기술 TRL(성숙도 1~9) 판정</caption>
+<thead><tr><th>요소 기술</th><th class="num">TRL</th><th>판정 근거</th><th>남은 관문</th></tr></thead>
+<tbody>
+<tr><td>다지 파지(정형·강체)</td><td class="num">8~9</td><td>연 1만 대 실사용(Inspire)·산업 배치 다수</td><td>속도·에너지 최적화</td></tr>
+<tr><td>취약물·전단 기반 파지</td><td class="num">6~7</td><td>1X 출하 사양 선언 — 실사용 검증 개시 전</td><td>NEO 인도분 현장 데이터</td></tr>
+<tr><td>손안 조작(in-hand)</td><td class="num">5~6</td><td>연구 입증(OpenAI '19·DLR '22)·상용 데모 단계</td><td>성공률 통계·복구력 공개</td></tr>
+<tr><td>비전촉각 상용화</td><td class="num">5~6</td><td>Sharpa·Daimon 제품화 — 내구·연산 부담</td><td>젤 수명·엣지 처리</td></tr>
+<tr><td>전자피부(대면적)</td><td class="num">3~4</td><td>손끝→손바닥 확장 시제 단계</td><td>배선·내구·단가</td></tr>
+<tr><td>텐던 내구(제3자 검증)</td><td class="num">4~5</td><td>자사 주장만 존재(1X 손목 200만·Inspire 100만)</td><td>독립 기관·현장 사이클 데이터</td></tr>
+<tr><td>양산 공정(연 1만+)</td><td class="num">7</td><td>Inspire 실측·1X 라인 가동</td><td>수율 공개·10만 대 스케일</td></tr>
+<tr><td>촉각 sim-to-real</td><td class="num">4~5</td><td>Tacto·TacSL 인프라 성립 — 정책 학습 초기</td><td>전단·동적 접촉의 충실도</td></tr>
+</tbody></table></div>
+<figcaption>판정은 공개 정보 기반 본 보고서 평가 <span class="bd bd-est">추정</span>. R&amp;D 지형: 서방은 촉각·학습(GelSight 계보·촉각 시뮬·1X 데이터 테제), 중국은 집적·양산(전기실린더·캐파·원가)에 집중 — 상위 산업의 "두뇌 capex vs 몸통 capex" 분업이 손에서도 반복된다.</figcaption>
+</section>
+
+<section id="s9">
+<h2><span class="no">9</span>규제·정책·지정학</h2>
+<p class="lead"><strong>핵심 결론:</strong> 손은 상위 산업 지정학의 <strong>축소판이자 증폭판</strong>이다 — 모터가 17~25개로 늘며 희토류 자석 노출이 대당 기준으로 증폭되고, "공급망이 존재하지 않는다"(머스크)는 서방의 공백은 곧 중국 클러스터 의존을 뜻하며, 촉각·인터페이스 표준의 공백은 중국의 표준 선점 시도(MIIT 121건 체계)가 파고들 여지다.</p>
+<p><strong>희토류:</strong> 손 모터는 개당 자석량이 작지만 수량이 본체 관절의 1.5~2배(손 2개 합산 34~50개 vs 본체 관절 25~40개)라 <span class="bd bd-drv">파생</span>, NdFeB 공급망(정제·자석 ~90% 중국) 리스크가 그대로 이식된다 — 2026-11 미·중 유예 만료가 손 부품 체인에도 단일 최대 정책 이벤트다. 코어리스 3강(스위스·독일)의 자석 조달 역시 동일 상류에 걸려 있어 "유럽 부품 = 탈중국"이 아니라는 점이 자주 간과된다. <strong>수출통제·관세:</strong> 고정밀 마이크로 액추에이터·고감도 촉각은 이중용도(듀얼유스) 분류 리스크가 잠재하고, 미국 관세는 중국산 부품 원가를 올린다 — 테슬라의 "non-existent" 발언 이후 미국 내 마이크로 부품 재구축 움직임이 부품 국산화 테마(미·중 쌍방)를 만든다. <strong>표준:</strong> 촉각 데이터 포맷·핸드 기계·전기 인터페이스의 국제 표준이 없다 — 손을 바꿔 끼우는 시대가 오면 인터페이스 표준을 쥔 쪽이 플랫폼이 된다. 중국의 휴머노이드 표준 121건 체계(MIIT, 2025-12 위원회)에 핸드·촉각이 포함될 가능성이 높고, 서방 대응(IEEE·ISO)은 초기다. <strong>한국:</strong> K-휴머노이드 연합의 자산 목록에서 핸드는 얇다 — 사실상 원익로보틱스 Allegro(연구 생태 표준)가 유일한 글로벌 자산이고, F/T·촉각 스타트업(에이딘·로보터스)이 주변부를 이룬다. 정책적으로는 "본체 연합"에 가려진 <strong>핸드·촉각 공백</strong>이 한국의 기회이자 리스크다 <span class="bd bd-est">평가</span>. <strong>의료 인증:</strong> 의수 겸용사(PSYONIC·OYMotion·BrainCo)의 FDA·MDR 인증 자산은 로봇 안전 인증 시대가 오면 우회 진입로가 된다. 반대편의 정책 수요도 막 열렸다 — 미 공군이 GelSight의 지문형 촉각(Nano)에 SBIR 2단계 $250만을 지원하며 국방 정비 로봇과 휴머노이드용 촉각을 명시했다(2026): 서방식 "정책이 만드는 수요"의 개막 신호다.</p>
+</section>
+
+<section id="s10">
+<h2><span class="no">10</span>리스크와 파괴 요인</h2>
+<p class="lead"><strong>핵심 결론:</strong> 최대 리스크는 화려한 데모의 반대편 — <strong>내구</strong>다. 텐던 손의 마모·유지보수는 50년째 미해결의 고전 난제이며, "백만 사이클"은 아직 전부 자사 주장이다. 두 번째는 수요 측 반란("그리퍼로 충분"), 세 번째는 이 시장 특유의 구조 — <strong>최대 고객들이 잠재 최대 경쟁자</strong>(인하우스)라는 점이다.</p>
+<div class="twrap"><table class="wide-xl">
+<caption>표 13. 리스크 매트릭스 — 발생 가능성 × 가격 반영도 <span class="bd bd-est">추정</span></caption>
+<thead><tr><th>리스크</th><th>내용·근거</th><th class="num">발생 가능성</th><th class="num">가격 반영도</th><th>판정</th></tr></thead>
+<tbody>
+<tr class="hl"><td>내구·유지보수 실패</td><td>텐던 마모·관절 고장 — 테슬라 '25 사태의 소비자판 재연 가능. 제3자 검증 전무</td><td class="num">중간~높음 ~50%</td><td class="num">미반영</td><td>발생 시 카테고리 신뢰 훼손 — 최대 꼬리 리스크</td></tr>
+<tr><td>OEM 전면 내재화</td><td>1X·테슬라·Figure 기실행, 中 헤드 OEM 자연(自研) 확산 — 외판 천장</td><td class="num">구조적(진행형)</td><td class="num">저평가(전문기업 밸류에)</td><td>전문기업은 촉각·볼륨·데이터로만 방어 가능</td></tr>
+<tr><td>가격전쟁·과잉캐파</td><td>백만 급 캐파 계획+신규 진입 러시+AAC 크로스오버 — 상위 산업 각본 재연</td><td class="num">높음 ~65%(中 내)</td><td class="num">미반영</td><td>모듈 마진 범위 하단(-10%) 시나리오의 방아쇠</td></tr>
+<tr><td>"그리퍼로 충분" 실증</td><td>GS 조사 "휠+2~3지 그리퍼로 산업 시나리오 70~90% 충족"·千寻智能 "5지 배제(수명·비용)" 선언·탄성계수 0.36 실측 — 다지 필수 과업 비중 미확정</td><td class="num">부분적 상존</td><td class="num">저평가됨</td><td>다지 프리미엄의 존립 근거를 흔드는 수요 리스크</td></tr>
+<tr><td>DoF 인플레 폭로</td><td>수동 관절 끼워 세기 관행 — 1X가 공개 저격 개시</td><td class="num">중간 ~40%</td><td class="num">미반영</td><td>스펙 신뢰 재편 — 정직한 표기 기업엔 호재</td></tr>
+<tr><td>촉각 노선 좌초</td><td>4노선 미수렴 — 오베팅 시 매몰(예: 비전촉각의 내구·연산 벽)</td><td class="num">노선별 상이</td><td class="num">미반영</td><td>소자 투자자는 노선 분산이 합리적</td></tr>
+<tr><td>HW 커머디티화(왕싱싱 테제)</td><td>"하드웨어 기본 충분, 병목은 SW" — 손 스펙 프리미엄의 조기 소멸</td><td class="num">중간 ~35%(3년 내)</td><td class="num">미반영</td><td>가치가 데이터·모델로 이동 — 부품 체인은 상대 방어적</td></tr>
+<tr><td>본체 지연 파생</td><td>휴머노이드 물량 전망 하향 시 β&gt;1로 연동</td><td class="num">상위 산업 연동</td><td class="num">부분 반영</td><td>연구·의수 수요가 부분 완충</td></tr>
+</tbody></table></div>
+<div class="bb">
+  <div class="col bull"><div class="ct">Bull — 왜 손이 최고의 '곡괭이·삽'인가</div>
+  <ul>
+    <li>승자 불문: 어느 휴머노이드가 이겨도 손 2개·모터 34~50개는 팔린다</li>
+    <li>믹스 상승: 언더→전능동·촉각 수십→수천 채널 — 대당 콘텐츠가 구조적으로 증가</li>
+    <li>병목 프리미엄: 머스크 "난이도 60%"·"공급망 부재" — 부족한 것이 값을 받는다</li>
+    <li>실측 성장: Inspire 2천→1만 대(1년 5배), 전문 4사 동시 리레이팅</li>
+    <li>이중 수요: 휴머노이드 외 연구·의수·산업 자동화가 하방 완충</li>
+    <li>1X가 연 사양 전쟁 — 2위권 전체의 업그레이드 수요(촉각·전능동) 강제</li>
+  </ul></div>
+  <div class="col bear"><div class="ct">Bear — 왜 회의론이 정당한가</div>
+  <ul>
+    <li>50년째 같은 약속: "이번엔 내구가 된다"는 아직 자사 시험실 수치뿐</li>
+    <li>최대 고객 = 잠재 경쟁자: 프런티어 OEM 전원이 인하우스 — 외판 TAM의 천장</li>
+    <li>가격 20배 스펙트럼의 수렴은 곧 마진 압착 — 백만 캐파가 예고편</li>
+    <li>현 물량의 질: 연구·POC 중심 — 최종 노동 수요의 검증은 본체와 동일하게 미완</li>
+    <li>과업의 90%가 그리퍼로 충분하다면 다지는 '멋진 과잉사양'일 뿐</li>
+    <li>자기보고 스펙의 늪: 점유 80%·내구 10배·백만 사이클 — 제3자 검증 전무</li>
+  </ul></div>
+</div>
+</section>
+<section id="s11">
+<h2><span class="no">11</span>투자 관점 종합 — 어디에 기회가 있는가</h2>
+<p class="lead"><strong>핵심 결론(단호):</strong> 구간 매력도는 <strong>① 촉각 감지 스택 &gt; ② 마이크로 구동 체인 &gt; ③ 핸드 모듈 전문기업 &gt; ④ 텐던·소재 니치 &gt; ⑤ OEM 인하우스</strong> 순이다. 단 상장 시장에서 ①은 티켓이 희소하고 ③은 전원 비상장이라, <strong>"지금 살 수 있는 것"의 현실 순위는 ②(마이크로 모터·스크류 상장사)가 앞선다.</strong> 진입 타이밍은 별개 문제다 — 이 순위는 구조 판정이며, 개별 가격의 선반영 정도는 종목별로 갈린다.</p>
+
+<h3>11.1 구간별 구조적 매력도 순위</h3>
+<div class="twrap"><table class="wide-xl">
+<caption>표 14. 매수 강도 — 핸드 가치사슬 구간 순위 (근거 병기)</caption>
+<thead><tr><th class="num">순위</th><th>구간</th><th>이익 풀 위치</th><th>해자·장벽</th><th>성장 여력</th><th>핵심 리스크</th><th>판정</th></tr></thead>
+<tbody>
+<tr class="hl"><td class="num">1</td><td><strong>촉각 감지 스택</strong><br>(소자·칩·모듈)</td><td>최고 마진 구간(+31% <span class="bd bd-est">추정</span>) — IP 장벽</td><td>노선 4파전 = 표준 선점 게임 · 채널당 원가·신뢰성 노하우</td><td>채널 수십→수천의 사양 혁명 — 침투율·밀도 이중 성장</td><td>노선 오베팅·구전망($4.3억) 대비 과열 논란</td><td>미수렴기의 프리미엄 형성 구간 — Paxini ¥100억 밸류가 신호. 확신도 중간 ~65%</td></tr>
+<tr><td class="num">2</td><td><strong>마이크로 구동 체인</strong><br>(코어리스/BLDC·스크류·전기실린더)</td><td>과점 마진(+21~25%) — 실적 실측 구간</td><td>3강 85%·권선 장비·정밀 연삭 — 인증 관성</td><td>손당 17~25개 × 대수 — 콘텐츠 최다 품목</td><td>슬로티드 전환·中 국산화 디플레</td><td><strong>승자 불문의 곡괭이·삽 + 상장 티켓 존재</strong> — 현실 접근성 1위. 확신도 높음 ~75%</td></tr>
+<tr><td class="num">3</td><td><strong>핸드 모듈 전문기업</strong><br>(Linkerbot·Inspire·Paxini·AGILINK)</td><td>마진 범위 넓음(-10~+25%)</td><td>양산 실적(Inspire 1만 대)·데이터·SDK — 형성 중</td><td>섹터 성장률 최고(협의 CAGR 40~65%)</td><td>인하우스 천장·가격전쟁·자기보고 스펙</td><td>IPO 대기 티켓 — 상장 시 최대 β. 확신도 중간 ~60%</td></tr>
+<tr><td class="num">4</td><td><strong>텐던·특수 소재</strong></td><td>니치 마진</td><td>마모 수명 노하우</td><td>텐던 노선 승리 시 동반</td><td>노선 의존·검증 얕음</td><td>옵션 성격 — 소액 위성. 확신도 낮음~중간 ~55%</td></tr>
+<tr><td class="num">5</td><td><strong>OEM 인하우스</strong></td><td>비용센터(본체로 회수)</td><td>본체 차별화의 심장</td><td>—</td><td>—</td><td>핸드 '전용' 투자 불가 — 본체 투자(상위 보고서)로 흡수. 확신도 높음 ~70%</td></tr>
+</tbody></table></div>
+
+<h3>11.2 밸류에이션 스냅샷 — 시장은 무엇을 이미 지불했나</h3>
+<div class="twrap"><table class="wide-xl">
+<caption>표 15. 노출 수단별 밸류에이션과 내재 기대 (2026-07 인근)</caption>
+<thead><tr><th>대상</th><th>노출 성격</th><th>밸류·지표</th><th>역산되는 기대</th><th>점검</th></tr></thead>
+<tbody>
+<tr><td>Linkerbot (비상장)</td><td>모듈 순수 — 고DoF 볼륨</td><td>$3.0B(B+) → 차기 $6B 목표 보도</td><td>'25 출하 기준 대당 밸류 ¥200만~400만 <span class="bd bd-drv">파생</span>·월 4,000 런레이트(연환산 ~4.8만)에도 '26 목표 완전 이행+데이터 서사를 선반영</td><td>"공개 대형 주문 부재" 지적 병존 — 목표 미달 시 되돌림 폭 최대, IPO 공모가가 시험대</td></tr>
+<tr><td>Paxini (비상장)</td><td>촉각 풀스택 순수</td><td>¥100억+</td><td>촉각 구전망(2029 $4.3억)의 수배 상향을 선반영</td><td>사양 혁명(채널 폭증) 실현 여부가 관건</td></tr>
+<tr><td>Inspire (비상장)</td><td>볼륨 실측 1위</td><td>¥40억 · 연 1만 대</td><td>대당 밸류 ¥40만 — 4사 중 가장 보수적 가격</td><td>실적 대비 저평가 vs 저가 노선의 마진 한계</td></tr>
+<tr><td>鸣志電器 (603728)</td><td>코어리스 국산화 대표(상장)</td><td>모터 본업+로봇 옵션</td><td>휴머노이드 수주의 자릿수 점프 기대 내재</td><td>수주 공시·고객사 다변화 추적</td></tr>
+<tr><td>兆威机电 (003021)</td><td>마이크로 구동 모듈(상장)</td><td>'25 로봇 매출 ¥2~3천만 → '26 목표 ¥1억+</td><td>매출 기여 미미 = 사실상 옵션 가격</td><td>목표 이행률이 즉각적 검증 지표</td></tr>
+<tr><td>五洲新春 (603667) 등 스크류 라인</td><td>마이크로 정밀가공(상장)</td><td>본체 스크류 수혜에 핸드 얹힘</td><td>손 스크류의 추가 콘텐츠 기대</td><td>핸드향 수주의 별도 공시 여부</td></tr>
+<tr><td>NVE (NVEC)</td><td>자기 촉각 서방 후보(상장)</td><td>GM ~79% · P/E &lt;30 <span class="bd bd-est">주의: 홍보성 2차 출처</span></td><td>로봇 촉각은 아직 가격 미반영에 가까움</td><td>공시·컨콜에서 로봇 매출 언급 검증 필수 — 12장 상충 참조</td></tr>
+<tr><td>汉威科技 (300007) / AAC (2018.HK)</td><td>압저항 볼륨 / 크로스오버</td><td>본업+옵션</td><td>볼륨 촉각 표준화 / 정밀 양산의 침공</td><td>디자인윈 공시 추적</td></tr>
+</tbody></table></div>
+<figcaption>출처: 각 라운드 보도·거래소 공시·MS(2026-03). <strong>역산 결론:</strong> 비상장 전문기업 밸류는 2026~27년 물량 목표의 완전 이행을 이미 지불했고, 상장 부품주는 "옵션 가격" 단계로 온도차가 크다 — 구조 순위와 별개로 <strong>가격 매력은 부품 체인에 있다</strong>는 것이 본 보고서의 판단. 개별 기업의 정밀 밸류에이션은 기업분석 프로젝트의 몫.</figcaption>
+
+<h3>11.3 승자·패자를 가르는 KPI와 핸드오프</h3>
+<p>추적할 KPI는 다섯이다: ① <strong>월 출하·수율</strong>(양산의 실측 — Inspire·Linkerbot 공개치), ② <strong>제3자 사이클 수명</strong>(최초 독립 검증 통과 기업이 프리미엄 선점), ③ <strong>디자인윈 수</strong>(OEM 채택 — 특히 "인하우스 진영의 외부 촉각 채택" 같은 역류 신호), ④ <strong>촉각 채널당 단가</strong>(사양 혁명의 경제성), ⑤ <strong>SDK 생태 지표</strong>(논문 채택·GitHub — Allegro 선례). 아래는 기업분석 프로젝트 이관 목록이다.</p>
+<div class="twrap"><table class="wide">
+<caption>표 16. 기업분석 핸드오프 — 무엇을 검증할 것인가</caption>
+<thead><tr><th>우선순위</th><th>기업(티커)</th><th>구간</th><th>핵심 질문</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>鸣志電器 (603728.SS)</td><td>코어리스 국산화</td><td>휴머노이드·핸드향 수주 궤적과 3강 대비 스펙 격차 — 코어리스/슬로티드 양다리의 승산</td></tr>
+<tr><td>A</td><td>兆威机电 (003021.SZ)</td><td>마이크로 구동 모듈</td><td>'26 로봇 매출 ¥1억+ 목표 이행률 — 옵션 가격이 실적 가격으로 바뀌는 시점</td></tr>
+<tr><td>A</td><td>NVE (NVEC)</td><td>자기 촉각(서방)</td><td>로봇 엔드이펙터 매출의 공시 실체 검증 — 홍보와 실적의 간극 측정</td></tr>
+<tr><td>B</td><td>Inspire·Linkerbot·Paxini (IPO 추적)</td><td>모듈·촉각 순수</td><td>상장 시 공모 밸류 vs 표 15 앵커 — 첫 손익 공시가 섹터 전체의 기준점</td></tr>
+<tr><td>B</td><td>원익 계열(원익로보틱스)</td><td>韓 유일 자산</td><td>Allegro V5의 상업 채택(연구→산업) 전환과 촉각 핑거팁의 외판 가능성</td></tr>
+<tr><td>B</td><td>五洲新春 (603667.SS)</td><td>마이크로 스크류</td><td>본체 롤러스크류 대비 핸드 스크류의 마진·물량 기여 분리 추정</td></tr>
+<tr><td>C</td><td>汉威科技 (300007.SZ) / 大业股份 / AAC (2018.HK)</td><td>압저항 / 텐던 / 크로스오버</td><td>볼륨 촉각 표준화 수혜 / 텐던 노선 옵션 / 정밀 양산 침공의 실체</td></tr>
+</tbody></table></div>
+<p>배분·진입 시점은 개인 포트폴리오 맥락의 문제이므로 다루지 않는다 — 위 목록은 검증 질문의 지도다.</p>
+</section>
+
+<section id="s12">
+<h2><span class="no">12</span>한계와 가정 — 이 분석은 어디서 틀릴 수 있는가</h2>
+<p class="lead"><strong>핵심 가정 3개:</strong> ① 휴머노이드 물량이 상위 보고서 밴드의 하단으로라도 실현된다(핸드는 그 파생상품), ② 전능동·다축 촉각 사양이 언더·기본 촉각 대비 지불의사 프리미엄을 유지한다(믹스 상승 논리의 전제), ③ 외판 시장이 인하우스화에 전멸당하지 않는다(전문기업 생존 공간). 셋 중 하나라도 깨지면 11장 순위가 재조정된다.</p>
+<p><strong>확신도가 낮은 지점:</strong> (a) 이익 풀 구간별 마진 — 공개 BOM 부재로 전부 구간 추정 <span class="bd bd-est">추정</span>. (b) 중국 전문기업 수치 — 점유 80%·내구 10배·출하량이 자기보고이며 제3자 감사 부재. (c) NVE의 로봇 매출 — 홍보성 X 게시 재인용으로 출처 등급이 낮다. (d) 1X 스펙 — 공식 발표이나 제품 인도 전(검증은 2026 H2 이후). (e) 촉각 하위시장 규모 — 구전망($4.3억)과 밸류 현실(¥100억+)의 괴리를 "전망 상향 선반영"으로 해석했으나 "밸류 거품"일 가능성도 있다. <strong>이 결론이 틀리는 조건:</strong> ① 대규모 배치 데이터가 "그리퍼 충분"을 실증하면 다지 프리미엄 논리 전체가 무너진다, ② 손 하드웨어가 2~3년 내 커머디티화(왕싱싱 테제)되면 1위(촉각)·3위(모듈)의 프리미엄이 조기 소멸한다, ③ 슬로티드 전환이 전면화되면 코어리스 과점 논리(2위 구간의 핵심)가 약화된다. <strong>다음 검증 단계:</strong> NEO 인도분 실사용 데이터, 전문 3사 IPO 공시, NVE 공시 원문 확인, 제3자 내구 시험 등장 여부.</p>
+<div class="twrap"><table class="wide">
+<caption>표 17. 데이터 상충([상충]) 총목록 — 본문 채택 기준</caption>
+<thead><tr><th>항목</th><th>값 A</th><th>값 B</th><th>본문 처리</th></tr></thead>
+<tbody>
+<tr><td>2030 시장 규모</td><td>$30.4억(東吳·Statista, 광의)</td><td>$46억~$120억(궈타이·中泰·头豹, 협의·휴머노이드)</td><td>정의별 분리 제시(표 6) — 기본 시나리오는 협의 $46억~$55억 밴드 채택</td></tr>
+<tr><td>다지 CAGR</td><td>11.9%(QYResearch 별도판)</td><td>64.6%(国泰海通/QYR 계열)</td><td>같은 'QYR' 명의의 두 계열 병존 — 집계 모집단 차이로 판단, 양측 병기</td></tr>
+<tr><td>테슬라 Gen3 손 DoF</td><td>22 DoF(자사·특허 분석)</td><td>주동 17(中 증권 분해)</td><td>능동/총 집계 기준 차로 추정 — 병기, 능동 기준 비교 원칙 적용</td></tr>
+<tr><td>Linkerbot 위상</td><td>고자유도 점유 80%+·내구 Shadow 10배(자칭)</td><td>제3자 검증 부재</td><td>'자기보고' 배지와 함께 인용 — 사실 단정 회피</td></tr>
+<tr><td>NVE 로봇 탑재</td><td>CEO 발언·GM 79%(X 투자 게시)</td><td>공시 원문 미확인</td><td>[주의] 표기 — 핸드오프에서 "공시 검증" 과제로 이관</td></tr>
+<tr><td>촉각 시장 규모</td><td>2029 $4.3억(QYR, '24 초)</td><td>Paxini 단독 밸류 ¥100억+('26)</td><td>구전망 vs 신현실의 괴리 명시 — 상향 선반영으로 해석하되 거품 가능성 병기</td></tr>
+<tr><td>Paxini DexH13 촉각 수</td><td>"1,956개"(WRC 전시 보도 — TORA-ONE 양손 근 2,000개와 혼선)</td><td>1,140 ITPU·3,420채널·16 DoF(주동 13) — 자사 공식 스펙</td><td>공식치로 정정(v1.1) — 유닛/채널 개념 분리 표기</td></tr>
+<tr><td>Figure 03 핸드 DoF</td><td>16(F02 공식 스펙의 이월)</td><td>미공개(자사) · 2차 소스 20 병존</td><td>"미공개"로 정정, F02=16·2차 20 병기(v1.1)</td></tr>
+<tr><td>GGII "34만"의 귀속</td><td>글로벌 핸드 34만 只+('30, 휴머노이드용 32.5만) / 中 43만 只+</td><td>글로벌 휴머노이드 로봇 34만 台('30 블루페이퍼)</td><td>세 계열 분리 명기 — 재인용 혼선 경고(표 6)</td></tr>
+<tr><td>테슬라 Gen3 손 설계</td><td>특허 4건(22 DoF·롤링 관절·텐던, '26-04 공개)</td><td>머스크 "이미 변경 — 작동 안 했다"('26-04-19) — 현행 미공개</td><td>특허 기반 서술에 '폐기 공언' 배지 부착, V3 공개(7말~8월)를 검증 이벤트로 지정</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="s13">
+<h2><span class="no">13</span>체크포인트와 모니터링</h2>
+<p class="lead"><strong>추적 원칙:</strong> 이 섹터의 다음 12개월은 "발표의 계절"에서 "검증의 계절"로 넘어간다 — 스펙 발표가 아니라 <strong>수율·내구·인도 후 데이터의 최초 공개</strong>를 잡는 것이 모니터링의 전부다.</p>
+<h3>13.1 핵심 추적 지표</h3>
+<p><strong>실적:</strong> ① Inspire 월 출하(볼륨의 정기 실측), ② Linkerbot '26 목표(5만~10만) 대비 진도, ③ 兆威 로봇 매출 ¥1억 목표 이행, ④ 코어리스 3강·中 체인의 핸드향 수주 공시. <strong>기술·검증:</strong> ⑤ NEO 인도분의 손 관련 고장률·원격개입률(최초의 가정 실사용 데이터), ⑥ 테슬라 V3 라인의 손 조립 수율 채널체크(2025 사태 재발 여부), ⑦ 제3자 사이클 시험 결과의 최초 등장, ⑧ RobOmni류 촉각 벤치마크 순위 변동. <strong>구조:</strong> ⑨ 헤드 OEM의 외부 핸드·촉각 채택(역류 신호) vs 추가 내재화 발표, ⑩ MIIT 표준 체계 내 핸드·촉각 표준 초안, ⑪ 전문 3사 IPO 일정·공모 밸류.</p>
+<h3>13.2 촉매 캘린더</h3>
+<div class="twrap"><table>
+<caption>표 18. 촉매 캘린더 (2026 H2~2028)</caption>
+<thead><tr><th>시점</th><th>이벤트</th><th>확인할 것</th><th>방향성</th></tr></thead>
+<tbody>
+<tr><td>2026 Q3~Q4</td><td>1X NEO 미국 인도 개시</td><td>신형 손 탑재 여부·초기 리뷰의 손 고장·개입률</td><td><span class="up">순조 시 사양 전쟁 가속 ▲</span> / <span class="down">고장 다발 시 내구 리스크 현실화 ▼</span></td></tr>
+<tr><td>2026 H2</td><td>테슬라 V3 램프(주 1,000대 목표 구간)</td><td>손 조립이 다시 병목이 되는가</td><td>부품 체인 수주의 선행지표</td></tr>
+<tr><td>2026 말</td><td>Linkerbot 연간 실적 공개 시점</td><td>5만~10만 목표 대비 실적·가격 추이</td><td><span class="down">대폭 미달 시 전문기업 밸류 재평가 ▼</span></td></tr>
+<tr><td>2026 말~2027</td><td>Inspire·Paxini·Linkerbot IPO 움직임</td><td>공모 밸류 vs 표 15 앵커·최초 손익 공시</td><td>섹터 가격의 공식 기준점 형성</td></tr>
+<tr><td>2027</td><td>2위권 OEM 신형 손 발표 사이클</td><td>전단 촉각·전능동의 채택 확산율(테슬라 신형 손 사양 포함)</td><td>사양 상향 = 부품 믹스 논리의 검증</td></tr>
+<tr><td>2027~28</td><td>표준화·제3자 검증 인프라</td><td>촉각 인터페이스 표준 초안·독립 내구 시험 등장</td><td>통과 기업의 프리미엄 재편</td></tr>
+</tbody></table></div>
+<h3>13.3 논지 변경 트리거</h3>
+<p><strong>[상향]</strong> ① 제3자 내구 검증(백만 사이클급) 최초 통과 — 해당 기업·노선 상향 및 모듈 구간 순위 재고, ② 헤드 OEM의 외부 촉각·핸드 채택 확대(인하우스 천장 논리 약화), ③ NEO 실사용에서 손 고장률이 무시 가능 수준으로 확인. <strong>[하향]</strong> ④ 내구·리콜 스캔들, ⑤ 배치 데이터의 "그리퍼 충분" 실증, ⑥ Linkerbot·Xynova 목표 대폭 미달과 가격 급락 동시 발생(과잉캐파 확정), ⑦ 中 헤드 OEM 전면 자연(自研) 선언 연쇄. <strong>[구조 재평가]</strong> ⑧ 손 하드웨어 커머디티화 신호(사양 상향 없이 가격만 하락 2년 지속) — 가치의 데이터·모델 이동 확정, 본 보고서 순위 폐기 검토. 분기 체크포인트: 兆威·鸣志·汉威 실적일 + 전문 3사 자금·IPO 뉴스플로 + 테슬라 실적 콜의 손 언급. 연간: 표 6(전망)·표 14(순위)·표 17(상충) 갱신.</p>
+</section>
+
+<div class="foot">
+<p><strong>기준일</strong> 2026-07-13 (Asia/Seoul) · 프레이밍: 기술 모드(기술 해부 편중) — 상위 문서 「휴머노이드 로봇 산업분석 2026-07」(v1.1)과 세트로 설계됨. 모든 수치는 본문에 출처·시점 병기, 출처 없는 수치 없음. [추정]=논리 추정 · [파생]=계산값(근거 병기) · [상충]=출처 불일치(표 17 총목록) · 자기보고=제3자 검증 부재.</p>
+<p><strong>주요 출처군</strong> — 1차: 1X 공식 기술 페이지·발표(2026-07-09), 테슬라 특허·실적 콜 분석, 각사 공식 스펙·라운드 공표(Linkerbot·Inspire·Paxini·AGILINK·Shadow·원익·PSYONIC·Sharpa), arXiv(SaTA 외)·OpenAI·DLR 공개 논문 · 기관: 東吳증권(2025-06), 国泰海通(2025-07), 中泰·국금·화신·장성증권, Morgan Stanley(2026-03), 头豹·QYResearch·Statista(재인용), BofA(상위 문서) · 매체: Forbes, Wired, The Information·TechSpot(테슬라 병목), 36kr·robotscope·艾邦·DoNews·humanoid.guide, The Robot Report.</p>
+<p><strong>표기</strong> — 통화 원문 유지($=USD, ¥=CNY, €=EUR), 환산 시 ¥7.3/$ 명시. 본 자료는 기술·산업 구조 이해를 위한 정보 제공 목적이며 특정 종목의 매매 시점 판단을 제공하지 않는다. <strong>v1.1</strong>(2026-07-13): 3개 언어 교차 검증을 반영해 테슬라 손 최신 상태('26-04 특허 설계 폐기 공언·일정 재연기), Paxini 공식 스펙(1,140유닛·3,420채널·16 DoF), GGII 34만/43만 계열 분리, Figure 03 DoF 미공개 처리, Linkerbot(월 4,000대·$3.0B→$6B 목표)·AGILINK(누적 8,000대) 갱신, Kovac 귀속 제거 등 9개 항목을 수정·갱신하고 상충 목록에 4행을 추가.</p>
+</div>
+
+</div>
+</body>
+</html>
