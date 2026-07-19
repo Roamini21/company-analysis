@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kulicke &amp; Soffa (KLIC) 기업분석 보고서</title>
+<style>
+/* ===== 보고서 UI 통일 시스템 v1 — 수정 금지 ===== */
+:root{
+  --bg-page:#FFFFFF; --bg-soft:#F6F8FA;
+  --brand:#0F2B46; --brand-2:#1E4265;
+  --ink:#1A202C; --ink-2:#4A5568; --ink-3:#718096;
+  --line:#E2E8F0; --line-2:#CBD5E1;
+  --accent:#2563EB; --accent-soft:#EFF6FF;
+  --pos:#047857; --pos-soft:#ECFDF5;
+  --neg:#DC2626; --neg-soft:#FEF2F2;
+  --warn:#B45309; --warn-soft:#FFFBEB;
+  --gold:#B7791F; --gold-soft:#FEF3C7;
+  --c1:#2563EB; --c2:#7C3AED; --c3:#059669; --c4:#D97706;
+  --c5:#DC2626; --c6:#0891B2; --c7:#DB2777; --c8:#64748B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+    "Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  background:var(--bg-page); color:var(--ink);
+  font-size:15px; line-height:1.7; word-break:keep-all;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px 80px;}
+p{margin:0 0 12px; color:var(--ink);}
+strong{color:var(--ink);font-weight:700;}
+a{color:var(--accent);text-decoration:none;}
+ul,ol{margin:0 0 12px 22px;} li{margin:4px 0;color:var(--ink);}
+
+/* --- 표지 밴드 (어두운 배경 허용 위치 1) --- */
+.cover{background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  color:#FFFFFF;padding:44px max(28px,calc((100% - 1040px)/2 + 28px));
+  border-radius:0 0 18px 18px;margin-bottom:36px;}
+.cover h1{font-size:27px;font-weight:800;color:#FFFFFF;margin:6px 0 10px;}
+.cover .sub{color:#C9D6E4;font-size:14px;}
+.cover .meta{color:#9FB3C8;font-size:12.5px;margin-top:14px;}
+.cover .kpis{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+.cover .kpi{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);
+  border-radius:10px;padding:10px 14px;min-width:130px;}
+.cover .kpi .k{font-size:11.5px;color:#9FB3C8;}
+.cover .kpi .v{font-size:18px;font-weight:800;color:#FFFFFF;}
+.cover .kpi .v.up{color:#6EE7B7;} .cover .kpi .v.down{color:#FCA5A5;}
+
+/* --- 목차 --- */
+.toc{background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;
+  padding:18px 22px;margin:0 0 40px;}
+.toc .t{font-weight:800;color:var(--brand);font-size:14px;margin-bottom:10px;}
+.toc ol{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0;}
+.toc li{white-space:nowrap;font-size:13.5px;}
+.toc a{color:var(--ink-2);}
+
+/* --- 섹션 --- */
+section{margin:56px 0 0;}
+h2{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:800;
+  color:var(--brand);border-bottom:2px solid var(--brand);
+  padding-bottom:10px;margin:0 0 20px;}
+h2 .no{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:var(--brand);
+  color:#FFFFFF;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;}
+h3{font-size:16.5px;font-weight:700;color:var(--ink);margin:28px 0 12px;}
+.lead{font-size:15.5px;color:var(--ink);background:var(--accent-soft);
+  border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+  padding:14px 16px;margin:0 0 16px;}
+.lead *{color:var(--ink);}
+
+/* --- 콜아웃 (배경+글자색 자급) --- */
+.co{border-radius:10px;padding:16px 18px;margin:16px 0;border:1px solid;}
+.co .ct{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.co p,.co li{font-size:14px;margin-bottom:6px;}
+.co-key{background:var(--accent-soft);border-color:#BFDBFE;}
+.co-key,.co-key *{color:#1E3A8A;}
+.co-pos{background:var(--pos-soft);border-color:#A7F3D0;}
+.co-pos,.co-pos *{color:#065F46;}
+.co-neg{background:var(--neg-soft);border-color:#FECACA;}
+.co-neg,.co-neg *{color:#991B1B;}
+.co-warn{background:var(--warn-soft);border-color:#FDE68A;}
+.co-warn,.co-warn *{color:#92400E;}
+.co-note{background:var(--bg-soft);border-color:var(--line);}
+.co-note,.co-note *{color:var(--ink-2);}
+
+/* --- 배지 (데이터 계보·확신도) --- */
+.bd{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;
+  padding:2px 7px;vertical-align:1px;margin:0 2px;}
+.bd-est{background:var(--warn-soft);color:#92400E;border:1px solid #FDE68A;}
+.bd-drv{background:var(--accent-soft);color:#1E40AF;border:1px solid #BFDBFE;}
+.bd-cfl{background:var(--neg-soft);color:#991B1B;border:1px solid #FECACA;}
+.bd-conf{background:var(--bg-soft);color:var(--ink-2);border:1px solid var(--line-2);}
+
+/* --- KPI 카드 그리드 --- */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;margin:16px 0;}
+.kcard{background:#FFFFFF;border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;}
+.kcard .k{font-size:12px;color:var(--ink-3);}
+.kcard .v{font-size:20px;font-weight:800;color:var(--ink);margin-top:2px;}
+.kcard .v.up{color:var(--pos);} .kcard .v.down{color:var(--neg);}
+.kcard .d{font-size:11.5px;color:var(--ink-3);margin-top:2px;}
+
+/* --- 표 --- */
+.twrap{overflow-x:auto;margin:16px 0;border:1px solid var(--line);
+  border-radius:10px;
+  background:
+    linear-gradient(to right,#FFF 30%,rgba(255,255,255,0)),
+    linear-gradient(to left,#FFF 30%,rgba(255,255,255,0)) 100% 0,
+    radial-gradient(farthest-side at 0 50%,rgba(15,43,70,.14),transparent),
+    radial-gradient(farthest-side at 100% 50%,rgba(15,43,70,.14),transparent) 100% 0;
+  background-repeat:no-repeat;background-size:60px 100%,60px 100%,16px 100%,16px 100%;
+  background-attachment:local,local,scroll,scroll;}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:#FFFFFF;}
+caption{caption-side:top;text-align:left;font-weight:800;color:var(--brand);
+  font-size:14px;padding:12px 14px 8px;}
+th{background:var(--brand);color:#FFFFFF;font-weight:700;font-size:12.5px;
+  padding:10px 12px;text-align:left;white-space:nowrap;}
+td{padding:9px 12px;border-top:1px solid var(--line);color:var(--ink);
+  vertical-align:top;}
+tbody tr:nth-child(even) td{background:#F8FAFC;}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+td .up{color:var(--pos);font-weight:700;} td .down{color:var(--neg);font-weight:700;}
+tr.hl td{background:var(--gold-soft);color:#78350F;font-weight:700;}
+tr.total td{background:var(--accent-soft);color:#1E3A8A;font-weight:800;
+  border-top:2px solid var(--line-2);}
+.wide{min-width:860px;}
+
+/* --- 그림(figure) --- */
+figure{margin:24px 0;}
+.fig-t{font-weight:800;color:var(--ink);font-size:14.5px;margin-bottom:10px;}
+.fig-box{background:#FFFFFF;border:1px solid var(--line);border-radius:12px;
+  padding:16px;}
+figcaption{font-size:12px;color:var(--ink-3);margin-top:8px;line-height:1.6;}
+figure img{max-width:100%;height:auto;border-radius:8px;display:block;}
+svg{max-width:100%;height:auto;display:block;}
+svg text{font-family:inherit;}
+
+/* --- 범례 (차트 외부 HTML 범례) --- */
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 2px 0;}
+.legend .li{display:flex;align-items:center;gap:6px;font-size:12.5px;
+  color:var(--ink-2);white-space:nowrap;}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto;}
+
+/* --- 이벤트 마커 범례 표 (주가 차트용) --- */
+.evt{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px;}
+.evt td{padding:6px 10px;border-top:1px solid var(--line);color:var(--ink);}
+.evt .n{width:30px;font-weight:800;color:#FFFFFF;text-align:center;}
+.evt .n span{display:inline-block;width:20px;height:20px;line-height:20px;
+  border-radius:50%;background:var(--brand);font-size:11.5px;}
+.evt .up{color:var(--pos);font-weight:700;} .evt .down{color:var(--neg);font-weight:700;}
+
+/* --- Bull/Bear 2열 --- */
+.bb{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+.bb .col{border-radius:12px;padding:16px 18px;border:1px solid;}
+.bb .bull{background:var(--pos-soft);border-color:#A7F3D0;}
+.bb .bull,.bb .bull *{color:#065F46;}
+.bb .bear{background:var(--neg-soft);border-color:#FECACA;}
+.bb .bear,.bb .bear *{color:#991B1B;}
+.bb .ct{font-weight:800;font-size:14px;margin-bottom:8px;}
+
+/* --- SWOT 4분면 --- */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+.swot .q{border-radius:12px;padding:14px 16px;border:1px solid;}
+.swot .s{background:var(--pos-soft);border-color:#A7F3D0;} .swot .s,.swot .s *{color:#065F46;}
+.swot .w{background:var(--neg-soft);border-color:#FECACA;} .swot .w,.swot .w *{color:#991B1B;}
+.swot .o{background:var(--accent-soft);border-color:#BFDBFE;} .swot .o,.swot .o *{color:#1E3A8A;}
+.swot .t{background:var(--warn-soft);border-color:#FDE68A;} .swot .t,.swot .t *{color:#92400E;}
+.swot .qt{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.swot ul{margin:0 0 0 18px;} .swot li{font-size:13.5px;margin:3px 0;}
+
+/* --- 푸터 --- */
+.foot{margin-top:64px;border-top:1px solid var(--line);padding-top:16px;
+  font-size:12px;color:var(--ink-3);line-height:1.7;}
+
+/* --- 반응형 --- */
+@media (max-width:640px){
+  .wrap{padding:0 16px 60px;}
+  .cover{padding:30px 16px;} .cover h1{font-size:22px;}
+  .bb,.swot{grid-template-columns:1fr;}
+  h2{font-size:19px;}
+}
+@media print{
+  .cover{border-radius:0;} body{font-size:13px;}
+}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="sub">기업분석 보고서 · 반도체 장비 (후공정 어셈블리) · NASDAQ:KLIC</div>
+  <h1>Kulicke &amp; Soffa — 메모리 슈퍼사이클의 병기창, 가격은 이미 강세 18년치를 샀다</h1>
+  <div class="kpis">
+    <div class="kpi"><div class="k">현재 주가 (7/16 종가)</div><div class="v">$99.02</div></div>
+    <div class="kpi"><div class="k">내재 CAP (강세 경로 전제)</div><div class="v">≈17.6년</div></div>
+    <div class="kpi"><div class="k">FY2026E 매출 성장</div><div class="v up">+65%</div></div>
+    <div class="kpi"><div class="k">고점(7/1 종가) 대비</div><div class="v down">−26%</div></div>
+    <div class="kpi"><div class="k">주당 순현금</div><div class="v">$8.4</div></div>
+  </div>
+  <div class="meta">기준일: 2026-07-19 · 데이터 출처 약 40개 (회사 공시·IR, SEC, Yole, TrendForce, TechInsights, Damodaran, 국내외 언론) · [추정]·[파생]·[상충] 표기 사용 · 주가 기준 2026-07-16 종가 · 회계연도(FY)는 9월 말~10월 초 결산</div>
+</div>
+<div class="wrap">
+<nav class="toc">
+  <div class="t">목차</div>
+  <ol>
+    <li><a href="#s1">1. 핵심 요약</a></li>
+    <li><a href="#s2">2. 기업 개요</a></li>
+    <li><a href="#s3">3. 수익 구조</a></li>
+    <li><a href="#s4">4. 제품·기술력</a></li>
+    <li><a href="#s5">5. 산업 분석</a></li>
+    <li><a href="#s6">6. 경쟁 우위(해자)</a></li>
+    <li><a href="#s7">7. 피어그룹 비교</a></li>
+    <li><a href="#s8">8. 시장 내러티브</a></li>
+    <li><a href="#s9">9. 재무·DCF 모델</a></li>
+    <li><a href="#s10">10. 내재 CAP 역산</a></li>
+    <li><a href="#s11">11. Bull Case</a></li>
+    <li><a href="#s12">12. Bear Case</a></li>
+    <li><a href="#s13">13. SWOT</a></li>
+    <li><a href="#s14">14. 경영진·자본배분</a></li>
+    <li><a href="#s15">15. 종합·체크포인트</a></li>
+  </ol>
+</nav>
+
+<section id="s1">
+<h2><span class="no">1</span>핵심 요약 (Executive Summary)</h2>
+<div class="lead"><strong>한 문장 요약:</strong> 1951년 세계 최초의 와이어 본더를 만든 이래 75년간 반도체 '조립(어셈블리)'의 표준 장비를 쥐어온 후공정 본딩 장비 세계 1위 기업이, AI가 촉발한 메모리 슈퍼사이클(볼 본더 수요 폭증)과 첨단 패키징 전환(TCB·플럭스리스 본딩)의 이중 수혜로 실적과 주가가 동시에 재평가되고 있는 국면이다.</div>
+<p>Kulicke &amp; Soffa(이하 K&amp;S)의 본질은 <strong>"칩과 세상을 잇는 마지막 1mm의 배선"</strong>을 만드는 장비 회사다. 반도체 다이(die, 웨이퍼에서 잘라낸 개별 칩)의 패드와 패키지 기판을 머리카락 굵기의 1/5인 금속 와이어로 초당 수십 번씩 용접해 붙이는 와이어 본딩에서 K&amp;S는 60% 이상의 점유율로 반세기 넘게 1위를 지켜왔다. 이 성숙한 본업이 2026년 AI 데이터센터발 NAND·DRAM 슈퍼사이클을 만나 가동률 85~90% 이상으로 재점화됐고(FY2026E 매출 약 $10.8억, +65%), 동시에 회사가 2020년부터 키워온 열압착 본딩(TCB) — 특히 플럭스 없이 포름산 증기로 산화막을 걷어내는 플럭스리스 TCB(FTC) — 가 칩렛·HBM 시대의 미세피치 적층 수요를 타고 연매출 $4억 규모의 생산능력 투자 단계에 진입했다.</p>
+<p>투자 매력의 핵심은 세 겹이다. 첫째, <strong>사이클 레버리지</strong> — 자산경량(capex/매출 약 2.5%) 구조라 매출이 돌아서면 영업마진이 −0.5%(FY25)에서 19%(Q2 FY26 비GAAP)로 폭발적으로 회복된다. 둘째, <strong>설치 기반의 복리</strong> — 전 세계 수만 대의 본더가 캐필러리·스페어·서비스(APS, 매출의 24%)를 반복 구매하는 준(準)구독 수익을 만든다. 셋째, <strong>구조 전환 옵션</strong> — TCB·수직 와이어·HBF(고대역폭 플래시)라는 첨단 패키징 신시장이 성숙 본업 위에 얹힌다. 순현금 $4.5억(주당 $8.4), 5년간 $8.2억 주주환원(주식수 −17%)의 재무 체력이 바닥을 받친다.</p>
+<div class="co co-key"><div class="ct">시장 내재 CAP 결론 (미리보기 — §9·§10 상세)</div>
+<p>현재가 $99.02는 <strong>평균회귀(섹터 페이드 0.25) 가정의 '합리적 중도 경로'로는 경쟁우위기간(CAP)을 30년까지 늘려도 도달 불가($62 상한)</strong>한 가격이다. 역산하면 시장은 "FY2027 매출 +25%·EBITA 마진 21%의 슈퍼사이클 정점 이후에도 <strong>연 12% 성장·마진 20%를 약 18년간(내재 CAP 17.6년) 유지</strong>"하는 강세 경로를 가격에 반영하고 있다 — FY2044 매출 $93억, 역대 최고치($15.2억)의 6.1배에 해당하는 기대다. 프레임워크 기준 15~20년 CAP는 '낙관 구간(해자 근거가 강력해야 정당화)'이며, 그 위에 공격적 운영 가정까지 얹혀 있어 기대 강도는 높다. 다만 7/1 고점($133.81) 대비 −26%의 조정으로 기대의 일부는 이미 되돌려졌고, TCB $4억 램프·메모리 타이트 지속(2027년까지) 등 이 기대를 뒷받침할 실물 증거들도 실재한다. 본 보고서는 그 증거와 반증 조건을 양쪽 모두 계량한다.</p></div>
+<div class="kgrid">
+  <div class="kcard"><div class="k">시가총액</div><div class="v">$5.3B</div><div class="d">53.1M주 × $99.02</div></div>
+  <div class="kcard"><div class="k">TTM 매출 / FY26E</div><div class="v">$768M / $1,080M</div><div class="d">FY26E는 가이던스 기반 [파생]</div></div>
+  <div class="kcard"><div class="k">Q2 FY26 매출</div><div class="v up">+49.8%</div><div class="d">$242.6M, 스트리트 컨센 +27%·가이던스 +5% 상회</div></div>
+  <div class="kcard"><div class="k">Q3 FY26 가이던스</div><div class="v">$310M±20</div><div class="d">+28% QoQ, 발표 8/5</div></div>
+  <div class="kcard"><div class="k">TTM PER / 선행 PER</div><div class="v">≈95x / ≈30x</div><div class="d">TTM 왜곡 · 선행은 FY26E EPS ~$3.3 기준 [파생]</div></div>
+  <div class="kcard"><div class="k">배당수익률</div><div class="v">0.84%</div><div class="d">분기 $0.205 · 개시 후 매년 인상, 현재 동결</div></div>
+</div>
+</section>
+
+<section id="s2">
+<h2><span class="no">2</span>기업 개요</h2>
+<div class="lead">전기다리미 설계 기사 두 명이 1951년 필라델피아에서 세운 정밀기계 공방이, 벨연구소의 요청으로 <strong>세계 최초의 와이어 본더</strong>를 만들며 반도체 산업의 탄생과 함께 성장했다. 75년이 지난 지금 본사는 싱가포르, 고객의 90.5%는 해외, 매출의 절반 이상은 중국에서 나오는 — 반도체 조립 산업의 지리적 이동을 그대로 체화한 회사다.</div>
+
+<h3>2-1. 설립과 역사 — 트랜지스터와 함께 태어난 회사</h3>
+<p>프레더릭 W. 컬릭 주니어(Frederick W. Kulicke Jr.)와 앨버트 소파(Albert Soffa)는 필라델피아의 가전회사 프록터 일렉트릭에서 전기다리미를 설계하다 만났다. 자기 사업을 꿈꾸던 두 사람은 1951년 커스텀 엔지니어링 파트너십을 결성한다 — 자본금이 거의 없어 지인들에게 돈을 빌려 시작한, 전형적인 공방 창업이었다. 운명을 바꾼 것은 벨연구소였다. 1947년 트랜지스터를 발명한 벨연구소는 게르마늄 다이에 가느다란 도선을 '사람 손이 아닌 기계로' 붙일 방법이 필요했고, K&amp;S는 1956년 이 요구에 응답해 <strong>세계 최초의 와이어 본더</strong>를 설계·제작했다. 트랜지스터를 대량생산 가능한 물건으로 만든 숨은 공로자가 된 것이다.</p>
+<p>이후의 이정표는 반도체 산업사의 축소판이다. 1961년 기업공개(10만 주 공모, OTC — 1971년 나스닥 개장과 함께 초기 상장사로 편입), 1970년대 중반 불황에 반도체 조립 외 전 제품군을 정리하는 구조조정, 그리고 그 집중의 결실로 1976년 <strong>세계 최초의 디지털 제어 완전자동 와이어 본더</strong> 출시. 1981년 일본 법인 설립으로 당시 급성장하던 일본 반도체 시장에 진출했고, 창업자 소파는 1985년 와이어 본딩 기술 공로로 SEMI 어워드를 받았다. 1999년에는 세계 와이어 본딩 장비 시장의 과반을 점유하는 확고한 1위가 됐다.</p>
+<p>2000년대는 지리와 사업 재편의 시대였다. 2000년 사상 최대 매출($8.99억)을 찍으며 볼 본더 제조를 싱가포르로 이전했고(조립 산업의 아시아 이동 추종), 이후 본사 기능도 싱가포르로 옮겼다(법인 등기는 미국 유지). 기술 전환점은 2010년 — <strong>IConnPS ProCu</strong>로 금(Au) 와이어에서 구리(Cu) 와이어로의 산업 전환을 주도했다. 금값 급등기에 구리 와이어는 재료비를 대폭 낮추면서 전기·열 전도도는 더 좋았지만, 산화가 빠르고 볼이 단단해 본딩이 훨씬 어려웠다. K&amp;S는 가스 딜리버리와 공정 제어로 이 난제를 풀어 전환기의 교체 수요를 독식했고, 오늘날 구리 와이어 본딩 레시피는 이 회사의 핵심 노하우 자산이 됐다.</p>
+<div class="twrap"><table>
+<caption>표 1. K&amp;S 주요 연혁과 M&amp;A — 성공과 실패의 기록</caption>
+<thead><tr><th>연도</th><th>사건</th><th>의미·결과</th></tr></thead>
+<tbody>
+<tr><td>1951</td><td>필라델피아 창업 (Kulicke + Soffa)</td><td>정밀기계 공방에서 출발</td></tr>
+<tr><td>1956</td><td>벨연구소용 세계 최초 와이어 본더</td><td>반도체 대량생산의 조력자</td></tr>
+<tr><td>1961</td><td>기업공개(OTC 상장)</td><td>1971년 나스닥 개장 시 초기 상장사 편입 — 65년째 상장</td></tr>
+<tr><td>1976</td><td>최초의 디지털 완전자동 와이어 본더</td><td>자동화 표준 선점</td></tr>
+<tr><td>2000</td><td>Probe Tech($65M)·Cerprobe($225M) 인수</td><td>테스트 사업 진출 → 이후 철수 (다각화 실패 1)</td></tr>
+<tr><td>2008</td><td>Orthodyne Electronics 인수</td><td>웨지 본딩 확보 → 파워·EV 사업의 뿌리 (성공)</td></tr>
+<tr><td>2010</td><td>IConnPS ProCu 출시</td><td>금→구리 와이어 전환 주도 (기술 해자 강화)</td></tr>
+<tr><td>2015</td><td>Assembléon 인수 (필립스 SMT 사업)</td><td>전자조립(EA) 진출 → 2025년 철수 (실패 2)</td></tr>
+<tr><td>2016</td><td>Fusen Chen CEO 취임</td><td>첨단 패키징(TCB) 투자 개시</td></tr>
+<tr><td>2017</td><td>Liteq 인수 (리소그래피)</td><td>소규모, 존재감 미미</td></tr>
+<tr><td>2018</td><td>배당 개시</td><td>이후 매년 인상(집계 기준별 7~8년)</td></tr>
+<tr><td>2020~21</td><td>Advanced Jet Automation(디스펜싱)·Uniqarta(레이저 전사) 인수</td><td>디스펜스는 ACELON으로 결실, Uniqarta는 Project W로</td></tr>
+<tr><td>2024</td><td>Project W(마이크로 LED 전사) 철수</td><td>대규모 손상 → FY24 영업적자 −$92.5M (실패 3)</td></tr>
+<tr><td>2025</td><td>EA(SMT) 사업 철수 발표, Fusen Chen 건강 사유 은퇴(12/1)</td><td>핵심 본딩·첨단 패키징으로 재집중</td></tr>
+<tr><td>2026</td><td>임시 CEO Lester Wong 체제, 메모리 슈퍼사이클 본격 수혜</td><td>FY26E 매출 +65%, TCB $4억 캐파 투자</td></tr>
+</tbody></table></div>
+<p>이 연혁이 말해주는 것은 두 가지다. <strong>본업(본딩)에서 벗어난 다각화는 반복적으로 실패</strong>했고(테스트, SMT, 마이크로 LED — 합산 수억 달러의 수업료), 반대로 <strong>본딩 인접 확장(웨지, 구리 전환, TCB)은 성공</strong>했다는 것. 2024~25년의 Project W·EA 동시 철수는 뼈아픈 손실이었지만, 결과적으로 회사를 "본딩과 그 인접"으로 재정렬시켰고 지금의 첨단 패키징 집중 구조를 만들었다.</p>
+
+<h3>2-2. 현재의 규모와 위상</h3>
+<div class="kgrid">
+  <div class="kcard"><div class="k">설립 / 상장</div><div class="v">1951 / 1961</div><div class="d">나스닥, 본사 싱가포르</div></div>
+  <div class="kcard"><div class="k">직원</div><div class="v">2,551명</div><div class="d">싱가포르·아시아 중심</div></div>
+  <div class="kcard"><div class="k">와이어 본딩 점유율</div><div class="v">60%+</div><div class="d">세계 1위 [추정: 2025 초 기준]</div></div>
+  <div class="kcard"><div class="k">사업 세그먼트</div><div class="v">4개</div><div class="d">볼·웨지·첨단솔루션·APS</div></div>
+  <div class="kcard"><div class="k">누적 TCB 설치</div><div class="v">120대</div><div class="d">그중 절반이 플럭스리스 (2026-02)</div></div>
+  <div class="kcard"><div class="k">R&amp;D 강도</div><div class="v">매출의 20%</div><div class="d">TTM $153M</div></div>
+</div>
+<p>K&amp;S는 800개 이상의 OSAT(외주 반도체 조립·테스트) 시설에 와이어 본딩 솔루션을 공급해 온 것으로 알려져 있으며, 고객군은 OSAT(ASE·Amkor·JCET 등)·IDM(종합반도체)·파운드리·자동차 전장·산업용 제조사에 걸친다. 제품이 담당하는 최종 반도체는 범용 로직·아날로그·전력 반도체·LED·센서부터 NAND 적층 패키지, 그리고 최근에는 AI 가속기용 첨단 패키지까지 확장됐다. 2025년 2월에는 서울에서 기자간담회를 열어 TC 본더·플럭스리스 본딩·CPO(광 코패키징)로 한국 HBM·메모리 장비 시장을 공략하겠다고 공식 선언하기도 했다.</p>
+</section>
+
+<section id="s3">
+<h2><span class="no">3</span>수익 구조 — 장비를 팔면 소모품이 따라온다</h2>
+<div class="lead">K&amp;S의 돈은 <strong>① 본딩 장비 판매(사이클 변동, 매출의 ~73%) → ② 설치 기반 축적 → ③ 소모품·서비스 APS(안정 수익, ~24%)</strong>의 순환으로 벌린다. FY2025 기준 볼 본딩이 매출의 44.8%로 최대이며, 지역적으로는 <strong>중국 본사 고객이 매출의 53.5%</strong>를 차지한다 — 이 숫자가 이 회사의 최대 성장동력이자 최대 리스크다.</div>
+
+<figure>
+<div class="fig-t">그림 1. 수익 흐름 구조 — 장비 판매가 소모품·서비스의 '설치 기반'을 만든다</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- 좌: 장비 3종 -->
+  <rect x="70" y="60" width="220" height="66" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="180" y="87" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1E3A8A">볼 본딩 장비 44.8%</text>
+  <text x="180" y="108" text-anchor="middle" font-size="12" fill="#1E40AF">IConn·RAPID (일반반도체·메모리)</text>
+  <rect x="70" y="150" width="220" height="66" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="180" y="177" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1E3A8A">웨지 본딩 장비 16.9%</text>
+  <text x="180" y="198" text-anchor="middle" font-size="12" fill="#1E40AF">Asterion (파워·EV·산업)</text>
+  <rect x="70" y="240" width="220" height="66" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="180" y="267" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1E3A8A">첨단 솔루션 11.1%</text>
+  <text x="180" y="288" text-anchor="middle" font-size="12" fill="#1E40AF">TCB APTURA·디스펜스·수직와이어</text>
+  <!-- 화살표 -->
+  <path d="M290 93 L400 180" stroke="#CBD5E1" stroke-width="2.5" fill="none"/>
+  <path d="M290 183 L400 195" stroke="#CBD5E1" stroke-width="2.5" fill="none"/>
+  <path d="M290 273 L400 210" stroke="#CBD5E1" stroke-width="2.5" fill="none"/>
+  <!-- 중앙: 설치기반 -->
+  <rect x="400" y="150" width="210" height="96" rx="12" fill="#0F2B46"/>
+  <text x="505" y="188" text-anchor="middle" font-size="14" font-weight="800" fill="#FFFFFF">설치 기반 (수만 대)</text>
+  <text x="505" y="212" text-anchor="middle" font-size="12" fill="#C9D6E4">OSAT 800+ · IDM · 파운드리</text>
+  <text x="505" y="232" text-anchor="middle" font-size="12" fill="#C9D6E4">중국 매출 비중 53.5%</text>
+  <path d="M610 198 L700 198" stroke="#CBD5E1" stroke-width="2.5" fill="none"/>
+  <path d="M700 198 l-10 -6 v12 z" fill="#CBD5E1"/>
+  <!-- 우: APS -->
+  <rect x="700" y="120" width="230" height="156" rx="12" fill="#ECFDF5" stroke="#A7F3D0"/>
+  <text x="815" y="152" text-anchor="middle" font-size="13.5" font-weight="800" fill="#065F46">APS 애프터마켓 23.9%</text>
+  <text x="815" y="178" text-anchor="middle" font-size="12.5" fill="#065F46">캐필러리·웨지 툴·블레이드</text>
+  <text x="815" y="200" text-anchor="middle" font-size="12.5" fill="#065F46">스페어·수리·리퍼브·K&amp;S Care</text>
+  <text x="815" y="228" text-anchor="middle" font-size="12.5" font-weight="700" fill="#047857">가동률 연동 반복 매출</text>
+  <text x="815" y="250" text-anchor="middle" font-size="12.5" fill="#065F46">영업마진 18.5% (FY25)</text>
+  <!-- 하단 순환 -->
+  <path d="M815 276 C815 340, 505 350, 505 250" stroke="#059669" stroke-width="2" stroke-dasharray="5 4" fill="none"/>
+  <text x="660" y="352" text-anchor="middle" font-size="12" fill="#047857">가동률↑ → 소모품 소비↑ → 신규 장비 증설로 회귀</text>
+  <!-- 기타 -->
+  <text x="180" y="340" text-anchor="middle" font-size="12" fill="#718096">기타(EA 철수 중) 3.3% — FY26 중 소멸</text>
+</svg>
+</div>
+<figcaption>그림 1. FY2025 세그먼트 매출 비중 기준 수익 구조 도식 | 출처: K&amp;S 10-K(FY2025), 세그먼트 주석. 직접 작도.</figcaption>
+</figure>
+
+<h3>3-1. 세그먼트별 실적 — 볼 본딩이 이익의 엔진, APS가 완충재</h3>
+<div class="twrap"><table>
+<caption>표 2. FY2025 세그먼트 상세 (단위: $M)</caption>
+<thead><tr><th>세그먼트</th><th class="num">매출</th><th class="num">비중</th><th class="num">영업이익</th><th class="num">영업마진</th><th>내용·성격</th></tr></thead>
+<tbody>
+<tr><td>볼 본딩 장비</td><td class="num">293.0</td><td class="num">44.8%</td><td class="num">84.4</td><td class="num">28.8%</td><td>일반반도체·메모리(NAND)·LED. 사이클의 몸통이자 이익 엔진</td></tr>
+<tr><td>APS (애프터마켓)</td><td class="num">156.1</td><td class="num">23.9%</td><td class="num">28.9</td><td class="num">18.5%</td><td>소모품·스페어·서비스. 가동률 연동, 다운사이클 완충</td></tr>
+<tr><td>웨지 본딩 장비</td><td class="num">110.6</td><td class="num">16.9%</td><td class="num">18.4</td><td class="num">16.6%</td><td>파워 모듈·EV 배터리·산업. 자동차 사이클 연동</td></tr>
+<tr><td>첨단 솔루션 (AS)</td><td class="num">72.7</td><td class="num">11.1%</td><td class="num">49.4*</td><td class="num">—</td><td>TCB·디스펜스·수직 와이어. 성장 옵션의 그릇</td></tr>
+<tr><td>기타 (EA 철수 중)</td><td class="num">21.7</td><td class="num">3.3%</td><td class="num">−89.3</td><td class="num">—</td><td>SMT 전자조립 정리(손상 포함), FY26 중 실질 소멸</td></tr>
+<tr class="total"><td>합계 (미배분 본사비 −95.0 포함)</td><td class="num">654.1</td><td class="num">100%</td><td class="num">−3.2</td><td class="num">−0.5%</td><td>FY26E 영업이익 ~$178M(16.5%)로 반전 [파생]</td></tr>
+</tbody></table></div>
+<p class="co co-note" style="display:block">* 첨단 솔루션의 FY2025 영업이익 $49.4M에는 사업 중단 관련 일회성 이익 $76.0M(Q1 FY25 GAAP 계상)이 포함돼 있다. 이를 제외하면 AS는 약 <strong>−$27M의 개발단계 적자</strong>로 추산된다 <span class="bd bd-drv">파생</span> — R&amp;D 배분($50.3M, 전사 최대)이 말해주듯 아직 '투자 중인 사업'이며, TCB 매출이 FY26 $1억+ → 캐파 $4억으로 커지면서 흑자 전환이 예상되는 구간이다.</p>
+
+<figure>
+<div class="fig-t">그림 2. FY2025 매출 구성 — 볼 본딩 45%, 애프터마켓 24%</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 380" xmlns="http://www.w3.org/2000/svg">
+  <!-- 도넛: 중심 (330,190) r=130, 내부 r=78 -->
+  <!-- 각도: Ball 44.8%->161.3deg, APS 23.9%->86.0, Wedge 16.9%->60.8, AS 11.1%->40.0, Others 3.3%->11.9 ; 시작 12시 -->
+  <g transform="translate(330,190)">
+    <path d="M0 -130 A130 130 0 0 1 124.5 37.4 L74.7 22.4 A78 78 0 0 0 0 -78 Z" fill="#2563EB"/>
+    <path d="M124.5 37.4 A130 130 0 0 1 -13.6 129.3 L-8.2 77.6 A78 78 0 0 0 74.7 22.4 Z" fill="#059669"/>
+    <path d="M-13.6 129.3 A130 130 0 0 1 -117.4 55.9 L-70.4 33.5 A78 78 0 0 0 -8.2 77.6 Z" fill="#7C3AED"/>
+    <path d="M-117.4 55.9 A130 130 0 0 1 -111.5 -66.8 L-66.9 -40.1 A78 78 0 0 0 -70.4 33.5 Z" fill="#D97706"/>
+    <path d="M-111.5 -66.8 A130 130 0 0 1 -0.3 -130 L-0.2 -78 A78 78 0 0 0 -66.9 -40.1 Z" fill="#64748B"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="16" font-weight="800" fill="#1A202C">$654.1M</text>
+    <text x="0" y="20" text-anchor="middle" font-size="12" fill="#4A5568">FY2025 매출</text>
+    <text x="72" y="-58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFFFFF">44.8%</text>
+    <text x="52" y="88" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFFFFF">23.9%</text>
+    <text x="-88" y="66" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFFFFF">16.9%</text>
+    <text x="-98" y="-28" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFFFFF">11.1%</text>
+  </g>
+  <!-- 우측 미니 설명 -->
+  <text x="560" y="90" font-size="13.5" font-weight="800" fill="#1A202C">Q2 FY2026 최종시장 스냅숏 ($242.6M)</text>
+  <rect x="560" y="110" width="299" height="26" rx="5" fill="#2563EB"/><text x="575" y="128" font-size="12.5" fill="#FFFFFF" font-weight="700">일반 반도체 ~$150M [파생]</text>
+  <rect x="560" y="144" width="80" height="26" rx="5" fill="#0891B2"/><text x="650" y="162" font-size="12.5" fill="#1A202C">APS $40M</text>
+  <rect x="560" y="178" width="62" height="26" rx="5" fill="#7C3AED"/><text x="632" y="196" font-size="12.5" fill="#1A202C">메모리 $31M (eSSD용 NAND)</text>
+  <rect x="560" y="212" width="44" height="26" rx="5" fill="#D97706"/><text x="614" y="230" font-size="12.5" fill="#1A202C">자동차·산업 $22M (+63% QoQ)</text>
+  <text x="560" y="272" font-size="12" fill="#718096">메모리·자동차의 반등이 이번 사이클의</text>
+  <text x="560" y="292" font-size="12" fill="#718096">증분 성장을 만들고 있다.</text>
+</svg>
+<div class="legend">
+  <div class="li"><span class="sw" style="background:#2563EB"></span>볼 본딩 44.8%</div>
+  <div class="li"><span class="sw" style="background:#059669"></span>APS 23.9%</div>
+  <div class="li"><span class="sw" style="background:#7C3AED"></span>웨지 본딩 16.9%</div>
+  <div class="li"><span class="sw" style="background:#D97706"></span>첨단 솔루션 11.1%</div>
+  <div class="li"><span class="sw" style="background:#64748B"></span>기타(EA) 3.3%</div>
+</div>
+</div>
+<figcaption>그림 2. 좌: FY2025 세그먼트 매출 도넛(10-K) | 우: Q2 FY2026 최종시장 구성(실적 발표 자료, 일반 반도체는 총액−공시 항목 차감 [파생]) | 출처: K&amp;S 10-K, Q2 FY26 실적 프레젠테이션</figcaption>
+</figure>
+
+<h3>3-2. 수익 모델의 질 — 사이클 장비 73% + 준구독 24%</h3>
+<p>수익 모델을 질적으로 뜯어보면, 매출의 약 73%(볼+웨지+AS)는 <strong>고객 설비투자 사이클에 완전 연동된 장비 판매</strong>다. 이 부분은 FY2022 $15억 → FY2025 $6.5억(−57%)이 보여주듯 진폭이 극단적이다. 반면 APS 24%는 장비의 '면도날'이다 — 캐필러리(볼 본딩 시 와이어를 잡아 누르는 세라믹 미세 노즐)는 수십만 본딩마다 마모돼 교체되므로, <strong>장비가 돌아가기만 하면 팔린다</strong>. 실제로 APS는 다운사이클이던 FY2025에도 18.5%의 영업마진을 지켰고, Q1 FY26에는 +14% YoY로 회복을 선행했다. 가동률(현재 메모리 볼 본딩 85%+, 중국 90%+)이 곧 APS의 선행지표이자 신규 장비 수요의 예고편이라는 점에서, 이 회사의 수익 구조는 "가동률 → 소모품 → 증설"의 3단 로켓으로 읽는 것이 정확하다.</p>
+<div class="co co-warn"><div class="ct">고객·지역 집중 — 성장의 원천이자 리스크의 원천</div>
+<p>FY2025 매출의 <strong>90.5%가 미국 외 지역</strong> 선적이며, 특히 <strong>중국 본사 고객이 53.5%</strong>다. 중국 OSAT·메모리(YMTC·CXMT 계열 후공정 포함)의 공격적 증설이 볼 본더 수요의 최대 축이라는 뜻이다. 중국 가동률 90%+는 단기 호재지만, 미·중 수출통제가 후공정 장비로 확대되거나 중국 로컬 장비사가 성숙 본더를 국산화할 경우 매출의 절반이 노출된다(§12 상세). 단일 고객 10% 이상 집중은 공시상 두드러지지 않으나, 지역 집중이 사실상의 집중 리스크다.</p></div>
+</section>
+
+<section id="s4">
+<h2><span class="no">4</span>제품·서비스 및 기술력 — 논문 수준 심층 해부</h2>
+<div class="lead">이 회사의 기술은 한 문장으로 <strong>"이종(異種) 금속 표면 두 개를, 산화막을 뚫고, 미크론 정밀도로, 초당 수십 번 야금학적으로 결합시키는 기계"</strong>다. 그 결합 에너지를 무엇으로 공급하느냐(초음파·열·압력)와 산화막을 어떻게 제거하느냐(기계적 파괴·플럭스·포름산 증기)의 조합이 곧 제품 포트폴리오이고, 각 조합의 물리·화학이 곧 진입장벽이다.</div>
+
+<h3>4-A. 작동 원리 — 본딩의 물리학과 화학</h3>
+<h3 style="font-size:15px;margin-top:18px;">① 볼 본딩(열초음파 본딩): 스파크, 볼, 그리고 초음파</h3>
+<p>볼 본딩은 열초음파(thermosonic) 공정이다 — 열(~150~250°C 스테이지 가열), 수직 하중(수십 gf), 초음파 진동(약 60~140kHz)의 세 에너지를 동시에 투입해 고체 상태에서 금속 결합을 만든다. 한 사이클의 해부는 다음과 같다. (1) <strong>EFO 스파크</strong>: 캐필러리(capillary, 와이어를 관통시켜 잡는 세라믹 미세 노즐) 끝으로 나온 와이어 꼬리에 전기 스파크(Electronic Flame-Off)를 터뜨려 순간 용융시키면, 표면장력이 지름 수십 µm의 완전 구형 <strong>FAB</strong>(Free Air Ball, 자유공기볼)를 만든다. (2) <strong>1차 본드</strong>: 캐필러리가 FAB를 칩의 알루미늄(또는 Cu) 패드에 내리누르며 초음파를 가한다. 진동이 계면의 얇은 산화막을 문질러 깨고, 소성 변형으로 청정 금속면끼리 맞닿는 순간 원자 확산이 일어나 금속간화합물(IMC)이 형성된다 — 접착제가 아니라 야금 결합이다. (3) <strong>루프 형성</strong>: 캐필러리가 프로그래밍된 3차원 궤적으로 움직여 와이어 곡선(루프)을 그린다. 낮고 일정한 루프 높이는 얇은 패키지의 필수 조건이다. (4) <strong>2차 본드(스티치)</strong>: 기판 리드 위에 와이어를 눌러 초승달 모양으로 접합하고, (5) 와이어를 끊어 다음 사이클용 꼬리를 남긴다. 이 전체가 <strong>와이어 하나당 0.05~0.1초</strong> 수준으로 반복된다.</p>
+<p>2010년 이후 산업 표준이 된 <strong>구리(Cu) 와이어</strong>는 이 물리에 화학 난제를 더했다. 구리는 금보다 값이 훨씬 싸고 전기·열 전도가 좋지만, 대기 중에서 즉시 산화하고(→ FAB 형성 구간을 질소+수소 혼합 <strong>포밍가스</strong>로 감싸 산화를 차단), 볼이 단단해 연질 Al 패드를 깨뜨리거나(크레터링) 패드 금속을 밀어내는(스플래시) 위험이 크다. K&amp;S의 ProCu 계열 공정(현행 ProCu-6)과 PSP(저응력 공정)는 하중·초음파·가스의 실시간 응답 제어로 이 창을 통과시키는 레시피이며, <strong>28nm 이하 선단 노드의 취약한 low-k 유전막 위에서도 구리 본딩을 가능케 한 것</strong>이 이 회사가 15년째 지켜온 공정 노하우의 실체다.</p>
+<div class="twrap"><table>
+<caption>표 3. 볼 본딩 핵심 성능 지표(KPI)와 K&amp;S 현행 수준</caption>
+<thead><tr><th>KPI</th><th>정의</th><th class="num">K&amp;S 현행 (RAPID Pro 기준)</th><th>의미</th></tr></thead>
+<tbody>
+<tr><td>본드 패드 피치 (BPP)</td><td>인접 패드 중심 간 거리</td><td class="num">35µm (인라인)</td><td>미세할수록 고밀도 I/O 지원</td></tr>
+<tr><td>배치 정확도</td><td>목표 대비 본드 위치 오차</td><td class="num">±2.0µm @3σ</td><td>미세 패드 수율의 전제</td></tr>
+<tr><td>와이어 직경</td><td>사용 가능 와이어 굵기</td><td class="num">0.6~2.5mil (15~63µm)</td><td>Cu·Ag·Au 전 재질</td></tr>
+<tr><td>본딩 영역</td><td>1회 클램프로 커버하는 면적</td><td class="num">X 56mm (LA/ELA 확장)</td><td>대형 매트릭스 기판 대응</td></tr>
+<tr><td>다이 스택·오버행</td><td>적층 메모리에서 허공에 뜬 다이 위 본딩</td><td class="num">멀티 다이 스택 전용 제어 (MEM PLUS)</td><td>고단 NAND의 핵심 난제 — 진동하는 외팔보 위에서 본딩</td></tr>
+</tbody></table></div>
+<p>특히 메모리용 본더(IConn/RAPID MEM PLUS, ATPremier MEM PLUS)는 <strong>16단 이상 적층된 NAND 다이의 '오버행'</strong> — 계단식으로 쌓여 아래층보다 튀어나온, 지지대 없는 다이 가장자리 — 위에 본딩하는 문제를 푼다. 외팔보처럼 출렁이는 표면 위에서 초음파 접합을 하려면 진동 모드를 읽고 파라미터를 실시간 보정해야 하며, 이것이 메모리 슈퍼사이클에서 K&amp;S 장비가 대체 불가로 팔리는 기술적 이유다. 2026년 3월 발표된 <strong>ProMEM Suite</strong>는 이 메모리 특화 라인을 최대 20% 고속화했다(자사 주장).</p>
+
+<h3 style="font-size:15px;">② 웨지 본딩: 상온 초음파로 대전류를 잇는다</h3>
+<p>웨지 본딩은 초음파 에너지 중심(대개 상온)으로, 굵은 알루미늄 와이어(수백 µm)나 <strong>리본</strong>(납작한 Al 스트립)을 웨지 툴로 눌러 문질러 접합한다. 볼을 만들지 않으므로 대구경·대전류 배선에 적합해, IGBT·SiC 파워 모듈의 다이-단자 연결, 그리고 <strong>EV 배터리 팩의 셀-버스바 접합</strong>이 주 무대다(용접 대비 저열·고신뢰). 2008년 인수한 Orthodyne이 뿌리인 이 사업은 Asterion 플랫폼으로 이어졌고, FY2025 신제품 Asterion-PW(파워), 2026년 3월의 ASTERION-TW(트윈헤드 초음파)로 파워 어셈블리 포트폴리오를 넓혔다. 회사는 전고체 배터리 조립 시장 진출 의사도 밝힌 바 있다(2024-11 실적콜). Q2 FY26 자동차·산업 매출이 +63% QoQ로 반등한 것은 ADAS·인포테인먼트의 고(高) I/O 패키징 수요가 돌아오고 있음을 보여준다.</p>
+
+<h3 style="font-size:15px;">③ TCB(열압착 본딩)와 FTC: 플럭스를 증기로 대체한 화학</h3>
+<p>칩을 와이어 없이 <strong>범프</strong>(구리 기둥+솔더 캡)로 뒤집어 붙이는 플립칩의 세계에서, 전통 방식은 오븐에 넣어 솔더를 한꺼번에 녹이는 매스 리플로우다. 그러나 다이가 크고 얇아지고 피치가 좁아지면 열에 의한 <strong>워피지</strong>(휨)로 범프들이 들뜨거나 뭉개진다. TCB는 본딩 헤드가 다이 하나를 집어 <strong>열과 압력을 국소·정밀 제어하며 눌러 붙이는</strong> 방식으로 이 문제를 푼다 — 대신 다이당 수 초가 걸려 처리량이 낮고 장비가 비싸다(HBM용 대당 $1.2~2.1M <span class="bd bd-cfl">상충: 출처별 상이</span>). HBM 적층이 TCB의 대표 무대이며, 한국 진영은 솔더 주변을 미리 필름(NCF)이나 몰드 언더필(MR-MUF)로 채우는 방식으로 발전시켜 왔다.</p>
+<p>여기서 K&amp;S의 차별화가 <strong>FTC(Fluxless TCB, 플럭스리스 열압착)</strong>다. 솔더 접합에는 산화막 제거용 <strong>플럭스</strong>(화학 활성제)가 필수였는데, 피치가 30µm 아래로 내려가면 범프 사이 간격이 너무 좁아 플럭스 잔사를 씻어낼 수도, 언더필을 보이드 없이 채울 수도 없게 된다 — 전통 TCB의 피치 한계가 약 30µm였던 이유다. FTC는 플럭스 대신 <strong>포름산(HCOOH) 증기를 본딩 챔버 안에 실시간(in-situ) 주입</strong>해 금속 산화물을 기체상에서 환원한다. 포름산은 가열된 구리·솔더 표면의 산화물과 반응해 금속 포메이트를 만들고, 이는 곧바로 열분해되어 청정 금속면과 CO₂·H₂O 기체만 남긴다 — <strong>잔사가 원천적으로 없다</strong>. 여기에 대기압 플라즈마 표면 활성화를 조합·단독 선택할 수 있게 한 것이 APTURA 플랫폼이며, 그 결과가 근제로(near-zero) 다이 갭, 저저항 직접 Cu-Cu 접합, <strong>양산 피치 8µm</strong>(CuFirst 확장 시 3µm 지향)이다. 상세한 임팩트 해부는 §4-D ①에서 7단계로 다룬다.</p>
+
+<h3 style="font-size:15px;">④ 수직 와이어·디스펜싱 — 본딩 인접의 확장</h3>
+<p><strong>수직 와이어 본딩</strong>은 와이어 본더의 정밀 모션을 활용해 자유직립 수직 와이어 기둥을 세우고 몰드로 감싸 z축 관통 배선으로 쓰는 기술이다. TSV(실리콘 관통전극)나 도금 구리 기둥 대비 장비·공정 비용이 낮아, 팬아웃 PoP나 적층 메모리 패키지의 저비용 수직 인터커넥트 경로로 자리잡고 있으며 <span class="bd bd-conf">일반 원리</span>, 경영진은 FY26 실적콜에서 "수직 와이어와 TCB의 기술 전환이 모두 궤도에 있다"고 밝혔다. <strong>디스펜싱</strong>은 언더필·접착제를 미세 제팅하는 공정으로, 2020~21년 Advanced Jet Automation 인수로 확보했고 FY2025 차세대 정밀 디스펜스 <strong>ACELON</strong>으로 결실을 맺었다 — TCB·플립칩이 늘수록 언더필 수요도 함께 늘어나는 동반 성장 구조다. 이외에 핀 웰딩, 클립 어태치, 스터드 범핑, 웨이퍼 레벨 본더까지 '접합'이라는 한 단어 아래 포트폴리오가 정렬돼 있다.</p>
+
+<h3>4-B. 기술 성숙도(TRL)와 로드맵</h3>
+<div class="twrap"><table>
+<caption>표 4. 기술별 성숙도(TRL 1~9 관점) 판정과 로드맵</caption>
+<thead><tr><th>기술</th><th>TRL 판정</th><th>근거</th><th>다음 이정표</th></tr></thead>
+<tbody>
+<tr><td>구리 볼 본딩</td><td>9 (완전 양산)</td><td>15년 양산, 점유 60%+, 28nm 이하 노드 대응</td><td>ProMEM 고속화(+20%), 고단 NAND 오버행 확장</td></tr>
+<tr><td>웨지 본딩 (파워·EV)</td><td>9 (완전 양산)</td><td>Orthodyne 이래 표준</td><td>ASTERION-TW 램프, 전고체 배터리 진입</td></tr>
+<tr><td>TCB (플럭스 방식)</td><td>8~9</td><td>CPO·3D 센싱·OSAT 양산 공급</td><td>캐파 확장($4억 지원)</td></tr>
+<tr><td>FTC (플럭스리스)</td><td>7~8 (양산 초기)</td><td>2022 첫 출하 → 필드 ~60대, 선단 로직 IDM·파운드리 양산 채택</td><td>메모리(ProMEM-FTC)로 응용 확장</td></tr>
+<tr><td>HBM용 TCB</td><td>6~7 (퀄 단계)</td><td>2025년 12월 분기 첫 시스템을 대형 메모리 고객 미국 시설에 출하, 퀄 진행 중</td><td>FY26 내 PO 가능성 → FY27 양산 기여 (회사 발언)</td></tr>
+<tr><td>HBF용 조립</td><td>4~5 (탐색)</td><td>"TCB 플레이" — 소수 고객과 탐색 중 (Q1 FY26 콜)</td><td>HBF 샘플 2026 하반기(샌디스크 일정)와 동조</td></tr>
+<tr><td>하이브리드 본딩</td><td>3~4 (연구·시연)</td><td>bumpless-FTC로 칩투웨이퍼 하이브리드 본드 시연(2024-08, UCLA 협업)</td><td>"수년 내 상업적 실현 가능" 관점, R&amp;D 가속 (Q2 FY26 콜)</td></tr>
+</tbody></table></div>
+<p>R&amp;D 정량으로 보면 K&amp;S는 TTM 기준 <strong>$153M, 매출의 20%</strong>를 연구개발에 쓴다 — 다운사이클(FY23~25)에도 연 $145~152M을 유지하며 깎지 않았다는 점이 중요하다. 세그먼트 배분에서 첨단 솔루션에 $50.3M(전사 최대)이 들어가는 것은 TCB·하이브리드가 회사의 미래 베팅임을 회계적으로 보여준다. 피치 로드맵은 명확하다: 양산 주류 35µm → FTC 10µm 시연(2023, UCLA) → <strong>8µm 양산</strong> → CuFirst 3µm 지향 → UCLA와 5µm 미만 공동 개발. 이 로드맵이 하이브리드 본딩(별도 웨이퍼 공정 필요, 고비용)과 만나기 전까지의 '미세피치 중간지대'를 TCB로 최대한 길게 점유하는 것이 회사의 기술 전략이다.</p>
+
+<h3>4-C. 기술 피어 대결표 — 같은 문제를 푸는 자들</h3>
+<p>본딩 장비는 크게 두 개의 전장으로 나뉜다. <strong>전장 1: 와이어 본딩</strong> — K&amp;S가 60%+로 압도하고 ASMPT가 뒤를 잇는, 승부가 사실상 끝난 성숙 시장. <strong>전장 2: TCB(및 하이브리드 본딩)</strong> — HBM·칩렛이라는 최대 성장처를 두고 한국(한미·SEMES·한화)·싱가포르(ASMPT·K&amp;S)·네덜란드(BESI)·일본(Shinkawa·Shibaura·Toray)이 정면 충돌 중인 시장. K&amp;S는 전장 1의 왕이지만 전장 2에서는 '로직·파운드리 쪽 문'으로 들어온 도전자다.</p>
+<div class="twrap"><table class="wide">
+<caption>표 5. TCB 스펙·포지션 대결표 (2026년 중반 기준)</caption>
+<thead><tr><th>기업 (제품)</th><th>산화막 대응 방식</th><th>피치·정밀도</th><th>주 전장·고객</th><th>최근 실증 (수주·점유)</th><th>강점 / 약점</th></tr></thead>
+<tbody>
+<tr><td><strong>K&amp;S (APTURA FTC)</strong></td><td>플럭스리스: in-situ 포름산 증기 + 대기압 플라즈마 (조합 가능)</td><td>직접 Cu-Cu 8µm 양산, CuFirst 3µm 지향, 정확도 '동급 최고' 주장</td><td>선단 로직 IDM(2020~)·선도 파운드리(2024 수주)·OSAT·CPO. HBM은 신규 진입</td><td>필드 120대(FTC ~60대), FY26 TCB 매출 &gt;$100M, 캐파 $4억 투자</td><td>플럭스리스 양산 선점(유일 주장) / HBM 실적 전무, 처리량 데이터 미공개</td></tr>
+<tr><td><strong>한미반도체 (그리핀 듀얼 TC본더)</strong></td><td>NCF 계열 미세 접합 <span class="bd bd-est">추정</span></td><td>HBM4 양산 대응, HBM5·6용 2026 하반기 출시 예고</td><td>HBM — SK하이닉스 주력, 마이크론 공급 이력</td><td>HBM TC본더 점유 71.2%(TechInsights, 2025 1~3Q), 2026-06 SKH ₩442억 수주</td><td>HBM 압도적 레퍼런스·듀얼헤드 생산성 / 고객·기술 집중, 한화와 특허전쟁</td></tr>
+<tr><td><strong>ASMPT</strong></td><td>플럭스·NCF 등 복수 <span class="bd bd-est">추정</span></td><td>AMICRA 고정밀 라인 서브미크론~1.5µm급 배치</td><td>로직 TCB 강세 + HBM 제3공급자 부상 (SKH·삼성)</td><td>2025-11 SKH HBM4용 7대(~₩300억), 2026-04 삼성 평가 진행</td><td>포트폴리오 폭·양대 메모리 침투 / 개별 기술 집중도 낮음</td></tr>
+<tr><td><strong>한화세미텍 (SFM5 Expert)</strong></td><td>NCF 계열 <span class="bd bd-est">추정</span></td><td>HBM4 납품 단계, 2세대 하이브리드 본더 개발 발표</td><td>HBM — SK하이닉스 신규 벤더(2024~)</td><td>점유 3.2%(5위)이나 한미와 유사 규모 동시 수주 반복(2026-01·06)</td><td>그룹 자본력·R&amp;D +50% / 레퍼런스 짧음, 특허 소송 피고</td></tr>
+<tr><td><strong>SEMES</strong></td><td>삼성 내부 사양</td><td>비공개</td><td>삼성전자 캡티브</td><td>점유 13.1% (2025 1~3Q)</td><td>캡티브 안정 물량 / 외판 없음</td></tr>
+<tr><td><strong>BESI (TCB Next·하이브리드)</strong></td><td>하이브리드 본딩: 솔더 자체를 제거(유전체+Cu 직접 접합)</td><td>하이브리드 서브미크론 정렬, 차세대 플립칩 1µm(2026 Q1)</td><td>TSMC·삼성·인텔·마이크론 + OSAT — '차세대' 전장</td><td>하이브리드 고객 20개사, Q1 26 수주 €269.7M(+104%), AMAT 지분 9%</td><td>포스트-TCB 기술 선점 / 대량 채택 지연 보도(삼성·SKH HBM), 초고가</td></tr>
+<tr><td><strong>Shinkawa·Shibaura·Toray</strong></td><td>각사 상이</td><td>비공개</td><td>일본계 — 메모리·니치 <span class="bd bd-est">추정</span></td><td>Yole 참여자 명단 등재</td><td>일본 고객 밀착 / 글로벌 점유 열위</td></tr>
+</tbody></table></div>
+<div class="co co-key"><div class="ct">격차의 정량화와 추격 가능성</div>
+<p><strong>K&amp;S가 앞선 곳:</strong> 플럭스리스 양산화는 2022년 첫 출하 이후 경쟁사의 동급 양산 사례가 확인되지 않아 약 2~3년의 선행으로 판단된다 <span class="bd bd-est">추정</span>. 추격에는 포름산 in-situ 딜리버리의 장비 통합, 공정 레시피, 그리고 12~24개월의 고객 퀄 사이클이 필요하다. <strong>K&amp;S가 뒤진 곳:</strong> HBM용 TCB에서는 한미(71.2%)·SEMES·ASMPT·한화가 이미 양산 레퍼런스를 쌓았고 K&amp;S는 퀄 단계다 — 다만 한미·한화의 특허전쟁과 SK하이닉스·삼성의 공급망 3원화 움직임(ASMPT 발주·평가)은 <strong>"검증된 제3의 공급자"에게 문이 열리는 국면</strong>임을 시사하며, K&amp;S의 미국 메모리 고객(마이크론 추정 <span class="bd bd-est">추정</span>) 공략은 이 틈을 노린 것이다. <strong>구조적 위협:</strong> BESI의 하이브리드 본딩은 TCB 자체를 건너뛰는 기술이나, 대량 채택 지연 보도(2026-07)가 말해주듯 비용·수율 장벽으로 '수년의 유예'가 존재한다 — 이 유예 기간이 곧 K&amp;S TCB의 수확기다.</p></div>
+
+<h3>4-D. 신기술 영향력 분석 — 발표 단위 임팩트 해부</h3>
+<p>최근 1~2년 내 주가에 유의미한 기술 발표가 다수 존재하므로 본 절을 수행한다. 영향 큰 순서로 3건: <strong>① 플럭스리스 TCB(FTC)의 양산 확산과 메모리 확장(ProMEM)</strong>, <strong>② HBM·HBF용 TCB 진입</strong>, <strong>③ 하이브리드 본딩 전선의 이동(BESI 지연 보도)</strong>.</p>
+
+<h3 style="font-size:15px;">① FTC — 포름산 증기로 연 '30µm 아래의 세계' (7단계 전체)</h3>
+<p><strong>(1) 병목 정의.</strong> 칩렛 시대의 접합 병목은 '플럭스'였다. 범프 피치가 30µm 아래로 내려가면 범프 간 틈이 사람 세포 하나 크기가 되어, 액상 플럭스를 도포·세정할 물리적 공간이 사라진다. 잔사는 언더필 보이드와 누설 전류를 만들고, 세정 불가는 곧 수율 붕괴다. 업계 양산 주류가 35µm에 묶여 있었던 이유이며, 이 벽 너머(10µm 이하)에는 하이브리드 본딩이라는 고비용 대안밖에 없었다 — <strong>즉 '35µm과 10µm 사이의 20µm대 공백'이 수천억 원짜리 병목</strong>이었다. TCB 장비 시장 자체가 2025년 $5.4억 → 2030년 $9.4억(Yole)으로 커지는 성장 시장이기에 병목 해소의 상금도 크다.</p>
+<p><strong>(2) 기술 해부.</strong> 역할 개념도(그림 3)와 같이, FTC는 본딩 헤드-챔버 안에서 <strong>가열(국소) → 포름산 증기 주입 → 산화막 기상 환원 → 가압 접합 → 부산물(CO₂·H₂O) 배기</strong>가 한 스테이션에서 완결된다. 하드웨어는 정밀 가압·가열 헤드, 포름산 증기 딜리버리, (옵션) 대기압 플라즈마 모듈, 웨이퍼/릴/트레이 겸용 핸들링을 담당하고, 소프트웨어는 다이별 온도-하중-시간 프로파일과 정렬 보정을 담당한다.</p>
+<div class="twrap"><table>
+<caption>표 6. APTURA FTC 핵심 사양 (회사 발표 기준)</caption>
+<thead><tr><th>항목</th><th>사양</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td>산화막 제거</td><td>in-situ 포름산 증기 환원 + 대기압 플라즈마 (조합/단독)</td><td>양산 검증 완료(회사)</td></tr>
+<tr><td>최소 피치</td><td>직접 Cu-Cu 8µm 양산, CuFirst로 3µm 지향</td><td>전통 TCB 한계 ~30µm 대비</td></tr>
+<tr><td>소재 핸들링</td><td>소스: 웨이퍼·릴·트레이 → 타깃: 웨이퍼·인터포저·다이·기판</td><td>D2D·D2W 전 조합 양산 지원</td></tr>
+<tr><td>접합 형태</td><td>솔더 미세범프, 직접 Cu-Cu, (시연) bumpless 하이브리드</td><td>근제로 다이 갭</td></tr>
+<tr><td>설치 실적</td><td>TCB 총 120대 필드, FTC ~60대 / 5개+ 최종고객(2024-11 시점 30대)</td><td>양산 환경 FTC '최초·유일' 주장</td></tr>
+</tbody></table></div>
+<figure>
+<div class="fig-t">그림 3. FTC 작동 개념도 — 플럭스 도포·세정 2개 공정이 '증기 한 줄기'로 대체된다</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 430" xmlns="http://www.w3.org/2000/svg">
+  <text x="250" y="40" text-anchor="middle" font-size="13.5" font-weight="800" fill="#991B1B">전통 TCB (플럭스) — 피치 ≥30µm</text>
+  <rect x="80" y="60" width="340" height="44" rx="8" fill="#FEF2F2" stroke="#FECACA"/>
+  <text x="250" y="88" text-anchor="middle" font-size="12.5" fill="#991B1B">① 플럭스 도포 (액상 활성제)</text>
+  <rect x="80" y="118" width="340" height="44" rx="8" fill="#FEF2F2" stroke="#FECACA"/>
+  <text x="250" y="146" text-anchor="middle" font-size="12.5" fill="#991B1B">② 열압착 접합 (솔더 용융)</text>
+  <rect x="80" y="176" width="340" height="44" rx="8" fill="#FEF2F2" stroke="#FECACA"/>
+  <text x="250" y="204" text-anchor="middle" font-size="12.5" fill="#991B1B">③ 플럭스 세정 — 좁은 틈에서 불가능해짐</text>
+  <rect x="80" y="234" width="340" height="44" rx="8" fill="#FEF2F2" stroke="#FECACA"/>
+  <text x="250" y="262" text-anchor="middle" font-size="12.5" fill="#991B1B">④ 언더필 — 잔사 → 보이드·신뢰성 저하</text>
+  <text x="250" y="316" text-anchor="middle" font-size="12" fill="#DC2626" font-weight="700">피치 &lt;30µm에서 수율 붕괴</text>
+  <text x="750" y="40" text-anchor="middle" font-size="13.5" font-weight="800" fill="#065F46">K&amp;S FTC — 피치 8µm (3µm 지향)</text>
+  <rect x="580" y="60" width="340" height="60" rx="8" fill="#ECFDF5" stroke="#A7F3D0"/>
+  <text x="750" y="85" text-anchor="middle" font-size="12.5" fill="#065F46">① 챔버 내 포름산(HCOOH) 증기 주입</text>
+  <text x="750" y="106" text-anchor="middle" font-size="12" fill="#047857">금속 산화물을 기체상에서 환원</text>
+  <rect x="580" y="134" width="340" height="60" rx="8" fill="#ECFDF5" stroke="#A7F3D0"/>
+  <text x="750" y="159" text-anchor="middle" font-size="12.5" fill="#065F46">② 동일 스테이션에서 즉시 열압착</text>
+  <text x="750" y="180" text-anchor="middle" font-size="12" fill="#047857">청정면 Cu-Cu / 솔더 접합, 근제로 갭</text>
+  <rect x="580" y="208" width="340" height="60" rx="8" fill="#ECFDF5" stroke="#A7F3D0"/>
+  <text x="750" y="233" text-anchor="middle" font-size="12.5" fill="#065F46">③ 부산물은 CO₂·H₂O 기체로 배기</text>
+  <text x="750" y="254" text-anchor="middle" font-size="12" fill="#047857">잔사 제로 → 세정 공정 자체가 불필요</text>
+  <text x="750" y="316" text-anchor="middle" font-size="12" fill="#047857" font-weight="700">보이드 없는 언더필 · 미세피치 수율 확보</text>
+  <path d="M470 165 L560 165" stroke="#0F2B46" stroke-width="3" fill="none"/>
+  <path d="M560 165 l-12 -7 v14 z" fill="#0F2B46"/>
+  <text x="500" y="395" text-anchor="middle" font-size="12" fill="#4A5568">화학 요지: 산화물 + 2HCOOH → 금속 포메이트 + H₂O → (열분해) 청정 금속 + CO₂↑</text>
+</svg>
+</div>
+<figcaption>그림 3. FTC와 전통 TCB의 공정 비교 개념도 | 출처: K&amp;S 보도자료(2024-11, 2026-03)·UCLA CHIPS 협업 발표 기반 직접 작도</figcaption>
+</figure>
+<p><strong>(3) 적용 구성 예시.</strong> 선단 로직의 칩렛 조립(칩-투-기판)을 예로 들면, 종전에는 35µm 피치에서 다이당 수천 개 범프가 한계였지만, 8µm FTC에서는 <strong>동일 면적에 약 19배(35²/8²)의 접점 밀도</strong>가 이론적으로 가능해진다 <span class="bd bd-drv">파생</span>. 실무적으로는 베이스 다이 위에 로직 타일·브리지 다이를 미세피치로 직결해 인터포저 없이 대역폭을 끌어올리는 구성이 가능해지며, 이것이 "선단 로직에서의 점유 확대"(회사, 2026-03)의 실체다.</p>
+<p><strong>(4) 효과 정량화.</strong> 회사 발표 기준 — 피치 30µm → 8µm(3.75배 미세화), 플럭스 도포·세정 공정 제거, 근제로 다이 갭, "업계 선도 처리량·수율". 사업 성과로의 번역: TCB 매출은 FY2020 이후 CAGR 149%(2023-11 회사 발표), FY2024 ~$55M <span class="bd bd-est">Needham 추정</span> → FY2026 &gt;$100M(성장률 ≥70%, 회사 가이던스) → <strong>생산능력 기준 연 $4억 지원(FY2027 초)</strong>. 제3자 검증으로는 "세계 선도 파운드리"의 복수 시스템 수주(2024-11)와 선단 IDM의 양산 채택이 사실상의 검증이다. 다만 처리량(UPH)·수율의 절대 수치는 미공개다 <span class="bd bd-cfl">비공개</span>.</p>
+<p><strong>(5) 트레이드오프.</strong> FTC가 포기한 것도 분명하다. (a) <strong>처리량</strong> — 다이 단위 정밀 가압은 매스 리플로우 대비 본질적으로 느려 대량·저가 패키지에는 부적합하다(그래서 와이어 본딩·플립칩 리플로우를 대체하는 게 아니라 그 위층에 얹힌다). (b) <strong>피치의 상한선</strong> — 3µm 아래의 초미세 영역은 결국 하이브리드 본딩의 영토이며, FTC의 bumpless 시연은 그 경계를 미루는 교두보일 뿐 완성형이 아니다. (c) <strong>화학물질 관리</strong> — 포름산은 부식성 증기로 챔버 재질·배기 설계 부담을 더한다. 회사는 (a)를 듀얼 소스 핸들링과 공정 최적화로, (b)를 CuFirst·UCLA 공동개발(5µm 미만)로 보완 중이다.</p>
+<p><strong>(6) 파급 효과 맵.</strong> 수혜 — <strong>K&amp;S(KLIC)</strong> 자신, 포름산·특수가스 공급망, 언더필 디스펜스(자사 ACELON 포함), 그리고 미세피치 기판·RDL 생태계(Resonac 주도 US-JOINT 컨소시엄 참여가 그 신호). 검증 효과 — TCB라는 카테고리 전체의 수명이 연장되며 ASMPT·한미의 TCB 로드맵에도 우호적. 대체 위협 — 플럭스 재료·세정 장비 수요는 해당 응용에서 감소하고, 장기적으로는 <strong>BESI(하이브리드)의 침투 시점을 늦추는 효과</strong>가 있다(하이브리드 채택 지연 보도와 정합적). 확산 경로 — 선단 IDM → 파운드리 → OSAT → 메모리(ProMEM) 순으로 이미 확산 중이며, 표준화보다는 고객별 퀄이 확산 속도를 결정한다.</p>
+<p><strong>(7) 본 기업 함의.</strong> 판정: <strong>기회(핵심 가치동인)</strong>. P&amp;L 자릿수 — TCB가 캐파 $4억을 채우면 FY26 대비 증분 매출 ~$3억, 총마진 50% 내외 가정 시 <span class="bd bd-est">추정</span> 증분 영업이익 $1.0~1.3억, 즉 <strong>FY2026E 영업이익(~$1.78억)의 55~75%를 더 얹는 규모</strong>다. 확인·반증 이벤트: 8/5 Q3 실적의 TCB 매출 코멘트, FY26 실적 발표(11월)의 FY27 TCB 가이던스, 캐파 증설 완료 시점(FY27 초), 파운드리 후속 발주 공시.</p>
+
+<h3 style="font-size:15px;">② HBM·HBF용 TCB 진입 — 메모리라는 두 번째 대륙 (7단계 압축)</h3>
+<p><strong>병목:</strong> HBM은 DRAM을 8~16단 TSV로 적층하며, 단수가 늘수록(HBM4→HBM5·6) 접합 정밀도·워피지 관리가 수율을 지배한다 — SK하이닉스의 2026년 HBM 캐파 계획이 월 7~8만 장 규모로 거론될 만큼 <span class="bd bd-est">추정</span> TC본더는 병목 장비다. 나아가 HBF(고대역폭 플래시)는 NAND 16단을 HBM4와 같은 풋프린트로 적층해 스택당 512GB·1.6TB/s를 내는 신규 티어로, AI 추론의 '용량 벽'을 겨냥한다. <strong>기술:</strong> K&amp;S는 2025년 12월 분기에 첫 HBM용 TCB 시스템을 대형 메모리 고객의 미국 시설(마이크론 추정 <span class="bd bd-est">추정</span>)에 출하해 퀄 진행 중이며, FTC의 근제로 갭·직접 Cu-Cu는 차세대 HBM의 갭 축소 요구와 정합적이다. HBF에 대해서는 "TCB 플레이"로 규정하고 소수 고객과 탐색 중이다. <strong>구성·효과:</strong> HBM TC본더 시장은 2025년 $1.66억 → 2032년 $4.22억(CAGR 14.4%) <span class="bd bd-cfl">상충: Yole 전체 TCB $5.4억→$9.4억과 정의 상이</span>, 대당 $1.2M(2024 평균)~₩30억(한미 계약 단가 ≈$2.1M) <span class="bd bd-cfl">상충</span>. <strong>트레이드오프:</strong> 한국 현지 대응력·듀얼헤드 생산성에서 한미 대비 열위 <span class="bd bd-est">추정</span>, 퀄 실패 시 매몰. <strong>파급:</strong> 성공 시 한미·ASMPT 과점에 균열, 실패해도 본업 손상 없음(비대칭 옵션). <strong>함의: 기회(옵션)</strong> — FY27 양산 기여 시 자릿수 $수천만, 확인 이벤트는 "FY26 내 PO"(회사 언급)와 HBF 샘플(2026 하반기)·첫 HBF 디바이스 샘플(2027 초).</p>
+
+<h3 style="font-size:15px;">③ 하이브리드 본딩 전선의 이동 — 위협의 시간표가 밀렸다 (7단계 압축)</h3>
+<p><strong>병목·기술:</strong> 하이브리드 본딩은 솔더를 아예 없애고 유전체와 Cu 패드를 직접 접합해 서브미크론~수 µm 피치를 여는 기술로, TCB의 최종 대체재다. BESI(AMAT 협업, 고객 20개사)가 선두, 한화세미텍도 2세대 개발을 발표했다. <strong>최근 발표:</strong> 2026년 7월, 삼성·SK하이닉스가 HBM 하이브리드 본딩 대량 채택을 늦추고 있다는 보도에 BESI 주가가 −7% 하락했다 — 웨이퍼급 청정도·평탄도 요구와 비용이 원인으로 지목된다. 동시에 BESI는 6월에 장기 매출 목표를 €17~22억으로 상향해, '지연이지 취소가 아님'도 분명히 했다. <strong>함의: 단기 기회 / 장기 위협.</strong> 채택 지연은 TCB·FTC의 수확기를 늘려 K&amp;S에 우호적이나, HBM5~6 세대(2027~28)부터 하이브리드가 본격 침투하면 K&amp;S TCB의 상단이 제한된다 — K&amp;S의 bumpless-FTC(TCB 장비로 하이브리드급 접합)가 그 보험이다. 확인 이벤트: BESI 실적(7/23)의 하이브리드 수주 코멘트, 삼성·SKH의 HBM5 공정 공개, K&amp;S 하이브리드 R&amp;D 마일스톤.</p>
+
+<figure>
+<div class="fig-t">그림 4. K&amp;S 공식 자료 — 포름산 증기 기반 플럭스리스 TCB</div>
+<div class="fig-box">
+<img src="https://investor.kns.com/images/residue-free-fluxless-tcb.png" alt="K&amp;S 잔사 없는 플럭스리스 TCB 공식 이미지 (원본이 표시되지 않으면 K&amp;S 미디어 페이지에서 확인 가능)">
+</div>
+<figcaption>그림 4. "Revolutionizing Chip Bonding: Fluxless TCB with Formic Acid Vapor" 공식 이미지 원본 | 출처: Kulicke &amp; Soffa 미디어(investor.kns.com), 2026-07 확인</figcaption>
+</figure>
+</section>
+
+<section id="s5">
+<h2><span class="no">5</span>산업 분석 — 첨단 패키징이라는 두 번째 무어의 법칙</h2>
+<div class="lead">전공정 미세화(무어의 법칙)가 물리·경제 한계에 부딪히자, 산업은 성능 향상의 축을 <strong>"칩을 더 작게"에서 "칩들을 더 가깝게"로</strong> 옮겼다 — 이것이 첨단 패키징이다. K&amp;S는 이 전환에서 ① 성숙 시장(와이어 본딩)의 지배적 현금창출자이면서 ② 성장 시장(TCB)의 도전자라는 이중 좌표에 서 있다. 산업의 '꿈'은 AI 메모리·칩렛이 접합 장비 수요를 구조적으로 끌어올린다는 것이고, 이 절은 그 꿈이 주가의 연료가 될 수 있는지를 9개 항목으로 검증한다.</div>
+
+<h3>5-A. 산업 성장의 구조 분해</h3>
+<figure>
+<div class="fig-t">그림 5. 반도체 가치사슬과 K&amp;S의 위치 — 후공정 '접합' 단계의 장비 공급자</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 330" xmlns="http://www.w3.org/2000/svg">
+  <rect x="30" y="60" width="150" height="70" rx="10" fill="#F6F8FA" stroke="#CBD5E1"/>
+  <text x="105" y="90" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">칩 설계</text>
+  <text x="105" y="110" text-anchor="middle" font-size="11.5" fill="#4A5568">NVIDIA·AMD 등</text>
+  <path d="M180 95 L215 95" stroke="#CBD5E1" stroke-width="2.5"/><path d="M215 95 l-9 -5 v10 z" fill="#CBD5E1"/>
+  <rect x="215" y="60" width="160" height="70" rx="10" fill="#F6F8FA" stroke="#CBD5E1"/>
+  <text x="295" y="90" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">전공정 (웨이퍼 팹)</text>
+  <text x="295" y="110" text-anchor="middle" font-size="11.5" fill="#4A5568">TSMC·삼성·메모리사</text>
+  <path d="M375 95 L410 95" stroke="#CBD5E1" stroke-width="2.5"/><path d="M410 95 l-9 -5 v10 z" fill="#CBD5E1"/>
+  <rect x="410" y="35" width="380" height="130" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+  <text x="600" y="60" text-anchor="middle" font-size="13" font-weight="800" fill="#1E3A8A">후공정 — 어셈블리·패키징 (OSAT·IDM 후공정)</text>
+  <rect x="425" y="75" width="80" height="46" rx="7" fill="#FFFFFF" stroke="#BFDBFE"/>
+  <text x="465" y="102" text-anchor="middle" font-size="11.5" fill="#1E40AF">다이싱</text>
+  <rect x="513" y="75" width="86" height="46" rx="7" fill="#FFFFFF" stroke="#BFDBFE"/>
+  <text x="556" y="96" text-anchor="middle" font-size="11.5" fill="#1E40AF">다이</text>
+  <text x="556" y="112" text-anchor="middle" font-size="11.5" fill="#1E40AF">어태치</text>
+  <rect x="607" y="70" width="100" height="56" rx="7" fill="#0F2B46"/>
+  <text x="657" y="94" text-anchor="middle" font-size="12" font-weight="800" fill="#FFFFFF">접합(본딩)</text>
+  <text x="657" y="112" text-anchor="middle" font-size="10.5" fill="#C9D6E4">K&amp;S의 자리</text>
+  <rect x="715" y="75" width="62" height="46" rx="7" fill="#FFFFFF" stroke="#BFDBFE"/>
+  <text x="746" y="102" text-anchor="middle" font-size="11.5" fill="#1E40AF">몰딩</text>
+  <text x="600" y="150" text-anchor="middle" font-size="11.5" fill="#1E40AF">와이어 본딩 · 웨지 · TCB · 하이브리드 — 방식 선택이 장비사 운명을 결정</text>
+  <path d="M790 95 L825 95" stroke="#CBD5E1" stroke-width="2.5"/><path d="M825 95 l-9 -5 v10 z" fill="#CBD5E1"/>
+  <rect x="825" y="60" width="145" height="70" rx="10" fill="#F6F8FA" stroke="#CBD5E1"/>
+  <text x="897" y="90" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">테스트 → 시스템</text>
+  <text x="897" y="110" text-anchor="middle" font-size="11.5" fill="#4A5568">서버·스마트폰·차량</text>
+  <rect x="215" y="215" width="270" height="72" rx="10" fill="#ECFDF5" stroke="#A7F3D0"/>
+  <text x="350" y="242" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">장비 피어: ASMPT·BESI·한미·SEMES</text>
+  <text x="350" y="264" text-anchor="middle" font-size="11.5" fill="#047857">소재: 와이어(Heraeus 등)·기판·언더필</text>
+  <rect x="520" y="215" width="270" height="72" rx="10" fill="#FFFBEB" stroke="#FDE68A"/>
+  <text x="655" y="242" text-anchor="middle" font-size="12" font-weight="700" fill="#92400E">수요처: OSAT 800+ (ASE·Amkor·JCET)</text>
+  <text x="655" y="264" text-anchor="middle" font-size="11.5" fill="#B45309">IDM·파운드리·메모리 — 중국 매출 53.5%</text>
+</svg>
+</div>
+<figcaption>그림 5. 반도체 가치사슬 내 K&amp;S 포지션 | 출처: Yole 백엔드 장비 구조, 회사 공시 기반 직접 작도</figcaption>
+</figure>
+
+<div class="twrap"><table>
+<caption>표 7. TAM 구조 — 시장별 규모와 성장률 (단위: $B, 장비는 $M)</caption>
+<thead><tr><th>시장 (레이어)</th><th class="num">현재</th><th class="num">2030 전망</th><th class="num">CAGR</th><th>K&amp;S 관련성</th></tr></thead>
+<tbody>
+<tr><td>첨단 패키징 전체 (서비스·소재 포함)</td><td class="num">$46B (2024)</td><td class="num">$79.4B</td><td class="num">9.4~9.6%</td><td>산업의 조류 — 직접 TAM 아님</td></tr>
+<tr><td>└ 하이엔드 2.5D/3D 패키징</td><td class="num">—</td><td class="num">$28.5B</td><td class="num">23%</td><td>TCB·하이브리드의 무대 (유닛 44% CAGR)</td></tr>
+<tr><td>백엔드 장비 전체</td><td class="num">$6.9B (2025)</td><td class="num">$9.2B</td><td class="num">5.8%</td><td>K&amp;S의 실질 TAM 상위 집합</td></tr>
+<tr class="hl"><td>└ 와이어 본딩 장비</td><td class="num">~$800M대 [추정]</td><td class="num">~$994M</td><td class="num">저성장</td><td>점유 60%+ 지배 — 현금창출원</td></tr>
+<tr class="hl"><td>└ TCB 장비</td><td class="num">$542M (2025)</td><td class="num">$936M</td><td class="num">11.6%</td><td>도전자 → 캐파 $4억 = 시장의 ~43% 규모</td></tr>
+<tr><td>└ 플립칩 본더</td><td class="num">—</td><td class="num">$662M</td><td class="num">중성장</td><td>부분 참여</td></tr>
+<tr><td>└ 하이브리드 본딩 장비</td><td class="num">소규모</td><td class="num">$397M</td><td class="num">고성장</td><td>R&amp;D 단계 — 장기 위협이자 옵션</td></tr>
+<tr><td>HBM용 TC본더 (별도 정의)</td><td class="num">$166M (2025)</td><td class="num">$422M (2032)</td><td class="num">14.4%</td><td>신규 진입 시도 <span class="bd bd-cfl">상충: Yole 전체 TCB와 정의 상이</span></td></tr>
+</tbody></table></div>
+<p><strong>성장의 P·Q 분해.</strong> 와이어 본딩 수요는 가격(P)이 아니라 물량(Q)의 함수다 — 장비 ASP는 안정적이고, 수요는 반도체 유닛 수(특히 레거시·메모리·자동차 칩)와 가동률이 결정한다. 이번 사이클의 Q 동인은 명확하다: <strong>AI 데이터센터의 eSSD 수요 → NAND 고단 적층(패키지당 와이어 수 증가) → 메모리 팹 가동률 85~90%+ → 증설</strong>. TrendForce 기준 2026년 DRAM capex $61.3B(+14%)·NAND $22.2B(+5%)가 이 Q의 자금줄이다. 반면 TCB는 P×Q가 동시에 작동한다 — 침투율 확대(Q)에 더해 장비 단가 자체가 볼 본더의 수 배(HBM용 대당 $1.2~2.1M)라 믹스가 개선된다. K&amp;S FY26E 매출 +65% 중 약 절반은 사이클(Q), 나머지는 TCB 램프와 믹스 개선의 기여로 분해된다 <span class="bd bd-drv">파생</span>.</p>
+<p><strong>S커브 위치 판정.</strong> 와이어 본딩은 명백한 성숙기다 — 다만 '쇠퇴기'가 아니라는 점이 중요하다. 하이엔드가 플립칩·TCB로 이탈해도, 전체 반도체 유닛의 대다수(레거시 로직·아날로그·전력·센서·NAND)는 비용 우위 때문에 와이어 본딩에 남는다(2030년에도 ~$10억 시장 유지 전망). TCB는 성장기 초중반 — 침투율이 아직 낮고(백엔드 장비의 8%) 채택 기업이 IDM·파운드리에서 OSAT·메모리로 확산되는 국면이다. 하이브리드 본딩은 도입기 — HBM 대량 채택이 지연되며 S커브의 급상승이 2027~28년 이후로 밀렸다. <strong>K&amp;S의 포트폴리오는 이 세 커브를 시차를 두고 갈아타는 구조</strong>이며, 이것이 "성숙기업의 현금 + 성장기업의 옵션"이라는 투자 서사의 산업적 근거다.</p>
+<p><strong>인접 확장 경로.</strong> ① CPO(광 코패키징): 광엔진-ASIC 접합에 TCB가 채택돼 이미 양산 공급 중 — AI 네트워킹 성장의 파생 수혜. ② EV·전고체 배터리: 웨지 본딩의 셀 접합 확장(회사가 진출 의사 공표). ③ HBF: NAND 적층이 HBM급 정밀 접합을 요구하게 되는 시나리오 — 성사 시 TCB TAM이 메모리 쪽으로 한 층 더 열린다. 각 경로의 전제 조건은 순서대로 AI 네트워킹 투자 지속, 전고체 상용화(2027~), HBF 표준화(2026-02 킥오프 완료)다.</p>
+
+<h3>5-B. 꿈 분석 — 이 성장 스토리는 주가를 밀어올릴 연료인가 (9항목)</h3>
+<div class="twrap"><table class="wide">
+<caption>표 8. 꿈 분석 총괄표 — 9개 항목 판정</caption>
+<thead><tr><th>#</th><th>항목</th><th>판정</th><th>근거 요지</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>꿈의 정의</td><td>"AI 시대의 모든 적층·접합은 본더를 지나간다"</td><td>메모리 슈퍼사이클의 픽앤셔블 + 첨단 패키징 전환의 병기창이라는 이중 서사</td></tr>
+<tr><td>2</td><td>꿈의 크기</td><td>이익 기준 '0 → $3억' 스토리</td><td>FY25 영업이익 −$3.2M → FY26E ~$178M → TCB $4억 풀가동+사이클 지속 시 FY28 $3억± <span class="bd bd-drv">파생</span>. 순이익 기준 사실상 무한배(턴어라운드형)</td></tr>
+<tr><td>3</td><td>꿈의 신선도</td><td>메모리는 반쯤 소비, TCB $4억은 신선</td><td>메모리 랠리는 2025H2~2026H1 뉴스 피크(2025년 마이크론 +239%·샌디스크 +559%) — KLIC 편입은 2026-02부터. TCB 캐파 스토리는 2026-05 Q2 발표로 부상한 새 재료</td></tr>
+<tr><td>4</td><td>3P 검증</td><td>메모리: probable / TCB $4억: plausible / HBM·HBF: possible</td><td>메모리는 이미 분기 숫자로 증명(+50% YoY). TCB는 캐파 투자·고객 확보 진행형. HBM은 퀄, HBF는 표준화 단계</td></tr>
+<tr><td>5</td><td>증거화 일정</td><td>촉매 캘린더 §8 표 11</td><td>8/5 Q3 실적($310M±20 달성 여부)이 최근접 관문. 11월 FY27 가이던스가 최대 재료</td></tr>
+<tr><td>6</td><td>선례 비교</td><td>한미반도체 HBM 리레이팅</td><td>HBM TC본더 서사로 52주 저점(₩81,400, 2025-09) 대비 고점(₩426,000, 2026-05) 5.2배·PER 100x대 도달. 단 KLIC은 본업(사이클 장비)이 커서 순수 테마 멀티플 도달은 구조적으로 어려움 — '반쪽 리레이팅'이 현실적 상단</td></tr>
+<tr><td>7</td><td>가격 반영도</td><td>상당 부분 선반영 (§10 교차)</td><td>내재 CAP ≈17.6년(강세 경로 전제) = 시총의 67%가 성장가치(PVGO). 단 고점比 −26% 조정으로 초과분 일부 되돌림</td></tr>
+<tr><td>8</td><td>꿈의 사망 조건</td><td>메모리 피크아웃 &gt; TCB 부진 &gt; 경쟁 발표</td><td>①NAND·DRAM 가격 꺾임→capex 삭감 ②8/5 가이던스 미스 ③TCB 수주 공백·HBM 퀄 실패 ④하이브리드 본딩 조기 채택 ⑤중국 수출통제 확대</td></tr>
+<tr><td>9</td><td>자금 흐름</td><td>테마 내 '파생 2등주'</td><td>대표주는 마이크론·샌디스크·SK하이닉스·한미. KLIC은 밸류에이션 갭(FY26E PER ~30x·EV/S 4.5x vs 한미 TTM PER ~114x·EV/S ~29x, BESI 50x+ <span class="bd bd-est">추정</span>)을 가진 후행 수혜주 — 자금이 테마 내 확산될 때 수혜, 이탈할 때 먼저 매도되는 위치</td></tr>
+</tbody></table></div>
+<p>종합하면, 이 꿈은 <strong>"이미 숫자가 나오기 시작한 사이클(메모리)"과 "숫자가 나오기 직전의 구조 전환(TCB)"의 결합</strong>이라는 점에서 순수 내러티브 주식보다 질이 높다. 문제는 크기가 아니라 가격이다 — §10에서 보듯 현재가는 강세 경로의 약 18년 지속을 이미 지불하고 있어, 꿈이 '공짜 옵션'이던 구간($40~60대)은 지나갔다. 지금부터의 수익률은 꿈의 존재가 아니라 <strong>꿈의 초과 달성(FY27 가이던스·TCB $4억 조기 소진)</strong> 여부에 걸려 있다.</p>
+</section>
+
+<section id="s6">
+<h2><span class="no">6</span>경쟁 우위 분석 — 해자의 실체와 유통기한</h2>
+<div class="lead">K&amp;S의 해자는 <strong>"성숙 시장의 요새 + 성장 시장의 교두보"</strong>라는 비대칭 구조다. 와이어 본딩에서는 60%+ 점유·소모품 락인·공정 레시피가 겹겹의 성벽을 이루지만, TCB에서는 아직 해자가 아니라 '먼저 판 참호'(플럭스리스 선점) 수준이다. 재무 지표는 원가 우위와 차별화가 혼합된 자산경량 모델을 가리킨다.</div>
+
+<h3>6-1. 포터의 5 Forces 평가</h3>
+<div class="twrap"><table>
+<caption>표 9. 5 Forces — 힘의 방향과 강도</caption>
+<thead><tr><th>힘</th><th>강도</th><th>평가</th></tr></thead>
+<tbody>
+<tr><td>기존 경쟁</td><td><span class="bd bd-est">중</span></td><td>와이어 본딩은 K&amp;S·ASMPT 과점으로 가격 경쟁 온건. TCB는 6개사+ 난전으로 강도 높음 — 사업부별 온도차가 큼</td></tr>
+<tr><td>신규 진입 위협</td><td><span class="bd bd-est">낮음~중</span></td><td>와이어 본딩: 성숙·저성장 시장이라 진입 유인 자체가 없고, 구리 레시피·수율 레퍼런스가 장벽. 예외는 중국 국산화(정책 동기) — 성숙 장비부터 잠식 가능성 <span class="bd bd-est">추정</span></td></tr>
+<tr><td>대체재 위협</td><td><span class="bd bd-est">중 (장기)</span></td><td>하이엔드에서 플립칩·TCB·하이브리드로의 이탈은 구조적. 단 비용 격차로 전체 유닛의 다수는 와이어 본딩 잔류 — '침식은 느리고 상단은 제한'</td></tr>
+<tr><td>공급자 교섭력</td><td><span class="bd bd-est">낮음</span></td><td>정밀 부품·세라믹 공급망 분산, 자체 소모품(캐필러리) 수직화</td></tr>
+<tr><td>구매자 교섭력</td><td><span class="bd bd-est">중~높음</span></td><td>대형 OSAT·IDM의 볼륨 협상력 존재. 단 장비비가 고객 원가에서 차지하는 비중이 작고 수율 리스크 회피 성향이 가격 압박을 완충</td></tr>
+</tbody></table></div>
+
+<h3>6-2. 차별화인가 원가 우위인가 — 숫자의 판정</h3>
+<p>CAP 프레임워크의 판별식(NOPAT 마진 × 투하자본 회전율)으로 보면, K&amp;S의 투하자본은 약 $4.1억(자본 $8.58억 − 순현금 $4.48억)에 불과해 FY26E 매출 기준 <strong>회전율 약 2.6회</strong> <span class="bd bd-drv">파생</span> — 장비업치고 이례적으로 높다(제조 상당분 외주·아웃소싱 구조). NOPAT 마진은 업사이클 20%±(FY22 24.7%), 다운사이클 0% 이하로 진폭이 크다. 조합하면 <strong>"자산경량 기반의 원가 우위 위에, 공정 레시피라는 차별화가 얹힌 혼합형"</strong>이다 — 업사이클 ROIC가 34% <span class="bd bd-drv">파생</span>까지 치솟는 이유이자, 사이클 평균 ROIC로 보정해야 하는 이유다(사이클 전체 평균은 자본비용을 상회하는 수준으로 추산 <span class="bd bd-est">추정</span>).</p>
+
+<h3>6-3. 해자의 원천 4가지와 지속 가능성</h3>
+<p><strong>① 설치 기반 락인(전환 비용):</strong> 수만 대의 필드 장비가 캐필러리·스페어·서비스를 K&amp;S 규격으로 소비한다. 고객이 타사 장비로 바꾸면 레시피 재퀄·오퍼레이터 재교육·수율 리스크를 진다 — APS 24%가 이 락인의 화폐화다. <strong>② 무형자산(공정 레시피·특허):</strong> 구리 와이어 본딩 15년, 오버행 본딩, 포름산 in-situ 통합 등은 문서가 아니라 파라미터 축적의 세계다. <strong>③ 규모의 경제:</strong> 60%+ 점유가 R&amp;D $153M을 최다 유닛에 분산시켜, 2위 이하가 같은 강도로 투자하기 어렵게 만든다. <strong>④ 신뢰 자본:</strong> 75년·800개 OSAT의 레퍼런스는 "본딩 수율 사고"라는 꼬리 리스크를 회피하려는 구매자의 보수성을 K&amp;S 편으로 만든다.</p>
+<div class="co co-key"><div class="ct">해자의 유통기한 판정 — CAP 논의(§10)의 질적 근거</div>
+<p>와이어 본딩 요새의 잔존 수명은 10년+로 본다 <span class="bd bd-conf">확신도 높음~75%</span> — 성숙 시장의 신규 진입 유인 부재와 락인 구조 때문이다. 반면 TCB의 우위(플럭스리스 선점 2~3년)는 경쟁사 추격·하이브리드 본딩 침투로 5~7년 시야의 '조건부 해자'다. 따라서 회사 전체의 정당화 가능한 CAP는 <strong>"요새의 10년+ × 교두보의 5~7년"의 가중 평균으로 10~15년 내외</strong>가 질적 상한이며 — §10의 내재 CAP 17년(강세 경로 전제)은 이 상한을 소폭 웃돈다.</p></div>
+</section>
+
+<section id="s7">
+<h2><span class="no">7</span>피어그룹 비교 — 성장은 최고, 멀티플은 최저</h2>
+<div class="lead">본딩 장비 4강(K&amp;S·ASMPT·BESI·한미) 중 K&amp;S는 <strong>FY26E 성장률(+65%)이 가장 높으면서 매출 대비 밸류에이션은 가장 낮다.</strong> 할인의 이유는 사이클성(이익 지속성 의심)과 중국 노출이고, 할인 해소의 열쇠는 TCB의 구조 성장 증명이다.</div>
+<div class="twrap"><table class="wide">
+<caption>표 10. 피어 비교 (2026-07 중순 기준, 시총·주가는 각 통화)</caption>
+<thead><tr><th>항목</th><th>K&amp;S (KLIC)</th><th>ASMPT (0522.HK)</th><th>BESI (BESI.AS)</th><th>한미반도체 (042700.KS)</th></tr></thead>
+<tbody>
+<tr><td>시가총액</td><td class="num">$5.3B</td><td class="num">~$11.2B</td><td class="num">~€20B</td><td class="num">~₩23.4조(~$17B, 7/2 기준)</td></tr>
+<tr><td>최근 연매출</td><td class="num">$768M (TTM)</td><td class="num">$1.76B (TTM)</td><td class="num">€591M (2025)</td><td class="num">₩5,767억 (2025 공시, +3.2% 창사 최대)</td></tr>
+<tr><td>최근 분기 성장</td><td class="num"><span class="up">+49.8%</span> (Q2 FY26)</td><td class="num">+32% (Q1 26)</td><td class="num">+28.3% 매출 / 수주 +104.5%</td><td class="num"><span class="down">−65.5%</span> (1Q26 잠정 — HBM4 발주 이월 공백)</td></tr>
+<tr><td>수익성 (최근)</td><td class="num">영업마진 19.1% 비GAAP (Q2)</td><td class="num">개선 중 <span class="bd bd-est">추정 한자릿수 후반</span></td><td class="num">GM 64~66% 가이드</td><td class="num">2025 영업이익률 43.6% (공시)</td></tr>
+<tr><td>EV/매출 (FY26E)</td><td class="num">~4.5x <span class="bd bd-drv">파생</span></td><td class="num">~5.5x <span class="bd bd-drv">파생</span></td><td class="num">~23x <span class="bd bd-drv">파생: 장기목표 €850M 기준</span></td><td class="num">~29x <span class="bd bd-drv">파생: 2026E ₩8,000억 기준</span></td></tr>
+<tr><td>선행 PER</td><td class="num">~30x (FY26E) <span class="bd bd-drv">파생</span></td><td class="num">~45x (DBS FY27F 기준)</td><td class="num">50x+ <span class="bd bd-est">추정</span></td><td class="num">TTM ~114x / PT 평균 ₩263,125</td></tr>
+<tr><td>기술 좌표</td><td>와이어 지배 + FTC 선점, HBM 도전</td><td>포트폴리오 폭 + HBM 제3공급자</td><td>하이브리드 본딩 선두</td><td>HBM TC본더 71.2% 지배</td></tr>
+<tr><td>핵심 리스크</td><td>사이클·중국 53.5%</td><td>SMT 구조조정 진행</td><td>하이브리드 채택 지연</td><td>고객·기술 집중 — 1Q26 공백이 실증, 특허소송</td></tr>
+</tbody></table></div>
+
+<figure>
+<div class="fig-t">그림 6. 피어 2D 포지셔닝 — 성장 대비 밸류에이션의 비대칭</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="90" y1="410" x2="950" y2="410"/>
+    <line x1="90" y1="318" x2="950" y2="318" stroke-dasharray="4 4"/>
+    <line x1="90" y1="225" x2="950" y2="225" stroke-dasharray="4 4"/>
+    <line x1="90" y1="133" x2="950" y2="133" stroke-dasharray="4 4"/>
+    <line x1="90" y1="40" x2="950" y2="40" stroke-dasharray="4 4"/>
+    <line x1="520" y1="40" x2="520" y2="410" stroke-dasharray="4 4"/>
+  </g>
+  <g font-size="11.5" fill="#718096">
+    <text x="82" y="414" text-anchor="end">0x</text>
+    <text x="82" y="322" text-anchor="end">8x</text>
+    <text x="82" y="229" text-anchor="end">16x</text>
+    <text x="82" y="137" text-anchor="end">24x</text>
+    <text x="82" y="44" text-anchor="end">32x</text>
+    <text x="90" y="432" text-anchor="middle">−80</text>
+    <text x="305" y="432" text-anchor="middle">−40</text>
+    <text x="520" y="432" text-anchor="middle">0</text>
+    <text x="735" y="432" text-anchor="middle">+40</text>
+    <text x="950" y="432" text-anchor="middle">+80</text>
+    <text x="520" y="458" text-anchor="middle">최근 분기 매출 성장률 (YoY, %)</text>
+  </g>
+  <text x="30" y="225" text-anchor="middle" font-size="11.5" fill="#4A5568" transform="rotate(-90 30 225)">EV / 매출 (배)</text>
+  <circle cx="672" cy="144" r="55" fill="#D97706" opacity="0.8"/>
+  <text x="672" y="138" text-anchor="middle" font-size="12.5" font-weight="800" fill="#FFFFFF">BESI</text>
+  <text x="672" y="154" text-anchor="middle" font-size="10.5" fill="#FFFFFF">+28% · ~23x</text>
+  <circle cx="168" cy="75" r="48" fill="#DC2626" opacity="0.8"/>
+  <text x="168" y="69" text-anchor="middle" font-size="12.5" font-weight="800" fill="#FFFFFF">한미</text>
+  <text x="168" y="85" text-anchor="middle" font-size="10.5" fill="#FFFFFF">−65.5% · ~29x</text>
+  <circle cx="692" cy="346" r="40" fill="#7C3AED" opacity="0.8"/>
+  <text x="692" y="340" text-anchor="middle" font-size="12.5" font-weight="800" fill="#FFFFFF">ASMPT</text>
+  <text x="692" y="356" text-anchor="middle" font-size="10.5" fill="#FFFFFF">+32% · 5.5x</text>
+  <circle cx="788" cy="358" r="30" fill="#2563EB" opacity="0.9"/>
+  <text x="788" y="353" text-anchor="middle" font-size="12" font-weight="800" fill="#FFFFFF">KLIC</text>
+  <text x="788" y="367" text-anchor="middle" font-size="10" fill="#FFFFFF">+50% · 4.5x</text>
+  <text x="798" y="404" text-anchor="middle" font-size="11.5" font-weight="700" fill="#166534">고성장·저멀티플 (KLIC)</text>
+  <text x="470" y="98" text-anchor="middle" font-size="11.5" font-weight="700" fill="#92400E">하이브리드 프리미엄 (BESI)</text>
+  <text x="168" y="141" text-anchor="middle" font-size="11.5" font-weight="700" fill="#991B1B">HBM4 발주 공백기 (한미)</text>
+</svg>
+<div class="legend">
+  <div class="li"><span class="sw" style="background:#2563EB"></span>KLIC (버블 크기=시총 $5.3B)</div>
+  <div class="li"><span class="sw" style="background:#7C3AED"></span>ASMPT ($11.2B)</div>
+  <div class="li"><span class="sw" style="background:#D97706"></span>BESI (~$23B)</div>
+  <div class="li"><span class="sw" style="background:#DC2626"></span>한미 (~$17B)</div>
+</div>
+</div>
+<figcaption>그림 6. x축 최근 분기 매출 YoY(한미는 1Q26 잠정치), y축 EV/매출(KLIC·ASMPT는 FY26E, BESI는 장기목표, 한미는 2026E ₩8,000억 기준 — 파생·추정 혼재, 표 10 배지 참조), 버블 크기 시총 | 출처: 각사 공시·표 10, 직접 작도</figcaption>
+</figure>
+<p>이 그림의 투자적 함의는 명확하다. 시장은 <strong>'구조 성장의 순도'</strong>에 멀티플을 지불한다 — BESI(하이브리드 독점 서사)는 ~23x, 한미(HBM 과점)는 발주 공백 분기조차 ~29x를 받는 반면, K&amp;S는 매출의 ~85%가 사이클 장비라 4.5x에 머문다. 뒤집어 말하면, <strong>TCB가 매출의 30~40%로 커지는 순간(캐파 $4억 소진 시나리오) K&amp;S의 '서사 순도'가 재분류되며 멀티플 리레이팅의 산술적 여지</strong>가 생긴다 — 이것이 §8 내러티브와 §11 Bull의 핵심 연결고리다.</p>
+</section>
+
+<section id="s8">
+<h2><span class="no">8</span>시장 내러티브 및 자금 선호도 — 시장은 지금 무슨 이야기를 사고 있나</h2>
+<div class="lead">현재 KLIC에 붙은 스토리는 세 겹이다: <strong>① 메모리 슈퍼사이클의 픽앤셔블(곡괭이 장수)</strong>, <strong>② TCB 캐파 $4억이 상징하는 첨단 패키징 구조 전환</strong>, <strong>③ 딥밸류에서 모멘텀주로의 신분 전환</strong>(1년 새 +182%). 7월의 −26% 조정은 회사 악재가 아니라 메모리 섹터 전체의 기대 재조정(반도체 시총 $1.5조 증발)에 동승한 것으로, 스토리 자체는 아직 부러지지 않았다.</div>
+
+<figure>
+<div class="fig-t">그림 7. 주가 여정과 8개의 변곡점 — $26.63에서 $133.81을 찍고 $99.02로 (2025-04 ~ 2026-07)</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="80" y1="440" x2="950" y2="440"/>
+    <line x1="80" y1="340" x2="950" y2="340" stroke-dasharray="4 4"/>
+    <line x1="80" y1="240" x2="950" y2="240" stroke-dasharray="4 4"/>
+    <line x1="80" y1="140" x2="950" y2="140" stroke-dasharray="4 4"/>
+    <line x1="80" y1="40" x2="950" y2="40" stroke-dasharray="4 4"/>
+  </g>
+  <g font-size="11.5" fill="#718096">
+    <text x="72" y="444" text-anchor="end">$20</text>
+    <text x="72" y="344" text-anchor="end">$50</text>
+    <text x="72" y="244" text-anchor="end">$80</text>
+    <text x="72" y="144" text-anchor="end">$110</text>
+    <text x="72" y="44" text-anchor="end">$140</text>
+    <text x="80" y="462" text-anchor="middle">25.04</text>
+    <text x="247" y="462" text-anchor="middle">25.07</text>
+    <text x="415" y="462" text-anchor="middle">25.10</text>
+    <text x="582" y="462" text-anchor="middle">26.01</text>
+    <text x="749" y="462" text-anchor="middle">26.04</text>
+    <text x="930" y="462" text-anchor="middle">26.07</text>
+  </g>
+  <polyline points="80,418 136,407 192,397 247,390 303,393 359,387 415,388 470,377 526,340 582,320 638,285 693,272 749,223 805,203 819,165 860,162 902,83 917,61 928,154 934,129 944,177" fill="none" stroke="#2563EB" stroke-width="2.5"/>
+  <circle cx="944" cy="177" r="4" fill="#2563EB"/>
+  <text x="896" y="201" font-size="12" font-weight="800" fill="#1A202C">$99.02</text>
+  <g font-size="11.5" font-weight="800">
+    <circle cx="92" cy="418" r="11" fill="#0F2B46"/><text x="92" y="422" text-anchor="middle" fill="#FFFFFF">1</text>
+    <circle cx="303" cy="393" r="11" fill="#0F2B46"/><text x="303" y="397" text-anchor="middle" fill="#FFFFFF">2</text>
+    <circle cx="415" cy="388" r="11" fill="#0F2B46"/><text x="415" y="392" text-anchor="middle" fill="#FFFFFF">3</text>
+    <circle cx="470" cy="365" r="11" fill="#0F2B46"/><text x="470" y="369" text-anchor="middle" fill="#FFFFFF">4</text>
+    <circle cx="638" cy="272" r="11" fill="#0F2B46"/><text x="638" y="276" text-anchor="middle" fill="#FFFFFF">5</text>
+    <circle cx="809" cy="228" r="11" fill="#0F2B46"/><text x="809" y="232" text-anchor="middle" fill="#FFFFFF">6</text>
+    <circle cx="917" cy="44" r="11" fill="#0F2B46"/><text x="917" y="48" text-anchor="middle" fill="#FFFFFF">7</text>
+    <circle cx="966" cy="177" r="11" fill="#0F2B46"/><text x="966" y="181" text-anchor="middle" fill="#FFFFFF">8</text>
+  </g>
+</svg>
+<table class="evt">
+<tbody>
+<tr><td class="n"><span>1</span></td><td>2025-04-08</td><td>상호관세 쇼크로 52주 저점 $26.63 — 사이클 바닥 공포의 정점</td><td class="down">저점</td></tr>
+<tr><td class="n"><span>2</span></td><td>2025-08-06</td><td>Q3 FY25 발표 — 비GAAP EPS 7¢로 컨센(5¢) 상회, 니덤 PT $37→$40 상향; 매출 −18% YoY 바닥권</td><td>중립</td></tr>
+<tr><td class="n"><span>3</span></td><td>2025-10-28</td><td>Fusen Chen CEO 건강 사유 은퇴 발표(12/1부), Lester Wong 임시 체제</td><td>중립</td></tr>
+<tr><td class="n"><span>4</span></td><td>2025-11-19</td><td>Q4 FY25 비트 + 회복 가이던스 — 시간외 +12.5%, 턴 신호</td><td class="up">↑</td></tr>
+<tr><td class="n"><span>5</span></td><td>2026-02-05</td><td>Q1 FY26 비트(+20% YoY)·메모리 랠리 편입 — 당일 +19%, $66.40</td><td class="up">↑</td></tr>
+<tr><td class="n"><span>6</span></td><td>2026-05-06</td><td>Q2 블로아웃(+50% YoY, 스트리트 컨센 +27% 상회)·TCB 캐파 $4억 공개 — 이틀 +9.5%</td><td class="up">↑</td></tr>
+<tr><td class="n"><span>7</span></td><td>2026-07-01</td><td>사상최고 종가 $133.81 (장중 $135.80) — 메모리 랠리·SK하이닉스 나스닥 상장(7/10) 기대 정점</td><td class="up">고점</td></tr>
+<tr><td class="n"><span>8</span></td><td>2026-07-02~16</td><td>메모리 섹터 재조정(삼성 실적 실망 7/7 −11.5%, ASML발 7/16 −7.8%)에 동반 −26% → $99.02</td><td class="down">↓</td></tr>
+</tbody>
+</table>
+</div>
+<figcaption>그림 7. 월별 종가 근사 곡선(2026-05 이후는 일별 실측 앵커, 중간 구간 보간 <span class="bd bd-drv">파생</span>) + 이벤트 마커 | 출처: 회사 공시·S&amp;P Global 일별 시세·언론 보도 종합</figcaption>
+</figure>
+
+<h3>8-1. 자금이 주목하는 지점과 촉매 캘린더</h3>
+<p>기관·애널리스트의 질문은 이미 "사이클이 도나"에서 <strong>"이익의 어디까지가 구조적인가"</strong>로 이동했다. Q2 콜에서 집중된 주제는 TCB 캐파 증설의 소진 속도, HBM 퀄의 PO 전환 시점, 그리고 메모리 볼 본더 주문의 지속성(가동률 85~90%+)이었다. 컨센서스는 애널리스트 3~4명·Hold~Moderate Buy·평균 PT $100(범위 $95~105, 3명 — 최고는 니덤이 5/7 $70→$105로 상향)로, <strong>주가가 6~7월 PT 상단($105)을 27%까지 웃돌았다가 다시 컨센서스 안으로 회귀</strong>한 상태다 — 애널리스트가 주가를 뒤쫓아 상향하는 국면이며, 8/5 실적이 그 다음 상향(또는 하향)의 방아쇠다. 자금 성격은 메모리·AI 인프라 테마 자금의 '2차 확산' 수혜로, 대표주(2025년 마이크론 +239%, 샌디스크 +559%)가 먼저 오르고 밸류 갭을 찾는 자금이 KLIC으로 흘러든 구조다 — 이 구조는 유입도 빠르지만 <strong>테마 이탈 시 이탈도 빠르다</strong>(7월 −26%가 실증).</p>
+<div class="twrap"><table>
+<caption>표 11. 촉매 캘린더 — 꿈을 숫자로 바꾸는 일정 (§5-B 항목 5의 실행표)</caption>
+<thead><tr><th>일정</th><th>이벤트</th><th>확인 포인트</th><th>방향성</th></tr></thead>
+<tbody>
+<tr><td>2026-07-23</td><td>BESI Q2 실적</td><td>하이브리드 본딩 수주·채택 지연 코멘트 — K&amp;S TCB 수명 판단 재료</td><td>간접</td></tr>
+<tr class="hl"><td>2026-08-05</td><td><strong>K&amp;S Q3 FY26 실적</strong></td><td>가이던스 $310M±20·EPS $1.00 달성, Q4 가이드(+5~10% QoQ 시사 유지), TCB·중국 코멘트</td><td>직접·최대</td></tr>
+<tr><td>2026-09 하순</td><td>마이크론 실적</td><td>NAND·DRAM capex 톤 — 볼 본더 수요의 선행지표</td><td>간접</td></tr>
+<tr><td>2026-10~11</td><td>삼성·SK하이닉스 실적</td><td>HBM·NAND 증설 계획, 하이브리드 본딩 로드맵</td><td>간접</td></tr>
+<tr class="hl"><td>2026-11 중순</td><td><strong>K&amp;S Q4·FY26 확정 + FY27 첫 가이던스</strong></td><td>FY26 매출 ~$1,080M 확정 여부, FY27 성장·마진 — §10 내재 기대와의 첫 대조</td><td>직접·최대</td></tr>
+<tr><td>2026 하반기</td><td>HBF 샘플 (샌디스크 일정)</td><td>NAND 고단 적층 'TCB 플레이' 구체화</td><td>옵션</td></tr>
+<tr><td>FY26 내 (~2026-09)</td><td>HBM TCB 첫 PO (회사 목표)</td><td>퀄 → 구매주문 전환 — 메모리 TCB 진입 증명</td><td>옵션</td></tr>
+<tr><td>FY27 초 (2026 말~27 초)</td><td>TCB 캐파 $4억 완공</td><td>capex $20~24M 집행 완료, 수주 소진 속도</td><td>직접</td></tr>
+</tbody></table></div>
+<p><strong>모멘텀 평가.</strong> 1년 +182%(2025-07-15 종가 $35.16 대비)의 수익률은 실적(두 분기 연속 대형 비트)이 견인했다는 점에서 순수 수급 랠리보다 질이 높다. 그러나 §5-B의 판정대로 '메모리 꿈'의 신선도는 반쯤 소진됐고, 7월 조정은 <strong>"AI 지출이 메모리 가격 인상을 소화할 수 있는가"라는 서사 차원의 의심</strong>이 처음 등장한 사건이다(삼성 사상 최대 실적에도 매도 — 7/7 −6.9%, SK하이닉스 상장(7/10) 직후 차익 매물 — 7/13 −9.1%). KLIC의 다음 상승 구간은 섹터 베타만으로는 어렵고, 8/5와 11월의 자체 숫자가 섹터 의심을 개별 증명으로 돌파해야 열린다 — 내러티브가 펀더멘털로 뒷받침되는지의 시험대가 정확히 이 두 날짜다.</p>
+</section>
+
+<section id="s9">
+<h2><span class="no">9</span>재무 분석 및 DCF 모델 — 사이클의 진폭과 자산경량의 복원력</h2>
+<div class="lead">지난 5년의 재무는 이 회사의 성격을 압축한다: 매출이 반토막 나도(−57%) 순현금은 늘고 자사주는 계속 샀다. FY2026은 매출 +65%·영업이익 0→$1.8억의 V자 국면이며, DCF는 이 앵커 위에서 <strong>"현재 주가가 요구하는 경로"를 역산하는 도구</strong>로 사용한다 — 적정가 단정이 아니라 시장 기대의 해부다.</div>
+
+<h3>9-1. 연간·분기 재무 추이</h3>
+<div class="twrap"><table class="wide">
+<caption>표 12. 연간 재무 요약 (FY = 9월 말~10월 초 결산, $M)</caption>
+<thead><tr><th>항목</th><th class="num">FY2021</th><th class="num">FY2022</th><th class="num">FY2023</th><th class="num">FY2024</th><th class="num">FY2025</th><th class="num">FY2026E <span class="bd bd-drv">파생</span></th></tr></thead>
+<tbody>
+<tr><td>매출</td><td class="num">1,517.7</td><td class="num">1,503.6</td><td class="num">742.5</td><td class="num">706.2</td><td class="num">654.1</td><td class="num">~1,080</td></tr>
+<tr><td>매출 성장</td><td class="num"><span class="up">+143%</span></td><td class="num">−0.9%</td><td class="num"><span class="down">−50.6%</span></td><td class="num">−4.9%</td><td class="num">−7.4%</td><td class="num"><span class="up">+65%</span></td></tr>
+<tr><td>매출총이익률</td><td class="num">44.8%</td><td class="num">50.5%</td><td class="num">48.3%</td><td class="num">38.1%*</td><td class="num">42.5%</td><td class="num">~48.6%</td></tr>
+<tr><td>영업이익</td><td class="num">412.4</td><td class="num">470.4</td><td class="num">39.3</td><td class="num">−92.5*</td><td class="num">−3.2*</td><td class="num">~178</td></tr>
+<tr><td>영업마진</td><td class="num">27.2%</td><td class="num">31.3%</td><td class="num">5.3%</td><td class="num">−13.1%</td><td class="num">−0.5%</td><td class="num">~16.5%</td></tr>
+<tr><td>희석 EPS ($)</td><td class="num">5.78</td><td class="num">7.09</td><td class="num">0.99</td><td class="num">−1.24</td><td class="num">0.00</td><td class="num">~3.2 <span class="bd bd-drv">파생</span></td></tr>
+<tr><td>FCF</td><td class="num">277.3</td><td class="num">367.2</td><td class="num">129.0</td><td class="num">14.9</td><td class="num">96.4</td><td class="num">억제(운전자본 흡수)</td></tr>
+<tr><td>자사주+배당</td><td class="num">43.9</td><td class="num">320.7</td><td class="num">111.3</td><td class="num">195.5</td><td class="num">152.7</td><td class="num">지속(배당 $0.82/주)</td></tr>
+</tbody></table></div>
+<p class="co co-note" style="display:block">* FY2024 GM·영업이익에는 Project W(마이크로 LED) 철수 손상, FY2025에는 EA 철수 비용이 포함된 왜곡치다(총이익률은 GAAP·10-K 기준). FY2026E는 분기 실적 2개(합 $442.2M)+Q3 가이던스 $310M+Q4 시사치(+5~10% QoQ)의 합산 <span class="bd bd-drv">파생</span>. TTM FCF가 $4.3M로 낮은 것은 급성장 국면의 재고·매출채권 확대(운전자본 흡수) 때문이며 — Q1 FY26 FCF −$11.6M — 성장 둔화 시 역방향으로 현금이 풀리는 구조다.</p>
+
+<figure>
+<div class="fig-t">그림 8. 매출과 영업마진 — 반토막에서 V자로, 마진은 −13%에서 +17%로</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="80" y1="400" x2="950" y2="400"/>
+    <line x1="80" y1="310" x2="950" y2="310" stroke-dasharray="4 4"/>
+    <line x1="80" y1="220" x2="950" y2="220" stroke-dasharray="4 4"/>
+    <line x1="80" y1="130" x2="950" y2="130" stroke-dasharray="4 4"/>
+    <line x1="80" y1="40" x2="950" y2="40" stroke-dasharray="4 4"/>
+  </g>
+  <g font-size="11.5" fill="#718096">
+    <text x="72" y="404" text-anchor="end">0</text>
+    <text x="72" y="314" text-anchor="end">400</text>
+    <text x="72" y="224" text-anchor="end">800</text>
+    <text x="72" y="134" text-anchor="end">1,200</text>
+    <text x="72" y="44" text-anchor="end">$1,600M</text>
+    <text x="958" y="404" text-anchor="start">−20%</text>
+    <text x="958" y="284" text-anchor="start">0%</text>
+    <text x="958" y="164" text-anchor="start">+20%</text>
+    <text x="958" y="44" text-anchor="start">+40%</text>
+  </g>
+  <g fill="#2563EB" opacity="0.9">
+    <rect x="107" y="58" width="90" height="342" rx="4"/>
+    <rect x="252" y="62" width="90" height="338" rx="4"/>
+    <rect x="397" y="233" width="90" height="167" rx="4"/>
+    <rect x="542" y="241" width="90" height="159" rx="4"/>
+    <rect x="687" y="253" width="90" height="147" rx="4"/>
+  </g>
+  <rect x="832" y="157" width="90" height="243" rx="4" fill="#7C3AED" opacity="0.9"/>
+  <polyline points="152,117 297,92 442,248 587,359 732,283 877,181" fill="none" stroke="#D97706" stroke-width="3"/>
+  <g fill="#D97706">
+    <circle cx="152" cy="117" r="5"/><circle cx="297" cy="92" r="5"/><circle cx="442" cy="248" r="5"/>
+    <circle cx="587" cy="359" r="5"/><circle cx="732" cy="283" r="5"/><circle cx="877" cy="181" r="5"/>
+  </g>
+  <g font-size="12" fill="#1A202C" font-weight="700">
+    <text x="152" y="50" text-anchor="middle">1,518</text>
+    <text x="297" y="54" text-anchor="middle">1,504</text>
+    <text x="442" y="225" text-anchor="middle">742</text>
+    <text x="587" y="233" text-anchor="middle">706</text>
+    <text x="732" y="245" text-anchor="middle">654</text>
+    <text x="877" y="149" text-anchor="middle">1,080E</text>
+  </g>
+  <g font-size="11.5" fill="#718096">
+    <text x="152" y="422" text-anchor="middle">FY21</text>
+    <text x="297" y="422" text-anchor="middle">FY22</text>
+    <text x="442" y="422" text-anchor="middle">FY23</text>
+    <text x="587" y="422" text-anchor="middle">FY24</text>
+    <text x="732" y="422" text-anchor="middle">FY25</text>
+    <text x="877" y="422" text-anchor="middle">FY26E</text>
+  </g>
+</svg>
+<div class="legend">
+  <div class="li"><span class="sw" style="background:#2563EB"></span>매출 (좌축, $M)</div>
+  <div class="li"><span class="sw" style="background:#7C3AED"></span>FY26E 매출 (파생)</div>
+  <div class="li"><span class="sw" style="background:#D97706"></span>GAAP 영업마진 (우축)</div>
+</div>
+</div>
+<figcaption>그림 8. FY24~25 마진은 사업 철수 손상 포함 | 출처: 회사 10-K·분기 공시, FY26E는 표 12 파생</figcaption>
+</figure>
+
+<figure>
+<div class="fig-t">그림 9. 분기 매출의 가속 — 6개 분기 연속 확대, Q3 가이던스는 +28% QoQ</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="80" y1="400" x2="950" y2="400"/>
+    <line x1="80" y1="297" x2="950" y2="297" stroke-dasharray="4 4"/>
+    <line x1="80" y1="194" x2="950" y2="194" stroke-dasharray="4 4"/>
+    <line x1="80" y1="91" x2="950" y2="91" stroke-dasharray="4 4"/>
+  </g>
+  <g font-size="11.5" fill="#718096">
+    <text x="72" y="404" text-anchor="end">0</text>
+    <text x="72" y="301" text-anchor="end">100</text>
+    <text x="72" y="198" text-anchor="end">200</text>
+    <text x="72" y="95" text-anchor="end">$300M</text>
+  </g>
+  <g fill="#2563EB" opacity="0.9">
+    <rect x="99" y="229" width="70" height="171" rx="4"/>
+    <rect x="208" y="233" width="70" height="167" rx="4"/>
+    <rect x="317" y="247" width="70" height="153" rx="4"/>
+    <rect x="426" y="217" width="70" height="183" rx="4"/>
+    <rect x="534" y="195" width="70" height="205" rx="4"/>
+    <rect x="643" y="150" width="70" height="250" rx="4"/>
+  </g>
+  <rect x="752" y="81" width="70" height="319" rx="4" fill="#7C3AED" opacity="0.9"/>
+  <rect x="861" y="63" width="70" height="337" rx="4" fill="#7C3AED" opacity="0.55"/>
+  <g font-size="12" fill="#1A202C" font-weight="700">
+    <text x="134" y="221" text-anchor="middle">166</text>
+    <text x="243" y="225" text-anchor="middle">162</text>
+    <text x="352" y="239" text-anchor="middle">148</text>
+    <text x="461" y="209" text-anchor="middle">178</text>
+    <text x="569" y="187" text-anchor="middle">200</text>
+    <text x="678" y="142" text-anchor="middle">243</text>
+    <text x="787" y="73" text-anchor="middle">310G</text>
+    <text x="896" y="55" text-anchor="middle">~330E</text>
+  </g>
+  <g font-size="11.5" fill="#718096">
+    <text x="134" y="422" text-anchor="middle">Q1 25</text>
+    <text x="243" y="422" text-anchor="middle">Q2 25</text>
+    <text x="352" y="422" text-anchor="middle">Q3 25</text>
+    <text x="461" y="422" text-anchor="middle">Q4 25</text>
+    <text x="569" y="422" text-anchor="middle">Q1 26</text>
+    <text x="678" y="422" text-anchor="middle">Q2 26</text>
+    <text x="787" y="422" text-anchor="middle">Q3 26</text>
+    <text x="896" y="422" text-anchor="middle">Q4 26</text>
+  </g>
+</svg>
+<div class="legend">
+  <div class="li"><span class="sw" style="background:#2563EB"></span>실적</div>
+  <div class="li"><span class="sw" style="background:#7C3AED"></span>Q3 가이던스 중앙값 / Q4 시사치 (파생)</div>
+</div>
+</div>
+<figcaption>그림 9. 분기 매출($M). Q3 FY25는 연간−3개 분기 역산 <span class="bd bd-drv">파생</span> | 출처: 분기 공시·Q3 가이던스</figcaption>
+</figure>
+
+<figure>
+<div class="fig-t">그림 10. FCF와 주주환원 — 다운사이클에도 환원을 멈추지 않았다</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="80" y1="400" x2="950" y2="400"/>
+    <line x1="80" y1="310" x2="950" y2="310" stroke-dasharray="4 4"/>
+    <line x1="80" y1="220" x2="950" y2="220" stroke-dasharray="4 4"/>
+    <line x1="80" y1="130" x2="950" y2="130" stroke-dasharray="4 4"/>
+  </g>
+  <g font-size="11.5" fill="#718096">
+    <text x="72" y="404" text-anchor="end">0</text>
+    <text x="72" y="314" text-anchor="end">100</text>
+    <text x="72" y="224" text-anchor="end">200</text>
+    <text x="72" y="134" text-anchor="end">$300M</text>
+  </g>
+  <g fill="#059669" opacity="0.9">
+    <rect x="107" y="150" width="56" height="250" rx="4"/>
+    <rect x="281" y="70" width="56" height="330" rx="4"/>
+    <rect x="455" y="284" width="56" height="116" rx="4"/>
+    <rect x="629" y="387" width="56" height="13" rx="4"/>
+    <rect x="803" y="313" width="56" height="87" rx="4"/>
+  </g>
+  <g fill="#0F2B46" opacity="0.85">
+    <rect x="171" y="361" width="56" height="39" rx="4"/>
+    <rect x="345" y="111" width="56" height="289" rx="4"/>
+    <rect x="519" y="300" width="56" height="100" rx="4"/>
+    <rect x="693" y="224" width="56" height="176" rx="4"/>
+    <rect x="867" y="263" width="56" height="137" rx="4"/>
+  </g>
+  <g font-size="11.5" fill="#1A202C" font-weight="700">
+    <text x="135" y="142" text-anchor="middle">277</text>
+    <text x="309" y="62" text-anchor="middle">367</text>
+    <text x="483" y="276" text-anchor="middle">129</text>
+    <text x="657" y="379" text-anchor="middle">15</text>
+    <text x="831" y="305" text-anchor="middle">96</text>
+    <text x="199" y="353" text-anchor="middle">44</text>
+    <text x="373" y="103" text-anchor="middle">321</text>
+    <text x="547" y="292" text-anchor="middle">111</text>
+    <text x="721" y="216" text-anchor="middle">196</text>
+    <text x="895" y="255" text-anchor="middle">153</text>
+  </g>
+  <g font-size="11.5" fill="#718096">
+    <text x="167" y="422" text-anchor="middle">FY21</text>
+    <text x="341" y="422" text-anchor="middle">FY22</text>
+    <text x="515" y="422" text-anchor="middle">FY23</text>
+    <text x="689" y="422" text-anchor="middle">FY24</text>
+    <text x="863" y="422" text-anchor="middle">FY25</text>
+  </g>
+</svg>
+<div class="legend">
+  <div class="li"><span class="sw" style="background:#059669"></span>잉여현금흐름 (FCF)</div>
+  <div class="li"><span class="sw" style="background:#0F2B46"></span>자사주 매입 + 배당</div>
+</div>
+</div>
+<figcaption>그림 10. 5년 누적: FCF $885M vs 환원 $824M — 환원율 93%, 주식수 −17% (자사주는 RSU 원천징수 포함 재무활동 기준) | 출처: 회사 현금흐름표</figcaption>
+</figure>
+
+<h3>9-2. ROIC와 생애주기 판별</h3>
+<p>투하자본이 약 $4.1억(자본 $8.58억 − 순현금 $4.48억)에 불과하므로, ROIC는 사이클에 따라 극단을 오간다: FY22 NOPAT ~$3.7억 기준 <strong>90%대</strong>, FY24~25는 0% 이하, FY26E NOPAT $1.41억 기준 <strong>~34%</strong> <span class="bd bd-drv">파생</span>. 사이클 전체 평균으로도 자본비용(10.8%)을 상회하는 것으로 추산되며 <span class="bd bd-est">추정</span>, 이것이 "가치를 파괴하지 않고 사이클을 건너는 장비회사"라는 이 회사의 재무적 정체성이다. 현금흐름 부호 패턴(영업 +, 투자 −, 재무 −)은 Dickinson 기준 전형적 <strong>성숙 단계</strong>다 — 단 사업부 층위에서는 볼·웨지·APS가 성숙, 첨단 솔루션(TCB)은 도입→성장 전환기로, '성숙 몸통에 성장 팔다리'가 정확한 판별이다.</p>
+
+<h3>9-3. WACC 산출</h3>
+<div class="twrap"><table>
+<caption>표 13. 자본비용(WACC = 자기자본비용, 무차입) 산출 근거 — 2026-07-17 기준</caption>
+<thead><tr><th>입력</th><th class="num">값</th><th>출처·근거</th></tr></thead>
+<tbody>
+<tr><td>무위험이자율 (미 10년물)</td><td class="num">4.55%</td><td>2026-07-17 종가</td></tr>
+<tr><td>원시 베타</td><td class="num">1.63</td><td>5년 월간 <span class="bd bd-cfl">상충: 소스별 1.63~1.76</span></td></tr>
+<tr><td>Blume 조정 베타</td><td class="num">1.42</td><td>0.67×1.63 + 0.33 — 평균회귀 조정</td></tr>
+<tr><td>주식위험프리미엄 (ERP)</td><td class="num">4.42%</td><td>Damodaran 내재 ERP, 2026-07-01</td></tr>
+<tr class="total"><td>자기자본비용 = WACC</td><td class="num">10.84%</td><td>4.55% + 1.42 × 4.42% (부채 $39.8M 리스뿐 — 무차입)</td></tr>
+<tr><td>장기 성장률 g</td><td class="num">2.5%</td><td>기대 인플레이션 근사</td></tr>
+<tr><td>페이드 비율 f</td><td class="num">0.25</td><td>반도체·반도체장비 섹터 표준</td></tr>
+</tbody></table></div>
+
+<h3>9-4. DCF — 시장 내재 경로의 전시 23 테이블</h3>
+<p>이 DCF는 "적정가"를 내놓는 모델이 아니라, <strong>현재 주가 $99.02와 일치하도록 역산한 '시장이 지불 중인 경로'</strong>다(내재 CAP 17.6년 — 표는 정수 18년으로 반올림, 가치 $100.4 = 현재가 +1.4%). 그 경로는: FY27 매출 +25%·EBITA 마진 21%(슈퍼사이클 정점), 이후 <strong>연 +12% 성장·마진 20%를 18년째까지 유지</strong>, 재투자는 capex 2.5%+운전자본 증분 30%, 이후 페이드(f=0.25) 터미널. 연중(mid-year) 할인, 첫해 할인지수 0.70(FY26 잔여분 반영).</p>
+<div class="twrap"><table class="wide">
+<caption>표 14. 전시 23 — 시장 내재 경로 연도별 가치 창출 ($M)</caption>
+<thead><tr><th>FY</th><th class="num">매출</th><th class="num">성장</th><th class="num">EBITA</th><th class="num">마진</th><th class="num">NOPAT</th><th class="num">투자</th><th class="num">FCF</th><th class="num">현재가치</th></tr></thead>
+<tbody>
+<tr><td>2027</td><td class="num">1,350</td><td class="num">+25%</td><td class="num">284</td><td class="num">21%</td><td class="num">224</td><td class="num">115</td><td class="num">109</td><td class="num">102</td></tr>
+<tr><td>2028</td><td class="num">1,512</td><td class="num">+12%</td><td class="num">302</td><td class="num">20%</td><td class="num">239</td><td class="num">86</td><td class="num">152</td><td class="num">128</td></tr>
+<tr><td>2029</td><td class="num">1,693</td><td class="num">+12%</td><td class="num">339</td><td class="num">20%</td><td class="num">268</td><td class="num">97</td><td class="num">171</td><td class="num">129</td></tr>
+<tr><td>2030</td><td class="num">1,897</td><td class="num">+12%</td><td class="num">379</td><td class="num">20%</td><td class="num">300</td><td class="num">108</td><td class="num">191</td><td class="num">131</td></tr>
+<tr><td>2031</td><td class="num">2,124</td><td class="num">+12%</td><td class="num">425</td><td class="num">20%</td><td class="num">336</td><td class="num">121</td><td class="num">214</td><td class="num">132</td></tr>
+<tr><td>2032</td><td class="num">2,379</td><td class="num">+12%</td><td class="num">476</td><td class="num">20%</td><td class="num">376</td><td class="num">136</td><td class="num">240</td><td class="num">134</td></tr>
+<tr><td>2033</td><td class="num">2,665</td><td class="num">+12%</td><td class="num">533</td><td class="num">20%</td><td class="num">421</td><td class="num">152</td><td class="num">269</td><td class="num">135</td></tr>
+<tr><td>2034</td><td class="num">2,984</td><td class="num">+12%</td><td class="num">597</td><td class="num">20%</td><td class="num">472</td><td class="num">171</td><td class="num">301</td><td class="num">136</td></tr>
+<tr><td>2035</td><td class="num">3,343</td><td class="num">+12%</td><td class="num">669</td><td class="num">20%</td><td class="num">528</td><td class="num">191</td><td class="num">337</td><td class="num">138</td></tr>
+<tr><td>2036</td><td class="num">3,744</td><td class="num">+12%</td><td class="num">749</td><td class="num">20%</td><td class="num">591</td><td class="num">214</td><td class="num">378</td><td class="num">139</td></tr>
+<tr><td>2037</td><td class="num">4,193</td><td class="num">+12%</td><td class="num">839</td><td class="num">20%</td><td class="num">662</td><td class="num">240</td><td class="num">423</td><td class="num">141</td></tr>
+<tr><td>2038</td><td class="num">4,696</td><td class="num">+12%</td><td class="num">939</td><td class="num">20%</td><td class="num">742</td><td class="num">268</td><td class="num">474</td><td class="num">142</td></tr>
+<tr><td>2039</td><td class="num">5,260</td><td class="num">+12%</td><td class="num">1,052</td><td class="num">20%</td><td class="num">831</td><td class="num">301</td><td class="num">530</td><td class="num">144</td></tr>
+<tr><td>2040</td><td class="num">5,891</td><td class="num">+12%</td><td class="num">1,178</td><td class="num">20%</td><td class="num">931</td><td class="num">337</td><td class="num">594</td><td class="num">145</td></tr>
+<tr><td>2041</td><td class="num">6,598</td><td class="num">+12%</td><td class="num">1,320</td><td class="num">20%</td><td class="num">1,042</td><td class="num">377</td><td class="num">665</td><td class="num">147</td></tr>
+<tr><td>2042</td><td class="num">7,389</td><td class="num">+12%</td><td class="num">1,478</td><td class="num">20%</td><td class="num">1,168</td><td class="num">422</td><td class="num">745</td><td class="num">148</td></tr>
+<tr><td>2043</td><td class="num">8,276</td><td class="num">+12%</td><td class="num">1,655</td><td class="num">20%</td><td class="num">1,308</td><td class="num">473</td><td class="num">835</td><td class="num">150</td></tr>
+<tr><td>2044</td><td class="num">9,269</td><td class="num">+12%</td><td class="num">1,854</td><td class="num">20%</td><td class="num">1,465</td><td class="num">530</td><td class="num">935</td><td class="num">151</td></tr>
+<tr class="total"><td colspan="7">FCF 현재가치 합 2,470 + 페이드 터미널 현재가치 2,412 + 순현금 448</td><td class="num">= 5,330</td></tr>
+<tr class="hl"><td colspan="7">÷ 희석주식수 53.1M → 주당 가치</td><td class="num">$100.4 ≈ 현재가(+1.4%)</td></tr>
+</tbody></table></div>
+<p>이 표의 용도는 예측이 아니라 <strong>거울</strong>이다 — $99.02를 지불하는 투자자는 (본인이 의식하든 아니든) FY2044 매출 $93억, 즉 역대 최고치의 6.1배에 도달하는 약 18년짜리 복리 성장을 사고 있다. 참고로 보수적 앵커인 <strong>정체상태 가치</strong>(FY26 NOPAT $1.41억 영구 유지)는 주당 <strong>$32.9</strong>에 불과해, 시가총액의 67%가 미래 성장가치(PVGO)다. §10에서 이 기대의 합리성을 판정한다.</p>
+</section>
+
+<section id="s10">
+<h2><span class="no">10</span>시장 내재 CAP 역산 및 해석 — $99.02가 요구하는 것</h2>
+<div class="lead">핵심 발견: <strong>합리적 중도(평균회귀) 가정으로는 현재 주가에 도달할 수 있는 CAP가 존재하지 않는다.</strong> 시장은 페이드 가정 자체를 기각하고 구조적 강세 경로를 가격에 반영 중이며, 그 경로(마진 20%·성장 12%)를 인정할 때의 내재 CAP는 약 <strong>17.6년</strong> — 프레임워크 기준 '낙관 구간(15~20년)'에 해당한다.</div>
+
+<h3>10-1. 세 개의 눈금: 정체 $33 → 기본 $62 → 시장 $99</h3>
+<p>가장 보수적인 눈금인 <strong>정체상태 가치</strong>(FY26E NOPAT $1.41억을 성장 없이 영구 유지, k=10.84%)는 순현금 포함 주당 <strong>$32.9</strong>다 — 즉 시가총액의 <strong>67%가 미래 성장에 대한 지불(PVGO)</strong>이다. 다음 눈금인 <strong>기본 경로</strong>(FY27 +16%·마진 19%, 이후 사이클 평균 성장 +8%·통과사이클 마진 17%)는 CAP를 10년 주면 $48, 30년을 다 줘도 <strong>$62.3</strong>에 그친다. 반도체 장비의 역사적 평균회귀(페이드 0.25)를 존중하는 한, 현재가 $99.02는 <strong>어떤 CAP로도 정당화되지 않는다</strong> — 이것이 이 분석의 첫 번째 결론이다.</p>
+
+<div class="twrap"><table>
+<caption>표 15. 역산 ①: CAP를 고정하면 어떤 성장이 필요한가 (ROIIC 30%, 페이드 터미널)</caption>
+<thead><tr><th class="num">CAP 고정</th><th class="num">필요 NOPAT 성장률 (연)</th><th>해석</th></tr></thead>
+<tbody>
+<tr><td class="num">10년</td><td class="num">20.2%</td><td>10년간 이익 6.3배 — 역사상 최상위 분위 성장의 지속 요구</td></tr>
+<tr class="hl"><td class="num">15년</td><td class="num">15.1%</td><td>15년간 이익 8.2배 — "3년 연속 20%+ 성장 기업 중 다음 3년도 유지하는 비율은 소수"라는 베이스레이트와 대조</td></tr>
+<tr><td class="num">20년</td><td class="num">12.7%</td><td>20년간 이익 10.9배</td></tr>
+<tr><td class="num">25년</td><td class="num">11.3%</td><td>25년간 이익 14.5배</td></tr>
+</tbody></table></div>
+
+<div class="twrap"><table>
+<caption>표 16. 역산 ②: 운영 경로를 고정하면 내재 CAP는 몇 년인가</caption>
+<thead><tr><th>경로 (FY27 / 이후 지속)</th><th class="num">CAP 10년 가치</th><th class="num">CAP 15년</th><th class="num">CAP 20년</th><th class="num">내재 CAP (= $99.02 도달)</th></tr></thead>
+<tbody>
+<tr><td>약세: +5%·13% / +2%·12%</td><td class="num">$25.5</td><td class="num">$25.1</td><td class="num">—</td><td class="num">도달 불가</td></tr>
+<tr><td>기본: +16%·19% / +8%·17%</td><td class="num">$48.2</td><td class="num">$52.4</td><td class="num">$56.1</td><td class="num">도달 불가 (30년 $62.3)</td></tr>
+<tr><td>강세A: +25%·21% / +10%·20%</td><td class="num">$67</td><td class="num">$77</td><td class="num">$87</td><td class="num">26.6년</td></tr>
+<tr class="hl"><td><strong>강세B: +25%·21% / +12%·20%</strong></td><td class="num">$75</td><td class="num">$91</td><td class="num">$107</td><td class="num"><strong>17.6년 = 시장 내재 경로</strong></td></tr>
+<tr><td>강세C: +30%·22% / +14%·21%</td><td class="num">$92</td><td class="num">$118</td><td class="num">$148</td><td class="num">11.5년</td></tr>
+</tbody></table></div>
+
+<figure>
+<div class="fig-t">그림 11. 가치 사다리 — 기본 경로는 현재가에 닿지 않고, 강세 경로는 17년째에 닿는다</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="100" y1="420" x2="940" y2="420"/>
+    <line x1="100" y1="332" x2="940" y2="332" stroke-dasharray="4 4"/>
+    <line x1="100" y1="245" x2="940" y2="245" stroke-dasharray="4 4"/>
+    <line x1="100" y1="157" x2="940" y2="157" stroke-dasharray="4 4"/>
+    <line x1="100" y1="69" x2="940" y2="69" stroke-dasharray="4 4"/>
+  </g>
+  <g font-size="11.5" fill="#718096">
+    <text x="92" y="424" text-anchor="end">$20</text>
+    <text x="92" y="336" text-anchor="end">$50</text>
+    <text x="92" y="249" text-anchor="end">$80</text>
+    <text x="92" y="161" text-anchor="end">$110</text>
+    <text x="92" y="73" text-anchor="end">$140</text>
+    <text x="100" y="442" text-anchor="middle">3</text>
+    <text x="318" y="442" text-anchor="middle">10</text>
+    <text x="473" y="442" text-anchor="middle">15</text>
+    <text x="629" y="442" text-anchor="middle">20</text>
+    <text x="784" y="442" text-anchor="middle">25</text>
+    <text x="940" y="442" text-anchor="middle">30년</text>
+    <text x="520" y="464" text-anchor="middle" font-size="12">경쟁우위기간 CAP (년)</text>
+  </g>
+  <line x1="100" y1="189" x2="940" y2="189" stroke="#DC2626" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="905" y="180" font-size="12" font-weight="800" fill="#DC2626">현재가 $99.02</text>
+  <polyline points="100,358 162,352 224,346 318,338 380,333 473,325 567,319 629,314 784,305 940,296" fill="none" stroke="#64748B" stroke-width="2.5"/>
+  <polyline points="100,320 162,304 224,286 318,260 380,242 473,214 567,185 629,165 784,114 940,60" fill="none" stroke="#2563EB" stroke-width="3"/>
+  <circle cx="554" cy="189" r="7" fill="#2563EB" stroke="#FFFFFF" stroke-width="2"/>
+  <text x="554" y="217" text-anchor="middle" font-size="12.5" font-weight="800" fill="#1E3A8A">내재 CAP ≈ 17.6년</text>
+  <text x="880" y="280" text-anchor="end" font-size="12" fill="#64748B" font-weight="700">기본 경로 — 도달 불가</text>
+</svg>
+<div class="legend">
+  <div class="li"><span class="sw" style="background:#2563EB"></span>강세B(시장 내재) 경로: FY27 +25%·21% → +12%·20%</div>
+  <div class="li"><span class="sw" style="background:#64748B"></span>기본 경로: FY27 +16%·19% → +8%·17%</div>
+  <div class="li"><span class="sw" style="background:#DC2626"></span>현재 주가</div>
+</div>
+</div>
+<figcaption>그림 11. CAP별 주당가치 (k=10.84%, f=0.25, 연중 할인) | 출처: 본 보고서 DCF 모델 산출</figcaption>
+</figure>
+
+<figure>
+<div class="fig-t">그림 12. 밸류에이션 레인지(풋볼 필드) — 현재가는 강세A와 강세B 사이에 서 있다</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="120" y1="480" x2="120" y2="40" />
+    <line x1="309" y1="480" x2="309" y2="40" stroke-dasharray="4 4"/>
+    <line x1="499" y1="480" x2="499" y2="40" stroke-dasharray="4 4"/>
+    <line x1="688" y1="480" x2="688" y2="40" stroke-dasharray="4 4"/>
+    <line x1="877" y1="480" x2="877" y2="40" stroke-dasharray="4 4"/>
+  </g>
+  <g font-size="11.5" fill="#718096">
+    <text x="120" y="500" text-anchor="middle">$20</text>
+    <text x="309" y="500" text-anchor="middle">$50</text>
+    <text x="499" y="500" text-anchor="middle">$80</text>
+    <text x="688" y="500" text-anchor="middle">$110</text>
+    <text x="877" y="500" text-anchor="middle">$140</text>
+  </g>
+  <g font-size="12.5" fill="#1A202C">
+    <text x="112" y="92" text-anchor="end">정체상태 (성장 0)</text>
+    <text x="112" y="152" text-anchor="end">약세 경로</text>
+    <text x="112" y="212" text-anchor="end">기본 (CAP 10~30)</text>
+    <text x="112" y="272" text-anchor="end">강세A (CAP 10~20)</text>
+    <text x="112" y="332" text-anchor="end">강세B (CAP 10~20)</text>
+    <text x="112" y="392" text-anchor="end">강세C (CAP 10~20)</text>
+    <text x="112" y="452" text-anchor="end">애널리스트 PT</text>
+  </g>
+  <rect x="196" y="70" width="12" height="34" rx="4" fill="#64748B"/>
+  <rect x="152" y="130" width="7" height="34" rx="3" fill="#DC2626"/>
+  <rect x="298" y="190" width="89" height="34" rx="6" fill="#64748B" opacity="0.85"/>
+  <rect x="417" y="250" width="126" height="34" rx="6" fill="#0891B2" opacity="0.85"/>
+  <rect x="467" y="310" width="202" height="34" rx="6" fill="#2563EB" opacity="0.9"/>
+  <rect x="574" y="370" width="353" height="34" rx="6" fill="#7C3AED" opacity="0.8"/>
+  <rect x="593" y="430" width="63" height="34" rx="6" fill="#B7791F" opacity="0.8"/>
+  <g font-size="11.5" font-weight="700" fill="#1A202C">
+    <text x="216" y="92">$33</text>
+    <text x="167" y="152">$25~26</text>
+    <text x="288" y="212" text-anchor="end">$48</text>
+    <text x="395" y="212">$62</text>
+    <text x="408" y="272" text-anchor="end">$67</text>
+    <text x="551" y="272">$87</text>
+    <text x="458" y="332" text-anchor="end">$75</text>
+    <text x="677" y="332">$107</text>
+    <text x="565" y="392" text-anchor="end">$92</text>
+    <text x="935" y="392">$148</text>
+    <text x="584" y="452" text-anchor="end">$95</text>
+    <text x="664" y="452">$105</text>
+  </g>
+  <line x1="619" y1="40" x2="619" y2="480" stroke="#DC2626" stroke-width="2.5"/>
+  <text x="619" y="30" text-anchor="middle" font-size="12.5" font-weight="800" fill="#DC2626">현재가 $99.02</text>
+</svg>
+</div>
+<figcaption>그림 12. 표 16의 경로별 가치 범위 + 애널리스트 목표주가 범위($95~105, 3명) | 출처: 본 모델·컨센서스</figcaption>
+</figure>
+
+<h3>10-2. 민감도 — 기본 경로는 어떤 조합에서도 부족하다</h3>
+<div class="twrap"><table>
+<caption>표 17. 민감도 히트맵: 주당가치 (CAP 15년 고정, 통과사이클 마진 17%, 할인율 × 지속 성장률)</caption>
+<thead><tr><th>할인율 k \ 성장률</th><th class="num">+5%</th><th class="num">+8%</th><th class="num">+11%</th><th class="num">+14%</th></tr></thead>
+<tbody>
+<tr><td>9.84% (−1%p)</td><td class="num" style="background:#FEF2F2;color:#991B1B">$45</td><td class="num" style="background:#FEF2F2;color:#991B1B">$56</td><td class="num" style="background:#FFFBEB;color:#92400E">$73</td><td class="num" style="background:#ECFDF5;color:#065F46;font-weight:700">$96</td></tr>
+<tr><td>10.84% (기준)</td><td class="num" style="background:#FEF2F2;color:#991B1B">$40</td><td class="num" style="background:#FEF2F2;color:#991B1B">$50</td><td class="num" style="background:#FEF2F2;color:#991B1B">$63</td><td class="num" style="background:#FFFBEB;color:#92400E">$82</td></tr>
+<tr><td>11.84% (+1%p)</td><td class="num" style="background:#FEF2F2;color:#991B1B">$37</td><td class="num" style="background:#FEF2F2;color:#991B1B">$45</td><td class="num" style="background:#FEF2F2;color:#991B1B">$55</td><td class="num" style="background:#FFFBEB;color:#92400E">$71</td></tr>
+</tbody></table></div>
+<p>붉은 칸은 현재가의 3분의 2에도 못 미치는 조합이다. 통과사이클 마진 17%를 전제하는 한, <strong>할인율을 1%p 낮추고 성장률을 14%까지 끌어올려야 겨우 $96</strong>에 닿는다 — 현재가 정당화의 무게중심이 성장률이 아니라 <strong>"마진 20%가 구조적 뉴노멀인가"</strong>에 있음을 보여준다(표 16의 강세 경로들이 모두 마진 20%+를 전제하는 이유). 페이드 비율 민감도는 방향이 같다: f를 0.20으로 완화하면 터미널이 소폭 커지지만 기본 경로 기준 주당 +$2~3 수준 <span class="bd bd-drv">파생</span>, 결론을 바꾸지 못한다.</p>
+
+<div class="co co-warn"><div class="ct">CAP 판정 — 프레임워크 해석표 적용</div>
+<p>내재 CAP 17.6년(강세 운영 가정 전제)은 해석 기준상 <strong>'15~20년: 다소 낙관적 — 강력한 해자 근거가 있어야 정당화'</strong> 구간이다. §6의 질적 판정(정당화 가능 CAP 10~15년)을 웃돌고, 그마저도 마진 20%·성장 12%라는 공격적 운영 가정 위에서의 17년이므로 <strong>실질 기대 강도는 표기된 숫자 이상</strong>이다. 균형을 위해 반대편도 명확히 하면: ① 7/1 고점 $133.81은 같은 방법으로 내재 CAP 약 27~28년에 해당했으므로, 현 주가는 이미 상당한 기대 축소를 반영했다 <span class="bd bd-drv">파생</span>. ② 강세 경로의 재료(TCB $4억 캐파, 메모리 타이트 2027년 지속 전망, HBM·HBF 옵션)는 허구가 아니라 진행 중인 실물이다. ③ 강세C(슈퍼사이클 연장+TCB 완전 성공)가 실현되면 내재 CAP는 11.5년으로 '합리 구간'에 들어온다 — 즉 <strong>현재가는 "강세 시나리오가 기본 시나리오가 되어야 하는 가격"</strong>이며, 8/5와 11월 가이던스가 그 판정 이벤트다.</p></div>
+</section>
+
+<section id="s11">
+<h2><span class="no">11</span>투자 논거 — Bull Case: 가치 창출의 세 엔진</h2>
+<div class="lead">Bull의 뼈대는 "사이클이 아니라 구조"라는 주장이다: AI가 만든 메모리 수요는 일시적 가격 랠리가 아니라 <strong>비트 수요의 층위 이동</strong>이고, TCB는 사이클 위에 얹히는 <strong>영구적 믹스 개선</strong>이며, 그 사이 회사는 순현금과 환원으로 주식 수를 줄여왔다.</div>
+<p><strong>엔진 1 — 메모리 슈퍼사이클의 구조성.</strong> 이번 사이클의 원천은 AI 데이터센터의 저장 수요다: 학습·추론 데이터가 eSSD로 쏟아지며 2026년 1분기 계약가는 DRAM +90~95%·NAND +55~60%(TrendForce)로 치솟았고, 공급 부족은 "2027년 깊숙이까지" 이어진다는 전망(Omdia <span class="bd bd-est">추정: 귀속 미확인</span>)이 나와 있다. 볼 본더 관점의 핵심은 가격이 아니라 <strong>물리량</strong>이다 — NAND 적층 단수가 높아질수록, eSSD 패키지가 늘어날수록 와이어 본딩 스텝 수 자체가 증가한다. 메모리 볼 본더 가동률 85%+, 중국 90%+에서의 증설은 이미 시작됐고(DRAM capex 2026 +14%), K&amp;S는 이 증설의 사실상 독점 공급자군(점유 60%+)이다. 경쟁사가 못 따라오는 이유는 단순하다: 오버행 본딩·구리 레시피의 15년 축적을 지금 시작해서는 이번 사이클 안에 퀄을 통과할 수 없다.</p>
+<p><strong>엔진 2 — TCB $4억, 사이클 위의 구조 성장.</strong> capex를 $12M→$20~24M로 배로 늘려 짓는 TCB 캐파(연매출 $4억 지원, FY27 초 완공)는 현 TCB 매출($1억+)의 4배 규모다. 이 투자는 수요 확신 없이는 집행되지 않는 성격이며, 실제로 뒤에는 선단 IDM 양산, 세계 선도 파운드리 수주(2024-11), OSAT·CPO 확산, 필드 120대의 레퍼런스가 있다. 플럭스리스라는 기술 노선의 선점(양산 기준 경쟁 부재 주장, 격차 2~3년 <span class="bd bd-est">추정</span>)에 더해, 최대 위협인 하이브리드 본딩의 대량 채택이 지연되며(2026-07 보도) <strong>TCB의 수확기가 늘어났다</strong>. TCB가 캐파를 채우면 증분 영업이익 $1.0~1.3억 <span class="bd bd-drv">파생</span> — FY26E 전사 영업이익의 55~75%를 위에 얹는 규모이고, 매출 믹스에서 TCB가 30%대로 올라서는 순간 §7의 '서사 순도' 재분류(멀티플 리레이팅)가 산술적으로 가능해진다.</p>
+<p><strong>엔진 3 — 재무 체력과 주주환원의 복리.</strong> 순현금 $4.48억(주당 $8.4), 5년 환원 $8.24억(FCF의 93%), 주식 수 −17%. 다운사이클 3년 내내 배당과 자사주를 지속한 트랙 레코드는 "사이클 바닥에서도 주주가치가 깎이지 않는다"는 신뢰를 만들었고, 자산경량 구조(투하자본 ~$4억)는 업사이클 ROIC를 34%로 증폭한다. 여기에 HBM 퀄→PO, HBF(2H26 샘플), CPO 확산이라는 <strong>세 개의 무료에 가까운 콜옵션</strong>이 얹혀 있다 — 어느 하나만 열려도 강세C 경로(내재 CAP 11.5년, 합리 구간)의 문이 열린다.</p>
+</section>
+
+<section id="s12">
+<h2><span class="no">12</span>리스크 — Bear Case: 여섯 개의 균열과 반영 정도</h2>
+<div class="lead">Bear의 뼈대는 "이번에도 다르지 않다"는 역사다: 이 회사 매출은 FY2022→FY2023 한 해에 −50.6%였다. 각 리스크가 <strong>이미 주가에 얼마나 반영됐는지</strong>를 함께 판정한다.</div>
+<div class="twrap"><table class="wide">
+<caption>표 18. Bear 리스크 목록 — 심각도와 가격 반영도</caption>
+<thead><tr><th>리스크</th><th>내용</th><th>심각도</th><th>주가 반영도 판정</th></tr></thead>
+<tbody>
+<tr><td>① 사이클 피크아웃</td><td>메모리 가격·capex가 꺾이면 볼 본더 주문은 급정지한다(FY23 −50.6% 전례). 7월 조정의 원인인 "AI 지출이 메모리 인상을 소화 못한다"는 의심이 현실화되는 경우</td><td><span class="bd bd-cfl">높음</span></td><td><strong>부분 반영</strong> — 고점比 −26%가 1차 반영. 그러나 내재 CAP 17.6년은 여전히 '피크 없음'을 전제 <span class="bd bd-drv">파생</span></td></tr>
+<tr><td>② 중국 집중 53.5%</td><td>후공정 장비로의 수출통제 확대, 또는 중국 성숙 본더 국산화 시 매출 절반 노출</td><td><span class="bd bd-cfl">높음</span></td><td><strong>미반영에 가까움</strong> — 현 랠리에서 시장이 사실상 무시 중. 헤드라인 리스크에 취약</td></tr>
+<tr><td>③ TCB 경쟁·캐파 소진 실패</td><td>HBM은 한미(71.2%)·SEMES·ASMPT의 기존 아성. $4억 캐파가 수주로 채워지지 않으면 과잉투자·마진 훼손</td><td><span class="bd bd-est">중</span></td><td><strong>부분 반영</strong> — HBM 기대는 아직 주가에 크게 실리지 않은 옵션 취급. 캐파 소진 실패는 미반영</td></tr>
+<tr><td>④ 하이브리드 본딩 대체</td><td>HBM5~6 세대부터 침투 시 TCB 상단 제한. BESI·한화의 로드맵 진행</td><td><span class="bd bd-est">중 (장기)</span></td><td><strong>부분 반영</strong> — 채택 지연 보도로 우려 완화된 상태. 조기 채택 뉴스가 나오면 재부상</td></tr>
+<tr><td>⑤ 거버넌스 공백·내부자 매도</td><td>영구 CEO 부재(서치 중), CFO 겸임 임시체제. Wong의 6월 고점 부근 6만 주 매도 — 2021-12 경영진 매도 후 1년 −13.7% 전례</td><td><span class="bd bd-est">중</span></td><td><strong>미반영</strong> — 시장 논의 자체가 적음. CEO 선임은 양방향 이벤트</td></tr>
+<tr><td>⑥ 밸류에이션 자체</td><td>§10: 강세 17년 선반영. 8/5 가이던스 미스 시 기본 경로 상한($62)까지 −37% 공간이 이론적으로 열림</td><td><span class="bd bd-cfl">높음</span></td><td><strong>정의상 미반영</strong> — 이것이 현 주가의 본질적 취약점</td></tr>
+</tbody></table></div>
+<p>정직한 총평: <strong>①과 ⑥이 결합된 시나리오</strong> — 메모리 모멘텀 둔화 신호와 함께 가이던스가 컨센서스를 하회하는 경우 — 가 최대 하방이며, 그 확률은 낮지 않다(사이클 산업의 기저율). 반대로 ②는 발생 확률은 불확실하나 발생 시 영구 손상형이라는 점에서 성격이 다르다 — 포지션 크기를 결정할 때는 ⑥(가격), 보유 여부를 결정할 때는 ②(구조)를 봐야 한다.</p>
+</section>
+
+<section id="s13">
+<h2><span class="no">13</span>SWOT 분석 — 종합 도식</h2>
+<div class="swot">
+  <div class="q s"><div class="qt">강점 (Strengths)</div>
+    <ul>
+      <li>와이어 본딩 점유 60%+ · 75년 레퍼런스 · 설치기반 락인(APS 24%)</li>
+      <li>플럭스리스 TCB 양산 선점 (필드 120대, 격차 2~3년 추정)</li>
+      <li>자산경량 — 업사이클 ROIC 34%, 순현금 $8.4/주</li>
+      <li>다운사이클에도 유지된 R&amp;D(매출의 20%)와 주주환원(FCF의 93%)</li>
+    </ul>
+  </div>
+  <div class="q w"><div class="qt">약점 (Weaknesses)</div>
+    <ul>
+      <li>매출 ~73%가 사이클 장비 — FY23 −50.6%의 진폭</li>
+      <li>중국 본사 고객 53.5% — 지역 집중</li>
+      <li>HBM TCB 레퍼런스 부재 (퀄 단계, 한국 3사에 후발)</li>
+      <li>영구 CEO 공백·CFO 겸임 임시체제, 본업 외 다각화 실패 이력</li>
+    </ul>
+  </div>
+  <div class="q o"><div class="qt">기회 (Opportunities)</div>
+    <ul>
+      <li>메모리 증설 사이클 — NAND 타이트 2027년까지 전망, DRAM capex +14%</li>
+      <li>TCB 캐파 $4억 소진 → 믹스 개선·멀티플 리레이팅 여지</li>
+      <li>HBM 3원화 국면의 '검증된 제3공급자' 틈새 + HBF·CPO·전고체 옵션</li>
+      <li>하이브리드 본딩 지연 = TCB 수확기 연장</li>
+    </ul>
+  </div>
+  <div class="q t"><div class="qt">위협 (Threats)</div>
+    <ul>
+      <li>메모리 가격 피크아웃 → capex 급감 (사이클 기저율)</li>
+      <li>미·중 수출통제의 후공정 확대, 중국 장비 국산화</li>
+      <li>하이브리드 본딩의 조기 대량 채택 (BESI·한화)</li>
+      <li>강세 17년을 선반영한 가격 자체 — 실망 시 하방 폭 큼</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<section id="s14">
+<h2><span class="no">14</span>경영진 및 자본 배분 — 트랙 레코드의 명암</h2>
+<div class="lead">지난 10년의 자본 배분 성적표는 <strong>"주주환원 A, 유기적 R&amp;D B+, M&amp;A C−"</strong>로 요약된다. 지금은 그 성적표를 쓴 CEO가 떠나고 임시체제가 사상 최대 확장 투자를 집행하는, 이례적 조합의 국면이다.</div>
+<p><strong>Fusen Chen 시대(2016~2025)의 유산.</strong> 인텔·어플라이드 출신의 Chen은 9년 재임 동안 두 개의 상반된 유산을 남겼다. 성공: 구리 본딩 지배력 유지, TCB·플럭스리스에 대한 반사이클 R&amp;D 투자(오늘의 APTURA·$4억 캐파의 씨앗), FY21~22 슈퍼사이클의 완벽한 수확(2년 영업이익 $8.8억). 실패: Project W(마이크로 LED 레이저 전사)와 EA(SMT) — 두 다각화의 동시 철수로 FY24~25에 걸쳐 대규모 손상을 인식했고, "본딩 밖에서는 이긴 적이 없다"는 이 회사의 오래된 패턴을 재확인시켰다. 2025년 10월 건강 사유 은퇴 발표(12/1부) 후 <strong>Lester Wong</strong>(법무·재무 출신 CFO)이 임시 CEO를 겸임 중이며, 이사회(의장 Peter Kong)가 내·외부 후보 서치를 진행하고 있다.</p>
+<p><strong>자본 배분의 숫자.</strong> 5년간 FCF $8.85억 중 $8.24억(93%)을 자사주($6.11억)와 배당($2.13억)으로 환원해 주식 수를 64M→53M(−17%)으로 줄였다 — 다운사이클 한복판에도 멈추지 않은 일관성이 핵심이다. 배당은 2018년 개시 후 매년 인상해 오다(집계 기준별 7~8년 <span class="bd bd-cfl">상충</span>) 현재 분기 $0.205에서 동결 상태로, 확장 capex(FY26 $20~24M)와의 균형을 택했다. M&amp;A는 소형·기술 인수(Orthodyne·AJA·Uniqarta) 위주였고 성패가 갈렸다. 인센티브 구조는 매출·이익 연동 성과급과 주식 보상(SBC 연 ~$29M, 매출의 2.7% — 본 DCF에 비용 반영)이며, 2026년 3월 주총에서 이사 선임·감사인·보수안이 승인됐고, 회사는 제조능력 확장과 배당·자사주 유지 방침을 밝혔다.</p>
+<div class="co co-warn"><div class="ct">주의 신호 — 내부자 매도와 임시체제의 조합</div>
+<p>Wong 임시 CEO는 6/18 <strong>60,000주를 평균 $121.71에 매도</strong>했다(사전계획 여부 불문 시점이 공교롭다). 직전 대형 경영진 매도(2021-12) 후 1년 수익률은 −13.7%였다. 여기에 사상 최대 캐파 투자를 영구 CEO 없이 집행 중이라는 구조가 겹친다 — CEO 선임 발표는 인물에 따라 상방(첨단 패키징 전문가 영입)과 하방(내부 승계로 현상 유지 해석) 어느 쪽으로도 작동할 수 있는 양방향 이벤트다.</p></div>
+</section>
+
+<section id="s15">
+<h2><span class="no">15</span>종합 판단 및 체크포인트</h2>
+<div class="lead">종합: K&amp;S는 <strong>"성숙 요새(와이어)의 현금 + 성장 교두보(TCB)의 옵션"</strong>이라는 드물게 좋은 사업 구조가, <strong>"강세 경로 17년"이라는 드물게 높은 기대치의 가격</strong>과 결합된 상태다. 사업의 방향은 위를 가리키고, 가격의 여유는 아래를 가리킨다 — 따라서 이 종목의 다음 1년은 방향 베팅이 아니라 <strong>기대치 대 실적의 격차 관리 게임</strong>이다.</div>
+<p>본 분석의 확신도를 명시하면: 사업·기술 우위의 실재(와이어 지배, FTC 선점)는 <span class="bd bd-conf">높음 ~85%</span>, FY26 가이던스 달성은 <span class="bd bd-conf">중상 ~70%</span>(수주 가시성 기반), 시장 내재 경로(마진 20%·성장 12%·17.6년)의 완주는 <span class="bd bd-conf">낮음 ~25%</span>(사이클 기저율·경쟁 구도 감안), 중국발 구조 리스크의 5년 내 현실화는 <span class="bd bd-conf">판단 유보(증거 불충분)</span>다. 새 증거로 판단이 바뀌는 지점: TCB 수주잔고가 캐파를 앞서 소진되면 강세C로 상향, 메모리 capex 하향 조정이 나오면 기본 경로로 하향.</p>
+<div class="twrap"><table>
+<caption>표 19. 모니터링 체크포인트 — 분기마다 이 표를 다시 채운다</caption>
+<thead><tr><th>지표</th><th>현재 값 (2026-07)</th><th>상향 신호</th><th>하향 신호</th></tr></thead>
+<tbody>
+<tr><td>분기 매출·가이던스</td><td class="num">Q2 $242.6M / Q3 가이드 $310M±20</td><td>Q3 상단 + Q4 가이드 $325M+</td><td>Q3 하단 미달 또는 Q4 가이드 QoQ 감소</td></tr>
+<tr><td>TCB 매출·수주</td><td class="num">FY26 &gt;$100M (연 +70%+)</td><td>FY27 가이드에서 $2억대 제시</td><td>캐파 완공에도 수주 코멘트 부재</td></tr>
+<tr><td>메모리 가동률·capex</td><td class="num">볼본더 85%+, 중국 90%+</td><td>DRAM·NAND capex 추가 상향</td><td>메모리 계약가 하락 전환, capex 삭감</td></tr>
+<tr><td>총마진</td><td class="num">49.3% (Q2)</td><td>50%+ 안착 (TCB 믹스)</td><td>47% 이하 (가격 경쟁 신호)</td></tr>
+<tr><td>HBM·HBF 진전</td><td class="num">퀄 중 / 표준화 킥오프</td><td>첫 PO 공시, HBF 샘플 참여 확인</td><td>퀄 종료 무소식 1년 경과</td></tr>
+<tr><td>중국 비중·규제</td><td class="num">매출 53.5%</td><td>비중 하락하며 총매출 성장</td><td>후공정 수출통제 확대 보도</td></tr>
+<tr><td>거버넌스</td><td class="num">임시 CEO(CFO 겸임)</td><td>외부 첨단패키징 전문가 CEO 선임</td><td>추가 내부자 매도, 서치 장기화</td></tr>
+<tr><td>내재 CAP (본 모델 갱신)</td><td class="num">≈17.6년 (강세 경로 전제)</td><td>실적 상향으로 동일 주가의 내재 CAP 단축</td><td>주가 재상승만으로 CAP 20년+ 재진입</td></tr>
+</tbody></table></div>
+<h3>한계와 가정 — 이 보고서가 틀릴 수 있는 방식</h3>
+<p>① FY26E 매출 $1,080M은 가이던스 합산 파생치로, 8/5 실적에 따라 즉시 수정되어야 한다. ② 시장 내재 경로는 유일해가 아니다 — 같은 $99.02를 "더 높은 마진 × 더 짧은 CAP"(강세C·11.5년)로도, "더 낮은 할인율"로도 설명할 수 있으며, 본 보고서는 페이드 0.25·k 10.84%라는 특정 좌표계의 역산임을 명시한다. ③ 피어 밸류에이션 다수가 [추정]·[파생]이며 한미반도체 재무는 특히 불확실하다. ④ 주가 곡선의 월중 값은 보간 근사다. ⑤ TCB·HBM 관련 고객명(인텔·TSMC·마이크론)은 업계 통설 기반 추정으로 회사가 확인한 바 없다. ⑥ 중국 규제는 모델링 불가능한 이산 리스크로, 어떤 시나리오 가치에도 정량 반영되지 않았다. ⑦ 베타는 소스 간 상충(1.63~1.76)하며 Blume 조정 선택이 결과에 ±$3~4 영향을 준다 <span class="bd bd-drv">파생</span>. ⑧ 기준 주가는 확정 종가인 2026-07-16 $99.02이며, 7/17 종가는 작성 시점에 1차 소스에서 미집계였다(장중 $95.6~99.2 관측) — 확정 시 밸류에이션 파생치는 ±2% 내에서 변동한다. 본 보고서는 투자 추천이 아니라 의사결정을 위한 정보·분석 자료다.</p>
+</section>
+
+<div class="foot">
+<p><strong>Kulicke &amp; Soffa Industries (NASDAQ: KLIC) 기업분석 보고서</strong> · 기준일 2026-07-19 (주가는 2026-07-16 종가 — 직전 확정치, 금리는 07-17 종가)</p>
+<p>주요 출처: 회사 10-K(FY2025)·10-Q·실적 발표 및 콘퍼런스콜(Q1·Q2 FY26)·보도자료·IR 자료(investor.kns.com), SEC 공시, Yole Group, TrendForce, TechInsights, Omdia, Damodaran(ERP 2026-07), 미 국채 수익률(2026-07-17), Needham·DBS 등 애널리스트 코멘트, 국내외 언론(반도체 전문지·한국 매체 포함). 데이터 계보: <span class="bd bd-est">추정</span> 2차 자료·업계 통설 기반, <span class="bd bd-drv">파생</span> 공시 수치의 계산 가공, <span class="bd bd-cfl">상충</span> 출처 간 불일치(본문에 범위 병기). 모든 차트 수치는 본문 표와 일치하며, 근사 보간 사용 시 캡션에 명시했다.</p>
+<p>본 자료는 정보 제공 목적이며 특정 증권의 매수·매도 권유가 아니다. 사이클 산업 특성상 수치와 판단은 분기 단위로 재검토되어야 한다.</p>
+</div>
+</div>
+</body>
+</html>
