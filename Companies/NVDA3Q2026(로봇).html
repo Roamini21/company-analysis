@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NVIDIA 로봇 부문 심층 분석 — 차기 수익 모델 해부 (2026-07)</title>
+<style>
+/* ===== 보고서 UI 통일 시스템 v1 — 수정 금지 ===== */
+:root{
+  --bg-page:#FFFFFF; --bg-soft:#F6F8FA;
+  --brand:#0F2B46; --brand-2:#1E4265;
+  --ink:#1A202C; --ink-2:#4A5568; --ink-3:#718096;
+  --line:#E2E8F0; --line-2:#CBD5E1;
+  --accent:#2563EB; --accent-soft:#EFF6FF;
+  --pos:#047857; --pos-soft:#ECFDF5;
+  --neg:#DC2626; --neg-soft:#FEF2F2;
+  --warn:#B45309; --warn-soft:#FFFBEB;
+  --gold:#B7791F; --gold-soft:#FEF3C7;
+  --c1:#2563EB; --c2:#7C3AED; --c3:#059669; --c4:#D97706;
+  --c5:#DC2626; --c6:#0891B2; --c7:#DB2777; --c8:#64748B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+    "Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  background:var(--bg-page); color:var(--ink);
+  font-size:15px; line-height:1.7; word-break:keep-all;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px 80px;}
+p{margin:0 0 12px; color:var(--ink);}
+strong{color:var(--ink);font-weight:700;}
+a{color:var(--accent);text-decoration:none;}
+ul,ol{margin:0 0 12px 22px;} li{margin:4px 0;color:var(--ink);}
+
+/* --- 표지 밴드 (어두운 배경 허용 위치 1) --- */
+/* 배경은 전체 폭, 좌우 패딩 계산식이 내용을 본문(.wrap)과 같은 1040px
+   중앙선에 자동 정렬한다. 내부 래퍼 div가 전혀 필요 없다 — 이 패딩
+   공식을 절대 단순 숫자(예: 32px)로 바꾸지 말 것. */
+.cover{background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  color:#FFFFFF;padding:44px max(28px,calc((100% - 1040px)/2 + 28px));
+  border-radius:0 0 18px 18px;margin-bottom:36px;}
+.cover h1{font-size:27px;font-weight:800;color:#FFFFFF;margin:6px 0 10px;}
+.cover .sub{color:#C9D6E4;font-size:14px;}
+.cover .meta{color:#9FB3C8;font-size:12.5px;margin-top:14px;}
+.cover .kpis{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+.cover .kpi{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);
+  border-radius:10px;padding:10px 14px;min-width:130px;}
+.cover .kpi .k{font-size:11.5px;color:#9FB3C8;}
+.cover .kpi .v{font-size:18px;font-weight:800;color:#FFFFFF;}
+.cover .kpi .v.up{color:#6EE7B7;} .cover .kpi .v.down{color:#FCA5A5;}
+
+/* --- 목차 --- */
+.toc{background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;
+  padding:18px 22px;margin:0 0 40px;}
+.toc .t{font-weight:800;color:var(--brand);font-size:14px;margin-bottom:10px;}
+.toc ol{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0;}
+.toc li{white-space:nowrap;font-size:13.5px;}
+.toc a{color:var(--ink-2);}
+
+/* --- 섹션 --- */
+section{margin:56px 0 0;}
+h2{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:800;
+  color:var(--brand);border-bottom:2px solid var(--brand);
+  padding-bottom:10px;margin:0 0 20px;}
+h2 .no{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:var(--brand);
+  color:#FFFFFF;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;}
+h3{font-size:16.5px;font-weight:700;color:var(--ink);margin:28px 0 12px;}
+.lead{font-size:15.5px;color:var(--ink);background:var(--accent-soft);
+  border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+  padding:14px 16px;margin:0 0 16px;}
+.lead *{color:var(--ink);}
+
+/* --- 콜아웃 (배경+글자색 자급) --- */
+.co{border-radius:10px;padding:16px 18px;margin:16px 0;border:1px solid;}
+.co .ct{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.co p,.co li{font-size:14px;margin-bottom:6px;}
+.co-key{background:var(--accent-soft);border-color:#BFDBFE;}
+.co-key,.co-key *{color:#1E3A8A;}
+.co-pos{background:var(--pos-soft);border-color:#A7F3D0;}
+.co-pos,.co-pos *{color:#065F46;}
+.co-neg{background:var(--neg-soft);border-color:#FECACA;}
+.co-neg,.co-neg *{color:#991B1B;}
+.co-warn{background:var(--warn-soft);border-color:#FDE68A;}
+.co-warn,.co-warn *{color:#92400E;}
+.co-note{background:var(--bg-soft);border-color:var(--line);}
+.co-note,.co-note *{color:var(--ink-2);}
+
+/* --- 배지 (데이터 계보·확신도) --- */
+.bd{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;
+  padding:2px 7px;vertical-align:1px;margin:0 2px;}
+.bd-est{background:var(--warn-soft);color:#92400E;border:1px solid #FDE68A;}
+.bd-drv{background:var(--accent-soft);color:#1E40AF;border:1px solid #BFDBFE;}
+.bd-cfl{background:var(--neg-soft);color:#991B1B;border:1px solid #FECACA;}
+.bd-conf{background:var(--bg-soft);color:var(--ink-2);border:1px solid var(--line-2);}
+
+/* --- KPI 카드 그리드 --- */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;margin:16px 0;}
+.kcard{background:#FFFFFF;border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;}
+.kcard .k{font-size:12px;color:var(--ink-3);}
+.kcard .v{font-size:20px;font-weight:800;color:var(--ink);margin-top:2px;}
+.kcard .v.up{color:var(--pos);} .kcard .v.down{color:var(--neg);}
+.kcard .d{font-size:11.5px;color:var(--ink-3);margin-top:2px;}
+
+/* --- 표 --- */
+.twrap{overflow-x:auto;margin:16px 0;border:1px solid var(--line);
+  border-radius:10px;
+  background:
+    linear-gradient(to right,#FFF 30%,rgba(255,255,255,0)),
+    linear-gradient(to left,#FFF 30%,rgba(255,255,255,0)) 100% 0,
+    radial-gradient(farthest-side at 0 50%,rgba(15,43,70,.14),transparent),
+    radial-gradient(farthest-side at 100% 50%,rgba(15,43,70,.14),transparent) 100% 0;
+  background-repeat:no-repeat;background-size:60px 100%,60px 100%,16px 100%,16px 100%;
+  background-attachment:local,local,scroll,scroll;}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:#FFFFFF;}
+caption{caption-side:top;text-align:left;font-weight:800;color:var(--brand);
+  font-size:14px;padding:12px 14px 8px;}
+th{background:var(--brand);color:#FFFFFF;font-weight:700;font-size:12.5px;
+  padding:10px 12px;text-align:left;white-space:nowrap;}
+td{padding:9px 12px;border-top:1px solid var(--line);color:var(--ink);
+  vertical-align:top;}
+tbody tr:nth-child(even) td{background:#F8FAFC;}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+td .up{color:var(--pos);font-weight:700;} td .down{color:var(--neg);font-weight:700;}
+tr.hl td{background:var(--gold-soft);color:#78350F;font-weight:700;}
+tr.total td{background:var(--accent-soft);color:#1E3A8A;font-weight:800;
+  border-top:2px solid var(--line-2);}
+.wide{min-width:860px;}
+
+/* --- 그림(figure) --- */
+figure{margin:24px 0;}
+.fig-t{font-weight:800;color:var(--ink);font-size:14.5px;margin-bottom:10px;}
+.fig-box{background:#FFFFFF;border:1px solid var(--line);border-radius:12px;
+  padding:16px;}
+figcaption{font-size:12px;color:var(--ink-3);margin-top:8px;line-height:1.6;}
+figure img{max-width:100%;height:auto;border-radius:8px;display:block;}
+svg{max-width:100%;height:auto;display:block;}
+svg text{font-family:inherit;}
+
+/* --- 범례 (차트 외부 HTML 범례) --- */
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 2px 0;}
+.legend .li{display:flex;align-items:center;gap:6px;font-size:12.5px;
+  color:var(--ink-2);white-space:nowrap;}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto;}
+
+/* --- 이벤트 마커 범례 표 (주가 차트용) --- */
+.evt{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px;}
+.evt td{padding:6px 10px;border-top:1px solid var(--line);color:var(--ink);}
+.evt .n{width:30px;font-weight:800;color:#FFFFFF;text-align:center;}
+.evt .n span{display:inline-block;width:20px;height:20px;line-height:20px;
+  border-radius:50%;background:var(--brand);font-size:11.5px;}
+.evt .up{color:var(--pos);font-weight:700;} .evt .down{color:var(--neg);font-weight:700;}
+
+/* --- Bull/Bear 2열 --- */
+.bb{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+.bb .col{border-radius:12px;padding:16px 18px;border:1px solid;}
+.bb .bull{background:var(--pos-soft);border-color:#A7F3D0;}
+.bb .bull,.bb .bull *{color:#065F46;}
+.bb .bear{background:var(--neg-soft);border-color:#FECACA;}
+.bb .bear,.bb .bear *{color:#991B1B;}
+.bb .ct{font-weight:800;font-size:14px;margin-bottom:8px;}
+
+/* --- SWOT 4분면 --- */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+.swot .q{border-radius:12px;padding:14px 16px;border:1px solid;}
+.swot .s{background:var(--pos-soft);border-color:#A7F3D0;} .swot .s,.swot .s *{color:#065F46;}
+.swot .w{background:var(--neg-soft);border-color:#FECACA;} .swot .w,.swot .w *{color:#991B1B;}
+.swot .o{background:var(--accent-soft);border-color:#BFDBFE;} .swot .o,.swot .o *{color:#1E3A8A;}
+.swot .t{background:var(--warn-soft);border-color:#FDE68A;} .swot .t,.swot .t *{color:#92400E;}
+.swot .qt{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.swot ul{margin:0 0 0 18px;} .swot li{font-size:13.5px;margin:3px 0;}
+
+/* --- 푸터 --- */
+.foot{margin-top:64px;border-top:1px solid var(--line);padding-top:16px;
+  font-size:12px;color:var(--ink-3);line-height:1.7;}
+
+/* --- 반응형 --- */
+@media (max-width:640px){
+  .wrap{padding:0 16px 60px;}
+  .cover{padding:30px 16px;} .cover h1{font-size:22px;}
+  .bb,.swot{grid-template-columns:1fr;}
+  h2{font-size:19px;}
+}
+@media print{
+  .cover{border-radius:0;} body{font-size:13px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="cover">
+  <div class="sub">부문 심층 분석 보고서 · NVIDIA(NASDAQ:NVDA) · 피지컬 AI / 로보틱스</div>
+  <h1>로봇 — 젠슨 황이 "AI 다음의 최대 기회"라 부르는 사업의 해부</h1>
+  <div class="kpis">
+    <div class="kpi"><div class="l">현재 로봇·오토 매출</div><div class="v">분기 ~$0.6B</div><div class="d">총매출의 약 1% (Q3 FY26)</div></div>
+    <div class="kpi"><div class="l">오토·로봇 세그 성장</div><div class="v">FY26 +39%</div><div class="d">분기 +72→+6%로 감속 후 재점화 대기</div></div>
+    <div class="kpi"><div class="l">TAM 전망 스펙트럼</div><div class="v">$38B~$5조</div><div class="d">GS 2035 vs MS 2050 <span style="opacity:.8">[상충]</span></div></div>
+    <div class="kpi"><div class="l">로봇 두뇌 가격</div><div class="v">$2,999</div><div class="d">Jetson T5000 모듈 (1,000개+)</div></div>
+    <div class="kpi"><div class="l">주가 반영도</div><div class="v">사실상 0</div><div class="d">컨센서스 미포함 — 무상 옵션 (§7)</div></div>
+  </div>
+  <div class="meta">기준일: 2026-07-20 · 본편 「NVDA 기업분석 2026-07」의 §4·§5-B를 확장하는 부문 보고서 · <span class="bd bd-est">추정</span> <span class="bd bd-drv">파생</span> <span class="bd bd-cfl">상충</span> 표기 사용</div>
+</div>
+
+<nav class="toc">
+  <div class="tt">목차</div>
+  <ul>
+    <li>1. 핵심 요약</li><li>2. 병목 — 물리 노동의 경제학</li><li>3. 수익 모델 — 3컴퓨터 전략</li><li>4. 기술 스택 해부</li><li>5. 트레이드오프·리스크</li><li>6. 두뇌 3층 대결표</li><li>7. 꿈 분석 (9항목)</li><li>8. 파급 지도·투자 함의</li>
+  </ul>
+</nav>
+
+<!-- ================= 1. 핵심 요약 ================= -->
+<section id="s1">
+<h2><span class="no">1</span>핵심 요약</h2>
+<div class="lead">한 문장 요약: NVIDIA의 로봇 사업은 "로봇을 파는 사업"이 아니라 <strong>세상의 모든 로봇 제조사에 두뇌(칩)·훈련장(시뮬레이션)·교과서(파운데이션 모델)를 파는 사업</strong>이며, 오늘 매출의 1%(분기 ~$6억)에 불과하지만 젠슨 황이 "AI 인프라 다음의 최대 성장 기회"로 지목한, 컨센서스 숫자에 사실상 반영되지 않은 무상 옵션이다.</div>
+<p>투자 함의 한 문장: 이 옵션의 가치는 "휴머노이드가 언제 팔리느냐"보다 <strong>"로봇 붐이 나기 전부터 NVIDIA가 3중으로 과금한다"</strong>는 구조에서 나온다 — ① 로봇 AI를 훈련하는 GPU는 이미 데이터센터 매출로 잡히고 있고, ② 시뮬레이션·데이터 팩토리 소프트웨어가 두 번째 층을 만들며, ③ 로봇 1대가 팔릴 때마다 $2,999짜리 두뇌 모듈이 세 번째 층으로 얹힌다. 즉 로봇 산업의 성패와 무관하게 <em>시도 자체가 매출</em>이 되는 곡괭이 장사 구조다.</p>
+<div class="co co-key"><div class="ct">이 보고서의 결론 미리보기</div>
+<p>① 현재 위치: 직접 매출은 FY26 연간 $2.35B(오토+로봇 합산, +39%)로 미미하며, 분기 성장률은 +72%→+6%로 감속했다 — 차량 기저효과 소진이 주인이고 로봇 물량 기여는 아직 반올림 수준이다. ② 수익 모델: '3컴퓨터 전략'(학습 DGX → 시뮬 Omniverse → 배포 Jetson)이 로봇 밸류체인의 세 관문에 모두 요금소를 세웠다. ③ 경쟁: 온보드 칩(Qualcomm·중국산)·모델(Google·π)·양쪽에서 도전이 시작됐지만, 세 층을 다 가진 곳은 NVIDIA뿐이다. ④ 꿈의 크기: 기관 전망은 2035년 $380억(GS)에서 2050년 $5조(MS)까지 두 자릿수 배 갈린다 <span class="bd bd-cfl">상충</span> — 이 분산 자체가 "아직 아무도 모른다"는 뜻이며, 그래서 주가에도 거의 안 들어가 있다. ⑤ 판정: <strong>기회 — 5년 내 P&amp;L 견인은 로보택시가, 10년 서사는 휴머노이드가 맡는 이중 구조</strong>이며, 본편 §10의 내재 CAP 14~23년을 정당화할 '제2 S커브'의 가장 유력한 후보다. 확신도는 §8에서 항목별로 제시한다.</p></div>
+</section>
+
+<!-- ================= 2. 병목 정의 ================= -->
+<section id="s2">
+<h2><span class="no">2</span>병목 정의 — 이 기술이 풀려는 문제와 그 크기</h2>
+<p><strong>문제 설정.</strong> 지난 4년의 AI가 '디지털 노동'(읽기·쓰기·코딩)을 자동화했다면, 남은 병목은 <strong>물리 노동</strong>이다 — 세계 GDP의 약 절반은 여전히 사람의 몸이 만든다. 문제의 크기를 세 겹으로 정량화하면: ① <strong>임금 총액</strong> — 글로벌 노동 보수는 연 수십조 달러 규모로, 제조·물류·건설·돌봄 등 육체노동 몫만 잘라도 연 $10조+ 급이다 <span class="bd bd-est">추정</span>. ② <strong>노동력 부족</strong> — G7과 중국의 생산가능인구가 동시에 줄어드는 사상 초유의 국면으로, 모건스탠리는 이를 휴머노이드 채택의 1번 동인으로 꼽는다. ③ <strong>기존 자동화의 한계</strong> — 산업용 로봇 팔은 '한 가지 일'만 하도록 프로그래밍되며, 작업이 바뀌면 재설치·재프로그래밍에 수개월이 든다. 사람 공간(계단·문·선반)에 그대로 투입 가능한 <em>범용</em> 기계는 아직 없다.</p>
+<p><strong>왜 지금인가 — 세 가지 전제의 동시 성숙.</strong> (a) 인터넷 규모 VLM(시각-언어 모델)이 충분히 강해져 로봇에게 '상식'을 이식할 수 있게 됐고, (b) 시뮬레이션·합성 데이터가 로봇 데이터 수집 비용을 붕괴시켰으며(엣지 AI 학습 데이터 중 합성 비중 20% → 2030년 90% 전망, Gartner), (c) 하드웨어 가격이 임계점을 뚫었다 — 중국산 휴머노이드 G1이 $13,500, 부품 원가는 서방의 3분의 1이다. 골드만삭스는 공장용 휴머노이드의 투자 회수 기간이 2026~27년에 2년에 도달한다고 계산한다 — <strong>"페이백 2년"은 기업 구매가 시작되는 관습적 임계값</strong>이다.</p>
+<p><strong>병목의 소유자가 가져갈 몫.</strong> LLM 시대의 교훈은 명확하다: 병목(컴퓨트)을 쥔 자가 산업 이익의 최대 몫을 가져갔다. 로봇 시대의 병목은 두 가지 — <em>두뇌 반도체</em>와 <em>훈련 데이터·시뮬레이션</em> — 이며, NVIDIA의 로봇 전략은 이 둘을 동시에 선점하려는 시도다. 이하 §3이 그 과금 구조를, §4가 기술 실체를 해부한다.</p>
+</section>
+
+<!-- ================= 3. 수익 모델 ================= -->
+<section id="s3">
+<h2><span class="no">3</span>수익 모델 해부 — '3컴퓨터 전략'이라는 3중 요금소</h2>
+<div class="lead">핵심 구조: 로봇 하나가 세상에 나오려면 세 대의 컴퓨터를 거쳐야 한다 — <strong>훈련하는 컴퓨터(DGX), 연습하는 컴퓨터(Omniverse/OVX), 몸에 들어가는 컴퓨터(Jetson)</strong>. NVIDIA는 세 관문 모두에서 과금하며, 그중 첫 번째(훈련)는 이미 데이터센터 매출로 흘러 들어와 로봇 부문 숫자에 잡히지도 않는다. "로봇 매출 1%"라는 표면 숫자가 이 사업의 실체를 과소평가하게 만드는 이유다.</div>
+
+<figure>
+<div class="fig-t">3컴퓨터 전략 — 로봇 개발 생애주기의 세 관문과 과금 지점</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg">
+  <rect x="30" y="50" width="280" height="190" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+  <text x="170" y="82" text-anchor="middle" font-size="14" font-weight="800" fill="#1E3A8A">① 학습 — DGX / 클라우드 GPU</text>
+  <text x="170" y="108" text-anchor="middle" font-size="12" fill="#1E3A8A">GR00T·Cosmos 등 파운데이션 모델과</text>
+  <text x="170" y="127" text-anchor="middle" font-size="12" fill="#1E3A8A">각사 정책(policy)을 훈련</text>
+  <text x="170" y="153" text-anchor="middle" font-size="12" font-weight="700" fill="#1E40AF">과금: GPU 서버·클라우드 임대</text>
+  <text x="170" y="172" text-anchor="middle" font-size="12" fill="#1E40AF">회계상 데이터센터 매출로 인식</text>
+  <text x="170" y="198" text-anchor="middle" font-size="11.5" fill="#4A5568">고객 예: 로봇사 전원 + 데이터팩토리</text>
+  <text x="170" y="216" text-anchor="middle" font-size="11.5" fill="#4A5568">(Uber-NVIDIA 조인트 등)</text>
+  <rect x="360" y="50" width="280" height="190" rx="12" fill="#ECFDF5" stroke="#059669" stroke-width="2"/>
+  <text x="500" y="82" text-anchor="middle" font-size="14" font-weight="800" fill="#065F46">② 시뮬 — Omniverse / OVX</text>
+  <text x="500" y="108" text-anchor="middle" font-size="12" fill="#065F46">Isaac Sim·Lab에서 가상 훈련,</text>
+  <text x="500" y="127" text-anchor="middle" font-size="12" fill="#065F46">Cosmos로 합성 데이터 무한 생성</text>
+  <text x="500" y="153" text-anchor="middle" font-size="12" font-weight="700" fill="#047857">과금: OVX 서버 + SW 라이선스</text>
+  <text x="500" y="172" text-anchor="middle" font-size="12" fill="#047857">(Omniverse·AI Enterprise·GR00T 상용)</text>
+  <text x="500" y="198" text-anchor="middle" font-size="11.5" fill="#4A5568">합성 데이터 비중: 20% → 90%('30E)</text>
+  <text x="500" y="216" text-anchor="middle" font-size="11.5" fill="#4A5568">— 시뮬 수요는 구조적 증가</text>
+  <rect x="690" y="50" width="280" height="190" rx="12" fill="#FFF7ED" stroke="#D97706" stroke-width="2"/>
+  <text x="830" y="82" text-anchor="middle" font-size="14" font-weight="800" fill="#92400E">③ 배포 — Jetson (로봇의 몸속)</text>
+  <text x="830" y="108" text-anchor="middle" font-size="12" fill="#92400E">Thor T5000/T4000 온보드 추론,</text>
+  <text x="830" y="127" text-anchor="middle" font-size="12" fill="#92400E">차량은 DRIVE AGX Thor×2</text>
+  <text x="830" y="153" text-anchor="middle" font-size="12" font-weight="700" fill="#B45309">과금: 대당 모듈 $2,999 (T5000)</text>
+  <text x="830" y="172" text-anchor="middle" font-size="12" fill="#B45309">+ Halos 인증·Metropolis·유지 SW</text>
+  <text x="830" y="198" text-anchor="middle" font-size="11.5" fill="#4A5568">로봇이 팔릴수록 반복 — 물량 레버리지</text>
+  <text x="830" y="216" text-anchor="middle" font-size="11.5" fill="#4A5568">개발자 저변: Jetson 200만+</text>
+  <path d="M310 145 L360 145" stroke="#94A3B8" stroke-width="2.5"/>
+  <path d="M640 145 L690 145" stroke="#94A3B8" stroke-width="2.5"/>
+  <path d="M830 240 C830 300 500 320 240 300 C200 297 175 275 172 240" fill="none" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="500" y="292" text-anchor="middle" font-size="12" fill="#718096">현장 데이터가 다시 학습으로 — 플라이휠(점선). 세 관문 중 어디서 시작해도 나머지 둘로 이어지는 락인 구조</text>
+</svg>
+</div>
+<figcaption>그림 1. NVIDIA 3컴퓨터 전략과 과금 지점(본 보고서 작도). 근거: NVIDIA GTC 2026·CES 2026 발표, Jetson 가격 공시.</figcaption>
+</figure>
+
+<h3>3-1. 로봇 1대당 NVIDIA 콘텐츠 — 얼마씩 가져가는가</h3>
+<div class="twrap"><table>
+<caption>대당·건당 과금 구조 (공시 가격 기준, 2026-07)</caption>
+<thead><tr><th>과금 항목</th><th class="num">단가</th><th>비고</th></tr></thead>
+<tbody>
+<tr class="hl"><td>Jetson T5000 모듈 (휴머노이드·고급 로봇 두뇌)</td><td class="num">$2,999 / 대</td><td>1,000개+ 주문 기준. 데브킷 $3,499. 로봇 판가 $50K 가정 시 BOM의 약 6% <span class="bd bd-drv">파생</span></td></tr>
+<tr><td>Jetson T4000 모듈 (중급 로봇·AMR)</td><td class="num">$1,999 / 대</td><td>1,200 TFLOPS·64GB·40~70W — T5000 대비 33% 저렴한 가격 방어 라인 (NPN 파트너 공시)</td></tr>
+<tr><td>DRIVE AGX Thor ×2 (로보택시 1대)</td><td class="num">수천 달러대 <span class="bd bd-est">추정</span></td><td>Hyperion 10 레퍼런스 = Thor 2개(각 2,000+ FP4 TF) + 검증 센서 세트</td></tr>
+<tr><td>학습 컴퓨트 (모델사 1곳)</td><td class="num">수백~수천 GPU 상시 <span class="bd bd-est">추정</span></td><td>DC 매출로 인식 — 로봇 부문 숫자 밖에서 발생하는 '보이지 않는 로봇 매출'</td></tr>
+<tr><td>시뮬·SW (Omniverse·AI Enterprise·GR00T 상용 라이선스)</td><td class="num">구독·라이선스</td><td>GR00T N1.7부터 상용 라이선스 개시(GTC 2026) — 오픈 모델의 수익화 전환점</td></tr>
+<tr><td>Halos Certified (안전 인증 프로그램)</td><td class="num">생태계 수수료·장비</td><td>업계 첫 피지컬 AI 안전 인증 — '표준 제정자' 지위의 화폐화, Infineon 등 참여</td></tr>
+</tbody></table></div>
+
+<h3>3-2. 현재 매출 위치 — 작지만 가장 가파른 선</h3>
+<p>공시 기준 오토모티브·로보틱스 세그먼트는 FY26 연간 <strong>$23.5억(+39%)</strong>, 분기 궤적은 <strong>+72%(Q1) → +69%(Q2) → +32%(Q3, $5.92억) → +6%(Q4)</strong>로 뚜렷이 감속했다 <span class="bd bd-drv">파생: 분기 공시 역산</span>. 흔히 인용되는 "+72%"는 로봇 단독이 아니라 이 합산 세그먼트의 FY26 1분기 수치다. 감속의 성분: 전년 차량 SoC 램프의 기저효과 소진이 주인이고, 로봇 모듈(Thor, '25.9 출하 개시)은 절대 물량이 작아 세그 성장률을 아직 움직이지 못한다 — 즉 지금 숫자는 "차량 사이클의 숨 고르기"이지 로봇 수요의 신호가 아니며, 재가속 트리거는 §7-5의 캘린더(로보택시 램프·휴머노이드 양산)에 걸려 있다. FY27 1분기부터는 보고 체계가 바뀌어 로봇·오토가 게이밍·워크스테이션·AI-RAN과 함께 <strong>Edge Computing 플랫폼($64억, +29%)</strong>으로 통합됐다 — 회사 스스로 "엣지의 모든 컴퓨터"를 하나의 사업으로 본다는 신호이자, 역설적으로 로봇 단독 추적을 어렵게 만든 변경이다(모니터링 항목, §8). 참고로 젠슨 황의 공식 서열 정리: <strong>"로보틱스(자율주행 포함)는 AI 다음으로 중요한 성장 카테고리"</strong>(CNBC), "휴머노이드는 피지컬 AI를 세계 최대 산업으로 만들 수조 달러 기회"(GTC Taipei).</p>
+<p><strong>왜 지금 매출이 작은데 구조는 강한가.</strong> 첫째, <em>비대칭 과금</em> — 로봇 산업이 실패해도 '시도' 단계(학습·시뮬)의 매출은 이미 발생한다. 둘째, <em>물량 레버리지의 예약</em> — 로보택시 10만 대(Uber, 2027~)와 휴머노이드 수만~수십만 대(2026~27)의 두뇌 자리가 레퍼런스 설계로 선점돼 있다. 셋째, <em>가격 결정력의 이식</em> — 데이터센터에서 증명된 "성능 리더가 프리미엄을 받는" 구조가 로봇 두뇌에서도 재현될 초기 조건(Thor 대비 경쟁 칩 연산력 3~4분의 1, §6)이 갖춰져 있다.</p>
+</section>
+
+<!-- ================= 4. 기술 스택 ================= -->
+<section id="s4">
+<h2><span class="no">4</span>기술 스택 해부 — 실리콘에서 세계모델까지, 파이프라인 전체를 소유</h2>
+<div class="lead">기술 우위의 본질: 개별 제품이 아니라 <strong>"현실 데이터가 부족한 산업에서 데이터를 제조하는 공장"</strong>을 통째로 갖고 있다는 점이다. LLM은 인터넷이라는 공짜 데이터가 있었지만 로봇에는 없다 — 그래서 시뮬레이션·세계모델·합성 데이터 파이프라인이 로봇 시대의 '인터넷' 역할을 하며, 그 파이프라인의 사실상 표준이 NVIDIA 스택이다. 이 장은 온보드 실리콘(4-A) → 정책 모델(4-B) → 세계모델(4-C) → 물리 시뮬(4-D)의 순서로, 각 층을 1차 자료(스펙시트·논문·기술보고서) 수준까지 내려가 해부한다.</div>
+
+<figure>
+<div class="fig-t">Sim-to-Real 파이프라인 — 로봇 지능의 제조 공정</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg">
+  <rect x="20" y="60" width="170" height="110" rx="10" fill="#F6F8FA" stroke="#E2E8F0"/>
+  <text x="105" y="90" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1A202C">원료: 데이터</text>
+  <text x="105" y="112" text-anchor="middle" font-size="11.5" fill="#4A5568">실로봇 시연 + 인간</text>
+  <text x="105" y="130" text-anchor="middle" font-size="11.5" fill="#4A5568">1인칭 영상 2만h+</text>
+  <text x="105" y="148" text-anchor="middle" font-size="11.5" fill="#4A5568">(EgoScale)</text>
+  <rect x="220" y="40" width="180" height="150" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="310" y="70" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1E3A8A">증폭: Cosmos 3</text>
+  <text x="310" y="92" text-anchor="middle" font-size="11.5" fill="#1E3A8A">세계모델이 1개 시나리오를</text>
+  <text x="310" y="110" text-anchor="middle" font-size="11.5" fill="#1E3A8A">수천 개 변형으로 합성</text>
+  <text x="310" y="132" text-anchor="middle" font-size="11.5" fill="#1E3A8A">DreamGen: 합성 영상 →</text>
+  <text x="310" y="154" text-anchor="middle" font-size="11.5" fill="#1E3A8A">IDM 의사 라벨 · OSMO 관리</text>
+  <rect x="430" y="40" width="180" height="150" rx="10" fill="#ECFDF5" stroke="#A7F3D0"/>
+  <text x="520" y="70" text-anchor="middle" font-size="12.5" font-weight="700" fill="#065F46">훈련: Isaac Lab 3.0</text>
+  <text x="520" y="92" text-anchor="middle" font-size="11.5" fill="#065F46">Newton 1.0 물리엔진</text>
+  <text x="520" y="110" text-anchor="middle" font-size="11.5" fill="#065F46">(MuJoCo Warp·미분가능)</text>
+  <text x="520" y="132" text-anchor="middle" font-size="11.5" fill="#065F46">DGX급 인프라에서</text>
+  <text x="520" y="154" text-anchor="middle" font-size="11.5" fill="#065F46">대규모 병렬 강화학습</text>
+  <rect x="640" y="40" width="160" height="150" rx="10" fill="#FDF2F8" stroke="#FBCFE8"/>
+  <text x="720" y="70" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9D174D">평가: Lab-Arena</text>
+  <text x="720" y="92" text-anchor="middle" font-size="11.5" fill="#9D174D">표준 벤치마크로</text>
+  <text x="720" y="110" text-anchor="middle" font-size="11.5" fill="#9D174D">정책 성능 검증</text>
+  <text x="720" y="132" text-anchor="middle" font-size="11.5" fill="#9D174D">GR00T N2 = 랭킹 1위</text>
+  <text x="720" y="154" text-anchor="middle" font-size="11.5" fill="#9D174D">(MolmoSpaces 등·사측)</text>
+  <rect x="830" y="60" width="150" height="110" rx="10" fill="#FFF7ED" stroke="#FED7AA"/>
+  <text x="905" y="90" text-anchor="middle" font-size="12.5" font-weight="700" fill="#92400E">배포: Jetson Thor</text>
+  <text x="905" y="112" text-anchor="middle" font-size="11.5" fill="#92400E">GR00T 듀얼시스템</text>
+  <text x="905" y="130" text-anchor="middle" font-size="11.5" fill="#92400E">S2 추론 + S1 반사</text>
+  <text x="905" y="148" text-anchor="middle" font-size="11.5" fill="#92400E">온보드 실행</text>
+  <path d="M190 115 L220 115" stroke="#94A3B8" stroke-width="2.5"/>
+  <path d="M400 115 L430 115" stroke="#94A3B8" stroke-width="2.5"/>
+  <path d="M610 115 L640 115" stroke="#94A3B8" stroke-width="2.5"/>
+  <path d="M800 115 L830 115" stroke="#94A3B8" stroke-width="2.5"/>
+  <path d="M905 170 C905 250 400 265 105 230 C80 226 70 200 72 170" fill="none" stroke="#94A3B8" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="500" y="255" text-anchor="middle" font-size="12" fill="#718096">현장 로그가 원료로 회수(점선) — 배치가 늘수록 데이터 우위가 복리로 쌓이는 플라이휠</text>
+</svg>
+</div>
+<figcaption>그림 2. Sim-to-Real 파이프라인(본 보고서 작도). 근거: NVIDIA GTC·CES 2026 발표, GR00T-Dreams(DreamGen) 공개 리포지토리.</figcaption>
+</figure>
+
+<h3>4-A. Jetson Thor 실리콘 해부 — 왜 이것이 '로봇 두뇌'의 기준선인가</h3>
+<p><strong>구성.</strong> T5000 모듈은 세 블록의 결합이다. ① 연산: Blackwell GPU — CUDA 코어 2,560개 + 5세대 텐서코어 96개 + 트랜스포머 엔진으로 <strong>FP4 2,070 / FP8 1,035 TFLOPS</strong>(희소 기준), FP32 7.8 TFLOPS. MIG(Multi-Instance GPU)로 GPU를 물리 분할해 지각·계획·제어 워크로드를 간섭 없이 병행시킨다. ② 범용 처리: <strong>14코어 Arm Neoverse-V3AE</strong>(차량·로봇용 기능안전 변형, 최대 2.6GHz, 코어당 L2 1MB·공유 L3 16MB) — 센서 드라이버·안전 감시·궤적 후처리 같은 결정론적 실시간 작업 담당. ③ 기억·입출력: <strong>128GB LPDDR5X, 256비트 273GB/s</strong>를 CPU·GPU가 단일 주소공간으로 공유(UVM 코히런스, CUDA 13) — 복사 없는 제로카피 파이프라인. I/O는 4×25GbE(합 100Gbps, Orin의 10배)로, Holoscan Sensor Bridge가 카메라를 이더넷 위 RDMA(RoCE)로 GPU 메모리에 직결한다. 여기에 3세대 PVA(비전 가속기)·듀얼 인코더/디코더·옵티컬 플로우 가속기가 전처리를 GPU 밖에서 흡수한다.</p>
+<p><strong>이 구성의 '왜' — VLA 추론의 산수.</strong> GR00T-N1-2B는 16개 액션 청크 1회 샘플링에 L40 GPU 기준 63.9ms가 든다(백서 공시). 로봇 제어는 100Hz+ 반사를 요구하지만, 모델을 매 스텝 돌리는 게 아니라 <em>액션 청킹</em>(한 번의 추론으로 미래 액션 H개를 뽑아 개루프 실행)으로 실효 주파수를 채운다 — 추론 ~10Hz × 청크 16 = 실효 120Hz+가 N1 계열의 실제 운용 공식이다. Thor의 설계는 정확히 이 공식에 맞춰져 있다: FP4·트랜스포머 엔진은 청크 샘플링 지연을 줄이고, 128GB 대용량은 S2(VLM)·S1(액션)·지각 모델을 <em>동시 상주</em>시키며, MIG는 그 셋의 지연 간섭을 차단한다. 한계도 명확하다 — 273GB/s 메모리 대역은 데스크톱 상위권 수준이라 70B급 LLM의 자기회귀 디코드에는 병목이며, 이것이 로봇 두뇌가 "작은 모델 여러 개 + 청킹" 구조로 수렴하는 하드웨어적 이유다.</p>
+<p><strong>전력의 산수.</strong> 구성 가능 전력 40~130W. 휴머노이드의 보행·조작 총소비를 300~700W로 잡으면 <span class="bd bd-est">추정</span> 두뇌 몫은 상한에서도 20~30% 수준 — 2kWh급 배터리에서 두뇌가 앗아가는 가동시간은 관리 가능한 범위다. 하위 T4000(1,200 TFLOPS·64GB·40~70W·12코어·3×25GbE)은 같은 아키텍처의 절전판으로, <strong>모듈 가격 $1,999(1,000개+)</strong>가 공시되어 T5000($2,999)과 함께 2단 가격 사다리를 만든다 — §6의 저가 경쟁(퀄컴 700 TOPS급)에 대한 명시적 방어선이다.</p>
+
+<h3>4-B. GR00T — 듀얼시스템 VLA의 해부와 N2의 세대 전환</h3>
+<p><strong>N1 백서 기준 아키텍처.</strong> GR00T는 인지과학의 이중처리 이론을 그대로 옮긴 이단 구조다. <em>System 2</em>는 Eagle-2 VLM(공개판 N1-2B 기준 전체 2.2B 중 1.34B)으로 이미지·언어를 토큰화해 약 10Hz로 "무엇을 왜 하는가"를 표상하고, <em>System 1</em>은 디퓨전 트랜스포머(DiT)가 <strong>플로우 매칭</strong>(노이즈→행동으로의 연속 흐름을 학습하는 생성 기법)으로 로봇 고유수용 상태·액션 토큰을 S2 출력에 크로스어텐션시켜 <strong>120Hz 폐루프 모터 액션</strong>을 뽑는다. 두 시스템은 분리 파이프라인이 아니라 엔드투엔드 공동 학습된다 — 추론과 반사가 같은 그래디언트로 자란다는 것이 종전 '플래너+컨트롤러' 구조와의 본질 차이다. 임베디먼트 일반화는 로봇별 상태·액션 차원을 공용 임베딩으로 사상하는 경량 MLP 프로젝션이 담당해, 같은 정책이 Fourier GR-1·Unitree G1 등 이종 기체에 파인튜닝된다.</p>
+<p><strong>데이터 피라미드와 스케일링.</strong> 학습 코퍼스는 3층 피라미드다 — 하단: 웹 규모 영상·언어 + 인간 1인칭 영상(EgoScale 2만 시간, 한계비용 ~0의 수집 경로), 중단: Isaac 시뮬·Cosmos 생성 합성 데이터, 상단: 소량의 실로봇 시연. N1.6은 Cosmos Reason을 백본에 흡수해 전신 제어·맥락 추론을 넓혔고, <strong>N1.7은 GA(정식판) 도달·Apache 2.0 완전 상용 라이선스</strong>로 전환하며 백본을 Cosmos-Reason2-2B/Qwen3-VL로 교체했다 — 오픈 모델이면서 백본·데이터·평가가 전부 자사 스택에 정렬되는, '오픈의 락인'이라는 역설적 설계다.</p>
+<p><strong>N2 = VLA에서 WAM으로.</strong> 연말 출시 예고된 N2의 기반인 DreamZero(NVIDIA GEAR, 2026-02 공개)는 노선 자체가 다르다. VLA가 "VLM 백본에서 출발해 이해→행동"이라면, <strong>WAM(World Action Model)은 사전학습 비디오 디퓨전 백본에서 출발해 미래 영상 프레임과 액션을 공동 예측</strong>한다 — 행동하기 전에 세계의 다음 장면을 '상상'하는 구조다. 논문 수치(사측): 14B 자기회귀 디퓨전 트랜스포머, 미학습 과제 평균 진행률 39.5%, 영상만으로 배운 시연의 크로스임베디먼트 전이 +42% 상대 개선, 최적화 후 실시간 7Hz 제어. 회사가 내건 "신과제 성공률 2배+, MolmoSpaces·RoboArena 1위"는 이 노선의 상용 번역이다. 냉정한 단서 둘 — ① 7Hz는 상상의 대가다: 반사(120Hz)는 여전히 별도 저수준 계층이 필요하며, N2 상용판이 S1을 어떻게 결합할지는 미공개다 <span class="bd bd-est">추정</span>. ② 성능 수치는 전부 사측·자사 벤치 기준으로 제3자 재현 전이다.</p>
+
+<h3>4-C. Cosmos 3 — '데이터 공장'에서 '정책의 모체'로</h3>
+<p><strong>구조(기술보고서 기준).</strong> Cosmos 3는 <strong>MoT(Mixture-of-Transformers) 2타워</strong> 옴니모델이다. Reasoner 타워(자기회귀 VLM — 언어 토큰 + ViT로 임베딩한 영상·이미지 토큰을 처리해 운동·상호작용·시공간 관계를 이해)가 먼저 돌고, Generator 타워(디퓨전 — VAE 영상·이미지 + 오디오 + 액션 토큰을 반복 디노이징)가 그 이해에 조건화되어 생성한다. 두 타워는 3D 회전 위치 임베딩을 공유하며 Generator는 Reasoner 없이 동작하지 않는다 — <em>추론이 생성에 선행</em>하도록 강제한 설계다. 변형은 3종: Edge 2B(예정)·Nano 16B(8B+8B, 워크스테이션급)·Super 64B(32B+32B, 대규모 합성 데이터 생성용). 라이선스는 상용 허용 OpenMDW 1.1, 5/31 Hugging Face 공개·6/1 GTC Taipei 정식 발표.</p>
+<p><strong>왜 중요한가 — 4개 모델의 1개化.</strong> 종전 Cosmos 제품군(Predict 세계 생성 / Transfer 제어 생성 / Reason 장면 이해 / Policy 정책)을 <strong>단일 가중치의 5개 태스크</strong>(텍스트→비디오, VLM 추론, 순동역학, 역동역학, 액션 정책)로 통합했다. 투자 관점의 함의: 세계모델이 '합성 데이터 공장'(§그림 2의 증폭 단계)에 머물지 않고 <em>정책의 사전학습 모체이자 평가 기준선</em>을 겸하게 되면서, 모델층(§6 제2층)과 인프라층(제3층)의 경계가 기술적으로 무너지고 있다 — 3층 독점이 2층 경쟁력을 '생산'하는 구조로의 이행이며, 동일한 수직 결합을 재현할 수 있는 곳은 자체 세계모델(Genie 계열)·정책(Gemini Robotics)·칩(TPU)을 다 가진 구글뿐이다. 데이터 공장의 구체 공정은 GR00T-Dreams(DreamGen) 파이프라인이 보여준다: 단일 이미지+언어 지시 → Cosmos가 photoreal 합성 영상 대량 생성 → 역동역학 모델(IDM)이 영상에서 의사 액션 라벨 추출 → 그 '신경 궤적'으로 정책 학습. 텔레오퍼레이션 없이 새 과제 데이터를 찍어내는 이 공정이 "합성 20%→90%"(Gartner) 전망의 기술적 실체다.</p>
+<p><strong>정직한 제약.</strong> 모델카드 스스로 명시한다 — 출력은 물리적으로 정확한 시뮬레이션도, 안전 인증된 제어도 아니다. 입력 캡(영상 720p·생성 경로 5프레임, 오디오 0.5초)과 지원 임베디먼트 목록(Franka·AgiBot·UR·WidowX 등)은 아직 연구실 스케일이며, 상상(생성)의 오류가 액션으로 전파될 수 있다는 것이 옴니 구조의 그늘이다 — §5의 트레이드오프와 §8 체크포인트('N2 벤치 제3자 재현')가 이 지점을 감시한다.</p>
+
+<h3>4-D. Newton — 접촉의 물리를 GPU로, 그리고 오픈으로</h3>
+<p>sim-to-real 갭의 최후 병목은 렌더링이 아니라 <strong>접촉·마찰의 물리</strong>다(불연속·강성 문제로 수치해석이 어렵고, 여기가 틀리면 시뮬에서 배운 손재주가 현실에서 무너진다). Newton 1.0은 이 병목을 겨냥해 NVIDIA·Google DeepMind·Disney Research가 공동 개발하고 리눅스재단에 이관한 <strong>오픈소스(Apache 2.0) GPU 물리엔진</strong>이다. 기반은 Warp(파이썬으로 CUDA급 커널을 쓰는 프레임워크)+OpenUSD이며, 핵심 솔버로 DeepMind의 <strong>MuJoCo Warp</strong>를 통합한다 — 로봇 조작 시뮬 70배, 인핸드 조작 100배 가속(자사 벤치, MJX 대비 최대 313배 보고). 미분가능 물리(시뮬 자체를 미분해 학습·시스템 식별에 그래디언트 제공), 플러그형 멀티 솔버(강체·연체·유체 혼합), 신경 동역학(NeRD — 해석적 방정식 대신 학습된 신경망으로 다음 상태 예측)까지 갖춰, Isaac Lab 3.0의 기본 엔진으로 얹혔다. 전략적 독법: 물리엔진을 <em>오픈으로 풀되 GPU 최적화로 묶는</strong> 이 수는 CUDA 플레이북의 반복이며, 경쟁 시뮬 생태계(MuJoCo)의 본가인 DeepMind를 공동 개발자로 포섭했다는 점이 요체다 — 시뮬 표준 전쟁을 시작 전에 합병으로 끝낸 셈이다.</p>
+
+<h3>4-1. 구성 요소 사양 총괄</h3>
+<div class="twrap"><table class="wide">
+<caption>로봇 스택 핵심 컴포넌트 (2026-07 기준)</caption>
+<thead><tr><th>층</th><th>제품</th><th>핵심 사양·상태</th><th>의미</th></tr></thead>
+<tbody>
+<tr><td rowspan="2">온보드 칩</td><td>Jetson T5000 (Thor)</td><td>FP4 2,070 TFLOPS · Blackwell 2,560 CUDA·96 텐서 · 14코어 Neoverse-V3AE · 128GB 273GB/s · MIG · 40~130W · $2,999@1k+</td><td>휴머노이드 표준 두뇌 — 대형 VLA를 로봇 안에서 구동하는 유일 검증 칩</td></tr>
+<tr><td>Jetson T4000</td><td>1,200 TFLOPS · 64GB · 40~70W · 효율 4배 · $1,999@1k+ (CES 2026 GA)</td><td>중급 로봇·AMR용 — 저가 침투에 대한 가격 방어선</td></tr>
+<tr><td rowspan="2">파운데이션 모델</td><td>Isaac GR00T N1.7 → N2</td><td>N1.7 GA·Apache 2.0(백본 Cosmos-Reason2-2B/Qwen3-VL·EgoScale 2만h) / N2: DreamZero 세계행동모델, 신과제 성공률 2배+ <span class="bd bd-est">사측</span>, '26말</td><td>듀얼시스템(S2 10Hz 추론 + S1 120Hz 반사) — 오픈 배포로 생태계 표준화, 상용 라이선스로 수익화</td></tr>
+<tr><td>Cosmos 3 (5/31 공개·6/1 발표)</td><td>MoT 2타워(Reasoner+Generator) · Nano 16B/Super 64B(Edge 2B 예정) · 5모달 양방향 · OpenMDW 1.1</td><td>세계모델 = 합성 데이터 공장의 엔진이자 정책의 사전학습 모체</td></tr>
+<tr><td>시뮬·물리</td><td>Isaac Lab 3.0 + Newton 1.0</td><td>MuJoCo Warp 솔버(조작 70x·인핸드 100x) · 미분가능 · Apache 2.0·리눅스재단 (EA)</td><td>DeepMind·디즈니와 공동 — 시뮬 충실도 기준선을 오픈+GPU로 장악</td></tr>
+<tr><td>차량 스택</td><td>DRIVE Hyperion 10 + Halos</td><td>Thor×2 레퍼런스 · L4-레디 · 업계 첫 피지컬 AI 안전 인증 프로그램</td><td>로보택시의 '인텔 인사이드' — Uber 10만 대 계획의 기반 설계</td></tr>
+<tr><td>레퍼런스 실물</td><td>Isaac GR00T 휴머노이드</td><td>Unitree H2 Plus 바디 · 75자유도 · Sharpa 촉각 5지 핸드 · 보도 기준 $10만 · '26말</td><td>'개발용 아이폰' 전략 — 연구 표준 기체로 소프트웨어 락인 가속</td></tr>
+</tbody></table></div>
+
+<figure>
+<div class="fig-t">실물 — Isaac GR00T 레퍼런스 휴머노이드 (GTC Taipei 2026)</div>
+<div class="fig-box">
+<img src="https://iprsoftwaremedia.com/219/files/202605/dd0fcde2db49f29fc1596865178c673a/6a1c7fce3d6332ecba1d64a8_nvidia-and-unitree/nvidia-and-unitree_mid.jpg" alt="NVIDIA Isaac GR00T 레퍼런스 휴머노이드 (Unitree H2 Plus 기반)" referrerpolicy="no-referrer" loading="lazy">
+</div>
+<figcaption>그림 3. Unitree H2 Plus 바디 + Jetson Thor + GR00T 스택의 레퍼런스 휴머노이드. 로이터에 따르면 NVIDIA는 미국·유럽·<strong>한국</strong> 로봇 기업과도 동일 협력 모델을 추진 중이다. 출처: <a href="https://nvidianews.nvidia.com/" target="_blank">NVIDIA 뉴스룸(2026-06-01)</a>.</figcaption>
+</figure>
+<figure>
+<div class="fig-t">영상 — GTC Taipei 2026 키노트 (로봇·GR00T 발표 원문)</div>
+<div class="fig-box">
+<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px">
+<iframe src="https://www.youtube.com/embed/q_umfWm8J28" title="NVIDIA GTC Taipei 2026 Keynote" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe>
+</div>
+</div>
+<figcaption>영상 1. 젠슨 황 GTC Taipei 키노트(2026-05-31) — 레퍼런스 휴머노이드·"수조 달러 기회" 발언 원문. 출처: NVIDIA 공식 YouTube.</figcaption>
+</figure>
+</section>
+
+<!-- ================= 5. 트레이드오프 ================= -->
+<section id="s5">
+<h2><span class="no">5</span>트레이드오프 — 이 전략이 포기한 것과 감수한 것</h2>
+<p><strong>① 매출의 시차(하키스틱 문제).</strong> 배포층(Jetson) 매출은 로봇 출하량의 함수인데, 2026년 글로벌 휴머노이드 출하는 5만 대 수준(TrendForce)이다 — 전량이 T5000이어도 연 $1.5억. 의미 있는 P&amp;L 기여는 로보택시 램프(2027~)와 휴머노이드 10만 대+ 시대(2028~)를 기다려야 하며, 그 사이 이 사업의 가치는 <em>서사</em>로만 존재한다. 이는 실적 미스가 아니라 구조다.</p>
+<p><strong>② 오픈 전략의 양날.</strong> GR00T·Cosmos를 오픈으로 뿌리는 것은 칩을 팔기 위한 고전적 '면도날' 전략이지만, 역은 성립하지 않는다 — <em>모델이 표준이 되어도 칩 락인을 보장하지 않는다.</em> 실증 사례: Boston Dynamics Atlas는 하드웨어로 Jetson Thor를 쓰면서 두뇌 모델은 Google Gemini Robotics를 얹는다. 모델층에서 지면 칩은 지키되 마진이 얇아지고, 칩층에서 지면 모델은 남되 돈이 안 된다 — 두 층을 동시에 지켜야 하는 이중 전선이다.</p>
+<p><strong>③ 중국 역설 — 최대 시장에서의 구조적 배제 위험.</strong> 2025년 휴머노이드 설치의 80~90%는 중국이었고, 2026년 출하 전망(5만 대)의 대부분도 중국이다(모건스탠리 중국 전망 두 차례 상향). 그런데 수출 규제로 중국 휴머노이드 다수는 이미 Huawei·Loongson·Biren 칩을 쓴다 — <strong>세계에서 로봇이 가장 많이 팔리는 시장이, NVIDIA가 두뇌를 팔 수 없는 시장</strong>이 되어가는 중이다. Galbot의 Thor 채택, Unitree 레퍼런스 협력처럼 회색지대는 남아 있으나(연구용 규제 경계), 데이터센터에서 벌어진 '중국 상실'의 로봇판 재연이 기본 시나리오다. 반대급부: 중국 외 시장(미·유럽·일본·한국·대만)에서는 "탈중국 로봇 공급망"의 표준 지위가 오히려 강화된다.</p>
+<p><strong>④ 저가 구간의 전력·가격 미스매치.</strong> Thor의 40~130W·$2,999는 $1.3만짜리 G1급 로봇이나 소형 AMR에는 과잉이다. Qualcomm IQ10(700 TOPS·저전력·통합 레퍼런스)과 중국산 560 TOPS급이 정확히 이 틈을 노린다. T4000이 방어선이지만, 스마트폰에서 벌어졌던 '하이엔드는 지키고 볼륨은 내주는' 구도가 재현될 수 있다 — 다만 로봇은 폰과 달리 <em>지능 상한이 곧 상품성</em>이라 하이엔드 비중이 구조적으로 클 것이라는 반론도 성립한다.</p>
+<p><strong>⑤ 휴머노이드 회의론(수요 자체의 불확실성).</strong> "왜 $5만 로봇 팔이 아니라 $20만 휴머노이드인가"라는 근본 반론은 유효하다. 현재 실매출 휴머노이드는 Agility Digit 정도이고, Figure CEO조차 자사 로봇을 아이 곁에 무감독으로 두지 않겠다고 말했다. 산업 정리도 시작됐다(K-Scale·Cartwheel 폐업). NVIDIA의 방어막은 <em>임베디먼트 중립성</em> — 휴머노이드가 아니라 로봇 팔·AMR·수술로봇·차량 무엇이 이겨도 두뇌·훈련장 수요는 발생한다는 점이다. 휴머노이드는 이 사업의 상방 옵션이지 전제가 아니다.</p>
+</section>
+
+<!-- ================= 6. 피어 대결표 ================= -->
+<section id="s6">
+<h2><span class="no">6</span>두뇌 3층 대결표 — 같은 문제를 푸는 자들</h2>
+<div class="lead">로봇 '두뇌' 경쟁은 세 층에서 따로 벌어진다: <strong>온보드 칩 · 파운데이션 모델 · 훈련 인프라(시뮬+데이터)</strong>. 층별 승자는 다를 수 있으며, 세 층을 모두 보유한 참가자는 현재 NVIDIA가 유일하다 — 이 수직 통합이 격차의 본질이다.</div>
+
+<h3>6-1. 제1층 — 온보드 칩 스펙 대결</h3>
+<div class="twrap"><table class="wide">
+<caption>로봇 온보드 컴퓨트 비교 (각사 공표 기준 · 측정 조건 상이, 방향성 참고)</caption>
+<thead><tr><th>항목</th><th>NVIDIA Jetson T5000</th><th>Qualcomm Dragonwing IQ10</th><th>Horizon(RoboRobot) S600</th><th>중국 규제 대체군</th></tr></thead>
+<tbody>
+<tr><td>AI 연산</td><td class="num"><strong>2,070 TFLOPS (FP4)</strong></td><td class="num">700 TOPS</td><td class="num">560 TOPS (INT8)</td><td>Huawei·Loongson·Biren — 사양 파편화</td></tr>
+<tr><td>메모리</td><td class="num">128GB · 273GB/s</td><td>비공개 (모바일 계열)</td><td>비공개</td><td>—</td></tr>
+<tr><td>포지셔닝</td><td>휴머노이드·고급 로봇 — 대형 VLA 온보드 구동</td><td>산업로봇·AMR·서비스 — 저전력 + 시스템 통합(Arduino 인수)</td><td>중국 내수 — 차량용 강자의 로봇 확장</td><td>수출 규제하 중국 휴머노이드 실사용 칩</td></tr>
+<tr><td>소프트웨어</td><td>Isaac·CUDA·Holoscan·Metropolis — 성숙 생태계</td><td>레퍼런스 플랫폼(CES 2026) — 초기</td><td>차량 스택 전용성 강함</td><td>자국 프레임워크</td></tr>
+<tr><td>대표 채택</td><td>Boston Dynamics Atlas·Figure·Amazon·Meta·Agility·Galbot·LEM Surgical·레퍼런스 휴머노이드</td><td>NEURA·Booster·Kuka·VinMotion·Advantech (Figure는 투자 유치·거명 단계, 채택 미확인)</td><td>중국 로봇·차량 OEM</td><td>Unitree 등 중국 양산기 다수</td></tr>
+</tbody></table></div>
+<p class="co co-note" style="margin-top:0">읽는 법: 연산력 격차는 3~4배지만 이것이 곧 승패는 아니다 — 저가·저전력 구간은 700 TOPS로 충분한 작업이 많다. 관전 포인트는 <strong>NEURA가 양쪽에 다 걸쳐 있다</strong>는 사실이다 — GR00T 채택사이면서 3월 퀄컴과 IQ10 협력을 발표했다. 최상위권조차 이중 소싱을 설계 중이며, 이는 데이터센터의 'ASIC 병행 구매'와 동일한 패턴이다. (Figure는 퀄컴의 투자·거명 관계일 뿐 칩 채택은 확인되지 않는다.)</p>
+
+<h3>6-2. 제2층 — 파운데이션 모델(VLA) 대결</h3>
+<div class="twrap"><table class="wide">
+<caption>로봇 파운데이션 모델 빅4 (2026-07)</caption>
+<thead><tr><th>항목</th><th>NVIDIA GR00T N1.7→N2</th><th>Google Gemini Robotics 1.5</th><th>Physical Intelligence π0.5</th><th>Figure Helix</th></tr></thead>
+<tbody>
+<tr><td>아키텍처 철학</td><td>듀얼시스템 — S2 '숙고' + S1 '반사' 분리</td><td>언어로 먼저 생각 후 행동 (thinking-then-acting)</td><td>디퓨전 플로우로 액션 생성</td><td>자체 VLA (2025.2 OpenAI 결별 후 내재화)</td></tr>
+<tr><td>데이터 전략</td><td>EgoScale 인간 1인칭 2만h + Isaac 합성 — 조작 스케일링 법칙 제시</td><td>Motion Transfer — 이종 로봇 데이터 단일 표현공간 통합</td><td>다임베디먼트 실데이터 중심 — 평가 SOTA로 널리 인정</td><td>자사 기체 폐쇄 데이터</td></tr>
+<tr><td>개방성·수익화</td><td>오픈 + 상용 라이선스(N1.7~) — 생태계 표준 노림</td><td>파트너 접근 — TPU 학습(NVIDIA 우회 유일 사례)</td><td>연구·파트너 접근</td><td>완전 폐쇄 — 수직 통합</td></tr>
+<tr><td>현재 성적</td><td>N2: MolmoSpaces·RoboArena 1위 (사측)</td><td>Atlas 두뇌로 채택 확정 (비독점)</td><td>평가 벤치 최상급</td><td>BMW 상업 전환 — 02 파일럿 1,250시간·9만 부품·성공률 99%+ → 03 물류 투입</td></tr>
+</tbody></table></div>
+
+<h3>6-3. 제3층 — 훈련 인프라: 사실상 무경쟁</h3>
+<p>시뮬레이션(Isaac Sim/Lab+Newton)·세계모델(Cosmos)·데이터 파이프라인(Curator→Transfer→Evaluator→OSMO)을 한 몸으로 묶은 상용 스택의 대안은 현재 없다. 오픈소스 물리엔진(MuJoCo 등)과 개별 도구는 존재하나, "1개 실측 시나리오 → 수천 개 합성 변형 → 훈련 → 표준 평가 → 온보드 배포"의 <em>공정 전체</em>를 파는 곳은 NVIDIA뿐이다. 결정적으로 — <strong>경쟁 모델들(π·Helix, Gemini 제외)조차 이 인프라 위에서, NVIDIA GPU로 훈련된다.</strong> 모델 전쟁의 승자가 누구든 훈련층 요금은 NVIDIA가 받는 구조다.</p>
+<div class="co co-key"><div class="ct">격차의 정량 판정 <span class="bd bd-conf">확신도 중간~높음 · 약 70%</span></div>
+<p>층별 판정 — 칩: 하이엔드 1.5~2세대 리드(연산력 3배+·생태계), 단 저가 구간은 격차 무의미. 모델: 리드라기보다 <em>혼전 선두권</em>(벤치 1위 주장 vs π·Gemini의 대항 실적) — 이 층은 승부 미확정. 인프라: 사실상 독점. 종합하면 "칩 우위 + 인프라 독점 + 모델 혼전"으로, <strong>3층 중 2.5층 우세</strong>. 추격 조건: 경쟁자가 뒤집으려면 (a) 대안 시뮬·데이터 공장(구글만 자체 보유 가능) (b) 저가 칩의 상향 침투(퀄컴 차세대) (c) 중국 내수의 완전 자립(진행 중) — 이 중 (c)만이 확실히 현실화되고 있다.</p></div>
+</section>
+
+<!-- ================= 7. 꿈 분석 ================= -->
+<section id="s7">
+<h2><span class="no">7</span>꿈 분석 — 이 스토리는 주가를 밀어올릴 연료인가 (9항목)</h2>
+<p><strong>1) 꿈의 정의.</strong> "노동이 자본재가 된다 — 지능을 가진 기계 몸이 전기값+감가상각비로 일하는 시대의 표준 두뇌·훈련장 공급자가 NVIDIA다."</p>
+<p><strong>2) 꿈의 크기(자릿수).</strong> 상단: 모건스탠리 2050년 $5조·10억 대 — 이 세계에서 두뇌 콘텐츠 점유 30%·대당 $1,500만 잡아도 <span class="bd bd-drv">파생</span> 연 수백억~천억$대 매출 라인이 나온다(현 로봇·오토의 수십 배). 하단: 골드만 2035년 $380억 — 두뇌 몫 ~$50억 수준의 '괜찮은 사업부'에 그친다. 중간 경로(로보택시 포함): Uber 10만 대×Thor 2개+DC 학습 수요, 휴머노이드 '30년 중국만 44.6만 대(MS)면 <strong>2030년 로봇·오토 매출 $150~250억 자릿수</strong>가 합리적 중심 추정 <span class="bd bd-est">추정</span> — FY26 대비 7~10배, 단 그 시점 전사 매출의 3~5%로 여전히 '보조 엔진'이다. 즉 이 꿈의 5년 가치는 P&amp;L보다 <em>멀티플(제2 S커브 서사)</em>에 있다.</p>
+<p><strong>3) 꿈의 신선도.</strong> AI 하위 서사 중 가장 신선한 구간이다 — 학습(2023)·추론(2024~25)은 소비됐고, 로봇은 2026년 들어 언급량이 급증하는 진입기다. 증거: 휴머노이드 투자 9개월간 610건·$70억, 7월 한 주에만 신규 자금 $12억+, Unitree IPO가 중국 A주 로봇 섹터 전체 랠리를 촉발.</p>
+<p><strong>4) 3P 검증.</strong> 가능(possible) — 통과. 그럴듯(plausible) — 통과: BMW의 파일럿→상업 전환(Figure 02가 1,250시간·9만+ 부품·배치 성공률 99%+를 기록한 뒤 03이 물류 시퀀싱에 정식 투입; 보도 기준 초기 ~40대·시간당 ~$25 과금, 단 공식 대수 미공개로 10~30대 추정 병존 <span class="bd bd-cfl">상충</span>)·Amazon 창고 실배치·페이백 2년 도달('26~27, GS)이라는 초기 상업 증거 존재. 개연(probable) — <strong>미통과</strong>: 범용성(새 작업 일반화)은 GR00T N2가 "성공률 2배"를 주장하는 단계, 즉 아직 절반의 확률과 싸우는 중이다. 데이터센터의 꿈(§본편 5-B)이 '계약서가 쓰인 이야기'였다면, 로봇의 꿈은 <strong>'시제품이 걷기 시작한 이야기'</strong>다 — 한 단계 이르다.</p>
+<p><strong>5) 증거화 캘린더.</strong> 2026-07말 Unitree STAR 상장(~$5.9B <span class="bd bd-cfl">상충: ¥1,000억 기대 보도</span>) → 07~08월 Tesla Optimus 3 공개·Fremont 라인 가동 → 2026말 GR00T 레퍼런스 휴머노이드 출시·GR00T N2 정식판·1X NEO 가정 배송(선주문 1만+)·Mercedes L4 도심 주행 → 2027 Uber 로보택시 상업 개시·NVIDIA 자체 로보택시 테스트·Lucid 35,000대 램프 → 2027 Tesla 텍사스 양산 → 2028 Uber 30개 도시 10만 대. 각 이벤트가 로봇 서사를 숫자로 바꾸는 촉매다.</p>
+<p><strong>6) 선례 비교.</strong> 가장 정확한 유비는 <strong>스마트폰 시대의 퀄컴</strong>이다 — 단말은 누가 이기든 AP·모뎀 로열티를 받았고, 정점기 시총 리레이팅의 근거가 '대당 콘텐츠×출하량' 공식이었다. NVIDIA 로봇 사업은 같은 공식에 훈련 인프라(퀄컴에 없던 층)를 더한 상위 호환이다. 반면 경계 선례는 <strong>2016~18년 'AI 자율주행' 붐</strong> — 당시도 NVIDIA DRIVE가 표준을 자처했지만 L4 상용화가 5년+ 밀리며 서사가 식었다. 로봇도 같은 지연 리스크를 안고 있으며, 차이는 이번엔 중국발 실물 출하(연 5만 대)가 이미 돌고 있다는 점이다.</p>
+<p><strong>7) 가격 반영도 — 본편 §10과 교차.</strong> FY27 컨센서스(~$3,930억)는 데이터센터가 지배하며 로봇 기여는 반올림 오차 수준 — 세그먼트 통합(Edge Computing)으로 애널리스트 모델에서 별도 라인조차 사라졌다. 내재 CAP 14~23년의 정당화 근거로 시장이 실제 지불한 것은 '데이터센터 지속성'이지 로봇이 아니다. 결론: <strong>로봇은 현 주가에서 사실상 무상 옵션</strong>이며, 반대로 로봇 서사가 꺼져도 주가 하방 기여는 제한적이다 — 비대칭이 매력의 본질이다.</p>
+<p><strong>8) 꿈의 사망 조건.</strong> ① Optimus·Figure·NEO의 2026~27 마일스톤 연쇄 지연(휴머노이드 겨울) ② 로보택시 사고·규제로 Uber 플랜 좌초 ③ 중국 칩 자립 완성 + 중국산 로봇의 서방 수출 성공(두뇌 시장 자체를 우회) ④ 페이백 2년 계산의 붕괴 — 현장 신뢰성(작업 실패율)이 기대 이하로 판명 ⑤ 퀄컴·구글 연합이 '충분히 좋은 저가 스택'으로 볼륨 구간 장악. ①이 발생해도 NVIDIA 손익 타격은 작지만(§7-7), 멀티플 서사에는 직격이다.</p>
+<p><strong>9) 자금 흐름.</strong> 휴머노이드는 현재 사모(私募)가 주도한다 — Figure $39B(NVIDIA·LG·퀄컴 동승), 1X ~$10B, NEURA ~$7B, 9개월 $70억 유입. 공모 시장의 순수 노출은 UBTech(9880.HK)·Unitree(상장 임박)·현대차(보스턴다이내믹스) 정도로 희소해, <strong>"로봇 테마의 유동성 있는 대표주" 자리가 비어 있다</strong> — 미국 대형주 중 그 자리에 가장 가까운 것이 NVIDIA(두뇌)와 테슬라(기체)이며, 테마 자금이 커질수록 이 둘로의 낙수가 기본 경로다.</p>
+</section>
+
+<!-- ================= 8. 파급·투자 함의 ================= -->
+<section id="s8">
+<h2><span class="no">8</span>파급 효과 지도와 투자 함의 종합</h2>
+
+<figure>
+<div class="fig-t">꿈의 크기 전망 — 기관 간 130배 갈리는 스펙트럼 (로그 스케일)</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg">
+  <line x1="120" y1="230" x2="960" y2="230" stroke="#CBD5E1"/>
+  <g font-size="11" fill="#718096">
+    <text x="200" y="252" text-anchor="middle">$10B</text>
+    <text x="450" y="252" text-anchor="middle">$100B</text>
+    <text x="700" y="252" text-anchor="middle">$1조</text>
+    <text x="950" y="252" text-anchor="middle">$10조</text>
+  </g>
+  <line x1="200" y1="225" x2="200" y2="235" stroke="#94A3B8"/><line x1="450" y1="225" x2="450" y2="235" stroke="#94A3B8"/><line x1="700" y1="225" x2="700" y2="235" stroke="#94A3B8"/><line x1="950" y1="225" x2="950" y2="235" stroke="#94A3B8"/>
+  <line x1="244" y1="80" x2="244" y2="230" stroke="#E2E8F0"/>
+  <circle cx="244" cy="80" r="9" fill="#059669"/>
+  <text x="244" y="60" text-anchor="middle" font-size="12" font-weight="700" fill="#065F46">모건스탠리 · 중국 2030</text>
+  <text x="244" y="105" text-anchor="middle" font-size="12" fill="#1A202C">$150억</text>
+  <line x1="345" y1="130" x2="345" y2="230" stroke="#E2E8F0"/>
+  <circle cx="345" cy="130" r="9" fill="#2563EB"/>
+  <text x="345" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#1E40AF">골드만삭스 · 글로벌 2035</text>
+  <text x="345" y="155" text-anchor="middle" font-size="12" fill="#1A202C">$380억</text>
+  <line x1="875" y1="80" x2="875" y2="230" stroke="#E2E8F0"/>
+  <circle cx="875" cy="80" r="9" fill="#7C3AED"/>
+  <text x="875" y="60" text-anchor="middle" font-size="12" font-weight="700" fill="#5B21B6">모건스탠리 · 글로벌 2050</text>
+  <text x="875" y="105" text-anchor="middle" font-size="12" fill="#1A202C">$5조 (10억 대)</text>
+  <text x="540" y="285" text-anchor="middle" font-size="12" fill="#718096">전망이 두 자릿수 배로 갈린다 = 시장 크기가 아직 '미정의'라는 뜻 — 그래서 주가에도 거의 반영되지 않았다</text>
+</svg>
+<div class="legend"><div class="li"><span class="sw" style="background:#2563EB"></span>휴머노이드 시장 규모 전망 (기관·시점별, 로그축)</div></div>
+</div>
+<figcaption>그림 4. 휴머노이드 TAM 전망 스펙트럼. CAGR 추정도 기관별 17.5%~69.7%로 분산 <span class="bd bd-cfl">상충</span> | 출처: Goldman Sachs('25.1 6배 상향), Morgan Stanley('25.5 및 '26.6.24 중국 상향).</figcaption>
+</figure>
+
+<h3>8-1. 밸류체인 파급 지도 — 수혜·경쟁·중립 (티커 단위)</h3>
+<div class="twrap"><table class="wide">
+<caption>로봇 서사의 종목별 영향 방향 (본 보고서 판정)</caption>
+<thead><tr><th>층</th><th>기업(티커)</th><th>방향</th><th>근거 한 줄</th></tr></thead>
+<tbody>
+<tr class="hl"><td>두뇌·인프라</td><td>NVIDIA (NVDA)</td><td><span class="up">기회 ▲</span></td><td>3층(칩·모델·훈련장) 동시 보유 유일 — 본 보고서의 주제</td></tr>
+<tr><td>두뇌(도전)</td><td>Qualcomm (QCOM)</td><td><span class="up">기회 ▲</span></td><td>저가·저전력 볼륨 구간 — NVDA와 제로섬이 아닌 시장 분할 가능</td></tr>
+<tr><td>모델(도전)</td><td>Alphabet (GOOGL)</td><td><span class="up">기회 ▲</span></td><td>Gemini Robotics + 자체 TPU 학습 — NVIDIA 우회가 가능한 유일 모델사</td></tr>
+<tr><td>기체(수직통합)</td><td>Tesla (TSLA)</td><td>중립~기회</td><td>Optimus는 자체 칩·모델 — NVDA 매출 기여 없음, 단 서사 성공 시 테마 전체 리레이팅</td></tr>
+<tr><td>기체(NVDA 진영)</td><td>현대차(005380.KS)·UBTech(9880.HK)·Unitree(상장 임박)·Figure·1X·Agility(SPAC)</td><td><span class="up">기회 ▲</span></td><td>Thor·GR00T 채택군 — 로봇 판매가 곧 NVDA 콘텐츠 판매</td></tr>
+<tr><td>정밀 부품</td><td>Harmonic Drive(6324.T)·Nabtesco(6268.T)·Nidec(6594.T)</td><td><span class="up">기회 ▲</span></td><td>감속기·액추에이터 — 두뇌가 누구든 몸은 필요 (MS 'Bodies' 목록)</td></tr>
+<tr><td>메카트로닉스 칩</td><td>Infineon(IFX.DE)·TI(TXN)·NXP(NXPI)</td><td><span class="up">기회 ▲</span></td><td>NVIDIA 공식 파트너 — 모터제어·전력·안전 MCU가 대당 동반 탑재</td></tr>
+<tr><td>로보택시 운영</td><td>Uber(UBER)·Lucid(LCID)</td><td>기회 / <span class="down">부담 혼재</span></td><td>Uber는 자산경량 플랫폼 수혜, Lucid는 35,000대 제조 부담(희석 논란)</td></tr>
+<tr><td>배치 대기업</td><td>Amazon(AMZN)·BMW·Foxconn(2317.TW)</td><td>기회</td><td>노동 원가 절감의 최종 수혜 — Amazon은 Fauna 인수로 내재화도 병행</td></tr>
+<tr><td>중국 대체 칩</td><td>Huawei(비상장)·Horizon(9660.HK)</td><td><span class="down">NVDA에 위협 ▼</span></td><td>세계 최대 로봇 시장의 두뇌 자리를 규제 반사이익으로 잠식</td></tr>
+</tbody></table></div>
+
+<h3>8-2. 함의 판정과 체크포인트</h3>
+<div class="co co-pos"><div class="ct">판정: 기회 — '지금의 이익'이 아니라 '내재 CAP의 연장 근거' <span class="bd bd-conf">확신도: 구조(3중 과금) 높음 ~85% · 2030 매출 $150~250억 경로 중간 ~55% · 휴머노이드 대중화 시점은 낮음 ~40%</span></div>
+<p>P&amp;L 자릿수: 단기(FY27~28)는 로보택시 준비 수요와 Thor 램프로 로봇·오토가 연 $40~70억대로 성장 <span class="bd bd-est">추정</span>, 2030년 $150~250억 중심 추정(§7-2). 그러나 이 사업의 진짜 재무 효과는 두 곳에서 먼저 나타난다 — ① 로봇 모델 훈련이 밀어 올리는 <strong>데이터센터 매출</strong>(일본 로봇 이니셔티브의 Rubin 27,500칩처럼 '로봇 명목의 DC 수주'가 이미 발생), ② 본편 §10 내재 CAP 14~23년을 정당화하는 <strong>제2 S커브 서사</strong>. 투자 관점의 한 줄: 로봇은 NVIDIA를 '사는 이유'가 되기엔 이르고, '더 오래 들고 있는 이유'로는 이미 충분하다.</p></div>
+<div class="twrap"><table>
+<caption>모니터링 체크포인트 — 로봇 부문 (날짜·지표·합격선)</caption>
+<thead><tr><th>시점</th><th>이벤트</th><th>확인 지표 / 합격선</th></tr></thead>
+<tbody>
+<tr class="hl"><td>2026-07말</td><td>Unitree STAR 상장</td><td>공모 밸류·첫날 수급 — 로봇 테마 공모시장 온도계. ¥1,000억대 안착 시 테마 강화</td></tr>
+<tr><td>2026-07~08</td><td>Tesla Optimus 3 공개·Fremont 가동</td><td>실작업 시연의 질·양산 개시 여부 — 지연 반복 시 '휴머노이드 겨울' 서사 점화</td></tr>
+<tr><td>2026-08-25</td><td>NVDA Q2 실적</td><td>Edge Computing 성장률·로봇 콜 언급 빈도 — 세그 통합 후 첫 정성 추적</td></tr>
+<tr><td>2026 연말</td><td>GR00T 휴머노이드·N2 정식판·NEO 배송·Mercedes L4</td><td>레퍼런스 기체 실판매 개시 + N2 벤치 제3자 재현 — 옵션의 1차 증거화</td></tr>
+<tr><td>2027 상반기</td><td>Uber 로보택시 상업 개시</td><td>도시 수·가동률·사고 통계 — DRIVE 매출 하키스틱의 시작점</td></tr>
+<tr><td>2027</td><td>Tesla 텍사스 양산 / 중국 출하 10만 대 돌파 여부</td><td>중국 두뇌 칩 국산 비중 — NVDA '중국 역설'의 심화 속도</td></tr>
+<tr><td>분기별</td><td>모건스탠리·TrendForce 출하 추적</td><td>'26 5만 대 달성 여부 — 미달 시 전 기관 전망 하향 도미노</td></tr>
+</tbody></table></div>
+
+<h3>8-3. 한계와 가정</h3>
+<p>① 시장 전망은 기관 간 130배 갈리며 <span class="bd bd-cfl">상충</span>, 본 보고서의 2030년 매출 추정($150~250억)은 중간 시나리오의 자릿수 추정일 뿐 정밀 예측이 아니다. ② 로봇 '단독' 매출은 FY27부터 Edge Computing에 통합되어 외부 검증이 불가능해졌다 — 이후 추적은 어닝콜 정성 발언과 파트너 공시에 의존한다. ③ GR00T N2 성능(성공률 2배·벤치 1위)과 결합 효과 수치는 사측 주장으로 제3자 재현 전이다. ④ 일본 로봇 이니셔티브의 'Rubin 27,500칩·¥60조 30% 목표'는 언론 보도 기반으로 정부 1차 문서 확인 전이다 <span class="bd bd-est">보도 기반</span>. ⑤ 2025년 출하 1위는 집계 기관 간 <span class="bd bd-cfl">상충</span>이 있다 — Omdia는 AgiBot 5,168대(점유 39%) 1위, Unitree는 자사 5,500대+로 반박(Counterpoint 인용도 병존). 아울러 '26년 출하 전망도 TrendForce는 글로벌 5만+, 모건스탠리는 중국만 5만으로 서로 긴장 관계다 <span class="bd bd-cfl">상충</span>. ⑥ 본 보고서는 매매 권유가 아니며, 본편 「NVDA 기업분석 2026-07」의 밸류에이션 프레임(내재 CAP)과 함께 읽어야 완결된다.</p>
+</section>
+
+<div class="foot">
+  <p><strong>기준일:</strong> 2026-07-20 · <strong>작성:</strong> 2026-07-20 · <strong>v2 (교차 재검증·기술 심화·표 정렬 수정):</strong> 2026-07-20 · 본편 보고서: NVDA_기업분석_2026-07</p>
+  <p><strong>주요 출처:</strong> NVIDIA 뉴스룸·개발자 블로그(Jetson Thor GA 2025-08, CES 2026-01, GTC 2026-03-16~19, GTC Taipei 2026-05-31~06-01) · NVIDIA 10-K/10-Q·8-K · CNBC(Thor 가격 2025-08-25, 로보택시 2026-01-05, MS 중국 전망 2026-06-24) · Goldman Sachs·Morgan Stanley 휴머노이드 리포트 보도 · TrendForce·Omdia·Counterpoint 출하 집계 · The Robot Report·Robotics 24/7·automate.org(GTC 로봇 발표) · Pandaily(임베디드 AI 칩 경쟁) · RoboZaps·기타 산업 트래커(플레이어 현황, 2026-07) · 로이터·연합뉴스·이데일리(한국 협력) · 인피니언 코리아 보도자료(2026-03-17) · GR00T N1 백서(arXiv 2503.14734) · DreamZero 논문(arXiv 2602.15922) · Cosmos 3 기술보고서(NVIDIA Research) · Newton(리눅스재단·developer.nvidia.com) · ServeTheHome·RS·NPN 파트너(Thor 실측·가격) · BMW 그룹·Figure 발표(2026-06).</p>
+  <p><strong>표기 원칙:</strong> <span class="bd bd-est">추정</span>=근거 있는 추정 · <span class="bd bd-drv">파생</span>=공시값 계산 · <span class="bd bd-cfl">상충</span>=출처 불일치 · 확신도는 베이지안 표기. 사측 성능 수치는 본문에 주체를 명시.</p>
+</div>
+</div>
+</body>
+</html>
