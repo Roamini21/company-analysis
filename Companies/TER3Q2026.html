@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teradyne(TER) 기업분석 보고서</title>
+<style>
+/* ===== 보고서 UI 통일 시스템 v1 — 수정 금지 ===== */
+:root{
+  --bg-page:#FFFFFF; --bg-soft:#F6F8FA;
+  --brand:#0F2B46; --brand-2:#1E4265;
+  --ink:#1A202C; --ink-2:#4A5568; --ink-3:#718096;
+  --line:#E2E8F0; --line-2:#CBD5E1;
+  --accent:#2563EB; --accent-soft:#EFF6FF;
+  --pos:#047857; --pos-soft:#ECFDF5;
+  --neg:#DC2626; --neg-soft:#FEF2F2;
+  --warn:#B45309; --warn-soft:#FFFBEB;
+  --gold:#B7791F; --gold-soft:#FEF3C7;
+  --c1:#2563EB; --c2:#7C3AED; --c3:#059669; --c4:#D97706;
+  --c5:#DC2626; --c6:#0891B2; --c7:#DB2777; --c8:#64748B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+    "Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  background:var(--bg-page); color:var(--ink);
+  font-size:15px; line-height:1.7; word-break:keep-all;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px 80px;}
+p{margin:0 0 12px; color:var(--ink);}
+strong{color:var(--ink);font-weight:700;}
+a{color:var(--accent);text-decoration:none;}
+ul,ol{margin:0 0 12px 22px;} li{margin:4px 0;color:var(--ink);}
+
+/* --- 표지 밴드 (어두운 배경 허용 위치 1) --- */
+/* 배경은 전체 폭, 좌우 패딩 계산식이 내용을 본문(.wrap)과 같은 1040px
+   중앙선에 자동 정렬한다. 내부 래퍼 div가 전혀 필요 없다 — 이 패딩
+   공식을 절대 단순 숫자(예: 32px)로 바꾸지 말 것. */
+.cover{background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  color:#FFFFFF;padding:44px max(28px,calc((100% - 1040px)/2 + 28px));
+  border-radius:0 0 18px 18px;margin-bottom:36px;}
+.cover h1{font-size:27px;font-weight:800;color:#FFFFFF;margin:6px 0 10px;}
+.cover .sub{color:#C9D6E4;font-size:14px;}
+.cover .meta{color:#9FB3C8;font-size:12.5px;margin-top:14px;}
+.cover .kpis{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+.cover .kpi{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);
+  border-radius:10px;padding:10px 14px;min-width:130px;}
+.cover .kpi .k{font-size:11.5px;color:#9FB3C8;}
+.cover .kpi .v{font-size:18px;font-weight:800;color:#FFFFFF;}
+.cover .kpi .v.up{color:#6EE7B7;} .cover .kpi .v.down{color:#FCA5A5;}
+
+/* --- 목차 --- */
+.toc{background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;
+  padding:18px 22px;margin:0 0 40px;}
+.toc .t{font-weight:800;color:var(--brand);font-size:14px;margin-bottom:10px;}
+.toc ol{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0;}
+.toc li{white-space:nowrap;font-size:13.5px;}
+.toc a{color:var(--ink-2);}
+
+/* --- 섹션 --- */
+section{margin:56px 0 0;}
+h2{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:800;
+  color:var(--brand);border-bottom:2px solid var(--brand);
+  padding-bottom:10px;margin:0 0 20px;}
+h2 .no{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:var(--brand);
+  color:#FFFFFF;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;}
+h3{font-size:16.5px;font-weight:700;color:var(--ink);margin:28px 0 12px;}
+.lead{font-size:15.5px;color:var(--ink);background:var(--accent-soft);
+  border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+  padding:14px 16px;margin:0 0 16px;}
+.lead *{color:var(--ink);}
+
+/* --- 콜아웃 (배경+글자색 자급) --- */
+.co{border-radius:10px;padding:16px 18px;margin:16px 0;border:1px solid;}
+.co .ct{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.co p,.co li{font-size:14px;margin-bottom:6px;}
+.co-key{background:var(--accent-soft);border-color:#BFDBFE;}
+.co-key,.co-key *{color:#1E3A8A;}
+.co-pos{background:var(--pos-soft);border-color:#A7F3D0;}
+.co-pos,.co-pos *{color:#065F46;}
+.co-neg{background:var(--neg-soft);border-color:#FECACA;}
+.co-neg,.co-neg *{color:#991B1B;}
+.co-warn{background:var(--warn-soft);border-color:#FDE68A;}
+.co-warn,.co-warn *{color:#92400E;}
+.co-note{background:var(--bg-soft);border-color:var(--line);}
+.co-note,.co-note *{color:var(--ink-2);}
+
+/* --- 배지 (데이터 계보·확신도) --- */
+.bd{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;
+  padding:2px 7px;vertical-align:1px;margin:0 2px;}
+.bd-est{background:var(--warn-soft);color:#92400E;border:1px solid #FDE68A;}
+.bd-drv{background:var(--accent-soft);color:#1E40AF;border:1px solid #BFDBFE;}
+.bd-cfl{background:var(--neg-soft);color:#991B1B;border:1px solid #FECACA;}
+.bd-conf{background:var(--bg-soft);color:var(--ink-2);border:1px solid var(--line-2);}
+
+/* --- KPI 카드 그리드 --- */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;margin:16px 0;}
+.kcard{background:#FFFFFF;border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;}
+.kcard .k{font-size:12px;color:var(--ink-3);}
+.kcard .v{font-size:20px;font-weight:800;color:var(--ink);margin-top:2px;}
+.kcard .v.up{color:var(--pos);} .kcard .v.down{color:var(--neg);}
+.kcard .d{font-size:11.5px;color:var(--ink-3);margin-top:2px;}
+
+/* --- 표 --- */
+.twrap{overflow-x:auto;margin:16px 0;border:1px solid var(--line);
+  border-radius:10px;
+  background:
+    linear-gradient(to right,#FFF 30%,rgba(255,255,255,0)),
+    linear-gradient(to left,#FFF 30%,rgba(255,255,255,0)) 100% 0,
+    radial-gradient(farthest-side at 0 50%,rgba(15,43,70,.14),transparent),
+    radial-gradient(farthest-side at 100% 50%,rgba(15,43,70,.14),transparent) 100% 0;
+  background-repeat:no-repeat;background-size:60px 100%,60px 100%,16px 100%,16px 100%;
+  background-attachment:local,local,scroll,scroll;}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:#FFFFFF;}
+caption{caption-side:top;text-align:left;font-weight:800;color:var(--brand);
+  font-size:14px;padding:12px 14px 8px;}
+th{background:var(--brand);color:#FFFFFF;font-weight:700;font-size:12.5px;
+  padding:10px 12px;text-align:left;white-space:nowrap;}
+td{padding:9px 12px;border-top:1px solid var(--line);color:var(--ink);
+  vertical-align:top;}
+tbody tr:nth-child(even) td{background:#F8FAFC;}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+td .up{color:var(--pos);font-weight:700;} td .down{color:var(--neg);font-weight:700;}
+tr.hl td{background:var(--gold-soft);color:#78350F;font-weight:700;}
+tr.total td{background:var(--accent-soft);color:#1E3A8A;font-weight:800;
+  border-top:2px solid var(--line-2);}
+.wide{min-width:860px;}
+
+/* --- 그림(figure) --- */
+figure{margin:24px 0;}
+.fig-t{font-weight:800;color:var(--ink);font-size:14.5px;margin-bottom:10px;}
+.fig-box{background:#FFFFFF;border:1px solid var(--line);border-radius:12px;
+  padding:16px;}
+figcaption{font-size:12px;color:var(--ink-3);margin-top:8px;line-height:1.6;}
+figure img{max-width:100%;height:auto;border-radius:8px;display:block;}
+svg{max-width:100%;height:auto;display:block;}
+svg text{font-family:inherit;}
+
+/* --- 범례 (차트 외부 HTML 범례) --- */
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 2px 0;}
+.legend .li{display:flex;align-items:center;gap:6px;font-size:12.5px;
+  color:var(--ink-2);white-space:nowrap;}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto;}
+
+/* --- 이벤트 마커 범례 표 (주가 차트용) --- */
+.evt{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px;}
+.evt td{padding:6px 10px;border-top:1px solid var(--line);color:var(--ink);}
+.evt .n{width:30px;font-weight:800;color:#FFFFFF;text-align:center;}
+.evt .n span{display:inline-block;width:20px;height:20px;line-height:20px;
+  border-radius:50%;background:var(--brand);font-size:11.5px;}
+.evt .up{color:var(--pos);font-weight:700;} .evt .down{color:var(--neg);font-weight:700;}
+
+/* --- Bull/Bear 2열 --- */
+.bb{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+.bb .col{border-radius:12px;padding:16px 18px;border:1px solid;}
+.bb .bull{background:var(--pos-soft);border-color:#A7F3D0;}
+.bb .bull,.bb .bull *{color:#065F46;}
+.bb .bear{background:var(--neg-soft);border-color:#FECACA;}
+.bb .bear,.bb .bear *{color:#991B1B;}
+.bb .ct{font-weight:800;font-size:14px;margin-bottom:8px;}
+
+/* --- SWOT 4분면 --- */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+.swot .q{border-radius:12px;padding:14px 16px;border:1px solid;}
+.swot .s{background:var(--pos-soft);border-color:#A7F3D0;} .swot .s,.swot .s *{color:#065F46;}
+.swot .w{background:var(--neg-soft);border-color:#FECACA;} .swot .w,.swot .w *{color:#991B1B;}
+.swot .o{background:var(--accent-soft);border-color:#BFDBFE;} .swot .o,.swot .o *{color:#1E3A8A;}
+.swot .t{background:var(--warn-soft);border-color:#FDE68A;} .swot .t,.swot .t *{color:#92400E;}
+.swot .qt{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.swot ul{margin:0 0 0 18px;} .swot li{font-size:13.5px;margin:3px 0;}
+
+/* --- 푸터 --- */
+.foot{margin-top:64px;border-top:1px solid var(--line);padding-top:16px;
+  font-size:12px;color:var(--ink-3);line-height:1.7;}
+
+/* --- 반응형 --- */
+@media (max-width:640px){
+  .wrap{padding:0 16px 60px;}
+  .cover{padding:30px 16px;} .cover h1{font-size:22px;}
+  .bb,.swot{grid-template-columns:1fr;}
+  h2{font-size:19px;}
+}
+@media print{
+  .cover{border-radius:0;} body{font-size:13px;}
+}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="sub">기업분석 보고서 · 반도체 장비(ATE)·로보틱스 · NASDAQ:TER</div>
+  <h1>Teradyne — "웨이퍼에서 AI 데이터센터까지", 테스트가 AI 인프라의 통행세가 된 해</h1>
+  <div class="kpis">
+    <div class="kpi"><div class="k">현재 주가 (7/29 종가)</div><div class="v">$336.61</div></div>
+    <div class="kpi"><div class="k">시가총액</div><div class="v">약 $53B</div></div>
+    <div class="kpi"><div class="k">Q2'26 매출 (YoY)</div><div class="v up">$1,329M +104%</div></div>
+    <div class="kpi"><div class="k">AI 관련 매출 비중</div><div class="v up">60%+</div></div>
+    <div class="kpi"><div class="k">내재 CAP (성장 13~14% 가정)</div><div class="v">약 20~25년</div></div>
+  </div>
+  <div class="meta">기준일: 2026-07-30 (주가·재무는 2026-07-29 종가 및 Q2'26 실적 기준) · 데이터 출처 약 40개(회사 공시·어닝콜·SEC·시장데이터·업계 리서치) · [추정]·[파생]·[상충] 표기 사용</div>
+</div>
+<div class="wrap">
+
+<nav class="toc">
+  <div class="t">목차</div>
+  <ol>
+    <li><a href="#s1">1. 핵심 요약</a></li>
+    <li><a href="#s2">2. 기업 개요</a></li>
+    <li><a href="#s3">3. 수익 구조</a></li>
+    <li><a href="#s4">4. 제품·기술력</a></li>
+    <li><a href="#s5">5. 산업 분석</a></li>
+    <li><a href="#s6">6. 경제적 해자</a></li>
+    <li><a href="#s7">7. 피어그룹 비교</a></li>
+    <li><a href="#s8">8. 시장 내러티브</a></li>
+    <li><a href="#s9">9. 재무·DCF</a></li>
+    <li><a href="#s10">10. 내재 CAP</a></li>
+    <li><a href="#s11">11. Bull Case</a></li>
+    <li><a href="#s12">12. Bear Case</a></li>
+    <li><a href="#s13">13. SWOT</a></li>
+    <li><a href="#s14">14. 경영진·자본배분</a></li>
+    <li><a href="#s15">15. 종합 판단</a></li>
+  </ol>
+</nav>
+
+<!-- ============ 1. 핵심 요약 ============ -->
+<section id="s1">
+<h2><span class="no">1</span>핵심 요약 (Executive Summary)</h2>
+
+<p class="lead"><strong>한 문장 요약:</strong> Teradyne은 세계 모든 반도체가 출하 전 반드시 거쳐야 하는 '시험대(자동 테스트 장비, ATE)'를 Advantest와 사실상 양분하는 회사이며, 2025년 하반기부터 AI 칩·HBM·네트워킹 테스트 수요가 폭발하면서 분기 매출이 1년 만에 2배($652M→$1,329M), 주가가 저점 대비 최대 5.5배($89→$488)가 된 AI 인프라 '픽 앤 셔블(picks &amp; shovels)' 기업이다.</p>
+
+<p>이 회사의 본질은 "반도체 품질의 최종 관문"이다. 트랜지스터가 아무리 많이 생산되어도, 테스트를 통과하지 못한 칩은 팔 수 없다. AI 가속기·HBM처럼 칩이 복잡해지고, 칩렛(chiplet, 여러 다이를 한 패키지에 결합하는 방식)과 첨단 패키징이 확산될수록 '테스트 강도'는 구조적으로 올라간다. 실제로 반도체 설비투자(CapEx) 중 테스트 장비가 차지하는 비율은 2023년 4%에서 2025년 7%, 2026년(1~5월) 8%로 뛰었고, 회사는 이 비율이 장기 7~9%에 안착하며 ATE 시장이 2025년 약 $12B에서 2030년 $18~24B로 커진다고 본다. Teradyne은 이 시장의 2위(전체 점유율 약 37% <span class="bd bd-drv">파생</span>)로서, 그동안 Advantest가 독점해 온 엔비디아향 '머천트 GPU' 테스트에 2026년 처음으로 침투(1분기 첫 수주→2분기 납품)했고, 구글 TPU류 '커스텀 ASIC' 테스트에서는 이미 45~50%의 지분을 갖고 있다. 여기에 협동로봇 세계 1위 Universal Robots를 보유해 'AI 칩을 시험하는 회사이자, AI가 움직이는 로봇을 파는 회사'라는 이중 노출을 갖는다.</p>
+
+<div class="co co-key">
+<div class="ct">시장 내재 CAP 결론 (상세는 §10)</div>
+<p>자본비용 11.4%(무위험 4.64% + 조정베타 1.52 × ERP 4.45%), 반도체장비 섹터 페이드 0.25를 적용해 현재 주가 $336.61을 역산하면, 시장은 대략 <strong>"NOPAT 연 13~14% 성장 × 20~25년"</strong> 조합을 가격에 반영하고 있다. 연 10% 성장으로는 어떤 기간을 넣어도 현 주가에 도달하지 못하며(가치 상한 약 $223), 연 16%의 초고성장을 믿어야 내재 CAP가 17년 수준으로 내려온다. 즉 현재 가격은 프레임워크 기준표(15~20년=약간 낙관, 20년 초과=과도한 낙관)상 <strong>낙관 구간의 상단</strong>에 있다. 이 기대는 ①ATE TAM의 구조적 확장(테스트 강도 상승), ②듀얼벤더 전환에 따른 점유율 상승(37%→40%대), ③로보틱스 Physical AI 옵션이 모두 이행될 때 정당화된다. 강점의 실체는 분명하나, 가격은 이미 그 강점의 장기 지속을 상당 부분 선반영하고 있다 — 2027년 재가속(회사 예고)과 Q4 콜의 타깃 모델 상향이 이 기대를 검증할 1차 시험대다.</p>
+</div>
+
+<div class="kgrid">
+  <div class="kcard"><div class="k">FY2026E 매출 <span class="bd bd-drv">파생</span></div><div class="v">$5.0~5.2B</div><div class="d">FY25 $3.19B 대비 약 +60%</div></div>
+  <div class="kcard"><div class="k">FY2026E 비GAAP EPS <span class="bd bd-drv">파생</span></div><div class="v">$9.0~9.4</div><div class="d">상반기 실적 $5.02 + 가이던스</div></div>
+  <div class="kcard"><div class="k">컴퓨트 매출 성장 (Q2'26)</div><div class="v up">+약 600% YoY</div><div class="d">SoC 매출의 70%로 부상</div></div>
+  <div class="kcard"><div class="k">메모리 수주잔량 신호</div><div class="v up">Book-to-Bill &gt; 2</div><div class="d">HBM·DRAM·NAND 회복</div></div>
+  <div class="kcard"><div class="k">애널리스트 목표가</div><div class="v">평균 $430</div><div class="d">범위 $270~550 (18명)</div></div>
+</div>
+</section>
+
+<!-- ============ 2. 기업 개요 ============ -->
+<section id="s2">
+<h2><span class="no">2</span>기업 개요</h2>
+
+<h3>2-1. 창업과 역사 — "테라(10¹²) 단위의 힘"</h3>
+<p>Teradyne은 1960년 MIT 동창인 알렉스 다벨로프(Alexander V. d'Arbeloff)와 닉 드울프(Nicholas DeWolf)가 보스턴에서 창업했다. 사명은 '테라(tera, 10¹²)'와 힘의 단위 '다인(dyne)'의 합성으로, "막대한 규모의 시험 능력"이라는 창업 정신을 담았다. 당시 반도체(다이오드·트랜지스터)는 사람이 계측기로 한 개씩 시험하던 시절이었고, 두 창업자는 이 과정을 기계로 자동화하면 반도체 산업 전체의 병목을 풀 수 있다고 봤다. 1961년 첫 제품인 다이오드 자동 테스터를 시작으로, Teradyne은 이후 65년간 "반도체가 복잡해질수록 테스트가 더 중요해진다"는 단 하나의 명제 위에서 성장해 왔다. 본사는 매사추세츠주 노스리딩(North Reading)에 있으며 직원은 약 6,600명이다.</p>
+<p>회사의 궤적은 크게 네 국면으로 나뉜다. <strong>①테스트 전업 시대(1960~2007)</strong>: SoC 테스터 FLEX 패밀리, 볼륨 디바이스용 J750 등으로 로직 테스트의 양대 축을 구축했다. <strong>②테스트 포트폴리오 확장(2008~2014)</strong>: 2008년 Nextest(메모리 테스트, 현 Magnum의 모태)와 Eagle Test(아날로그·전력, 현 ETS 플랫폼)를 인수해 메모리·아날로그로 영역을 넓혔고, 2011년 LitePoint(무선 테스트)를 더했다. <strong>③로보틱스 진출(2015~2022)</strong>: 2015년 협동로봇(cobot) 창시 기업인 덴마크 Universal Robots(UR)를 약 $285M에, 2018년 자율이동로봇(AMR) 기업 MiR을 인수하며 "테스트의 사이클성을 산업자동화의 구조 성장으로 보완한다"는 두 기둥 전략을 세웠다. <strong>④AI 시대 재편(2023~현재)</strong>: 2023년 2월 SemiTest 사장 출신 엔지니어 그레그 스미스(Greg Smith)가 CEO로 취임한 뒤, 2024년 인터페이스 보드 사업(DIS)을 프로브카드 업체 Technoprobe에 매각하며 동사 지분 10%를 취득했고, 2025년 Infineon의 자동테스트 기술·인력(전력 반도체 테스트), 광계측 기업 Quantifi Photonics를 인수, 2026년에는 테스트 소프트웨어 기업 TestInsight 인수와 고속 인터커넥트 테스트 합작사 MLTP(MultiLane Test Products JV)를 출범시키며 "웨이퍼에서 AI 데이터센터까지(wafer-to-AI data center)" 전략으로 포트폴리오를 재구성했다.</p>
+
+<h3>2-2. 무엇을 하는 회사인가 — 3개 사업 그룹</h3>
+<p><strong>Semiconductor Test(반도체 테스트, 매출의 84%)</strong>가 본체다. 반도체는 웨이퍼 상태에서 한 번(웨이퍼 소트), 패키징 후 한 번(파이널 테스트), 고성능 칩은 시스템 환경에서 한 번 더(시스템 레벨 테스트, SLT) 시험을 거친다. Teradyne은 이 전 구간에 테스터를 공급한다: 컴퓨트·AI 가속기용 <strong>UltraFLEXplus</strong>, HBM·DRAM·NAND용 <strong>Magnum</strong>, 마이크로컨트롤러용 J750, 아날로그·전력용 ETS-800, 그리고 스토리지(HDD)·SLT를 담당하는 IST(Integrated System Test)가 있다. <strong>Product Test(제품 테스트, 8%)</strong>는 생산 보드 테스트(신제품 Omnics), 방산·항공(2026년 미 국방부 $139.9M 계약), 무선(LitePoint), 실리콘 포토닉스 광테스트, 데이터센터 인터커넥트(MLTP)를 묶은 그룹이다. <strong>Robotics(로보틱스, 8%)</strong>는 UR(협동로봇 누적 11만 대+, 세계 최대 설치 기반)과 MiR(AMR 누적 1.1만 대+)로 구성되며, 2026년 NVIDIA와의 파트너십 아래 'Physical AI'(로봇에 AI를 심어 자연어·시각으로 작업을 지시하는 패러다임)를 상용화하는 단계다.</p>
+
+<h3>2-3. 현재의 규모와 위상</h3>
+<div class="kgrid">
+  <div class="kcard"><div class="k">FY2025 매출 / 비GAAP EPS</div><div class="v">$3.19B / $3.96</div><div class="d">+13% / +23% YoY</div></div>
+  <div class="kcard"><div class="k">H1 2026 매출 / 비GAAP EPS</div><div class="v up">$2.61B / $5.02</div><div class="d">약 +100% / +275% YoY</div></div>
+  <div class="kcard"><div class="k">ATE 시장 지위</div><div class="v">글로벌 2위</div><div class="d">Advantest와 합산 점유 85%+</div></div>
+  <div class="kcard"><div class="k">지수 편입</div><div class="v">Nasdaq-100</div><div class="d">2026-06-22 신규 편입</div></div>
+  <div class="kcard"><div class="k">배당·자사주</div><div class="v">13년 연속 배당</div><div class="d">$1B 자사주 프로그램(2025.4 승인)</div></div>
+  <div class="kcard"><div class="k">52주 주가 범위</div><div class="v">$89 ~ $488</div><div class="d">사상최고 2026-06-30</div></div>
+</div>
+<p>요컨대 Teradyne은 65년 된 '테스트 회사'가 AI 사이클의 한복판에서 성장주로 재정의된 사례다. 2023년까지 이 회사의 최대 변수는 애플·모바일 사이클이었지만, 2025년을 기점으로 컴퓨트(AI 가속기·CPU·네트워킹 칩)가 모바일을 제치고 최대 매출원이 되었고(2025년 컴퓨트 매출 +90%, SoC 매출 내 비중 2023년 10%→2026년 2분기 70%), 회사 발표 기준 Q4'25는 2025년 최대이자 역대 2위 분기 매출을 기록했고, "2·3분기가 정점"이던 회사의 역사적 계절성 패턴이 깨졌다고 회사는 설명했다.</p>
+</section>
+
+<!-- ============ 3. 수익 구조 ============ -->
+<section id="s3">
+<h2><span class="no">3</span>수익 구조 — 어떻게 돈을 버는가</h2>
+
+<p class="lead">Teradyne의 돈은 "칩 1개당 테스트 몇 초 × 초당 비용"에서 나온다. 고객(파운드리·팹리스·메모리·OSAT)이 생산량을 늘리거나 칩이 복잡해져 테스트 시간이 길어지면, 테스터를 추가 구매해야 한다. 2026년 상반기 기준 매출의 84%가 반도체 테스트에서, 그중 70%가 AI 컴퓨트·메모리·네트워킹에서 발생한다 — 즉 현재의 Teradyne은 사실상 'AI 데이터센터 설비투자의 파생 수요'를 파는 회사다.</p>
+
+<figure>
+<div class="fig-t">돈의 흐름: 고객군 → 3개 사업그룹 → 이익·주주환원</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg">
+  <!-- 고객군 -->
+  <text x="70" y="40" font-size="13" font-weight="800" fill="#0F2B46">고객 (누가 사는가)</text>
+  <rect x="70" y="55" width="215" height="52" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="82" y="77" font-size="12.5" fill="#1E3A8A" font-weight="700">파운드리·OSAT (대만 축)</text>
+  <text x="82" y="95" font-size="12" fill="#1E3A8A">TSMC 생태계·후공정 외주</text>
+  <rect x="70" y="115" width="215" height="52" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="82" y="137" font-size="12.5" fill="#1E3A8A" font-weight="700">팹리스·하이퍼스케일러</text>
+  <text x="82" y="155" font-size="12" fill="#1E3A8A">AI 가속기·커스텀 ASIC·GPU</text>
+  <rect x="70" y="175" width="215" height="52" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="82" y="197" font-size="12.5" fill="#1E3A8A" font-weight="700">메모리 제조사</text>
+  <text x="82" y="215" font-size="12" fill="#1E3A8A">HBM·DRAM·NAND (한국 축)</text>
+  <rect x="70" y="235" width="215" height="52" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="82" y="257" font-size="12.5" fill="#1E3A8A" font-weight="700">스토리지·전자기기 OEM</text>
+  <text x="82" y="275" font-size="12" fill="#1E3A8A">HDD 3사·보드·방산·무선</text>
+  <rect x="70" y="295" width="215" height="52" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="82" y="317" font-size="12.5" fill="#1E3A8A" font-weight="700">제조·물류 기업</text>
+  <text x="82" y="335" font-size="12" fill="#1E3A8A">전자제조·반도체 공장 자동화</text>
+  <!-- 화살표 -->
+  <line x1="285" y1="140" x2="360" y2="140" stroke="#CBD5E1" stroke-width="2"/>
+  <line x1="285" y1="260" x2="360" y2="285" stroke="#CBD5E1" stroke-width="2"/>
+  <line x1="285" y1="321" x2="360" y2="365" stroke="#CBD5E1" stroke-width="2"/>
+  <!-- 사업그룹 -->
+  <text x="370" y="40" font-size="13" font-weight="800" fill="#0F2B46">사업그룹 (무엇을 파는가) — Q2'26 매출</text>
+  <rect x="370" y="55" width="300" height="150" rx="10" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
+  <text x="385" y="80" font-size="13.5" font-weight="800" fill="#1A202C">Semiconductor Test  $1,122M · 84%</text>
+  <text x="385" y="102" font-size="12" fill="#4A5568">SoC $843M(컴퓨트 70%) · 메모리 $212M</text>
+  <text x="385" y="120" font-size="12" fill="#4A5568">IST(스토리지·SLT) $67M</text>
+  <text x="385" y="142" font-size="12" fill="#4A5568">제품: UltraFLEXplus·Magnum·J750·ETS</text>
+  <text x="385" y="164" font-size="12" fill="#4A5568">모델: 테스터 판매 + 업그레이드·서비스</text>
+  <text x="385" y="186" font-size="12" fill="#047857" font-weight="700">세그먼트 이익률(세전) 약 29% 수준</text>
+  <rect x="370" y="215" width="300" height="90" rx="10" fill="#FFFFFF" stroke="#D97706" stroke-width="2"/>
+  <text x="385" y="240" font-size="13.5" font-weight="800" fill="#1A202C">Product Test  $107M · 8%</text>
+  <text x="385" y="262" font-size="12" fill="#4A5568">보드테스트(Omnics)·광테스트·방산</text>
+  <text x="385" y="282" font-size="12" fill="#4A5568">무선(LitePoint)·인터커넥트(MLTP JV)</text>
+  <rect x="370" y="315" width="300" height="100" rx="10" fill="#FFFFFF" stroke="#DC2626" stroke-width="2"/>
+  <text x="385" y="340" font-size="13.5" font-weight="800" fill="#1A202C">Robotics  $100M · 8%</text>
+  <text x="385" y="362" font-size="12" fill="#4A5568">UR 협동로봇 · MiR 자율이동로봇</text>
+  <text x="385" y="382" font-size="12" fill="#4A5568">Physical AI 앱 · myUR 플릿 SW</text>
+  <text x="385" y="402" font-size="12" fill="#B45309" font-weight="700">2025 적자 → 2026 회복 국면</text>
+  <!-- 화살표 -->
+  <line x1="670" y1="130" x2="745" y2="150" stroke="#CBD5E1" stroke-width="2"/>
+  <line x1="670" y1="260" x2="745" y2="200" stroke="#CBD5E1" stroke-width="2"/>
+  <line x1="670" y1="365" x2="745" y2="230" stroke="#CBD5E1" stroke-width="2"/>
+  <!-- 이익 -->
+  <text x="755" y="40" font-size="13" font-weight="800" fill="#0F2B46">이익과 배분 (Q2'26)</text>
+  <rect x="755" y="55" width="205" height="200" rx="10" fill="#ECFDF5" stroke="#A7F3D0"/>
+  <text x="770" y="82" font-size="12.5" fill="#065F46" font-weight="800">매출총이익률 59.8%</text>
+  <text x="770" y="106" font-size="12.5" fill="#065F46" font-weight="800">비GAAP 영업이익 $448M</text>
+  <text x="770" y="126" font-size="12" fill="#065F46">(영업이익률 33.7%)</text>
+  <text x="770" y="150" font-size="12.5" fill="#065F46" font-weight="800">잉여현금흐름 $378M</text>
+  <text x="770" y="174" font-size="12" fill="#065F46">상반기 FCF $579M (+150%)</text>
+  <text x="770" y="202" font-size="12" fill="#065F46">→ 재투자(R&amp;D·CapEx) 우선</text>
+  <text x="770" y="222" font-size="12" fill="#065F46">→ 자사주 $69M·배당 $20M</text>
+  <text x="770" y="242" font-size="12" fill="#065F46">→ M&amp;A 드라이파우더</text>
+</svg>
+</div>
+<figcaption>그림 1. Teradyne 수익 구조 개관 — 고객군에서 3개 사업그룹을 거쳐 이익·주주환원으로 이어지는 흐름 | 출처: 회사 Q2'26 실적발표·어닝콜(2026-07-28/29), 세그먼트 이익률은 10-Q 세그먼트 손익 기준(직접 작도)</figcaption>
+</figure>
+
+<h3>3-1. 매출 구성 — 컴퓨트가 회사를 다시 정의했다</h3>
+<figure>
+<div class="fig-t">Q2'26 매출 $1,329M의 구성: SoC(그중 70%가 컴퓨트)가 3분의 2</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 500 50 A 150 150 0 1 1 388.1 299.9 L 432.9 259.9 A 90 90 0 1 0 500 110 Z" fill="#2563EB"/>
+  <path d="M 388.1 299.9 A 150 150 0 0 1 355.6 159.4 L 413.4 175.6 A 90 90 0 0 0 432.9 259.9 Z" fill="#7C3AED"/>
+  <path d="M 355.6 159.4 A 150 150 0 0 1 375.3 116.6 L 425.2 150.0 A 90 90 0 0 0 413.4 175.6 Z" fill="#059669"/>
+  <path d="M 375.3 116.6 A 150 150 0 0 1 431.7 66.5 L 459.0 119.9 A 90 90 0 0 0 425.2 150.0 Z" fill="#D97706"/>
+  <path d="M 431.7 66.5 A 150 150 0 0 1 500 50 L 500 110 A 90 90 0 0 0 459.0 119.9 Z" fill="#DC2626"/>
+  <text x="500" y="192" font-size="13" fill="#4A5568" text-anchor="middle">Q2'26 합계</text>
+  <text x="500" y="218" font-size="18" font-weight="800" fill="#1A202C" text-anchor="middle">$1,329M</text>
+  <text x="609" y="253" font-size="12.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">63.4%</text>
+  <text x="383" y="231" font-size="12.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">16.0%</text>
+  <text x="420" y="114" font-size="12.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">8.1%</text>
+  <text x="472" y="87" font-size="12.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">7.5%</text>
+</svg>
+<div class="legend">
+  <div class="li"><span class="sw" style="background:#2563EB"></span>SoC 테스트 $843M (컴퓨트가 그중 70%)</div>
+  <div class="li"><span class="sw" style="background:#7C3AED"></span>메모리 테스트 $212M (사상 최대)</div>
+  <div class="li"><span class="sw" style="background:#059669"></span>IST(스토리지·SLT) $67M (5.0%)</div>
+  <div class="li"><span class="sw" style="background:#D97706"></span>Product Test $107M</div>
+  <div class="li"><span class="sw" style="background:#DC2626"></span>Robotics $100M</div>
+</div>
+</div>
+<figcaption>그림 2. Q2'26 매출 구성 | 출처: Teradyne Q2'26 보도자료(2026-07-28)·어닝콜 세부 분해. IST 조각(5.0%)은 라벨 겹침 방지를 위해 범례에만 표기</figcaption>
+</figure>
+
+<div class="twrap"><table>
+<caption>사업그룹별 실적 요약 — 세 그룹 모두 성장 국면 진입</caption>
+<thead><tr><th>사업그룹</th><th class="num">Q2'26 매출 ($M)</th><th class="num">YoY</th><th class="num">QoQ</th><th>수익성·특징</th></tr></thead>
+<tbody>
+<tr><td><strong>Semiconductor Test</strong><br>SoC / 메모리 / IST</td><td class="num">1,122<br>843 / 212 / 67</td><td class="num"><span class="up">+128%</span></td><td class="num">+1%</td><td>컴퓨트 +약 600% YoY, 메모리 3분기 연속 $200M+ 사상 최대(북투빌 2배+), IST는 HDD 3사 AI 수요로 QoQ 2.5배. 세그먼트 세전이익률 약 29%(Q1'25 10-Q 기준) <span class="bd bd-drv">파생</span></td></tr>
+<tr><td><strong>Product Test</strong></td><td class="num">107</td><td class="num"><span class="up">+26%</span></td><td class="num"><span class="up">+33%</span></td><td>보드테스트 신제품 Omnics 출하 개시, MLTP JV(고속 인터커넥트) 가세, 방산 $139.9M 수주. 이익률 한 자릿수 중반~10%대 <span class="bd bd-drv">파생</span></td></tr>
+<tr><td><strong>Robotics</strong></td><td class="num">100</td><td class="num"><span class="up">+33%</span></td><td class="num"><span class="up">+9%</span></td><td>전자제조·반도체가 최대 엔드마켓으로 부상(QoQ +50%), AI 관련 매출이 로보틱스의 15%. 2025년 구조조정 후 적자 축소 중(Q1'25 세전 −$37M) </td></tr>
+<tr class="total"><td>전사</td><td class="num">1,329</td><td class="num">+104%</td><td class="num">+4%</td><td>GM 59.8%, 비GAAP 영업이익률 33.7%, FCF $378M</td></tr>
+</tbody>
+</table></div>
+
+<h3>3-2. 수익 모델의 질 — 무엇이 좋고 무엇이 약한가</h3>
+<p>Teradyne의 수익 모델은 <strong>고마진 자본재 판매형</strong>이다. 테스터 1대는 수십만~수백만 달러의 고가 장비이고, 매출총이익률은 58~61%로 장비 업종 최상위권이다(참고: 증착·식각 장비사들은 통상 40%대 중후반). 이 마진의 원천은 하드웨어가 아니라 <strong>소프트웨어와 IP</strong>다 — 테스트 프로그램 개발환경(IG-XL)과 축적된 테스트 IP가 플랫폼에 락인(lock-in)되어 있어, 고객이 한 세대 테스터를 채택하면 다음 세대에서도 같은 벤더의 프로그램 자산을 재활용하려는 유인이 강하다. 또한 장비는 팔린 뒤에도 계측 카드 추가·소프트웨어 업그레이드·서비스로 후속 매출을 만든다.</p>
+<p>약점은 <strong>순수 사이클성</strong>이다. 구독·소모품형 반복 매출의 비중이 낮아, 고객 CapEx가 꺾이면 매출이 즉각 수축한다(2022년 $3.16B→2023년 $2.68B의 -15% 경험). 다만 두 가지가 이 약점을 구조적으로 완화하고 있다: ①테스트 강도의 추세적 상승(§5-A)으로 사이클의 저점 자체가 높아지고 있고, ②메모리 고객들이 2027년까지의 캐파 계획에 맞춰 선주문을 넣으면서(북투빌 2배+) 가시성이 과거보다 길어졌다. 그럼에도 이 회사의 손익 변동성은 여전히 크다는 점(분기 매출이 1년 새 2배가 될 수 있다는 것은, 반대로 절반이 될 수도 있다는 뜻)을 §12에서 다시 다룬다.</p>
+
+<h3>3-3. 고객 집중과 지역 분포 — '대만 36%'의 의미</h3>
+<figure>
+<div class="fig-t">FY2025 지역별 매출: 최종 수요는 미국 하이퍼스케일러, 청구지는 아시아 제조 거점</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg">
+  <text x="70" y="52" font-size="12" fill="#4A5568" text-anchor="end" dx="80">대만</text>
+  <rect x="160" y="36" width="648" height="24" rx="4" fill="#2563EB"/>
+  <text x="816" y="53" font-size="12.5" font-weight="700" fill="#1A202C">36%</text>
+  <text x="150" y="94" font-size="12" fill="#4A5568" text-anchor="end">기타(일본·동남아 등)</text>
+  <rect x="160" y="78" width="324" height="24" rx="4" fill="#64748B"/>
+  <text x="492" y="95" font-size="12.5" font-weight="700" fill="#1A202C">18%</text>
+  <text x="150" y="136" font-size="12" fill="#4A5568" text-anchor="end">중국</text>
+  <rect x="160" y="120" width="252" height="24" rx="4" fill="#7C3AED"/>
+  <text x="420" y="137" font-size="12.5" font-weight="700" fill="#1A202C">14%</text>
+  <text x="150" y="178" font-size="12" fill="#4A5568" text-anchor="end">한국</text>
+  <rect x="160" y="162" width="252" height="24" rx="4" fill="#059669"/>
+  <text x="420" y="179" font-size="12.5" font-weight="700" fill="#1A202C">14%</text>
+  <text x="150" y="220" font-size="12" fill="#4A5568" text-anchor="end">미국</text>
+  <rect x="160" y="204" width="198" height="24" rx="4" fill="#D97706"/>
+  <text x="366" y="221" font-size="12.5" font-weight="700" fill="#1A202C">11%</text>
+  <text x="150" y="262" font-size="12" fill="#4A5568" text-anchor="end">유럽</text>
+  <rect x="160" y="246" width="126" height="24" rx="4" fill="#0891B2"/>
+  <text x="294" y="263" font-size="12.5" font-weight="700" fill="#1A202C">7%</text>
+  <line x1="160" y1="290" x2="960" y2="290" stroke="#CBD5E1"/>
+  <text x="160" y="315" font-size="12" fill="#718096">막대 길이 = 매출 비중 (100% = 800px 환산)</text>
+</svg>
+</div>
+<figcaption>그림 3. FY2025 지역별 매출 비중 | 출처: Teradyne 10-K(2026-02-19 제출). 지역은 '청구지' 기준으로, 대만 36%는 TSMC·OSAT 후공정 생태계에 테스터가 설치됨을 뜻하며 최종 수요처(미국 빅테크)와 다르다</figcaption>
+</figure>
+<p>대만 36%는 이 회사의 지정학 프로필을 규정한다. AI 칩의 절대다수가 TSMC에서 생산·패키징되고 그 옆 OSAT(후공정 외주업체)에서 테스트되므로, 테스터의 물리적 행선지가 대만에 쏠린다. 한국 14%는 HBM·DRAM(메모리 테스트), 중국 14%는 성숙공정·전력 반도체 중심이다. 고객 집중도는 <strong>오히려 심화 중</strong>이다: Q1'26 기준 매출 10%를 초과하는 고객이 사양 지정(specifying) 2사 + 구매(buying) 1사로 복수 존재한다고 CFO가 밝혔다(과거 분기에는 통상 1개사). AI 데이터센터 수요가 소수 고객에 몰린 결과이며, 통상 대만 파운드리·OSAT 축이 그 통로로 추정된다 <span class="bd bd-est">추정</span>. 듀얼벤더 확산으로 하이퍼스케일러 직접 관계가 늘면 장기적으로는 분산될 수 있으나, 단기 프로필은 집중 강화다.</p>
+</section>
+
+<!-- ============ 4. 제품·기술 ============ -->
+<section id="s4">
+<h2><span class="no">4</span>제품·서비스 및 기술력 — 논문 수준 심층 해부</h2>
+
+<p class="lead">반도체 테스트의 경제학은 단순하다: <strong>비용 = 테스트 시간 × 초당 비용 ÷ 병렬도</strong>. 칩이 복잡해질수록 시간(분자)은 늘어나므로, 테스터 회사의 기술 경쟁은 결국 "초당 비용을 낮추고(아키텍처 효율) 병렬도를 높이는(동시 시험 칩 수) 싸움"이다. Teradyne의 핵심 기술 자산 세 가지 — SoC용 UltraFLEXplus의 PACE/Broadside 아키텍처, HBM용 Magnum 7H의 Near-DUT 아키텍처, 실리콘 포토닉스용 Photon 100의 양면 프로브 — 는 모두 이 방정식의 다른 변수를 공략한다.</p>
+
+<h3>4-0. 기초: 반도체는 몇 번 시험대에 오르는가 — 인서션(insertion) 체인</h3>
+<p>테스트는 제조 흐름의 여러 지점(인서션)에서 반복된다. ①<strong>웨이퍼 소트(wafer sort)</strong>: 웨이퍼 상태에서 프로브카드로 다이(die)에 접촉해 불량을 걸러낸다 — 불량 다이를 비싼 패키징 공정에 넣지 않기 위한 1차 관문. ②<strong>파이널 테스트(final test)</strong>: 패키징 완료 후 소켓에 꽂아 전 기능·속도를 검증한다. ③<strong>시스템 레벨 테스트(SLT)</strong>: 고성능 칩을 실제 시스템과 유사한 보드 환경에서 OS 부팅·실사용 부하까지 돌려본다 — ATE의 구조적 커버리지 한계(모든 실사용 시나리오를 테스트 패턴으로 만들 수 없음)를 보완하며, AI 가속기처럼 불량 1개의 비용이 큰 칩에서 급속히 확산 중이다. ④<strong>번인(burn-in)</strong>: 고온·고전압 스트레스로 초기 불량을 조기 유발시킨다. 첨단 패키징(칩렛·HBM 적층)은 여기에 <strong>중간 인서션</strong>(적층 전 KGSD 시험 등)을 추가한다 — 다이 하나의 잠복 결함이 패키지 전체(HBM 8~16단 + GPU + 기판)를 폐기시키기 때문이다. 인서션이 늘어난다는 것, 그것이 바로 '테스트 강도 상승'이며 이 산업의 성장 방정식 그 자체다.</p>
+
+<h3>4-A. 플랫폼별 작동 원리 심층 해부</h3>
+
+<h3 style="font-size:15px">① UltraFLEXplus — 분산 컴퓨팅으로 테스터를 재설계하다 (SoC·AI 컴퓨트)</h3>
+<p><strong>문제 정의:</strong> AI·5G 시대 SoC의 테스트 데이터량은 2018년 대비 2025년 최대 8배로 늘 것으로 전망됐다(2019년 출시 배경). 전통적 테스터는 중앙 워크스테이션 1대가 수백 개 계측 채널의 패턴 전송·결과 수집을 총괄하는 구조여서, 데이터가 폭증하면 중앙 버스가 병목이 되어 테스터가 놀게 된다.</p>
+<p><strong>해법 1 — PACE™ 아키텍처:</strong> 테스터 내부 곳곳에 <strong>분산 멀티 컨트롤러(DMC, Distributed Multi-Controller)</strong>를 심어, 각 계측기(instrument) 옆에서 패턴 실행과 결과 1차 처리를 국지적으로 수행하게 했다. 멀티코어 시스템 컨트롤러는 이들을 조율만 한다. 컴퓨팅 세계의 '중앙집중형 메인프레임 → 분산 클러스터' 전환을 테스터 안에서 구현한 셈이다. 결과적으로 계측 하드웨어로 향하는 데이터 대역폭이 커지고, 엔지니어의 디버그·특성화(characterization) 작업도 병렬화된다.</p>
+<p><strong>해법 2 — Broadside 인터페이스:</strong> 계측 보드를 기존 ATE 대비 <strong>90° 회전 배치</strong>해 계측 리소스가 DUT(피시험 디바이스) 영역과 평행하게 마주 보도록 했다. DIB(Device Interface Board, 테스터와 칩 소켓을 잇는 대형 PCB)의 신호 배선이 짧고 균일해져 PCB 층수가 줄고, 사이트(동시 시험 칩) 간 신호 편차가 감소한다 — 병렬도를 높일 때 최대 난제인 '사이트 간 상관성' 문제를 기구 설계로 푼 것이다.</p>
+<p><strong>정량 효과(회사 공표):</strong> 테스트 셀 수 15~50% 절감(사이트 수 증가 + 병렬 효율), 신규 테스트 프로그램의 양산 투입 시간 20% 이상 단축. <strong>생태계 락인:</strong> IG-XL 소프트웨어의 활성 프로그래머 1만 명 이상, UltraFLEX 계열 설치 기반 4,000대 이상 — 기존 테스트 IP를 그대로 이식할 수 있다는 점이 신규 아키텍처의 최대 채택 장벽(엔지니어 재교육·프로그램 재개발)을 제거했다. 차세대 디지털 계측기 UltraPin2200이 채널 성능을 잇는다.</p>
+
+<h3 style="font-size:15px">② Photon 100 — 빛과 전기를 동시에 시험하는 세계 최초의 양면 웨이퍼 프로브 (실리콘 포토닉스·CPO)</h3>
+<p><strong>문제 정의:</strong> AI 클러스터가 커지면서 칩 간 연결이 구리에서 빛(광 인터커넥트)으로 넘어가고 있다. CPO(Co-Packaged Optics, 스위치·가속기 칩과 광엔진을 한 패키지에 결합)가 그 종착점인데, 광 디바이스는 전기 신호와 광 신호를 <strong>동시에</strong> 측정해야 해서 기존 전기 전용 ATE로는 시험이 불가능하다. 게다가 광 손실·편광 특성은 포토닉스 IC 위에 전자 IC를 본딩하고 폴리머 렌즈까지 올린 '완성 웨이퍼' 상태에서만 유의미하게 측정된다(렌즈가 광 경로의 핵심이기 때문) — CEO는 "인서션 1(본딩 전)에서 양품 다이를 골라내도 옵티컬 엔진의 품질 보증에는 큰 도움이 안 된다"고 못 박았다.</p>
+<p><strong>해법:</strong> UltraFLEXplus 플랫폼에 광 계측(2025년 인수한 Quantifi Photonics 기술)을 통합하고, 웨이퍼의 <strong>위에서는 전기 프로브, 아래에서는 광 프로브</strong>로 동시 접촉하는 업계 최초의 양면(double-sided) 웨이퍼 프로브를 구현했다. 웨이퍼 → 옵티컬 엔진 → 코패키지 모듈까지 전 단계를 한 플랫폼에서 고속 병렬 시험한다. 회사는 CPO 테스트 시장만 2028년 $300~700M(2027년 약 $200M)으로 보며, 파일럿 고객의 초도 램프가 진행 중이다.</p>
+
+<h3 style="font-size:15px">③ Magnum 7H — HBM 시대의 '스윙 툴' (메모리)</h3>
+<p><strong>문제 정의:</strong> HBM은 단순한 메모리가 아니다. DRAM 다이 8~16개를 수직 적층하고 맨 아래에 <strong>로직 베이스 다이</strong>(호스트 인터페이스·테스트 회로 담당)를 깐 3D 구조물이다. 따라서 HBM을 시험하려면 메모리 테스트(셀 어레이 패턴)와 로직 테스트(베이스 다이 기능)를 <strong>둘 다</strong> 해야 하고, 적층 전(베이스 다이 웨이퍼), 적층 후 절단 전(KGSD, Known-Good-Stack-Die), 절단 후(베어 다이), 코어 테스트·번인까지 인서션도 많다. HBM4는 인터페이스가 2,048비트로 2배가 되고 16단 적층이 표준화되며 난도가 다시 뛴다.</p>
+<p><strong>해법 1 — Near-DUT 아키텍처:</strong> Magnum 계열은 계측 보드를 테스트 헤드 확장부, 즉 <strong>DUT 바로 옆</strong>에 배치한다. 신호 왕복 지연(RTD)이 최소화되어 실제 동작 속도(at-speed) 시험이 가능하고, Read-Modify-Write 패턴의 시험 시간이 줄며, 좁은 공간에 핀을 밀집시켜 병렬도를 극대화한다.</p>
+<p><strong>해법 2 — 로직+메모리 겸용(스윙 툴):</strong> Magnum 7H는 가변 알고리즘 패턴 발생기(APG)로 메모리 셀을, 로직 벡터 메모리(LVM) 옵션으로 베이스 다이 로직을 한 장비에서 시험한다. 경영진이 강조한 "스윙 툴 우위"란, 메모리 제조사가 같은 장비를 HBM 로직 시험과 D램 시험 사이에서 유연하게 돌려 쓸 수 있어 장비 가동률·투자 효율이 올라간다는 뜻이다 — 메모리 전용 테스터만 가진 경쟁사 대비 구조적 차별점이다.</p>
+<div class="twrap"><table>
+<caption>Magnum 7H 핵심 사양 (2025-08 발표)</caption>
+<thead><tr><th>항목</th><th>사양</th><th>의미</th></tr></thead>
+<tbody>
+<tr><td>지원 세대</td><td>HBM2E / 3 / 3E / 4 / 4E</td><td>차세대(HBM4E)까지 선행 대응 — 세대 전환기 교체 수요 방어</td></tr>
+<tr><td>최고 데이터 속도</td><td>4.5Gbps</td><td>HBM3E~4의 at-speed 검증 커버</td></tr>
+<tr><td>병렬 자원</td><td>디지털 핀 9,216 + 전원 핀 2,560</td><td>프로브 터치다운당 동시 시험 수 극대화 → 처리량 1.6배(양산 환경)</td></tr>
+<tr><td>커버 인서션</td><td>베이스다이 웨이퍼 → KGSD(칩온웨이퍼) → 싱귤레이티드 베어다이 → 코어·번인</td><td>HBM 제조 전 구간 단일 플랫폼 — 인서션 추가가 곧 매출 추가</td></tr>
+<tr><td>전원 성능</td><td>고속 DPS(동적 전원) 응답</td><td>전압 강하 최소화 → 오판 감소 → 수율 개선</td></tr>
+<tr><td>로직 시험</td><td>APG + LVM(Logic Vector Memory)</td><td>로직 베이스 다이 시험 겸용 = '스윙 툴' 우위</td></tr>
+<tr><td>양산 현황</td><td>최대 HBM 제조사들에서 볼륨 램프 개시</td><td>Q2'26 메모리 매출 사상 최대 $212M·북투빌 2배+의 동력</td></tr>
+</tbody>
+</table></div>
+<p>보완 라인업으로 NAND용 Magnum 7(최대 18,432 I/O 채널 @5.28Gbps)과 최신 DRAM용 Magnum EPIC이 있으며, DDR 시장은 에이전틱 AI발 서버 CPU 수요와 LPDDR 채용 확대로 "1월 예상보다 강하다"(CEO)는 평가다.</p>
+
+<h3 style="font-size:15px">④ IST와 나머지 포트폴리오 — 조용한 복리 성장원</h3>
+<p><strong>IST(Integrated System Test)</strong>는 SLT와 스토리지 테스트를 묶은 유닛이다. AI 데이터센터의 학습 데이터·체크포인트 저장 수요로 HDD가 부활하면서(연 20%+ 엑사바이트 성장 전망), Q2'26 IST 매출은 $67M으로 전년 대비 +94%, 전분기 대비 2.5배가 됐고 3대 HDD 제조사 전부에서 설계를 확보했다. <strong>ETS-800</strong>(Eagle 계열)은 아날로그·전력 반도체를 담당하며, 2025년 1월 Infineon의 자동테스트 기술·팀 인수로 SiC·GaN 등 <strong>와이드밴드갭(WBG) 디스크리트 테스트</strong> — AI 데이터센터 전력 아키텍처의 핵심 부품 — 리더십을 노린다. <strong>Omnics</strong>(2026년 발표 신형 보드 테스터)는 데이터센터 랙 조립 라인에서 결함을 조기 검출하는 장비로 2분기부터 출하가 시작됐고, <strong>MLTP JV</strong>는 스케일업 네트워킹의 구리 인터커넥트 고속 IO 테스트를 맡는다. 2026년 6월에는 <strong>Tokyo Electron과 UltraFLEXplus + Prexa SDP 통합 테스트 셀</strong>(AI·데이터센터 디바이스의 패키지 스크리닝)을 공동 발표하며 핸들러 생태계와의 결합도 강화했다.</p>
+
+<h3>4-B. 기술 성숙도(TRL)와 로드맵</h3>
+<div class="twrap"><table>
+<caption>핵심 기술별 성숙도 판정과 다음 마일스톤</caption>
+<thead><tr><th>기술</th><th>TRL 판정</th><th>근거</th><th>다음 마일스톤(시점)</th></tr></thead>
+<tbody>
+<tr><td>UltraFLEXplus (SoC·컴퓨트)</td><td><strong>양산 성숙 (8~9)</strong></td><td>설치 4,000대+, 커스텀 ASIC 볼륨 양산 수년째</td><td>머천트 GPU 볼륨 램프(2027 상반기), 2번째 하이퍼스케일러 양산 전환</td></tr>
+<tr><td>Magnum 7H (HBM)</td><td><strong>양산 램프 (8)</strong></td><td>최대 HBM 제조사 볼륨 램프 개시(2025.8 출시)</td><td>HBM4 16단 양산 퀄(2026 하반기~2027) <span class="bd bd-est">추정</span></td></tr>
+<tr><td>Photon 100 (SiPh·CPO)</td><td><strong>실증→초기 양산 (6~7)</strong></td><td>파일럿 고객 램프 중, 인서션 정의조차 유동적(CEO 발언)</td><td>CPO 스케일아웃 1차 대량 램프 성패(2027) → 2028 TAM $300M vs $700M 갈림</td></tr>
+<tr><td>Physical AI 로보틱스</td><td><strong>개발·실증 (5~6)</strong></td><td>GTC·Automate 2026 데모, AI 매출 로보틱스의 15%</td><td>양산형 AI 앱 매출 기여 확대, 미시간 공장 가동(2026 하반기)</td></tr>
+<tr><td>WBG 전력 테스트</td><td><strong>개발→양산 전환 (6~7)</strong></td><td>Infineon 기술·팀 흡수 1.5년차</td><td>2027 자동차·산업 전고점 회복 국면에서 점유 확인</td></tr>
+</tbody>
+</table></div>
+<p><strong>R&amp;D 정량:</strong> Teradyne의 연구개발비는 분기 약 $108M(Q1'25 기준) 페이스에서 2026년 들어 "2027년 성장을 위한 R&amp;D·고객팀 투자 확대"로 증가 중이며, FY25 기준 매출 대비 약 13~14% <span class="bd bd-drv">파생</span>로 장비 업계 최상위권 투자 강도다. 경영진은 Q3~Q4 OPEX를 높은 수준으로 유지하겠다고 명시했는데, 이는 수요 둔화 시 이익 방어가 아니라 <strong>점유율 공세를 택했다는 자신감의 신호</strong>로 읽힌다(반대로 수요가 꺾이면 마진 하방을 키우는 양날의 검이다). 공표 로드맵 밖의 방향으로는, Quantifi·MLTP·TestInsight로 이어지는 인수 패턴이 '광·인터커넥트·소프트웨어' 3축의 테스트 스택 수직화를 가리킨다 <span class="bd bd-est">추정</span>.</p>
+
+<h3>4-C. 기술 피어 대결표 — 같은 문제를 푸는 자들</h3>
+<p>ATE는 Advantest(일본)와 Teradyne이 시장의 85% 이상을 나눠 갖는 '합리적 듀오폴리'다. 두 회사는 같은 문제(칩 검증)를 다른 철학으로 푼다: Advantest V93000은 <strong>범용 카드 기반 확장성</strong>(하나의 플랫폼·카드 라이브러리로 초광대역 커버)을, Teradyne UltraFLEXplus는 <strong>처리량 중심의 분산 아키텍처</strong>(테스트 셀당 경제성)를 앞세운다. 그 아래로 Cohu·Chroma·Tokyo Seimitsu(Accretech), 그리고 중국 로컬 업체들이 특정 니치(자동차·아날로그·성숙공정)를 공략하지만, 첨단 AI 컴퓨트·HBM의 대량 양산 테스트에서 실질 선택지는 두 회사뿐이다.</p>
+
+<div class="twrap"><table class="wide">
+<caption>SoC·컴퓨트 테스트 대결: Teradyne UltraFLEXplus vs Advantest V93000 EXA Scale</caption>
+<thead><tr><th>비교 축</th><th>Teradyne UltraFLEXplus</th><th>Advantest V93000 EXA Scale</th><th>판정</th></tr></thead>
+<tbody>
+<tr><td>아키텍처 철학</td><td>PACE 분산 멀티컨트롤러 + Broadside 90° DIB — 셀당 처리량·병렬 효율 극대화</td><td>범용 카드 확장형 단일 플랫폼 — 저핀 IoT부터 초대형 AI 다이까지 한 계열로 커버</td><td>접근 상이 — 처리량 vs 범용성</td></tr>
+<tr><td>정량 강점(각사 공표)</td><td>테스트 셀 15~50% 절감, 프로그램 양산 투입 20%+ 단축</td><td>설치 420개 라인+ <span class="bd bd-cfl">상충: 집계 기준별 점유율 수치 상이</span></td><td>—</td></tr>
+<tr><td>SW 생태계</td><td>IG-XL, 활성 프로그래머 1만+, UltraFLEX 4,000대+ 자산 호환</td><td>SmarTest, V93000 20년+ 설치 기반</td><td>양사 모두 강력한 락인 — 전환장벽 상호 높음</td></tr>
+<tr><td>AI 컴퓨트 고객</td><td>커스텀 ASIC(VIP) 45~50% 점유, 머천트 GPU 2026년 첫 침투</td><td>머천트 GPU(엔비디아) 사실상 독점 + ASIC 50~55%</td><td>Advantest 우위 지속, 격차 축소 개시</td></tr>
+<tr><td>SoC 테스터 점유율</td><td>CY25 약 30% 내외 <span class="bd bd-drv">파생: 듀오폴리 잔여분</span></td><td>CY24 56% → CY25 66% (+10%p)</td><td>Advantest 우위 확대(CY25) → 2026 안정화</td></tr>
+<tr><td>생산능력</td><td>비공개(리드타임 약 16주 언급)</td><td>연 3,000대('25-07) → 5,000대+('27-03 목표) → 1만 대(당초 '28말~'29초 목표, 7/29 '앞당김' 공표)</td><td>양사 모두 공급이 병목 — 캐파 = 점유율</td></tr>
+<tr><td>포토닉스</td><td>Photon 100 양면 프로브(전기+광 동시) — 세계 최초 주장</td><td>실리콘 포토닉스 점유 확대 언급(인서션 1 강세 평가)</td><td>인서션별 분점 형성 중 — 초기전</td></tr>
+</tbody>
+</table></div>
+
+<div class="twrap"><table class="wide">
+<caption>메모리·HBM 테스트 대결: 접근 방식과 점유 동학</caption>
+<thead><tr><th>비교 축</th><th>Teradyne (Magnum 7H·EPIC·7)</th><th>Advantest (메모리 테스터 라인)</th><th>판정</th></tr></thead>
+<tbody>
+<tr><td>구조적 접근</td><td>Near-DUT(계측기를 DUT 직근 배치) — at-speed·RTD 최소화·핀 밀도</td><td>고속 인터페이스 중심의 전통 강자 — HBM 초기 사이클(2023~24) 수혜 주도</td><td>—</td></tr>
+<tr><td>HBM 차별점</td><td>APG+LVM으로 로직 베이스다이+DRAM 겸용 '스윙 툴', 전 인서션 커버</td><td>구세대 HBM 퍼포먼스 테스트 주도권 <span class="bd bd-est">추정</span></td><td>HBM4 세대 전환이 재편 창구</td></tr>
+<tr><td>점유 방향(양사 자인)</td><td>HBM·DRAM 파이널에서 점유 상승 중 — 메모리 매출 사상 최대 행진, 북투빌 2배+</td><td>"메모리에서 소폭 점유 상실 예상"(2026-07 실적 코멘트, TER CEO도 동의)</td><td><span class="up">Teradyne 잠식 진행</span></td></tr>
+<tr><td>정량 스펙</td><td>4.5Gbps, 9,216+2,560핀, 처리량 1.6배(§4-A 표)</td><td>동급 상세 스펙 공개 자료 미확보 — 비교 생략(날조 방지)</td><td>—</td></tr>
+</tbody>
+</table></div>
+
+<p><strong>격차의 정량화와 추격 가능성:</strong> 이 산업의 격차는 나노미터가 아니라 <strong>'퀄(qualification) 시간'</strong>으로 측정된다. 신규 벤더가 특정 칩의 테스트를 따내려면 기회 확보→솔루션 개발→상관(correlation, 기존 장비와 판정 일치 검증)→양산 램프의 4단계에 9~12개월이 걸리고, 이후에도 소켓별로 하나씩 전환해야 한다. 즉 Advantest의 머천트 GPU 요새는 기술 절대 우위라기보다 '시간과 신뢰의 축적'이며 — 역으로 Teradyne의 커스텀 ASIC 요새도 같은 성질이다. 2026년의 변화는 고객 스스로가 공급망 리스크 때문에 이 장벽을 낮추기 시작했다는 것(듀얼벤더), 그것이 4-D③의 주제다. 중국 로컬 ATE는 성숙공정·아날로그에서 존재감을 키우고 있으나(§12 리스크), 첨단 컴퓨트·HBM의 상관·수율 노하우 격차는 수 년 단위로 평가된다 <span class="bd bd-est">추정</span>.</p>
+
+<h3>4-D. 신기술 영향력 분석 — 최근 12개월의 3대 발표</h3>
+<p>발동 조건 충족: 최근 1~2년 내 주가에 유의미한 기술·사업 발표가 다수 존재. 주가 영향이 큰 순서로 3건을 7단계 절차로 해부한다.</p>
+
+<h3 style="font-size:15px">4-D①. Magnum 7H — HBM 병목을 파고든 유니버설 테스터 (2025-08-04 발표)</h3>
+<p><strong>1) 병목 정의:</strong> HBM은 AI 가속기 원가·공급의 최대 제약 중 하나다. HBM 공급 부족이 2024~26년 내내 이어졌고, 엔비디아 로드맵상 GPU당 HBM 탑재량은 2026년 288GB에서 2027년(Rubin Ultra) 1,024GB로 3.6배가 된다(JPMorgan 인용). 적층 단수가 12→16단으로, 인터페이스가 1,024→2,048비트로 늘 때마다 <strong>시험해야 할 비트·인서션·시간이 비선형으로 증가</strong>하는데, 다이 하나의 잠복 결함이 완성 HBM(수백 달러)과 그것이 붙은 GPU 패키지(수만 달러)를 통째로 폐기시키므로 '덜 시험하기'는 선택지가 아니다. 2026년 메모리 테스트 TAM이 전년 대비 40% 이상 커진다는 회사 추정이 병목의 크기를 말해준다.</p>
+<p><strong>2) 기술 해부:</strong> 역할 개념도는 아래 그림, 사양은 §4-A 표 참조. 작동 방식의 요체는 하드웨어(Near-DUT 계측·고속 DPS)가 신호 품질과 병렬도를, 소프트웨어(APG 패턴 생성·LVM 로직 벡터·Fail List Streaming 고속 오류 수집)가 시험 내용과 데이터 처리를 분담하는 구조다.</p>
+<figure>
+<div class="fig-t">HBM 제조 흐름 속 Magnum 7H의 위치 — 인서션 4곳을 한 플랫폼이 커버</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 250" xmlns="http://www.w3.org/2000/svg">
+  <rect x="70" y="60" width="180" height="70" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="160" y="88" font-size="12.5" font-weight="700" fill="#1E3A8A" text-anchor="middle">① 베이스다이 웨이퍼</text>
+  <text x="160" y="108" font-size="12" fill="#1E3A8A" text-anchor="middle">로직 다이 시험 (LVM)</text>
+  <line x1="250" y1="95" x2="300" y2="95" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="300" y="60" width="180" height="70" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="390" y="88" font-size="12.5" font-weight="700" fill="#1E3A8A" text-anchor="middle">② KGSD (적층 후·절단 전)</text>
+  <text x="390" y="108" font-size="12" fill="#1E3A8A" text-anchor="middle">칩온웨이퍼 프로브</text>
+  <line x1="480" y1="95" x2="530" y2="95" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="530" y="60" width="180" height="70" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="620" y="88" font-size="12.5" font-weight="700" fill="#1E3A8A" text-anchor="middle">③ 싱귤레이티드 HBM</text>
+  <text x="620" y="108" font-size="12" fill="#1E3A8A" text-anchor="middle">베어다이 핸들러 시험</text>
+  <line x1="710" y1="95" x2="760" y2="95" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="760" y="60" width="200" height="70" rx="8" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="860" y="88" font-size="12.5" font-weight="700" fill="#1E3A8A" text-anchor="middle">④ 코어 테스트·번인</text>
+  <text x="860" y="108" font-size="12" fill="#1E3A8A" text-anchor="middle">속도 검증·스트레스</text>
+  <rect x="70" y="165" width="890" height="50" rx="8" fill="#ECFDF5" stroke="#A7F3D0"/>
+  <text x="515" y="195" font-size="13" font-weight="800" fill="#065F46" text-anchor="middle">Magnum 7H 단일 플랫폼 커버리지 — 메모리 패턴(APG) + 로직 시험(LVM) 겸용 '스윙 툴'</text>
+  <line x1="160" y1="130" x2="160" y2="165" stroke="#059669" stroke-width="2" stroke-dasharray="3 3"/>
+  <line x1="390" y1="130" x2="390" y2="165" stroke="#059669" stroke-width="2" stroke-dasharray="3 3"/>
+  <line x1="620" y1="130" x2="620" y2="165" stroke="#059669" stroke-width="2" stroke-dasharray="3 3"/>
+  <line x1="860" y1="130" x2="860" y2="165" stroke="#059669" stroke-width="2" stroke-dasharray="3 3"/>
+</svg>
+</div>
+<figcaption>그림 4. HBM 인서션 체인과 Magnum 7H 커버리지 | 출처: Teradyne Magnum 7H 발표자료(2025-08) 기반 직접 작도</figcaption>
+</figure>
+<p><strong>3) 적용 구성 예시:</strong> 9,216 디지털 핀 구성 시 프로브 터치다운 한 번에 수백 개 다이를 병렬 시험하며, 동일 라인 기준 처리량이 1.6배가 된다 — 팹 입장에서는 같은 클린룸 면적으로 HBM 출하를 60% 더 늘리거나, 같은 출하량을 테스터 38% 절감으로 달성한다는 뜻이다 <span class="bd bd-drv">파생</span>.</p>
+<p><strong>4) 효과 정량화(발표 수치·회사 주장):</strong> 처리량 1.6배, 4.5Gbps at-speed, DPS 응답 개선에 따른 수율 향상(수치 미공표). 제3자 검증 수치는 아직 없으며, 다만 결과 지표(메모리 매출 3분기 연속 사상 최대, 북투빌 2배+, "최대 HBM 제조사들 볼륨 램프")가 시장 수용을 간접 입증한다.</p>
+<p><strong>5) 트레이드오프:</strong> 메모리 테스트는 구조적으로 SoC 테스트보다 마진이 낮고(CFO: "메모리는 2027년까지 마진의 부담 요인"), 범용성 높은 장비 특성상 가격 경쟁 압력도 크다. 즉 Magnum의 성공은 매출을 키우는 동시에 <strong>믹스 마진을 희석</strong>한다 — Q3'26 GM 가이던스 하락(58~59%)의 한 요인이다.</p>
+<p><strong>6) 파급 효과 맵:</strong> 수혜 — SK하이닉스·마이크론·삼성전자(테스트 캐파 확보 경쟁 완화, 스윙 툴로 투자 효율↑), 프로브카드(Technoprobe — TER가 지분 10% 보유, FormFactor), 핸들러 업체. 대체·피해 — Advantest 메모리 테스터 점유(자사도 소폭 상실 인정), 구세대 메모리 테스터 중고 가치. 확산 경로 — HBM4 퀄(2026 하반기~2027)이 표준 전환 창구이며, 세대 전환마다 신규 퀄이 열리므로 채택이 자기 강화된다.</p>
+<p><strong>7) 본사 함의:</strong> <strong>판정 = 기회(강)</strong>. 메모리 매출은 FY25 약 $0.7B <span class="bd bd-drv">파생: 분기 합산</span>에서 FY26 $0.85B+ 페이스로 성장 중이며, 2026 메모리 TAM +40% 환경에서 점유까지 얻는 이중 레버리지다. P&amp;L 임팩트 자릿수: 연 매출 +수억 달러, 다만 GM 희석 −1~2%p 동반. 확인 이벤트 — 10/27 Q3 실적의 메모리 수치, HBM4 양산 퀄 뉴스(2026 하반기), 2027 상반기 메모리 캐파 증설 오더.</p>
+
+<h3 style="font-size:15px">4-D②. Photon 100과 CPO 테스트 — 빛의 병목에 먼저 도착하다 (2025~26 전개)</h3>
+<p><strong>1) 병목:</strong> 스케일업·스케일아웃 네트워크의 전력·대역폭 한계. 구리 케이블과 플러거블 광모듈로는 랙당 수백 Tbps 시대를 감당하기 어려워 CPO로의 이행이 예정돼 있으나, 광+전기 동시 시험이라는 미해결 양산 관문이 존재. <strong>2) 기술:</strong> §4-A② — 양면 프로브가 핵심. <strong>3) 구성:</strong> 웨이퍼(포스트 본딩)→옵티컬 엔진→코패키지 모듈 3단 인서션을 한 플랫폼으로. <strong>4) 효과:</strong> 정량 공표 제한적 — 시장 규모 제시가 대신한다(CPO 테스트 2028년 $300~700M, 2027년 약 $200M). <strong>5) 트레이드오프:</strong> 인서션 정의가 고객마다 달라 표준화 전 단계이며(CEO 일화: "고객과 15분간 서로 다른 인서션 2를 논의"), 시장 개화 시점 리스크가 크다 — 2027년 스케일아웃 램프가 부진하면 2028 TAM은 하단($300M)에 머문다. <strong>6) 파급:</strong> 수혜 — TER·Advantest(둘 다 진입, 인서션 분점), 광부품·FAU 업체, TEL 등 핸들러. 피해 — 플러거블 모듈 밸류체인(장기), 전기 전용 테스트 장비의 커버리지. <strong>7) 함의:</strong> <strong>기회(중, 옵션 성격)</strong>. 2027년 ~$200M 시장에서 의미 있는 몫을 가져가면 매출 기여는 아직 한 자릿수 %지만, '차세대 인서션의 표준'을 선점하는 전략 가치가 본질. 확인 이벤트 — 2027년 CPO 스케일아웃 램프 뉴스, 고객사 광엔진 양산 발표.</p>
+
+<h3 style="font-size:15px">4-D③. 듀얼벤더 전환과 머천트 GPU 첫 수주 — 요새에 생긴 균열 (2026 Q1~Q3)</h3>
+<p><strong>1) 병목:</strong> 이번엔 기술이 아니라 <strong>공급망</strong>이 병목이다. AI 칩 고객들은 CoWoS 기판·HBM·선단 파운드리 캐파라는 3중 배급제 속에서, 테스트 캐파까지 단일 벤더에 묶이는 리스크를 더는 감수하지 않으려 한다. "어느 한 테스트 공급사가 얼마나 커질 수 있느냐의 문제가 아니라, 체인의 각 단계마다 복수 공급사의 보증이 필요하다"(CEO).</p>
+<p><strong>2~3) 사건 해부와 구성:</strong> 4단계 퀄 프로세스(기회→솔루션→상관→램프, 9~12개월)를 통과하면 'fast follower' 단계에서 점유율이 0→약 30%까지 오르고, 수년에 걸쳐 '성숙 듀얼벤더'(어느 플랫폼으로든 신제품 출시)에 도달한다. 현재 Teradyne의 컴퓨트 고객 포트폴리오: <strong>성숙 듀얼벤더 1개사 + fast follower 1개사 + 램프 전 퀄 1개사</strong>. 여기에 2026년 1분기 <strong>머천트 GPU 고객 첫 수주</strong>(2분기 납품), 3분기 <strong>두 번째 하이퍼스케일러 상관 완료</strong>가 더해졌다 — Advantest가 독점해 온 영역의 문이 처음 열린 것이다.</p>
+<p><strong>4) 정량:</strong> Q2'26 컴퓨트 매출 +약 600% YoY, SoC 내 비중 70%. 전사 점유율은 2026년 "약 37%로 대략 횡보"(UBS 추정에 CEO 수긍)지만, CEO는 "가장 빠르게 크는 세그먼트(컴퓨트)에서 점유율이 바닥을 다지고 상승 반전 중이며, 효과는 2027년부터 소켓 단위로 점진 가시화"라고 시점을 특정했다. <strong>5) 트레이드오프:</strong> 듀얼벤더는 양날이다 — Teradyne이 Advantest 요새에 들어가는 문이자, Advantest가 Teradyne의 커스텀 ASIC 요새(45~50%)에 들어오는 문이기도 하다. 또한 상반기 집중 발주 패턴("다음 서지는 2027년 상반기")은 분기 변동성을 키운다. <strong>6) 파급:</strong> 수혜 — TER(신규 TAM 진입), 고객(협상력·공급 안정). 피해 — Advantest의 독점 프리미엄(단, TAM 자체가 커져 절대 매출은 양사 모두 성장 가능 — 제로섬이 아님). <strong>7) 함의:</strong> <strong>기회(강) — 본 보고서의 단일 최대 변수</strong>. 점유율 1%p ≈ SoC TAM $9B 기준 연 매출 약 $90M <span class="bd bd-drv">파생</span>. 37%→42%면 연 +$450M(현 매출의 약 9%) 규모의 구조적 상승. 확인 이벤트 — 10/27 Q3 콜의 퀄 진행 코멘트, Q4 콜 타깃모델 상향 폭, 2027 상반기 머천트 GPU 볼륨 오더.</p>
+</section>
+
+<!-- ============ 5. 산업 분석 ============ -->
+<section id="s5">
+<h2><span class="no">5</span>산업 분석 — ATE 시장의 구조와 '꿈'</h2>
+
+<p class="lead">이 산업의 성장 공식은 <strong>ATE TAM ≈ 반도체 CapEx × 테스트 비율</strong>이다. 2023~26년에 두 변수가 동시에 뛰었다: 반도체 CapEx(특히 WFE)가 AI로 가속했고, 그 안에서 테스트가 차지하는 비율이 4%→8%로 배증했다. Teradyne의 주장은 이것이 일회성이 아니라 <strong>첨단 패키징이 만든 구조 변화</strong>라는 것이며, 이 주장의 진위가 이 주식의 장기 밸류에이션을 결정한다.</p>
+
+<h3>5-A. 성장의 구조 분해</h3>
+<figure>
+<div class="fig-t">ATE TAM: 2023년 약 $6B에서 2030년 $18~24B로 — 3~4배 확장 경로</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg">
+  <line x1="70" y1="350" x2="960" y2="350" stroke="#CBD5E1"/>
+  <line x1="70" y1="278" x2="960" y2="278" stroke="#E2E8F0"/>
+  <line x1="70" y1="206" x2="960" y2="206" stroke="#E2E8F0"/>
+  <line x1="70" y1="134" x2="960" y2="134" stroke="#E2E8F0"/>
+  <line x1="70" y1="62" x2="960" y2="62" stroke="#E2E8F0"/>
+  <text x="62" y="354" font-size="12" fill="#4A5568" text-anchor="end">0</text>
+  <text x="62" y="282" font-size="12" fill="#4A5568" text-anchor="end">6</text>
+  <text x="62" y="210" font-size="12" fill="#4A5568" text-anchor="end">12</text>
+  <text x="62" y="138" font-size="12" fill="#4A5568" text-anchor="end">18</text>
+  <text x="62" y="66" font-size="12" fill="#4A5568" text-anchor="end">24 ($B)</text>
+  <rect x="120" y="278" width="110" height="72" rx="4" fill="#2563EB"/>
+  <text x="175" y="266" font-size="12.5" font-weight="700" fill="#1A202C" text-anchor="middle">~6</text>
+  <text x="175" y="375" font-size="12" fill="#4A5568" text-anchor="middle">2023</text>
+  <rect x="290" y="260" width="110" height="90" rx="4" fill="#2563EB"/>
+  <text x="345" y="248" font-size="12.5" font-weight="700" fill="#1A202C" text-anchor="middle">~7.5</text>
+  <text x="345" y="375" font-size="12" fill="#4A5568" text-anchor="middle">2024</text>
+  <rect x="460" y="206" width="110" height="144" rx="4" fill="#2563EB"/>
+  <text x="515" y="194" font-size="12.5" font-weight="700" fill="#1A202C" text-anchor="middle">~12</text>
+  <text x="515" y="375" font-size="12" fill="#4A5568" text-anchor="middle">2025</text>
+  <rect x="630" y="194" width="110" height="156" rx="4" fill="#2563EB" opacity="0.55"/>
+  <text x="685" y="182" font-size="12.5" font-weight="700" fill="#1A202C" text-anchor="middle">12~14</text>
+  <text x="685" y="375" font-size="12" fill="#4A5568" text-anchor="middle">2026E</text>
+  <rect x="800" y="98" width="110" height="252" rx="4" fill="#2563EB" opacity="0.55"/>
+  <line x1="855" y1="62" x2="855" y2="134" stroke="#1A202C" stroke-width="2"/>
+  <line x1="843" y1="62" x2="867" y2="62" stroke="#1A202C" stroke-width="2"/>
+  <line x1="843" y1="134" x2="867" y2="134" stroke="#1A202C" stroke-width="2"/>
+  <text x="855" y="52" font-size="12.5" font-weight="700" fill="#1A202C" text-anchor="middle">18~24</text>
+  <text x="855" y="375" font-size="12" fill="#4A5568" text-anchor="middle">2030E</text>
+</svg>
+</div>
+<figcaption>그림 5. ATE 시장 규모 추이·전망 — 2023·2024는 업계 추정 종합 <span class="bd bd-est">추정</span>, 2025~2030은 Teradyne Q2'26 발표 기준. Advantest는 7/29 발표에서 CY2026 TAM을 $13.0~14.5B로 상향(4월 전망 $10.9~12.2B 대비 +19%) — TER의 $12~14B 가이드와 겹치는 존 | 출처: Teradyne Q2'26 프레젠테이션, Advantest Q1 FY2026 발표(2026-07-29), JPMorgan(2025-06)</figcaption>
+</figure>
+
+<p><strong>P·Q 분해 — 성장은 어디서 오는가:</strong> 물량(Q)의 축은 두 개다. WFE CapEx가 2030년경 $250B에 접근하면서 300mm 웨이퍼 생산이 연 5~10%, <strong>총 트랜지스터 생산이 연 15~20%</strong>(비메모리), <strong>메모리 비트 생산도 연 15~20%</strong> 성장한다는 것이 회사의 중기 프레임이다 — "모든 트랜지스터는 시험되어야 하고, 같은 노드에서 웨이퍼당 트랜지스터 수는 디바이스 종류와 무관하게 대체로 같으므로" 트랜지스터 생산량이 SoC TAM의 1차 예측 변수가 된다. 가격·강도(P)의 축은 첨단 패키징이다: 칩렛·HBM·CPO가 패키지당 다이 수를 늘리면 잠복 결함 1개의 파급이 커져 <strong>다이당 요구 테스트량이 상승</strong>한다(수율 방정식: 패키지 수율 = 다이 수율ⁿ, n=다이 수 — n이 커질수록 개별 다이의 사전 검증 가치가 기하급수로 커진다). 그 결과가 ATE/반도체 CapEx 비율의 4%→8% 점프이며, 회사는 7~9% 안착을 전망한다. 단, CEO 스스로 "2026년은 ATE가 WFE 대비 과속한 해로, 2027년엔 비율이 6~7%대로 되돌아올 수 있다(시차 효과)"고 균형을 잡았다 — WFE 지출과 테스터 매출 사이엔 약 3분기의 시차(팹 건설·가동 후 웨이퍼 산출 시점에 테스터 수요 발생, 테스터 리드타임 약 16주)가 있기 때문이다.</p>
+
+<p><strong>S커브 위치 판정:</strong> ATE 산업 전체는 성숙 산업이었으나, <strong>AI 테스트라는 신규 S커브가 2024~25년 도입기를 지나 성장기 초중반에 진입</strong>했다고 판정한다. 근거 — ①침투율 관점: AI 관련 매출이 Teradyne 매출의 60%+에 도달했지만, ATE/CapEx 비율(8%)은 회사가 보는 안착 범위(7~9%)의 하단~중간이고 CPO·SLT·보드테스트 등 인접 인서션은 아직 초기다. ②수요 성격: 메모리 고객들이 2027년 캐파까지 선발주(북투빌 2배+)하는 것은 성장기 특유의 '공급 확보 경쟁' 신호다. ③반론: 2026년 ATE가 WFE를 과속한 부분은 사이클 고점 신호일 수 있어, 2027년 '비율 정상화 속의 절대 성장'이 확인돼야 성장기 지속이 입증된다.</p>
+
+<figure>
+<div class="fig-t">가치사슬: 웨이퍼에서 데이터센터까지 — Teradyne이 깔아 놓은 검문소들</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 460" xmlns="http://www.w3.org/2000/svg">
+  <text x="70" y="36" font-size="13" font-weight="800" fill="#0F2B46">반도체 제조 흐름</text>
+  <rect x="70" y="50" width="130" height="60" rx="8" fill="#F6F8FA" stroke="#CBD5E1"/>
+  <text x="135" y="76" font-size="12" fill="#1A202C" text-anchor="middle" font-weight="700">WFE 장비</text>
+  <text x="135" y="94" font-size="11.5" fill="#4A5568" text-anchor="middle">ASML·AMAT·TEL</text>
+  <line x1="200" y1="80" x2="240" y2="80" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="240" y="50" width="130" height="60" rx="8" fill="#F6F8FA" stroke="#CBD5E1"/>
+  <text x="305" y="76" font-size="12" fill="#1A202C" text-anchor="middle" font-weight="700">웨이퍼 팹</text>
+  <text x="305" y="94" font-size="11.5" fill="#4A5568" text-anchor="middle">TSMC·삼성·SK·MU</text>
+  <line x1="370" y1="80" x2="410" y2="80" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="410" y="50" width="150" height="60" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+  <text x="485" y="76" font-size="12" fill="#1E3A8A" text-anchor="middle" font-weight="700">웨이퍼 소트 ✓</text>
+  <text x="485" y="94" font-size="11.5" fill="#1E3A8A" text-anchor="middle">UltraFLEXplus·Magnum</text>
+  <line x1="560" y1="80" x2="600" y2="80" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="600" y="50" width="150" height="60" rx="8" fill="#F6F8FA" stroke="#CBD5E1"/>
+  <text x="675" y="76" font-size="12" fill="#1A202C" text-anchor="middle" font-weight="700">첨단 패키징</text>
+  <text x="675" y="94" font-size="11.5" fill="#4A5568" text-anchor="middle">CoWoS·HBM 적층</text>
+  <line x1="750" y1="80" x2="790" y2="80" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="790" y="50" width="170" height="60" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+  <text x="875" y="76" font-size="12" fill="#1E3A8A" text-anchor="middle" font-weight="700">파이널·SLT·번인 ✓</text>
+  <text x="875" y="94" font-size="11.5" fill="#1E3A8A" text-anchor="middle">UFLXp·IST·TEL 협업</text>
+  <rect x="70" y="160" width="170" height="60" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+  <text x="155" y="186" font-size="12" fill="#1E3A8A" text-anchor="middle" font-weight="700">광·인터커넥트 ✓</text>
+  <text x="155" y="204" font-size="11.5" fill="#1E3A8A" text-anchor="middle">Photon 100·MLTP</text>
+  <line x1="240" y1="190" x2="280" y2="190" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="280" y="160" width="170" height="60" rx="8" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+  <text x="365" y="186" font-size="12" fill="#1E3A8A" text-anchor="middle" font-weight="700">보드·시스템 ✓</text>
+  <text x="365" y="204" font-size="11.5" fill="#1E3A8A" text-anchor="middle">Omnics·방산·무선</text>
+  <line x1="450" y1="190" x2="490" y2="190" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="490" y="160" width="200" height="60" rx="8" fill="#F6F8FA" stroke="#CBD5E1"/>
+  <text x="590" y="186" font-size="12" fill="#1A202C" text-anchor="middle" font-weight="700">랙 조립 (CM·ODM)</text>
+  <text x="590" y="204" font-size="11.5" fill="#4A5568" text-anchor="middle">Foxconn·Quanta·Flex 등</text>
+  <line x1="690" y1="190" x2="730" y2="190" stroke="#CBD5E1" stroke-width="2"/>
+  <rect x="730" y="160" width="230" height="60" rx="8" fill="#F6F8FA" stroke="#CBD5E1"/>
+  <text x="845" y="186" font-size="12" fill="#1A202C" text-anchor="middle" font-weight="700">AI 데이터센터</text>
+  <text x="845" y="204" font-size="11.5" fill="#4A5568" text-anchor="middle">하이퍼스케일러 (최종 수요)</text>
+  <rect x="70" y="270" width="890" height="66" rx="8" fill="#FEF3C7" stroke="#FDE68A"/>
+  <text x="90" y="296" font-size="12.5" font-weight="800" fill="#78350F">로보틱스의 이중 역할: 위 체인의 '조립·검사 자동화 공급자'(UR 코봇·MiR이 CM·ODM 라인과 반도체 팹에 투입)</text>
+  <text x="90" y="318" font-size="12" fill="#78350F">— 전자제조·반도체가 로보틱스 최대 엔드마켓으로 부상(Q2'26 QoQ +50%). CM·ODM향 조립·자동화·테스트·번인 장비 시장은 "수십억 달러, 연 15%대 성장"(회사)</text>
+  <rect x="70" y="360" width="890" height="60" rx="8" fill="#ECFDF5" stroke="#A7F3D0"/>
+  <text x="90" y="386" font-size="12.5" font-weight="800" fill="#065F46">파란 박스(✓) = Teradyne 커버 구간. 후방(WFE)과 전방(랙·데이터센터) 사이의 '품질 관문'을 다층으로 점유 — 이것이 wafer-to-AI data center 전략의 실체</text>
+  <text x="90" y="408" font-size="12" fill="#065F46">경쟁 검문소: 같은 구간에 Advantest가 병렬 존재(듀오폴리). 프로브카드(Technoprobe·FormFactor)·핸들러(TEL·Cohu)는 보완재</text>
+</svg>
+</div>
+<figcaption>그림 6. AI 반도체 가치사슬과 Teradyne의 위치 | 출처: 회사 전략 발표·어닝콜 기반 직접 작도</figcaption>
+</figure>
+
+<p><strong>인접 확장 경로:</strong> ①CPO 테스트(2028년 $300~700M — §4-D②), ②CM·ODM향 조립·자동화·테스트·번인(회사 표현 "현재 수십억 달러 시장, 연 15%대(mid-double-digit) 성장"), ③네트워킹 스위치 실리콘 테스트(회사가 "훌륭한 포지션" 자평 — 물리 계층과 무관하게 성장), ④서버 CPU 테스트(Arm 점유 확대 시 Teradyne 유리 — 가속기 대비 테스트 강도는 약 1/4이지만 물량 축 확대), ⑤로보틱스 Physical AI(코봇 시장 2030년 $20B+ 전망). 진입 전제는 각각 광 인서션 표준화, 리쇼어링 지속, Arm 서버 침투, AI 앱 상용화다.</p>
+
+<h3>5-B. 꿈 분석 — 이 성장 스토리는 주가를 계속 밀어올릴 연료인가 (9항목)</h3>
+<div class="co co-key"><div class="ct">1) 꿈의 정의 (한 문장)</div>
+<p>"AI가 만들어내는 <strong>모든 트랜지스터와 모든 비트는 시험대를 거쳐야 한다</strong> — 테스트는 AI 인프라 전체에 부과되는 통행세이며, Teradyne은 그 통행세를 걷는 두 회사 중 하나이자, 이제 1위의 요새(GPU 테스트)까지 침투하기 시작한 도전자다."</p></div>
+
+<p><strong>2) 꿈의 크기 (자릿수 추정):</strong> 현재 실적 대비 몇 배짜리 스토리인가. 1단계 — 회사 타깃 모델: ATE TAM $12~14B에서 매출 ~$6B·EPS $9.50~11.00. FY2025 실적($3.19B·$3.96) 대비 매출 1.9배·EPS 2.4~2.8배이며, <strong>2026년에 이미 사실상 도달 페이스</strong>(FY26E $5.0~5.2B·EPS $9+ <span class="bd bd-drv">파생</span>)다. 2단계 — 2030 시나리오: TAM $20B × 점유 40% = 매출 $8B, 영업이익률 33%·세율 15%·주식수 150M 가정 시 EPS 약 $15 <span class="bd bd-drv">파생</span> — FY25 대비 매출 2.5배, EPS 3.8배. 3단계 — 로보틱스 옵션: 코봇 시장이 $20B+로 크는 세계에서 UR가 점유 20~30%를 지키면 로보틱스만 $4~6B 매출 가능성 <span class="bd bd-est">추정</span> — 현재 시장이 사실상 가치를 부여하지 않는 무료 옵션에 가깝다. 요약: <strong>본체 스토리는 'EPS 3~4배', 옵션까지 합치면 그 이상</strong>의 자릿수다.</p>
+
+<p><strong>3) 꿈의 신선도:</strong> 이 내러티브는 2025년 10월 28일(Q3'25 가이던스 쇼크)에 점화됐다 — 나이가 <strong>9개월</strong>에 불과하다. 목표가 상향 러시(6월 말 $550까지), 나스닥100 편입(6월), "2027년을 생각하라"류의 기고가 이어지는 국면은 스토리 소비의 초중반부다. 다만 1년 새 주가 3.8배·선행 P/E 37배는 신선도의 상당분이 이미 가격으로 전환됐음을 뜻한다 — '새로 부상 중'과 '이미 소비됨'의 경계에서, 남은 신선도는 ①머천트 GPU 볼륨화 ②로보틱스 Physical AI ③CPO라는 3개 후속 챕터에 있다.</p>
+
+<p><strong>4) 3P 검증:</strong> <strong>Possible(가능) — 통과.</strong> 분기 매출 2배·AI 비중 60%가 실적으로 증명. <strong>Plausible(그럴듯) — 통과.</strong> WFE $250B 전망, 메모리 북투빌 2배+, 듀얼벤더 3개사 파이프라인 등 제3자·고객 행동 증거 존재. <strong>Probable(개연) — 부분 통과.</strong> 2027년 재가속(회사 예고)과 점유율 상승의 '숫자 확인'이 남았다. 판정: <strong>plausible에서 probable로 넘어가는 경계</strong> — 이 경계 통과 여부가 2026년 4분기~2027년 상반기에 결정된다.</p>
+
+<p><strong>5) 증거화 일정 (촉매 캘린더):</strong></p>
+<div class="twrap"><table>
+<caption>꿈을 숫자로 바꾸는 마일스톤</caption>
+<thead><tr><th>시점</th><th>이벤트</th><th>확인할 것</th></tr></thead>
+<tbody>
+<tr><td>2026-09 초~중순</td><td>Goldman Sachs·Citi 테크 컨퍼런스 (콰이엇 9/11~)</td><td>수요 톤, 2027 선행 코멘트</td></tr>
+<tr><td>2026-10-27</td><td>Q3'26 실적</td><td>가이던스($1.2~1.3B) 달성, 메모리 지속성, 퀄 진행</td></tr>
+<tr><td>2027-01~02</td><td>Q4'26 실적 + <strong>타깃 어닝 모델 상향 발표</strong></td><td>새 모델의 매출·EPS 상단 — 내재 기대와의 정합</td></tr>
+<tr><td>2026 하반기~2027</td><td>HBM4 16단 양산 퀄, 미시간 로보틱스 공장 가동</td><td>Magnum 7H 세대 전환 수성, 미국 생산 개시</td></tr>
+<tr><td>2027 상반기</td><td>컴퓨트 발주 서지(회사 예고), 머천트 GPU 볼륨 램프</td><td>"점유율 상승이 소켓 단위로 가시화"의 실증</td></tr>
+<tr><td>2027 연중</td><td>CPO 스케일아웃 1차 대량 램프</td><td>2028 CPO TAM $300M vs $700M 갈림길</td></tr>
+</tbody>
+</table></div>
+
+<p><strong>6) 선례 비교 — 같은 유형의 꿈으로 리레이팅된 사례:</strong> 가장 직접적인 선례는 <strong>Advantest 그 자체</strong>다. 엔비디아 테스트 독점 지위가 재평가되며 1년 시총이 3~4배(시총 ¥18~21T, 약 $125~140B), PER은 40~50배대로 리레이팅됐다. Teradyne의 현재 랠리는 그 '1위 리레이팅'을 뒤따르는 <strong>2등주 캐치업</strong> 구조다. 유사 유형으로는 AI 전력·냉각 인프라주(Vertiv류: '데이터센터가 커지면 반드시 필요한 주변 장비'가 P/E 15배→35배+로), GLP-1 소재·CDMO 체인(치료제가 아닌 공급 병목이 리레이팅)이 있다. 공통 패턴 — <strong>'본체(GPU·신약)가 아니라 병목(전력·테스트·생산)을 사는' 2차 파동</strong>은 본체 스토리가 살아있는 한 멀티플이 유지되고, 본체가 흔들리면 배수로 되돌아간다. 이 기업에 같은 일이 계속되면 Advantest 수준(선행 40배)까지의 갭 축소가 상단 가늠자다.</p>
+
+<p><strong>7) 가격 반영도 (§10 교차 연결):</strong> §10의 역산 결과, 현 주가는 <strong>NOPAT 13~14% 성장 × 20~25년</strong>을 내재한다 — 본체 꿈(타깃 모델 조기 달성 + 2030 $8B 경로)의 상당 부분이 <strong>이미 반영</strong>됐다. 미반영으로 판단되는 몫: ①로보틱스 Physical AI(시장이 사실상 0 가치 부여 <span class="bd bd-est">추정</span> — 로보틱스가 흑자 전환·고성장하면 공짜 옵션 행사), ②CPO 상단 시나리오($700M), ③점유율 42% 초과 달성, ④Advantest와의 선행 P/E 갭(36.6배 vs 39.6배 <span class="bd bd-drv">파생</span>) 축소. 반대로 <strong>과반영 리스크</strong>: 2027년 성장이 '재가속'이 아니라 '한 자릿수'로 나오면, §10 사다리에서 보듯 가치가 $200대 초반으로 재계산된다 — 밸류 트랩 경고 구간.</p>
+
+<p><strong>8) 꿈의 사망 조건 (구체적으로):</strong> ①하이퍼스케일러 AI CapEx 가이던스 컷 — 특히 2027년 계획 축소 발언(테스트는 CapEx의 파생 수요이므로 즉사급). ②테스트 강도의 역전 — DFT(Design-for-Test)·BIST(내장 자가시험)·AI 기반 테스트 시간 단축 기술이 ATE/CapEx 비율을 다시 5%대로 끌어내리는 증거. ③듀얼벤더 침투 실패 — 머천트 GPU 퀄 탈락 또는 fast follower 단계 정체 뉴스. ④역침투 — Advantest가 커스텀 ASIC 요새(TER 45~50%)를 잠식하는 신호. ⑤메모리 사이클 붕괴 — HBM 공급과잉 전환으로 북투빌 급락. ⑥대만 유사시 — 매출 36% 지역의 지정학 사건. ⑦금리 — 2026년 7월처럼 '인상' 경계가 재점화되면 장기 CAP를 반영한 멀티플이 기계적으로 압축된다.</p>
+
+<p><strong>9) 자금 흐름:</strong> 수급의 3층 구조가 확인된다. ①<strong>패시브</strong>: 2026-06-22 나스닥100 편입으로 QQQ류 기계적 매수 유입, 필라델피아 반도체지수(SOX) 기존 편입. ②<strong>기관</strong>: Vanguard·BlackRock 지분 확대 보도, 18명 애널리스트 커버리지에 Sell 0~1명. ③<strong>테마</strong>: AI 인프라·로보틱스(Physical AI) ETF 양쪽에 걸치는 희소 종목 — 휴머노이드·Agility Robotics 상장 국면에서 '로봇 공급망 대형주'로 재분류되는 흐름. 테마 내 위상은 명확히 <strong>'대표주 Advantest의 2등주'</strong>이며, 선행 P/E는 TER 약 36.6배 vs Advantest 약 39.6배 <span class="bd bd-drv">파생: 7/28 기준 계산</span>로 소폭 할인 — "점유율을 뺏는 쪽이 할인받는" 역설이 갭 축소 논리의 근거다. 단기 수급 경고: 실적 직전 풋 옵션이 평소의 1.9배로 몰렸고 7월 한 달 −29%의 고변동 구간을 지났다 — 모멘텀 자금의 손바뀜이 진행 중이다.</p>
+
+<div class="co co-note"><div class="ct">역할 분리 메모</div><p>본 5-B는 "이 꿈이 앞으로 연료가 될 수 있는가"(미래형 평가·검증)를, §8은 "시장이 지금 무슨 이야기를 하고 있는가"(현재형 관찰)를 다룬다. §8은 본 절의 결론(plausible→probable 경계, 가격 반영도 상당)을 전제로 서술된다.</p></div>
+</section>
+
+<!-- ================= §6 경제적 해자 ================= -->
+<section id="s6">
+<h2><span class="no">6</span>경쟁 우위 분석 — 경제적 해자</h2>
+
+<p class="lead">ATE 산업은 Advantest·Teradyne 두 회사가 시장의 85% 이상을 점유한 사실상의 복점(duopoly)이다. 해자의 본질은 "테스터를 잘 만드는 것"이 아니라, <strong>고객의 테스트 프로그램 자산과 상관(correlation) 데이터가 특정 플랫폼에 축적되어 이탈 비용이 기하급수로 커지는 구조</strong>에 있다. 아래에서 이 해자를 5 Forces → 우위 유형 판별 → 해자 원천 → 지속성 순으로 해부한다.</p>
+
+<h3>6-1. 포터의 5 Forces 평가</h3>
+<div class="twrap"><table>
+<thead><tr><th>경쟁 요인</th><th>강도</th><th>판단 근거</th></tr></thead>
+<tbody>
+<tr><td><strong>신규 진입 위협</strong></td><td><strong style="color:var(--pos)">낮음</strong></td><td>수십 년 축적된 계측 IP·소프트웨어 생태계·고객 상관 데이터가 필요. 신규 진입자는 성능이 같아도 "검증 이력"이 없어 채택 불가. 유일한 예외는 중국 로컬(화펑측공 등)로, 성숙 노드·중국 내수에 한정</td></tr>
+<tr><td><strong>기존 경쟁 강도</strong></td><td><strong style="color:var(--neg)">중상</strong></td><td>Advantest와의 양강 구도. 단, 파괴적 가격 경쟁보다 소켓(socket) 단위 설계 승리 경쟁 — 승패가 세대 단위로 갈리고 승자는 해당 소켓에서 수년간 독점적 지위</td></tr>
+<tr><td><strong>공급자 교섭력</strong></td><td><strong>중</strong></td><td>고성능 계측 반도체·정밀 부품 의존. 다만 TER는 팹리스형 아웃소싱 제조(주력 위탁)로 특정 공급자 종속이 낮은 편</td></tr>
+<tr><td><strong>구매자 교섭력</strong></td><td><strong style="color:var(--neg)">상</strong></td><td>고객이 TSMC·삼성·대형 OSAT·빅테크 등 초대형 — 10%+ 고객 존재. 단가 협상력은 강하나, 퀄 완료 후 플랫폼 전환 비용이 커서 "가격은 눌러도 벤더는 못 바꾸는" 비대칭</td></tr>
+<tr><td><strong>대체재 위협</strong></td><td><strong>중하</strong></td><td>테스트 자체는 생략 불가(첨단 패키징일수록 강화). 위협은 '테스트 안 하기'가 아니라 DFT(Design-for-Test)·BIST(내장자가테스트) 고도화로 외부 테스터 의존을 줄이는 방향 — 현재까지는 복잡도 증가가 이를 압도</td></tr>
+</tbody>
+</table></div>
+
+<h3>6-2. 우위 유형 판별 — 차별화형</h3>
+<p>CAP 프레임워크의 판별 공식(NOPAT 마진 × 투하자본 회전율)으로 보면 Teradyne은 전형적인 <strong>차별화(differentiation)형</strong>이다. Q2'26 비GAAP 총마진 59.8%, 영업마진 33.7%는 원가 우위 기업의 수치가 아니라 가격 결정력의 수치다. 동시에 제조를 대부분 아웃소싱해 투하자본이 가볍고(공장 자산 최소), 그 결과 ROE TTM 약 29%로 자본 효율까지 높다 — "높은 마진 × 높은 회전율"이라는 가장 강한 조합이다. 투자 함의: 이런 기업의 초과이익은 가격 경쟁이 아니라 <strong>기술 세대 전환에서의 설계 승리 여부</strong>로 결정되므로, 모니터링 포인트는 원가율이 아니라 소켓 승패다.</p>
+
+<h3>6-3. 해자의 원천 — 4개 축</h3>
+<div class="kgrid">
+<div class="kcard"><div class="k">① 전환 비용 (가장 강력)</div><div class="v" style="font-size:16px">IG-XL 생태계</div><div class="d">고객이 수년간 작성한 테스트 프로그램·상관 데이터가 IG-XL(TER 통합 소프트웨어)에 축적. 플랫폼 교체 = 전 제품 재퀄리피케이션(9~12개월+) — 양산 일정이 생명인 AI 칩에서 사실상 불가</div></div>
+<div class="kcard"><div class="k">② 무형자산</div><div class="v" style="font-size:16px">아키텍처 IP</div><div class="d">PACE 런타임·DMC(Distributed Multi Controller, 분산 멀티컨트롤러)·Broadside 병렬화 등 세대 축적형 설계 노하우 + 특허. R&D 매출 대비 13~14%를 수십 년 지속한 결과물</div></div>
+<div class="kcard"><div class="k">③ 효율적 규모</div><div class="v" style="font-size:16px">복점 &gt;85%</div><div class="d">글로벌 ATE 시장 규모 대비 개발비가 커서 3위 사업자의 경제성이 성립하기 어려움 — 시장이 커져도 신규 진입보다 양강의 캐파 증설로 흡수되는 구조</div></div>
+<div class="kcard"><div class="k">④ 설치기반 네트워크</div><div class="v" style="font-size:16px">UR 11만대+</div><div class="d">로보틱스는 별개 축: 세계 최대 코봇 설치기반 + UR+ 생태계(500+ 인증 컴포넌트) + 교육 아카데미. Physical AI 전환 시 "이미 깔린 하드웨어"가 배포 채널이 됨</div></div>
+</div>
+
+<h3>6-4. 해자 지속성 — 페이드 0.25의 의미</h3>
+<p>본 보고서의 가치평가는 반도체장비 섹터 표준 페이드 비율 0.25를 적용한다. 이는 초과이익이 매년 25%씩 경쟁 수준으로 수렴한다는 가정으로, 소비재(0.10)의 2.5배 속도다. 사이클 산업의 역사적 현실 — 호황의 초과 마진이 다운사이클에서 빠르게 반납되는 패턴 — 을 반영한 것이다.</p>
+<p><strong>지속성을 지지하는 논거:</strong> ① 테스트 강도(ATE/CapEx 비율)의 구조적 상승은 사이클과 독립적 — 칩렛·HBM 적층이 되돌아가지 않는 한 유지된다. ② 소켓 단위 승리는 해당 칩 세대(2~3년)의 매출을 사실상 보장하는 준(準)구독형 가시성을 준다. ③ 복점 구도 자체가 20년 이상 유지된 검증된 균형이다.</p>
+<p><strong>반론(정직한 견제):</strong> ① 마진의 절대 수준(OPM 33.7%)은 사이클 정점 수치일 수 있다 — 2019년 OPM은 20%대 초반이었다. ② 중국 로컬 ATE가 성숙 노드에서 점유를 잠식 중이며, 중국 매출 14%의 일부는 구조적으로 위험하다. ③ 고객(빅테크)의 수직계열화가 테스트까지 내려올 가능성은 낮지만 0은 아니다. 결론적으로 해자의 <strong>존재</strong>는 강하게 지지되나, 해자가 보장하는 <strong>마진의 높이</strong>는 사이클을 탄다 — 이것이 페이드 0.25가 뜻하는 바다.</p>
+</section>
+
+<!-- ================= §7 피어그룹 ================= -->
+<section id="s7">
+<h2><span class="no">7</span>피어그룹 비교 — Advantest와의 양강 구도</h2>
+
+<p class="lead">재무·밸류에이션 비교의 결론: Teradyne은 Advantest 대비 <strong>성장률은 높고(매출 +104% vs 상대적 완만) 밸류에이션은 낮은데(선행 P/E 약 36.6배 vs 약 40배)</strong>, 절대 점유율과 머천트 GPU 캡티브 지위에서는 열위다. "점유율을 뺏는 쪽이 할인받는" 현재 구도가 유지될지, 갭이 닫힐지가 상대수익률의 핵심 변수다. (기술 스펙 비교는 §4-C 참조 — 여기서는 재무·밸류에이션만 다룬다.)</p>
+
+<div class="twrap"><table>
+<thead><tr><th>항목</th><th>Teradyne (TER)</th><th>Advantest (6857.T)</th><th>Cohu (COHU)</th></tr></thead>
+<tbody>
+<tr><td>시가총액</td><td>≈ $53B</td><td>≈ $125~140B (¥18.5~21T)</td><td>소형 (니치)</td></tr>
+<tr><td>최근 실적 모멘텀</td><td>Q2'26 매출 +104% YoY, 비GAAP EPS $2.47</td><td>Q1 FY26(4~6월, 7/29 발표) 매출 ¥367.5B(+39%)·OPM 51.7% 분기 신기록, FY26 순이익 가이던스 +42% 상향</td><td>자동차·산업 중심, GaN 테스트 수주(DiamondX, 약 $5M) 등 회복 초입</td></tr>
+<tr><td>총마진 / 영업마진</td><td>59.8% / 33.7% (Q2'26 비GAAP)</td><td>OPM 최고 47% (직전 분기)</td><td>TER·ADV 대비 낮음 (구조적)</td></tr>
+<tr><td>자본수익성</td><td>ROE TTM ≈ 29%</td><td>ROIC ≈ 26%</td><td>—</td></tr>
+<tr><td>P/E (TTM / 선행)</td><td>≈ 43.8배 / ≈ 36.6배 <span class="bd bd-drv">파생</span></td><td>≈ 49배 / ≈ 40배</td><td>—</td></tr>
+<tr><td>SoC 테스터 점유율</td><td>CY25 ≈ 30% 내외 <span class="bd bd-drv">파생: ADV 66% 잔여 34%에서 군소 차감</span> — 하락 후 반격 국면</td><td>CY25 ≈ 66% (56%→66% 급상승)</td><td>비참여 (핸들러·검사 중심)</td></tr>
+<tr><td>구조적 강점</td><td>VIP 커스텀 ASIC 45~50%, HBM 성장 포착(북투빌&gt;2), 로보틱스 옵션</td><td>엔비디아 머천트 GPU 사실상 독점, SoC 캐파 1만 대 로드맵(당초 '28말~'29초, 앞당김 중), 설치기반 최대</td><td>자동차·산업 니치, 핸들러 시장 지위</td></tr>
+<tr><td>구조적 약점</td><td>머천트 GPU 후발(첫 수주 단계), 모바일 의존 이력</td><td>단일 고객(엔비디아 체인) 집중, 7/28 아시아 반도체 폭락에서 −10.1%(실적 발표는 7/29 장 마감 후 — 발표 자체는 서프라이즈)</td><td>규모의 경제 부재, AI 노출 미미</td></tr>
+</tbody>
+</table></div>
+<p style="font-size:12px;color:var(--ink-3)">표 7-1. 피어 3사 재무·밸류에이션 비교. 출처: 각사 실적 발표·MacroTrends·TIKR·보도 종합(2026-07 기준). Advantest 선행 P/E는 7/28 급락 후 종가 기준 계산(실적 발표는 7/29 장 마감 후) <span class="bd bd-drv">파생</span>. Cohu는 규모 차이로 정성 비교만 수행.</p>
+
+<h3>7-1. 상대 우위·열위 요약</h3>
+<p><strong>TER가 앞서는 것:</strong> ① 성장의 기울기 — 낮은 기저에서 점유를 되찾는 국면이라 증가율이 구조적으로 높다. ② 메모리(HBM) 노출 — 3분기 연속 $200M+, 북투빌 2 초과로 가시성이 가장 좋은 세그먼트를 쥐고 있다. ③ 사업 다각화 — 로보틱스·Product Test·방산이 반도체 사이클과 다른 리듬을 탄다. ④ 밸류에이션 — 선행 P/E가 대표주 대비 약 8~9% 할인.</p>
+<p><strong>Advantest가 앞서는 것:</strong> ① 절대 점유율(66%)과 그에 따른 규모의 경제. ② 엔비디아라는 단일 최대 수요원의 캡티브 벤더 지위 — 머천트 GPU 물량의 대부분을 가져간다. ③ 캐파 — 1만 대 로드맵 조기화(당초 2028말~2029초)로 공급 병목 국면에서 유리. 결국 이 비교의 투자 함의는 명확하다: <strong>ADV는 '현재 점유율의 프리미엄', TER는 '점유율 변화율의 베타'</strong>다. 듀얼벤더 전환이 진행될수록 후자의 리레이팅 여지가 커진다.</p>
+</section>
+
+<!-- ================= §8 시장 내러티브 ================= -->
+<section id="s8">
+<h2><span class="no">8</span>시장 내러티브 및 자금 선호도</h2>
+
+<p class="lead">2025년 여름 $89에서 2026년 여름 $488까지 — 1년간 5.5배는 실적만으로 설명되지 않는다. 이 주가는 <strong>세 겹의 스토리</strong>가 순차적으로 쌓인 결과다: ① "AI가 테스트 수요를 구조적으로 늘린다"(2025 하반기), ② "엔비디아 독점 체인에 균열, TER가 두 번째 벤더가 된다"(2026 상반기), ③ "로보틱스가 Physical AI 옵션이다"(부상 중). §5-B에서 검증한 대로 이 꿈은 plausible→probable 경계에 있으며, 아래는 시장이 지금 이 스토리를 어떻게 소비하고 있는지의 관찰이다.</p>
+
+<h3>8-1. 주가 궤적과 이벤트 — 1년의 드라마</h3>
+<p><strong>결론형 요약: 상승은 실적 서프라이즈가 만들고, 조정은 매크로(금리·이란)·중국발 경쟁 충격과 가이던스 착시가 만들었다.</strong> 특히 2026-04-29의 −19.4%는 "H1 편중 가이드"를 시장이 성장 정점으로 오독한 사건으로, 이후 Q2 실적이 이를 반증하며 회복했다 — 이 패턴(가이던스 보수성 → 실적 상회)은 현 경영진의 반복된 습관이다.</p>
+
+<figure style="margin:18px 0">
+<svg viewBox="0 0 1000 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TER 주가 추이와 주요 이벤트">
+<text x="70" y="18" font-size="13" font-weight="700" fill="var(--ink)">그림 7. TER 주가 1년 — 실적이 밀고 매크로가 흔든 5.5배 (2025-07 ~ 2026-07, 주간 종가 근사)</text>
+<!-- grid -->
+<line x1="70" y1="30" x2="970" y2="30" stroke="var(--line)" stroke-width="1"/>
+<line x1="70" y1="106" x2="970" y2="106" stroke="var(--line)" stroke-width="1"/>
+<line x1="70" y1="181" x2="970" y2="181" stroke="var(--line)" stroke-width="1"/>
+<line x1="70" y1="257" x2="970" y2="257" stroke="var(--line)" stroke-width="1"/>
+<line x1="70" y1="332" x2="970" y2="332" stroke="var(--line)" stroke-width="1"/>
+<line x1="70" y1="370" x2="970" y2="370" stroke="var(--ink)" stroke-width="1.2"/>
+<text x="62" y="34" font-size="11" fill="var(--ink-3)" text-anchor="end">$500</text>
+<text x="62" y="110" font-size="11" fill="var(--ink-3)" text-anchor="end">$400</text>
+<text x="62" y="185" font-size="11" fill="var(--ink-3)" text-anchor="end">$300</text>
+<text x="62" y="261" font-size="11" fill="var(--ink-3)" text-anchor="end">$200</text>
+<text x="62" y="336" font-size="11" fill="var(--ink-3)" text-anchor="end">$100</text>
+<text x="70" y="392" font-size="11" fill="var(--ink-3)">'25/7</text>
+<text x="278" y="392" font-size="11" fill="var(--ink-3)" text-anchor="middle">'25/10</text>
+<text x="485" y="392" font-size="11" fill="var(--ink-3)" text-anchor="middle">'26/1</text>
+<text x="693" y="392" font-size="11" fill="var(--ink-3)" text-anchor="middle">'26/4</text>
+<text x="920" y="392" font-size="11" fill="var(--ink-3)" text-anchor="middle">'26/7</text>
+<!-- price line -->
+<polyline points="103,336 150,341 208,332 278,319 338,308 342,287 416,268 485,251 555,222 562,194 624,185 679,181 693,192 757,162 760,210 832,158 882,90 889,78 899,58 901,39 951,129 965,165 968,153" fill="none" stroke="var(--c1)" stroke-width="2.4" stroke-linejoin="round"/>
+<!-- current price dashed -->
+<line x1="70" y1="153" x2="970" y2="153" stroke="var(--c4)" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
+<text x="76" y="149" font-size="10.5" fill="var(--c4)">현재 $336.61</text>
+<!-- event markers -->
+<g font-size="11" font-weight="700" text-anchor="middle">
+<circle cx="150" cy="341" r="11" fill="var(--bg-page)" stroke="var(--neg)" stroke-width="2"/><text x="150" y="345" fill="var(--neg)">1</text>
+<circle cx="342" cy="287" r="11" fill="var(--bg-page)" stroke="var(--pos)" stroke-width="2"/><text x="342" y="291" fill="var(--pos)">2</text>
+<circle cx="562" cy="194" r="11" fill="var(--bg-page)" stroke="var(--pos)" stroke-width="2"/><text x="562" y="198" fill="var(--pos)">3</text>
+<circle cx="693" cy="192" r="11" fill="var(--bg-page)" stroke="var(--neg)" stroke-width="2"/><text x="693" y="196" fill="var(--neg)">4</text>
+<circle cx="760" cy="210" r="11" fill="var(--bg-page)" stroke="var(--neg)" stroke-width="2"/><text x="760" y="214" fill="var(--neg)">5</text>
+<circle cx="875" cy="105" r="11" fill="var(--bg-page)" stroke="var(--c1)" stroke-width="2"/><text x="875" y="109" fill="var(--c1)">6</text>
+<circle cx="901" cy="39" r="11" fill="var(--bg-page)" stroke="var(--pos)" stroke-width="2"/><text x="901" y="43" fill="var(--pos)">7</text>
+<circle cx="951" cy="129" r="11" fill="var(--bg-page)" stroke="var(--neg)" stroke-width="2"/><text x="951" y="133" fill="var(--neg)">8</text>
+<circle cx="972" cy="165" r="11" fill="var(--bg-page)" stroke="var(--pos)" stroke-width="2"/><text x="972" y="169" fill="var(--pos)">9</text>
+</g>
+</svg>
+</figure>
+
+<table class="evt">
+<tbody>
+<tr><td class="n"><span>1</span></td><td><strong>2025-08 초</strong> · 52주 저점 $89.18 — 관세 불확실성 + 모바일 테스트 부진의 바닥</td><td class="down">저점</td></tr>
+<tr><td class="n"><span>2</span></td><td><strong>2025-10-29</strong> · Q3'25 실적 + "Q4 매출 +25% QoQ" 가이던스 → 익일 +15.8%, AI 사이클 진입 확인</td><td class="up">↑</td></tr>
+<tr><td class="n"><span>3</span></td><td><strong>2026-02-03</strong> · Q4'25 서프라이즈($1,083M) + $6B 타깃모델 제시 → +13.4% $282.98 사상최고 경신</td><td class="up">↑</td></tr>
+<tr><td class="n"><span>4</span></td><td><strong>2026-03-30</strong> · 이란 지정학 리스크 확산 → −6.5%, 반도체 전반 조정</td><td class="down">↓</td></tr>
+<tr><td class="n"><span>5</span></td><td><strong>2026-04-29</strong> · Q1'26 +87%에도 "Q2 순감 가이드" 오독 + 마진 우려 → −19.4%</td><td class="down">↓</td></tr>
+<tr><td class="n"><span>6</span></td><td><strong>2026-06-22</strong> · 나스닥100 지수 편입 — 패시브 자금 기계적 유입 개시</td><td class="up">↑</td></tr>
+<tr><td class="n"><span>7</span></td><td><strong>2026-06-30</strong> · Cantor $550·BofA $525 목표가 → 장중 $487.91 사상최고</td><td class="up">고점</td></tr>
+<tr><td class="n"><span>8</span></td><td><strong>2026-07 중하순</strong> · AI 밸류에이션 부담·금리 인상 경계 위에 7/28 중국발 충격(CXMT 상장·중국산 DUV 양산 보도)으로 아시아 반도체 폭락: SK하이닉스 −14.7%, TEL −11.0%, Advantest −10.1%, Kospi −10.8% → TER 고점 대비 −34%</td><td class="down">↓</td></tr>
+<tr><td class="n"><span>9</span></td><td><strong>2026-07-29</strong> · Q2'26 서프라이즈(+104%) + Q3 가이드 컨센 +21% 상회 → +5.0% $336.61 (장중 한때 +12%대)</td><td class="up">↑</td></tr>
+</tbody>
+</table>
+
+<h3>8-2. 시장이 자금을 태우는 지점 — 스토리 3층 구조</h3>
+<p><strong>1층 · AI 테스트 슈퍼사이클(주력 내러티브, 소비 9개월차):</strong> "반도체 CapEx에서 테스트가 차지하는 비율이 4%→8%로 배증했고 7~9%에 안착한다"는 구조론. 기관 리포트의 표준 프레임이 됐고, 목표가 상향(Susquehanna·Cantor $550, BofA $525, UBS $500)의 공통 근거다. 이 층은 이미 상당 부분 가격에 반영됐다.</p>
+<p><strong>2층 · 듀얼벤더 전환(가장 뜨거운 층, 소비 6개월차):</strong> "엔비디아 테스트 체인의 Advantest 독점에 균열 — TER 머천트 GPU 첫 수주(Q1'26) + 두 번째 하이퍼스케일러 상관 완료"가 2026년 상반기 리레이팅의 직접 연료였다. 점유율 1%p ≈ 연 $90M 매출이라는 산수가 애널리스트 모델에 들어가기 시작했다. 아직 물량이 작아 실적 기여는 미미 — <strong>기대가 실적을 앞서 달리는 층</strong>이다.</p>
+<p><strong>3층 · Physical AI 옵션(부상 초기):</strong> 로보틱스 5분기 연속 순차 성장(Q2'26 $100M)과 NVIDIA 파트너십·미시간 공장이 "휴머노이드·Physical AI 공급망 대형주" 재분류를 만들고 있다. 아직 목표가 모델에 본격 반영되지 않은, 잠재 리레이팅 여지가 가장 큰 층이다.</p>
+
+<h3>8-3. 컨센서스의 방향과 강도</h3>
+<p>애널리스트 18명 평균 목표가 $429.88(범위 $270~550), Buy 12~13 / Hold 1~6 / Sell 0~1 — 방향은 명확한 강세 편향이다. 더 중요한 것은 <strong>추정치 상향 사이클이 진행 중</strong>이라는 점: 실적 발표 전 구컨센(FY26 매출 $4.46B·EPS $6.99)은 실제 궤적($5.0~5.2B·EPS $9 이상) 대비 크게 낮아, 향후 수 주간 기계적 상향이 예정돼 있다. 컨센 상향기는 역사적으로 멀티플이 버티거나 확장되는 구간이다. 단, 평균 목표가가 현재가보다 28% 위에 있다는 것은 "애널리스트가 낙관적"이라는 뜻이지 "주가가 싸다"는 증명이 아니다 — 목표가는 후행적으로 주가를 쫓아 올라온 이력이 있다.</p>
+
+<h3>8-4. 수급·모멘텀 체크</h3>
+<p>수급의 순풍: 나스닥100 편입(6/22)으로 QQQ 계열 패시브 매수가 구조화됐고, SOX 지수 편입 기존 유지, 대형 운용사 지분 확대 보도. 수급의 역풍: 7월 고점 대비 −34% 조정에서 모멘텀 자금의 손바뀜이 일어났고, 실적 직전 풋 옵션 1.9배 유입은 단기 심리의 취약성을 보여줬다. 현재 상태는 "장기 스토리 자금은 유지, 단기 모멘텀 자금은 이탈 후 재진입 관망" — 실적 서프라이즈가 재진입 트리거를 당긴 직후 국면이다.</p>
+
+<div class="co co-note"><div class="ct">내러티브와 펀더멘털의 정합성 — §10으로의 다리</div><p>이 스토리들이 허구인가? 아니다 — 매출 +104%, AI 비중 60%+, 북투빌 2 초과는 실측치다. 문제는 정합성의 <strong>정도</strong>다: §10의 역산이 보여주듯 현재 주가는 "NOPAT 13~14% 성장을 20~25년" 지속하는 시나리오를 이미 지불했다. 내러티브가 사실이어도, 그 사실이 이 가격을 정당화하려면 TAM 확장(로보틱스·CPO)까지 성공해야 한다. 스토리를 믿는 것과 이 가격에 사는 것은 별개의 판단이다.</p></div>
+</section>
+
+<!-- ================= §9 재무·DCF ================= -->
+<section id="s9">
+<h2><span class="no">9</span>재무 분석 및 DCF 모델</h2>
+
+<p class="lead">재무의 큰 그림: <strong>매출은 사이클 저점(2024) 대비 배증 궤도, 마진은 영업레버리지로 15%→34~38% 구간까지 확장, 현금창출은 팹리스형 경량 자산 구조 덕에 이익과 동행</strong>한다. 아래에서 실적 추이 → 생애주기 판별 → WACC → 전시 23 DCF 순으로 가치평가의 토대를 쌓는다.</p>
+
+<h3>9-1. 분기 실적 추이 — 영업레버리지의 실증</h3>
+
+<figure style="margin:18px 0">
+<svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="분기 매출과 영업마진 추이">
+<text x="80" y="18" font-size="13" font-weight="700" fill="var(--ink)">그림 8. 분기 매출(막대)과 비GAAP 영업마진(선) — 매출 2배에 마진 2배가 얹히는 구조 ($M, %)</text>
+<line x1="80" y1="40" x2="960" y2="40" stroke="var(--line)"/>
+<line x1="80" y1="110" x2="960" y2="110" stroke="var(--line)"/>
+<line x1="80" y1="180" x2="960" y2="180" stroke="var(--line)"/>
+<line x1="80" y1="250" x2="960" y2="250" stroke="var(--line)"/>
+<line x1="80" y1="320" x2="960" y2="320" stroke="var(--ink)" stroke-width="1.2"/>
+<text x="72" y="44" font-size="11" fill="var(--ink-3)" text-anchor="end">1,400</text>
+<text x="72" y="114" font-size="11" fill="var(--ink-3)" text-anchor="end">1,050</text>
+<text x="72" y="184" font-size="11" fill="var(--ink-3)" text-anchor="end">700</text>
+<text x="72" y="254" font-size="11" fill="var(--ink-3)" text-anchor="end">350</text>
+<text x="72" y="324" font-size="11" fill="var(--ink-3)" text-anchor="end">0</text>
+<text x="968" y="44" font-size="11" fill="var(--c4)">40%</text>
+<text x="968" y="114" font-size="11" fill="var(--c4)">30%</text>
+<text x="968" y="184" font-size="11" fill="var(--c4)">20%</text>
+<text x="968" y="254" font-size="11" fill="var(--c4)">10%</text>
+<text x="968" y="324" font-size="11" fill="var(--c4)">0%</text>
+<!-- bars -->
+<rect x="90" y="182.8" width="72" height="137.2" fill="var(--c1)" opacity="0.85"/>
+<rect x="216" y="189.6" width="72" height="130.4" fill="var(--c1)" opacity="0.85"/>
+<rect x="342" y="166.2" width="72" height="153.8" fill="var(--c1)" opacity="0.85"/>
+<rect x="468" y="103.4" width="72" height="216.6" fill="var(--c1)" opacity="0.85"/>
+<rect x="594" y="63.6" width="72" height="256.4" fill="var(--c1)" opacity="0.85"/>
+<rect x="720" y="54.2" width="72" height="265.8" fill="var(--c1)" opacity="0.85"/>
+<rect x="846" y="70" width="72" height="250" fill="var(--c1)" opacity="0.5"/>
+<g font-size="11" font-weight="700" fill="var(--ink)" text-anchor="middle">
+<text x="126" y="177">686</text><text x="252" y="184">652</text><text x="378" y="161">769</text>
+<text x="504" y="98">1,083</text><text x="630" y="58">1,282</text><text x="756" y="49">1,329</text>
+<text x="882" y="65">1,250E</text>
+</g>
+<!-- OPM line -->
+<polyline points="126,176.5 252,214.3 378,190.5 504,117 630,57.5 756,84.1 882,117" fill="none" stroke="var(--c4)" stroke-width="2.4"/>
+<g fill="var(--c4)"><circle cx="126" cy="176.5" r="3.5"/><circle cx="252" cy="214.3" r="3.5"/><circle cx="378" cy="190.5" r="3.5"/><circle cx="504" cy="117" r="3.5"/><circle cx="630" cy="57.5" r="3.5"/><circle cx="756" cy="84.1" r="3.5"/><circle cx="882" cy="117" r="3.5"/></g>
+<g font-size="10.5" font-weight="700" fill="var(--c4)" text-anchor="middle">
+<text x="126" y="166">20.5%</text><text x="252" y="232">15.1%</text><text x="378" y="208">18.5%</text>
+<text x="504" y="135">29%</text><text x="630" y="47">37.5%</text><text x="756" y="74">33.7%</text><text x="882" y="135">~29%E</text>
+</g>
+<g font-size="11" fill="var(--ink-3)" text-anchor="middle">
+<text x="126" y="340">Q1'25</text><text x="252" y="340">Q2'25</text><text x="378" y="340">Q3'25</text>
+<text x="504" y="340">Q4'25</text><text x="630" y="340">Q1'26</text><text x="756" y="340">Q2'26</text><text x="882" y="340">Q3'26E</text>
+</g>
+</svg>
+<div class="legend"><span class="li"><span class="sw" style="background:var(--c1)"></span>매출($M, 좌축)</span><span class="li"><span class="sw" style="background:var(--c4)"></span>비GAAP 영업마진(우축)</span><span class="li"><span class="sw" style="background:var(--c1);opacity:.5"></span>Q3'26 가이던스 중간값</span></div>
+<figcaption style="font-size:12px;color:var(--ink-3);margin-top:6px">출처: 회사 실적 발표. Q3'25 영업마진은 공시 미확인으로 <span class="bd bd-est">추정</span>(연간 22.3%와 전후 분기로부터 보간), Q3'26은 가이던스(28~30%) 중간값.</figcaption>
+</figure>
+
+<p>이 차트의 메시지는 하나다: <strong>매출이 652→1,329로 2배가 되는 동안 영업마진이 15.1%→33.7%로 2.2배가 됐다</strong> — 고정비(R&D·판관비) 위에 증분 매출이 60% 총마진으로 얹히는 영업레버리지의 교과서적 실증이다. 역으로 이는 다운사이클에서 마진이 같은 속도로 무너진다는 뜻이기도 하다(2025년 상반기가 그 증거). Q1'26 GM 60.9%에는 일회성 우호 요인이 포함되어 있었고, Q2'26 59.8%(−110bp QoQ)와 Q3 가이드 58~59%는 HBM 메모리 믹스 확대에 따른 완만한 희석을 반영한다 — §4-D①에서 다룬 "매출은 크게 늘고 마진은 살짝 눌리는" 구조 그대로다.</p>
+
+<h3>9-2. 연간 재무 추이와 현금흐름 체질</h3>
+<div class="twrap"><table>
+<thead><tr><th>항목</th><th>FY2023</th><th>FY2024</th><th>FY2025</th><th>FY2026E <span class="bd bd-drv">파생</span></th></tr></thead>
+<tbody>
+<tr><td>매출($M)</td><td>2,676</td><td>2,820</td><td>3,190</td><td>5,020~5,220</td></tr>
+<tr><td>성장률</td><td>−15% 내외(다운사이클)</td><td>+5.4%</td><td>+13.1%</td><td>+58~63%</td></tr>
+<tr><td>비GAAP EPS</td><td>$2.93</td><td>$3.22</td><td>$3.96</td><td>$9.0~9.4</td></tr>
+<tr><td>총마진</td><td>—</td><td>—</td><td>58.3%</td><td>59% 내외</td></tr>
+<tr><td>비GAAP 영업마진</td><td>—</td><td>—</td><td>22.3%</td><td>32~34%</td></tr>
+</tbody>
+</table></div>
+<p style="font-size:12px;color:var(--ink-3)">표 9-1. 연간 실적 추이. FY26E는 상반기 실적($2,611M·EPS $5.02) + Q3 가이던스 + "H1=연간의 50~52%" 가이드로부터 산출. 출처: 회사 공시·실적 발표.</p>
+
+<p><strong>현금흐름 체질:</strong> H1'26 FCF $579M(+150% YoY), Q2 단독 $378M — 비GAAP 순이익 대비 FCF 전환율이 100%에 근접한다. 제조 아웃소싱으로 CapEx가 가볍고(분기 증가분 +$26M 수준), 운전자본 투자(재고 선행 확충)가 유일한 현금 흡수처다. 재고 증가는 통상 위험 신호지만, 북투빌 2 초과 상태에서의 재고는 "못 팔 재고"가 아니라 "공급 못 할 위험의 헤지"로 읽는 것이 타당하다. 주주환원은 분기 배당 $20M + 자사주 $69M — 13년 연속 배당에 $1B 자사주 프로그램이 병행된다.</p>
+
+<p><strong>생애주기 판별(현금흐름표 부호 패턴):</strong> 영업(+)·투자(−)·재무(−) — 형식상 <strong>성숙기</strong> 패턴이다. 그러나 매출 +104%는 성숙기의 숫자가 아니다. 정확한 판독은 "성숙기 기업이 신규 S커브(AI 테스트)에 올라타 <strong>성장 단계를 재점화</strong>한 상태"다. 사업부별로는 반도체 테스트가 성장기 초중반, 로보틱스가 도입기~성장기 경계, Product Test가 성숙기다. 이 판별이 중요한 이유: 성숙기 재무 체력(현금·배당·자사주)으로 성장기 투자를 감당할 수 있다는 뜻이며, 도입기 기업의 희석 리스크가 없다.</p>
+
+<h3>9-3. WACC 산출</h3>
+<div class="twrap"><table>
+<thead><tr><th>구성 요소</th><th>값</th><th>근거</th></tr></thead>
+<tbody>
+<tr><td>무위험 이자율 (10Y UST)</td><td>4.638%</td><td>2026-07-29 종가 기준</td></tr>
+<tr><td>주식 위험 프리미엄 (ERP)</td><td>4.45%</td><td>다모다란 2026년 7월 업데이트 (1월 4.23%에서 상승)</td></tr>
+<tr><td>베타 (조정)</td><td>1.52</td><td>원시 5Y 월간 1.74~1.80 (Yahoo·Finbox) → 블룸버그 조정식 0.67β+0.33. <span class="bd bd-cfl">상충</span> TradingView 1.26 존재 — 보수적으로 높은 원시치 채택</td></tr>
+<tr><td>자기자본비용 (CoE)</td><td><strong>≈ 11.4%</strong></td><td>4.638% + 1.52 × 4.45%</td></tr>
+<tr><td>WACC</td><td><strong>≈ 11.4%</strong></td><td>부채 미미·순현금 ~$0.4B → CoE ≈ WACC. 민감도 ±1%p 병행</td></tr>
+<tr><td>장기 성장률 g</td><td>2.5%</td><td>기대 인플레이션 표준 가정</td></tr>
+<tr><td>페이드 비율 f</td><td>0.25</td><td>반도체장비 섹터 표준 (초과이익 연 25% 수렴)</td></tr>
+</tbody>
+</table></div>
+
+<h3>9-4. 전시 23 — DCF 연도별 테이블 (기본 성장경로, CAP 25년 전개)</h3>
+<p>아래 표는 §10에서 도출되는 <strong>시장 내재 시나리오</strong>(NOPAT 성장 13%/년, CAP 25년)를 그대로 전개한 것이다 — 즉 "현재 주가가 옳다면 회사가 걸어야 할 재무 경로"다. 2026~28년은 개별 프로젝션(매출 $5.1B→+18%→+12%, 마진 32.5%→33.5%→34%), 2029년 이후는 NOPAT 13% 등속 성장, 투자는 연 15% 증가를 가정했다.</p>
+
+<div class="twrap"><table>
+<thead><tr><th>연도</th><th>매출</th><th>NOPAT</th><th>투자</th><th>FCF</th><th>할인계수</th><th>현재가치</th></tr></thead>
+<tbody>
+<tr><td>2026</td><td>5,100</td><td>1,409</td><td>300</td><td>1,109</td><td>0.947</td><td>1,051</td></tr>
+<tr><td>2027</td><td>6,018</td><td>1,714</td><td>345</td><td>1,369</td><td>0.850</td><td>1,164</td></tr>
+<tr><td>2028</td><td>6,740</td><td>1,948</td><td>397</td><td>1,551</td><td>0.763</td><td>1,184</td></tr>
+<tr><td>2029</td><td>7,616</td><td>2,201</td><td>456</td><td>1,745</td><td>0.685</td><td>1,196</td></tr>
+<tr><td>2030</td><td>8,607</td><td>2,487</td><td>525</td><td>1,963</td><td>0.615</td><td>1,207</td></tr>
+<tr><td>2031</td><td>9,725</td><td>2,811</td><td>603</td><td>2,207</td><td>0.552</td><td>1,219</td></tr>
+<tr><td>2032</td><td>10,990</td><td>3,176</td><td>694</td><td>2,482</td><td>0.496</td><td>1,230</td></tr>
+<tr><td>2033</td><td>12,418</td><td>3,589</td><td>798</td><td>2,791</td><td>0.445</td><td>1,242</td></tr>
+<tr><td>2034</td><td>14,033</td><td>4,055</td><td>918</td><td>3,138</td><td>0.399</td><td>1,253</td></tr>
+<tr><td>2035</td><td>15,857</td><td>4,583</td><td>1,055</td><td>3,527</td><td>0.359</td><td>1,265</td></tr>
+<tr><td>2040</td><td>29,215</td><td>8,443</td><td>2,123</td><td>6,321</td><td>0.209</td><td>1,321</td></tr>
+<tr><td>2045</td><td>53,827</td><td>15,556</td><td>4,270</td><td>11,287</td><td>0.122</td><td>1,375</td></tr>
+<tr><td>2050</td><td>99,174</td><td>28,661</td><td>8,588</td><td>20,074</td><td>0.071</td><td>1,425</td></tr>
+<tr class="hl"><td>터미널(페이드)</td><td colspan="3">CAP 종료 후 초과이익이 f=0.25로 소멸</td><td>294,501</td><td>—</td><td>20,912</td></tr>
+<tr class="hl"><td colspan="5"><strong>기업가치(EV) = PV(FCF) 32,301 + PV(터미널) 20,912 = 53,213 → + 순현금 400 = 자기자본 53,613 → ÷ 157M주</strong></td><td colspan="2"><strong>$341.5/주</strong></td></tr>
+</tbody>
+</table></div>
+<p style="font-size:12px;color:var(--ink-3)">표 9-2 (전시 23 형식). 단위 $M, 주당 제외. 연중(mid-year) 할인 적용. 2036~2049 중간 연도는 지면상 5년 간격 표시(모델에는 전 연도 포함). 이 경로가 현재가 $336.61과 사실상 일치($341.5)한다는 것이 §10의 출발점이다.</p>
+
+<div class="co co-warn"><div class="ct">이 표를 읽는 올바른 방법 — TAM 정합성 경고</div><p>이 표는 "회사가 이렇게 될 것"이라는 예측이 아니라 <strong>"시장 가격이 전제하는 경로"의 역산</strong>이다. 주목할 지점: 2040년 매출 $29B는 회사가 제시한 2030년 ATE TAM 상단($24B)을 이미 넘어서고, 2045년 $54B는 그 2배가 넘는다. 즉 이 경로가 실현되려면 ①ATE TAM이 2030년 이후에도 두 자릿수로 계속 커지거나 ②로보틱스·Product Test가 제2의 본체로 성장하거나 ③둘 다여야 한다. 시장은 사실상 "wafer-to-AI-data-center 플랫폼 전환의 완성"을 지불하고 있다.</p></div>
+</section>
+
+<!-- ================= §10 내재 CAP ================= -->
+<section id="s10">
+<h2><span class="no">10</span>시장 내재 CAP 역산 및 해석</h2>
+
+<p class="lead">결론부터: 현재 주가 $336.61은 <strong>"NOPAT 연 13~14% 성장 × 경쟁우위기간(CAP) 20~25년"</strong>을 내재한다. CAP 해석 기준(10~15년 = 합리적 우량주, 15~20년 = 약간 낙관, 20년+ = 과도한 낙관 위험)에 대면 <strong>낙관 구간의 상단</strong>이다. 다만 성장률 가정을 16%로 올리면 내재 CAP는 17년(약간 낙관)으로, 18%면 14년(합리적)으로 내려온다 — 즉 이 주가의 정당성은 "얼마나 오래"보다 <strong>"얼마나 빨리"</strong>에 대한 믿음에 달려 있다.</p>
+
+<h3>10-1. 역산 방법</h3>
+<p>①2026~28년 개별 프로젝션 위에 2029년 이후 NOPAT 등속 성장경로(gaf)를 가정하고, ②예측 기간 N을 1년씩 늘려가며 페이드 터미널(f=0.25) 포함 주당가치를 계산, ③가치가 현재가와 일치하는 N을 찾는다(연중 할인 적용). ④이를 자본비용 k와 성장률 gaf의 격자에서 반복해 <strong>내재 CAP 프런티어</strong>를 얻는다.</p>
+
+<h3>10-2. 내재 CAP 프런티어 — k × 성장률 격자</h3>
+<div class="twrap"><table>
+<thead><tr><th>NOPAT 성장률 ↓ / 자본비용 →</th><th>k = 10.4%</th><th>k = 11.4% (기본)</th><th>k = 12.4%</th></tr></thead>
+<tbody>
+<tr><td>gaf = 10%</td><td>N = 24</td><td>도달 불가 (가치 상한 ≈$223)</td><td>도달 불가</td></tr>
+<tr><td>gaf = 12%</td><td>N = 24</td><td>N = 32</td><td>&gt;45</td></tr>
+<tr class="hl"><td><strong>gaf = 13%</strong></td><td><strong>N = 20</strong></td><td><strong>N = 25</strong></td><td><strong>N = 32</strong></td></tr>
+<tr><td>gaf = 14%</td><td>N = 18</td><td>N = 21</td><td>N = 26</td></tr>
+<tr><td>gaf = 16%</td><td>N = 15</td><td>N = 17</td><td>N = 20</td></tr>
+<tr><td>gaf = 18%</td><td>N = 13</td><td>N = 14</td><td>N = 16</td></tr>
+</tbody>
+</table></div>
+<p style="font-size:12px;color:var(--ink-3)">표 10-1. 현재가 $336.61에 도달하는 데 필요한 예측기간 N(=내재 CAP). gaf 10% 행이 보여주듯, 한 자릿수 후반~10% 성장으로는 어떤 기간을 줘도 현재가를 정당화할 수 없다 — 이 주가는 최소 13%+의 장기 성장을 요구한다.</p>
+
+<h3>10-3. 가치 사다리 — 성장경로별 가치 곡선과 현재가의 교점</h3>
+<figure style="margin:18px 0">
+<svg viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="예측기간별 주당가치 곡선">
+<text x="80" y="18" font-size="13" font-weight="700" fill="var(--ink)">그림 9. 예측기간 N에 따른 주당가치 — 현재가와 만나는 지점이 내재 CAP (k=11.4%)</text>
+<line x1="80" y1="40" x2="960" y2="40" stroke="var(--line)"/>
+<line x1="80" y1="120" x2="960" y2="120" stroke="var(--line)"/>
+<line x1="80" y1="200" x2="960" y2="200" stroke="var(--line)"/>
+<line x1="80" y1="280" x2="960" y2="280" stroke="var(--line)"/>
+<line x1="80" y1="360" x2="960" y2="360" stroke="var(--ink)" stroke-width="1.2"/>
+<text x="72" y="44" font-size="11" fill="var(--ink-3)" text-anchor="end">$800</text>
+<text x="72" y="124" font-size="11" fill="var(--ink-3)" text-anchor="end">$600</text>
+<text x="72" y="204" font-size="11" fill="var(--ink-3)" text-anchor="end">$400</text>
+<text x="72" y="284" font-size="11" fill="var(--ink-3)" text-anchor="end">$200</text>
+<text x="72" y="364" font-size="11" fill="var(--ink-3)" text-anchor="end">$0</text>
+<g font-size="11" fill="var(--ink-3)" text-anchor="middle">
+<text x="144" y="380">N=5</text><text x="303" y="380">N=10</text><text x="462" y="380">N=15</text><text x="622" y="380">N=20</text><text x="781" y="380">N=25</text><text x="940" y="380">N=30</text>
+</g>
+<!-- 현재가 수평선 -->
+<line x1="80" y1="225" x2="960" y2="225" stroke="var(--ink)" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="86" y="219" font-size="11.5" font-weight="700" fill="var(--ink)">현재가 $336.61</text>
+<!-- 곡선 3개 -->
+<polyline points="80,312 112,310 144,308 176,305 207,303 239,301 271,299 303,297 335,295 367,293 399,291 430,289 462,287 494,286 526,284 558,283 590,281 621,280 653,279 685,277 717,276 749,275 781,274 813,273 844,273 876,272 908,271 940,271" fill="none" stroke="var(--ink-3)" stroke-width="2"/>
+<polyline points="80,311 112,308 144,304 176,300 207,297 239,293 271,289 303,285 335,281 367,278 399,274 430,270 462,266 494,262 526,257 558,253 590,249 621,245 653,241 685,236 717,232 749,228 781,223 813,219 844,215 876,210 908,206 940,201" fill="none" stroke="var(--c1)" stroke-width="2.6"/>
+<polyline points="80,310 112,306 144,301 176,295 207,290 239,284 271,278 303,272 335,266 367,259 399,252 430,245 462,237 494,229 526,221 558,212 590,203 621,194 653,184 685,174 717,163 749,152 781,141 813,129 844,116 876,103 908,90 940,75" fill="none" stroke="var(--c4)" stroke-width="2"/>
+<!-- 교점 -->
+<circle cx="781" cy="223" r="6" fill="var(--c1)"/>
+<text x="781" y="248" font-size="11.5" font-weight="700" fill="var(--c1)" text-anchor="middle">13% × 25년</text>
+<circle cx="526" cy="221" r="6" fill="var(--c4)"/>
+<text x="526" y="207" font-size="11.5" font-weight="700" fill="var(--c4)" text-anchor="middle">16% × 17년</text>
+<text x="944" y="262" font-size="11" fill="var(--ink-3)" text-anchor="end">10%: 도달 불가 (상한 ≈$223)</text>
+</svg>
+<div class="legend"><span class="li"><span class="sw" style="background:var(--ink-3)"></span>gaf 10%</span><span class="li"><span class="sw" style="background:var(--c1)"></span>gaf 13% (기본)</span><span class="li"><span class="sw" style="background:var(--c4)"></span>gaf 16% (강세)</span></div>
+<figcaption style="font-size:12px;color:var(--ink-3);margin-top:6px">각 곡선은 해당 성장률로 N년 성장 후 페이드하는 시나리오의 주당가치. 곡선이 현재가 점선과 만나는 N이 내재 CAP다. 출처: 본 보고서 DCF 모델.</figcaption>
+</figure>
+
+<h3>10-4. 가치의 분해 — 얼마가 '미래 성장' 값인가</h3>
+<p>성장을 0으로 고정한 <strong>정체 가치(steady-state)는 주당 $81.3</strong> — 현재 실적의 영구 유지만으로 설명되는 가격이다. 나머지 $255, 즉 <strong>시가총액의 75.9%가 미래 성장의 현재가치(PVGO)</strong>다. 참고로 성숙 우량주의 PVGO는 통상 30~50%, 고성장 기술주는 60~80% 범위다 — TER는 후자의 상단에 있다. 이 분해가 말해주는 것: 이 주식의 리스크는 "회사가 망하는 것"이 아니라 "성장이 기대에 못 미치는 것"이며, 성장 실망 시 하방은 펀더멘털이 아니라 <strong>기대 재조정의 크기</strong>로 결정된다(4/29 −19.4%가 그 예고편이었다).</p>
+
+<h3>10-5. 민감도·시나리오</h3>
+<div class="twrap"><table>
+<thead><tr><th>구분</th><th>가정</th><th>주당가치</th><th>현재가 대비</th></tr></thead>
+<tbody>
+<tr><td>강세</td><td>2027 +25%·GM 상향, gaf 14%, k 10.4%, CAP 15년</td><td><strong>$353</strong></td><td>+4.9%</td></tr>
+<tr class="hl"><td>기본</td><td>2027 +18%, gaf 13%, k 11.4%, CAP 15년</td><td><strong>$236</strong></td><td>−29.9%</td></tr>
+<tr><td>약세</td><td>2027 +5%·2028 −10%(사이클 하강), gaf 8%, 마진 압축</td><td><strong>$75</strong></td><td>−77.7%</td></tr>
+<tr><td>자본비용 민감도</td><td>N=15·gaf 13% 고정, k 10.4% / 11.4% / 12.4%</td><td>$271~276 / $234~238 / $204~207</td><td>k ±1%p ≈ 가치 ±15%</td></tr>
+</tbody>
+</table></div>
+<p style="font-size:12px;color:var(--ink-3)">표 10-2. CAP 15년(합리적 우량주 기준)을 고정했을 때의 시나리오. 기본 시나리오가 현재가보다 30% 낮다는 것 = 시장은 기본보다 강한 경로(더 긴 CAP 또는 더 높은 성장)를 이미 지불 중이라는 뜻. 강세 시나리오조차 +5%에 그침에 주목.</p>
+
+<h3>10-6. 풋볼 필드 — 가치 지도 위의 현재가</h3>
+<figure style="margin:18px 0">
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="밸류에이션 레인지 비교">
+<text x="70" y="18" font-size="13" font-weight="700" fill="var(--ink)">그림 10. 밸류에이션 레인지 — 현재가는 DCF 기본을 넘어 강세 시나리오와 애널리스트 존 사이 ($/주)</text>
+<g font-size="11" fill="var(--ink-3)" text-anchor="middle">
+<text x="70" y="320">0</text><text x="220" y="320">100</text><text x="370" y="320">200</text><text x="520" y="320">300</text><text x="670" y="320">400</text><text x="820" y="320">500</text><text x="970" y="320">600</text>
+</g>
+<line x1="70" y1="300" x2="970" y2="300" stroke="var(--ink)" stroke-width="1.2"/>
+<line x1="220" y1="45" x2="220" y2="300" stroke="var(--line)"/><line x1="370" y1="45" x2="370" y2="300" stroke="var(--line)"/><line x1="520" y1="45" x2="520" y2="300" stroke="var(--line)"/><line x1="670" y1="45" x2="670" y2="300" stroke="var(--line)"/><line x1="820" y1="45" x2="820" y2="300" stroke="var(--line)"/>
+<!-- rows -->
+<text x="187" y="56" font-size="11.5" fill="var(--ink)" font-weight="700">정체가치 $81 (성장 0)</text>
+<rect x="187" y="62" width="12" height="22" fill="var(--ink-3)"/>
+<text x="182" y="101" font-size="11.5" fill="var(--ink)" font-weight="700">시나리오 약세 $75 ~ 강세 $353 (기본 $236)</text>
+<rect x="182" y="107" width="417" height="22" fill="var(--c1)" opacity="0.35"/>
+<line x1="424" y1="104" x2="424" y2="132" stroke="var(--c1)" stroke-width="3"/>
+<text x="376" y="146" font-size="11.5" fill="var(--ink)" font-weight="700">자본비용 민감도 $204 ~ $276 (CAP 15년)</text>
+<rect x="376" y="152" width="108" height="22" fill="var(--c1)" opacity="0.65"/>
+<text x="475" y="191" font-size="11.5" fill="var(--ink)" font-weight="700">애널리스트 목표가 $270 ~ $550 (평균 $430)</text>
+<rect x="475" y="197" width="420" height="22" fill="var(--c4)" opacity="0.4"/>
+<line x1="715" y1="194" x2="715" y2="222" stroke="var(--c4)" stroke-width="3"/>
+<text x="204" y="236" font-size="11.5" fill="var(--ink)" font-weight="700">52주 범위 $89 ~ $488</text>
+<rect x="204" y="242" width="598" height="22" fill="var(--ink-3)" opacity="0.25"/>
+<!-- 현재가 -->
+<line x1="575" y1="40" x2="575" y2="300" stroke="var(--ink)" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="575" y="290" font-size="12" font-weight="800" fill="var(--ink)" text-anchor="middle">현재가 $336.61</text>
+</svg>
+<figcaption style="font-size:12px;color:var(--ink-3);margin-top:6px">출처: 본 보고서 DCF·§8 컨센서스·시세 데이터. 애널리스트 평균 목표가는 실적 발표 전 수치로, 향후 상향 조정 가능성이 있다.</figcaption>
+</figure>
+
+<h3>10-7. 종합 판정 — 이 기대는 합리적인가</h3>
+<p><strong>판정: 내재 CAP 20~25년은 절대 기준으로 '과도한 낙관' 경계선이다. 그러나 세 가지 맥락이 이를 부분적으로 완충한다.</strong> ① <strong>성장률 상향 가능성</strong> — 내재 CAP는 gaf 가정에 극도로 민감하며, 회사 타깃모델($6B)의 Q4 상향과 2027 컴퓨트 서지가 실현되면 "16~18% 성장 × 14~17년"이라는 훨씬 온건한 해석으로 같은 주가가 설명된다. ② <strong>복점 구조의 CAP 선례</strong> — ASML·TSMC처럼 구조적 병목을 쥔 장비·제조 기업이 15~20년+ CAP로 거래된 선례가 있고, ATE 복점은 그 아류 구조다. 단, TER는 복점의 2위라는 점에서 할인이 정당하다. ③ <strong>페이드 0.25의 보수성</strong> — 본 모델의 터미널은 초과이익이 4년 내 대부분 소멸한다고 가정하므로, 해자가 실제로 더 오래가면 모델이 가치를 과소평가한다.</p>
+<p>반대 방향의 정직한 결론도 병기한다: §9-4의 TAM 정합성 문제 — 내재 경로의 2040년대 매출이 현재 알려진 ATE TAM을 초과한다 — 는 이 가격이 <strong>반도체 테스트 회사가 아니라 플랫폼 회사의 가격</strong>임을 뜻한다. §5-B의 꿈(로보틱스·CPO·듀얼벤더)이 전부 켜져야 산수가 맞다. 꿈의 일부만 실현되는 시나리오에서 기본 가치는 $236 — 현재가 대비 −30%가 "낙관이 식었을 때의 중력"이다.</p>
+</section>
+
+<!-- ================= §11 Bull ================= -->
+<section id="s11">
+<h2><span class="no">11</span>투자 논거 — Bull Case</h2>
+
+<p class="lead">강세론의 뼈대는 "구조가 바뀐 시장에서, 구조적으로 점유율을 늘릴 위치에 선 2등"이다. 아래 다섯 논거는 각각 독립적으로 성립하며, 동시에 켜질 때 §10의 강세 시나리오($353) 너머를 연다.</p>
+
+<p><strong>① 테스트 강도의 구조적 상승 — 사이클이 아니라 층위 이동.</strong> ATE/반도체 CapEx 비율 4%(2023)→8%(2026)의 배증은 첨단 패키징의 물리학이 만든 것이다: 칩렛·HBM 적층에서 패키지 수율은 개별 다이 수율의 곱으로 무너지므로, 비싼 결합 전에 각 다이를 더 오래·더 깊게 시험하는 것이 경제 최적이 된다. 이 논리는 공정이 미세화될수록, 적층이 높아질수록 강해진다 — 되돌아갈 물리적 이유가 없다. 회사의 장기 7~9% 안착 전망이 맞다면 ATE TAM은 반도체 CapEx보다 빠르게 크는 시장이 된다.</p>
+
+<p><strong>② 듀얼벤더 전환 — 점유율 변화율의 베타.</strong> 세계에서 가장 중요한 반도체 고객군(엔비디아·하이퍼스케일러)이 테스트 이중화를 원한다는 사실 자체가 TER의 구조적 순풍이다. 커스텀 ASIC 45~50% 지분에 더해 머천트 GPU 첫 수주(Q1'26)→납품(Q2)→두 번째 하이퍼스케일러 상관 완료까지, 침투의 초기 증거가 분기마다 쌓이고 있다. SoC 점유율 1%p ≈ 연 $90M의 산수에서, 회사가 시사한 열망치(40~42%)까지 3~5%p의 여지는 $270~450M/년의 잠재 매출이다.</p>
+
+<p><strong>③ 메모리(HBM)의 가시성 — 북투빌 2 초과.</strong> 3분기 연속 $200M+에 수주가 매출의 2배로 쌓이는 세그먼트는 지금 반도체 장비 전체에서도 드물다. HBM4 전환(2026~27)과 Rubin 세대의 HBM 용량 급증(288GB→1TB급)은 Magnum 7H의 설계 승리가 최소 2~3년의 매출로 번역됨을 뜻한다. §4-D①에서 본 대로 이는 마진을 약간 희석하지만 절대 이익을 크게 늘린다.</p>
+
+<p><strong>④ 로보틱스 옵션 — 공짜에 가까운 두 번째 꿈.</strong> §10의 역산에서 로보틱스가 기여하는 내재 가치는 미미하다 — 즉 현재가에 Physical AI 성공은 거의 지불되지 않았다. 5분기 연속 순차 성장, NVIDIA 전략 파트너십, 미시간 생산 허브, 세계 최대 코봇 설치기반(11만 대)이라는 실물 자산 위에서, 휴머노이드·Physical AI 내러티브가 점화되면 이 사업부만으로 리레이팅 트리거가 될 수 있다. 실패해도 현재 밸류에이션이 잃는 것은 적다 — 비대칭이 유리한 옵션이다.</p>
+
+<p><strong>⑤ 재무 체력과 환원의 동시 성립.</strong> 순현금 + FCF 전환율 100% 근접 + $1B 자사주 + 13년 연속 배당 — 성장주의 손익계산서에 가치주의 대차대조표다. 다운사이클이 와도 생존이 아니라 역매수(자사주·M&A)의 국면이 된다는 뜻이며, 이는 변동성을 견디는 장기 보유자에게 실질적 보호막이다.</p>
+</section>
+
+<!-- ================= §12 Bear ================= -->
+<section id="s12">
+<h2><span class="no">12</span>리스크 — Bear Case</h2>
+
+<p class="lead">약세론의 핵심은 하나로 수렴한다: <strong>"이 가격은 이미 많은 것이 잘 되는 미래를 지불했다."</strong> 아래 표는 각 리스크의 실체와 함께, 그것이 현재 주가에 얼마나 반영되어 있는지를 정직하게 가른다 — 반영된 리스크는 공포가 아니라 사실이고, 미반영 리스크가 진짜 하방이다.</p>
+
+<div class="twrap"><table>
+<thead><tr><th>리스크</th><th>실체와 경로</th><th>심각도</th><th>가격 반영도</th></tr></thead>
+<tbody>
+<tr><td><strong>사이클 반전</strong></td><td>AI CapEx 조정 시 테스트 장비는 후행이 아니라 동행 감속. 2019·2023년 다운사이클에서 매출 두 자릿수 감소 + 마진 반토막 전례. §10 약세 시나리오 $75가 그 재현의 가격</td><td>높음</td><td><strong>부분 반영</strong> — 7월 −34% 조정이 일부 소화했으나, 컨센은 여전히 2027 재가속 전제</td></tr>
+<tr><td><strong>기대 선반영 (밸류에이션)</strong></td><td>내재 CAP 20~25년 = 낙관 상단. 성장이 13%가 아니라 8~10%로 판명되면 어떤 CAP로도 현재가 정당화 불가(상한 $223) — 기대 재조정만으로 −30% 갭</td><td>높음</td><td><strong>미반영</strong> — 이것이 본 보고서가 보는 제1 리스크</td></tr>
+<tr><td><strong>머천트 GPU 침투 실패</strong></td><td>Advantest의 캐파 로드맵 조기화(1만 대, 당초 '28말~'29초)·가격 대응으로 fast follower 침투가 정체될 가능성. 듀얼벤더 스토리는 2026 리레이팅의 직접 연료였으므로, 실패 시 스토리 2층이 통째로 꺼짐</td><td>중상</td><td><strong>미반영</strong> — 기대가 실적을 앞서 달리는 층</td></tr>
+<tr><td><strong>대만 집중</strong></td><td>매출 36%가 대만 — TSMC·OSAT 생태계 의존. 양안 리스크는 확률은 낮으나 발생 시 손실이 극단적인 테일 리스크</td><td>테일</td><td><strong>미반영에 가까움</strong> — 섹터 공통 할인 외 개별 반영 없음</td></tr>
+<tr><td><strong>중국 로컬 ATE·수출통제</strong></td><td>중국 매출 14%. 성숙 노드에서 화펑측공 등 로컬 잠식 진행, 수출통제 확대 시 추가 축소 경로. 단 파워 믹스는 전고점 유지 중(회사)</td><td>중</td><td><strong>대체로 반영</strong> — 수년째 알려진 리스크, 컨센 모델에 반영</td></tr>
+<tr><td><strong>금리·할인율</strong></td><td>k +1%p = 가치 −15%(§10-5). 7월 FOMC發 금리 인상 경계가 재부상한 국면 — 고 PVGO(76%) 주식은 듀레이션이 길어 금리에 가장 민감한 부류</td><td>중</td><td><strong>진행 중</strong> — 7월 조정의 일부가 이것</td></tr>
+<tr><td><strong>HBM 믹스 마진 희석</strong></td><td>메모리 확대는 GM을 −1~2%p 누른다(Q2 −110bp 실증). "매출 서프라이즈 + 마진 미스"의 분기가 나올 수 있는 구조</td><td>중하</td><td><strong>반영</strong> — 가이던스(58~59%)에 명시, 콜에서 소통</td></tr>
+<tr><td><strong>가이던스 소통 변동성</strong></td><td>보수적 가이드 습관이 4/29 −19.4% 같은 오독 급락을 재생산할 수 있음. H1 50~52% 가이드 특성상 Q4 콜의 Q1'27 가이드가 다음 오독 후보</td><td>중하</td><td>구조적 — 반영 개념 부적용, 변동성으로 상시 지불</td></tr>
+<tr><td><strong>로보틱스 재실패</strong></td><td>UR·MiR 10년의 전례(기대 하회→2025 구조조정). Physical AI가 데모에 그치면 옵션 가치 소멸 — 단 현재가에 옵션이 거의 미지불이라 하방 기여는 제한적</td><td>하</td><td>해당 없음(미지불 옵션)</td></tr>
+</tbody>
+</table></div>
+
+<div class="co co-neg"><div class="ct">약세론의 한 문장</div><p>"매출 +104%는 사실이지만, 그 사실은 이미 $336에 들어 있다 — 여기서 돈을 벌려면 사실이 아니라 <strong>사실의 가속</strong>이 필요하며, 반도체 장비 역사에서 가속은 언제나 감속으로 끝났다."</p></div>
+</section>
+
+<!-- ================= §13 SWOT ================= -->
+<section id="s13">
+<h2><span class="no">13</span>SWOT 분석</h2>
+
+<div class="swot">
+<div class="q s"><div class="qt">Strengths — 강점</div><ul>
+<li>ATE 복점의 한 축(양사 합산 점유 85%+), 전환비용 해자(IG-XL·상관 데이터)</li>
+<li>커스텀 ASIC 테스트 45~50% 지분 — VIP 고객 기반</li>
+<li>HBM 테스트 설계 승리: 메모리 3분기 연속 $200M+, 북투빌 &gt;2</li>
+<li>GM ~60%·OPM 34%·ROE 29% — 차별화형 수익 구조</li>
+<li>순현금·FCF 전환 100% 근접 — 사이클 방어 체력</li>
+<li>세계 최대 코봇 설치기반(UR 11만 대+)</li>
+</ul></div>
+<div class="q w"><div class="qt">Weaknesses — 약점</div><ul>
+<li>SoC 절대 점유 열위(≈30% vs Advantest 66%)</li>
+<li>머천트 GPU 후발 — 침투 초기 단계의 실행 리스크</li>
+<li>대만 36%·중국 14% — 지역 집중</li>
+<li>로보틱스 10년 기대 하회 이력(2025 구조조정)</li>
+<li>보수적 가이던스 소통이 만드는 반복적 오독 변동성</li>
+<li>모바일 테스트의 구조적 뮤트(과거 주력의 공백)</li>
+</ul></div>
+<div class="q o"><div class="qt">Opportunities — 기회</div><ul>
+<li>테스트 강도 장기 7~9% 안착 — TAM 2030년 $18~24B</li>
+<li>듀얼벤더 전환: 점유 1%p ≈ 연 $90M, 열망치 40~42%</li>
+<li>HBM4·Rubin 세대 메모리 테스트 수요 급증</li>
+<li>CPO·실리콘 포토닉스 계측 — Photon 100 선점</li>
+<li>Physical AI·휴머노이드 — NVIDIA 동맹, 미시간 허브</li>
+<li>2027 컴퓨트 서지 + 자동차·산업 회복의 동시 도래 가능성</li>
+</ul></div>
+<div class="q t"><div class="qt">Threats — 위협</div><ul>
+<li>AI CapEx 사이클 반전 — 매출·마진 동시 압축 전례</li>
+<li>Advantest 캐파 로드맵 조기화(1만 대) 기반 방어전</li>
+<li>내재 CAP 20~25년의 기대 재조정 리스크(−30% 중력)</li>
+<li>금리 상승 — 고 PVGO 주식의 듀레이션 리스크</li>
+<li>양안·이란 등 지정학 테일</li>
+<li>중국 로컬 ATE의 성숙 노드 잠식 확대</li>
+</ul></div>
+</div>
+<p style="font-size:12px;color:var(--ink-3)">표 13-1. SWOT 종합 — 상세 논거는 각각 §6(강점), §12(약점·위협), §5(기회) 참조.</p>
+</section>
+
+<!-- ================= §14 경영진·자본배분 ================= -->
+<section id="s14">
+<h2><span class="no">14</span>경영진 및 자본 배분</h2>
+
+<p class="lead">평가 요지: <strong>기술을 아는 경영진이, 절제된 자본 배분을, 보수적 소통과 함께</strong> 하고 있다. 트랙 레코드의 오점은 로보틱스 M&A의 더딘 개화 — 다만 그 실패를 인정하고 구조조정한 뒤 Physical AI로 재정렬한 대응은 오히려 규율의 증거로 읽을 수 있다.</p>
+
+<h3>14-1. 경영진 프로필과 트랙 레코드</h3>
+<p><strong>CEO Greg Smith(2023-02~)</strong>는 반도체 테스트 사업부(SemiTest) 사장 출신 엔지니어다 — 세일즈맨이 아니라 제품을 아는 CEO라는 점이 "wafer-to-AI data center" 전략의 신뢰도를 받친다. 취임 후 실행 기록: ①AI 컴퓨트 전환 가속(AI 매출 비중 60%+ 도달), ②머천트 GPU 침투 개시(전임 체제에서 못 뚫던 소켓), ③로보틱스 구조조정 단행(2025)과 NVIDIA 동맹 재정렬, ④Technoprobe 지분 교환·Quantifi 인수 등 계측 밸류체인 보강. 약속 대비 실행 측면에서, 2026-02 제시한 $6B 타깃모델은 상반기 실적이 궤도를 상회하며 Q4 콜 상향이 예고된 상태 — 현재까지는 <strong>과소약속·초과달성</strong> 패턴이다. <strong>CFO Michelle Turner(2025~)</strong> 체제에서 가이던스는 보수적 톤을 유지하고 있다(그 부작용이 §12의 오독 변동성이다). 로보틱스 그룹 총괄 Jean-Pierre Hathout(2025-09~, Universal Robots 사장 겸임 — 전임 Ujjwal Kumar 승계), 메모리 사장 Young Kim 등 사업부 수장 라인도 정비됐다. 로보틱스는 2025년 구조조정과 함께 총괄까지 교체하며 "코봇·AMR 통합 운영 + Physical AI 집중"으로 지휘 체계를 재정렬했다.</p>
+
+<h3>14-2. 자본 배분의 역사 — 규율과 오점</h3>
+<p>명시된 우선순위는 <strong>사업 재투자 → 현금·M&A 드라이파우더 → 주주환원</strong>이다. R&D 매출 대비 13~14%를 사이클 저점에서도 유지한 것이 오늘의 설계 승리(Magnum 7H·UltraFLEXplus)로 돌아왔다 — 재투자 규율의 증거다. 환원은 $1B 자사주 프로그램(2025-04 승인) + 13년 연속 배당(분기 $0.13)으로, Q2'26 자사주 $69M·배당 $20M을 집행했다. 발행주식이 자사주 매입으로 꾸준히 줄어드는(158M→157M) 구조다.</p>
+<p><strong>M&A 성적표는 혼합이다.</strong> 성공: Nextest·Eagle Test(2008, 메모리·아날로그 확장 — 오늘의 Magnum 계보), LitePoint(2011, 무선). 미완: <strong>Universal Robots($285M, 2015)·MiR($148M+, 2018)은 인수 10년이 지나도록 매출 비중 7.5%에 머물렀고</strong> AutoGuide(2019)는 2022년 정리됐다 — "코봇이 제2의 본체가 된다"던 원래 기대에는 명백히 미달이다. 냉정하게 말해 이 구간의 자본은 반도체 테스트에 재투자했을 때보다 낮은 수익률을 냈다. 다만 두 가지 단서: ①인수가가 절제되어 있어(합산 ~$450M) 훼손 규모 자체는 제한적이고, ②그 설치기반이 지금 Physical AI 옵션의 원료가 됐다 — 실패한 투자가 뒤늦게 옵션으로 전환되는 드문 경로다. 최근의 Technoprobe 지분 10% 매입(2024, €483.1M≈$524M)과 DIS 사업 매각($85M — 별도 거래)의 결합은 "소유보다 생태계 지분"이라는 더 성숙한 접근을 보여준다.</p>
+
+<h3>14-3. 인센티브 정렬</h3>
+<p>내부자 지분은 창업 66년 전문경영 체제 특성상 크지 않으며, 보상은 통상적 성과연동(매출·EPS·상대주주수익률) 구조다. 특기할 적신호(대량 내부자 매도, 과도한 희석)는 관찰되지 않았고, 자사주 매입이 희석을 상쇄하는 균형이 유지되고 있다. 도입 단계 기업이 아니므로 CEO 스토리텔링 의존도는 낮으나, Smith의 "wafer-to-AI data center" 프레임은 애널리스트 모델의 표준 서사로 안착했다 — 자본시장 소통 능력도 합격점이다.</p>
+</section>
+
+<!-- ================= §15 종합 판단 ================= -->
+<section id="s15">
+<h2><span class="no">15</span>종합 판단 및 체크포인트</h2>
+
+<div class="co co-key"><div class="ct">세 문장 결론</div><p>①Teradyne은 AI가 만든 "테스트 강도의 구조적 상승"과 "듀얼벤더 전환"이라는 두 순풍을 동시에 받는, 복점 시장의 추격자다 — 사업의 질과 방향은 최근 10년 중 가장 좋다. ②그러나 현재가 $336.61은 NOPAT 13~14% 성장 × 20~25년이라는 낙관 상단의 기대를 이미 지불했으며, 기본 시나리오 가치는 $236으로 −30% 아래에 있다. ③따라서 이 종목의 승부는 "회사가 잘하느냐"가 아니라 <strong>"잘하는 속도가 기대를 앞지르느냐"</strong>에 걸려 있고, 그 판정 증거는 아래 체크포인트에서 분기마다 갱신된다.</p></div>
+
+<h3>15-1. 판단의 구조 — 무엇이 어느 쪽 증거인가</h3>
+<p>본 보고서의 분석을 한 축으로 접으면: <strong>사업 분석(§2~8)은 강세를, 가격 분석(§9~10)은 신중을 가리킨다.</strong> 이 긴장은 해소해야 할 모순이 아니라 이 주식의 본질이다 — 좋은 회사와 좋은 주식은 가격에서 갈린다. 실행 가능한 함의는 세 가지다. ①기대 재조정 국면(4/29형 급락, 7월형 매크로 조정)은 사업 훼손이 아니라면 내재 CAP가 합리 구간(15년 내외 = $236~270 존)으로 내려오는 순간이며, 이때의 매수는 "꿈을 싸게 사는" 구조가 된다. ②현 가격대에서의 신규 진입은 2027 컴퓨트 서지·타깃모델 상향·듀얼벤더 진전이라는 세 촉매가 모두 켜진다는 베팅임을 자각해야 한다. ③보유자라면 §12의 미반영 리스크 2개(성장 감속, 머천트 GPU 정체)의 반증 증거를 분기마다 확인하는 것이 포지션 관리의 전부다.</p>
+
+<h3>15-2. 모니터링 체크포인트</h3>
+<div class="twrap"><table>
+<thead><tr><th>시점</th><th>이벤트</th><th>확인 지표</th><th>강세 유지 조건 / 경고 신호</th></tr></thead>
+<tbody>
+<tr><td>2026-10-27</td><td>Q3'26 실적</td><td>매출 vs 가이드($1.2~1.3B), GM, 메모리 북투빌</td><td>가이드 상단 상회 + GM 58%+ / 북투빌 1.5 미만 하락 시 경고</td></tr>
+<tr><td>2027-01 말</td><td>Q4'26 실적 + 연간 콜</td><td><strong>타깃모델 상향 폭</strong>($6B→?), Q1'27 가이드</td><td>타깃 $6.5B+ 상향 / 상향 없음·Q1 급감 가이드 시 4/29형 변동 대비</td></tr>
+<tr><td>2027 상반기</td><td>컴퓨트 서지 검증</td><td>SoC 내 컴퓨트 비중·증가율, 머천트 GPU 2번째 고객 램프</td><td>서지 실현 = 스토리 2층 확증 / 지연 시 내재 CAP 재계산 필요</td></tr>
+<tr><td>분기 연속</td><td>점유율 추적</td><td>TER 전체 점유(37%→), SoC 점유(≈30%→), UBS·업계 추정</td><td>40% 방향 진전 / Advantest 캐파 증설에 밀려 횡보~하락 시 약세 전환</td></tr>
+<tr><td>분기 연속</td><td>로보틱스</td><td>매출 연속 성장(현재 5분기), 흑자 접근, Physical AI 수주</td><td>$120M/분기 돌파·흑자 가시화 시 옵션 점화 / 역성장 복귀 시 옵션 소멸</td></tr>
+<tr><td>상시</td><td>할인율 환경</td><td>10Y 금리(현 4.64%), 다모다란 ERP 갱신</td><td>10Y 4% 하향 시 가치 +15% 순풍 / 5%대 진입 시 밸류에이션 압축</td></tr>
+<tr><td>학회 캘린더</td><td>기술 검증</td><td>ISSCC·VLSI(HBM4 테스트), OFC(CPO 계측), GTC·Automate(Physical AI)</td><td>§5-B 촉매 캘린더의 실물 증거화 여부</td></tr>
+</tbody>
+</table></div>
+
+<h3>15-3. 한계와 가정 — 이 보고서가 확실하지 않은 것</h3>
+<p>①<strong>베타 상충</strong>: 원시 베타가 소스별 1.26~1.80으로 갈린다 <span class="bd bd-cfl">상충</span>. 본문은 보수적으로 높은 축(조정 1.52, k=11.4%)을 채택했으며, 낮은 베타가 옳다면 내재 CAP는 본문보다 짧아진다(k 10.4% 열 참조 — 판정이 '합리적' 쪽으로 이동). ②<strong>주가 경로 근사</strong>: 그림 7의 곡선은 확인된 앵커 종가 사이를 주간 단위로 보간한 근사다 — 이벤트 시점·종가는 확인치, 곡선 형태는 <span class="bd bd-est">추정</span>. ③<strong>Q3'25 영업마진</strong>은 공시 미확인으로 보간 추정치다. ④<strong>Advantest 재무 상세</strong>(연매출 절대액)는 미확보로 §7은 확인된 지표만 비교했다 — 스펙 공백을 임의로 채우지 않았다. ⑤<strong>FY26E·EPS는 파생치</strong>다(상반기 실적+가이드 조합) — 공식 컨센서스가 상향 안착하면 수치가 이동한다. ⑥<strong>모델 구조의 한계</strong>: 등속 성장+페이드 모델은 반도체의 사이클 진폭을 평균으로 뭉갠다 — 실제 경로는 본문의 매끈한 곡선보다 훨씬 험할 것이며, 시나리오 폭($75~353)이 그 진폭의 대리 지표다. ⑦애널리스트 목표가·컨센서스는 7/28 실적 발표 전 수치가 섞여 있어 향후 수 주간 갱신된다. ⑧<strong>2026-07-31 개정</strong>: 외부 사실 검증을 반영해 로보틱스 그룹 총괄(Kumar→Hathout, 2025-09 교체), Advantest 실적 발표일(7/29 장 마감 후)과 7/28 −10% 급락의 인과(실적 반응이 아니라 중국발 시장 폭락), Advantest 캐파 로드맵 시한(1만 대는 당초 2028말~2029초), SoC 점유율 표기 통일(≈30%), DMC 약어(Distributed Multi Controller), 고객 집중(Q1'26 기준 10%+ 고객 복수), 로보틱스 연속 성장(5분기)을 정정·갱신했다.</p>
+
+</section>
+
+<div class="foot">
+<p><strong>데이터 기준</strong> — 시세: 2026-07-29(현지) 종가 $336.61. 실적: Q2'26(2026-07-28 발표) 및 그 이전 공시. 작성 기준일: 2026-07-30(KST), 사실 검증 개정: 2026-07-31(KST).</p>
+<p><strong>주요 출처</strong> — 회사 실적 발표·어닝콜(Q2'26)·10-K/10-Q·투자자 자료 | 시세·차트: MacroTrends·Investing.com·TradingView | 컨센서스·목표가: 각 증권사 보도(Susquehanna·Cantor·BofA·UBS·Baird·Goldman 등) 종합 | 산업·점유율: UBS·JPMorgan·Morningstar·Wing VC·업계 매체 | 기술: 회사 기술자료·학회 발표 보도(ISSCC·SID 등)·티어다운 매체 | 거시 입력: 미 10년물 금리, 다모다란 ERP(2026-07). 본문 표기 원칙: <span class="bd bd-est">추정</span> 자체 추정 · <span class="bd bd-drv">파생</span> 공시로부터 계산 · <span class="bd bd-cfl">상충</span> 출처 간 불일치.</p>
+</div>
+
+</div>
+</body>
+</html>
