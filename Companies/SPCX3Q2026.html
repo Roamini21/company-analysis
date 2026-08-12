@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpaceX(SPCX) 기업분석 보고서</title>
+<style>
+/* ===== 보고서 UI 통일 시스템 v1.1 — 수정 금지 ===== */
+:root{
+  --bg-page:#FFFFFF; --bg-soft:#F6F8FA;
+  --brand:#0F2B46; --brand-2:#1E4265;
+  --ink:#1A202C; --ink-2:#4A5568; --ink-3:#718096;
+  --line:#E2E8F0; --line-2:#CBD5E1;
+  --accent:#2563EB; --accent-soft:#EFF6FF;
+  --pos:#047857; --pos-soft:#ECFDF5;
+  --neg:#DC2626; --neg-soft:#FEF2F2;
+  --warn:#B45309; --warn-soft:#FFFBEB;
+  --gold:#B7791F; --gold-soft:#FEF3C7;
+  --c1:#2563EB; --c2:#7C3AED; --c3:#059669; --c4:#D97706;
+  --c5:#DC2626; --c6:#0891B2; --c7:#DB2777; --c8:#64748B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+    "Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  background:var(--bg-page); color:var(--ink);
+  font-size:15px; line-height:1.7; word-break:keep-all;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px 80px;}
+p{margin:0 0 12px; color:var(--ink);}
+strong{color:var(--ink);font-weight:700;}
+a{color:var(--accent);text-decoration:none;}
+ul,ol{margin:0 0 12px 22px;} li{margin:4px 0;color:var(--ink);}
+
+/* --- 표지 밴드 (어두운 배경 허용 위치 1) --- */
+.cover{background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  color:#FFFFFF;padding:44px max(28px,calc((100% - 1040px)/2 + 28px));
+  border-radius:0 0 18px 18px;margin-bottom:36px;}
+.cover h1{font-size:27px;font-weight:800;color:#FFFFFF;margin:6px 0 10px;}
+.cover .sub{color:#C9D6E4;font-size:14px;}
+.cover .meta{color:#9FB3C8;font-size:12.5px;margin-top:14px;}
+.cover .kpis{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+.cover .kpi{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);
+  border-radius:10px;padding:10px 14px;min-width:130px;}
+.cover .kpi .k{font-size:11.5px;color:#9FB3C8;}
+.cover .kpi .v{font-size:18px;font-weight:800;color:#FFFFFF;}
+.cover .kpi .v.up{color:#6EE7B7;} .cover .kpi .v.down{color:#FCA5A5;}
+
+/* --- 목차 --- */
+.toc{background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;
+  padding:18px 22px;margin:0 0 40px;}
+.toc .t{font-weight:800;color:var(--brand);font-size:14px;margin-bottom:10px;}
+.toc ol{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0;}
+.toc li{white-space:nowrap;font-size:13.5px;}
+.toc a{color:var(--ink-2);}
+
+/* --- 섹션 --- */
+section{margin:56px 0 0;}
+h2{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:800;
+  color:var(--brand);border-bottom:2px solid var(--brand);
+  padding-bottom:10px;margin:0 0 20px;}
+h2 .no{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:var(--brand);
+  color:#FFFFFF;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;}
+h3{font-size:16.5px;font-weight:700;color:var(--ink);margin:28px 0 12px;}
+.lead{font-size:15.5px;color:var(--ink);background:var(--accent-soft);
+  border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+  padding:14px 16px;margin:0 0 16px;}
+.lead *{color:var(--ink);}
+
+/* --- 콜아웃 (배경+글자색 자급) --- */
+.co{border-radius:10px;padding:16px 18px;margin:16px 0;border:1px solid;}
+.co .ct{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.co p,.co li{font-size:14px;margin-bottom:6px;}
+.co-key{background:var(--accent-soft);border-color:#BFDBFE;}
+.co-key,.co-key *{color:#1E3A8A;}
+.co-pos{background:var(--pos-soft);border-color:#A7F3D0;}
+.co-pos,.co-pos *{color:#065F46;}
+.co-neg{background:var(--neg-soft);border-color:#FECACA;}
+.co-neg,.co-neg *{color:#991B1B;}
+.co-warn{background:var(--warn-soft);border-color:#FDE68A;}
+.co-warn,.co-warn *{color:#92400E;}
+.co-note{background:var(--bg-soft);border-color:var(--line);}
+.co-note,.co-note *{color:var(--ink-2);}
+
+/* --- 배지 (데이터 계보·확신도) --- */
+.bd{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;
+  padding:2px 7px;vertical-align:1px;margin:0 2px;}
+.bd-est{background:var(--warn-soft);color:#92400E;border:1px solid #FDE68A;}
+.bd-drv{background:var(--accent-soft);color:#1E40AF;border:1px solid #BFDBFE;}
+.bd-cfl{background:var(--neg-soft);color:#991B1B;border:1px solid #FECACA;}
+.bd-unk{background:var(--bg-soft);color:var(--ink-2);border:1px dashed var(--line-2);}
+.bd-conf{background:var(--bg-soft);color:var(--ink-2);border:1px solid var(--line-2);}
+
+/* --- KPI 카드 그리드 --- */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;margin:16px 0;}
+.kcard{background:#FFFFFF;border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;}
+.kcard .k{font-size:12px;color:var(--ink-3);}
+.kcard .v{font-size:20px;font-weight:800;color:var(--ink);margin-top:2px;}
+.kcard .v.up{color:var(--pos);} .kcard .v.down{color:var(--neg);}
+.kcard .d{font-size:11.5px;color:var(--ink-3);margin-top:2px;}
+
+/* --- 표 --- */
+.twrap{overflow-x:auto;margin:16px 0;border:1px solid var(--line);
+  border-radius:10px;
+  background:
+    linear-gradient(to right,#FFF 30%,rgba(255,255,255,0)),
+    linear-gradient(to left,#FFF 30%,rgba(255,255,255,0)) 100% 0,
+    radial-gradient(farthest-side at 0 50%,rgba(15,43,70,.14),transparent),
+    radial-gradient(farthest-side at 100% 50%,rgba(15,43,70,.14),transparent) 100% 0;
+  background-repeat:no-repeat;background-size:60px 100%,60px 100%,16px 100%,16px 100%;
+  background-attachment:local,local,scroll,scroll;}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:#FFFFFF;}
+caption{caption-side:top;text-align:left;font-weight:800;color:var(--brand);
+  font-size:14px;padding:12px 14px 8px;}
+th{background:var(--brand);color:#FFFFFF;font-weight:700;font-size:12.5px;
+  padding:10px 12px;text-align:left;white-space:nowrap;}
+td{padding:9px 12px;border-top:1px solid var(--line);color:var(--ink);
+  vertical-align:top;}
+tbody tr:nth-child(even) td{background:#F8FAFC;}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+td .up{color:var(--pos);font-weight:700;} td .down{color:var(--neg);font-weight:700;}
+tr.hl td{background:var(--gold-soft);color:#78350F;font-weight:700;}
+tr.total td{background:var(--accent-soft);color:#1E3A8A;font-weight:800;
+  border-top:2px solid var(--line-2);}
+.wide{min-width:860px;}
+
+/* --- 그림(figure) --- */
+figure{margin:24px 0;}
+.fig-t{font-weight:800;color:var(--ink);font-size:14.5px;margin-bottom:10px;}
+.fig-box{background:#FFFFFF;border:1px solid var(--line);border-radius:12px;
+  padding:16px;}
+figcaption{font-size:12px;color:var(--ink-3);margin-top:8px;line-height:1.6;}
+figure img{max-width:100%;height:auto;border-radius:8px;display:block;}
+svg{max-width:100%;height:auto;display:block;}
+svg text{font-family:inherit;}
+
+/* --- 범례 (차트 외부 HTML 범례) --- */
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 2px 0;}
+.legend .li{display:flex;align-items:center;gap:6px;font-size:12.5px;
+  color:var(--ink-2);white-space:nowrap;}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto;}
+
+/* --- 이벤트 마커 범례 표 (주가 차트용) --- */
+.evt{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px;}
+.evt td{padding:6px 10px;border-top:1px solid var(--line);color:var(--ink);}
+.evt .n{width:30px;font-weight:800;color:#FFFFFF;text-align:center;}
+.evt .n span{display:inline-block;width:20px;height:20px;line-height:20px;
+  border-radius:50%;background:var(--brand);font-size:11.5px;}
+.evt .up{color:var(--pos);font-weight:700;} .evt .down{color:var(--neg);font-weight:700;}
+
+/* --- Bull/Bear 2열 --- */
+.bb{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+.bb .col{border-radius:12px;padding:16px 18px;border:1px solid;}
+.bb .bull{background:var(--pos-soft);border-color:#A7F3D0;}
+.bb .bull,.bb .bull *{color:#065F46;}
+.bb .bear{background:var(--neg-soft);border-color:#FECACA;}
+.bb .bear,.bb .bear *{color:#991B1B;}
+.bb .ct{font-weight:800;font-size:14px;margin-bottom:8px;}
+
+/* --- SWOT 4분면 --- */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+.swot .q{border-radius:12px;padding:14px 16px;border:1px solid;}
+.swot .s{background:var(--pos-soft);border-color:#A7F3D0;} .swot .s,.swot .s *{color:#065F46;}
+.swot .w{background:var(--neg-soft);border-color:#FECACA;} .swot .w,.swot .w *{color:#991B1B;}
+.swot .o{background:var(--accent-soft);border-color:#BFDBFE;} .swot .o,.swot .o *{color:#1E3A8A;}
+.swot .t{background:var(--warn-soft);border-color:#FDE68A;} .swot .t,.swot .t *{color:#92400E;}
+.swot .qt{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.swot ul{margin:0 0 0 18px;} .swot li{font-size:13.5px;margin:3px 0;}
+
+/* --- 푸터 --- */
+.foot{margin-top:64px;border-top:1px solid var(--line);padding-top:16px;
+  font-size:12px;color:var(--ink-3);line-height:1.7;}
+
+/* --- 반응형 --- */
+@media (max-width:640px){
+  .wrap{padding:0 16px 60px;}
+  .cover{padding:30px 16px;} .cover h1{font-size:22px;}
+  .bb,.swot{grid-template-columns:1fr;}
+  h2{font-size:19px;}
+}
+@media print{
+  .cover{border-radius:0;} body{font-size:13px;}
+}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="sub">기업분석 보고서 · 우주·통신·AI 인프라 · NASDAQ:SPCX</div>
+  <h1>SpaceX — 발사대 위의 하이퍼스케일러: 꿈은 신선하고, 가격은 그 꿈의 완주를 이미 선불했다</h1>
+  <div class="kpis">
+    <div class="kpi"><div class="k">현재 주가 (8/11)</div><div class="v">$138.74</div></div>
+    <div class="kpi"><div class="k">시가총액</div><div class="v">$1.83T</div></div>
+    <div class="kpi"><div class="k">내재 CAP (강세경로 기준)</div><div class="v">약 13년</div></div>
+    <div class="kpi"><div class="k">2Q26 매출 성장</div><div class="v up">+92%</div></div>
+    <div class="kpi"><div class="k">고점(6/16) 대비</div><div class="v down">−38.5%</div></div>
+  </div>
+  <div class="meta">기준일: 2026-08-11 · 데이터 출처 약 60개(회사 공시·어닝콜, J.P.Morgan 8/5, Citi 8/4, Reuters, CNBC, SpaceNews, NVIDIA, FRED, 다모다란 등) · [추정]·[파생]·[상충]·[미확인] 표기 사용</div>
+</div>
+<div class="wrap">
+<nav class="toc">
+  <div class="t">목차</div>
+  <ol>
+    <li><a href="#s1">1. 핵심 요약</a></li>
+    <li><a href="#s2">2. 기업 개요</a></li>
+    <li><a href="#s3">3. 수익 구조</a></li>
+    <li><a href="#s4">4. 제품·기술력</a></li>
+    <li><a href="#s5">5. 산업 분석·꿈</a></li>
+    <li><a href="#s6">6. 경제적 해자</a></li>
+    <li><a href="#s7">7. 피어그룹</a></li>
+    <li><a href="#s8">8. 시장 내러티브·수급</a></li>
+    <li><a href="#s9">9. 재무·DCF</a></li>
+    <li><a href="#s10">10. 내재 CAP 역산</a></li>
+    <li><a href="#s11">11. Bull Case</a></li>
+    <li><a href="#s12">12. Bear Case</a></li>
+    <li><a href="#s13">13. SWOT</a></li>
+    <li><a href="#s14">14. 경영진·자본배분</a></li>
+    <li><a href="#s15">15. 종합 판단</a></li>
+  </ol>
+</nav>
+
+<!-- ================= 1. 핵심 요약 ================= -->
+<section id="s1">
+<h2><span class="no">1</span>핵심 요약 (Executive Summary)</h2>
+<p class="lead"><strong>한 문장 요약:</strong> SpaceX는 지구 궤도 수송(Starship)·글로벌 통신(Starlink)·AI 컴퓨트(Colossus·Grok·Starmind)를 하나의 수직통합 스택으로 묶어 "우주를 인프라화"하는 회사이며, 2026년 6월 사상 최대 IPO($75B 조달)로 상장한 뒤 현재 시가총액 약 $1.83조로 거래되는, 역사상 가장 비싼 "성장기 적자 기업"이다.</p>
+
+<div class="co co-key"><div class="ct">헤드라인 결론 — 꿈 × CAP 매트릭스 판정: "꿈 신선 + CAP 과열" 칸 → 1차 판정 긍정(내러티브 주도 구간)</div>
+<p>이 종목의 성장 스토리(궤도 수송 독점 → 통신 → AI 컴퓨트 → 궤도 데이터센터)는 지금 소진된 이야기가 아니라 <strong>2단계 검증 국면에 진입한 신선한 내러티브</strong>다. 향후 5개월 안에 굵직한 촉매가 밀집해 있다: Starship Flight 14 첫 상단(Ship) 타워 캐치(8월 말), Grok 4.7 공개(9월 초), Cursor 인수 승인(3Q), 12월 ARR $100B 목표 검증, 2027 Starmind 첫 발사와 Starlink Mobile 미국 상용화. 반면 현재 주가 $138.74는 <strong>경영진·강세 경로(2030년 매출 $1조)를 거의 그대로 실현하고 그 위에 약 13년의 경쟁우위 지속(CAP)을 얹어야 정당화</strong>되는 수준으로, 컨센서스 경로로는 주가의 약 22%밖에 설명되지 않는다. 요약하면 "이야기는 앞으로도 커질 수 있으나, 가격은 그 이야기의 완주를 이미 상당 부분 선불한 상태"다.</p></div>
+
+<div class="kgrid">
+  <div class="kcard"><div class="k">1차 판정 (내러티브 엔진)</div><div class="v up">긍정</div><div class="d">꿈 신선도 높음 + 촉매 밀집 + 수급 회복 중</div></div>
+  <div class="kcard"><div class="k">시장 내재 CAP</div><div class="v">≈13.2년</div><div class="d">강세 경로(매출 $1T by 2030) 전제 시 [파생]</div></div>
+  <div class="kcard"><div class="k">컨센서스 경로 DCF</div><div class="v down">$28~32</div><div class="d">현 주가의 20~23%만 설명 [파생]</div></div>
+  <div class="kcard"><div class="k">2차 경고 (장기 관점)</div><div class="v down">하방 −78%</div><div class="d">내러티브 소진+컨센 회귀 시 이론치 → §15-B</div></div>
+</div>
+
+<h3>기업의 본질과 투자 매력</h3>
+<p>SpaceX의 본질은 "발사 회사"가 아니라 <strong>수직통합된 우주 인프라 플랫폼</strong>이다. ① 세계 발사 질량의 80% 이상을 처리하는 궤도 수송 독점(Falcon 9 연 165회, 2025년 기준), ② 그 수송력을 자기 위성에 우선 배정해 만든 세계 최대 통신 사업(Starlink 브로드밴드 가입자 1,200만, D2C 모바일 1,000만+), ③ 2026년 2월 xAI 인수로 편입한 AI 컴퓨트 사업(멤피스 Colossus 2GW, Anthropic·Google 등 외부 임대 커밋 $80B+), 그리고 ④ 이 셋을 관통하는 최종 스토리인 궤도 데이터센터(Starmind, NVIDIA Vera Rubin 탑재, 2027 발사 목표)가 한 회사 안에 있다. 시장이 이 회사에 지불하는 프리미엄의 핵심은 "AI 전력 병목의 궁극 해법이 우주"라는 서사와, 그 서사를 실행할 물리적 수단(Starship)을 유일하게 보유했다는 사실의 결합이다.</p>
+<p>2Q26 실적(8/4 첫 어닝콜)은 이 전환을 숫자로 보여줬다. 매출 $78.1억(+92% YoY) 중 AI 세그먼트가 $25.6억(33%)으로 단숨에 2위 사업부가 됐고, 조정 EBITDA $35.4억(마진 45%)을 내면서도 분기 설비투자 $184억, FCF −$159억이라는 하이퍼스케일러급 투자 사이클에 진입했다. 회사는 2026년 12월 ARR $100B, 2030년 매출 $1조를 가이던스로 제시했다(당초 내부 목표 2031년에서 앞당긴 것 [상충: "2029년 잠재 달성" 표현은 일부 보도에만 등장, 원출처 미확인]) — 달성 시 아마존보다 빠른 인류 역사상 최속의 $1조 매출 도달이 된다.</p>
+
+<div class="twrap"><table>
+<caption>표 1-1. 꿈 × CAP 조합 매트릭스 — SPCX의 위치</caption>
+<thead><tr><th></th><th>CAP 합리/미반영</th><th>CAP 과열</th></tr></thead>
+<tbody>
+<tr><td><strong>꿈 신선</strong></td><td>최상 (내러티브가 공짜 옵션)</td><td class="num"><strong style="color:#B45309">◀ SPCX 현재 위치</strong><br>1차 긍정(내러티브 주도 구간). 단, 소진 시 하방을 §15-B에 정량 명시</td></tr>
+<tr><td><strong>꿈 소진</strong></td><td>유보 (가치함정 위험)</td><td>부정 (최악의 조합)</td></tr>
+</tbody></table></div>
+
+<div class="co co-warn"><div class="ct">이 보고서를 관통하는 세 개의 숫자</div>
+<ul>
+<li><strong>$80B+</strong> — 외부 고객이 이미 서명한 AI 컴퓨트 임대 커밋(Anthropic $1.25B/월 + Google $0.92B/월 + Reflection + 미공개 고객). 꿈이 "가능성" 단계를 지나 "계약" 단계에 있음을 보여주는 증거. <span class="bd bd-conf">확신도 높음 ~90%</span></li>
+<li><strong>13.2년</strong> — 강세 경로를 100% 실현한다는 전제에서 현 주가가 요구하는 경쟁우위 지속기간(내재 CAP). 정보기술 섹터 평균적 해석범위(10~15년)의 상단. <span class="bd bd-drv">파생</span></li>
+<li><strong>−$15.95B</strong> — 2Q26 한 분기 FCF. 이 꿈은 공짜가 아니며, 2031년까지 누적 조 단위의 현금이 선투입된다. 자금조달 환경이 이 종목의 산소다.</li>
+</ul></div>
+</section>
+
+<!-- ================= 2. 기업 개요 ================= -->
+<section id="s2">
+<h2><span class="no">2</span>기업 개요 — 파산 직전의 로켓 스타트업에서 $1.8조 플랫폼까지</h2>
+<p class="lead">SpaceX의 24년 역사는 세 번의 자기변신으로 요약된다: ① 발사 서비스 회사(2002–2015), ② 재사용 로켓으로 발사 원가를 부수고 그 위에 통신 사업을 얹은 인프라 회사(2015–2025), ③ xAI 합병과 IPO로 완성된 우주·통신·AI 통합 플랫폼(2026–). 각 변신은 이전 단계의 현금흐름과 기술 자산을 다음 단계의 원가 우위로 전환하는 동일한 패턴을 따랐다.</p>
+
+<h3>2-1. 설립과 생존 (2002–2008): "네 번째 발사가 마지막 돈이었다"</h3>
+<p>일론 머스크는 2002년 3월, PayPal 매각 대금 중 약 $1억을 들고 SpaceX를 설립했다. 원래 구상은 화성에 온실을 보내는 홍보 프로젝트('Mars Oasis')였으나, 러시아에서 중고 ICBM 구매 협상이 결렬되자 "발사체 원가 자체가 문제"라는 결론에 도달해 로켓 제조로 방향을 틀었다. 첫 로켓 Falcon 1은 2006년, 2007년, 2008년 8월 세 차례 연속 실패했고, 회사 자금은 바닥났다. 2008년 9월 28일 네 번째 발사가 성공하며 민간 개발 액체연료 로켓 최초의 궤도 도달을 기록했고, 그해 12월 NASA의 상업 화물 수송 계약(CRS, $16억)을 따내며 파산을 면했다. 이 초기 서사는 지금도 이 회사 문화의 원형이다 — 극단적 수직통합, 빠른 실패·빠른 반복(iterative design), 그리고 정부 앵커 고객 위에 상업 시장을 쌓는 사업 설계.</p>
+
+<h3>2-2. 재사용 혁명 (2010–2020): 발사 경제학을 바꾼 10년</h3>
+<p>Falcon 9은 2010년 첫 비행 후, 2015년 12월 21일 궤도급 1단 부스터의 지상 착륙에 세계 최초로 성공했고, 2017년 3월 회수 부스터의 재비행까지 입증했다. 이때부터 발사의 한계비용 구조가 바뀌었다: 기체 제작비(약 수천만 달러)가 감가상각 항목이 되고, 한 번의 발사 원가는 연료·정비·운영비 중심으로 내려갔다. 2018년 Falcon Heavy, 2020년 5월 Crew Dragon 유인 비행(Demo-2, 미국의 유인 발사 능력 9년 만의 회복)으로 정부 시장의 최상위 계약까지 장악했다. 같은 기간 Starlink가 2019년 첫 60기 발사, 2020년 10월 베타 서비스로 상업화됐다 — 재사용으로 확보한 "남는 발사 용량"을 자사 위성에 투입해, 발사 원가 우위를 통신 사업의 자본 우위로 전환한 것이다.</p>
+
+<h3>2-3. 플랫폼 완성 (2023–2026): Starship, xAI, 그리고 IPO</h3>
+<p>Starship은 2023년 4월 첫 통합 시험비행(IFT-1) 이후 폭발과 개선을 반복하다, 2024년 10월 Flight 5에서 세계 최초의 부스터 타워 캐치("젓가락 회수")에 성공했고, 2026년 7월 24일 Flight 13에서 상단(Ship)의 통제된 재진입·인도양 연착수와 히트실드 무손상 회수 데이터 확보, V3 Starlink 위성 시험 배치까지 도달했다. 한편 2026년 2월 SpaceX는 xAI를 전량 주식교환으로 인수한다고 발표했다(합병 후 기업가치 $1.25조, 사상 최대 비상장 M&A; 클로징 시점은 [상충: 다수 보도 2월 신속 완결 vs 회계 기준일 5월 표기 병존]). 이로써 Grok 모델군, X 플랫폼, 멤피스 Colossus 데이터센터(2GW급)가 편입됐다. 2026년 6월 12일 나스닥 상장(공모가 $135, 5.556억 주, $750억 조달 — 그린슈 포함 약 $860억, 별도 회사채 $250억)은 사상 최대 IPO였고, 첫날 +19%($160.95), 나흘 뒤 장중 $225.64(시총 약 $2.9조)까지 치솟은 뒤 50% 조정을 거쳐 현재에 이른다.</p>
+
+<div class="twrap"><table class="wide">
+<caption>표 2-1. SpaceX 주요 연혁 — 각 단계가 다음 단계의 원가 우위가 되는 구조</caption>
+<thead><tr><th>시기</th><th>사건</th><th>투자 관점의 의미</th></tr></thead>
+<tbody>
+<tr><td>2002.3</td><td>설립 (머스크, ~$1억 자기자본)</td><td>수직통합·저원가 DNA의 출발</td></tr>
+<tr><td>2008.9</td><td>Falcon 1 4차 발사 성공 (민간 액체로켓 최초 궤도)</td><td>3연속 실패 후 성공 — 반복설계 문화 확립</td></tr>
+<tr><td>2008.12</td><td>NASA CRS 계약 $16억</td><td>정부 앵커 고객 모델의 원형, 파산 회피</td></tr>
+<tr><td>2015.12</td><td>궤도급 부스터 지상 착륙 최초 성공</td><td>발사 한계비용 구조 전환의 시작</td></tr>
+<tr><td>2017.3</td><td>회수 부스터 재비행 성공</td><td>재사용 경제성 입증 → 경쟁사 대비 구조적 원가 우위</td></tr>
+<tr><td>2020.5</td><td>Crew Dragon 유인비행 (Demo-2)</td><td>정부 최상위 계약 장악, 신뢰성 프리미엄</td></tr>
+<tr><td>2020.10</td><td>Starlink 베타 개시</td><td>발사 우위 → 통신 자본 우위 전환</td></tr>
+<tr><td>2024.10</td><td>Starship Flight 5 — 부스터 타워 캐치 최초 성공</td><td>완전 재사용의 전반부 입증</td></tr>
+<tr><td>2026.2</td><td>xAI 전량 주식교환 인수 발표→클로징(완결 시점 [상충: 2월 vs 5월]) (합병가치 $1.25조)</td><td>AI 세그먼트 편입 — Grok·X·Colossus</td></tr>
+<tr class="hl"><td>2026.6.12</td><td>나스닥 IPO — 공모가 $135, $750억 조달(사상 최대)</td><td>공개시장 자본으로 하이퍼스케일 투자 사이클 개시</td></tr>
+<tr><td>2026.7.24</td><td>Starship Flight 13 — 상단 연착수·히트실드 회수 데이터</td><td>완전 재사용의 후반부(Ship 회수) 목전</td></tr>
+<tr><td>2026.8.4</td><td>첫 어닝콜 + Starmind(NVIDIA 협업) 발표</td><td>궤도 데이터센터 내러티브의 공식화</td></tr>
+</tbody></table></div>
+
+<h3>2-4. 현재의 규모와 위상</h3>
+<div class="kgrid">
+  <div class="kcard"><div class="k">시가총액 / EV</div><div class="v">$1.83T / ~$1.78T</div><div class="d">주식수 131.6억주, 순현금 ~$45B [파생]</div></div>
+  <div class="kcard"><div class="k">FY25 매출 / 2Q26 매출</div><div class="v">$18.7B / $7.8B</div><div class="d">2Q26 +92% YoY</div></div>
+  <div class="kcard"><div class="k">누적 궤도 발사</div><div class="v">~670회</div><div class="d">성공률 99%+, 2026 상반기 78회(6/30 공시) · 8월 초 누적 90~91회</div></div>
+  <div class="kcard"><div class="k">궤도 투입 질량 점유율</div><div class="v">80%+</div><div class="d">2023년 이후 전 세계 기준</div></div>
+  <div class="kcard"><div class="k">Starlink 가입자</div><div class="v">1,200만</div><div class="d">+D2C 모바일 1,000만+ (별도)</div></div>
+  <div class="kcard"><div class="k">보유 현금·유가증권</div><div class="v">~$100B</div><div class="d">IPO·채권 조달 직후 (2Q26 말)</div></div>
+</div>
+<p>본사는 텍사스 스타베이스(Starbase — 2025년 5월 시(市)로 승격된 회사 소유 도시)에 있으며, 지배구조는 머스크가 차등의결권으로 <strong>약 82%의 의결권</strong>을 보유한 'controlled company'다. 임직원 수는 약 21,000~22,000명이다 [상충: Shotwell 발언 "약 22,000명" vs 금융데이터 서비스 21,000명 — 회사 공시엔 단일 수치 미제시]. 이 회사의 위상을 한 줄로 표현하면: 궤도 수송에서는 사실상의 독점 사업자, 위성 통신에서는 압도적 1위, AI 컴퓨트에서는 단일 사이트 기준 세계 최대(Colossus 2GW)를 보유한 신규 진입자다.</p>
+</section>
+
+<!-- ================= 3. 수익 구조 ================= -->
+<section id="s3">
+<h2><span class="no">3</span>수익 구조 — 매출은 통신이 벌고, 투자는 AI가 삼킨다</h2>
+<p class="lead">2Q26 기준 SpaceX의 손익 구조는 한 문장으로 요약된다: <strong>Connectivity(Starlink)가 그룹의 현금 엔진(매출 55%, 영업마진 +39%)이고, Space는 전략 자산이자 원가센터(마진 −56%)이며, AI는 매출의 33%를 차지하는 초고속 성장 사업이지만 아직 대규모 적자(마진 −49%)와 그룹 설비투자의 86%를 흡수하는 투자 블랙홀</strong>이다. 이 비대칭이 이 회사 밸류에이션 논쟁의 출발점이다.</p>
+
+<figure>
+<div class="fig-t">그림 3-1. 수익 흐름 구조 — 발사 독점이 두 개의 플랫폼 사업에 원가 우위를 공급한다</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SpaceX 수익 흐름 구조도">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#64748B"/></marker></defs>
+  <rect x="310" y="28" width="380" height="78" rx="12" fill="#0F2B46"/>
+  <text x="500" y="60" text-anchor="middle" fill="#FFFFFF" font-size="16" font-weight="800">궤도 수송 스택 (원가 우위의 원천)</text>
+  <text x="500" y="84" text-anchor="middle" fill="#C9D6E4" font-size="12.5">Falcon 9 연 90회+ 재사용 발사 · Starship 완전재사용 개발 중</text>
+  <line x1="380" y1="106" x2="180" y2="166" stroke="#64748B" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="500" y1="106" x2="500" y2="166" stroke="#64748B" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="620" y1="106" x2="820" y2="166" stroke="#64748B" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="300" y="140" text-anchor="middle" fill="#4A5568" font-size="11.5">외부 판매 (질량의 18%)</text>
+  <text x="500" y="150" text-anchor="middle" fill="#4A5568" font-size="11.5">내부 배정 (질량의 82%)</text>
+  <text x="723" y="140" text-anchor="middle" fill="#4A5568" font-size="11.5">미래: Starmind 궤도 DC</text>
+  <rect x="40" y="170" width="280" height="118" rx="12" fill="#FFFFFF" stroke="#0891B2" stroke-width="2.5"/>
+  <text x="180" y="198" text-anchor="middle" fill="#0891B2" font-size="15" font-weight="800">Space</text>
+  <text x="180" y="220" text-anchor="middle" fill="#1A202C" font-size="12.5">발사 서비스 · Dragon · 우주선</text>
+  <text x="180" y="245" text-anchor="middle" fill="#1A202C" font-size="13" font-weight="700">2Q 매출 $0.96B (12%)</text>
+  <text x="180" y="267" text-anchor="middle" fill="#DC2626" font-size="12.5" font-weight="700">영업이익 −$0.54B (마진 −56%)</text>
+  <rect x="360" y="170" width="280" height="118" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2.5"/>
+  <text x="500" y="198" text-anchor="middle" fill="#2563EB" font-size="15" font-weight="800">Connectivity</text>
+  <text x="500" y="220" text-anchor="middle" fill="#1A202C" font-size="12.5">Starlink 브로드밴드·모바일 · Starshield</text>
+  <text x="500" y="245" text-anchor="middle" fill="#1A202C" font-size="13" font-weight="700">2Q 매출 $4.29B (55%)</text>
+  <text x="500" y="267" text-anchor="middle" fill="#047857" font-size="12.5" font-weight="700">영업이익 +$1.66B (마진 +39%)</text>
+  <rect x="680" y="170" width="280" height="118" rx="12" fill="#FFFFFF" stroke="#7C3AED" stroke-width="2.5"/>
+  <text x="820" y="198" text-anchor="middle" fill="#7C3AED" font-size="15" font-weight="800">AI</text>
+  <text x="820" y="220" text-anchor="middle" fill="#1A202C" font-size="12.5">Colossus 컴퓨트 임대 · Grok · X</text>
+  <text x="820" y="245" text-anchor="middle" fill="#1A202C" font-size="13" font-weight="700">2Q 매출 $2.56B (33%)</text>
+  <text x="820" y="267" text-anchor="middle" fill="#DC2626" font-size="12.5" font-weight="700">영업이익 −$1.26B (마진 −49%)</text>
+  <text x="180" y="318" text-anchor="middle" fill="#4A5568" font-size="12">고객: NASA · 국방부 · 상업위성사</text>
+  <text x="500" y="318" text-anchor="middle" fill="#4A5568" font-size="12">고객: 가입자 1,200만 · 미군(Golden Dome)</text>
+  <text x="820" y="318" text-anchor="middle" fill="#4A5568" font-size="12">고객: Anthropic · Google · 구독/광고</text>
+  <line x1="180" y1="288" x2="180" y2="300" stroke="#64748B" stroke-width="1.5"/>
+  <line x1="500" y1="288" x2="500" y2="300" stroke="#64748B" stroke-width="1.5"/>
+  <line x1="820" y1="288" x2="820" y2="300" stroke="#64748B" stroke-width="1.5"/>
+  <line x1="180" y1="330" x2="180" y2="368" stroke="#64748B" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="500" y1="330" x2="500" y2="368" stroke="#64748B" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="820" y1="330" x2="820" y2="368" stroke="#64748B" stroke-width="2" marker-end="url(#ar)"/>
+  <rect x="40" y="372" width="920" height="72" rx="12" fill="#FEF2F2" stroke="#FECACA" stroke-width="2"/>
+  <text x="500" y="402" text-anchor="middle" fill="#991B1B" font-size="14.5" font-weight="800">그룹 FCF −$15.9B / 분기 — 분기 설비투자 $18.4B의 86%가 AI(데이터센터·GPU)에 투입</text>
+  <text x="500" y="426" text-anchor="middle" fill="#991B1B" font-size="12.5">부족분은 자본시장이 메운다: IPO $86B + 회사채 $25B → 현금·유가증권 ~$100B 보유</text>
+  <text x="500" y="486" text-anchor="middle" fill="#718096" font-size="12">굵은 화살표 = 자원·용량의 흐름 · 수치는 2026년 2분기 회사 공시 기준</text>
+</svg>
+</div>
+<figcaption>그림 3-1. SpaceX 수익 흐름 구조. 출처: 회사 2Q26 실적발표(2026-08-04), J.P.Morgan(2026-08-05) 세그먼트 집계 기준으로 작도.</figcaption>
+</figure>
+
+<h3>3-1. 세그먼트별 매출·성장·마진</h3>
+<div class="twrap"><table class="wide">
+<caption>표 3-1. 2Q26 세그먼트 실적 — 성장률·수익성·수익모델의 질</caption>
+<thead><tr><th>세그먼트</th><th class="num">2Q26 매출</th><th class="num">YoY</th><th class="num">매출 비중</th><th class="num">영업이익</th><th class="num">영업마진</th><th>수익 모델</th><th>모델의 질적 평가</th></tr></thead>
+<tbody>
+<tr><td><strong>Space</strong></td><td class="num">$962M</td><td class="num"><span class="up">+29%</span></td><td class="num">12.3%</td><td class="num"><span class="down">−$542M</span></td><td class="num"><span class="down">−56%</span></td><td>발사 서비스(건당)·정부계약(CRS·유인)</td><td>수주형·비반복. 단 Starship R&D 비용이 이 세그먼트에 계상돼 마진이 구조적으로 눌림 — "원가센터이자 그룹 전체의 원가 우위 공장"</td></tr>
+<tr><td><strong>Connectivity</strong></td><td class="num">$4,291M</td><td class="num"><span class="up">+66%</span></td><td class="num">54.9%</td><td class="num"><span class="up">+$1,656M</span></td><td class="num"><span class="up">+39%</span></td><td>구독(브로드밴드 ARPU ~$66/월)·D2C 모바일·정부계약(Starshield)</td><td>반복매출·고마진·규모의 경제 진행형. 그룹에서 가장 질 높은 매출. 백로그 $47.5B 중 Starshield 수주가 가시성 제공</td></tr>
+<tr><td><strong>AI</strong></td><td class="num">$2,561M</td><td class="num"><span class="up">+247%</span></td><td class="num">32.8%</td><td class="num"><span class="down">−$1,257M</span></td><td class="num"><span class="down">−49%</span></td><td>컴퓨트 장기임대(월정액)·Grok 구독/API·X 광고/구독</td><td>임대는 계약형 반복매출($2B+/월)이나 고객 2사 집중·해지조항 존재. Grok/X는 경쟁 심화로 질이 낮음(§12)</td></tr>
+<tr class="total"><td>합계</td><td class="num">$7,814M</td><td class="num">+92%</td><td class="num">100%</td><td class="num">−$143M</td><td class="num">−1.8%</td><td colspan="2">조정 EBITDA $3,538M(마진 45%) — 감가상각·SBC 제외 시 이미 대규모 흑자 체력</td></tr>
+</tbody></table></div>
+
+<figure>
+<div class="fig-t">그림 3-2. 매출 구성 vs 설비투자 구성 (2Q26) — 자본이 향하는 곳이 이 회사의 미래 지도다</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="매출과 설비투자 구성 비교 누적 막대">
+  <text x="70" y="52" fill="#1A202C" font-size="13.5" font-weight="700">매출 $7.8B</text>
+  <rect x="200" y="30" width="93" height="36" fill="#0891B2"/>
+  <rect x="293" y="30" width="417" height="36" fill="#2563EB"/>
+  <rect x="710" y="30" width="250" height="36" fill="#7C3AED"/>
+  <text x="246" y="53" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="700">12%</text>
+  <text x="501" y="53" text-anchor="middle" fill="#FFFFFF" font-size="12.5" font-weight="700">Connectivity 55%</text>
+  <text x="835" y="53" text-anchor="middle" fill="#FFFFFF" font-size="12.5" font-weight="700">AI 33%</text>
+  <text x="70" y="142" fill="#1A202C" font-size="13.5" font-weight="700">Capex $18.4B</text>
+  <rect x="200" y="120" width="49" height="36" fill="#0891B2"/>
+  <rect x="249" y="120" width="56" height="36" fill="#2563EB"/>
+  <rect x="305" y="120" width="655" height="36" fill="#7C3AED"/>
+  <text x="224" y="112" text-anchor="middle" fill="#0891B2" font-size="11.5" font-weight="700">6%</text>
+  <text x="277" y="112" text-anchor="middle" fill="#2563EB" font-size="11.5" font-weight="700">7%</text>
+  <text x="632" y="143" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="800">AI 86% (GPU·데이터센터·전력)</text>
+  <text x="200" y="205" fill="#4A5568" font-size="12.5">해석: 현재 손익계산서는 "통신 회사"지만, 자본 배분은 이미 "AI 하이퍼스케일러"다.</text>
+  <text x="200" y="228" fill="#718096" font-size="11.5">분기 capex $18.4B는 같은 분기 매출($7.8B)의 2.4배 — 마이크로소프트·아마존도 겪지 않은 강도의 선행 투자</text>
+</svg>
+<div class="legend">
+  <div class="li"><span class="sw" style="background:#0891B2"></span>Space</div>
+  <div class="li"><span class="sw" style="background:#2563EB"></span>Connectivity</div>
+  <div class="li"><span class="sw" style="background:#7C3AED"></span>AI</div>
+</div>
+</div>
+<figcaption>그림 3-2. 2Q26 매출·설비투자 세그먼트 구성. 출처: 회사 공시(2026-08-04), 비중은 [파생](각 세그먼트 금액 ÷ 합계).</figcaption>
+</figure>
+
+<h3>3-2. 고객 집중도 — 이 회사의 아킬레스건</h3>
+<p>세그먼트별 고객 구조는 극단적으로 다르다. <strong>Connectivity는 이상적으로 분산</strong>돼 있다(브로드밴드 1,200만 + D2C 모바일 1,000만+ 가입자, 160여 개국). 반면 <strong>AI 컴퓨트 임대 매출은 사실상 2개 고객에 집중</strong>돼 있다: Anthropic(월 $12.5억, Colossus 1 전체 220K+ GPU, 2029년 5월까지, 총 $400억+)과 Google(월 $9.2억, Colossus 2의 ~110K GPU, 2026년 10월 개시, 총 ~$300억). 두 계약 모두 해지 조항이 있다 — Anthropic은 90일 통지 해지권, Google은 9월 30일까지 GPU 미인도 시 해지권 및 2026년 말 이후 90일 통지 해지권을 보유한다 <span class="bd bd-cfl">상충</span>(계약 금액의 고객별 귀속은 J.P.Morgan 리포트와 Reuters/공시 간 표기가 뒤바뀌어 있어, 본 보고서는 원출처인 Reuters·공시 기준을 채택했다). 미공개 제3의 고객이 6개월 $67억(월 $11.2억) 계약을 10월 개시 예정이라고 회사가 밝혔으나 신원은 [미확인]이다. Space 세그먼트는 NASA·국방부 의존도가 높지만 이는 오히려 진입장벽으로 기능한다.</p>
+<div class="co co-warn"><div class="ct">왜 중요한가</div><p>AI 세그먼트 연환산 매출의 대부분이 "언제든 90일 만에 사라질 수 있는" 2건의 계약에서 나온다. 특히 Anthropic·Google은 모두 자체 데이터센터와 자체 칩(TPU 등)을 보유한 회사로, 이 임대는 그들에게 '자체 용량이 차오를 때까지의 교량'일 가능성이 있다. 반대로 보면, 경쟁 AI 랩들이 경쟁사(xAI)의 인프라를 빌릴 만큼 컴퓨트 기근이 심각하다는 뜻이기도 하다 — 이 양면성이 §5-B 꿈 분석과 §12 리스크의 핵심 쟁점이다.</p></div>
+
+<h3>3-3. 지역별 분포</h3>
+<p>회사는 지역별 매출을 세그먼트 수준으로 공시하지 않는다 [미확인]. 정황상 미국 비중이 압도적일 것으로 보이는 근거는 세 가지다: ① AI 임대 고객(Anthropic·Google)과 데이터센터가 전부 미국 소재, ② Starshield·NASA 등 정부 매출의 100%가 미국, ③ Starlink도 최대 시장이 북미다 [추정]. 다만 Starlink의 가입자 순증은 신흥국(아프리카·동남아·남미)에서 빠르게 일어나고 있어, 장기적으로는 Connectivity의 지역 다변화가 진행되는 방향이다.</p>
+</section>
+
+<!-- ================= 4. 제품·기술력 ================= -->
+<section id="s4">
+<h2><span class="no">4</span>제품·서비스 및 기술력 — 논문 수준 심층 해부</h2>
+<p class="lead">이 회사의 기술 스택은 하나의 인과 사슬이다: <strong>Raptor 3 엔진(전유량 다단연소)이 Starship(완전재사용 발사체)을 가능케 하고, Starship이 kg당 발사비를 두 자릿수 달러로 끌어내리면, V3 Starlink(테라비트급 위성)와 Starmind(궤도 데이터센터)가 경제성을 얻는다.</strong> 따라서 이 섹션의 순서는 곧 투자 논리의 순서다 — 엔진→발사체→위성망→AI 컴퓨트→궤도 컴퓨트.</p>
+
+<h3>4-A-1. Raptor 3 — 왜 전유량 다단연소(FFSC)가 게임체인저인가</h3>
+<p>로켓 엔진의 성능은 결국 "연소실 압력을 얼마나 높이고, 그 압력을 만드는 터보펌프를 얼마나 오래 살려두느냐"의 문제다. 통상의 다단연소(예: RD-180의 산화제 리치, RS-25의 연료 리치)는 추진제의 한쪽만 프리번너(preburner, 터빈 구동용 예비연소기)를 통과시킨다. <strong>전유량 다단연소(Full-Flow Staged Combustion)는 연료·산화제 전량을 각각의 프리번너에서 가스화한 뒤 주연소실에서 기체-기체로 연소</strong>시키는 방식으로, ① 같은 챔버압에서 터빈 입구 온도가 낮아져 터보펌프 수명이 길어지고(재사용의 전제), ② 질량 유량이 커져 더 높은 챔버압이 가능하며, ③ 기체-기체 연소로 연소 효율이 개선된다. 이 사이클을 비행체에 실어 양산한 엔진은 인류 역사상 Raptor가 유일하다 — 소련 RD-270, 미국 IPD는 시험대를 벗어나지 못했다.</p>
+<p>연료로 메탄(CH₄)/액체산소를 쓰는 선택도 재사용 논리다: 케로신과 달리 <strong>코킹(탄소 침전)이 없어 엔진 내부 세척 없이 재비행</strong>이 가능하고, 화성 현지생산(ISRU, 사바티에 반응 CO₂+H₂→CH₄)과 호환된다. 2026년 Flight 12부터 비행한 Raptor 3는 이 철학의 3세대 완성형이다: <strong>엔진 외장 히트실드와 별도 소화(消火)계통을 아예 삭제</strong>했다. 2차 유로(secondary flow path)를 엔진 구조 내부로 통합하고 노출 배관을 재생냉각(연료를 냉각채널로 순환)으로 보호해, 부스터 기준 약 10톤의 건조질량을 덜어냈다. 소량의 추진제 누설은 재진입 플라즈마 경계층에서 무해하게 연소된다는 것이 설계 전제다. 단체 중량 1,525kg(장착 1,720kg)으로 Raptor 1(2,080/3,630kg) 대비 절반 이하이며, 부스터 33기 합산 이륙추력은 80,800kN(기당 약 245tf; 머스크는 280tf급 언급 <span class="bd bd-cfl">상충</span>)에 달한다. Flight 13에서는 NASA 요구사항인 궤도상 재점화까지 시연했다 — 달 착륙선(HLS)과 궤도 급유의 전제 기술이다.</p>
+
+<h3>4-A-2. 히트실드 — 완전재사용의 마지막 관문</h3>
+<p>부스터 회수는 이미 풀린 문제다(2024년 10월 이후 타워 캐치 반복 성공, Falcon 9 부스터는 20회+ 재사용). 남은 난제는 <strong>상단(Ship)이 궤도속도(~7.8km/s)에서 재진입할 때 견디는 열차폐를 "정비 없이 재사용 가능"하게 만드는 것</strong>이다. 우주왕복선이 실패한 지점이 정확히 여기다 — 왕복선은 비행마다 타일 수개월 정비가 필요해 "재사용인데 재사용 경제성이 없는" 역설에 갇혔다. Starship은 약 18,000장의 육각 세라믹 타일(기계식 핀 고정 + 개선된 본딩)을 쓰며, 케이프커내버럴 타일 공장을 일산 1,000장(2026년 초)에서 7,000장(월 10대 재정비 분량)으로 증설 중이다. 금속 타일·능동냉각 타일도 병행 실험한다. Flight 13은 의도적으로 고에너지 재진입 스트레스 테스트를 수행했고, 상단이 무손상에 가까운 히트실드로 인도양에 연착수해 예인·회수됐다 — 머스크는 "가장 어려운 문제를 풀었다"고 주장했다(자체 주장 <span class="bd bd-est">검증 전</span>; 제3자 검증은 Flight 14의 실제 타워 캐치와 재비행으로 이뤄진다).</p>
+
+<figure>
+<div class="fig-t">사진 4-1. Starship Flight 13 — V3 Starlink 시험 배치와 상단 회수 데이터 확보 (2026-07-24)</div>
+<div class="fig-box">
+<img src="https://www.teslarati.com/wp-content/uploads/2026/07/spacex-starship-flight-13-v3.jpg" alt="Starship Flight 13 발사 장면" loading="lazy">
+</div>
+<figcaption>사진 4-1. Starship Flight 13. 크레딧: SpaceX (Teslarati 게재본 원본 인용). 이 비행에서 상단은 통제 재진입 후 인도양 연착수, 히트실드 무손상급 회수 데이터를 확보했고 V3 Starlink 20기의 배치 메커니즘을 시험했다.</figcaption>
+</figure>
+
+<h3>4-A-3. 타워 캐치와 발사 경제학 — 숫자로 보는 27배</h3>
+<p>다리(landing leg)를 없애고 발사탑 로봇팔("젓가락")로 공중에서 잡는 방식은 두 가지를 동시에 얻는다: 기체 건조질량 절감(다리+보강 구조)과 <strong>착륙지→발사대 운송 단계의 제거</strong>(잡은 자리가 곧 정비·재발사 위치). 목표는 "1년 내 일일 발사"(머스크, 자체 주장)이며 발사탑 5기(텍사스·플로리다)가 건설·운용 중이다. 경제학의 골자는 다음 표와 같다 — Starship이 목표 원가에 도달하면 kg당 발사비는 Falcon 9 대비 27분의 1, 우주왕복선 대비 545분의 1이 된다. 이 숫자가 §4-D(궤도 데이터센터)와 §5(산업 TAM 확장)의 물리적 전제다.</p>
+<div class="twrap"><table>
+<caption>표 4-1. 발사 시스템 스펙·원가 비교 — Starship이 여는 자릿수 변화</caption>
+<thead><tr><th>시스템</th><th class="num">LEO 페이로드</th><th class="num">kg당 원가</th><th>재사용</th><th>상태</th></tr></thead>
+<tbody>
+<tr><td>우주왕복선 (퇴역)</td><td class="num">27.5t</td><td class="num">$54,500</td><td>부분(정비 과다)</td><td>2011 퇴역 — 실패한 재사용의 교훈</td></tr>
+<tr><td>Falcon 9</td><td class="num">17.5t(회수)</td><td class="num">$2,720</td><td>1단 20회+</td><td>연 90회+ 운용, 세계 표준</td></tr>
+<tr><td>Falcon Heavy</td><td class="num">~57t(소모)</td><td class="num">$1,500</td><td>부스터 부분</td><td>운용</td></tr>
+<tr class="hl"><td>Starship V3</td><td class="num">100t</td><td class="num">목표 &lt;$100</td><td>완전(양단 캐치)</td><td>F14(8월 말) 첫 상단 캐치 시도</td></tr>
+</tbody></table></div>
+<p>전고 124.4m·직경 9m의 V3 기체는 궤도 도킹·추진제 이송(궤도 급유)에 대응하도록 설계됐다 — 이는 Artemis 달 착륙선($28.9억 계약)과 화성 임무의 전제이자, 단일 발사 질량 한계를 넘는 초대형 페이로드(예: 차세대 Starmind) 시대를 여는 기술이다.</p>
+
+<h3>4-A-4. Starlink — 위상배열·레이저 메시·V3의 용량 경제학</h3>
+<p>Starlink의 기술 본질은 "지상 기지국을 궤도로 올린 것"이 아니라 <strong>우주에 깐 광 백본(optical backbone)</strong>이다. 각 위성은 전자식 위상배열 안테나(기계 구동 없이 빔을 밀리초 단위로 조향)로 지상 단말과 Ku/Ka/E-밴드 링크를 맺고, 위성 간에는 레이저 링크(ISL)로 메시 네트워크를 구성해 지상 게이트웨이가 없는 해상·오지에서도 트래픽을 우회한다. 2026년 8월 초 기준 누적 발사 12,644기, 궤도상 10,898기, 작동 10,882기로 <strong>전 세계 활성 기동위성의 약 65~75%가 Starlink</strong>다 <span class="bd bd-cfl">상충</span>(S-1의 "기동(maneuverable)위성" 정의 기준 ~75% vs 제3자 집계 "전체 작동위성" 기준 ~65%). 서비스 품질은 S-1 기준 중간값 다운로드 225Mbps(피크), 지연 21ms — 지상 케이블과 체감 차이가 없는 수준까지 왔다.</p>
+<p>차세대 <strong>V3 위성은 다운링크 용량이 기존 대비 10배(테라비트급, ~1Tbps)</strong>이며 크기·질량 때문에 Starship 전용이다. 발사당 60기를 배치하면 <strong>한 번의 발사로 약 60Tbps의 용량이 궤도에 추가</strong>되는데(2세대 대비 "데이터 밀도 100배" — 회사 주장), 이것이 Starship→Starlink로 이어지는 용량당 원가(capex per Gbps)의 계단식 하락 메커니즘이다. Flight 13에서 배치 메커니즘을 시험했고 Flight 14부터 실배치가 시작된다.</p>
+<p>D2C(Direct-to-Cell) 모바일은 별도의 성장 축이다. 1세대 위성 650여 기로 T-Mobile·KDDI·Rogers 등 제휴 통신사망에서 위성-휴대폰 직접 연결(문자→데이터)을 제공해 누적 이용자 1,000만+(2026-02)에 도달했다. 결정적 변곡점은 <strong>EchoStar 스펙트럼 인수(AWS-4 40MHz + H-block 10MHz + AWS-3 15MHz = 총 65MHz, 총액 $196억, FCC 승인 2026-05-12, 클로징 2027-11 예정)</strong>다. 제휴사 주파수를 빌리는 보조 서비스에서 <strong>자체 전용 주파수 기반의 "우주 이동통신사"</strong>로 전환하는 것으로, 차세대 D2C 위성(스루풋 20배, 커스텀 실리콘, 최대 15,000기 계획)과 결합하면 2027년 말 미국에서 기존 통신사와 정면 경쟁하는 Starlink Mobile 상용화가 목표다. 머스크는 여기에 "모든 차가 Starlink를 탑재하게 된다"(8/9)는 차량 시장 서사까지 얹었다 — Cybercab에 Starlink V5 단말 기본 탑재(7/20 확정)가 첫 사례다.</p>
+
+<h3>4-A-5. Colossus·Grok — 세계 최대 단일 사이트 AI 팩토리의 실체</h3>
+<figure>
+<div class="fig-t">사진 4-2. 멤피스 Colossus 캠퍼스 — 2GW 설계, GPU 약 55.5만 장의 세계 최대 단일 사이트</div>
+<div class="fig-box">
+<img src="https://tesorb.com/wp-content/uploads/2026/07/wikimedia-colossus-2-xai.jpg" alt="xAI Colossus 데이터센터" loading="lazy">
+</div>
+<figcaption>사진 4-2. Colossus 데이터센터 전경. 출처: Wikimedia Commons (Tesorb 게재본 원본 인용).</figcaption>
+</figure>
+<p>Colossus 1(멤피스, 前 Electrolux 공장 785K sqft)은 착공 122일 만에 가동, 19일 만에 H100 10만 장을 켠 속도전의 상징이다(현재 ~200K H100/H200 + ~30K GB200, ~300MW — Anthropic 전용 임대). Colossus 2는 <strong>2026년 1월 가동된 세계 최초의 기가와트급 단일 훈련 클러스터</strong>로, 캠퍼스 3동 합산 GPU 약 55.5만 장(GB200 ~52만 + GB300 3만 + 레거시 3만), 설계 전력 2GW, 누적 투자 $350~400억, Tesla Megapack 420기+가 백업한다. <strong>Colossus 2의 전력</strong> 상당분은 주 경계 건너 미시시피 서드헤이븐(Southaven) 스탠턴로드 부지의 무허가 이동식 가스터빈으로 충당돼 왔다 — 규모는 소장 기준 27기(~495MW)에서 2026년 5월 46기, 7월 조사보도 기준 57~59기까지 증설됐고, 별도로 MDEQ가 3월 허가한 영구 터빈 41기가 있다 [상충: 문서별 27/46/57~59기]. 이것이 NAACP·Earthjustice의 청정대기법 소송(2026-04)으로 비화했고, 법무부가 "국가안보"(국방부 서면: 이 터빈이 <strong>Colossus 2</strong>를 구동하며 Grok이 군사 표적 2,000+건 타격에 사용됐다고 명시)를 이유로 기각을 신청(6/15)한 상태다. <strong>예비적 금지명령 심리가 2026-08-24로 잡혀 있어 단기 이벤트 리스크</strong>다(§12·§15-C). 참고로 Colossus 1은 2025년 선행 분쟁 후 무허가 터빈을 철수하고 잔여분을 허가받아, 이번 금지명령의 직접 대상이 아니다.</p>
+<p>모델 측면에서 Grok은 4.5(1.5T 파라미터, 7/8 출시, 주요 경쟁 모델 대비 약 절반 수준의 가격 포지셔닝 [상충: "60% 저렴" 표기 보도 병존])→4.6(8/7경)→4.7(2.1T, 9월 초 예정)→<strong>Grok 5(6~10T MoE, Colossus 2에서 훈련 중, 머스크 "AGI 확률 10%+" 발언)</strong>로 이어지는 로드맵을 공개했고, 7개 모델을 동시 훈련 중이다. 다만 벤치마크 리더십은 확보하지 못했다(4.5는 리더보드 4위권; GPQA Diamond에서 Grok 4의 88% 대비 4.3 Beta 77.6%로 역행 논란) — 컴퓨트 규모가 모델 우위로 자동 변환되지 않는다는 반증이며, 이것이 "컴퓨트를 자체 소비 대신 외부 임대로 돌린" 전략 전환(§3)의 배경이라는 블룸버그 보도도 있다.</p>
+
+<h3>4-A-6. 임대 자산의 실체 — NVIDIA Vera Rubin 플랫폼 스펙</h3>
+<p>SpaceX가 고객에게 파는 것은 결국 "Vera Rubin 컴퓨트 시간"이므로, 이 플랫폼의 스펙이 곧 제품 스펙이다. 2026년 6월 양산에 들어간 Vera Rubin은 <strong>Rubin GPU(TSMC N3, 2다이 3,360억 트랜지스터, HBM4 288GB·13~22TB/s [상충: GTC 발표 13TB/s vs 양산 스펙 보도 22TB/s], NVFP4 기준 추론 50PF)와 Vera CPU(Arm v9.2 88코어, NVLink-C2C 1.8TB/s 코히런트 연결로 CPU 메모리를 GPU가 통합 주소공간으로 사용 — KV캐시 오프로드에 결정적)</strong>의 결합이다. NVL144 랙(GPU 패키지 72개) 기준 추론 3.6EF, HBM 합산 20.7TB, 랙 전력 500~600kW(액랭 필수)이며, NVIDIA 자체 주장으로 Blackwell 대비 토큰당 비용 1/10이다. 공급 병목은 HBM4(SK하이닉스 점유 60~70%)로, 이 병목이 §12의 "AI 매출은 수요가 아니라 공급이 제약"이라는 리스크의 근원이다.</p>
+<div class="twrap"><table class="wide">
+<caption>표 4-2. Vera Rubin NVL144 핵심 사양 — SpaceX AI 세그먼트의 "제품 스펙"</caption>
+<thead><tr><th>항목</th><th>사양</th><th>투자 함의</th></tr></thead>
+<tbody>
+<tr><td>Rubin GPU (R100)</td><td>TSMC N3 · 2다이 336B Tr · HBM4 288GB(8스택) 13~22TB/s [상충] · NVFP4 50PF 추론</td><td>토큰당 비용 1/10(vs Blackwell, NVIDIA 자체) → 임대 단가 방어력</td></tr>
+<tr><td>Vera CPU</td><td>Arm v9.2 88코어(올림푸스)·176스레드 · LPDDR5X 1.5TB · NVLink-C2C 1.8TB/s</td><td>CPU-GPU 통합 메모리풀 — 에이전트·장문 컨텍스트 추론 최적</td></tr>
+<tr><td>NVL144 랙</td><td>추론 3.6EF NVFP4 / 훈련 1.2EF FP8 · HBM4 20.7TB · 패브릭 260TB/s · 500–600kW 액랭</td><td>랙당 전력이 곧 병목 — "전력 = 매출"의 등식 성립</td></tr>
+<tr><td>차기 (H2 2027)</td><td>Rubin Ultra + Kyber 랙 · FP4 15EF급</td><td>Musk의 Vera Rubin 임대 "$30–50/W" 발언의 기술 기반</td></tr>
+<tr><td>공급 병목</td><td>HBM4 — SK하이닉스 60–70% 점유, 삼성 2026-02 양산 개시, 마이크론 3위</td><td>2027년 5–10GW 증설 목표의 최대 제약 변수</td></tr>
+</tbody></table></div>
+
+<h3>4-B. 기술 성숙도(TRL)와 로드맵 — 무엇이 검증됐고 무엇이 남았나</h3>
+<div class="twrap"><table class="wide">
+<caption>표 4-3. 핵심 기술별 성숙도 판정과 다음 마일스톤</caption>
+<thead><tr><th>기술</th><th>TRL 판정</th><th>근거</th><th>다음 검증 이벤트</th><th>남은 난제</th></tr></thead>
+<tbody>
+<tr><td>Falcon 9 재사용 발사</td><td>9 (완전 상용)</td><td>연 165회(2025)·부스터 20회+ 재사용</td><td>—</td><td>없음 (성숙 단계)</td></tr>
+<tr><td>Starlink 브로드밴드·레이저 메시</td><td>9 (완전 상용)</td><td>가입자 1,200만·위성 1.09만 작동</td><td>V3 실배치(F14~)</td><td>ARPU 하락 관리, 용량 증설 속도</td></tr>
+<tr><td>Starship 부스터 회수</td><td>7–8 (실증 반복)</td><td>타워 캐치 반복 성공(2024.10~)</td><td>연내 캐치 정례화</td><td>재비행 턴어라운드 단축</td></tr>
+<tr class="hl"><td>Starship 상단(Ship) 재사용</td><td>6→7 진입 중</td><td>F13 연착수·히트실드 회수 데이터</td><td><strong>F14 첫 타워 캐치(8월 말)</strong></td><td>타일 무정비 재비행 입증</td></tr>
+<tr><td>궤도 급유(추진제 이송)</td><td>4–5 (설계·부분시험)</td><td>V3 대응 설계, NASA 요구 재점화 시연</td><td>2027 궤도 급유 시연 [추정]</td><td>극저온 유체 무중력 이송</td></tr>
+<tr><td>D2C 전용망(Starlink Mobile)</td><td>6–7</td><td>1세대 D2C 1,000만 이용·스펙트럼 확보</td><td>EchoStar 클로징(2027-11)·미국 상용화(2027말)</td><td>차세대 위성 양산, 단말 생태계</td></tr>
+<tr><td>Colossus GW급 운용</td><td>8–9</td><td>2GW 설계·1.5GW 가동, 외부 고객 서빙</td><td>Google 인도(9/30 기한)</td><td>전력 인허가(8/24 심리)·HBM 공급</td></tr>
+<tr class="hl"><td>Starmind 궤도 컴퓨트</td><td>3–4 (설계·지상시제)</td><td>사양 공개·NVIDIA 협업·팹리스 부품 미검증</td><td><strong>프로토 시험 2027 초 → 첫 발사 2027</strong></td><td>방사선 내성·궤도 열관리·발사비 실현</td></tr>
+</tbody></table></div>
+<p>R&D 정량 비교는 공시 한계로 제한적이다: SpaceX는 R&D를 별도 계정으로 완전 분리 공시하지 않고 Space 세그먼트 비용에 Starship 개발비가 흡수돼 있다 [미확인 — 정확 R&D 절대액]. 다만 구조적으로 <strong>Space 세그먼트의 영업적자 −$5.4억/분기 자체가 사실상의 R&D 지출 대리변수</strong>이며(연환산 $20억+), 여기에 AI capex(분기 $158억)의 상당분이 차세대 기술 투자 성격이다. 경쟁사 대비로는 Blue Origin(비상장, 베조스 연 수십억 달러 투입 [추정])·Rocket Lab(연 R&D ~$1.5억 규모 [추정])과 자릿수가 다르다.</p>
+
+<h3>4-C. 기술 피어 대결표 — 같은 문제를 푸는 자들과의 스펙 대결</h3>
+<p>비교 대상 선정 기준: ① 궤도 수송(재사용 발사체 노선을 실제 비행·개발 중인 사업자), ② LEO 위성통신(메가컨스텔레이션 운용·구축 중), ③ 지상 AI 컴퓨트(GW급 클러스터 보유·계획). 규모와 무관하게 기술 노선상 위협적인 신규 진입자(중국 CALT, Starcloud 등)를 포함했고, 궤도 컴퓨트 경쟁은 §4-D에서 별도 심층 비교한다. 재무·밸류에이션 비교는 §7의 역할이며 여기서는 기술 스펙만 다룬다.</p>
+
+<div class="twrap"><table class="wide">
+<caption>표 4-4. 대결표 ① 궤도 수송 — 케이던스가 곧 해자다</caption>
+<thead><tr><th>사업자 / 기체</th><th class="num">LEO 페이로드</th><th>재사용 상태</th><th>실적 (2025–26)</th><th>기술 노선·비고</th></tr></thead>
+<tbody>
+<tr class="hl"><td>SpaceX Falcon 9</td><td class="num">17.5t</td><td>1단 회수·20회+ 재비행</td><td>2025년 165회 — 나머지 세계 합계 초과</td><td>수직착륙(다리) — 검증 완료된 캐시카우</td></tr>
+<tr class="hl"><td>SpaceX Starship V3</td><td class="num">100t</td><td>부스터 캐치 반복 성공 · 상단 캐치 F14 시도</td><td>F13(7/24) 상단 연착수·V3 배치 시험</td><td>양단 타워 캐치 + FFSC — 유일 노선</td></tr>
+<tr><td>Blue Origin New Glenn</td><td class="num">45t</td><td>1단 해상회수 <strong>2연속 성공</strong> — NG-2(2025-11) 첫 착륙, NG-3(2026-04-19) 동일 부스터 재비행·재착륙(궤도급 부스터 재사용, SpaceX 이후 세계 2번째)</td><td>비행 3회: 상단 실패 1회(NG-3, AST BlueBird 7 궤도 미달) · 5/28 지상 정적점화 폭발로 LC-36 대파 → 복귀 시점 [상충: 회사 조기 복귀 의지 vs 발사장 재건 1년+ 전망]</td><td>BE-4(산화제리치 다단연소) — Kuiper 발사 지연의 직접 원인</td></tr>
+<tr><td>Rocket Lab Neutron</td><td class="num">~13t(설계)</td><td>1단 회수 설계 — 미비행</td><td>개발 중(첫 비행 시점 [미확인])</td><td>중형 재사용 — Electron으로 소형시장 검증</td></tr>
+<tr><td>중국 CALT 창정 10B</td><td class="num">LEO 16t+</td><td><strong>2026-07-10 해상 그물+훅 회수 성공</strong> — 미국 외 최초의 궤도급 부스터 회수, 그물 방식은 세계 최초</td><td>국가 프로그램 · 63m급 · 동일 기체 연내 재비행 목표 · 2025년 중국 전체 92회 발사</td><td>착륙다리(F9)·타워캐치(Starship)와 <strong>다른 제3의 노선</strong> — 유도·강하 기술은 실증, 재비행·케이던스는 미실증</td></tr>
+</tbody></table></div>
+<p><strong>기술 격차의 정량화 — 세 개의 잣대로:</strong> ① <strong>첫 궤도급 부스터 회수</strong> 기준, 중국 CALT(2026-07)는 SpaceX(2015-12) 대비 <strong>약 10.6년</strong>, Blue Origin(2025-11)은 약 9.9년 뒤였다 [파생: 이벤트 시점 차]. ② <strong>부스터 재비행</strong> 기준, SpaceX 2017-03 vs Blue Origin 2026-04(9.1년차) vs CALT 연내 목표(약 9.7년차 예상). ③ <strong>운용 케이던스</strong> 기준 격차는 압도적으로 크다 — 연간 재사용 발사 165회를 소화하는 사업자는 SpaceX뿐이고, 2위권은 연 한 자릿수다. 종합하면 <strong>약 1.5~2세대(회수 실증 ~10년 + 완전재사용은 전원 미착수), 근거: 위 세 잣대</strong>. 주의할 점은 방향이다: 2025-11(NG-2)→2026-04(NG-3 재비행)→2026-07(CALT)로 <strong>회수 클럽이 1년 새 1개사에서 3개 주체로 늘었고</strong>, 특히 중국은 실패를 반복할 수 있는 국가 자본·규제 허용을 갖춰 추격 속도가 가장 빠르다. 다만 CALT의 그물 방식·Blue Origin의 재건(발사장 상실)이 보여주듯, 회수 1회와 "주 3회 재비행 공장"(§4-A) 사이에는 여전히 수년의 학습곡선이 놓여 있다.</p>
+
+<div class="twrap"><table class="wide">
+<caption>표 4-5. 대결표 ② LEO 위성통신 — 작동 위성 수 45배 차이의 의미</caption>
+<thead><tr><th>사업자</th><th class="num">작동/계획 위성</th><th class="num">가입자·고객</th><th>기술 특성</th><th>현재 상태</th></tr></thead>
+<tbody>
+<tr class="hl"><td>Starlink</td><td class="num">10,882 / 수만기+</td><td class="num">브로드밴드 1,200만 + D2C 1,000만+</td><td>레이저 메시 · V3 1Tbps급 · 전용 D2C 스펙트럼 65MHz</td><td>160+개국 상용 · 중간값 225Mbps/21ms</td></tr>
+<tr><td>Amazon Leo (Kuiper)</td><td class="num">~240–400 / 3,236</td><td class="num">엔터프라이즈 프리뷰(2025-11)</td><td>Ka밴드 · 자체 단말 3종</td><td>"초기 서비스 가능"(7/2) — FCC 1,618기 기한 미달로 2년 연장 신청 · Delta 항공 500대(2028~) 수주 · 발사 계약 100회+와 추가 옵션 22회(발사력 외부 의존, 일부는 SpaceX — New Glenn 이탈로 배치 일정 타격)</td></tr>
+<tr><td>Eutelsat OneWeb</td><td class="num">647 / 648</td><td class="num">B2B·정부 전용</td><td>Ku밴드 · ISL 없음(1세대)</td><td>유럽 주권 수요로 니치 방어</td></tr>
+<tr><td>중국 Qianfan(千帆)</td><td class="num">[미확인] / ~15,000 [추정]</td><td class="num">중국·일대일로 시장</td><td>국가 주도 메가컨스텔레이션</td><td>구축 중 — 서방 시장 진입 불가로 시장 분할형 경쟁</td></tr>
+<tr><td>AST SpaceMobile</td><td class="num">BlueBird 소수 배치 중</td><td class="num">MNO 제휴 ~60곳(커버 30억 명)</td><td>초대형 위상배열로 일반 폰 직결(D2C 전업)</td><td>2Q 매출 $31.5M · FY26 가이드 $150–200M — 상용 초기, 아이러니하게 발사는 SpaceX에 의존</td></tr>
+</tbody></table></div>
+<p><strong>격차 판독:</strong> 작동 위성 수 기준 Starlink 대 Amazon Leo는 약 <strong>27~45배</strong>다 [파생: 10,882÷240~400]. 더 구조적인 격차는 ① 발사 내재화(Leo는 New Glenn 지연으로 배치 일정 자체가 타사 손에 있음), ② 단말·게이트웨이 생태계 7년의 선행, ③ D2C 전용 스펙트럼(65MHz)이다. Amazon의 추격 자산은 자본과 AWS 번들링(클라우드+위성 엣지)이며, 실제로 BEAD 농촌 커버리지 커밋에서 41.7만 지점을 확보해(SpaceX 47.6만) 정부 보조 시장에서는 이미 2강 구도를 만들었다. 요약: <strong>브로드밴드에서 Starlink의 리드는 4~5년 규모이나, "두 번째 사업자의 존재" 자체는 이미 확정</strong>됐고 가격 경쟁 리스크가 열렸다.</p>
+
+<div class="twrap"><table class="wide">
+<caption>표 4-6. 대결표 ③ 지상 AI 컴퓨트 — Colossus는 최대 단일 사이트이지 최대 프로그램이 아니다</caption>
+<thead><tr><th>사업자 / 프로그램</th><th class="num">전력 규모</th><th class="num">칩 규모</th><th class="num">투자액</th><th>구조적 특징</th></tr></thead>
+<tbody>
+<tr class="hl"><td>SpaceX Colossus (멤피스)</td><td class="num">2GW 설계 · 1.5GW 가동</td><td class="num">~55.5만 GPU</td><td class="num">$35–40B</td><td>세계 최대 단일 사이트 · 속도(122일 건설) · 단, 전력의 상당분이 무허가 가스터빈(소송 중)</td></tr>
+<tr><td>Stargate (OpenAI·MS 등)</td><td class="num">10GW 목표</td><td class="num">200만+ 칩 계획</td><td class="num">$500B+ 커밋</td><td>멀티사이트 분산 — 총량에서 최대 프로그램</td></tr>
+<tr><td>Google</td><td class="num">멀티 GW (자체 TPU)</td><td class="num">[미확인]</td><td class="num">2026 capex $175B+</td><td>자체 칩(TPU) 수직통합 — SpaceX의 고객이자 잠재 이탈자</td></tr>
+<tr><td>Amazon (AWS)</td><td class="num">멀티 GW</td><td class="num">Trainium 매출 $10B+ (2026E)</td><td class="num">$200B</td><td>자체 칩 + 정부 AI $50B 프로그램</td></tr>
+<tr><td>Meta Hyperion</td><td class="num">2GW (루이지애나)</td><td class="num">[미확인]</td><td class="num">$27B</td><td>자체 소비용 — 임대 시장 비참여</td></tr>
+<tr><td>CoreWeave</td><td class="num">1.7GW 목표(2026)</td><td class="num">43개 DC</td><td class="num">NVDA $2B 지분 등</td><td>순수 GPU 임대 동종업 — 2026 용량 완판, 시장 검증</td></tr>
+</tbody></table></div>
+<p><strong>추격 가능성의 방향이 여기선 반대다:</strong> 발사·위성에서는 남들이 SpaceX를 추격하지만, AI 컴퓨트에서는 <strong>SpaceX가 하이퍼스케일러를 추격하는 후발주자</strong>다. SpaceX의 차별화는 ① 속도(인허가를 우회해서라도 전력을 확보하는 실행 문화 — 그 자체가 소송 리스크), ② Tesla Megapack·태양광 등 그룹 전력 스택, ③ 그리고 남들이 없는 탈출구인 "궤도"다. 즉 지상 컴퓨트에서의 열위(전력 인허가·자체 칩 부재)가 궤도 컴퓨트 서사(§4-D)의 전략적 필연성을 만든다 — 이 연결고리가 이 회사 기술 스토리의 정수다.</p>
+
+<h3>4-D. 신기술 영향력 분석 — Starmind 궤도 데이터센터 (2026-08-04 발표)</h3>
+<p>발동 조건 충족: 최근 1년 내 이 기업의 가장 중요한 신기술 발표는 단연 <strong>Starmind</strong>(발표 당일 주가 +9%)이며, 아래에 표준 7단계로 해부한다. 차순위 발표인 Grok 5 훈련 개시와 EchoStar 스펙트럼 딜은 각각 §4-A-5와 §4-A-4에서 다뤘다.</p>
+
+<p><strong>① 병목 정의 — "AI의 제약은 칩이 아니라 전력·냉각이 되고 있다."</strong> 근거는 이 회사 자신의 경험이다: Colossus는 멤피스 그리드에서 8MW→300MW밖에 확보하지 못했고, Colossus 2는 나머지 약 495MW를 서드헤이븐의 무허가 이동식 가스터빈(소장 27기→7월 보도 57~59기 [상충])으로 메웠다 — 그 결과가 연방 소송이다. 하이퍼스케일러 전체로도 2026년 AI capex가 Google $175B+·Amazon $200B·Stargate $500B+ 커밋으로 치닫는 가운데, 신규 데이터센터의 병목은 GPU 인도가 아니라 <strong>계통 연계(grid interconnection)·전력 인허가·냉각수</strong>로 이동했다(Colossus의 냉각수만 일 130만 갤런). 지상 데이터센터는 총 전력의 상당분을 냉각에 소모한다 [추정 — PUE 구조상 통상 수십 % 수준]. 이 병목이 클수록 "발전·냉각·부지 제약이 없는 곳 = 우주"라는 해법의 잠재 가치가 커진다.</p>
+
+<p><strong>② 기술 해부.</strong> Starmind AI1은 전개 후 높이 30m·날개폭 75m의 위성으로, 새벽-황혼 태양동기궤도(dawn-dusk SSO: 궤도면이 주야 경계선을 따라 돌아 <strong>거의 연속 일조</strong>를 받는 궤도)에서 태양광 210kW(전력밀도 250W/m² → 패널 약 840m² [파생])를 생산해 NVIDIA Vera Rubin 기반 컴퓨트 페이로드(피크 250kW·평균 175kW)를 구동한다. 폐열은 냉각탑 대신 <strong>160m² 전개형 액체 라디에이터(능동 유체냉각·이중화 펌프 루프)가 우주 진공으로 복사 방열</strong>한다 — 회사는 이로써 냉각 오버헤드가 지상 대비 자릿수(order of magnitude)로 줄어든다고 주장한다(자체 주장). 처리 결과는 고대역 레이저 링크로 Starlink 메시(작동 10,882기)에 접속해 지상으로 내려온다. 하드웨어/소프트웨어 역할 분담: 발전·열관리·궤도 유지는 위성 버스가, 워크로드 배치는 지상 오케스트레이션이 담당하며, 아키텍처는 모듈러 설계로 칩 벤더 교체가 가능하게 했다(초기 세대는 NVIDIA Rubin GPU + Vera CPU 확정, NVIDIA "Space-1" 모듈은 H100 대비 최대 25배 AI 컴퓨트 — NVIDIA 자체 주장).</p>
+
+<figure>
+<div class="fig-t">그림 4-1. Starmind 시스템 개념도 — 데이터가 아니라 "전력과 냉각"을 우주에서 조달한다</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Starmind 작동 개념도">
+  <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#64748B"/></marker></defs>
+  <text x="500" y="34" text-anchor="middle" fill="#0F2B46" font-size="14.5" font-weight="800">새벽-황혼 태양동기궤도 (거의 연속 일조 · 고도 500–2,000km)</text>
+  <rect x="40" y="70" width="270" height="106" rx="12" fill="#FEF3C7" stroke="#B7791F" stroke-width="2"/>
+  <text x="175" y="100" text-anchor="middle" fill="#78350F" font-size="14" font-weight="800">태양광 발전</text>
+  <text x="175" y="124" text-anchor="middle" fill="#78350F" font-size="12.5">210kW 출력 · 250W/m²</text>
+  <text x="175" y="146" text-anchor="middle" fill="#78350F" font-size="12.5">패널 약 840m² [파생]</text>
+  <rect x="365" y="70" width="270" height="106" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2.5"/>
+  <text x="500" y="100" text-anchor="middle" fill="#1E3A8A" font-size="14" font-weight="800">컴퓨트 페이로드</text>
+  <text x="500" y="124" text-anchor="middle" fill="#1E3A8A" font-size="12.5">NVIDIA Rubin GPU + Vera CPU</text>
+  <text x="500" y="146" text-anchor="middle" fill="#1E3A8A" font-size="12.5">피크 250kW · 평균 175kW · 75kW/톤</text>
+  <rect x="690" y="70" width="270" height="106" rx="12" fill="#ECFDF5" stroke="#047857" stroke-width="2"/>
+  <text x="825" y="100" text-anchor="middle" fill="#065F46" font-size="14" font-weight="800">복사 방열</text>
+  <text x="825" y="124" text-anchor="middle" fill="#065F46" font-size="12.5">160m² 전개형 액체 라디에이터</text>
+  <text x="825" y="146" text-anchor="middle" fill="#065F46" font-size="12.5">냉각탑·냉각수 불필요</text>
+  <line x1="310" y1="123" x2="360" y2="123" stroke="#64748B" stroke-width="2.5" marker-end="url(#ar2)"/>
+  <line x1="635" y1="123" x2="685" y2="123" stroke="#64748B" stroke-width="2.5" marker-end="url(#ar2)"/>
+  <text x="335" y="112" text-anchor="middle" fill="#4A5568" font-size="11">전력</text>
+  <text x="660" y="112" text-anchor="middle" fill="#4A5568" font-size="11">폐열</text>
+  <line x1="500" y1="176" x2="500" y2="238" stroke="#7C3AED" stroke-width="2.5" marker-end="url(#ar2)"/>
+  <text x="588" y="212" text-anchor="middle" fill="#7C3AED" font-size="12" font-weight="700">고대역 레이저 링크</text>
+  <rect x="200" y="242" width="600" height="66" rx="12" fill="#0F2B46"/>
+  <text x="500" y="270" text-anchor="middle" fill="#FFFFFF" font-size="13.5" font-weight="800">Starlink 광 메시 네트워크 (작동 위성 10,882기)</text>
+  <text x="500" y="292" text-anchor="middle" fill="#C9D6E4" font-size="11.5">위성 간 레이저 백본으로 최근접 게이트웨이까지 라우팅</text>
+  <line x1="500" y1="308" x2="500" y2="362" stroke="#64748B" stroke-width="2.5" marker-end="url(#ar2)"/>
+  <rect x="270" y="366" width="460" height="60" rx="12" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="2"/>
+  <text x="500" y="392" text-anchor="middle" fill="#1A202C" font-size="13" font-weight="700">지상 게이트웨이 → 고객 (추론 결과·처리 데이터)</text>
+  <text x="500" y="412" text-anchor="middle" fill="#718096" font-size="11.5">업링크: 워크로드·모델 가중치 배포</text>
+  <text x="500" y="454" text-anchor="middle" fill="#718096" font-size="11.5">사양 출처: SpaceX 공식 Starmind 페이지 공개 스펙 (2026-08-04)</text>
+</svg>
+</div>
+<figcaption>그림 4-1. Starmind AI1 작동 개념도. 회사 공개 사양 기준으로 작도. 핵심: 전력(태양광)과 냉각(복사)을 궤도에서 해결하고, 데이터만 레이저로 오간다.</figcaption>
+</figure>
+
+<div class="twrap"><table>
+<caption>표 4-7. Starmind AI1 공식 사양표</caption>
+<thead><tr><th>항목</th><th>사양</th><th>해석</th></tr></thead>
+<tbody>
+<tr><td>전개 크기</td><td>높이 30m × 날개폭 75m</td><td>V3 Starlink보다 한 자릿수 큰 급 — Starship 필수</td></tr>
+<tr><td>컴퓨트 전력</td><td>피크 250kW / 평균 175kW</td><td>지상 NVL144 랙(500–600kW)의 약 1/3 [파생] — "랙을 궤도에 분산 배치"하는 모델</td></tr>
+<tr><td>기체 효율</td><td>75kW/톤</td><td>기당 질량 약 3.3톤 [파생: 250÷75]</td></tr>
+<tr><td>태양광</td><td>210kW @ 250W/m²</td><td>패널 약 840m² [파생] — 발전이 기체 설계를 지배</td></tr>
+<tr><td>열관리</td><td>160m² 전개형 액체 라디에이터 · 이중화 펌프</td><td>단일 고장점 회피 설계 — 수리 불가 환경 대응</td></tr>
+<tr><td>칩</td><td>NVIDIA Rubin GPU + Vera CPU ("최적화된 NVL72")</td><td>모듈러 설계로 벤더 교체 여지 — 단 초기 NVIDIA 독점</td></tr>
+<tr><td>생산·일정</td><td>Gigasat Factory(텍사스 배스트롭) · 프로토 2027 초 · 발사 2027 목표</td><td>FCC에 최대 100만기 신청(고도 500–2,000km)</td></tr>
+</tbody></table></div>
+
+<p><strong>③ 적용 구성 예시 — "75GW"가 물리적으로 요구하는 것.</strong> J.P.Morgan은 궤도 컴퓨트를 2029년 개시, 2031년 말 약 75GW 규모로 모델링했다. 공식 사양으로 역산하면 이 숫자의 무게가 드러난다: 75GW ÷ 기당 평균 175kW = <strong>약 42.9만 기</strong> [파생]. 기당 3.3톤이므로 총 <strong>약 143만 톤</strong>을 궤도에 올려야 하고 [파생], Starship 100t·회당 30기 적재 기준 <strong>약 1.43만 회의 발사</strong>가 필요하다 [파생: 428,600÷30]. 이는 FCC 100만기 신청과는 정합하지만, JPM 자신의 발사 모델(2031년 연 ~5,000회 도달)과 견줘도 <strong>발사 케이던스가 단 몇 년 안에 현재의 두 자릿수 배로 뛰어야 성립하는 시나리오</strong>임을 뜻한다. 한 기 단위로 보면: 위성 1기 = 지상 랙 약 1/3 = Rubin GPU 수십 패키지분의 추론 용량이 "전력 계약·냉각수·건축 인허가 없이" 추가되는 구조다.</p>
+
+<p><strong>④ 효과 정량화 (주장 주체 구분).</strong> 회사 자체 주장: 냉각 오버헤드 자릿수 감소, 연속 일조로 배터리 최소화, "2~3년 내 우주가 가장 싼 AI 컴퓨트 입지"(머스크). NVIDIA 주장: Space-1 컴퓨트 모듈은 H100 대비 최대 25배 AI 성능. <strong>제3자(경쟁사) 검증: Google Suncatcher 논문은 발사비가 kg당 약 $200에 도달하면(그들 추정 2030년대 중반) 궤도 데이터센터의 에너지 비용이 지상과 경쟁 가능해진다고 계산</strong>했다 — 즉 "경제성의 스위치는 발사비"라는 데에 적과 아군의 계산이 일치하며, Starship 목표(<$100/kg)는 그 문턱의 절반 이하다. 시장의 즉각 검증: 발표 당일 SPCX +9%, NVDA +2.5~3%.</p>
+
+<p><strong>⑤ 트레이드오프 — 이 기술이 포기한 것.</strong> ⓐ <strong>대역폭·지연</strong>: 지상 DC의 파이버 대비 다운링크가 병목이며 레이저 메시로 완화해도 게이트웨이 용량·기상 제약이 남는다 → 초기에는 지연에 둔감한 <strong>추론·배치 워크로드 위주</strong>가 될 공산이 크고, 노드 간 초저지연이 필요한 초대형 훈련에는 부적합하다 [추정]. ⓑ <strong>방사선</strong>: 상용(COTS) 최첨단 GPU의 총이온화선량(TID)·단일사건업셋(SEU) 내성은 미검증 — 경쟁사 Suncatcher는 TPU로 5년 LEO 방사선 시험을 통과했다고 밝힌 반면 Starmind의 Rubin 내방사선 데이터는 [미확인]. ⓒ <strong>수리 불가</strong>: 고장 = 폐기. 이중화 펌프 등 설계로 보완하나 지상 DC의 부품 교체 경제학은 없다. ⓓ <strong>궤도 혼잡·잔해</strong>: 100만기급 신청은 그 자체로 규제·충돌 리스크를 만든다. ⓔ <strong>전제 조건 의존</strong>: 발사비 <$100/kg가 실현되지 않으면(즉 Starship 상단 재사용이 늦어지면) Suncatcher 논문 기준으로도 경제성 문턱을 못 넘는다 — <strong>Starmind의 성패는 기술적으로 Flight 14 이후 캐치·재비행 실적에 종속</strong>된다.</p>
+
+<p><strong>⑥ 파급 효과 맵 — 티커 단위.</strong></p>
+<div class="twrap"><table class="wide">
+<caption>표 4-8. Starmind 발표의 밸류체인 파급 — 수혜·검증·피해</caption>
+<thead><tr><th>구분</th><th>대상 (티커)</th><th>메커니즘</th><th>시계(時界)</th></tr></thead>
+<tbody>
+<tr><td>직접 수혜</td><td>NVIDIA (NVDA)</td><td>궤도 컴퓨트 1세대 칩 독점 채택 + "우주 = 신규 TAM" 서사 — 발표일 +2.5~3%</td><td>즉시~2027</td></tr>
+<tr><td>생태계 검증</td><td>Starcloud(비상장), 궤도 DC 테마 전반, 위성 레이저 통신 부품업</td><td>업계 1위의 참전이 "마케팅 플로이" 회의론(PitchBook)을 반박하는 신뢰 부여</td><td>즉시</td></tr>
+<tr><td>경쟁 자극</td><td>Alphabet (GOOGL) · Amazon/Blue Origin</td><td>Suncatcher(첫 TPU 위성 2027)·TeraWave 가속 유인 — 베조스 "궤도 DC가 가장 비용효율적 미래"</td><td>2027~</td></tr>
+<tr><td>잠재 대체(피해)</td><td>지상 DC 개발·전력 성장 서사 일부 — 유틸리티(VST·CEG 류), 냉각 인프라(VRT 류) [추정]</td><td>궤도가 신규 수요의 한계 증분을 흡수하는 시나리오 — 단 2030년 이전 실질 영향은 미미</td><td>2030년대</td></tr>
+<tr><td>중립·양면</td><td>SK하이닉스·삼성전자·마이크론 (HBM)</td><td>궤도든 지상이든 HBM 수요는 동일 — 입지 이동은 중립, 총량 확대는 수혜</td><td>지속</td></tr>
+</tbody></table></div>
+
+<p><strong>⑦ 분석 대상 기업에의 함의 — 판정: 기회 (조건부).</strong> P&L 임팩트의 자릿수: JPM의 2031년 AI 세그먼트 매출 모델 $8,291억의 상당분이 지상+궤도 컴퓨트 임대에서 나오는 구조로, 실현 시 <strong>현재 그룹 연매출($187억)의 수십 배급 옵션</strong>이다. 다만 위 ③·⑤에서 보듯 이는 "Starship 발사비 실현 → 42.9만 기 양산·발사 → 방사선·운용 검증"의 3중 관문을 전제한다. 판정을 확인·반증할 이벤트: <strong>Flight 14 상단 캐치(2026-08 말)</strong> → 캐치 정례화(연내) → <strong>Gigasat 프로토 시험(2027 초)</strong> → <strong>Starmind 첫 발사(2027)</strong> → 경쟁 검증인 <strong>Google 첫 TPU 위성(2027)</strong>과 Starcloud-2(2026-10, H100+Blackwell·AWS 우주 Outposts 1호). 자료 원칙 준수: 본 분석의 수치는 SpaceX 공식 페이지·NVIDIA 발표·Suncatcher 논문 등 1차 자료 우선으로 인용했고, 언론 간 상충 수치는 원문 기준을 채택했다.</p>
+
+<figure>
+<div class="fig-t">사진 4-3. Starmind AI1 공개 렌더링 — 상단 컴퓨트 모듈과 전개형 라디에이터·태양광 구조</div>
+<div class="fig-box">
+<img src="https://www.notateslaapp.com/img/containers/article_images/spacex/spacex-starmind-ai1-nvidia-2.webp/932d33d7b6e53112c5e0d96dffb4a8c1/spacex-starmind-ai1-nvidia-2.jpg" alt="Starmind AI1 위성 렌더링 1" loading="lazy" style="margin-bottom:12px">
+<img src="https://www.notateslaapp.com/img/containers/article_images/spacex/spacex-starmind-ai1-nvidia-1.webp/ec8efbab0497b474c0a9cb3459494d7f/spacex-starmind-ai1-nvidia-1.jpg" alt="Starmind AI1 위성 렌더링 2" loading="lazy">
+</div>
+<figcaption>사진 4-3. Starmind AI1 렌더링. 크레딧: SpaceX (Not a Tesla App 게재본 원본 인용). 날개폭 75m — V3 Starlink 위성보다 한 자릿수 큰 구조물로, Starship 없이는 올릴 수 없는 크기다.</figcaption>
+</figure>
+
+<div class="twrap"><table class="wide">
+<caption>표 4-9. 궤도 컴퓨트 피어 대결표 — 같은 꿈을 꾸는 4개 진영</caption>
+<thead><tr><th>진영</th><th>칩·아키텍처</th><th class="num">규모 비전</th><th>검증 실적</th><th>일정</th><th>구조적 강점/약점</th></tr></thead>
+<tbody>
+<tr class="hl"><td>SpaceX Starmind</td><td>NVIDIA Rubin+Vera (모듈러)</td><td class="num">FCC 100만기 · JPM 모델 75GW(2031)</td><td>사양 공개 · 지상 시제 단계 (TRL 3–4)</td><td>프로토 2027초 · 발사 2027</td><td>발사 내재화+Starlink 백본 — 유일한 풀스택 / 방사선 데이터 미공개</td></tr>
+<tr><td>Google Suncatcher</td><td>자체 TPU(Trillium v6e) 스웜</td><td class="num">논문 단계 (스웜 아키텍처)</td><td><strong>TPU 5년 LEO 방사선 시험 통과 · 1.6Tbps 레이저 데모</strong></td><td>첫 TPU 위성 2027</td><td>칩 자급+검증 데이터 최다 / 발사는 외부 의존</td></tr>
+<tr><td>Starcloud (스타트업)</td><td>NVIDIA H100→Blackwell</td><td class="num">FCC 8.8만기 · 비전 5GW</td><td><strong>Starcloud-1 발사(2025-11) · 궤도 첫 LLM 훈련(2025-12)</strong></td><td>Starcloud-2 2026-10 (AWS Outposts 우주 1호)</td><td>실비행 최선두·NVDA/Google/In-Q-Tel 투자 / 자본·발사 모두 외부 의존(발사는 SpaceX)</td></tr>
+<tr><td>Axiom / Blue Origin</td><td>Kepler 위성 ODC / TeraWave 레이저 릴레이</td><td class="num">[미확인]</td><td>Axiom T1 2027 목표 · Blue는 릴레이 우선</td><td>2027~</td><td>후발 — 베조스의 장기 비전 발언이 테마 신뢰엔 기여</td></tr>
+</tbody></table></div>
+<div class="co co-key"><div class="ct">4-D 종합 — 이 발표가 투자 논리에 갖는 의미</div>
+<p>Starmind는 아직 매출 0의 TRL 3~4 프로젝트다. 그러나 ① 병목(전력)이 실재하고 정량화 가능하며, ② 적(Google)의 논문조차 "발사비만 내려가면 성립한다"고 계산하고, ③ 그 발사비를 내릴 수단(Starship)을 발표자가 독점한다는 3박자가 맞물려, <strong>시장은 이것을 "허풍"이 아니라 "행사가격이 Flight 14인 콜옵션"으로 가격에 반영하기 시작</strong>했다. §5-B 꿈 분석과 §10 CAP 역산이 이 옵션의 가격표를 계산한다.</p></div>
+</section>
+
+<!-- ================= 5. 산업 분석 ================= -->
+<section id="s5">
+<h2><span class="no">5</span>산업 분석 — 세 개의 S커브와 하나의 꿈</h2>
+<p class="lead">SpaceX는 하나의 산업이 아니라 <strong>성숙도가 다른 세 개의 산업에 걸쳐 있다</strong>: 궤도 수송(성장기 중반, 독점), 위성 통신(성장기 초중반, 압도적 1위), AI 컴퓨트(도입기→성장기 전환, 후발). 그리고 이 셋의 교차점에 네 번째 산업(궤도 데이터센터, 도입 전 단계)을 스스로 창조하려 한다. J.P.Morgan이 제시한 통합 TAM은 $28조+다.</p>
+
+<h3>5-A-1. TAM/SAM/SOM과 성장의 분해 — P인가 Q인가</h3>
+<div class="twrap"><table class="wide">
+<caption>표 5-1. 사업별 시장 구조와 성장 동인 분해</caption>
+<thead><tr><th>사업</th><th>시장 규모·전망</th><th>성장 동인 분해 (P=가격 / Q=물량)</th><th>S커브 위치·근거</th></tr></thead>
+<tbody>
+<tr><td>궤도 수송</td><td>2025년 전 세계 324회 발사(사상 최대) — SpaceX 질량 점유 80%+. Starship이 kg당 원가를 1/27로 낮추면 <strong>시장 자체가 재정의</strong>(수요 탄력성 발현)</td><td><strong>Q 주도 + P 역방향</strong>: 단가는 의도적으로 낮추고(P↓) 물량을 폭발시키는(Q↑↑) 전략. 최대 물량 고객은 자기 자신(2Q 질량의 82%가 내부)</td><td>성장기 중반 — 연 발사 수가 매년 두 자릿수 % 증가, 침투 여지는 Starship 단가 실현에 종속</td></tr>
+<tr><td>위성 브로드밴드</td><td>가입자 1,200만(2Q26) → JPM 2030E 9,500만+. 전 세계 미연결·저품질 연결 인구가 잠재 시장</td><td><strong>Q 주도, P 하락 수용</strong>: ARPU $64.66(2Q26)→$34(2031E, JPM) — 신흥시장 믹스로 단가를 낮추며 가입자를 8배로. 매출 성장 = Q(8×) × P(0.5×) ≈ 4× [파생]</td><td>성장기 초중반 — 연 순증 가속 중(2023말 230만→현재 1,200만), 포화 신호 없음</td></tr>
+<tr><td>D2C 모바일</td><td>글로벌 이동통신은 조 단위 시장 — SpaceX SAM은 "커버리지 밖 + 위성 프리미엄" 계층부터 시작해 전용망(2027말)으로 확장</td><td>도입기 특유의 <strong>Q 창출형</strong>: 이용 1,000만+은 대부분 무과금·번들 — 수익화(P)는 EchoStar 스펙트럼 기반 전용 서비스부터</td><td>도입기 — 기술 검증 완료, 수익모델 검증 전</td></tr>
+<tr><td>AI 컴퓨트 임대</td><td>하이퍼스케일러 연 capex 합계가 이미 수천억 달러 — 임대(네오클라우드) 시장은 CoreWeave 완판이 증명하는 초과수요</td><td><strong>공급이 곧 매출</strong>: P(임대 단가)는 계약 고정, Q(가동 GW)가 전부 — 2026말 2+GW→2027말 5~10GW 목표</td><td>도입→성장 전환 — 계약 기반 매출 개시 6개월 차</td></tr>
+<tr><td>궤도 데이터센터</td><td>미형성 — JPM 모델 2029 개시, 2031말 75GW. 성립 조건: 발사비 &lt;$200/kg(Suncatcher 논문 기준)</td><td>전적으로 Q(발사·양산 케이던스) — §4-D ③의 역산 참조</td><td>도입 전(TRL 3–4) — S커브에 아직 올라타지 않음</td></tr>
+</tbody></table></div>
+<p>기관 간 전망 분산: 2029년 그룹 매출 컨센서스는 FactSet ~$2,070억 vs Visible Alpha ~$2,320억으로 갈린다 <span class="bd bd-cfl">상충</span>. 본 보고서의 DCF 기본 경로는 보수적으로 FactSet 축을 채택했다(§9).</p>
+
+<h3>5-A-2. 가치사슬 — 풀스택 수직통합이라는 구조적 차별화</h3>
+<figure>
+<div class="fig-t">그림 5-1. 우주·통신·AI 가치사슬과 SpaceX의 커버리지 — 8단계 전부를 한 회사가 내재화</div>
+<div class="fig-box">
+<svg viewBox="0 0 1000 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="가치사슬 도식">
+  <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="#2563EB"/></marker></defs>
+  <g font-size="13" font-weight="700">
+    <rect x="40" y="46" width="205" height="72" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+    <text x="142" y="76" text-anchor="middle" fill="#1E3A8A">① 엔진·기체 제조</text>
+    <text x="142" y="98" text-anchor="middle" fill="#1E3A8A" font-size="11.5" font-weight="400">Raptor·스테인리스 동체</text>
+    <rect x="285" y="46" width="205" height="72" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+    <text x="387" y="76" text-anchor="middle" fill="#1E3A8A">② 발사 서비스</text>
+    <text x="387" y="98" text-anchor="middle" fill="#1E3A8A" font-size="11.5" font-weight="400">F9·Starship·발사장 5기</text>
+    <rect x="530" y="46" width="205" height="72" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+    <text x="632" y="76" text-anchor="middle" fill="#1E3A8A">③ 위성 양산</text>
+    <text x="632" y="98" text-anchor="middle" fill="#1E3A8A" font-size="11.5" font-weight="400">Starlink·Gigasat 팩토리</text>
+    <rect x="775" y="46" width="185" height="72" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+    <text x="867" y="76" text-anchor="middle" fill="#1E3A8A">④ 통신망·스펙트럼</text>
+    <text x="867" y="98" text-anchor="middle" fill="#1E3A8A" font-size="11.5" font-weight="400">레이저 메시·65MHz</text>
+    <rect x="775" y="176" width="185" height="72" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+    <text x="867" y="206" text-anchor="middle" fill="#1E3A8A">⑤ 단말·유통</text>
+    <text x="867" y="228" text-anchor="middle" fill="#1E3A8A" font-size="11.5" font-weight="400">자체 단말·MNO 제휴</text>
+    <rect x="530" y="176" width="205" height="72" rx="10" fill="#F5F3FF" stroke="#7C3AED" stroke-width="2"/>
+    <text x="632" y="206" text-anchor="middle" fill="#5B21B6">⑥ AI 인프라</text>
+    <text x="632" y="228" text-anchor="middle" fill="#5B21B6" font-size="11.5" font-weight="400">Colossus 2GW·Starmind</text>
+    <rect x="285" y="176" width="205" height="72" rx="10" fill="#F5F3FF" stroke="#7C3AED" stroke-width="2"/>
+    <text x="387" y="206" text-anchor="middle" fill="#5B21B6">⑦ AI 모델</text>
+    <text x="387" y="228" text-anchor="middle" fill="#5B21B6" font-size="11.5" font-weight="400">Grok 4.x → 5 (6–10T)</text>
+    <rect x="40" y="176" width="205" height="72" rx="10" fill="#F5F3FF" stroke="#7C3AED" stroke-width="2"/>
+    <text x="142" y="206" text-anchor="middle" fill="#5B21B6">⑧ 배포 플랫폼</text>
+    <text x="142" y="228" text-anchor="middle" fill="#5B21B6" font-size="11.5" font-weight="400">X (수억 사용자 접점)</text>
+  </g>
+  <line x1="245" y1="82" x2="280" y2="82" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar3)"/>
+  <line x1="490" y1="82" x2="525" y2="82" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar3)"/>
+  <line x1="735" y1="82" x2="770" y2="82" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar3)"/>
+  <line x1="867" y1="118" x2="867" y2="171" stroke="#2563EB" stroke-width="2.5" marker-end="url(#ar3)"/>
+  <line x1="770" y1="212" x2="740" y2="212" stroke="#7C3AED" stroke-width="2.5" marker-end="url(#ar3)"/>
+  <line x1="525" y1="212" x2="495" y2="212" stroke="#7C3AED" stroke-width="2.5" marker-end="url(#ar3)"/>
+  <line x1="280" y1="212" x2="250" y2="212" stroke="#7C3AED" stroke-width="2.5" marker-end="url(#ar3)"/>
+  <text x="500" y="292" text-anchor="middle" fill="#4A5568" font-size="12.5">경쟁자들은 단계별 부분 참여: 발사(Blue Origin·중국) · 위성(Amazon Leo) · 스펙트럼(통신사) · AI 인프라(하이퍼스케일러·CoreWeave) · 모델(OpenAI·Anthropic·Google)</text>
+  <text x="500" y="316" text-anchor="middle" fill="#718096" font-size="11.5">8단계 전부를 보유한 것은 SpaceX가 유일 — 단, ⑥⑦⑧은 각 단계 최강자가 아니라 "보유자"라는 점이 Bull/Bear 논쟁의 축</text>
+</svg>
+</div>
+<figcaption>그림 5-1. 가치사슬 커버리지. 파랑 = 우주·통신 스택(각 단계 1위), 보라 = AI 스택(보유하되 단계별 1위는 아님). 회사 공시·본문 데이터로 작도.</figcaption>
+</figure>
+<p>이 수직통합의 경제적 의미는 두 가지다. 첫째, <strong>단계 간 마진이 내부화</strong>된다 — 발사 마진, 위성 제조 마진, 통신 서비스 마진이 한 회사에 쌓이므로 각 단계에서 경쟁자보다 낮은 가격을 쓰고도 그룹 이익을 지킬 수 있다. 둘째, <strong>인접 확장의 한계비용이 낮다</strong> — Starshield(군용)는 Starlink 라인의 파생이고, Starmind는 "V3 위성 버스 + Colossus 노하우 + 발사 용량"의 재조합이다. 인접 확장 경로의 다음 후보는 차량 연결(Cybercab Starlink V5 기본 탑재), 궤도 급유 기반의 심우주 수송, 그리고 Terafab(그라임스 카운티, $168억 공시 필링 — 언론 추정 $200~250억 <span class="bd bd-cfl">상충</span>)을 통한 AI 칩 자급이다.</p>
+
+<h3>5-B. 꿈 분석 — 이 성장 스토리가 주가를 밀어올릴 연료인가 (판정 엔진)</h3>
+
+<p><strong>1) 꿈의 정의 (한 문장):</strong> "지구의 전력·냉각·규제에 갇힌 AI 컴퓨트를, 발사비를 두 자릿수 달러로 부순 유일한 회사가 우주로 옮겨 무한히 확장한다 — 그 길목의 통신·수송료까지 전부 이 회사가 받는다."</p>
+
+<p><strong>2) 꿈의 크기 (자릿수 추정):</strong> 회사 가이던스 기준으로도 이미 거대하다. 2026년 12월 ARR $1,000억 = FY25 매출($187억)의 <strong>5.4배</strong> [파생], 2030년 매출 $1조 = <strong>53배</strong> [파생]. JPM 강세 모델의 2031년 매출 $1.07조·AI 세그먼트 $8,291억은 현재 알파벳 전체 매출을 넘는 규모다. 즉 이 꿈은 "몇십 % 성장"이 아니라 <strong>기업 규모 자체가 한 자릿수→두 자릿수 배로 뛰는 유형</strong>의 스토리이며, 이런 자릿수의 꿈만이 $1.8조 시총에서 추가 상승 여력을 만들 수 있다.</p>
+
+<p><strong>3) 꿈의 신선도 — 판정: 신선(2단계 진입).</strong> 근거: ① 이 내러티브의 핵심 부품(Starmind·첫 어닝콜·ARR 가이던스)이 <strong>발표된 지 1주일</strong>밖에 안 됐다(8/4). ② 뉴스·리서치 커버리지가 개시 국면이다 — 셀사이드 이니시에이션(JPM·Citi·MS 등)이 7월 말~8월 초에 집중됐고, 목표주가 분산($200~300)이 크다는 것 자체가 "시장이 아직 합의에 도달하지 못한 신선한 스토리"의 증거다. ③ 다만 <strong>1차 열광(IPO 직후 $225)은 이미 소진</strong>됐다 — 검색·화제성의 첫 파도는 6월에 지나갔고, 지금은 "숫자로 증명하라"는 2단계 검증 국면이다. 신선도를 갉아먹는 건 시간이 아니라 <strong>실망 이벤트</strong>(F14 실패, ARR 미달)다.</p>
+
+<p><strong>4) 3P 검증 — 층위별로 다르다:</strong></p>
+<ul>
+<li><strong>지상 컴퓨트 임대 확장 — Probable(개연):</strong> 이미 $80B+ 서명 계약과 CoreWeave 완판이라는 시장 증거 존재. 남은 변수는 전력·HBM 공급뿐.</li>
+<li><strong>2030년 매출 $1조 — Plausible(그럴듯):</strong> 경로는 그릴 수 있으나(컴퓨트 5~10GW + Starlink 9,500만 + Mobile), 매년 이중 실행(발사+DC 증설)이 동시에 성공해야 한다.</li>
+<li><strong>궤도 75GW — Possible(가능):</strong> 물리학·경제학의 성립 조건은 확인됐으나(§4-D), 42.9만 기·1.4만 회 발사라는 실행 규모는 아직 어떤 회사도 해본 적 없는 영역.</li>
+</ul>
+
+<p><strong>5) 증거화 일정 — 촉매 캘린더 (꿈을 숫자로 바꾸는 마일스톤):</strong></p>
+<div class="twrap"><table class="wide">
+<caption>표 5-2. 촉매 캘린더 — 향후 18개월, 방향 표시는 기대 충족 시 기준</caption>
+<thead><tr><th>시점</th><th>이벤트</th><th>성격</th><th>확인되는 것</th></tr></thead>
+<tbody>
+<tr><td>2026-08-24</td><td>멤피스 가스터빈 예비적 금지명령 심리</td><td><span class="down">리스크</span></td><td>Colossus 전력의 법적 지속 가능성</td></tr>
+<tr class="hl"><td>2026-08 말</td><td><strong>Starship Flight 14 — 첫 궤도 비행 + 첫 상단(Ship) 타워 캐치</strong></td><td><span class="up">촉매</span></td><td>완전재사용 = 발사비 &lt;$100/kg 경로 = Starmind 전제</td></tr>
+<tr><td>2026-09 초</td><td>Grok 4.7 (2.1T) 공개</td><td><span class="up">촉매</span></td><td>모델 경쟁력 반등 여부 (벤치마크)</td></tr>
+<tr><td>2026-09-30</td><td>Google 계약 GPU 인도 기한</td><td><span class="down">리스크</span></td><td>미인도 시 $300억 계약 해지권 발동 가능</td></tr>
+<tr><td>3Q26</td><td>Cursor $600억 인수 규제 승인</td><td><span class="up">촉매</span></td><td>ARR $100B 목표의 전제 조건</td></tr>
+<tr><td>2026-10</td><td>미공개 고객 컴퓨트 개시($11.2억/월) · Google 임대 개시 · 락업 트랜치</td><td>혼합</td><td>AI 매출 월 $2B→$3B+ 점프</td></tr>
+<tr class="hl"><td>2026-12</td><td><strong>ARR $1,000억 목표 검증 시점</strong></td><td><span class="up">촉매</span></td><td>경영진 가이던스 신뢰도의 첫 대형 시험</td></tr>
+<tr><td>2027 초</td><td>Gigasat Factory 프로토 시험 · Grok 5</td><td><span class="up">촉매</span></td><td>궤도 DC 양산 체계 · AGI 내러티브</td></tr>
+<tr><td>2027 중</td><td>S&P500 편입 요건 충족 검토 개시(GAAP 흑자 + 12개월 시즈닝)</td><td><span class="up">촉매</span></td><td>패시브 수급의 다음 단계</td></tr>
+<tr><td>2027-11</td><td>EchoStar 스펙트럼 클로징</td><td><span class="up">촉매</span></td><td>Starlink Mobile 전용망 개시(2027말)의 관문</td></tr>
+<tr><td>2027</td><td><strong>Starmind 첫 발사</strong> · Google Suncatcher 첫 TPU 위성</td><td><span class="up">촉매</span></td><td>궤도 컴퓨트의 실물 검증 — 테마 전체의 리트머스</td></tr>
+<tr><td>2028</td><td>Golden Dome IOC · Starship 연 수백 회 체제 목표</td><td><span class="up">촉매</span></td><td>국방 백로그의 매출 전환</td></tr>
+</tbody></table></div>
+
+<p><strong>6) 선례 비교 — 같은 유형의 꿈이 만든 리레이팅:</strong></p>
+<div class="twrap"><table class="wide">
+<caption>표 5-3. 리레이팅 선례 — "인프라 독점 + 신시장 창조" 서사의 주가 이력</caption>
+<thead><tr><th>선례</th><th>꿈의 유형</th><th>리레이팅 결과</th><th>SPCX에의 시사점</th></tr></thead>
+<tbody>
+<tr><td>NVIDIA (2023–24)</td><td>"AI의 곡괭이" — 컴퓨트 인프라 독점</td><td>2023년 주가 +239%, 데이터센터 매출 연 3배 — <strong>실적이 꿈을 따라와 멀티플이 오히려 소화됨</strong></td><td>최선의 경로: 계약($80B+)이 실제 매출로 찍히면 같은 "성장으로 배수 소화" 패턴 가능 (§10 배수 소화 차트)</td></tr>
+<tr><td>Tesla (2020)</td><td>자동차→에너지·AI 플랫폼 재정의 + 지수 편입</td><td>연간 +743%, S&P 편입 수급이 증폭 — 이후 수년간 박스권으로 소화</td><td>수급(지수 편입)과 서사가 결합할 때의 폭발력과, 그 뒤의 긴 소화 기간 둘 다의 선례</td></tr>
+<tr><td>Palantir (2024–25)</td><td>정부 신뢰 자산의 AI 재평가</td><td>2024년 +340%, P/S 수십 배 안착 — 시장이 "희소 자산"에 영구 프리미엄 허용</td><td>Starshield·독점 발사가 같은 "국가 안보 희소 자산" 프리미엄을 받을 근거</td></tr>
+<tr><td>GLP-1 (LLY·NVO, 2023–24)</td><td>단일 기술이 산업 TAM 자체를 재정의</td><td>대형주가 2~3배 — 단, 경쟁 데이터 하나에 조정 반복</td><td>"TAM 재정의형 꿈"의 변동성 관리 교훈: 촉매 하나하나가 양방향 폭탄</td></tr>
+</tbody></table></div>
+
+<p><strong>7) 가격 반영도 (§10 교차):</strong> 현재가 $138.74 중 <strong>컨센서스 경로의 DCF 가치는 약 $30(약 22%)</strong>에 불과하고, 나머지 약 $109(78%)는 강세 경로 실현 + 13년 CAP라는 "꿈의 몫"이다 [파생]. 즉 이 꿈은 <strong>공짜 옵션이 아니라 이미 비싸게 팔린 옵션</strong>이다 — 다만 락업·조정으로 고점 대비 그 프리미엄의 38%가 빠진 상태라, "옵션이 세일 중"이라는 강세 반론도 성립한다(§11).</p>
+
+<p><strong>8) 꿈의 사망 조건 — 구체적으로:</strong> ① Flight 14~15 연속 실패 또는 상단 캐치의 장기 표류(궤도 DC 전제 붕괴), ② Anthropic·Google 중 한 곳의 해지권 행사 또는 갱신 거부(임대 모델의 신뢰 훼손 — 특히 9/30 Google 인도 기한), ③ 12월 ARR이 $100B에 크게 미달(가이던스 신뢰 상실 — 이 경영진 특유의 공격적 목표 문화가 역풍으로), ④ HBM4·전력 공급 차질로 2027년 5~10GW 증설 미달, ⑤ 멤피스 소송에서 터빈 가동 중단 명령, ⑥ AI capex 사이클 자체의 냉각(하이퍼스케일러 capex 가이던스 하향이 선행 지표), ⑦ 머스크 유고 또는 Tesla 합병 추진 같은 지배구조 이벤트.</p>
+
+<p><strong>9) 자금 흐름 — 유입 중이며, 이 종목이 곧 테마의 대표주:</strong> IPO 수요 $1,500억(2배 초과청약)·사상 최대 리테일 배정(30%), 나스닥100 조기 편입(7/7)으로 패시브 ~$40억+, 러셀 합산 기계적 매수 추정 $220~270억. 하락 구간에서 공매도가 $155억의 페이퍼 이익을 쌓았고 8/6 풋/콜 1.42까지 몰렸던 포지셔닝은 <strong>8/6 락업 당일 +6.1%·8/7 +15.8%의 역행 반등(락업 소화 확인)으로 숏커버 연료로 전환</strong>됐다 — 7/29 기준 공매도 잔량 2.19억 주(S3, 당시 플로트의 ~34%)가 그 연료의 크기다. 테마 내 위상: 우주·궤도AI 테마에서 SPCX는 2등주가 아니라 <strong>대표주 그 자체</strong>이며, 2등주(RKLB $500억, ASTS $205억)와의 시총 격차는 37~89배 [파생] — 테마 자금이 커질수록 대표주로 집중되는 구조다. S&P500 편입은 요건상 최소 2027년 중반 이후로, 이는 소진되지 않은 수급 카드로 남아 있다.</p>
+
+<div class="co co-key"><div class="ct">5-B 종합 판정 → §15-A의 직접 입력</div>
+<p>신선도 <strong>신선(2단계)</strong> · 3P <strong>핵심 축은 Probable, 확장 축은 Plausible~Possible</strong> · 증거화 일정 <strong>향후 5개월 촉매 밀집</strong> · 자금 흐름 <strong>유입 재개 + 대표주 지위</strong>. 네 요소 모두 "이야기가 커지는 구간"을 가리킨다. 단 7)에서 보듯 가격은 이미 꿈의 상당분을 선반영했다 — 이것이 §15의 "1차 긍정 + 2차 경고" 이중 결론의 근거다.</p></div>
+</section>
+
+<section id="s6">
+<h2><span class="no">6</span>경쟁 우위 분석 — 해자는 우주에 있고, 가격은 AI에 있다</h2>
+
+<h3>6-1. 포터 5 Forces — 세그먼트별로 완전히 다른 경쟁 구도</h3>
+<p>SpaceX를 하나의 경쟁 환경으로 평가하는 것은 오류다. 발사·위성통신·AI 세 사업은 각각 전혀 다른 산업 구조 안에 있으며, 5 Forces 평가도 세그먼트별로 갈라진다.</p>
+
+<div class="twrap"><table class="wide">
+<tr><th>경쟁 압력</th><th>Space (발사)</th><th>Connectivity (Starlink)</th><th>AI (xAI·컴퓨트)</th></tr>
+<tr><td>신규 진입 위협</td><td class="up">매우 낮음 — 재사용 학습곡선(부스터 20회+ 재비행), 발사장·규제(FAA/ITAR), 실패 자본이 진입장벽. 중국 CALT가 부스터 해상 회수(2026-07-10, 그물 방식)에 성공했으나 재비행·상업 케이던스까지 격차 존재</td><td class="up">낮음 — 위성 1.2만기 배치엔 자체 발사 능력이 사실상 전제. Amazon Leo도 발사의 상당분을 외부(경쟁사 포함)에 의존</td><td class="down">높음 — 자본만 있으면 GPU 클러스터 건설 가능. 하이퍼스케일러·네오클라우드·국부펀드가 모두 진입 중</td></tr>
+<tr><td>공급자 교섭력</td><td>낮음 — 로켓의 ~85%를 수직통합 내재화 [추정: 공개 인터뷰 기반]</td><td>낮음 — 위성·단말 자체 설계·생산</td><td class="down">매우 높음 — GPU는 NVIDIA 단일 공급, HBM4는 SK하이닉스 60~70% 점유. 가격 결정력이 공급자에 있음</td></tr>
+<tr><td>구매자 교섭력</td><td>중간 — NASA·USSF는 대형 고객이나 대안 부재(NSSL Lane2 28/54 임무 수주)</td><td class="up">매우 낮음 — 1,200만 가입자로 분산, 오지에선 대체재 없음</td><td class="down">매우 높음 — 컴퓨트 매출의 대부분이 Anthropic·Google 2사, 양쪽 모두 90일 해지권 보유</td></tr>
+<tr><td>대체재 위협</td><td>낮음 — 궤도 진입에 로켓 외 대안 없음</td><td>중간 — 도시권 파이버·5G가 대체재이나, Starlink의 주전장(오지·해상·항공·전장)에선 무대체</td><td>중간 — 지상 DC 간 대체는 쉬우나, xAI 입장에선 자체 칩(Terafab)으로 NVIDIA 대체를 역시도 중</td></tr>
+<tr><td>기존 경쟁 강도</td><td class="up">낮음 — 2025년 전세계 상업 발사 질량의 80%+ 점유. 경쟁자(New Glenn)는 부스터 회수엔 성공했으나 상단 실패·발사장 폭발로 이탈(재건 1년+ 전망 [상충])</td><td>중간·상승 — Amazon Leo 초기 서비스 개시(7/2), ASTS의 D2C 협공. 다만 활성 위성 수 기준 SpaceX가 전세계의 65~75% [상충]</td><td class="down">매우 높음 — Stargate $500B, Google capex $175B+, Meta Hyperion 등 역사상 최대 자본 경쟁</td></tr>
+<tr><td><strong>종합</strong></td><td class="up"><strong>독점적 (5개 압력 모두 유리)</strong></td><td class="up"><strong>매우 유리 (선점 해자)</strong></td><td class="down"><strong>불리 (자본 소모전)</strong></td></tr>
+</table></div>
+<p class="fig-t">표 6-1. 세그먼트별 5 Forces 평가. 출처: 본 보고서 종합(각 셀 근거는 §3~§5 참조)</p>
+
+<h3>6-2. 차별화인가 원가 우위인가 — 회계로는 아직, 단위 경제학으로는 명확</h3>
+<p>모부신 방법론의 표준 판별(NOPAT 마진 vs 투자자본 회전율)은 이 회사에 아직 적용하기 어렵다. 전사 GAAP 영업이익이 2Q26 −$143M으로 손익분기 부근이고, 투자자본이 capex 폭증으로 매 분기 팽창해 회전율이 왜곡되기 때문이다. 대신 단위 경제학으로 판별하면 결론은 명확하다. SpaceX의 근원 해자는 <strong>원가 우위(cost advantage)</strong>다. kg당 발사 원가 $2,720(F9)은 Shuttle의 1/20이며, 이 원가 우위가 Starlink라는 <strong>차별화(유일한 글로벌 LEO 광대역)</strong>를 만들어냈다. 즉 원가 우위가 상류에 있고, 그 위에서 차별화 사업이 자라는 이중 구조다. Starlink의 부문 영업이익률 39%(2Q26)는 이 차별화가 가격 결정력으로 전환됐다는 증거다.</p>
+
+<h3>6-3. 해자 인벤토리 — 유형별 강도와 지속성</h3>
+<div class="twrap"><table class="wide">
+<tr><th>해자 유형</th><th>구체 내용</th><th>강도 판정</th><th>지속성·침식 경로</th></tr>
+<tr><td>규모·원가 (발사)</td><td>재사용 학습곡선 누적(2025년 F9 165회 = 나머지 세계 합계 초과), 발사 인프라 5개 타워, kg당 원가 경쟁사 대비 약 1/3~1/10 [추정: 공개 가격표 기반]</td><td class="up">광폭(Wide)</td><td>Starship 성공 시 자기 강화(&lt;$100/kg). 실패해도 F9 독점 유지. 침식 후보: 중국 CALT(첫 회수 기준 격차 ~10.6년 [파생: 2015-12 vs 2026-07], 단 추격 가속), Blue Origin(회수 검증·발사장 재건 중 [상충: 복귀 시점])</td></tr>
+<tr><td>네트워크 효과 (Starlink)</td><td>위성 수→용량→가입자→현금→위성 증설의 플라이휠. 활성 위성 10,882기 = 전세계 65~75% [상충: 집계 기준], 가입자 1,200만</td><td class="up">광폭(Wide)</td><td>궤도 슬롯·주파수는 유한자원 — 선점 자체가 장벽. Amazon Leo가 FCC 배치 기한 미달로 2년 연장 신청한 것이 격차의 증거</td></tr>
+<tr><td>무형자산 (스펙트럼·라이선스)</td><td>EchoStar AWS-4/H블록 65MHz $19.6B 인수(FCC 승인 2026-05-12), 각국 통신 라이선스, ITAR 체제 내 지위</td><td>중간~광폭</td><td>스펙트럼은 영구성 높음. 단 클로징 2027-11까지 규제 조건 잔존</td></tr>
+<tr><td>전환비용 (국방)</td><td>Starshield 누적 계약 &gt;$9.36B, PLEO 물량 ~97% 배정, NSSL Lane2 28/54 임무 — 국가 안보 인프라에 통합</td><td>중간</td><td>정부의 멀티벤더 정책(SB-AMTI에 Rocket Lab 등 병행 발주)이 상한을 그음. 그러나 대체엔 수년 소요</td></tr>
+<tr><td>AI 세그먼트</td><td>Colossus 건설 속도(122일/300MW, 세계 최초 단일 GW급), 에너지-데이터센터 수직통합</td><td class="down">좁음(Narrow)~없음</td><td>컴퓨트는 본질적으로 커머디티. 건설 속도 우위는 실행 우위이지 구조적 해자가 아님 — 경쟁사도 자본으로 복제 가능. 90일 해지 조항이 전환비용 부재의 증거</td></tr>
+</table></div>
+<p class="fig-t">표 6-2. 해자 인벤토리. 강도 판정은 본 보고서 종합 [추정]</p>
+
+<div class="co co-warn"><div class="ct">이 종목 구조의 핵심 역설</div>
+<p>광폭 해자(발사·Starlink)는 현재 매출의 대부분을 만들지만 시가총액 $1.83조를 정당화하기엔 작고, 시가총액을 정당화하는 사업(AI 컴퓨트)에는 해자가 거의 없다. <strong>해자와 밸류에이션의 소재지가 다르다</strong>는 것 — 이것이 §10 CAP 분석에서 "내재 CAP 13년"이 과열로 판정되는 구조적 이유이자, §12 Bear Case의 뿌리다. 반대로 Starmind(궤도 컴퓨트)가 성립하면 발사 해자가 AI 세그먼트로 이식되며 이 역설이 해소된다 — §11 Bull Case의 핵심 논거.</p></div>
+</section>
+
+<section id="s7">
+<h2><span class="no">7</span>피어그룹 비교 — 비교 대상이 없다는 것 자체가 리스크이자 프리미엄</h2>
+
+<p>SpaceX는 발사(순수 비교: Rocket Lab), 위성통신(ASTS, Eutelsat-OneWeb), AI 클라우드(CoreWeave, 하이퍼스케일러), 프런티어 AI 랩(비상장 OpenAI·Anthropic)을 한 몸에 담고 있어 완전한 피어가 존재하지 않는다. 아래는 사업 축별 최근접 상장 피어와의 재무·밸류에이션 비교다. 기술 스펙 비교는 §4-C에서 완료했으므로 여기서는 재무·밸류에이션만 다룬다.</p>
+
+<div class="twrap"><table class="wide">
+<tr><th>기업 (티커)</th><th>겹치는 사업 축</th><th>시가총액</th><th>매출 (기준)</th><th>EV/매출 [파생]</th><th>성장률</th><th>수익성</th></tr>
+<tr class="hl"><td><strong>SpaceX (SPCX)</strong></td><td>—</td><td class="num">$1,826B</td><td class="num">FY26E $47.1B (JPM)</td><td class="num">~37.8× <span class="bd bd-drv">파생</span></td><td class="num">+152% (26E)</td><td class="num">GAAP OI 손익분기 부근, adjEBITDA 마진 45%</td></tr>
+<tr><td>Rocket Lab (RKLB)</td><td>발사·우주 시스템</td><td class="num">~$50B</td><td class="num">백로그 $2.36B (+137%)</td><td class="num">[미확인]</td><td class="num">고성장</td><td class="num">적자 (Neutron 개발 투자기)</td></tr>
+<tr><td>AST SpaceMobile (ASTS)</td><td>D2C 위성통신</td><td class="num">~$20.5B</td><td class="num">FY26 가이드 $150~200M</td><td class="num">~105~135× <span class="bd bd-drv">파생: 시총/가이드 중간값, 순부채 미조정</span></td><td class="num">초기 상업화</td><td class="num">적자</td></tr>
+<tr><td>CoreWeave (CRWV)</td><td>AI 컴퓨트 임대</td><td class="num">~$47.5B</td><td class="num">계약 전력 1.7GW 완판</td><td class="num">[미확인]</td><td class="num">고성장</td><td class="num">EBITDA 흑자·순손실, 고레버리지</td></tr>
+<tr><td>NVIDIA (NVDA·참조)</td><td>AI 인프라 대장주</td><td class="num">~$5,350B (8/7)</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">업계 최고 마진</td></tr>
+</table></div>
+<p class="fig-t">표 7-1. 상장 피어 비교 (2026-08 기준). EV/매출은 순현금 $45B 반영한 EV $1,781B ÷ JPM FY26E 매출 [파생]. 빈 셀은 검색으로 확정 실패한 값</p>
+
+<h3>7-1. 배수의 시간 구조 — "지금은 비싸고, 2028년엔 싸다"는 JPM 논리의 해부</h3>
+<p>JPM이 산출한 배수 경로(2Q 실적 시점, 주가 $125.33 기준)는 FY26E EV/매출 33.8×, EV/EBITDA 66.8×, 조정 P/E 134.9× → FY27E EV/매출 13.9×, P/E 36.3× → <strong>FY28E P/E 17.1×</strong>다. 현재가 $138.74 기준으로 재계산하면 FY26E EV/매출 약 37.8×, FY27E 약 14.5×, FY28E 약 9.0× [파생: EV $1,781B ÷ 47.1/122.9/197.6]. JPM은 여기에 "Mag7+팔란티어의 2028E P/E 중간값 ~20×"를 대며 <strong>"2028년 이익 기준으로는 Mag7보다 싸다"</strong>는 목표가 논리($240 = 34× × 2028E GAAP EPS $7.02)를 세웠다.</p>
+<p>이 논리의 성립 조건을 분해하면: ① 2028년 매출 $197.6B(2025년 대비 10.6배)과 ② GAAP EPS $7.02(현재 −$0.09에서 흑자 대전환)이 모두 실현되어야 한다. 즉 <strong>배수는 싸 보이게 만들 수 있지만, 분모(이익 추정)의 실현 확률이 전부</strong>인 구조다. §10에서 보듯 이 경로는 사실상 회사 가이던스(BULL) 경로이며, 제3자 컨센서스(2029년 매출 $207B, FactSet)는 훨씬 보수적이다 — 컨센서스와 JPM의 2029년 격차만 $100B가 넘는다 [상충: FactSet ~$207B vs Visible Alpha $232B vs JPM 궤적 ~$311B].</p>
+
+<h3>7-2. 우위·열위 요약</h3>
+<div class="twrap"><table>
+<tr><th>축</th><th>SpaceX 우위</th><th>SpaceX 열위</th></tr>
+<tr><td>vs RKLB</td><td>발사 규모 165회 vs 소형발사 중심, 질량 점유 80%+</td><td>RKLB는 순수 우주 노출 — AI 리스크 없음. 국방 멀티벤더 정책의 수혜자(SB-AMTI 동시 수주)</td></tr>
+<tr><td>vs ASTS</td><td>D2C에서 위성 수·자체 발사·EchoStar 스펙트럼 모두 우위 (§4-C 표 4-5: 용량 격차 약 45배)</td><td>ASTS는 기존 스마트폰 완전 호환 브로드밴드 선행 — 통신사 제휴 60곳</td></tr>
+<tr><td>vs CRWV</td><td>에너지-DC-모델 수직통합, 자본력(현금 $100B vs 고레버리지)</td><td>CRWV는 고객이 하이퍼스케일러로 분산·장기계약 — SpaceX AI 매출은 2사 집중+90일 해지</td></tr>
+<tr><td>vs 하이퍼스케일러</td><td>건설 속도(GW급 최초 가동), 궤도 확장 옵션 독점</td><td>클라우드 생태계·기업 고객 기반·소프트웨어 마진 부재. 자본 조달력 열위(그들은 영업현금으로 capex 충당)</td></tr>
+</table></div>
+<p class="fig-t">표 7-2. 축별 상대 우위·열위 종합</p>
+
+<div class="co co-key"><div class="ct">피어 비교의 투자 함의</div>
+<p>"비교 대상 없음"은 양날의 검이다. 희소성 프리미엄(우주+AI 동시 노출은 이 종목뿐)이 수급을 끌어들이는 동시에, 밸류에이션 앵커 부재가 변동성을 키운다 — 상장 후 8주간 고점 대비 −53% 급락과 +25% 반등이 공존한 이유. 테마 대표주 지위(시총이 2등주 RKLB의 37배)는 테마 자금 유입 시 집중 수혜 구조를 만든다 [파생: 1,826/50].</p></div>
+</section>
+
+<section id="s8">
+<h2><span class="no">8</span>시장 내러티브 및 자금 선호도 — 8주 만에 유포리아·투매·복원을 모두 겪은 주식</h2>
+
+<h3>8-1. 주가 궤적과 이벤트 — 상장 후 60일의 재구성</h3>
+<div class="fig-box">
+<div class="fig-t">그림 8-1. SPCX 주가 추이와 핵심 이벤트 (2026-06-12 ~ 08-11) — 유포리아(②)에서 투매(⑦)를 거쳐 락업 소화·숏커버 랠리(⑨)까지</div>
+<svg viewBox="0 0 1000 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SPCX 주가 추이와 9개 이벤트 마커">
+  <!-- gridlines -->
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="70" y1="360" x2="960" y2="360"/><line x1="70" y1="284" x2="960" y2="284"/>
+    <line x1="70" y1="208" x2="960" y2="208"/><line x1="70" y1="131" x2="960" y2="131"/>
+    <line x1="70" y1="55" x2="960" y2="55"/>
+  </g>
+  <g font-size="11" fill="#718096">
+    <text x="62" y="364" text-anchor="end">$100</text><text x="62" y="288" text-anchor="end">$130</text>
+    <text x="62" y="212" text-anchor="end">$160</text><text x="62" y="135" text-anchor="end">$190</text>
+    <text x="62" y="59" text-anchor="end">$220</text>
+    <text x="70" y="385" text-anchor="middle">6/12</text><text x="337" y="385" text-anchor="middle">6/30</text>
+    <text x="559" y="385" text-anchor="middle">7/15</text><text x="797" y="385" text-anchor="middle">7/31</text>
+    <text x="950" y="385" text-anchor="middle">8/11</text>
+  </g>
+  <!-- IPO price dashed -->
+  <line x1="70" y1="271" x2="960" y2="271" stroke="#64748B" stroke-width="1" stroke-dasharray="5 4"/>
+  <text x="200" y="265" font-size="11" fill="#64748B" text-anchor="start">공모가 $135</text>
+  <!-- price path (일별 재구성, 일부 구간 근사) -->
+  <polyline fill="none" stroke="#2563EB" stroke-width="2.5"
+    points="70,205 129,41 189,119 293,162 441,187 559,281 589,299 693,314 797,326 856,300 867,343 880,326 894,280 936,274 950,265"/>
+  <!-- ATL tick -->
+  <line x1="867" y1="343" x2="867" y2="352" stroke="#DC2626" stroke-width="2"/>
+  <text x="826" y="350" font-size="10.5" fill="#DC2626" text-anchor="end">장중 $104.83</text>
+  <!-- markers -->
+  <g font-size="11" font-weight="800" text-anchor="middle">
+    <circle cx="70" cy="205" r="11" fill="#0F2B46"/><text x="70" y="209" fill="#FFFFFF">1</text>
+    <circle cx="129" cy="41" r="11" fill="#0F2B46"/><text x="129" y="45" fill="#FFFFFF">2</text>
+    <circle cx="441" cy="187" r="11" fill="#0F2B46"/><text x="441" y="191" fill="#FFFFFF">3</text>
+    <circle cx="589" cy="299" r="11" fill="#0F2B46"/><text x="589" y="303" fill="#FFFFFF">4</text>
+    <circle cx="693" cy="314" r="11" fill="#0F2B46"/><text x="693" y="318" fill="#FFFFFF">5</text>
+    <circle cx="848" cy="288" r="11" fill="#0F2B46"/><text x="848" y="292" fill="#FFFFFF">6</text>
+    <circle cx="864" cy="366" r="11" fill="#DC2626"/><text x="864" y="370" fill="#FFFFFF">7</text>
+    <circle cx="889" cy="349" r="11" fill="#0F2B46"/><text x="889" y="353" fill="#FFFFFF">8</text>
+    <circle cx="897" cy="261" r="11" fill="#047857"/><text x="897" y="265" fill="#FFFFFF">9</text>
+  </g>
+  <text x="500" y="20" font-size="12" fill="#4A5568" text-anchor="middle">종가 기준 재구성 [파생: 보도 종합 — 8/4~7·8/11은 보도 확정치, 6월 하순~7월·8/10은 근사] · 8/11 종가 $138.74</text>
+</svg>
+<table class="evt">
+<tr><td class="n"><span>1</span></td><td>6/12</td><td>IPO — 공모가 $135, 조달 ~$86B(그린슈 포함)+채권 $25B. 첫날 종가 $160.95</td><td class="up">+19.2%</td></tr>
+<tr><td class="n"><span>2</span></td><td>6/16</td><td>사상 최고가 $225.64 — 시총 ~$2.9조, 세계 시총 5위권 진입. 리테일 매수 광풍 정점</td><td class="up">ATH</td></tr>
+<tr><td class="n"><span>3</span></td><td>7/7</td><td>나스닥100 조기 편입(fast-entry) — 패시브 자금 ~$40억+ 기계적 유입</td><td class="up">수급+</td></tr>
+<tr><td class="n"><span>4</span></td><td>7/17</td><td>밸류에이션 부담·차익실현 가속, $123.99 (-5.4%) — 공모가 하회 시작</td><td class="down">-5.4%</td></tr>
+<tr><td class="n"><span>5</span></td><td>7/24</td><td>Starship Flight 13 성공 — 상단 연착수·히트실드 데이터 확보. 주가 반응은 제한적(악재 국면에 묻힘)</td><td>중립</td></tr>
+<tr><td class="n"><span>6</span></td><td>8/4</td><td>2Q26 첫 실적(매출 +92%) + Starmind 궤도 데이터센터 발표 → $125.33</td><td class="up">+9.4%</td></tr>
+<tr><td class="n"><span>7</span></td><td>8/5</td><td>차익실현·락업 공포 급습 — 종가 $108.27(종가 기준 사상 최저, 상장 후 2번째 큰 낙폭). 장중 $104.83 최저치 기록 [상충: 발생 시점 8/5 장중 유력 vs 일부 집계 8/6]</td><td class="down">-13.6%</td></tr>
+<tr><td class="n"><span>8</span></td><td>8/6</td><td>1차 락업 해제 911.5M주(~$1,000억) — 공포 정점에서 역행 상승 마감 $114.92. 플로트 4.9%→11.8%</td><td class="up">+6.1%</td></tr>
+<tr><td class="n"><span>9</span></td><td>8/7~11</td><td>숏커버 폭발 — 8/7 하루 +15.8% $133.11(거래량 2.37억주 = 평균의 1.9배), 8/10 장중 공모가 회복, 8/11 $138.74. 저점 대비 +32%</td><td class="up">+32%</td></tr>
+</table>
+<p class="fig-t">출처: 공개 보도 종합 재구성 [파생·일부 근사]. 6월 하순~7월 중순 곡선은 시가·종가 보도 부재 구간을 근사 연결</p>
+</div>
+
+<h3>8-2. 시장이 이 주식에 붙인 세 겹의 스토리</h3>
+<p>현재 SPCX의 프리미엄은 단일 내러티브가 아니라 세 층위의 스토리가 포개진 결과다. 각 층의 소진도가 다르다는 점이 핵심이다.</p>
+<div class="twrap"><table>
+<tr><th>층위</th><th>스토리</th><th>주요 소비 주체</th><th>신선도 판정</th></tr>
+<tr><td>L1. 우주 독점</td><td>"발사의 80%를 가진 우주 인프라 독점 기업" — 상장 전부터 10년 이상 유통된 이야기</td><td>기관·인덱스</td><td>소진 단계 — 이 층만으론 리레이팅 불가. 단 멀티플 하단을 지지</td></tr>
+<tr><td>L2. AI 인프라 공급자</td><td>"GW급 데이터센터를 세계에서 가장 빨리 짓고, $80B+ 커밋을 확보한 컴퓨트 공급자" — 2026년 상장 서사의 본체</td><td>성장주 펀드·리테일</td><td class="up">신선 — 2Q 첫 실적(+92%)로 검증 1라운드 통과. 12월 ARR $100B이 2라운드</td></tr>
+<tr><td>L3. 궤도 컴퓨트 문명</td><td>"전력 병목을 우주 태양광으로 우회하는 인류 컴퓨트의 차기 단계" — 8/4 Starmind 발표로 점화</td><td>테마·내러티브 트레이더</td><td class="up">매우 신선 — 발표 3주차. 소비 시작 단계이며 증거화(2027 프로토)까지 상상력 구간 지속</td></tr>
+</table></div>
+<p class="fig-t">표 8-1. 내러티브 3층 구조와 소진도. §5-B 꿈 분석의 신선도 판정과 정합</p>
+
+<h3>8-3. 수급 — 기계적 매수, 락업 오버행, 숏커버의 삼파전</h3>
+<p><strong>유입 요인:</strong> IPO 수요 약 $1,500억(2배 초과청약)에 사상 최대 리테일 배정(30%)으로 출발했고, 나스닥100 조기 편입(7/7)이 ~$40억+, 러셀 지수군 합산으로 $220~270억의 기계적 매수를 만들었다. S&P500 편입은 12개월 시즈닝+GAAP 흑자 요건으로 <strong>최소 2027년 중반 이후</strong> — 아직 소진되지 않은 수급 카드다. MS의 Adam Jonas는 락업 물량 ~$1,000억을 "세대적 복리자산 매수 기회"로 규정하며 PT $300을 제시했다.</p>
+<p><strong>유출·압박 요인:</strong> 락업 스케줄이 연말까지 계단식으로 이어진다. 공매도는 하락 구간에서 $155억의 페이퍼 이익을 쌓았고, 8/6 만기 풋/콜 비율이 1.42까지 치솟았다 — 이 극단 포지셔닝(공매도 잔량 2.19억 주, 7/29 S3 기준)이 8/7 +15.8% 급등에서 숏커버 연료로 역전됐다.</p>
+<div class="twrap"><table>
+<tr><th>시점</th><th>트랜치 (풀 4,557.5M주 대비)</th><th>물량</th><th>비고</th></tr>
+<tr><td>8/6 (완료)</td><td>2Q 실적 +2거래일 — 20%</td><td class="num">911.5M주 (~$1,000억)</td><td>플로트 639M의 +143%. 당일 +6.1% 역행 상승 마감 — 소화 확인</td></tr>
+<tr class="hl"><td>8/12 (금일)</td><td>수정 투자설명서 +70일 — 7%</td><td class="num">~319M주</td><td>2차 — 본 보고서 개정일 당일. 장중 소폭 약세 관찰</td></tr>
+<tr><td>~9/1 → 10월 하순</td><td>격주 7% × 5회 [추정: 20일 간격]</td><td class="num">319M × 5 = ~1,595M주</td><td>"点滴식" 공급 — 단일 절벽 대신 상시 오버행</td></tr>
+<tr><td>3Q 실적 +2거래일 (10월 말~11월 초 [추정])</td><td>실적 트리거 — 28%</td><td class="num">~1,276M주</td><td><strong>최대 단일 이벤트</strong> — 실적 발표와 동시 도래</td></tr>
+<tr><td>12/8</td><td>180일 백스톱 만기 — 잔여 10%</td><td class="num">~456M주</td><td>가격 트리거(공모가 +30%, $175.50를 10거래일 중 5일) 미충족분의 이월</td></tr>
+<tr><td>2027-06-12</td><td>Musk 366일 락 (조기해제 조항 없음)</td><td class="num">6,400M주 (옵션 포함)</td><td>최대 단일 오버행이자 그때까지의 이해관계 정렬 장치. 별도 연장 투자자 그룹 ~1.6B주도 2027년 [파생]</td></tr>
+</table></div>
+<p class="fig-t">표 8-2. 락업 해제 전체 스케줄 [파생: 424B4 트랜치 비율(20%·10%·7%×6·28%) × 풀 4,557.5M주 = 911.5÷0.20]. 격주 일자·3Q 시점은 [추정], 나머지 일자·비율은 공시 기반 보도 확정</p>
+
+<h3>8-4. 락업 오버행 심층 — 물량 산식, 선례, 시나리오</h3>
+<p>이 종목에서 락업이 1급 변수인 이유는 물량의 절대 규모가 아니라 <strong>출발점의 왜소함</strong>이다. IPO는 전체 13,163M주의 4.9%(639M)만 유통시켰고, 표 8-2의 사다리가 모두 소화되면 12개월 뒤 유통 가능 주식은 약 11,600M주 — <strong>18배</strong>가 된다 [파생: (639+4,557.5+6,400)÷639]. 시가총액 세계 5위권 기업이 소형주의 수급 구조로 거래되고 있다는 뜻이며, 이것이 §8-1에서 본 ±15% 일중 변동성의 구조적 원인이다.</p>
+
+<div class="fig">
+<p class="fig-t"><strong>그림 8-2. 락업 해제 사다리 — 12개월 안에 유통 가능 주식 4.9% → 88%</strong> (막대: 트랜치 물량, 선: 누적 유통 가능 비율)</p>
+<svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="락업 해제 사다리">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="90" y1="320" x2="950" y2="320"/><line x1="90" y1="240" x2="950" y2="240"/>
+    <line x1="90" y1="160" x2="950" y2="160"/><line x1="90" y1="80" x2="950" y2="80"/>
+  </g>
+  <g font-size="11" fill="#718096">
+    <text x="82" y="324" text-anchor="end">0</text><text x="82" y="244" text-anchor="end">2B주</text>
+    <text x="82" y="164" text-anchor="end">4B주</text><text x="82" y="84" text-anchor="end">6B주</text>
+    <text x="958" y="324" text-anchor="start" fill="#D97706">0%</text><text x="958" y="192" text-anchor="start" fill="#D97706">50%</text><text x="958" y="64" text-anchor="start" fill="#D97706">100%</text>
+  </g>
+  <g>
+    <rect x="122" y="283.5" width="56" height="36.5" fill="#64748B" opacity="0.9"/>
+    <rect x="242" y="307.2" width="56" height="12.8" fill="#64748B" opacity="0.9"/>
+    <rect x="362" y="256.2" width="56" height="63.8" fill="#2563EB" opacity="0.9"/>
+    <rect x="482" y="269.0" width="56" height="51.0" fill="#2563EB" opacity="0.9"/>
+    <rect x="602" y="301.8" width="56" height="18.2" fill="#2563EB" opacity="0.9"/>
+    <rect x="792" y="64.0" width="56" height="256.0" fill="#7C3AED" opacity="0.9"/>
+  </g>
+  <line x1="715" y1="60" x2="715" y2="330" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="715" y="52" font-size="11" fill="#94A3B8" text-anchor="middle">…2027…</text>
+  <polyline fill="none" stroke="#D97706" stroke-width="2.5" points="95,307.3 150,289.3 270,283.1 390,251.6 510,226.4 630,217.3 820,90.9"/>
+  <g fill="#D97706"><circle cx="150" cy="289.3" r="4"/><circle cx="270" cy="283.1" r="4"/><circle cx="390" cy="251.6" r="4"/><circle cx="510" cy="226.4" r="4"/><circle cx="630" cy="217.3" r="4"/><circle cx="820" cy="90.9" r="4"/></g>
+  <g font-size="11" font-weight="700" fill="#1A202C" text-anchor="middle">
+    <text x="150" y="277">911.5M</text><text x="270" y="301">319M</text><text x="390" y="250">1,595M</text>
+    <text x="510" y="263">1,276M</text><text x="630" y="295">456M</text><text x="820" y="58">6,400M</text>
+  </g>
+  <g font-size="11" fill="#B45309" font-weight="700" text-anchor="middle">
+    <text x="186" y="299" text-anchor="start">11.8%</text><text x="286" y="278">14.2%</text><text x="430" y="256" fill="#B45309" text-anchor="start">26.3%</text>
+    <text x="510" y="219">36.0%</text><text x="622" y="213" text-anchor="end">39.5%</text><text x="852" y="88">88.1%</text>
+  </g>
+  <g font-size="11" fill="#4A5568" text-anchor="middle">
+    <text x="150" y="340">8/6</text><text x="150" y="354">완료</text>
+    <text x="270" y="340">8/12</text><text x="270" y="354">금일</text>
+    <text x="390" y="340">9~10월</text><text x="390" y="354">7%×5 [추정]</text>
+    <text x="510" y="340">3Q 실적 후</text><text x="510" y="354">28% [추정]</text>
+    <text x="630" y="340">12/8</text><text x="630" y="354">만기</text>
+    <text x="820" y="340">2027-06-12</text><text x="820" y="354">Musk</text>
+  </g>
+  <text x="500" y="20" font-size="12" fill="#4A5568" text-anchor="middle">막대 좌축(해제 주식 수) · 선 우축(누적 유통 가능 비율 [파생: ÷13,163M주]) · 회색=완료, 청색=2026 잔여, 보라=2027</text>
+  <text x="500" y="382" font-size="11" fill="#718096" text-anchor="middle">그림 8-2. 출처: 424B4 트랜치 구조 보도 종합 [파생·일부 일자 추정]. 별도 연장 투자자 그룹 ~1.6B주(2027)는 표기 생략</text>
+</svg>
+</div>
+
+<p><strong>수급 산식 — 8/6~7 실측이 알려준 것.</strong> 해제 물량이 곧 매도 물량은 아니다. 1차 해제 911.5M주 직후 확인된 최대 거래일(8/7)의 거래량은 236.7M주(3개월 평균의 1.91배)로, <strong>이틀간 거래량 전부를 신규 출회로 보는 극단 가정에서도 해제 물량의 ~26%가 상한</strong>이다 [파생: 236.7÷911.5, 실제 출회율은 이보다 낮음]. 견해는 갈린다 — Mizuho는 "매도 자격이 매도를 의미하지 않는다", 반대편은 "저원가·장기 보유자여서 대부분 출회될 것"(Yahoo Finance 인용 전략가), JPM Anmuth는 "상당한 사전 포지셔닝이 이미 반영됐다"고 봤다. 8/6~12의 실측은 일단 첫 번째와 세 번째 견해의 손을 들어줬다.</p>
+
+<div class="twrap"><table class="wide">
+<tr><th>선례</th><th>해제일</th><th>규모·맥락</th><th>당일 반응</th><th>교훈</th></tr>
+<tr><td>Facebook 1차</td><td>2012-08-16</td><td>271M주 — 첫 트랜치</td><td class="down">약 −5%</td><td rowspan="3">같은 회사·같은 구조에서도 트랜치마다 방향이 달랐다. 최대 물량(Zuckerberg 포함)에서 오히려 +12.5%(거래량 3.1배) — "가장 예고된 이벤트여서 공포가 선반영"된 전형. 이후 2주간 +40.7% 추가 상승</td></tr>
+<tr><td>Facebook 2차</td><td>2012-10월 말</td><td>~230M주</td><td class="down">약 −3~4%</td></tr>
+<tr class="hl"><td>Facebook 최대</td><td>2012-11-14</td><td>770~800M주</td><td class="up">+12.5%</td></tr>
+<tr><td>Twitter</td><td>2014-05-06</td><td>대규모 단일 절벽 — 창업자·초기직원 비중 과대</td><td class="down">−17.7%</td><td>선례 중 최악 — 센티먼트 악화 중의 해제는 증폭기</td></tr>
+<tr><td>Uber</td><td>2019-11-06</td><td>1.7B주 — 당시 사상 최대</td><td class="down">장중 −8.7%(ATL) · 종가 −3.9%</td><td>만기 전 수일간 이미 −17% 선반영. 이후 2년 내 저점 대비 2배 회복</td></tr>
+<tr><td>Beyond Meat</td><td>2019-10-29</td><td>플로트 16%로 상장 후 +800% 랠리 뒤 해제</td><td class="down">−22%</td><td>소형 플로트는 멜트업과 언락 붕괴를 모두 증폭 — SPCX와 구조 유사성 최대</td></tr>
+<tr><td>Airbnb</td><td>2021-12월</td><td>단일일 $33억 거래</td><td class="down">−6.6%</td><td>대형 우량주도 한 자릿수 조정은 표준</td></tr>
+<tr class="hl"><td><strong>SPCX 실측</strong></td><td>2026-08-06 · 08-12</td><td>911.5M(플로트 +143%) · 319M</td><td class="up">+6.1% · 소폭 약세</td><td>FB-11월형으로 출발 — 공포 선반영(직전 이틀 −13.6% 포함 조정) + 숏 2.19억주의 커버 수요가 흡수</td></tr>
+</table></div>
+<p class="fig-t">표 8-3. 대형 IPO 락업 해제 선례와 SPCX 실측. 5대 유명 사례의 공통점은 방향이 아니라 <strong>거래량(전 사례 2배+)</strong>이다</p>
+
+<div class="twrap"><table class="wide">
+<tr><th>시나리오</th><th>전개 경로</th><th>주가 함의 (§15-B 밴드 연동)</th><th>판정 신호</th></tr>
+<tr><td><strong>낙관 — FB-11월형 지속</strong><br>(잔여 트랜치 무난 소화)</td><td>공포 선반영 + 프리포지셔닝이 매 트랜치를 흡수. 플로트 확대가 오히려 순기능으로 전환: 나스닥100 비중 상향(유통주식 가중) → 패시브 재매수, S&amp;P500 편입 요건(유통비율) 충족 가속. 숏 2.19억주가 랠리마다 커버 수요로 작동</td><td class="up">수급 디스카운트 해소 — BULL 밴드($138~171) 상단 및 12월 ARR 검증 시 그 위로. 12/8 만기가 "오버행 소멸" 촉매로 재해석</td><td>트랜치 당일 거래량 2배+에도 종가 보합 이상 · 대차잔고 감소 · 12/8 전후 기관 순매수</td></tr>
+<tr><td><strong>기본 — 트랜치별 소화 반복</strong><br>(확률적 중심 경로)</td><td>각 트랜치 전후 −5~−10% 변동 스파이크 후 수일 내 흡수(FB 조기·Airbnb형). <strong>최대 시험대는 11월</strong>: 3Q 실적과 1,276M주가 동시 도래 — 실적이 방향을, 물량이 진폭을 결정</td><td>현 수준 ±15% 박스 내 고변동 지속. 배수회귀 밴드($122~140)가 반복 방어선</td><td>3Q 실적 서프라이즈 여부 · 트랜치 주간 변동성만 확대되고 추세 불변</td></tr>
+<tr><td><strong>비관 — Uber/BYND형</strong><br>(내러티브 훼손과 중첩)</td><td>9/30 Google 해지·12월 ARR 경고 등 펀더 악재가 대형 트랜치(11월 1,276M 또는 12/8)와 겹침 → 저원가 물량의 경쟁적 출회, −20%± 단층 하락. 수급 악화가 컨센서스 경로 앵커($28~32, §10)로의 리레이팅 논쟁을 점화</td><td class="down">배수회귀 밴드 하향 이탈 → §15-B 하방 시나리오 활성화. 8/5의 −13.6%가 반복 가능한 하한 견본</td><td>트랜치 당일 −10% 초과 · 거래량 3배+ 동반 하락 마감 · 풋/콜 재차 1.4+</td></tr>
+</table></div>
+<p class="fig-t">표 8-4. 락업 시나리오 3종. 확률 배분은 [추정]이므로 명시하지 않고, 판정 신호의 실측으로 대체한다</p>
+
+<div class="co co-warn"><div class="ct">락업의 이중성 — 그리고 2027-06-12라는 마지막 관문</div>
+<p>락업은 공급 이벤트인 동시에 <strong>이 종목이 "정상적인 대형주"가 되기 위한 통과의례</strong>다. 유통비율 40%(12/8 이후)는 지수 편입·기관 보유 확대의 전제조건이며, 나스닥100은 유통주식 가중이라 해제 자체가 비중 상향 → 패시브 매수를 부른다. 최후의 관문인 Musk 6.4B주(2027-06-12)는 물량으론 2026년 전체의 1.4배지만, 의결권 82% 유지 유인상 대량 매도 개연성은 낮다 [추정] — 다만 Tesla 2021년의 옵션 행사·세금 목적 대규모 매도 전례가 있어 "제로"는 아니며, 주식담보 조항 여부는 [미확인]이다. 요약: <strong>2026년의 락업은 트레이딩 변수, 2027년 6월의 락업은 지배구조 변수</strong>다.</p></div>
+
+<h3>8-5. 컨센서스의 방향과 강도</h3>
+<p>애널리스트 목표가는 평균 $231.40(Investing 집계)과 $293(Visible Alpha 집계)로 집계 기관 간 크게 갈린다 [상충: 포함 브로커 풀 차이로 추정]. 주요 3사만 봐도 JPM $240(OW)·Citi $200(Buy)·MS $300(8/11엔 Cursor 인수를 반영한 별도 강세 시나리오 $600 제시)으로 <strong>현재가 대비 +44~116% 상방</strong>이며, 방향은 강한 매수 쏠림이다. 단 §7-1에서 본 대로 이 목표가들은 대부분 2028년 이익 추정에 배수를 곱한 구조여서, 회사 가이던스의 실현을 상당 부분 전제한다. 컨센서스가 "회사의 꿈"을 얼마나 할인 없이 수용하고 있는지 자체가 내러티브 과열의 온도계다.</p>
+
+<div class="co co-key"><div class="ct">§8 종합 — 수급이 말해주는 것</div>
+<p>8/5~6은 이 종목의 첫 스트레스 테스트였다. 최악의 조합(밸류 공포+사상 최대 락업)에서 장중 −53%(ATH 대비)까지 밀렸으나, 락업 당일 +6.1% 역행 반등했고 익일(8/7) 하루에만 +15.8%(거래량 평균 1.9배) — 3거래일 만에 저점 대비 +32%를 회복했다. 이는 <strong>"이 가격대에 대기 매수 자금이 실재한다"</strong>는 시장의 자기 증명이며, §15-A 1차 판정(내러티브 구간 유효)의 수급 측 근거다. 반면 연말까지 남은 락업 &gt;40억주는 랠리 때마다 공급으로 돌아온다 — 상방도 하방도 수급이 증폭하는 고베타 구조가 당분간 지속된다.</p></div>
+</section>
+
+<section id="s9">
+<h2><span class="no">9</span>재무 분석 및 DCF 모델 — 오염되지 않은 입력값 만들기</h2>
+
+<h3>9-A. 이익의 질 점검 — DCF 입력 전 관문</h3>
+<p><strong>GAAP과 조정 지표의 괴리:</strong> 2Q26에서 GAAP 영업이익 −$143M vs 조정 EBITDA +$3,538M(마진 45%)로 괴리가 $3.7B에 달한다. 괴리의 주성분은 감가상각(위성·GPU·발사 인프라)과 주식보상비용이다. 이 괴리는 조작 신호가 아니라 자본집약 성장기업의 구조적 특성이지만, <strong>감가상각은 이 회사에서 명백한 실질 비용</strong>이다 — Starlink 위성 설계수명은 약 5년 [추정: 업계 관행·궤도 이탈 주기 기반], GPU 세대교체 주기는 2~3년으로, 자산을 계속 재구매해야 사업이 유지된다. 따라서 본 DCF는 adjEBITDA가 아닌 <strong>EBITA(감가 반영 후) 마진</strong>을 입력값으로 사용해 보수화했다.</p>
+<p><strong>영업현금흐름의 실체:</strong> 2Q26 FCF −$15,950M은 capex −$18,369M의 결과이며, 역산하면 영업현금흐름은 <strong>약 +$2.4B</strong>이다 [파생: FCF −15,950 + capex 18,369 = CFO ≈ +2,419M]. 즉 영업 자체는 현금을 만들고 있고, 적자는 전액 투자 선택의 결과다 — 이익의 질 관점에서 긍정 신호. 매출 인식의 공격성 징후(채널 스터핑 등)는 공개 자료에서 발견되지 않았고, 백로그 $47.5B는 계약 잔고로 선수수익과 구분된다. SBC 절대 규모·매출 대비 비율의 분기 세부는 [미확인 — S-1/10-Q 주석 수준 확인 필요]이며, 희석은 9-B에서 주식수 증가로 반영한다. 감사인 교체·의견 이슈는 확인되지 않았다. 특수관계자 거래는 존재한다(§14에서 상술: 합병 전 SpaceX→xAI $2B 투자, Tesla 협업).</p>
+
+<h3>9-B. 자본구조·희석 점검</h3>
+<div class="twrap"><table>
+<tr><th>항목</th><th>수치</th><th>평가</th></tr>
+<tr><td>현금·유가증권</td><td class="num">~$100B (2Q26)</td><td>IPO 주식 ~$86B + 채권 $25B 조달 직후 — 업계 최대급 유동성</td></tr>
+<tr><td>총부채</td><td class="num">~$55B [파생: 현금 100 − 순현금 45 역산]</td><td>IPO 동시 발행 채권 $25B 포함. 만기 스케줄·금리 구성 [미확인]</td></tr>
+<tr><td>순현금</td><td class="num">+$45B [파생]</td><td>EV = 시총 1,826 − 45 = $1,781B</td></tr>
+<tr><td>발행주식수</td><td class="num">13,163M주</td><td>JPM은 SBC 희석으로 2028E ~13.8B주 가정(연 +1.6% 내외) — 본 모델도 승계</td></tr>
+<tr><td>전환사채·워런트</td><td class="num">[미확인]</td><td>IPO 채권의 전환 조항 여부 S-1 세부 미확정</td></tr>
+<tr><td>12개월 유동성 vs 소요</td><td class="num">현금 $100B vs 연 capex ~$66B(26E)</td><td>자체 자금 런웨이 약 1.5년 + 영업현금 — 단 2026~30 누적 FCF −$300B+(JPM) 경로에선 추가 조달 필연</td></tr>
+</table></div>
+<p class="fig-t">표 9-1. 자본구조 요약 (2Q26 기준)</p>
+
+<h3>9-C. 재무 추이와 DCF 모델</h3>
+<div class="fig-box">
+<div class="fig-t">그림 9-1. 매출 급증 곡선과 마진의 J커브 — 실적 3년 + 모델 3년 (막대: 매출 $B, 선: EBITA 마진 %)</div>
+<svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="매출과 마진 추이">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="80" y1="340" x2="960" y2="340"/><line x1="80" y1="265" x2="960" y2="265"/>
+    <line x1="80" y1="190" x2="960" y2="190"/><line x1="80" y1="115" x2="960" y2="115"/><line x1="80" y1="40" x2="960" y2="40"/>
+  </g>
+  <g font-size="11" fill="#718096">
+    <text x="72" y="344" text-anchor="end">0</text><text x="72" y="269" text-anchor="end">50</text>
+    <text x="72" y="194" text-anchor="end">100</text><text x="72" y="119" text-anchor="end">150</text><text x="72" y="44" text-anchor="end">200</text>
+    <text x="20" y="30" font-size="11">$B</text>
+  </g>
+  <!-- bars: FY23 10.4, FY24 14.0, FY25 18.7, 26E 47.1, 27E 122.9, 28E 197.6 -->
+  <g fill="#2563EB">
+    <rect x="113" y="324.4" width="80" height="15.6"/>
+    <rect x="260" y="319" width="80" height="21"/>
+    <rect x="407" y="312" width="80" height="28"/>
+  </g>
+  <g fill="#7C3AED">
+    <rect x="553" y="269.4" width="80" height="70.6"/>
+    <rect x="700" y="155.7" width="80" height="184.3"/>
+    <rect x="847" y="43.6" width="80" height="296.4"/>
+  </g>
+  <g font-size="11.5" fill="#1A202C" text-anchor="middle" font-weight="700">
+    <text x="153" y="318">10.4</text><text x="300" y="313">14.0</text><text x="447" y="306">18.7</text>
+    <text x="593" y="263">47.1</text><text x="740" y="150">122.9</text><text x="887" y="38">197.6</text>
+  </g>
+  <!-- margin line: -33.7, 3.3, -13.9 (실적) / 15, 35, 42 (모델 BULL 가정) -->
+  <polyline fill="none" stroke="#D97706" stroke-width="2.5" points="153,318.7 300,195.7 447,253 593,156.7 740,90 887,66.7"/>
+  <g fill="#D97706" font-size="11" font-weight="700">
+    <circle cx="153" cy="318.7" r="4"/><circle cx="300" cy="195.7" r="4"/><circle cx="447" cy="253" r="4"/>
+    <circle cx="593" cy="156.7" r="4"/><circle cx="740" cy="90" r="4"/><circle cx="887" cy="66.7" r="4"/>
+    <text x="200" y="323" text-anchor="start">-33.7%</text><text x="300" y="188" text-anchor="middle">+3.3%</text>
+    <text x="447" y="272" text-anchor="middle">-13.9%</text><text x="593" y="148" text-anchor="middle">15%</text>
+    <text x="740" y="82" text-anchor="middle">35%</text><text x="932" y="70" text-anchor="start">42%</text>
+  </g>
+  <g font-size="11.5" fill="#4A5568" text-anchor="middle">
+    <text x="153" y="362">FY23</text><text x="300" y="362">FY24</text><text x="447" y="362">FY25</text>
+    <text x="593" y="362">FY26E</text><text x="740" y="362">FY27E</text><text x="887" y="362">FY28E</text>
+  </g>
+  <text x="500" y="390" font-size="11" fill="#718096" text-anchor="middle">실적: 회사 공시 [파생: 마진=영업이익/매출] · 추정(보라 막대·26E 이후 마진): JPM 매출 경로 + 본 모델 BULL 마진 가정 [추정]</text>
+</svg>
+</div>
+
+<div class="fig-box">
+<div class="fig-t">그림 9-2. FCF의 죽음의 계곡 — BULL(가이던스형) 경로에서도 흑자 전환은 2032년 (단위 $B, 본 모델)</div>
+<svg viewBox="0 0 1000 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="FCF 경로">
+  <line x1="70" y1="180" x2="960" y2="180" stroke="#4A5568" stroke-width="1.5"/>
+  <g font-size="11" fill="#718096">
+    <text x="62" y="90" text-anchor="end">+100</text><text x="62" y="184" text-anchor="end">0</text><text x="62" y="280" text-anchor="end">-100</text>
+    <text x="20" y="30" font-size="11">$B</text>
+  </g>
+  <g stroke="#E2E8F0" stroke-width="1"><line x1="70" y1="85" x2="960" y2="85"/><line x1="70" y1="275" x2="960" y2="275"/></g>
+  <!-- bars: 26:-65 27:-128 28:-68 29:-79 30:-148 31:-7 32:+52 33:+132 ; y=180-v*0.95 -->
+  <g fill="#DC2626" opacity="0.85">
+    <rect x="105" y="180" width="70" height="61.8"/>
+    <rect x="215" y="180" width="70" height="121.6"/>
+    <rect x="325" y="180" width="70" height="64.6"/>
+    <rect x="435" y="180" width="70" height="75.1"/>
+    <rect x="545" y="180" width="70" height="140.6"/>
+    <rect x="655" y="180" width="70" height="6.7"/>
+  </g>
+  <g fill="#047857" opacity="0.9">
+    <rect x="765" y="130.6" width="70" height="49.4"/>
+    <rect x="875" y="54.6" width="70" height="125.4"/>
+  </g>
+  <g font-size="11.5" font-weight="700" text-anchor="middle" fill="#1A202C">
+    <text x="140" y="256">-65</text><text x="250" y="316">-128</text><text x="360" y="259">-68</text><text x="470" y="270">-79</text>
+    <text x="580" y="312" fill="#FFFFFF">-148</text><text x="690" y="201">-7</text><text x="800" y="124">+52</text><text x="910" y="48">+132</text>
+  </g>
+  <g font-size="11.5" fill="#4A5568" text-anchor="middle">
+    <text x="140" y="345">26E</text><text x="250" y="345">27E</text><text x="360" y="345">28E</text><text x="470" y="345">29E</text>
+    <text x="580" y="345">30E</text><text x="690" y="345">31E</text><text x="800" y="345">32E</text><text x="910" y="345">33E</text>
+  </g>
+  <text x="500" y="20" font-size="12" fill="#4A5568" text-anchor="middle">누적 소요 2026~31 약 −$495B [파생: 본 모델 BULL 합산] — JPM의 "2026~30 FCF −$300B+"와 방향 일치, 폭은 본 모델이 더 보수적</text>
+</svg>
+</div>
+
+<h3>9-C-1. WACC와 표준 가정값 — 전부 실시간 조회값</h3>
+<div class="twrap"><table>
+<tr><th>가정</th><th>값</th><th>출처·기준 시점</th></tr>
+<tr><td>무위험이자율 (10Y)</td><td class="num">4.70%</td><td>미 10년 국채 4.72% (2026-08-10) → 4.70% 채택</td></tr>
+<tr><td>ERP</td><td class="num">4.23%</td><td>다모다란 implied ERP (2026-01-01 기준 최신 확인값)</td></tr>
+<tr><td>베타</td><td class="num">1.8 <span class="bd bd-cfl">상충</span></td><td>상장 2개월로 회귀 불가 → 고베타 성장주 프록시. 범위 1.5~2.1로 민감도 처리 (§10)</td></tr>
+<tr><td>자기자본비용 Ke</td><td class="num">12.31%</td><td>[파생: 4.70% + 1.8 × 4.23%]</td></tr>
+<tr><td>부채비중·세후 부채비용</td><td class="num">3% · 4.8%</td><td>[파생: 부채 55/시총+부채, kd 6% × (1−20%)]</td></tr>
+<tr class="hl"><td><strong>WACC</strong></td><td class="num"><strong>12.09%</strong></td><td>[파생: 12.31%×0.97 + 4.8%×0.03]</td></tr>
+<tr><td>영구성장률 g</td><td class="num">2.3%</td><td>FRED T10YIE 2.24%(7월 평균)~2.28%(7/23) → 2.3% 채택</td></tr>
+<tr><td>페이드 비율</td><td class="num">0.21</td><td>IT 0.20 · 통신 0.22 · 산업 0.21의 사업 믹스 혼합</td></tr>
+<tr><td>터미널 ROIIC</td><td class="num">18% [추정]</td><td>성숙기 인프라+소프트웨어 혼합 사업 가정</td></tr>
+</table></div>
+<p class="fig-t">표 9-2. 가정값 일람 — 기본값(fallback) 사용 없음, 전 항목 조회값</p>
+
+<h3>9-C-2. 전시 23 — BASE 시나리오 연도별 프로젝션 (2026~2040)</h3>
+<p>BASE는 회사 가이던스와 컨센서스의 중간 경로다: 2029년 매출 $195B(FactSet 컨센 ~$207B에 근접), EBITA 마진은 2031년 36%에서 정착(하이퍼스케일러 평균 수준), 이후 성장률은 연 22% 감쇠로 페이드. 세율은 이월결손 소진을 반영해 15%→20% 상승 경로.</p>
+<div class="twrap"><table class="wide">
+<tr><th>연도</th><th>매출</th><th>성장률</th><th>EBITA</th><th>마진</th><th>세율</th><th>NOPAT</th><th>신규투자</th><th>FCF</th><th>PV(FCF)</th></tr>
+<tr><td>2026</td><td class="num">45</td><td class="num">+141%</td><td class="num">6</td><td class="num">14%</td><td class="num">15%</td><td class="num">5</td><td class="num">66</td><td class="num down">-60</td><td class="num">-57.1</td></tr>
+<tr><td>2027</td><td class="num">90</td><td class="num">+100%</td><td class="num">20</td><td class="num">22%</td><td class="num">10%</td><td class="num">18</td><td class="num">113</td><td class="num down">-95</td><td class="num">-79.8</td></tr>
+<tr><td>2028</td><td class="num">140</td><td class="num">+56%</td><td class="num">42</td><td class="num">30%</td><td class="num">18%</td><td class="num">35</td><td class="num">112</td><td class="num down">-77</td><td class="num">-58.2</td></tr>
+<tr><td>2029</td><td class="num">195</td><td class="num">+39%</td><td class="num">64</td><td class="num">33%</td><td class="num">20%</td><td class="num">52</td><td class="num">110</td><td class="num down">-58</td><td class="num">-38.9</td></tr>
+<tr><td>2030</td><td class="num">256</td><td class="num">+31%</td><td class="num">89</td><td class="num">35%</td><td class="num">20%</td><td class="num">72</td><td class="num">110</td><td class="num down">-38</td><td class="num">-23.0</td></tr>
+<tr><td>2031</td><td class="num">317</td><td class="num">+24%</td><td class="num">114</td><td class="num">36%</td><td class="num">20%</td><td class="num">91</td><td class="num">102</td><td class="num down">-11</td><td class="num">-5.9</td></tr>
+<tr><td>2032</td><td class="num">378</td><td class="num">+19%</td><td class="num">136</td><td class="num">36%</td><td class="num">20%</td><td class="num">109</td><td class="num">94</td><td class="num up">15</td><td class="num">7.2</td></tr>
+<tr><td>2033</td><td class="num">437</td><td class="num">+16%</td><td class="num">157</td><td class="num">36%</td><td class="num">20%</td><td class="num">126</td><td class="num">84</td><td class="num up">42</td><td class="num">17.9</td></tr>
+<tr><td>2034</td><td class="num">492</td><td class="num">+13%</td><td class="num">177</td><td class="num">36%</td><td class="num">20%</td><td class="num">142</td><td class="num">73</td><td class="num up">68</td><td class="num">25.9</td></tr>
+<tr><td>2035</td><td class="num">542</td><td class="num">+10%</td><td class="num">195</td><td class="num">36%</td><td class="num">20%</td><td class="num">156</td><td class="num">63</td><td class="num up">93</td><td class="num">31.4</td></tr>
+<tr><td>2036</td><td class="num">589</td><td class="num">+9%</td><td class="num">212</td><td class="num">36%</td><td class="num">20%</td><td class="num">170</td><td class="num">55</td><td class="num up">115</td><td class="num">34.7</td></tr>
+<tr><td>2037</td><td class="num">631</td><td class="num">+7%</td><td class="num">227</td><td class="num">36%</td><td class="num">20%</td><td class="num">182</td><td class="num">50</td><td class="num up">132</td><td class="num">35.5</td></tr>
+<tr><td>2038</td><td class="num">670</td><td class="num">+6%</td><td class="num">241</td><td class="num">36%</td><td class="num">20%</td><td class="num">193</td><td class="num">45</td><td class="num up">148</td><td class="num">35.4</td></tr>
+<tr><td>2039</td><td class="num">705</td><td class="num">+5%</td><td class="num">254</td><td class="num">36%</td><td class="num">20%</td><td class="num">203</td><td class="num">42</td><td class="num up">162</td><td class="num">34.6</td></tr>
+<tr><td>2040</td><td class="num">738</td><td class="num">+5%</td><td class="num">266</td><td class="num">36%</td><td class="num">20%</td><td class="num">212</td><td class="num">38</td><td class="num up">174</td><td class="num">33.3</td></tr>
+</table></div>
+<p class="fig-t">표 9-3. 전시 23 (단위 $B, WACC 12.09%, mid-year 할인). 신규투자 = Δ매출 ÷ 매출/투하자본 비율(0.40→0.85 상승 경로). 이 표의 누적 PV + 페이드 터미널 밸류가 §10 가치 사다리의 원천</p>
+
+<p>같은 엔진에 회사 가이던스 경로(BULL: 매출 26E 47→31E 717→33E 1,135, EBITA 마진 45% 정착)와 검증 실패 경로(BEAR: Citi형 저성장+마진 22% 상한, 컴퓨트 계약 축소)를 넣어 세 갈래를 만들었다. 결과 요약: <strong>BULL은 N=13.2년에서 현재가와 교차, BASE는 N=30년까지 연장해도 주당 $32.1로 현재가의 23%에 그침, BEAR는 $3 내외</strong> — 상세 해석은 §10.</p>
+</section>
+
+<section id="s10">
+<h2><span class="no">10</span>시장 내재 CAP 역산 — 현재가는 "가이던스 경로 × 13년 해자"를 이미 지불했다</h2>
+
+<h3>10-1. 가치 사다리 — 세 경로에서 예측기간 N을 늘려가며 현재가와 만나는 지점 찾기</h3>
+<div class="fig-box">
+<div class="fig-t">그림 10-1. 예측기간 N별 주당 가치 — BULL 곡선만이 현재가($138.74)와 만나며, 교점은 N≈13.2년</div>
+<svg viewBox="0 0 1000 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="가치 사다리 차트">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="70" y1="370" x2="960" y2="370"/><line x1="70" y1="285" x2="960" y2="285"/>
+    <line x1="70" y1="200" x2="960" y2="200"/><line x1="70" y1="115" x2="960" y2="115"/><line x1="70" y1="30" x2="960" y2="30"/>
+  </g>
+  <g font-size="11" fill="#718096">
+    <text x="62" y="374" text-anchor="end">$0</text><text x="62" y="289" text-anchor="end">$50</text>
+    <text x="62" y="204" text-anchor="end">$100</text><text x="62" y="119" text-anchor="end">$150</text><text x="62" y="34" text-anchor="end">$200</text>
+    <text x="135.9" y="392" text-anchor="middle">N=5</text><text x="300.7" y="392" text-anchor="middle">10</text>
+    <text x="465.5" y="392" text-anchor="middle">15</text><text x="630.3" y="392" text-anchor="middle">20</text>
+    <text x="795.1" y="392" text-anchor="middle">25</text><text x="955" y="392" text-anchor="middle">30년</text>
+  </g>
+  <!-- 현재가 수평선 -->
+  <line x1="70" y1="134" x2="960" y2="134" stroke="#DC2626" stroke-width="1.8" stroke-dasharray="7 5"/>
+  <text x="78" y="127" font-size="12" font-weight="700" fill="#DC2626">현재가 $138.74</text>
+  <!-- BULL -->
+  <polyline fill="none" stroke="#7C3AED" stroke-width="3"
+    points="135.9,290.6 234.8,222.4 300.7,180.6 399.6,135.9 465.5,117.2 630.3,91.4 795.1,79.5 960,73"/>
+  <!-- BASE -->
+  <polyline fill="none" stroke="#2563EB" stroke-width="3"
+    points="135.9,352.3 234.8,338.7 300.7,331.9 399.6,325.1 465.5,322.4 630.3,318.5 795.1,316.5 960,315.4"/>
+  <!-- BEAR -->
+  <polyline fill="none" stroke="#DC2626" stroke-width="2.5"
+    points="135.9,366.8 300.7,365.6 465.5,365.2 630.3,365.1 960,364.7"/>
+  <!-- 교점 -->
+  <line x1="406" y1="134" x2="406" y2="370" stroke="#7C3AED" stroke-width="1.2" stroke-dasharray="4 4"/>
+  <circle cx="406" cy="134" r="6" fill="#7C3AED"/>
+  <text x="416" y="160" font-size="13" font-weight="800" fill="#7C3AED">내재 CAP ≈ 13.2년</text>
+  <g font-size="12" font-weight="700">
+    <text x="850" y="60" fill="#7C3AED">BULL (가이던스형)</text>
+    <text x="850" y="303" fill="#2563EB">BASE (컨센서스형)</text>
+    <text x="850" y="352" fill="#DC2626">BEAR (검증 실패)</text>
+  </g>
+</svg>
+<p class="fig-t">출처: 본 모델 (§9 가정, mid-year 할인). BASE·BEAR 곡선이 평평한 이유: 초기 대규모 FCF 적자가 후기 흑자의 현재가치를 상쇄</p>
+</div>
+
+<p>읽는 법: 현재 주가가 성립하려면 시장은 <strong>①회사 가이던스 수준의 실행(매출 2031년 $717B, EBITA 마진 45%)과 ②그 초과수익이 13년 이상 유지되는 해자</strong>를 동시에 믿어야 한다. CAP 프레임워크에서 13년은 그 자체로는 이상하지 않다 — 광폭 해자 IT 대형주의 내재 CAP가 10~15년(합리)~15~20년(낙관)에 분포하기 때문이다. 문제는 <strong>어느 경로 위의 13년이냐</strong>다. 하이퍼스케일러의 13년은 '검증된 실적 궤도' 위의 13년이지만, SPCX의 13.2년은 '아직 오지 않은 가이던스' 위의 13년이다. 기대의 이중 적층 — 이것이 §1 헤드라인의 "CAP 과열" 판정 근거다.</p>
+
+<div class="co co-warn"><div class="ct">컨센서스 경로의 충격적 함의</div>
+<p>BASE(컨센서스형) 경로로는 <strong>N을 30년까지 늘려도 주당 $32.1</strong> — 현재가의 23%에 불과하다. 거꾸로 BASE 경로로 현재가를 정당화하려면 WACC가 <strong>6.30%</strong>여야 한다 [파생: N=20 고정, brentq 해] — 무위험이자율 4.70%에 리스크 프리미엄을 1.6%p만 얹은 수준으로, 세계에서 가장 안전한 주식 취급을 해야 한다는 뜻이다. 즉 현재 주가에서 컨센서스는 죽은 시나리오이고, <strong>시장은 사실상 가이던스(BULL)를 기준 시나리오로 채택했다.</strong> 이 채택이 유지되는 한 주가는 지지되고, 철회되는 순간 준거점이 $30대로 이동한다 — §15-B 하방 정량의 근거.</p></div>
+
+<h3>10-2. 민감도 — 무엇이 가치를 움직이고, 무엇이 못 움직이나</h3>
+<div class="twrap"><table>
+<tr><th>BULL · N=15 주당가치</th><th>g=1.3%</th><th>g=2.3%</th><th>g=3.3%</th></tr>
+<tr><td>WACC 11.0% (β1.5)</td><td class="num">$182</td><td class="num up">$185</td><td class="num">$187</td></tr>
+<tr class="hl"><td>WACC 12.1% (β1.8, 기준)</td><td class="num">$147</td><td class="num"><strong>$148.7</strong></td><td class="num">$150</td></tr>
+<tr><td>WACC 13.3% (β2.1)</td><td class="num">$117</td><td class="num down">$118</td><td class="num">$119</td></tr>
+</table></div>
+<p class="fig-t">표 10-1. WACC × 영구성장률 민감도. 영구성장률(±1%p)의 영향은 ±$2 미만, WACC(±1.2%p)의 영향은 ±$32 — 가치는 거의 전적으로 할인율과 초기 10년 실행에 달려 있음</p>
+
+<div class="twrap"><table>
+<tr><th>민감도 축</th><th>변동</th><th>결과</th><th>해석</th></tr>
+<tr><td>베타 → 내재 CAP</td><td class="num">β 1.5 / 1.8 / 2.1</td><td class="num">CAP 9.8년 / 13.2년 / 도달 불가</td><td>β 2.1이면 BULL 경로로도 현재가 미달($30년 상한 ~$139 하회) — 할인율이 논쟁의 절반</td></tr>
+<tr><td>페이드 비율 (N=15)</td><td class="num">0.11 / 0.21 / 0.31</td><td class="num">$150 / $149 / $148</td><td>페이드는 사실상 무영향 — 가치의 무게중심이 터미널이 아닌 명시 예측기 FCF에 있다는 증거</td></tr>
+</table></div>
+<p class="fig-t">표 10-2. 베타·페이드 민감도 (본 모델)</p>
+
+<h3>10-3. 배수의 궤적 — 8주간의 디레이팅이 말하는 것</h3>
+<p>FY26E 매출($47.1B) 기준 EV/매출은 ATH(6/16, 시총 ~$2.9T)에서 <strong>약 62×</strong> → 8/5 저점(시총 ~$1.43T)에서 <strong>약 29×</strong> → 현재 <strong>약 37.8×</strong>로 움직였다 [파생: (시총−순현금 45)÷47.1]. 8주 만에 배수가 반토막 났다가 3분의 1을 회복한 것으로, 같은 기간 펀더멘털 뉴스(2Q 서프라이즈, Starmind)가 오히려 개선됐음을 감안하면 <strong>이 변동의 대부분은 수급과 내러티브 온도의 함수</strong>였다. 참고 앵커: 상장 직후의 62×는 닷컴기 극단값 영역이며, 현재 37.8×도 NVDA·하이퍼스케일러의 선행 EV/매출 대비 크게 높다. 단 FY27E로 시점을 옮기면 14.5×, FY28E로는 9.0×까지 떨어진다 [파생] — 배수 부담은 전적으로 "어느 해 매출을 믿느냐"의 문제다.</p>
+
+<h3>10-4. 밸류에이션 레인지 — 모든 관점을 한 화면에</h3>
+<div class="fig-box">
+<div class="fig-t">그림 10-2. 풋볼 필드 — DCF 세 경로, 배수 접근, 스트리트 목표가의 위치 비교 (주당 $)</div>
+<svg viewBox="0 0 1000 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="밸류에이션 레인지 풋볼필드">
+  <g stroke="#E2E8F0" stroke-width="1">
+    <line x1="100" y1="40" x2="100" y2="330"/><line x1="238.5" y1="40" x2="238.5" y2="330"/>
+    <line x1="377" y1="40" x2="377" y2="330"/><line x1="515.5" y1="40" x2="515.5" y2="330"/>
+    <line x1="654" y1="40" x2="654" y2="330"/><line x1="792.5" y1="40" x2="792.5" y2="330"/><line x1="931" y1="40" x2="931" y2="330"/>
+  </g>
+  <g font-size="11" fill="#718096" text-anchor="middle">
+    <text x="100" y="352">$0</text><text x="238.5" y="352">$50</text><text x="377" y="352">$100</text>
+    <text x="515.5" y="352">$150</text><text x="654" y="352">$200</text><text x="792.5" y="352">$250</text><text x="931" y="352">$300</text>
+  </g>
+  <!-- 현재가 vertical -->
+  <line x1="484.3" y1="35" x2="484.3" y2="335" stroke="#DC2626" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="484.3" y="26" font-size="12.5" font-weight="800" fill="#DC2626" text-anchor="middle">현재가 $138.74</text>
+  <!-- rows -->
+  <g font-size="12.5" fill="#1A202C">
+    <rect x="105" y="52" width="9" height="22" rx="4" fill="#DC2626"/><text x="122" y="68">DCF BEAR (검증 실패): $2~3</text>
+    <rect x="177.6" y="94" width="11" height="22" rx="4" fill="#2563EB"/><text x="196" y="110">DCF BASE N15~30: $28~32 (컨센 상한)</text>
+    <rect x="437.9" y="136" width="49.9" height="22" rx="4" fill="#0891B2"/><text x="428" y="152" text-anchor="end">배수 회귀(20× 2028E EPS): $122~140</text>
+    <rect x="482" y="178" width="91.7" height="22" rx="4" fill="#7C3AED"/><text x="580" y="194">DCF BULL N13~25: $138~171</text>
+    <circle cx="654" cy="231" r="8" fill="#B7791F"/><text x="668" y="236">Citi PT $200 (Buy, 8/4)</text>
+    <circle cx="764.8" cy="273" r="8" fill="#B7791F"/><text x="778" y="278">JPM PT $240 (OW, 8/5)</text>
+    <circle cx="931" cy="315" r="8" fill="#B7791F"/><text x="925" y="299" text-anchor="end">MS PT $300</text>
+  </g>
+</svg>
+<p class="fig-t">출처: DCF는 본 모델, 배수 회귀는 [파생: Mag7 중간값 20× × JPM 2028E EPS $7.02 = $140, 컨센 EPS 할인 시 하단 $122], 목표가는 각사 리포트. 현재가는 BULL 밴드의 하단이자 배수 회귀 밴드의 상단에 정확히 걸쳐 있다</p>
+</div>
+
+<div class="co co-key"><div class="ct">§10 종합 — 내재 CAP의 이중 해석</div>
+<p>13.2년이라는 내재 CAP는 <strong>섹터 문법 안에서는 읽을 수 있는 숫자이나, 전제(가이던스 경로 100% 채택)가 이미 낙관의 소산</strong>이다. 시장 기대의 강도로 번역하면: "이 회사는 5년 안에 매출을 38배로 늘리고, 45% 마진을 달성하며, 그 우위를 13년간 방어한다" — 세 명제의 곱이 현재가다. 하나라도 컨센서스 수준으로 후퇴하면 준거 가치는 $30대(DCF) 또는 $120대(배수)로 이동한다. 반대로 세 명제가 유지되는 동안 주가의 상방은 BULL 사다리를 따라 N=20~25 구간($164~171)과 스트리트 목표가($200~300)가 놓여 있다.</p></div>
+</section>
+
+<section id="s11">
+<h2><span class="no">11</span>투자 논거 — Bull Case: 다섯 개의 엔진과 각각의 반영도</h2>
+
+<p>사용자 지침의 대칭 보정 원칙에 따라, 각 긍정 동인마다 "이 강점이 내재 CAP(§10)에 얼마나 반영되어 있는가"를 판정해 <strong>미반영 강점(진짜 엣지)</strong>과 <strong>기반영 강점(주가 유지 조건)</strong>을 구분한다.</p>
+
+<h3>B1. 발사 계층의 사실상 독점 — 모든 것의 상류</h3>
+<p>2025년 전세계 궤도 투입 질량의 80% 이상, 발사 횟수 165회(나머지 세계 합계 초과), kg당 원가 $2,720로 경쟁 최저. 이 우위가 지속 가능한 이유는 재사용의 학습곡선이 <strong>비행 횟수에 비례해 복리로 쌓이는 구조</strong>이기 때문이다 — 경쟁자가 자본으로 살 수 없는 유형의 해자. Starship이 성공하면 원가가 다시 1/27(<$100/kg 목표)로 떨어지며 격차가 세대 단위로 벌어진다. <strong>반영도: 발사 매출 자체(26E ~$9.6B 추정 경로)는 시총의 극히 일부만 설명 — 그러나 "옵션 발생기"로서의 프리미엄은 상당 부분 기반영.</strong> 분류: 기반영 강점(주가 유지 조건).</p>
+
+<h3>B2. Starlink — 검증 완료된 현금 엔진</h3>
+<p>부문 영업이익률 39%(2Q26), 가입자 1,200만 명, 활성 위성 점유율 65~75% [상충: 집계 기준]. JPM 경로에서 2030E 가입자 9,500만+로 성장 가시성이 가장 높은 축이다. EchoStar 스펙트럼 $19.6B 인수로 D2C(휴대폰 직접 통신) 시장까지 교두보를 확보했고, V3 위성(1Tbps, 용량 10배)이 Starship과 함께 투입되면 용량 원가가 다시 한 단계 하락한다. Cybercab 표준 탑재(7/20)와 "모든 Tesla 차량에 Starlink"(Musk, 8/9) 발언은 자동차라는 신규 유통 채널을 예고한다. <strong>반영도: JPM SOTP의 최대 축으로 상당 부분 기반영. 미반영 잔여분은 D2C 스마트폰 서비스(2027년 말)와 차량 채널의 성공 여부.</strong> 분류: 기반영 중심 + 부분 엣지.</p>
+
+<h3>B3. AI 수직통합 — 에너지부터 모델까지, 세계에서 가장 빠른 건설자</h3>
+<p>Colossus 1을 122일에 세웠고, Colossus 2로 세계 최초 단일 GW급 클러스터(1.5GW 가동)를 달성했다. 커밋 계약 $80B+는 26E 매출의 4배가 넘는 가시성이다. 하이퍼스케일러가 전력 확보에 3~5년 걸리는 병목 구간에서, 가스터빈 직도입·자체 변전 인프라로 <strong>"전력을 기다리지 않는 유일한 사업자"</strong> 포지션을 잡았다. <strong>반영도: 부분 반영 — 커밋 매출은 반영됐으나, 시장은 90일 해지 조항의 디스카운트도 동시에 적용 중(§12 R1). 계약이 장기·무해지 구조로 갱신되면 그 자체가 리레이팅 트리거.</strong> 분류: 부분 반영.</p>
+
+<h3>B4. 궤도 컴퓨트 옵션 — 발사 해자가 AI 해자로 이식되는 유일한 경로</h3>
+<p>§4-D에서 해부한 대로, Starmind는 AI의 최종 병목(전력·냉각·입지)을 궤도로 우회하는 구조적 해법이며, 성립 조건(발사비 <$200/kg)을 자기 손으로 만들 수 있는 회사는 지구에 하나뿐이다. FCC 100만 기 신청, Gigasat Factory 착공, 2027년 프로토 일정까지 실행 궤도에 올라 있다. Google(Suncatcher)·NVIDIA(Starcloud 투자)가 같은 방향을 검증해주는 것도 역설적 호재다. <strong>반영도: 소액의 옵션 프리미엄만 반영(8/4 발표 당일 +9.4% = 시총 약 +$140B 반응 [파생]). §5-B 가격 반영도 분석에서 프리미엄의 주력은 지상 AI+Starlink 꿈으로 추정 — 궤도 컴퓨트는 진짜 미반영 엣지 후보.</strong> 분류: 미반영 엣지.</p>
+
+<h3>B5. 국방 플랫폼화 — 조용히 쌓이는 무해지 현금흐름</h3>
+<p>Starshield 누적 계약 $9.36B+, PLEO 물량 ~97%, Golden Dome($185B 프로그램)의 핵심 센싱 계약(SB-AMTI $4.16B) 수주. 90일 해지 조항이 붙은 상업 AI 계약과 달리 <strong>국방 매출은 다년·고신뢰 구조</strong>로, 멀티플 하단을 방어하는 질 좋은 매출이다. IOC 2028을 향한 Golden Dome 예산 집행이 본격화되면 추가 수주 여력이 크다. <strong>반영도: 미반영에 가까움 — 국방 가치는 AI 내러티브에 가려 컨퍼런스콜·리포트에서 후순위로 다뤄지는 중.</strong> 분류: 미반영 엣지.</p>
+
+<div class="twrap"><table class="wide">
+<tr><th>동인</th><th>핵심 수치</th><th>내재 CAP 반영도</th><th>분류</th></tr>
+<tr><td>B1. 발사 독점</td><td class="num">질량 80%+ · $2,720/kg</td><td>높음</td><td>기반영 — 주가 유지 조건</td></tr>
+<tr><td>B2. Starlink</td><td class="num">OI 마진 39% · 가입자 12M</td><td>높음 (SOTP 최대 축)</td><td>기반영 + D2C 엣지</td></tr>
+<tr><td>B3. AI 수직통합</td><td class="num">커밋 $80B+ · GW급 최초</td><td>중간 (해지 디스카운트 병존)</td><td>부분 반영</td></tr>
+<tr class="hl"><td>B4. 궤도 컴퓨트</td><td class="num">FCC 100만기 · 프로토 2027</td><td class="up">낮음</td><td><strong>미반영 엣지</strong></td></tr>
+<tr class="hl"><td>B5. 국방 플랫폼</td><td class="num">누적 $9.36B+ · Golden Dome</td><td class="up">낮음</td><td><strong>미반영 엣지</strong></td></tr>
+</table></div>
+<p class="fig-t">표 11-1. Bull 동인 × 반영도 매트릭스 [추정: §10 내재 CAP 분해와 교차 판정]</p>
+</section>
+
+<section id="s12">
+<h2><span class="no">12</span>리스크 — Bear Case: 여덟 개의 균열과 각각의 반영도</h2>
+
+<h3>R1. 90일 해지 조항 — $80B 백로그의 아킬레스건 (심각도 최상)</h3>
+<p>Anthropic 계약(월 $1.25B, 총 ~$40~45B)은 90일 통지 해지가 가능하고, Google 계약(월 $920M)은 9/30까지 GPU 미인도 시 해지권이 발동한다. 두 고객 모두 자체 인프라(Anthropic-AWS/Google TPU, Google 자체)를 보유한 <strong>전략적 멀티소싱 구매자</strong>다 — 즉 SpaceX 컴퓨트는 그들에게 대체 가능한 버퍼 용량일 수 있다. 시장이 커밋 $80B를 확정 매출처럼 소비하는 현재 내러티브와의 간극이 이 종목 최대의 미반영 리스크다. <strong>반영도: 낮음 — 스트리트 추정 대부분이 계약 완주를 전제.</strong></p>
+
+<h3>R2. 락업 오버행 — 연말까지 40억 주 이상</h3>
+<p>스케줄·시나리오 상세는 §8-4. 2026년 잔여 물량은 약 3,646M주 [파생: 풀 4,557.5M − 8/6 911.5M], 이 중 <strong>최대 단일 이벤트는 3Q 실적 직후의 1,276M주(풀의 28%)</strong>로, 실적 발표와 같은 주에 도래해 실적 미스 시 낙폭 증폭기가 된다. 12/8 만기 후 유통 가능 비율 ~40%, 2027-06-12 Musk 6.4B주가 마지막 관문. <strong>반영도: 중간 — 1·2차(8/6·8/12) 통과로 "트랜치=폭락" 공식은 기각됐으나, 시장이 학습한 것은 911.5M까지이며 1,276M+실적 동시 조합은 미시험.</strong></p>
+
+<h3>R3. xAI 인재 유출과 Grok 경쟁력 — 모델 층의 침식</h3>
+<p>xAI 공동창업자 11인 전원 이탈, 연구자 50인+ 유출 보도, Grok 모바일 참여 급감(DAU 3→4월 −12.5%, 앱 다운로드 1→4월 −60%, 순위 2위→5위 [상충: "일일 참여 −28%" 보도 병존, 원출처 미확인]). Grok 4.5→4.6→4.7 릴리스 속도는 유지되나 GPQA 등 일부 벤치마크 역행 논란이 있었고, 블룸버그는 "내부 모델 활용 실패 후 컴퓨트 임대로 전환"이라는 뼈아픈 프레임을 제시했다. 컴퓨트 임대업의 마진은 프런티어 모델 보유 여부와 무관하지 않다 — 모델 층이 무너지면 AI 세그먼트는 순수 커머디티 사업이 된다. <strong>반영도: 부분 — 멀티플에 일부 반영됐으나 Grok 5(6~10T MoE) 결과에 따라 재평가.</strong></p>
+
+<h3>R4. 멤피스·서드헤이븐 환경 소송 — 8/24 예비금지명령 심리 (대상: Colossus 2)</h3>
+<p>서드헤이븐 스탠턴로드의 무허가 가스터빈(소장 27기·~495MW → 5월 46기 → 7월 조사보도 57~59기 [상충])에 대한 NAACP·Earthjustice 청정대기법 소송. 국방부 서면이 명시하듯 <strong>이 터빈들의 급전 대상은 Colossus 2</strong>이며, Colossus 1은 선행 분쟁 후 허가 전원으로 전환돼 직접 대상이 아니다. 따라서 금지명령 인용 시 노출은 <strong>Google 계약(~110K GPU, 백로그 ~$300억)·Grok 5 훈련 일정·Reflection 계약</strong>이지 Anthropic 백로그가 아니다 — 특히 9/30 Google 인도 기한(R1)과 시간적으로 겹치는 것이 최악 조합. 완화 요인: DOJ 기각 신청(6/15), 인용되더라도 SCR 개조($1.8~2.4억 추정)·대체 전력 조달로 대응 가능(추론은 이미 Oracle·CoreWeave·Azure에 분산). <strong>반영도: 거의 미반영 — 전형적 테일 리스크.</strong></p>
+
+<h3>R5. 공급 병목 — HBM4와 전력</h3>
+<p>2027년 말 5~10GW 목표는 Vera Rubin 세대 GPU의 대량 확보를 전제하는데, HBM4는 SK하이닉스 60~70% 과점에 전 하이퍼스케일러가 줄 서 있다. 전력 역시 멤피스 터빈(R4)과 신규 부지 계통 연결이 변수. <strong>반영도: 부분 — AI 섹터 공통 리스크로 일부 반영.</strong></p>
+
+<h3>R6. 자금 조달 절벽 — 2026~30 누적 FCF −$300B+</h3>
+<p>JPM 추정 기준이며 본 모델 BULL은 −$495B(2026~31 누적)로 더 크다 [파생]. 현금 $100B와 영업현금 창출로 1.5~2년은 자체 소화 가능하나, 이후 채권·증자 조달이 필연이다. 금리 4.7% 환경에서 조달 비용 자체가 가치를 갉아먹고, 증자 시 희석이 온다. <strong>반영도: 부분 — 채권 $25B 선제 발행으로 1차 대응했으나 스트리트는 후속 조달의 희석을 명시 반영하지 않는 경향.</strong></p>
+
+<h3>R7. 밸류에이션 자체 — 컨센서스 경로의 준거가 $30</h3>
+<p>§10에서 정량화한 대로, 가이던스 채택이 철회되면 DCF 준거는 $28~32, 배수 준거는 $122~140으로 이동한다. 이것은 "리스크가 실현되면 생기는 손실"이 아니라 <strong>지금 이 순간 가격 구조에 내장된 비대칭</strong>이다. <strong>반영도: 정의상 미반영 — 반영되는 순간이 곧 디레이팅.</strong></p>
+
+<h3>R8. 키맨·지배구조 — 82% 의결권의 양면</h3>
+<p>Musk 의결권 ~82%의 controlled company로 소수주주 견제 장치가 얇다. 과거 관계사 거래(합병 전 SpaceX→xAI $2B 투자), Tesla와의 협업 경계(Terafab·Cybercab), 잠재적 Tesla 합병 루머까지 — 이해상충의 표면적이 넓다. 동시에 Musk 지분 6.4B주가 2027년 중반까지 잠겨 있어 단기 이해는 정렬돼 있다. <strong>반영도: 낮음 — 현재 주가에 지배구조 디스카운트가 관찰되지 않음(오히려 Musk 프리미엄).</strong></p>
+
+<div class="twrap"><table class="wide">
+<tr><th>리스크</th><th>트리거·시점</th><th>임팩트 방향</th><th>주가 반영도</th></tr>
+<tr class="hl"><td>R1. 90일 해지 조항</td><td>9/30 Google GPU 인도 기한 · 계약 갱신 협상</td><td class="down">백로그 최대 -$45B 증발 가능</td><td class="down">낮음 — 최대 미반영 리스크</td></tr>
+<tr><td>R2. 락업 오버행</td><td>9~10월 트랜치 · 3Q 실적 후</td><td class="down">수급 압박 반복</td><td>중간</td></tr>
+<tr><td>R3. xAI 인재·Grok</td><td>Grok 5 공개 (9월~)</td><td class="down">AI 마진 프리미엄 훼손</td><td>부분</td></tr>
+<tr class="hl"><td>R4. 멤피스·서드헤이븐 소송</td><td class="num">2026-08-24 심리</td><td class="down">Colossus 2 전력(Google·Grok 훈련) 테일</td><td class="down">거의 미반영</td></tr>
+<tr><td>R5. HBM4·전력</td><td>2027 증설 시즌</td><td class="down">5~10GW 목표 미달</td><td>부분</td></tr>
+<tr><td>R6. 자금 조달</td><td>2027~ 대규모 조달</td><td class="down">희석·이자 부담</td><td>부분</td></tr>
+<tr><td>R7. 밸류에이션</td><td>가이던스 미달 확인 시</td><td class="down">준거 $30(DCF)/$122~140(배수)</td><td class="down">정의상 미반영</td></tr>
+<tr><td>R8. 키맨·지배구조</td><td>상시</td><td class="down">이벤트성 급락</td><td class="down">낮음</td></tr>
+</table></div>
+<p class="fig-t">표 12-1. Bear 리스크 × 반영도 매트릭스. 반영도가 낮을수록 실현 시 주가 충격이 큼</p>
+</section>
+
+<section id="s13">
+<h2><span class="no">13</span>SWOT — 앞선 분석의 사분면 종합</h2>
+<div class="swot">
+<div class="q s"><div class="qt">Strengths — 강점</div><ul>
+<li>발사 질량 80%+ 독점, kg당 원가 경쟁 최저 (§4·§6)</li>
+<li>Starlink 부문 마진 39%, 활성 위성 65~75% 점유 [상충] (§3)</li>
+<li>세계 최초·최대 GW급 AI 클러스터 건설 실행력 (§4-A-5)</li>
+<li>현금 $100B — 업계 최대급 유동성 (§9-B)</li>
+<li>국방 통합: PLEO 97%, Golden Dome 핵심 계약 (§11-B5)</li>
+</ul></div>
+<div class="q w"><div class="qt">Weaknesses — 약점</div><ul>
+<li>AI 매출 2사 집중 + 90일 해지 조항 (§12-R1)</li>
+<li>FCF 대규모 적자 — 흑자 전환 빨라야 2032년 (§9)</li>
+<li>AI 세그먼트 구조적 해자 부재 (§6-3)</li>
+<li>xAI 인재 유출·Grok 참여 하락 (§12-R3)</li>
+<li>controlled company — 소수주주 보호 취약 (§12-R8)</li>
+</ul></div>
+<div class="q o"><div class="qt">Opportunities — 기회</div><ul>
+<li>궤도 컴퓨트 — 전력 병목의 구조적 우회, 미반영 옵션 (§4-D)</li>
+<li>D2C 위성통신 — EchoStar 스펙트럼으로 스마트폰 직접 서비스 (§4-A-4)</li>
+<li>Starship 상업화 — 원가 1/27 하락 시 신시장 개화 (§5-A)</li>
+<li>S&amp;P500 편입 — 2027년 중반 이후 수급 카드 (§8-3)</li>
+<li>Golden Dome 예산 집행 본격화 — IOC 2028 (§11-B5)</li>
+</ul></div>
+<div class="q t"><div class="qt">Threats — 위협</div><ul>
+<li>계약 해지·갱신 실패 — 9/30 Google 기한이 첫 시험대 (§12-R1)</li>
+<li>서드헤이븐 터빈 예비금지명령 — 8/24 심리, 대상 Colossus 2 (§12-R4)</li>
+<li>AI capex 사이클 냉각 — 하이퍼스케일러 가이던스가 선행지표 (§5-B)</li>
+<li>중국 CALT 재사용 추격 — 첫 회수 격차 ~10.6년이나 가속 중 [파생] (§4-C)</li>
+<li>HBM4 과점 공급 — 증설 목표의 외생 변수 (§12-R5)</li>
+</ul></div>
+</div>
+<p class="fig-t">그림 13-1. SWOT 종합. 괄호는 상세 분석 위치</p>
+</section>
+
+<section id="s14">
+<h2><span class="no">14</span>경영진 및 자본 배분 — 약속의 크기와 실행의 기록</h2>
+
+<h3>14-1. 체제</h3>
+<p>CEO Elon Musk(의결권 ~82%), President·COO Gwynne Shotwell, CFO Bret Johnsen. 실질 구조는 <strong>"Musk가 방향을, Shotwell이 실행을"</strong>의 이원 체제로 20년 이상 유지돼 왔으며, Shotwell의 존재가 기관투자자에게 키맨 리스크의 완충재 역할을 한다. controlled company로서 이사회 독립성 요건 일부를 면제받는 구조이며, 인센티브·보상 체계의 세부는 [미확인 — S-1 보상 항목 추가 확인 필요].</p>
+
+<h3>14-2. 약속 대비 실행 — 트랙 레코드 대차대조표</h3>
+<div class="twrap"><table>
+<tr><th>약속</th><th>결과</th><th>판정</th></tr>
+<tr><td>궤도급 로켓 재사용 (2011~ 공언)</td><td>2015 첫 착륙 → 부스터 20회+ 재비행 상용화</td><td class="up">이행 — 지연됐으나 달성</td></tr>
+<tr><td>Starlink 수익화 (2015 발표)</td><td>2023 손익분기 → 2Q26 부문 마진 39%</td><td class="up">이행</td></tr>
+<tr><td>화성 무인선 2024·유인 2026 (2016 IAC)</td><td>미달성 — Starship 궤도 상용화 단계</td><td class="down">대폭 지연</td></tr>
+<tr><td>Colossus "세계 최대 클러스터" (2024)</td><td>122일 건설 → GW급 최초 가동</td><td class="up">이행 — 오히려 초과</td></tr>
+<tr><td>Dec'26 ARR $100B · 매출 $1T by 2030</td><td>검증 진행 중 — 12월이 첫 판정일</td><td>미결 — 이 종목 전체의 시금석</td></tr>
+</table></div>
+<p class="fig-t">표 14-1. 약속-실행 대차대조표. 패턴: 방향은 맞히고 시점은 늦는다 — "Musk 시간"을 할인해 읽되, 방향 베팅 자체를 기각한 쪽이 장기적으로 틀려 왔다</p>
+
+<h3>14-3. 자본 배분 — 배당도 자사주도 없는 전액 재투자 기계</h3>
+<p>배당·자사주 매입은 없고 앞으로도 상당 기간 없을 것이 명시적이다. 자본은 ①Starship(발사 원가 파괴), ②Starlink V3·EchoStar($19.6B), ③Colossus·GPU(2Q에만 capex의 86%), ④Terafab 자체 칩 팹($16.8B 필링 [상충: 언론 $20~25B])으로 흐른다. M&A는 EchoStar 스펙트럼처럼 <strong>병목 자산을 사는 유형</strong>에 집중돼 있고, 문어발식 다각화 인수는 없다 — 자본 배분의 논리 일관성은 높다.</p>
+<p>주의 깊게 볼 지점은 <strong>관계사 거래의 전력</strong>이다. 합병 전 SpaceX가 xAI에 $2B를 투자했고(2025-07), 이번 xAI 합병 자체도 Musk가 양쪽 대주주인 거래였다(합산 밸류에이션 $1.25T 중 xAI $250B — 직전 라운드 $230B 대비 +9%로 산정 자체는 시장가 범위 [추정]). Tesla와의 Terafab 협업, Cybercab Starlink 탑재도 같은 결이다. 각 건은 개별로 방어 가능하나, 82% 의결권 아래에서 <strong>이해상충 심사를 시장이 아닌 한 사람이 한다</strong>는 구조 자체가 리스크 프리미엄의 대상이다.</p>
+
+<h3>14-4. 도입 단계 기업의 필수 역량 — 스토리텔링</h3>
+<p>CAP 프레임워크에서 도입기 기업의 가치는 상당 부분 "자본시장을 설득해 낮은 비용으로 자본을 계속 조달하는 능력"에 있다. 이 관점에서 Musk는 현존 최강의 자산이다 — IPO $86B+채권 $25B를 역사상 최대 규모로 조달했고, Starmind 발표 하루로 시총을 +9.4% 움직였다. 단 같은 능력이 공격적 가이던스 문화(ARR $100B, $1T by 2030)로 발현되며, <strong>가이던스가 곧 밸류에이션의 뼈대인 현 국면에서는 미달 시 신뢰 훼손의 진폭도 그만큼 크다.</strong></p>
+</section>
+
+<section id="s15">
+<h2><span class="no">15</span>종합 판단 및 체크포인트</h2>
+
+<h3>15-A. 1차 판단 — 내러티브 엔진 (헤드라인 결론)</h3>
+<div class="co co-key"><div class="ct">판정: 꿈 신선 × CAP 과열 → 1차 긍정 (내러티브 주도 구간 유효)</div>
+<p>§5-B의 네 입력이 모두 같은 방향이다. <strong>①신선도:</strong> 3층 내러티브 중 L2(AI 인프라)는 2Q 실적으로 검증 1라운드 통과, L3(궤도 컴퓨트)는 발표 3주차의 최신선 스토리. <strong>②3P:</strong> 핵심 축(컴퓨트 임대 확장)은 Probable, $1T 매출은 Plausible, 75GW 궤도는 Possible — 판정 등급이 상승 여지를 남김. <strong>③증거화 일정:</strong> 9/30 Google 인도 → 10월 $6.7B 계약 개시 → F14 첫 궤도+Ship 캐치 → 12월 ARR $100B 판정 → 2027 Starmind 프로토까지 향후 5개월 촉매 밀집. <strong>④자금 흐름:</strong> 락업 최악 구간 소화 확인 + 숏커버 전환 + 테마 대표주 지위 + S&amp;P500 카드 잔존. 종합: <strong>지금은 이야기가 커지는 구간이며, 앞에 촉매가 있다.</strong> §1 헤드라인과 일치.</p></div>
+
+<h3>15-B. 2차 후술 — 장기 보유 관점 (1차 판단을 기각하지 않는 별도 경고)</h3>
+<p><strong>CAP 과열도와 하방의 크기:</strong> 내재 CAP 13.2년은 "가이던스 경로 채택"이라는 낙관 위의 낙관이다. 내러티브가 소진되어 시장 준거가 컨센서스 경로로 회귀하는 경우의 이론가는 다음과 같이 정량화된다.</p>
+<div class="twrap"><table>
+<tr><th>내러티브 소진 시나리오</th><th>준거 가치</th><th>현재가 대비</th></tr>
+<tr><td>배수 회귀 (가이던스 유지 + 멀티플만 Mag7 수준으로)</td><td class="num">$122~140</td><td class="num down">-1% ~ -12%</td></tr>
+<tr class="hl"><td>컨센서스 회귀 (DCF BASE, N=15~30)</td><td class="num">$28~32</td><td class="num down"><strong>-77% ~ -80%</strong></td></tr>
+<tr><td>검증 실패 (BEAR: 계약 이탈 + 마진 상한 22%)</td><td class="num">$2~3</td><td class="num down">-98%</td></tr>
+</table></div>
+<p class="fig-t">표 15-1. 하방 정량 [파생: §10 모델]. 세 층의 낙하 지점이 서로 멀다는 것 자체가 이 종목의 위험 구조</p>
+<p><strong>내러티브 사후 가치(꿈이 꺼져도 남는 것):</strong> 발사 독점 + Starlink 현금흐름 + 국방 계약 + 순현금 $45B — 이는 BASE DCF의 $30 내외에 해당하는 구조적 가치다. 즉 이 종목은 "0이 되는 주식"이 아니라 <strong>"꿈의 가격($108 상당)과 구조의 가격($30 상당)이 4.6:1로 섞인 주식"</strong>이다 [파생: 138.74 분해].</p>
+<p><strong>보유 전환 조건 — "내러티브 구간 보유"에서 "장기 보유"로 넘어가려면:</strong> ①12월 ARR $100B 달성 또는 근접(±15%) — 가이던스 신뢰의 정착, ②컴퓨트 계약의 해지 조항 완화·장기화 갱신 — R1의 구조적 해소, ③분기 FCF 적자의 정점 통과 확인(모델상 2027~30이 최심부), ④Starship 상업 페이로드·궤도 급유 실증 — Starmind와 화성 서사의 물리적 전제. 네 조건 중 셋 이상 확인 전까지, 장기 보유 관점에서는 §15-B의 하방 표가 유효한 경고로 남는다.</p>
+
+<h3>15-C. 한계와 가정, 모니터링 체크포인트</h3>
+<p><strong>이 결론이 의존하는 핵심 가정:</strong> ①베타 1.8 — 상장 2개월로 회귀 추정 불가, 범위 1.5~2.1 [상충] 어디냐에 따라 내재 CAP가 9.8년~도달불가로 진동. ②BULL 마진 경로(EBITA 45%)는 회사·JPM 가정의 승계이며 독립 검증 불가 [추정]. ③주가 궤적 중 6월 하순~7월·8/10은 보도 기반 근사 재구성 [파생] — 8월 초 경로(8/5 $108.27·8/6 $114.92·8/7 $133.11)는 보도 확정치로 정정 완료. ④Anthropic·Google 계약 금액의 매체 간 표기 상충을 원출처 기준으로 채택 [상충]. <strong>결론 수정 트리거:</strong> 9/30 Google 인도 실패, 12월 ARR 대폭 미달, 멤피스 금지명령 인용, Grok 5의 벤치마크 실패 중 어느 하나가 확정되면 1차 판정(내러티브 유효)을 재심사한다.</p>
+<div class="twrap"><table class="wide">
+<tr><th>시점</th><th>체크포인트</th><th>확인 사항 (꿈의 사망 조건 §5-B-8 연동)</th></tr>
+<tr><td>2026-08-12</td><td>2차 락업 319M주 (당일)</td><td>8/6 소화 패턴 재현 여부 — 장중 소폭 약세 관찰, 종가 기준 판정 (§8-4)</td></tr>
+<tr class="hl"><td>2026-08-24</td><td>서드헤이븐 터빈 예비금지명령 심리</td><td>인용 시 Colossus 2 전력(Google 인도·Grok 5 훈련) 타격 → R4 실현. 9/30 Google 기한과 중첩 주시</td></tr>
+<tr><td>2026-08 말</td><td>Starship Flight 14</td><td>첫 궤도 비행 + 첫 Ship 캐치 — 실패 시 V3·Starmind 일정 연쇄 지연</td></tr>
+<tr class="hl"><td>2026-09-30</td><td>Google GPU 인도 기한</td><td>미인도 시 해지권 발동 — R1의 첫 시험대</td></tr>
+<tr><td>2026-10</td><td>미공개 고객 $6.7B/6mo 계약 개시</td><td>매출 인식 시작 확인</td></tr>
+<tr><td>2026-11 초</td><td>3Q26 실적 + 락업 28% 트랜치(1,276M주)</td><td>AI 세그먼트 적자 폭·capex 가이던스 — 실적과 최대 물량의 동시 도래, §8-4 시나리오의 분기점</td></tr>
+<tr><td>2026-12-08</td><td>180일 락업 전량 만기</td><td>이월 455.8M 포함 — 유통 가능 비율 ~40% [파생] 도달. 공급 피크이자 지수 요건 진전의 이중 신호</td></tr>
+<tr class="hl"><td>2026-12</td><td>ARR $100B 판정</td><td>가이던스 신뢰의 1차 최종시험 — Cursor $60B 인수 승인 여부 포함</td></tr>
+<tr><td>2027 초</td><td>Starmind 프로토타입</td><td>L3 내러티브의 첫 물리 증거</td></tr>
+<tr><td>2027-06-12</td><td>Musk 6.4B주 락업 만료 · S&amp;P500 요건 충족 개시</td><td>수급 구조의 재편 시점</td></tr>
+<tr><td>분기마다</td><td>하이퍼스케일러 capex 가이던스</td><td>AI 사이클의 선행지표 — 하향 전환 시 테마 전체 디레이팅</td></tr>
+</table></div>
+<p class="fig-t">표 15-2. 모니터링 캘린더. §5-B 촉매 캘린더(표 5-2)의 실행 점검판</p>
+
+<div class="co co-warn"><div class="ct">최종 정리 — 두 개의 결론을 하나로 뭉뚱그리지 않는다</div>
+<p><strong>1차(내러티브 판정): 긍정.</strong> 꿈은 신선하고, 촉매는 밀집해 있으며, 자금은 돌아왔다 — 내러티브 주도 구간이 유효하다. <strong>2차(장기 보유 판정): 유보.</strong> 현재가는 가이던스 경로에 13년 해자를 곱한 값이며, 준거가 컨센서스로 회귀하면 −78%의 하방이 구조에 내장돼 있다. 이 종목의 올바른 소유 형태는 "확신"이 아니라 <strong>"체크포인트가 달린 조건부 보유"</strong>다 — 표 15-2의 날짜들이 그 조건이다. 본 보고서는 투자 추천이 아닌 의사결정 자료다.</p></div>
+</section>
+
+<div class="foot">
+<p>기준일 2026-08-11 (주가 $138.74, 시총 $1,826B) · 작성 2026-08-12 · 데이터 출처: 회사 2Q26 실적자료·S-1, JPM(8/5)·Citi(8/4)·MS 리포트, FactSet·Visible Alpha 컨센서스 집계 보도, FCC 필링, 법원 기록 보도, NVIDIA·xAI 기술 발표, 다모다란 ERP, FRED T10YIE, 미 국채 수익률 (각 수치 옆 개별 표기) · 데이터 계보 마커: [추정] 논리적 추정 · [파생] 계산값(식 병기) · [상충] 출처 간 불일치(범위 제시) · [미확인] 검색 확인 실패(빈칸 유지) · 본 문서는 특정 종목의 매수·매도 추천이 아니며, 정보 제공 목적의 분석 자료입니다.</p>
+<p><strong>개정 이력</strong> — 초판 2026-08-11(기준가 $138.74, 이 가격 파생 수치 전부 유지). <strong>수정 2판 2026-08-12:</strong> 외부 팩트체크 및 자체 재검증(신규 검색 12건) 반영 — ①§12-R4 소송 대상 정정(터빈 급전 대상은 Colossus 1이 아닌 <strong>Colossus 2</strong>, 국방부 법원 서면 근거; 노출 백로그를 Anthropic→Google·Grok으로 재매핑) ②New Glenn 부스터 해상 회수 2연속 성공 반영(종전 "미검증" 오기 정정) ③중국 CALT 회수 방식 정정(타워캐치 모방→세계 최초 해상 그물+훅 노선) ④8/5~8/11 주가 경로 정정(8/6 +6.1% $114.92·8/7 +15.8% $133.11) ⑤§8-4 락업 시나리오 분석 신설 ⑥위성 점유율·서비스 국가 수·발사 횟수·HBM4 대역폭·Grok 지표 등 경미 수치 11건 [상충] 처리 또는 갱신. 외부 팩트체크가 지적한 "8/6 +2.6%"·"심리일 8/24 미확인" 2건은 자체 재검색 결과 원 보고서/원 일정이 맞는 것으로 확인되어 채택하지 않음(8/6 종가 +6.1%는 CNN·Yahoo, 8/24는 심리 일정 보도로 확정).</p>
+</div>
+
+</div><!-- /wrap -->
+</body>
+</html>
