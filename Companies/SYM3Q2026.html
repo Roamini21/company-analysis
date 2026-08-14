@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Symbotic (SYM) 기업분석 보고서</title>
+<style>
+/* ===== 보고서 UI 통일 시스템 v1.1 — 수정 금지 ===== */
+:root{
+  --bg-page:#FFFFFF; --bg-soft:#F6F8FA;
+  --brand:#0F2B46; --brand-2:#1E4265;
+  --ink:#1A202C; --ink-2:#4A5568; --ink-3:#718096;
+  --line:#E2E8F0; --line-2:#CBD5E1;
+  --accent:#2563EB; --accent-soft:#EFF6FF;
+  --pos:#047857; --pos-soft:#ECFDF5;
+  --neg:#DC2626; --neg-soft:#FEF2F2;
+  --warn:#B45309; --warn-soft:#FFFBEB;
+  --gold:#B7791F; --gold-soft:#FEF3C7;
+  --c1:#2563EB; --c2:#7C3AED; --c3:#059669; --c4:#D97706;
+  --c5:#DC2626; --c6:#0891B2; --c7:#DB2777; --c8:#64748B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,
+    "Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  background:var(--bg-page); color:var(--ink);
+  font-size:15px; line-height:1.7; word-break:keep-all;
+}
+.wrap{max-width:1040px;margin:0 auto;padding:0 28px 80px;}
+p{margin:0 0 12px; color:var(--ink);}
+strong{color:var(--ink);font-weight:700;}
+a{color:var(--accent);text-decoration:none;}
+ul,ol{margin:0 0 12px 22px;} li{margin:4px 0;color:var(--ink);}
+
+/* --- 표지 밴드 (어두운 배경 허용 위치 1) --- */
+.cover{background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  color:#FFFFFF;padding:44px max(28px,calc((100% - 1040px)/2 + 28px));
+  border-radius:0 0 18px 18px;margin-bottom:36px;}
+.cover h1{font-size:27px;font-weight:800;color:#FFFFFF;margin:6px 0 10px;}
+.cover .sub{color:#C9D6E4;font-size:14px;}
+.cover .meta{color:#9FB3C8;font-size:12.5px;margin-top:14px;}
+.cover .kpis{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+.cover .kpi{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);
+  border-radius:10px;padding:10px 14px;min-width:130px;}
+.cover .kpi .k{font-size:11.5px;color:#9FB3C8;}
+.cover .kpi .v{font-size:18px;font-weight:800;color:#FFFFFF;}
+.cover .kpi .v.up{color:#6EE7B7;} .cover .kpi .v.down{color:#FCA5A5;}
+
+/* --- 목차 --- */
+.toc{background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;
+  padding:18px 22px;margin:0 0 40px;}
+.toc .t{font-weight:800;color:var(--brand);font-size:14px;margin-bottom:10px;}
+.toc ol{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:0;}
+.toc li{white-space:nowrap;font-size:13.5px;}
+.toc a{color:var(--ink-2);}
+
+/* --- 섹션 --- */
+section{margin:56px 0 0;}
+h2{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:800;
+  color:var(--brand);border-bottom:2px solid var(--brand);
+  padding-bottom:10px;margin:0 0 20px;}
+h2 .no{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:var(--brand);
+  color:#FFFFFF;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800;}
+h3{font-size:16.5px;font-weight:700;color:var(--ink);margin:28px 0 12px;}
+.lead{font-size:15.5px;color:var(--ink);background:var(--accent-soft);
+  border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+  padding:14px 16px;margin:0 0 16px;}
+.lead *{color:var(--ink);}
+
+/* --- 콜아웃 (배경+글자색 자급) --- */
+.co{border-radius:10px;padding:16px 18px;margin:16px 0;border:1px solid;}
+.co .ct{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.co p,.co li{font-size:14px;margin-bottom:6px;}
+.co-key{background:var(--accent-soft);border-color:#BFDBFE;}
+.co-key,.co-key *{color:#1E3A8A;}
+.co-pos{background:var(--pos-soft);border-color:#A7F3D0;}
+.co-pos,.co-pos *{color:#065F46;}
+.co-neg{background:var(--neg-soft);border-color:#FECACA;}
+.co-neg,.co-neg *{color:#991B1B;}
+.co-warn{background:var(--warn-soft);border-color:#FDE68A;}
+.co-warn,.co-warn *{color:#92400E;}
+.co-note{background:var(--bg-soft);border-color:var(--line);}
+.co-note,.co-note *{color:var(--ink-2);}
+
+/* --- 배지 (데이터 계보·확신도) --- */
+.bd{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;
+  padding:2px 7px;vertical-align:1px;margin:0 2px;}
+.bd-est{background:var(--warn-soft);color:#92400E;border:1px solid #FDE68A;}
+.bd-drv{background:var(--accent-soft);color:#1E40AF;border:1px solid #BFDBFE;}
+.bd-cfl{background:var(--neg-soft);color:#991B1B;border:1px solid #FECACA;}
+.bd-unk{background:var(--bg-soft);color:var(--ink-2);border:1px dashed var(--line-2);}
+.bd-conf{background:var(--bg-soft);color:var(--ink-2);border:1px solid var(--line-2);}
+
+/* --- KPI 카드 그리드 --- */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;margin:16px 0;}
+.kcard{background:#FFFFFF;border:1px solid var(--line);border-radius:10px;
+  padding:14px 16px;}
+.kcard .k{font-size:12px;color:var(--ink-3);}
+.kcard .v{font-size:20px;font-weight:800;color:var(--ink);margin-top:2px;}
+.kcard .v.up{color:var(--pos);} .kcard .v.down{color:var(--neg);}
+.kcard .d{font-size:11.5px;color:var(--ink-3);margin-top:2px;}
+
+/* --- 표 --- */
+.twrap{overflow-x:auto;margin:16px 0;border:1px solid var(--line);
+  border-radius:10px;
+  background:
+    linear-gradient(to right,#FFF 30%,rgba(255,255,255,0)),
+    linear-gradient(to left,#FFF 30%,rgba(255,255,255,0)) 100% 0,
+    radial-gradient(farthest-side at 0 50%,rgba(15,43,70,.14),transparent),
+    radial-gradient(farthest-side at 100% 50%,rgba(15,43,70,.14),transparent) 100% 0;
+  background-repeat:no-repeat;background-size:60px 100%,60px 100%,16px 100%,16px 100%;
+  background-attachment:local,local,scroll,scroll;}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:#FFFFFF;}
+caption{caption-side:top;text-align:left;font-weight:800;color:var(--brand);
+  font-size:14px;padding:12px 14px 8px;}
+th{background:var(--brand);color:#FFFFFF;font-weight:700;font-size:12.5px;
+  padding:10px 12px;text-align:left;white-space:nowrap;}
+td{padding:9px 12px;border-top:1px solid var(--line);color:var(--ink);
+  vertical-align:top;}
+tbody tr:nth-child(even) td{background:#F8FAFC;}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+td .up{color:var(--pos);font-weight:700;} td .down{color:var(--neg);font-weight:700;}
+tr.hl td{background:var(--gold-soft);color:#78350F;font-weight:700;}
+tr.total td{background:var(--accent-soft);color:#1E3A8A;font-weight:800;
+  border-top:2px solid var(--line-2);}
+.wide{min-width:860px;}
+
+/* --- 그림(figure) --- */
+figure{margin:24px 0;}
+.fig-t{font-weight:800;color:var(--ink);font-size:14.5px;margin-bottom:10px;}
+.fig-box{background:#FFFFFF;border:1px solid var(--line);border-radius:12px;
+  padding:16px;}
+figcaption{font-size:12px;color:var(--ink-3);margin-top:8px;line-height:1.6;}
+figure img{max-width:100%;height:auto;border-radius:8px;display:block;}
+svg{max-width:100%;height:auto;display:block;}
+svg text{font-family:inherit;}
+
+/* --- 범례 (차트 외부 HTML 범례) --- */
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 2px 0;}
+.legend .li{display:flex;align-items:center;gap:6px;font-size:12.5px;
+  color:var(--ink-2);white-space:nowrap;}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto;}
+
+/* --- 이벤트 마커 범례 표 (주가 차트용) --- */
+.evt{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px;}
+.evt td{padding:6px 10px;border-top:1px solid var(--line);color:var(--ink);}
+.evt .n{width:30px;font-weight:800;color:#FFFFFF;text-align:center;}
+.evt .n span{display:inline-block;width:20px;height:20px;line-height:20px;
+  border-radius:50%;background:var(--brand);font-size:11.5px;}
+.evt .up{color:var(--pos);font-weight:700;} .evt .down{color:var(--neg);font-weight:700;}
+
+/* --- Bull/Bear 2열 --- */
+.bb{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+.bb .col{border-radius:12px;padding:16px 18px;border:1px solid;}
+.bb .bull{background:var(--pos-soft);border-color:#A7F3D0;}
+.bb .bull,.bb .bull *{color:#065F46;}
+.bb .bear{background:var(--neg-soft);border-color:#FECACA;}
+.bb .bear,.bb .bear *{color:#991B1B;}
+.bb .ct{font-weight:800;font-size:14px;margin-bottom:8px;}
+
+/* --- SWOT 4분면 --- */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+.swot .q{border-radius:12px;padding:14px 16px;border:1px solid;}
+.swot .s{background:var(--pos-soft);border-color:#A7F3D0;} .swot .s,.swot .s *{color:#065F46;}
+.swot .w{background:var(--neg-soft);border-color:#FECACA;} .swot .w,.swot .w *{color:#991B1B;}
+.swot .o{background:var(--accent-soft);border-color:#BFDBFE;} .swot .o,.swot .o *{color:#1E3A8A;}
+.swot .t{background:var(--warn-soft);border-color:#FDE68A;} .swot .t,.swot .t *{color:#92400E;}
+.swot .qt{font-weight:800;font-size:13.5px;margin-bottom:6px;}
+.swot ul{margin:0 0 0 18px;} .swot li{font-size:13.5px;margin:3px 0;}
+
+/* --- 푸터 --- */
+.foot{margin-top:64px;border-top:1px solid var(--line);padding-top:16px;
+  font-size:12px;color:var(--ink-3);line-height:1.7;}
+
+/* --- 반응형 --- */
+@media (max-width:640px){
+  .wrap{padding:0 16px 60px;}
+  .cover{padding:30px 16px;} .cover h1{font-size:22px;}
+  .bb,.swot{grid-template-columns:1fr;}
+  h2{font-size:19px;}
+}
+@media print{
+  .cover{border-radius:0;} body{font-size:13px;}
+}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="sub">기업분석 보고서 · 산업재(창고 자동화 로보틱스) · NASDAQ:SYM</div>
+  <h1>Symbotic — 월마트의 물류를 다시 쓴 로봇, "물류의 OS"라는 꿈과 그 가격</h1>
+  <div class="kpis">
+    <div class="kpi"><div class="k">현재 주가 (08-13)</div><div class="v">$41.2</div></div>
+    <div class="kpi"><div class="k">52주 범위</div><div class="v down">$38.19–87.88</div></div>
+    <div class="kpi"><div class="k">시가총액(전체 유닛)</div><div class="v">~$24.9B</div></div>
+    <div class="kpi"><div class="k">수주잔고</div><div class="v up">$22.5B</div></div>
+    <div class="kpi"><div class="k">내재 CAP</div><div class="v down">역산 불가(&gt;20년 초과)</div></div>
+    <div class="kpi"><div class="k">FY26E 매출</div><div class="v up">~$2.80B (+24%)</div></div>
+  </div>
+  <div class="meta">기준일: 2026-08-14 · 데이터 출처 약 45개(회사 IR·SEC·업계 전문지·시장데이터) · [추정]·[파생]·[상충]·[미확인] 표기 사용 · 회계연도(FY)는 9월 말 종료 기준</div>
+</div>
+<div class="wrap">
+<nav class="toc">
+  <div class="t">목차</div>
+  <ol>
+    <li><a href="#s1">1. 핵심 요약</a></li>
+    <li><a href="#s2">2. 기업 개요</a></li>
+    <li><a href="#s3">3. 수익 구조</a></li>
+    <li><a href="#s4">4. 제품·기술 심층</a></li>
+    <li><a href="#s5">5. 산업 분석·꿈</a></li>
+    <li><a href="#s6">6. 경제적 해자</a></li>
+    <li><a href="#s7">7. 피어그룹</a></li>
+    <li><a href="#s8">8. 시장 내러티브</a></li>
+    <li><a href="#s9">9. 재무·DCF</a></li>
+    <li><a href="#s10">10. 내재 CAP</a></li>
+    <li><a href="#s11">11. Bull Case</a></li>
+    <li><a href="#s12">12. Bear Case</a></li>
+    <li><a href="#s13">13. SWOT</a></li>
+    <li><a href="#s14">14. 경영진·자본배분</a></li>
+    <li><a href="#s15">15. 종합 판단</a></li>
+  </ol>
+</nav>
+<section id="s1">
+<h2><span class="no">1</span>핵심 요약 (Executive Summary)</h2>
+<p class="lead"><strong>한 문장 요약: Symbotic은 월마트의 미국 지역물류센터 42곳 전부를 자동화하고 있는, 케이스(박스) 단위 창고 자동화의 사실상 독주 기업이다.</strong> 시속 25마일로 달리는 자율로봇 2만 2천여 대와 고밀도 3D 저장 구조, 그리고 이를 지휘하는 AI 소프트웨어를 하나의 수직 통합 플랫폼으로 묶어, "매장 진열 순서 그대로 쌓인 혼합 팔레트"를 사람 없이 만들어낸다.</p>
+
+<div class="co co-key"><div class="ct">헤드라인 결론 — 꿈 × CAP 매트릭스 판정: "꿈 신선(재점화 대기) + CAP 과열" 칸</div>
+<p><strong>1차 판정(내러티브 엔진): 조건부 긍정 — 단, 지금은 이야기가 커지는 구간이 아니라 '수축 후 재점화 촉매를 기다리는 구간'이다.</strong> 피지컬 AI·창고 로보틱스라는 모(母)테마는 2026년에도 시장의 주력 테마로 살아 있고(Amazon의 유럽 €10B 로봇 투자가 오히려 "자동화 군비경쟁" 프레임을 강화), SYM 앞에는 날짜가 박힌 촉매들이 배치되어 있다 — 2026년 11월 하순 FY26 Q4 실적·FY27 가이던스, FY27 하반기 Gen-2 차세대 구조의 매출 변곡, 2028년 초 월마트 APD(매장 픽업·배송센터) 400개 본주문, Exol(구 GreenBox) 사이트 5개 추가. 그러나 종목 자체의 내러티브는 2025년 11월 26일 $87.88 정점에서 1차 소비를 마쳤고, 이후 EPS 컨센 미스 반복(Q2·Q3 연속)·소프트뱅크 순차 매도·최다 공매도 상태로 -53% 조정되며 냉각 국면에 있다.</p>
+<p><strong>2차 정보(CAP): 시장 내재 CAP는 "역산 불가" — 어떤 예측기간(1~19년), 어떤 합리적 할인율에서도 기본 펀더멘털 경로가 현 주가에 도달하지 못한다.</strong> 기본 경로를 정당화하려면 할인율이 3.47%(무위험수익률 4.70%보다 낮음)여야 하고, 합리적 할인율에서는 종착 EBITA 마진 52~60% 또는 FY2036 매출 $26~35B(현재의 9~13배)가 필요하다. 즉 현 주가의 약 절반~4분의 3은 아직 계약되지 않은 미래(TAM $433B + 마이크로풀필먼트 $305B 스토리)의 몫이다. 이 하방의 크기와 보유 조건은 §15-B에 정량으로 후술한다.</p></div>
+
+<p><strong>기업의 본질과 투자 매력:</strong> Symbotic의 본질은 로봇 회사가 아니라 <strong>"유통업의 원가 구조를 다시 쓰는 물류 운영체제(OS)"</strong>다. 창고 인건비는 물류 예산의 50~70%를 차지하고 2024년에도 임금이 연 7~9% 올랐는데, 전 세계 창고의 80%는 여전히 완전 수동이다. Symbotic은 이 문제를 "부분 자동화 기계 판매"가 아니라 "입고 도크에서 출고 팔레트까지의 완전 자동화 + 그 위의 소프트웨어·서비스 구독"으로 푼다. 그 결과가 <strong>$22.5B(연매출의 8배)의 계약 수주잔고, FY26 예상 매출 +24%, 조정 EBITDA 2배 이상 성장, 무차입에 현금 $1.75B</strong>라는 숫자이며, 여기에 소프트뱅크와의 WaaS 합작(Exol), 월마트 매장 400곳 마이크로풀필먼트, 자율 지게차(Fox)·운영 인텔리전스 SW(ARMS) 인수, Exol의 전국 6개 사이트(총 600만 sqft) 네트워크로 "도크 문에서 소비자 주문까지"로 영토를 넓히는 중이다. 시장이 이 회사에 열광했던 이유이자, 지금도 애널리스트 71%가 매수를 유지하며 평균 목표가 $65.7(현재가 +59%)를 제시하는 이유다.</p>
+
+<figure>
+  <div class="fig-t">최근 10개월: 실적 서프라이즈로 3거래일 +63.8% 폭등 → 증자·매도 물량·EPS 컨센 미스 반복으로 고점 대비 -53%</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg">
+      <line x1="70" y1="302" x2="960" y2="302" stroke="#E2E8F0"/><text x="60" y="306" font-size="12" fill="#4A5568" text-anchor="end">$40</text>
+      <line x1="70" y1="255" x2="960" y2="255" stroke="#E2E8F0"/><text x="60" y="259" font-size="12" fill="#4A5568" text-anchor="end">$50</text>
+      <line x1="70" y1="207" x2="960" y2="207" stroke="#E2E8F0"/><text x="60" y="211" font-size="12" fill="#4A5568" text-anchor="end">$60</text>
+      <line x1="70" y1="159" x2="960" y2="159" stroke="#E2E8F0"/><text x="60" y="163" font-size="12" fill="#4A5568" text-anchor="end">$70</text>
+      <line x1="70" y1="112" x2="960" y2="112" stroke="#E2E8F0"/><text x="60" y="116" font-size="12" fill="#4A5568" text-anchor="end">$80</text>
+      <line x1="70" y1="74" x2="960" y2="74" stroke="#CBD5E1" stroke-dasharray="5 4"/><text x="955" y="68" font-size="12" fill="#4A5568" text-anchor="end">52주 고점 $87.88</text>
+      <line x1="70" y1="311" x2="960" y2="311" stroke="#CBD5E1" stroke-dasharray="5 4"/><text x="955" y="326" font-size="12" fill="#4A5568" text-anchor="end">52주 저점 $38.19</text>
+      <path d="M76,93 L132,238 L148,74 L185,239 L272,140 L366,225 L537,231 L649,243 L664,246 L714,253 L733,272 L770,295 L796,311 L842,296 L929,271 L932,282 L957,297" fill="none" stroke="#2563EB" stroke-width="2.5"/>
+      <line x1="142" y1="40" x2="142" y2="350" stroke="#CBD5E1" stroke-dasharray="3 3"/><circle cx="142" cy="238" r="11" fill="#0F2B46"/><text x="142" y="242" font-size="11.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">1</text>
+      <line x1="170" y1="40" x2="170" y2="350" stroke="#CBD5E1" stroke-dasharray="3 3"/><circle cx="170" cy="145" r="11" fill="#0F2B46"/><text x="170" y="149" font-size="11.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">2</text>
+      <line x1="366" y1="40" x2="366" y2="350" stroke="#CBD5E1" stroke-dasharray="3 3"/><circle cx="366" cy="225" r="11" fill="#0F2B46"/><text x="366" y="229" font-size="11.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3</text>
+      <line x1="537" y1="40" x2="537" y2="350" stroke="#CBD5E1" stroke-dasharray="3 3"/><circle cx="537" cy="231" r="11" fill="#0F2B46"/><text x="537" y="235" font-size="11.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">4</text>
+      <line x1="649" y1="40" x2="649" y2="350" stroke="#CBD5E1" stroke-dasharray="3 3"/><circle cx="649" cy="243" r="11" fill="#0F2B46"/><text x="649" y="247" font-size="11.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">5</text>
+      <line x1="714" y1="40" x2="714" y2="350" stroke="#CBD5E1" stroke-dasharray="3 3"/><circle cx="714" cy="253" r="11" fill="#0F2B46"/><text x="714" y="257" font-size="11.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">6</text>
+      <line x1="796" y1="40" x2="796" y2="350" stroke="#CBD5E1" stroke-dasharray="3 3"/><circle cx="796" cy="311" r="11" fill="#0F2B46"/><text x="796" y="315" font-size="11.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">7</text>
+      <line x1="932" y1="40" x2="932" y2="350" stroke="#CBD5E1" stroke-dasharray="3 3"/><circle cx="932" cy="282" r="11" fill="#0F2B46"/><text x="932" y="286" font-size="11.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">8</text>
+      <text x="163" y="372" font-size="12" fill="#4A5568">25-12</text>
+      <text x="356" y="372" font-size="12" fill="#4A5568">26-02</text>
+      <text x="540" y="372" font-size="12" fill="#4A5568">26-04</text>
+      <text x="730" y="372" font-size="12" fill="#4A5568">26-06</text>
+      <text x="920" y="372" font-size="12" fill="#4A5568">26-08</text>
+    </svg>
+    <table class="evt">
+      <tr><td class="n"><span>1</span></td><td>2025-11-24</td><td>FY25 Q4 실적 서프라이즈(매출 $618M) — 3거래일 +63.8% 랠리, 11/26 장중 사상최고 $87.88(종가 $87.30)</td><td class="up">▲</td></tr>
+      <tr><td class="n"><span>2</span></td><td>2025-12-03</td><td>총 $550M 공모 발표(회사 신주 6.5M + 소프트뱅크 구주 3.5M, @$55·프라이싱 12/4) — 급락 반전</td><td class="down">▼</td></tr>
+      <tr><td class="n"><span>3</span></td><td>2026-02-04</td><td>FY26 Q1: 매출 $630M 비트, EPS는 귀속 기준 미스·조정 기준 비트로 집계 상충 — 당일 -4.8%, 종가 $56.12</td><td class="down">▼</td></tr>
+      <tr><td class="n"><span>4</span></td><td>2026-03-31</td><td>AWG(Associated Wholesale Grocers) 신규 대형 자동화 프로젝트 발표 — 비월마트 고객 추가</td><td class="up">▲</td></tr>
+      <tr><td class="n"><span>5</span></td><td>2026-05-06</td><td>FY26 Q2: 매출 $676M 비트, EPS $0.01(컨센 $0.11~0.12 <span class="bd bd-cfl">상충</span>, 약 -91%) 미스 — 5월 한 달 -21.4%</td><td class="down">▼</td></tr>
+      <tr><td class="n"><span>6</span></td><td>2026-05-27</td><td>소프트뱅크 계열(SVF Sponsor III) 잔여 5.59M주 전량 매도 @$50.42 — 1주 -14%</td><td class="down">▼</td></tr>
+      <tr><td class="n"><span>7</span></td><td>2026-06-23</td><td>52주 최저 $38.19 — 이후 $10B+ 시총 산업주 중 최다 공매도군 진입</td><td class="down">▼</td></tr>
+      <tr><td class="n"><span>8</span></td><td>2026-08-05</td><td>FY26 Q3: 매출 $721M 비트·GAAP 흑자 $55M 전환, EPS $0.09(컨센 $0.12) 미스 — 시간외 -5%</td><td class="down">▼</td></tr>
+    </table>
+  </div>
+  <figcaption>그림 1. SYM 주가와 8개 변곡점(2025-11 ~ 2026-08-13). 곡선은 출처가 확인된 종가·이벤트 가격 앵커 17개를 연결한 근사이며(11월 초 $84 선행 고점 → 실적 직전 -36% 조정 구간 포함), 앵커 사이 구간은 <span class="bd bd-est">추정</span> 보간이다. | 출처: 회사 IR·SEC Form 4/13D·Investing.com·Motley Fool·CNN Markets, 2026-08-13 기준</figcaption>
+</figure>
+
+<div class="kgrid">
+  <div class="kcard"><div class="k">1차 판정 (내러티브)</div><div class="v">조건부 긍정</div><div class="d">재점화 촉매 대기 구간</div></div>
+  <div class="kcard"><div class="k">내재 CAP (2차 정보)</div><div class="v down">역산 불가</div><div class="d">기본 경로로는 미도달</div></div>
+  <div class="kcard"><div class="k">DCF 기본가치</div><div class="v">$9.9–12.8</div><div class="d">강세² 상한 $30.4</div></div>
+  <div class="kcard"><div class="k">애널리스트 평균 목표</div><div class="v up">$65.7</div><div class="d">19명, Buy 71%</div></div>
+  <div class="kcard"><div class="k">하방 시나리오</div><div class="v down">-42 ~ -75%</div><div class="d">§15-B 정량 상세</div></div>
+</div>
+</section>
+
+<section id="s2">
+<h2><span class="no">2</span>기업 개요</h2>
+<p class="lead">Symbotic은 "고객이 만든 회사"다. 미국 최대 식품 도매업체 C&amp;S Wholesale Grocers의 3대 오너 릭 코헨(Rick Cohen)이 자기 창고의 인건비 문제를 풀 자동화 장비를 시장에서 찾지 못하자, 2007년 합판(plywood)으로 로봇 시제품을 직접 만들며 시작했다. 20년 뒤 그 회사는 월마트 물류망의 심장이 됐다.</p>
+
+<h3>2-1. 설립 배경과 연혁 — 도매상의 문제의식에서 월마트의 표준으로</h3>
+<p>릭 코헨(1952년생, 와튼스쿨 회계학)은 1918년 조부 이스라엘 코헨이 창업한 C&amp;S를 연매출 $14M에서 $25B+ 규모, 미국 8~10위권 비상장 대기업으로 키운 인물이다. 식품 도매는 마진이 극도로 얇은 사업이라 코헨은 1990년대부터 창고 자동화 장비를 사들였지만, 기존 장비(고정형 AS/RS와 컨베이어)는 "케이스를 매장 진열 순서대로 혼합 팔레트에 쌓는" 도매업의 핵심 문제를 풀지 못했다. 2005년 발명가 존 러트(John Lert)가 코헨에게 식료품 자동화 스타트업을 제안했고, 코헨이 자금을 대 2007년 <strong>CasePick Systems</strong>가 매사추세츠 윌밍턴에서 출범한다(초기 법인 서류·특허의 발명자는 러트). 2011년 첫 프로토타입 테스트, 2012년 버몬트 브래틀보로의 C&amp;S 시설에 첫 실전 배치, 같은 해 1월 사명을 <strong>Symbotic</strong>으로 변경했다. 흥미로운 후일담: 러트는 이후 매장 내 자동화 회사 Alert Innovation을 창업했고, 월마트가 2022년 이를 인수했으며, Symbotic이 2025년 1월 그 사업(ASR)을 다시 사들여 원점으로 회귀했다.</p>
+<p>월마트와의 관계는 2015년 파일럿으로 시작해 2017년 자동화 협업 본격화(MAA 체결 연도 표기는 출처 간 2017 vs 2021로 <span class="bd bd-cfl">상충</span>), 2021년 지역물류센터(RDC) 25곳, <strong>2022년 5월 42개 RDC 전체 계약(백로그 +$6.1B)</strong>으로 단계적으로 커졌다. 2022년 6월 소프트뱅크 스폰서 SPAC(SVF Investment Corp. 3)과의 합병으로 나스닥 상장(상장 시 기업가치 약 $4.8B, 지분가치 약 $5.5B; 상장 전 코헨 일가+임직원 지분 약 95%). 2023년 7월 소프트뱅크와 WaaS 합작 GreenBox(현 Exol) 설립, 2024년 10월 Walmex(월마트 멕시코) 계약으로 첫 해외 진출, 2024년 11월 회계 재작성 사태(-35.8% 급락), 2025년 1월 월마트 ASR 인수·APD 계약, 2025년 9월 분기 Medline(헬스케어) 신규 수주, 2026년 2월 Fox Robotics(자율 지게차) 인수, 2026년 3월 AWG 신규 수주, 2026년 7월 ARMS Innovations(운영 인텔리전스 SW) 인수까지 — 확장의 리듬이 끊긴 적이 없다.</p>
+
+<div class="twrap"><table>
+<caption>표 1. Symbotic 주요 연혁</caption>
+<thead><tr><th>시기</th><th>사건</th><th>의미</th></tr></thead>
+<tbody>
+<tr><td>2007</td><td>CasePick Systems 설립(릭 코헨 출자, 존 러트 초기 개발)</td><td>C&amp;S의 실수요에서 출발한 문제 정의</td></tr>
+<tr><td>2012</td><td>Symbotic으로 사명 변경, C&amp;S 브래틀보로 첫 배치</td><td>자가 창고 = 세계 최대 베타테스트장</td></tr>
+<tr><td>2015→2017→2021→2022</td><td>파일럿 → 자동화 협업 → MAA·25개 RDC(계약 연도 표기는 출처 간 2017 vs 2021 <span class="bd bd-cfl">상충</span>) → 42개 전체(+$6.1B, 10-K 연혁 요약 기준)</td><td>단일 고객 기준 사상 최대급 자동화 계약</td></tr>
+<tr><td>2022-06</td><td>SPAC 상장(NASDAQ: SYM)</td><td>소프트뱅크 스폰서, 코헨 지배 유지</td></tr>
+<tr><td>2023-07</td><td>GreenBox JV(소프트뱅크 65/Symbotic 35), $7.5B 시스템 계약</td><td>WaaS 신시장, 백로그 ~$11B 기여 <span class="bd bd-cfl">상충</span></td></tr>
+<tr><td>2024-10</td><td>Walmex 계약(멕시코시티 인근 그린필드 DC 2곳)</td><td>국제 확장 개시, 단일 페이즈 최대 시스템</td></tr>
+<tr><td>2024-11</td><td>FY24 재무 재작성(-$30~40M), 내부통제 중대 약점</td><td>-35.8% 급락, 집단소송(§9-A·§12)</td></tr>
+<tr><td>2025-01</td><td>월마트 ASR 인수($200M) + APD 400개 계약(월마트 개발비 $520M)</td><td>매장 마이크로풀필먼트로 TAM +$305B</td></tr>
+<tr><td>2025-11</td><td>FY25 Q4 서프라이즈 + Medline(헬스케어) 추가</td><td>3거래일 +63.8% 랠리, $87.88 신고가</td></tr>
+<tr><td>2026-02~07</td><td>Fox Robotics 인수 → AWG 수주 → Exol 리브랜딩·가동 → ARMS 인수</td><td>도크→매장까지 플랫폼 확장</td></tr>
+</tbody></table></div>
+
+<h3>2-2. 현재의 규모와 위상</h3>
+<p>FY2025 매출 $2,247M(+26%), FY2026 예상 매출 약 $2.80B(+24%). 2026년 6월 27일 기준 <strong>배치 진행 중 시스템 77개, 가동 시스템 56개, 계약 수주잔고 $22.5B</strong>. 현금 $1.75B에 차입금 제로. 공식 집계로 SymBot 누적 배치 2만 2,200대+, 누적 주행거리 3억 3천만 마일+, 특허(출원 포함) 1,050건+(15개국+), 누적 R&amp;D $1B+. 회사 네트워크는 2026년 4월 기준 하루 900만 케이스를 처리 중이며 연내 2배 이상으로 늘 것이라 밝혔다. 임직원 1인당 매출 약 $1.12M — 로봇 회사다운 생산성이다. 본사는 매사추세츠 윌밍턴(200 Research Drive).</p>
+<div class="co co-note"><div class="ct">주식 구조 주의 — 화면마다 시총이 다르게 보이는 이유</div>
+<p>SYM은 Up-C 구조다. 상장 Class A는 128.9M주(약 21%)뿐이고, Class V-3(403.6M)는 코헨 일가·신탁이, Class V-1(71.4M)의 대부분(61.35M)은 월마트가 보유하며, 두 클래스 모두 OpCo 유닛과 짝지어 1:1로 Class A 전환 가능한 지분이다(월마트 합산 76.35M주 = 완전희석 12.6%, 2026-08 13D/A). 그래서 어떤 화면은 시총을 $5.3B(Class A만), 어떤 화면은 $24.9~25.2B(전체 603.9M 유닛)로 표시한다. <strong>경제적 실질은 전체 유닛 기준 약 $24.9B이며, 본 보고서의 모든 밸류에이션은 이 기준(희석 포함 609M주)을 쓴다.</strong> P/E 462배(Class A 귀속이익 기준) 같은 스크리너 수치는 이 구조 때문에 왜곡된 값이다.</p></div>
+</section>
+
+<section id="s3">
+<h2><span class="no">3</span>수익 구조 — 어떻게 돈을 버는가</h2>
+<p class="lead">수익의 뼈대는 단순하다: <strong>① 시스템 구축(공사 진행 기준 인식, 매출의 93%) → ② 가동 후 소프트웨어 구독(고마진, +57%) + 운영 서비스(+49%)</strong>. 대형 시스템 하나가 약 $50M 안팎<span class="bd bd-est">추정</span>이고, 고객이 선수금을 내며(이연수익 $1.74B) 회사가 무차입으로 성장하는, 고객 자금으로 굴러가는 성장 모델이다.</p>
+
+<figure>
+  <div class="fig-t">수익 흐름 구조도: 계약 → 백로그 → 진행기준 시스템 매출 → 가동 후 반복 매출</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg">
+      <rect x="30" y="40" width="180" height="86" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+      <text x="120" y="70" font-size="13" font-weight="bold" fill="#1E3A8A" text-anchor="middle">장기 계약 체결</text>
+      <text x="120" y="90" font-size="12" fill="#1E3A8A" text-anchor="middle">Walmart MAA·Exol $7.5B</text>
+      <text x="120" y="108" font-size="12" fill="#1E3A8A" text-anchor="middle">고객 선수금 유입</text>
+      <rect x="270" y="40" width="180" height="86" rx="10" fill="#FEF3C7" stroke="#FDE68A"/>
+      <text x="360" y="70" font-size="13" font-weight="bold" fill="#78350F" text-anchor="middle">수주잔고 $22.5B</text>
+      <text x="360" y="90" font-size="12" fill="#78350F" text-anchor="middle">12개월 내 ~15% 인식</text>
+      <text x="360" y="108" font-size="12" fill="#78350F" text-anchor="middle">13~60개월 62%</text>
+      <rect x="510" y="40" width="200" height="86" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+      <text x="610" y="64" font-size="13" font-weight="bold" fill="#1E3A8A" text-anchor="middle">시스템 매출 93.1%</text>
+      <text x="610" y="84" font-size="12" fill="#1E3A8A" text-anchor="middle">진행기준(POC) 인식</text>
+      <text x="610" y="104" font-size="12" fill="#1E3A8A" text-anchor="middle">배치 77개 진행 중</text>
+      <rect x="770" y="20" width="200" height="60" rx="10" fill="#ECFDF5" stroke="#A7F3D0"/>
+      <text x="870" y="45" font-size="13" font-weight="bold" fill="#065F46" text-anchor="middle">SW 유지보수 1.8%</text>
+      <text x="870" y="65" font-size="12" fill="#065F46" text-anchor="middle">+57% YoY · GM 73%</text>
+      <rect x="770" y="96" width="200" height="60" rx="10" fill="#ECFDF5" stroke="#A7F3D0"/>
+      <text x="870" y="121" font-size="13" font-weight="bold" fill="#065F46" text-anchor="middle">운영 서비스 5.1%</text>
+      <text x="870" y="141" font-size="12" fill="#065F46" text-anchor="middle">+49% YoY · 가동 56개 기반</text>
+      <path d="M210,83 L266,83" stroke="#4A5568" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M450,83 L506,83" stroke="#4A5568" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M710,70 L766,50" stroke="#4A5568" stroke-width="2" marker-end="url(#ar)"/>
+      <path d="M710,100 L766,122" stroke="#4A5568" stroke-width="2" marker-end="url(#ar)"/>
+      <rect x="270" y="190" width="440" height="66" rx="10" fill="#F6F8FA" stroke="#E2E8F0"/>
+      <text x="490" y="215" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">현금 사이클: 선수금(이연수익 $1.74B)이 운전자본을 대신 조달</text>
+      <text x="490" y="237" font-size="12" fill="#4A5568" text-anchor="middle">차입금 0 · 현금 $1.75B · 분기 FCF는 수금 타이밍에 따라 큰 진폭</text>
+      <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4A5568"/></marker></defs>
+    </svg>
+  </div>
+  <figcaption>그림 2. Symbotic 수익 흐름 구조(FY26 Q3 비중 기준). | 출처: 회사 Q3 FY26 실적자료·10-K, 필자 도식</figcaption>
+</figure>
+
+<h3>3-1. 세그먼트별 매출: 시스템이 이끌고, 반복 매출이 뒤따른다</h3>
+<div class="twrap"><table>
+<caption>표 2. 세그먼트별 매출 (FY26 Q3, 전년동기 대비)</caption>
+<thead><tr><th>세그먼트</th><th class="num">매출 ($M)</th><th class="num">비중</th><th class="num">YoY</th><th class="num">매출총이익률</th><th>성격·평가</th></tr></thead>
+<tbody>
+<tr><td>시스템 (Systems)</td><td class="num">671.0</td><td class="num">93.1%</td><td class="num"><span class="up">+20%</span></td><td class="num">22.0%</td><td>진행기준 인식 공사형 매출. 규모·믹스 개선으로 마진 상승 중이나 본질적으로 하드웨어+설치</td></tr>
+<tr><td>SW 유지보수·지원</td><td class="num">12.8</td><td class="num">1.8%</td><td class="num"><span class="up">+57%</span></td><td class="num">72.7%</td><td>가동 시스템 수에 비례하는 구독형. 마진의 미래이자 멀티플의 근거</td></tr>
+<tr><td>운영 서비스</td><td class="num">37.1</td><td class="num">5.1%</td><td class="num"><span class="up">+49%</span></td><td class="num">11.5%</td><td>현장 운영·교육·부품. 저마진이지만 고객 락인 강화</td></tr>
+<tr class="total"><td>합계</td><td class="num">720.8</td><td class="num">100%</td><td class="num">+21.7%</td><td class="num">22.3% (조정 25.0%)</td><td>가동 시스템 56개가 반복 매출의 설치 기반</td></tr>
+</tbody></table></div>
+<p>반복 매출(SW+서비스)은 아직 7%지만 성장률이 시스템의 2배를 넘는다. 이 믹스 전환이 회사의 장기 마진 스토리의 핵심이다: 가동 시스템이 56개→수백 개로 늘면 시스템당 SW·서비스 매출이 누적되고, ARMS 인수(창고 운영 인텔리전스)와 Fox의 FoxBot 플릿 관리가 이 구독 레이어를 두껍게 만든다.</p>
+
+<figure>
+  <div class="fig-t">분기 매출은 8분기 연속 우상향, 조정 EBITDA 마진은 3.7% → 13.2%로 구조적 개선</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg">
+      <line x1="70" y1="277" x2="960" y2="277" stroke="#E2E8F0"/><text x="60" y="281" font-size="12" fill="#4A5568" text-anchor="end">200</text>
+      <line x1="70" y1="204" x2="960" y2="204" stroke="#E2E8F0"/><text x="60" y="208" font-size="12" fill="#4A5568" text-anchor="end">400</text>
+      <line x1="70" y1="131" x2="960" y2="131" stroke="#E2E8F0"/><text x="60" y="135" font-size="12" fill="#4A5568" text-anchor="end">600</text>
+      <line x1="70" y1="58" x2="960" y2="58" stroke="#E2E8F0"/><text x="60" y="62" font-size="12" fill="#4A5568" text-anchor="end">800</text>
+      <rect x="107" y="172" width="70" height="178" fill="#2563EB"/><text x="142" y="164" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">487</text>
+      <rect x="213" y="150" width="70" height="200" fill="#2563EB"/><text x="248" y="142" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">549</text>
+      <rect x="320" y="134" width="70" height="216" fill="#2563EB"/><text x="355" y="126" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">592</text>
+      <rect x="427" y="125" width="70" height="225" fill="#2563EB"/><text x="462" y="117" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">618</text>
+      <rect x="533" y="120" width="70" height="230" fill="#2563EB"/><text x="568" y="112" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">630</text>
+      <rect x="640" y="103" width="70" height="247" fill="#2563EB"/><text x="675" y="95" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">676</text>
+      <rect x="747" y="87" width="70" height="263" fill="#2563EB"/><text x="782" y="79" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">721</text>
+      <rect x="853" y="69" width="70" height="281" fill="#2563EB" opacity="0.55"/><text x="888" y="61" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">770E</text>
+      <path d="M142,278 L248,226 L355,203 L462,197 L568,145 L675,127 L782,94 L888,94" fill="none" stroke="#D97706" stroke-width="2.5"/>
+      <circle cx="142" cy="278" r="4" fill="#D97706"/><circle cx="782" cy="94" r="4" fill="#D97706"/>
+      <text x="142" y="300" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">3.7%</text>
+      <text x="782" y="116" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">13.2%</text>
+      <text x="107" y="385" font-size="12" fill="#4A5568">FY25Q1</text>
+      <text x="320" y="385" font-size="12" fill="#4A5568">FY25Q3</text>
+      <text x="533" y="385" font-size="12" fill="#4A5568">FY26Q1</text>
+      <text x="747" y="385" font-size="12" fill="#4A5568">FY26Q3</text>
+      <text x="853" y="385" font-size="12" fill="#4A5568">FY26Q4E</text>
+    </svg>
+    <div class="legend"><div class="li"><span class="sw" style="background:#2563EB"></span>분기 매출 ($M, 좌축)</div><div class="li"><span class="sw" style="background:#D97706"></span>조정 EBITDA 마진 (%, 우축 환산)</div></div>
+  </div>
+  <figcaption>그림 3. 분기 매출·조정 EBITDA 마진 추이. FY26Q4는 가이던스 중앙값(매출 $770M, 마진 13.2%<span class="bd bd-drv">파생</span>). FY25Q2 조정 EBITDA $35M은 연간치에서 역산<span class="bd bd-drv">파생</span>. | 출처: 회사 분기 실적발표</figcaption>
+</figure>
+
+<h3>3-2. 고객 집중도: 월마트 85%라는 축복이자 족쇄</h3>
+<div class="twrap"><table>
+<caption>표 3. 고객 포트폴리오 (2026-08 기준 공식 고객 11개사)</caption>
+<thead><tr><th>고객</th><th>산업</th><th>관계·규모</th><th>단계</th></tr></thead>
+<tbody>
+<tr><td><strong>Walmart</strong></td><td>대형 소매</td><td>FY25 매출의 85%(2026 초 ~90% 추정 보도<span class="bd bd-cfl">상충</span>). 42개 RDC 전체 + APD 400개(옵션 200) + ASR 인수. SYM 지분 12.6%(완전희석)·Class A 환산 39.9% 보유(2026-08 13D/A)</td><td>대량 배치 진행</td></tr>
+<tr><td><strong>Exol (구 GreenBox)</strong></td><td>WaaS 합작</td><td>$7.5B 시스템 6년 구매 계약, 백로그 ~$11B 기여<span class="bd bd-cfl">상충</span>. 소프트뱅크 65%/SYM 35%</td><td>1~2호 시설 가동(CA·애틀랜타)</td></tr>
+<tr><td>Walmex</td><td>소매(멕시코)</td><td>멕시코시티 인근 그린필드 DC 2곳, 단일 페이즈 최대 시스템(Bajío)</td><td>구축 중</td></tr>
+<tr><td>Target</td><td>대형 소매</td><td>복수 시스템<span class="bd bd-unk">미확인</span>(구체 수 미공개)</td><td>가동·확장</td></tr>
+<tr><td>Albertsons</td><td>식료품 소매</td><td>물류센터 2곳+(2022 공시 기준)</td><td>가동</td></tr>
+<tr><td>C&amp;S Wholesale</td><td>식품 도매(계열)</td><td>최초 고객·테스트베드. 특수관계자</td><td>가동</td></tr>
+<tr><td>UNFI</td><td>자연식품 도매</td><td>복수 시설<span class="bd bd-unk">미확인</span></td><td>가동</td></tr>
+<tr><td>Giant Tiger</td><td>소매(캐나다)</td><td>초기 해외 인접 고객</td><td>가동</td></tr>
+<tr><td>Associated Food Stores</td><td>식료품 협동조합</td><td>공식 고객 로고월 등재</td><td><span class="bd bd-unk">미확인</span></td></tr>
+<tr><td>Medline</td><td>의료 유통</td><td>FY25 Q4 신규 — 헬스케어 수직시장 첫 진입</td><td>초기 구축</td></tr>
+<tr><td>AWG</td><td>식료품 도매 협동조합</td><td>2026-03 걸프코스트 물류센터 대형 프로젝트</td><td>착수</td></tr>
+</tbody></table></div>
+<div class="co co-warn"><div class="ct">집중도 해석 — 비판적 관점</div>
+<p>월마트+Exol이 백로그의 "대부분(vast majority)"이라고 10-K가 명시한다. FY22 기준 비월마트 5개사 합산 매출 비중이 약 6%였을 만큼 편중은 구조적이다. 다만 두 가지 완충이 있다: ① 월마트는 SYM 지분 12.6%(완전희석)를 보유한 이해관계 일치 주주이고, 2026년이 월마트 자동화 투자의 피크(존 퍼너 CEO: 올해 "수천 개" 시설 업그레이드)라는 점, ② FY25 Q4 이후 Medline→AWG→Southern Glazer's 2호기로 분기마다 비월마트 로고가 추가되고 있다는 점. 그래도 "월마트가 기침하면 SYM은 몸살"인 구조 자체는 2028년까지 바뀌기 어렵다.</p></div>
+
+<h3>3-3. 지역별 분포와 수익 모델의 질</h3>
+<p>매출은 압도적으로 미국이며(10-K 세그먼트: 미국·국제), 국제 확장은 Walmex(멕시코) 2곳과 캐나다 Giant Tiger가 시작점이다. 수익 모델의 질을 뜯어보면: 시스템 매출은 수주 시점이 아니라 <strong>진행기준(percentage-of-completion)</strong>으로 인식되므로 백로그가 매출의 선행지표이고 분기 매출의 예측 가능성이 높다(최근 8개 분기 연속 가이던스 상단 부근 달성). 반면 이 방식은 2024년 재작성 사태의 진원지이기도 했다 — 원가 초과분을 청구 불가능한데도 매출로 인식한 오류(§9-A). 반복 매출은 아직 작지만 가동 시스템 수(56개)와 함께 기계적으로 성장하는, 사실상 "설치 기반 × 단가" 공식의 매출이다.</p>
+</section>
+<section id="s4">
+<h2><span class="no">4</span>제품·서비스 및 기술력 — 논문 수준 심층 해부</h2>
+<p class="lead">Symbotic의 기술적 본질은 로봇이 아니라 <strong>"확률적 물류를 결정론적 시스템으로 바꾸는 아키텍처"</strong>다. 핵심은 세 층이다: ① 임의 접근(random access)이 가능한 고밀도 3D 저장 구조, ② 그 안을 시속 25마일로 달리는 자율로봇 플릿, ③ 수백 대의 로봇·로봇팔·리프트를 하나의 기계처럼 지휘하는 AI 오케스트레이션 소프트웨어. 이 셋이 결합해야만 "매장 통로 순서대로 쌓인 150케이스 혼합 팔레트"라는, 경쟁사가 못 푸는 출력물이 나온다.</p>
+
+<h3>4-A. 작동 원리 — 입고 도크에서 매장 맞춤 팔레트까지</h3>
+<p><strong>문제 정의부터.</strong> 소매 물류센터(DC)의 핵심 작업은 "디팔레타이즈→보관→재조합(팔레타이즈)"이다. 제조사에서 단일 SKU 팔레트로 들어온 상품을 케이스 단위로 해체해 보관했다가, 각 매장의 주문에 맞춰 수십~수백 SKU를 섞은 혼합 팔레트로 다시 쌓아 내보내야 한다. 이 재조합이 어려운 이유는 세 가지다: (i) 케이스마다 크기·무게·강도(눌림성)가 제각각이라 적재 순서·위치가 안정성을 좌우하고, (ii) 매장은 진열 통로 순서(플래노그램: 매장 진열 계획도)대로 쌓인 팔레트를 원하며(하역 인건비 절감), (iii) SKU 수가 수만 개라 사람의 피킹 동선이 길다. 전통 자동화(고정 크레인형 AS/RS + 컨베이어 소터)는 (iii)의 일부만 풀고 (i)(ii)는 여전히 사람이 한다.</p>
+<p><strong>Symbotic의 해법 — 시스템의 신호·물류 흐름:</strong></p>
+<ol>
+<li><strong>인바운드 디지타이즈:</strong> 로봇팔이 입고 팔레트를 케이스 단위로 해체(디팔레타이즈)하고, 짧은 컨베이어 구간에서 각 케이스가 3D 치수 측정·중량·라벨 스캔을 거쳐 디지털 객체로 등록된다. 이 순간부터 시스템은 모든 케이스의 물리 속성(크기, 무게, 무게중심, 눌림성, 포장 재질)을 데이터로 보유한다.</li>
+<li><strong>저장 구조 — "거대한 팔레트":</strong> 저장부는 약 3피트(0.9m) 높이의 레벨을 수십 층 적층한 강철 구조물로, 각 레벨에 병렬 통로와 가변 높이 베이(선반 칸)가 배열된다. 핵심 설계 철학은 <strong>임의 접근</strong>: 어떤 케이스든 어느 시점에나 즉시 꺼낼 수 있어 구조 전체가 "하나의 거대한 팔레트"처럼 동작한다. 분산 저장 알고리즘이 SKU 회전율 기반으로 슬로팅(보관 위치 배정)을 최적화한다 — 고회전 상품은 출고구 가까이, 저회전은 안쪽으로. 결과: 동급 최고 대안 대비 건물 풋프린트 30~60% 축소, 그린필드(신축)가 아닌 기존 창고 개조(브라운필드)로 설치 가능.</li>
+<li><strong>SymBot 플릿:</strong> 각 레벨을 SymBot 자율로봇이 최대 25mph(40km/h)로 주행하며 케이스를 넣고 꺼낸다. 현행 세대는 바닥 자기 스트립을 가이드로 쓰되 온보드 RGB·3D 카메라와 비전 엔드이펙터로 케이스 상태를 인지하고, 차세대는 라이다·비전 기반 완전 자율주행(AMR)으로 전환할 계획이다(비전·라이다 단가 하락이 배경). 전원은 바닥 충전판의 자동 충전(초고속 충방전이 가능한 울트라커패시터 계열 — 급속충전 배터리사 Nyobolt에 전략투자한 이유)으로 10시간+ 연속 가동, 사실상 24/7 무정지 운영이 된다. 커피 찌꺼기나 물기 같은 바닥 오염 위에서도 자동차 기술에서 차용한 주행 제어로 감속 없이 달린다는 것이 회사 설명이다.</li>
+<li><strong>아웃바운드 — 이 회사의 진짜 마법:</strong> 주문이 떨어지면 태스킹·라우팅 소프트웨어가 필요한 케이스들을 <strong>정확한 순서로</strong> 출고 셀에 도착시키고, 비전 탑재 로봇팔 2대가 협업해 셀당 시간당 1,350케이스 속도로 팔레트를 쌓는다. 적재 알고리즘은 각 케이스의 무게중심·강도 데이터를 반영해 무겁고 단단한 것을 아래에, 눌리기 쉬운 것을 위에 배치하고, 완성 팔레트(최대 150케이스)를 해당 매장의 플래노그램 순서로 구성한 뒤 자동 랩핑까지 마친다. 주문 접수에서 팔레트 완성까지 최단 7분.</li>
+<li><strong>소프트웨어 두뇌:</strong> 컨트롤 레이어(개별 로봇·로봇팔·리프트 제어) → 태스킹·라우팅(수백 대 로봇의 실시간 교통 관제와 작업 할당 — 회사 블로그가 "고밀도 저장의 병목은 로봇 성능이 아니라 교통"이라 쓴 그 문제) → 계획·분석(슬로팅, 수요 예측, 팔레트 시퀀싱)의 3층이 고객 WMS(창고관리시스템)와 통합된다. 전형적 시스템에서 플릿 합산 시간당 15,000+ 케이스 이동, 팔레타이즈 정확도 99.99%(회사 주장·자체 측정).</li>
+</ol>
+
+<figure>
+  <div class="fig-t">시스템 단면: 세 개의 층위가 하나의 기계로 — 물류 흐름과 데이터 흐름</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 340" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="60" width="200" height="200" rx="10" fill="#EFF6FF" stroke="#BFDBFE"/>
+      <text x="120" y="88" font-size="13" font-weight="bold" fill="#1E3A8A" text-anchor="middle">① 인바운드</text>
+      <text x="120" y="115" font-size="12" fill="#1E3A8A" text-anchor="middle">로봇팔 디팔레타이즈</text>
+      <text x="120" y="135" font-size="12" fill="#1E3A8A" text-anchor="middle">케이스 치수·중량 스캔</text>
+      <text x="120" y="155" font-size="12" fill="#1E3A8A" text-anchor="middle">= 케이스 디지타이즈</text>
+      <text x="120" y="185" font-size="12" fill="#1E3A8A" text-anchor="middle">(+ FoxBot 자율지게차가</text>
+      <text x="120" y="203" font-size="12" fill="#1E3A8A" text-anchor="middle">트레일러 하역 자동화)</text>
+      <rect x="280" y="40" width="360" height="240" rx="10" fill="#F6F8FA" stroke="#CBD5E1"/>
+      <text x="460" y="66" font-size="13" font-weight="bold" fill="#1A202C" text-anchor="middle">② 고밀도 3D 저장 구조 = "거대한 팔레트"</text>
+      <line x1="300" y1="95" x2="620" y2="95" stroke="#CBD5E1"/>
+      <line x1="300" y1="130" x2="620" y2="130" stroke="#CBD5E1"/>
+      <line x1="300" y1="165" x2="620" y2="165" stroke="#CBD5E1"/>
+      <line x1="300" y1="200" x2="620" y2="200" stroke="#CBD5E1"/>
+      <line x1="300" y1="235" x2="620" y2="235" stroke="#CBD5E1"/>
+      <text x="310" y="88" font-size="11.5" fill="#4A5568">3ft 레벨 적층 · 레벨당 병렬 통로</text>
+      <rect x="330" y="103" width="34" height="18" rx="4" fill="#2563EB"/><rect x="440" y="138" width="34" height="18" rx="4" fill="#2563EB"/><rect x="540" y="173" width="34" height="18" rx="4" fill="#2563EB"/><rect x="380" y="208" width="34" height="18" rx="4" fill="#2563EB"/>
+      <text x="460" y="262" font-size="12" fill="#4A5568" text-anchor="middle">SymBot 최대 25mph · 바닥 충전판 자동충전 · 임의 접근 슬로팅</text>
+      <rect x="700" y="60" width="280" height="200" rx="10" fill="#ECFDF5" stroke="#A7F3D0"/>
+      <text x="840" y="88" font-size="13" font-weight="bold" fill="#065F46" text-anchor="middle">③ 아웃바운드</text>
+      <text x="840" y="115" font-size="12" fill="#065F46" text-anchor="middle">비전 로봇팔 2대 협업 적재</text>
+      <text x="840" y="135" font-size="12" fill="#065F46" text-anchor="middle">셀당 1,350케이스/시간</text>
+      <text x="840" y="155" font-size="12" fill="#065F46" text-anchor="middle">최대 150케이스 혼합 팔레트</text>
+      <text x="840" y="175" font-size="12" fill="#065F46" text-anchor="middle">매장 플래노그램 순서 적재</text>
+      <text x="840" y="195" font-size="12" fill="#065F46" text-anchor="middle">자동 랩핑 → 주문→팔레트 7분</text>
+      <text x="840" y="223" font-size="12" fill="#065F46" text-anchor="middle">정확도 99.99% (회사 측정)</text>
+      <path d="M220,160 L276,160" stroke="#4A5568" stroke-width="2" marker-end="url(#ar2)"/>
+      <path d="M640,160 L696,160" stroke="#4A5568" stroke-width="2" marker-end="url(#ar2)"/>
+      <text x="500" y="318" font-size="12" font-weight="bold" fill="#1A202C" text-anchor="middle">AI 소프트웨어(컨트롤 → 태스킹·라우팅 → 계획·분석)가 전 구간을 지휘 · 고객 WMS 통합 · 플릿 15,000+ 케이스 이동/시간</text>
+      <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4A5568"/></marker></defs>
+    </svg>
+  </div>
+  <figcaption>그림 4. Symbotic 시스템의 3층 아키텍처와 흐름. | 출처: symbotic.com 기술 페이지·Automated Warehouse(2026-04) 취재 기반 필자 도식</figcaption>
+</figure>
+
+<figure>
+  <div class="fig-t">실물: 저장 구조 내부를 주행하는 SymBot 플릿(좌) · BreakPack 봇의 토트 분류(우)</div>
+  <div class="fig-box" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <img src="https://exqkm9d8zzi.exactdn.com/wp-content/uploads/2026/03/20231018_Sym_039-Enhanced-NR_cc-4-1-640x427.jpg" alt="저장 구조 내부의 SymBot 자율로봇">
+    <img src="https://exqkm9d8zzi.exactdn.com/wp-content/uploads/2026/03/BreakPack_minibot-dropping-in-tote-1-1-640x427.png" alt="BreakPack 봇이 토트에 상품을 분류하는 장면">
+  </div>
+  <figcaption>그림 5. Symbotic 공식 이미지: 구조 내부의 SymBot(좌), 케이스 미만 단위를 처리하는 BreakPack 봇(우). | 출처: symbotic.com (회사 공식 CDN 원본)</figcaption>
+</figure>
+
+<div class="twrap"><table>
+<caption>표 4. 핵심 하드웨어 스펙과 플릿 KPI (회사 공표치, 2026-07 기준)</caption>
+<thead><tr><th>항목</th><th>사양</th><th>의미</th></tr></thead>
+<tbody>
+<tr><td>SymBot (표준)</td><td>케이스·토트 최대 60lb(27.2kg), 24×24×16.2in</td><td>소매·식품 케이스의 대부분 커버</td></tr>
+<tr><td>SymBot XL</td><td>36×24×16.2in, 듀얼 픽</td><td>대형 케이스·이중 픽으로 처리량 확대</td></tr>
+<tr><td>SymBot TR</td><td>토트 회수 전용, 3온도대(상온·냉장·냉동) 지원</td><td>이치스(each) 피킹·마이크로풀필먼트·신선식품 진입 열쇠</td></tr>
+<tr><td>BreakPack Bot</td><td>케이스 미만 수량을 빈으로 분류</td><td>부분 케이스 주문(소형 매장·이커머스) 대응</td></tr>
+<tr><td>처리 범위</td><td>2×6.4×5in ~ 36×24×16.2in, 1~60lb</td><td>"네이티브 케이스" 그대로 처리 — 재포장 불필요</td></tr>
+<tr><td>주행·전원</td><td>최대 25mph, 배터리 10시간+, 바닥 충전판 자동충전</td><td>업계 최고속 주장 · 24/7 무정지</td></tr>
+<tr><td>플릿 실적</td><td>누적 22,200대+, 총 3.3억 마일+, 최고령 개체 12년+</td><td>실주행 데이터 = AI 학습 자산이자 신뢰성 증거</td></tr>
+<tr><td>시스템 처리량</td><td>플릿 15,000+ 케이스 이동/시간 · 출고 셀 1,350케이스/시간</td><td>월마트 RDC급 물동량 대응</td></tr>
+<tr><td>IP·R&amp;D</td><td>특허 1,050건+(출원 포함, 15개국+), 누적 R&amp;D $1B+</td><td>15년+ 축적 — 복제 난이도의 근거</td></tr>
+</tbody></table></div>
+
+<h3>4-B. 기술 성숙도(TRL)와 로드맵 — 다음 세대는 이미 착공됐다</h3>
+<div class="twrap"><table>
+<caption>표 5. 기술별 성숙도 판정과 로드맵</caption>
+<thead><tr><th>기술</th><th>TRL 판정</th><th>현황·근거</th><th>다음 마일스톤</th></tr></thead>
+<tbody>
+<tr><td>케이스 자동화 코어(구조+SymBot+팔레타이즈)</td><td>9 (양산·상용)</td><td>가동 56개 시스템, 일 900만 케이스 처리, 12년+ 가동 개체 존재</td><td>배치 77개의 순차 가동 전환</td></tr>
+<tr><td><strong>Gen-2 차세대 저장 구조</strong></td><td>7→8 (상용 발표→초기 양산)</td><td>2025-08-05 상업 발표: 저장 풋프린트 최대 -40%(자사 현행 대비), 현장 조립 부품 -90%+(사전 조립 서브컴포넌트), 통합 화재진압·내진 옵션·바닥 레벨링. 2026 초 첫 현장 설치(코헨)</td><td>FY27 하반기 매출 변곡(CFO 가이드) — §4-D 상세</td></tr>
+<tr><td>BreakPack(케이스 미만)</td><td>7~8 (상용 초기)</td><td>기술 롤아웃 완료 언급(2026-04), 수요 확대 예상</td><td>이커머스·소형점 채택 확산</td></tr>
+<tr><td>SymMicro(매장 마이크로풀필먼트)</td><td>5~6 (개발·실증)</td><td>월마트 자금 $520M 개발 프로그램. 토트 디캔팅→SymBot TR 회수→goods-to-person 픽스테이션 구성. KPI 충족 조건부</td><td>2028 초 월마트 400개 매장 본주문(어닝콜)</td></tr>
+<tr><td>완전 AMR 주행(자기 스트립 제거)</td><td>4~6 (개발)</td><td>라이다·비전 단가 하락으로 전환 계획 공표</td><td>차세대 SymBot 세대 교체 시점 <span class="bd bd-unk">미확인</span></td></tr>
+<tr><td>FoxBot ATL(자율 트레일러 하역 지게차)</td><td>8~9 (상용)</td><td>Fox Robotics 인수(2026-02). 월마트 4개 DC에 19대 배치 실적, 고객 25개사</td><td>Symbotic SW 오케스트레이션 통합·크로스셀</td></tr>
+<tr><td>운영 인텔리전스 SW(ARMS)</td><td>8~9 (상용)</td><td>영국 ARMS Innovations 인수(2026-07). 창고 전체 운영 최적화 레이어</td><td>구독 매출 편입·기존 고객 업셀</td></tr>
+</tbody></table></div>
+<p><strong>R&amp;D 정량 비교:</strong> FY26 9개월 R&amp;D $138.1M(매출의 6.8%, 조정 기준 $88.3M·4.4%). 절대액 기준 AutoStore(연 $60M 내외<span class="bd bd-est">추정</span>)를 크게 웃돌고, KION·Daifuku 같은 대기업은 R&amp;D가 전사에 분산되어 케이스 자동화 단일 분야 투입으로는 Symbotic이 최상위권으로 판단된다<span class="bd bd-est">추정: 공시 R&amp;D 비교 기반</span>. 누적 R&amp;D $1B+와 실주행 3.3억 마일의 데이터는 후발주자가 돈만으로 단기간에 살 수 없는 자산이다.</p>
+
+<h3>4-C. 기술 피어 대결표 — 같은 문제를 푸는 다른 기계들</h3>
+<p><strong>선정 기준:</strong> ① 창고 자동화에서 저장·피킹·출고의 핵심 공정을 로봇으로 푸는 기업, ② 대형 소매·식품 고객군과 실제 수주 경쟁 관계, ③ 기술 노선상 위협적인 신규 진입자 포함(규모 불문). 이 기준으로 7개사를 비교하고, 부품·컨베이어 중심 업체(Daifuku 일반 사업부, Honeywell Intelligrated 등)는 통합 시스템 경쟁이 제한적이라 제외했다. <strong>주의: 이 표는 기술 스펙 비교이며, 재무·밸류에이션 비교는 §7이 담당한다.</strong></p>
+<div class="twrap"><table class="wide">
+<caption>표 6. 기술 피어 대결표 — 아키텍처·처리 단위·핵심 성능</caption>
+<thead><tr><th>기업</th><th>아키텍처</th><th>처리 단위</th><th>핵심 강점 스펙</th><th>구조적 약점</th><th>Symbotic 대비 포지션</th></tr></thead>
+<tbody>
+<tr><td><strong>Symbotic</strong> (미국)</td><td>3D 적층 구조 + 고속 AMR + 로봇팔 팔레타이즈, 수직 통합 자체 시공</td><td><strong>풀케이스</strong>(+BreakPack로 이치스 확장)</td><td>25mph 주행, 셀당 1,350케이스/h, 150케이스 혼합 팔레트 자동 적재, 풋프린트 -30~60%</td><td>시스템당 투자 규모 큼(~$50M<span class="bd bd-est">추정</span>), 배치 수년 소요</td><td>기준점</td></tr>
+<tr><td><strong>AutoStore</strong> (노르웨이, OSE: AUTO)</td><td>큐브 그리드(빈 적층) 상부 주행 로봇, 파트너(인테그레이터) 판매</td><td>이치스(빈 단위)</td><td>세계 최고 저장 밀도(빈 직적층), 1,950+ 시스템·65개국, 모듈 확장 용이</td><td>빈 상단 접근만 가능(하부 빈 회수 시 재적층 지연), 케이스→팔레트 미지원</td><td>이커머스 소형 물동에 최적 — 매장 보충 팔레트는 못 만듦</td></tr>
+<tr><td><strong>Ocado</strong> (영국, LSE: OCDO)</td><td>그리드 상부 로봇 + 로봇 피킹, OSP 라이선스</td><td>이치스(식료품 온라인)</td><td>온라인 식료품 특화(3온도), 소프트웨어 딥스택</td><td>대형 CFC 그린필드 전제, 파트너 가동률 이슈(FY25 Kroger·Sobeys CFC 폐쇄 수취 발생), 언더라잉 현금흐름 적자(FY25 -£213M)</td><td>온라인 주문 조립 vs 매장 보충 — 시장 자체가 다름</td></tr>
+<tr><td><strong>Dematic</strong> (KION 산하)</td><td>셔틀 AS/RS + 컨베이어 + 소터, 전통 인테그레이터</td><td>케이스·이치스 혼합(맞춤 설계)</td><td>글로벌 시공 역량, 레퍼런스 최다, 믹스드케이스 솔루션 보유</td><td>프로젝트별 맞춤 설계(반복성 낮음), 팔레트 시퀀싱 유연성 열위<span class="bd bd-est">추정</span></td><td>가장 직접적인 입찰 경쟁자 — 단 표준화·SW에서 열위 평가</td></tr>
+<tr><td><strong>Witron</strong> (독일, 비상장)</td><td>OPM(케이스 팔레타이즈 기계) + 고정 크레인 AS/RS</td><td><strong>풀케이스</strong> — 유일하게 같은 문제</td><td>식료품 DC 케이스 팔레타이즈 검증(크로거·월마트 신선 DC 등 실적)</td><td>고정 크레인 기반이라 처리량 확장 시 병목, 그린필드 성향, 로봇 유연성 열위<span class="bd bd-est">추정</span></td><td>기술 노선상 가장 가까운 대체재 — 속도·유연성에서 세대 차</td></tr>
+<tr><td><strong>Exotec</strong> (프랑스, 비상장)</td><td>Skypod: 랙 등반형 3D AMR + goods-to-person</td><td>이치스(빈)</td><td>로봇이 랙을 직접 등반(리프트 불요), 모듈 증설 무중단</td><td>케이스·팔레트 미지원, 대형 소매 물동량 검증 부족<span class="bd bd-unk">미확인</span></td><td>중형 이커머스 시장에서 AutoStore와 경합 — SYM과는 간접 경쟁</td></tr>
+<tr><td><strong>Amazon Robotics</strong> (사내)</td><td>Kiva 계보 AMR(Proteus) + 로봇팔(Vulcan·Blue Jay·STARK)</td><td>이치스·토트</td><td>세계 최대 플릿(누적 100만 대+), 유럽 €10B 투자, 촉각 센싱(Vulcan)</td><td>외판 안 함(자가 사용), 케이스→매장 팔레트 문제는 비대상, Blue Jay 초기 차질 보도(2026-02)</td><td>직접 경쟁 아님 — 오히려 "자동화 군비경쟁"으로 월마트 투자 자극</td></tr>
+</tbody></table></div>
+<div class="co co-key"><div class="ct">기술 격차의 정량화 — 범위와 근거</div>
+<p><strong>케이스 단위 매장 보충 자동화</strong>라는 좁고 깊은 문제에서 Symbotic의 리드는 약 <strong>1세대(체감 3~5년)</strong> 범위로 판단한다<span class="bd bd-est">추정</span>. 근거: ① 경쟁 이치스 시스템(AutoStore·Exotec·Ocado)은 아예 케이스 팔레타이즈 출력이 없고, ② 같은 문제를 푸는 Witron·Dematic은 고정 크레인·맞춤 설계 방식이라 처리량 스케일과 브라운필드 개조성에서 구조적 열위이며, ③ 25mph 주행·150케이스 혼합 적재·99.99% 정확도 같은 공표 스펙을 동일 조건으로 대응하는 공개 사례가 확인되지 않고, ④ 3.3억 마일 실주행 데이터와 42개 RDC 규모의 운영 레퍼런스는 자본만으로 단축 불가능한 시간 자산이기 때문이다. 추격 조건: 특허 1,050건+ 회피 설계, 대형 앵커 고객 확보(닭이 먼저냐 문제), 수년의 현장 신뢰성 데이터 — 현재 좁혀지고 있다는 공개 증거는 확인되지 않는다. 단, 이 리드는 "케이스 팔레타이즈" 문제에 한정되며, 이치스·마이크로풀필먼트 영역에서는 Symbotic이 오히려 후발이다.</p></div>
+
+<h3>4-D. 신기술 영향력 분석 — Gen-2 차세대 저장 구조 (발동: 2025-08-05 상업 발표)</h3>
+<p>최근 1~2년 내 가장 중요한 자사 기술 발표는 <strong>Gen-2(차세대) 저장 구조</strong>다. 2025-08-05 상업적 가용성이 공식 발표됐고, 다음 날 FY25 Q3 콜에서 코헨은 이를 "회사 역사상 가장 중요한 제품 업그레이드"라 칭하며 신구조 배치 일정 재편에 따른 FY25 Q4 성장 둔화를 함께 예고했다. 2026년 초 첫 현장 설치가 개시됐다. 7단계 표준 절차로 해부한다. (그 외 후보였던 Amazon Blue Jay는 §5-B·§12에서 위협 관점으로만 다룬다 — "해당 없음"이 아니라 역할 분리.)</p>
+<ol>
+<li><strong>병목 정의:</strong> 현행 구조의 제약은 ① 설치 기간(시스템당 수년 — 백로그 $22.5B를 매출로 바꾸는 속도의 상한), ② 밀도(도심·매장 후방 같은 초소형 공간 진입 한계), ③ 신선식품(3온도) 미지원. 백로그의 12개월 내 인식률이 ~15%에 불과한 것이 이 병목의 재무적 표현이다 — 설치 속도가 곧 매출 성장률의 병목이다.</li>
+<li><strong>기술 해부:</strong> 공표 사양: (i) <strong>저장 풋프린트 최대 40% 축소</strong>(자사 현행 대비) — 신형 래킹, 듀얼픽 유닛, 선반과 독립된 셔틀 레일이 핵심 설계 변경. (ii) <strong>현장 조립 부품 90% 이상 감소</strong> — 공장에서 정밀 제작된 사전 조립 서브컴포넌트로 전환, 바닥 준비를 최소화하는 레벨링 시스템 동반. (iii) 모듈형 선반 구성(취급 품목 범위 확대), 통합 화재진압, 내진 보강 옵션 — 마이크로풀필먼트·신선식품 지원의 기반. (iv) 소프트웨어 "카풀(carpool)" 루틴 — 봇 1회 주행에 복수 케이스를 운반해 밀도 상승과 처리 속도 상승을 동시 달성. 브라운필드 개조·그린필드 모두 적용 가능. 레벨 높이·통로 폭 등 세부 치수는 미공개<span class="bd bd-unk">미확인</span>. 역할 개념도상 위치: 그림 4의 ② 저장 구조 층의 세대 교체이며, SymBot·소프트웨어 층은 연속성을 유지한다.</li>
+<li><strong>적용 구성 예시:</strong> 동일 보관량을 최대 40% 작은 풋프린트에 수용하거나, 같은 풋프린트에 그만큼 더 많은 재고·SKU를 넣을 수 있다(회사 공표). 밀도 상승은 봇의 케이스당 이동거리를 줄여 처리 속도를 함께 끌어올린다 — 구조 개선과 카풀 SW가 결합된 이중 효과다. 그 위의 확실한 구성 변화는 "신선식품 DC"와 "매장 후방 SymMicro"가 동일 플랫폼 위에 올라간다는 점 — 월마트 신선 DC(현재 타사 영역)와 APD 400개가 직접적인 적용처다.</li>
+<li><strong>효과 정량화(공표된 것만):</strong> 풋프린트 최대 -40%, 현장 조립 부품 -90%+(모두 회사 자체 공표 — 제3자 검증치는 <span class="bd bd-unk">미확인</span>). CFO 가이드 — Gen-2가 배치 성장을 지원하기 시작했고, <strong>더 큰 매출 변곡은 FY2027 하반기</strong>. 400개 매장 SymMicro 본주문은 2028년 초 예상. 즉 Gen-2의 재무 효과는 "설치 속도 상승 → 백로그 회전율 상승 → FY27~28 매출 가속"의 경로로 설계되어 있으며, 설치기간 단축 폭의 정량치는 미공개<span class="bd bd-unk">미확인</span>.</li>
+<li><strong>트레이드오프 정직 기술:</strong> 세대 교체는 공짜가 아니다. 실제로 FY25 Q3 콜(2025-08)에서 신구조 배치 일정 재편에 따른 Q4 성장 둔화가 예고됐고, 그 감속이 FY26 상반기(Q1 QoQ +1.9%)까지 이어지며 2026년 주가 조정의 재료가 됐다. 전환기의 이중 원가(구세대 마감 + 신세대 램프), 프로토타입 KPI 미달 리스크, 그리고 신구 구조 혼재에 따른 부품·서비스 복잡도 상승이 대표적 비용이다.</li>
+<li><strong>파급 효과 맵:</strong> 수혜 — Symbotic 자신(백로그 회전 가속, APD·신선 TAM 개방), 월마트 WMT(매장 이커머스 원가 하락), Exol(사이트당 경제성 개선), 부품 협력사(비전 센서·울트라커패시터: Nyobolt 비상장). 피해 — 매장 MFC 경쟁 기술(Alert 계보 외 타사 MFC 솔루션), 신선 DC의 기존 강자 Witron(월마트 신선 물류 내 입지<span class="bd bd-est">추정</span>), 수동 창고 인력 수요. 채택 확산 경로: 월마트 검증 → Walmex·Exol 복제 → 비월마트 대형 유통 순.</li>
+<li><strong>당사에의 함의: 기회 판정.</strong> P&amp;L 임팩트 자릿수: APD 400개(+옵션 200) 본주문이 백로그에 +$5B+ 규모로 더해질 수 있고(회사 공표), 설치 기간 단축은 동일 백로그에서 연 매출 수억 달러대의 앞당김 효과를 낸다<span class="bd bd-est">추정</span>. 확인·반증 이벤트: ① 2026-11월 하순 Q4 실적에서 Gen-2 프로토타입 KPI 언급, ② FY27 상·하반기 매출 가속 여부(하반기 변곡 가이드의 이행), ③ 2028년 초 400개 매장 주문의 실제 접수 — 셋 중 하나라도 밀리면 이 기회 판정은 하향한다.</li>
+</ol>
+</section>
+<section id="s5">
+<h2><span class="no">5</span>산업 분석 — 산업의 미래와 "꿈" 분석</h2>
+<p class="lead">창고 자동화는 "노동을 자본으로 치환하는" 구조적 성장 산업이다. 2026년 시장 규모 $27~34B, 2030~31년 $47~66B 전망(기관별 CAGR 12~19%<span class="bd bd-cfl">상충</span>) — 그런데 전 세계 창고의 80%가 아직 완전 수동이다. Symbotic이 파는 꿈은 이 시장의 한 조각이 아니라, <strong>"유통 물류 전체($433B)와 매장 이커머스($305B)의 운영체제"</strong>가 되겠다는 것이다.</p>
+
+<h3>5-A. 산업 성장의 구조 분해</h3>
+<div class="twrap"><table>
+<caption>표 7. TAM/SAM/SOM 계층 — 기관 간 분산은 범위로 제시</caption>
+<thead><tr><th>계층</th><th class="num">규모</th><th>정의·근거</th></tr></thead>
+<tbody>
+<tr><td>회사 정의 장기 TAM</td><td class="num">$433B + $305B</td><td>코어 창고 자동화 $433B + 미국 마이크로풀필먼트 $305B (FY25 10-K). 여기에 WaaS 서비스 시장 연 $500B(제3자 컨설턴트, 미국 케이스 처리량 기준) 별도</td></tr>
+<tr><td>산업 TAM (연간 지출)</td><td class="num">2026년 $27.4~34.2B</td><td>Grand View $27.4B / Mordor $34.2B / Precedence $29.3B <span class="bd bd-cfl">상충</span> — 정의(HW·SW·서비스 포함 범위) 차이</td></tr>
+<tr><td>산업 TAM (2030~31년)</td><td class="num">$47~66B</td><td>CAGR 12~19% 범위. 보수적 전망(Interact Analysis 계열)은 2025~30년 연 ~6%: 2025년 수주 +7%, APAC은 중국 약세로 -8%</td></tr>
+<tr><td>SAM (케이스·팔레트 대형 시스템)</td><td class="num"><span class="bd bd-unk">미확인</span></td><td>대형 소매·도매 DC의 케이스 자동화 세분 시장은 별도 집계 부재. 참고: 백로그 $22.5B ÷ 시스템당 ~$50M<span class="bd bd-est">추정</span> ≈ 계약분만 약 450개 시스템 분량</td></tr>
+<tr><td>SOM (현재 점유)</td><td class="num">FY26E ~$2.8B</td><td>연간 산업 지출의 8~10% 수준<span class="bd bd-drv">파생: 2.8/27.4~34.2</span> — 단일 벤더 점유율로는 세계 최상위권</td></tr>
+</tbody></table></div>
+<p><strong>성장 동인의 P·Q·믹스 분해:</strong> 이 산업의 성장은 압도적으로 Q(설치 대수)다. ① 노동: 창고 인건비가 물류 예산의 50~70%, 2024년 임금 +7~9%, 공급망 조직의 76%가 인력난 보고 — 자동화의 회수기간을 단축시키는 항상적 압력. ② 이커머스 복잡성: 매장·온라인·픽업을 동시에 치러야 하는 옴니채널이 SKU와 주문 단위를 폭발시킴. ③ 침투율: 창고 80%가 완전 수동이라는 사실 자체가 Q의 장기 여력. P(가격)는 로봇 단가 하락으로 오히려 디플레이션 요인이나, Symbotic처럼 "시스템+SW" 통합 판매자는 소프트웨어 믹스로 P를 방어한다. 믹스 효과는 RaaS·WaaS(구독화)로 지출의 성격이 CapEx→OpEx로 바뀌며 중견 고객층이 새로 열리는 것 — Exol이 정확히 이 지점을 겨냥한다.</p>
+<p><strong>S커브 위치 판정: 초기 성장기.</strong> 근거: 침투율 20% 미만(수동 창고 80%), 수주 성장(+7%)이 GDP를 상회하되 과열은 아니며, 표준 아키텍처 경쟁(큐브 vs 셔틀 vs 3D AMR)이 아직 진행형이고, RaaS·WaaS 같은 사업모델 혁신이 이제 등장하는 국면 — 도입기에서 성장기로 넘어온 직후의 전형적 특징이다. 다만 하위 세그먼트별 위치는 다르다: 이치스 이커머스 자동화(AutoStore 영역)는 성장 중기(유럽 포화 조짐, AutoStore 매출 -10.4%), <strong>케이스 자동화(Symbotic 영역)와 마이크로풀필먼트는 도입~초기 성장</strong>으로 아직 앞선 구간이다.</p>
+<p><strong>인접 확장 경로:</strong> ① 매장 후방(SymMicro/APD — 미국 $305B), ② 신선식품 3온도(Gen-2+SymBot TR — 식료품 DC의 절반 이상이 신선<span class="bd bd-est">추정</span>), ③ 도크·야드(FoxBot — 인바운드/아웃바운드의 마지막 수동 구간), ④ 창고 운영 SW 단독 판매(ARMS — 타사 설비 창고에도 침투 가능), ⑤ 국제(Walmex를 교두보로 중남미·캐나다). 각 확장의 전제는 앵커 고객 검증이며, ①은 월마트, ⑤는 Walmex가 이미 그 역할을 한다.</p>
+
+<figure>
+  <div class="fig-t">가치사슬: Symbotic은 "장비 납품"이 아니라 사슬의 4개 구간을 수직 통합했다</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 250" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="60" width="140" height="100" rx="10" fill="#F6F8FA" stroke="#CBD5E1"/>
+      <text x="90" y="95" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">부품·로봇 HW</text>
+      <text x="90" y="115" font-size="11.5" fill="#4A5568" text-anchor="middle">모터·센서·배터리</text>
+      <text x="90" y="133" font-size="11.5" fill="#4A5568" text-anchor="middle">(Nyobolt 투자)</text>
+      <rect x="180" y="40" width="620" height="140" rx="12" fill="#EFF6FF" stroke="#2563EB" stroke-width="2"/>
+      <text x="490" y="66" font-size="13" font-weight="bold" fill="#1E3A8A" text-anchor="middle">Symbotic 수직 통합 영역</text>
+      <rect x="200" y="80" width="135" height="80" rx="8" fill="#FFFFFF" stroke="#BFDBFE"/>
+      <text x="267" y="108" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">시스템 설계</text>
+      <text x="267" y="128" font-size="11.5" fill="#1E3A8A" text-anchor="middle">구조·로봇·셀</text>
+      <rect x="350" y="80" width="135" height="80" rx="8" fill="#FFFFFF" stroke="#BFDBFE"/>
+      <text x="417" y="108" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">자체 시공·통합</text>
+      <text x="417" y="128" font-size="11.5" fill="#1E3A8A" text-anchor="middle">인테그레이터 불요</text>
+      <rect x="500" y="80" width="135" height="80" rx="8" fill="#FFFFFF" stroke="#BFDBFE"/>
+      <text x="567" y="108" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">SW·AI 운영</text>
+      <text x="567" y="128" font-size="11.5" fill="#1E3A8A" text-anchor="middle">태스킹·분석·ARMS</text>
+      <rect x="650" y="80" width="135" height="80" rx="8" fill="#FFFFFF" stroke="#BFDBFE"/>
+      <text x="717" y="108" font-size="12" font-weight="bold" fill="#1E3A8A" text-anchor="middle">서비스·WaaS</text>
+      <text x="717" y="128" font-size="11.5" fill="#1E3A8A" text-anchor="middle">운영·Exol 구독</text>
+      <rect x="820" y="60" width="160" height="100" rx="10" fill="#ECFDF5" stroke="#A7F3D0"/>
+      <text x="900" y="95" font-size="12.5" font-weight="bold" fill="#065F46" text-anchor="middle">고객 물류망</text>
+      <text x="900" y="115" font-size="11.5" fill="#065F46" text-anchor="middle">DC → 매장 → 소비자</text>
+      <text x="900" y="133" font-size="11.5" fill="#065F46" text-anchor="middle">(APD·FoxBot로 확장)</text>
+      <text x="500" y="215" font-size="12" fill="#4A5568" text-anchor="middle">전통 모델: 부품사 → 장비사 → 인테그레이터(Dematic 등) → SW사 → 고객 — Symbotic은 가운데 4단계를 한 회사로 접었다</text>
+    </svg>
+  </div>
+  <figcaption>그림 6. 창고 자동화 가치사슬과 Symbotic의 위치. | 출처: 회사 공시·업계 구조 기반 필자 도식</figcaption>
+</figure>
+
+<figure>
+  <div class="fig-t">성장 가시성: 수주잔고 $22.5B는 매출을 인식해도 줄지 않는 "재보충되는 저수지"</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg">
+      <line x1="70" y1="350" x2="960" y2="350" stroke="#CBD5E1"/>
+      <line x1="70" y1="247" x2="960" y2="247" stroke="#E2E8F0"/><text x="60" y="251" font-size="12" fill="#4A5568" text-anchor="end">22.0</text>
+      <line x1="70" y1="143" x2="960" y2="143" stroke="#E2E8F0"/><text x="60" y="147" font-size="12" fill="#4A5568" text-anchor="end">22.5</text>
+      <line x1="70" y1="40" x2="960" y2="40" stroke="#E2E8F0"/><text x="60" y="44" font-size="12" fill="#4A5568" text-anchor="end">23.0</text>
+      <rect x="127" y="164" width="110" height="186" fill="#2563EB"/><text x="182" y="156" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">22.4</text>
+      <rect x="293" y="143" width="110" height="207" fill="#2563EB"/><text x="348" y="135" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">22.5</text>
+      <rect x="460" y="185" width="110" height="165" fill="#2563EB"/><text x="515" y="177" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">22.3</text>
+      <rect x="627" y="102" width="110" height="248" fill="#2563EB"/><text x="682" y="94" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">22.7</text>
+      <rect x="793" y="143" width="110" height="207" fill="#2563EB"/><text x="848" y="135" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">22.5</text>
+      <text x="182" y="375" font-size="12" fill="#4A5568" text-anchor="middle">FY24말</text>
+      <text x="348" y="375" font-size="12" fill="#4A5568" text-anchor="middle">FY25말</text>
+      <text x="515" y="375" font-size="12" fill="#4A5568" text-anchor="middle">FY26Q1</text>
+      <text x="682" y="375" font-size="12" fill="#4A5568" text-anchor="middle">FY26Q2</text>
+      <text x="848" y="375" font-size="12" fill="#4A5568" text-anchor="middle">FY26Q3</text>
+      <text x="515" y="405" font-size="12" fill="#718096" text-anchor="middle">축 범위 $21.5~23.0B 확대 표시 · 매 분기 $6~7억 매출 인식 후에도 잔고 유지 = 신규 수주·가격 조정이 소진을 상쇄</text>
+    </svg>
+  </div>
+  <figcaption>그림 7. 계약 수주잔고 추이($B). FY26Q2 증가는 AWG 등 신규, Q3 감소는 매출 인식(가격 조정·Southern Glazer's 2호기로 일부 상쇄). 배치 중 시스템 46개(FY25Q2)→77개(FY26Q3), 가동 48개(FY25말)→56개. | 출처: 회사 분기 실적발표</figcaption>
+</figure>
+
+<h3>5-B. 꿈 분석 — 이 성장 스토리가 주가를 밀어올릴 연료인가 (본 보고서의 최중요 파트)</h3>
+<div class="twrap"><table class="wide">
+<caption>표 8. 꿈 분석 9항목 판정</caption>
+<thead><tr><th>#</th><th>항목</th><th>판정·내용</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong>꿈의 정의</strong></td><td>"Symbotic은 물리 세계의 AI(physical AI)로 유통 공급망 전체 — DC에서 매장 후방, 나아가 남의 창고(WaaS)까지 — 를 구동하는 운영체제가 된다." 한 문장으로: <strong>물류의 AWS</strong>.</td></tr>
+<tr><td>2</td><td><strong>꿈의 크기</strong></td><td>자릿수 추정: 회사 TAM $433B(코어)+$305B(미국 MFC)+연 $500B(WaaS 서비스)의 저(低)한자리수 % 점유만으로도 연매출 $15~30B — 현재 FY26E $2.8B의 <strong>5~10배짜리 스토리</strong>. 계산 예: 코어 5% 점유 $21.7B, 또는 미국 대형 유통 DC ~500곳 × $50M + APD 600개 × $8M<span class="bd bd-est">추정</span> + WaaS·SW 반복 매출. 가시적 하한: 백로그 $22.5B만 소화해도 8년치 매출.</td></tr>
+<tr><td>3</td><td><strong>꿈의 신선도</strong></td><td><strong>판정: 반(半)신선 — 1차 소비 완료, 재점화 대기.</strong> 2025년: 로보틱스·피지컬 AI 테마의 대표주로 리레이팅(11월 실적 후 1주 +50%, $87.88 신고가, "산업 경제의 OS" 담론). 2026년: EPS 컨센 미스 반복·매도 물량으로 -53% 냉각, 모멘텀 지표 최하(Zacks Momentum F). 그러나 이야기 자체는 죽지 않았다 — 커버리지 애널리스트 19~24명이 유지되고 목표가는 3개월간 오히려 +2.2% 상향($65.7), Amazon의 €10B 투자조차 "군비경쟁 수혜" 프레임으로 소비되며, MODEX 2026·전시 일정마다 뉴스량이 회복된다. 소진이 아니라 <strong>가격 조정을 통한 재장전</strong> 국면.</td></tr>
+<tr><td>4</td><td><strong>3P 검증</strong></td><td><strong>Possible(가능): 통과</strong> — 가동 56개, 일 900만 케이스, 12년 가동 개체. 기술은 검증 끝. <strong>Plausible(그럴듯함): 통과</strong> — $22.5B 계약 백로그와 월마트·소프트뱅크·월마트멕시코라는 자본력 있는 후원자. <strong>Probable(개연성): 부분 통과</strong> — 월마트 안에서는 개연성 높음(2026 투자 피크, APD 400개 커밋). 그러나 "월마트 밖에서도 같은 일이 반복된다"는 명제는 Medline·AWG·Southern Glazer's 2호기라는 초기 증거만 있을 뿐 아직 대형 2호 앵커가 없다. <strong>종합: Plausible 확정, Probable 진입 초기.</strong></td></tr>
+<tr><td>5</td><td><strong>증거화 일정</strong> (촉매 캘린더)</td><td>2026-09-22~24 GroceryShop·10-11 NBWA(파이프라인 시그널) → <strong>2026-11월 하순 FY26 Q4 실적+FY27 가이던스(최대 단기 촉매)</strong> → FY27 상반기 Gen-2 프로토타입 KPI 검증 → <strong>FY27 하반기 Gen-2발 매출 변곡(CFO 명시 가이드)</strong> → Exol 6개 사이트·총 600만 sqft 네트워크 완성(애틀랜타 100만 sqft 가동, LA·댈러스·NJ·시카고 12개월 내 개장 계획) → <strong>2028년 초 월마트 APD 400개 본주문</strong> → 수시: 비월마트 신규 로고(AWG 후속·Medline 램프·Fox 25개 고객 크로스셀), Walmex Bajío 가동<span class="bd bd-unk">미확인</span>.</td></tr>
+<tr><td>6</td><td><strong>선례 비교</strong></td><td>같은 유형(단일 대형 고객 검증 → 플랫폼 스토리 리레이팅)의 선례: ① AI 인프라 리레이팅 — 검증된 백로그를 가진 인프라주들이 2023~25년 EV/매출 3~5배→10~20배로 확장. SYM도 정확히 이 경로로 2025-12 EV/선행매출 18.2배까지 갔다. ② 휴머노이드·로보틱스 테마의 2025~26년 자금 유입 — SYM은 "실적이 있는 로보틱스"라는 희소 포지션. ③ 반면 Ocado의 교훈 — 라이선스 꿈으로 2020년 고점 후 파트너 가동률 부진으로 -90%대 하락: <strong>같은 꿈이라도 '2호 고객 검증' 실패 시의 하방 선례</strong>. SYM 리레이팅의 상단 가늠자는 18배(자체 전고), 하방 선례는 Ocado형 4배 이하.</td></tr>
+<tr><td>7</td><td><strong>가격 반영도</strong></td><td>§10 정량 결론과 교차: 현 주가 $41.2 중 검증 가능한 경제성(기본 DCF)은 $9.9~12.8, 가장 관대한 강세²로도 $22~30. 즉 <strong>주가의 약 26%(vs 강세²)~75%(vs 기본)가 꿈의 몫</strong>이다. 고점 $87.88에서는 그 비율이 85%+였다. 결론: 꿈은 이미 상당 부분 가격에 있다 — 공짜 옵션이 아니라 <strong>비싼 옵션</strong>. 단, -53% 조정으로 옵션 프리미엄은 고점 대비 크게 빠진 상태.</td></tr>
+<tr><td>8</td><td><strong>꿈의 사망 조건</strong></td><td>① 월마트의 자본지출 축소·전략 변경 또는 (극단) 자동화 내재화 선언, ② Gen-2 KPI 미달로 APD 400개 주문 불발·연기(2028 초가 시금석), ③ 2027년까지 대형 비월마트 앵커(2호 월마트) 부재 지속, ④ Exol 사이트 경제성 실패(지분법손실이 이미 9M -$22.4M로 확대 중 — 확대 지속+사이트 증설 중단 조합이면 적신호), ⑤ 재무 재작성급 회계 사건 재발, ⑥ 백로그의 유의미한 취소·감액. 이 중 ①·②는 내러티브 즉사, ③~⑥은 서서히 질식.</td></tr>
+<tr><td>9</td><td><strong>자금 흐름</strong></td><td>테마 대표성: 순수 창고 로보틱스 상장사 중 최대 시총 — 로보틱스·AI 테마 바스켓의 "실적 있는 대표주"이며 2등주는 AutoStore(시총 수십억 달러급, 역성장)로 격차가 크다. 그러나 2026년 수급은 역풍: 소프트뱅크 계열 순차 매도(12월 $186M + 5월 $282M 전량 처분), 내부자 매도(CSO·이사 Form 4), 그리고 <strong>$10B+ 시총 산업주 중 최다 공매도군</strong>. 역설적으로 이 공매도 잔고는 촉매 확인 시 숏스퀴즈 연료다. Class A 유통주식이 전체의 21%뿐이라 수급 탄성(양방향)이 크다는 점도 구조적 특징.</td></tr>
+</tbody></table></div>
+<div class="co co-key"><div class="ct">판단 위계 연결 — §15-A의 직접 입력</div>
+<p>신선도(반신선·재장전) × 3P(Plausible 확정, Probable 초기) × 증거화 일정(11월 실적→FY27 Gen-2→2028 APD로 날짜가 박힘) × 자금 흐름(유출 후 공매도 과밀)의 조합은 <strong>"이야기가 커지는 구간의 직전, 촉매 대기 구간"</strong>으로 요약된다. 이것이 §1과 §15-A의 1차 판정(조건부 긍정)의 근거다. §8은 이 결론을 현재형 관찰로 뒷받침한다.</p></div>
+</section>
+<section id="s6">
+<h2><span class="no">6</span>경쟁 우위 분석 (경제적 해자)</h2>
+<p class="lead">Symbotic의 해자는 특허나 로봇 속도가 아니라 <strong>"전환비용 × 데이터 축적 × 검증된 스케일"의 복합체</strong>다. 42개 RDC에 심긴 시스템은 고객 물류망의 척추가 되어 사실상 제거 불가능하고, 3.3억 마일의 실주행 데이터는 후발주자가 돈으로 살 수 없다. 단, 이 해자는 "케이스 자동화"라는 좁은 영토 안에서 깊고, 영토 밖(이치스·MFC)에서는 얕다.</p>
+<h3>6-1. 포터 5 Forces</h3>
+<div class="twrap"><table>
+<caption>표 9. 5 Forces 평가</caption>
+<thead><tr><th>힘</th><th>강도</th><th>평가</th></tr></thead>
+<tbody>
+<tr><td>기존 경쟁</td><td>중</td><td>케이스 팔레타이즈 직접 경쟁은 Witron·Dematic 정도로 과점적. 이치스 시장은 다수 경쟁(AutoStore·Exotec 등)이나 시장이 다름</td></tr>
+<tr><td>신규 진입 위협</td><td>중하</td><td>진입장벽: 특허 1,050+, 앵커 고객 검증 요구, 수년의 신뢰성 데이터, 시스템당 ~$50M 프로젝트 수행력. 단 휴머노이드·범용 로봇 자본(수십억 달러)이 우회 진입할 가능성은 감시 대상</td></tr>
+<tr><td><strong>구매자 교섭력</strong></td><td><strong>상</strong></td><td>최대 리스크. 월마트가 매출 85%·지분 12.6% — 가격·조건 협상력이 구조적으로 고객 우위. Q3 백로그의 "가격 조정" 언급이 그 증거</td></tr>
+<tr><td>공급자 교섭력</td><td>중하</td><td>핵심 부품(모터·센서) 범용성 높음. 배터리 등 병목은 Nyobolt 지분투자로 헤지</td></tr>
+<tr><td>대체재 위협</td><td>중</td><td>수동 노동(임금 상승으로 매년 약화), 타 아키텍처(이치스 시스템은 케이스 출력 불가), 휴머노이드(비용·처리량에서 아직 세대 이전 — 단 장기 감시)</td></tr>
+</tbody></table></div>
+<h3>6-2. 차별화 vs 원가 우위 판별</h3>
+<p>CAP 프레임워크의 판별식으로 보면 Symbotic은 아직 <strong>"차별화 우위를 마진으로 수확하기 전 단계"</strong>다. NOPAT 마진(FY26E EBITA 기준 약 3.5%)은 산업 평균에 못 미치지만, 이는 성장기 특유의 진행기준 매출 인식 구조(저마진 시스템 매출이 선행하고 고마진 SW·서비스가 후행) 때문이다. 반면 투자자본 회전율은 사실상 무한대에 가깝다 — 고객 선수금(이연수익 $1.74B)이 운전자본을 대신 조달해 <strong>투하자본이 음(-)에 가까운</strong> 보기 드문 구조다. 즉 원가 우위 축이 아니라, "고객 자금으로 성장하는 차별화 기업"이라는 제3의 형태다. 해자의 지속성 판정: 월마트 계약의 물리적 락인(설치된 구조물+운영 의존)은 10년+ 지속 가능성이 높으나, 그 해자가 <strong>초과수익(높은 NOPAT 마진)으로 전환될지</strong>는 구매자 교섭력이 결정한다 — 이것이 §10 CAP 해석의 핵심 긴장이다.</p>
+</section>
+
+<section id="s7">
+<h2><span class="no">7</span>피어그룹 비교 — 재무·밸류에이션</h2>
+<p class="lead">재무로 보면 4개의 다른 동물이다: 고성장·저마진의 Symbotic, 역성장·초고마진의 AutoStore(단 2025 Q4 +9% 반등), 대규모·저성장의 Dematic(KION), 라이선스 재편 중이나 현금 창출 전 단계인 Ocado. 시장은 이 중 Symbotic에게만 "플랫폼 멀티플"을 준다.</p>
+<div class="twrap"><table class="wide">
+<caption>표 10. 피어 재무·밸류에이션 비교 — 기업 × 지표 매트릭스 (각사 최근 공시 기준)</caption>
+<thead><tr><th style="width:110px;">지표</th><th>Symbotic<br>(SYM)</th><th>AutoStore<br>(AUTO.OL)</th><th>KION SCS<br>(Dematic)</th><th>Ocado<br>(OCDO.L)</th><th>Exotec<br>(비상장)</th></tr></thead>
+<tbody>
+<tr><td><strong>매출</strong></td><td style="background:var(--gold-soft);color:#78350F;font-weight:700;">FY26E $2.80B</td><td>2025년 $538.5M<span class="bd bd-drv">파생</span></td><td>2025년 €3.07B</td><td>FY25 £1.36B</td><td><span class="bd bd-unk">미확인</span></td></tr>
+<tr><td><strong>최근 성장</strong></td><td style="background:var(--gold-soft);color:#78350F;font-weight:700;">+24%</td><td><span class="down">-10.4%</span><br>(Q4 +9.0% 반등)</td><td>한 자릿수 초반<span class="bd bd-est">추정</span></td><td><span class="up">+12.1%</span></td><td><span class="bd bd-unk">미확인</span></td></tr>
+<tr><td><strong>수익성</strong></td><td style="background:var(--gold-soft);color:#78350F;font-weight:700;">조정 EBITDA 12.2%<br>GAAP 흑자 전환</td><td>조정 EBITDA 42.3%<br>($228.1M)</td><td>조정 EBIT 한 자릿수 중반<span class="bd bd-est">추정</span></td><td>조정 EBITDA 흑자<br>언더라잉 CF -£213M</td><td><span class="bd bd-unk">미확인</span></td></tr>
+<tr><td><strong>수주·파이프라인</strong></td><td style="background:var(--gold-soft);color:#78350F;font-weight:700;">백로그 $22.5B<br>(매출의 8배)</td><td>백로그 $543M<br>(+13% YoY)</td><td><span class="bd bd-unk">미확인</span></td><td>~8개 CFC<br>3년 내 가동 예정</td><td><span class="bd bd-unk">미확인</span></td></tr>
+<tr><td><strong>밸류에이션</strong></td><td style="background:var(--gold-soft);color:#78350F;font-weight:700;">EV/매출 8.3×<br>EV/EBITDA 68×</td><td><span class="bd bd-unk">미확인</span></td><td><span class="bd bd-unk">미확인</span></td><td>저배수·부채 부담</td><td>유니콘 밸류<span class="bd bd-est">추정</span></td></tr>
+<tr><td><strong>모델 성격</strong></td><td style="background:var(--gold-soft);color:#78350F;font-weight:700;">수직통합 시스템+SW<br>무차입</td><td>큐브 모듈 제품<br>파트너 판매</td><td>맞춤 인테그레이션<br>사이클 노출</td><td>OSP 라이선스 재편<br>FY26 CF 흑자 목표</td><td>Skypod 모듈<br>중형 이커머스</td></tr>
+</tbody></table></div>
+<p>표 주석 — AutoStore 매출은 2025년 분기 실적 합산<span class="bd bd-drv">파생</span>이며 백로그는 Q3'25 기준. Ocado는 2025-04 Ocado Retail 연결 제외(지분법 전환) 후 기준으로, 법정손익은 Retail 재평가 일회성 이익 £782.6M을 포함해 흑자다. KION 수치는 공급망솔루션(SCS) 세그먼트 외부 매출 기준. Symbotic의 FCF는 수금 타이밍에 따라 분기 진폭이 크다는 점(§9)을 함께 볼 것.</p>
+<figure>
+  <div class="fig-t">피어 포지셔닝: 성장(가로) × 수익성(세로) — Symbotic은 "성장은 최고, 마진은 아직" 사분면</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg">
+      <line x1="70" y1="322" x2="960" y2="322" stroke="#E2E8F0"/><text x="60" y="326" font-size="12" fill="#4A5568" text-anchor="end">0%</text>
+      <line x1="70" y1="265" x2="960" y2="265" stroke="#E2E8F0"/><text x="60" y="269" font-size="12" fill="#4A5568" text-anchor="end">10</text>
+      <line x1="70" y1="209" x2="960" y2="209" stroke="#E2E8F0"/><text x="60" y="213" font-size="12" fill="#4A5568" text-anchor="end">20</text>
+      <line x1="70" y1="153" x2="960" y2="153" stroke="#E2E8F0"/><text x="60" y="157" font-size="12" fill="#4A5568" text-anchor="end">30</text>
+      <line x1="70" y1="96" x2="960" y2="96" stroke="#E2E8F0"/><text x="60" y="100" font-size="12" fill="#4A5568" text-anchor="end">40</text>
+      <line x1="70" y1="40" x2="960" y2="40" stroke="#E2E8F0"/><text x="60" y="44" font-size="12" fill="#4A5568" text-anchor="end">50</text>
+      <line x1="367" y1="40" x2="367" y2="350" stroke="#CBD5E1" stroke-dasharray="3 3"/>
+      <text x="169" y="372" font-size="12" fill="#4A5568" text-anchor="middle">-10%</text>
+      <text x="367" y="372" font-size="12" fill="#4A5568" text-anchor="middle">0%</text>
+      <text x="564" y="372" font-size="12" fill="#4A5568" text-anchor="middle">+10%</text>
+      <text x="762" y="372" font-size="12" fill="#4A5568" text-anchor="middle">+20%</text>
+      <text x="957" y="372" font-size="12" fill="#4A5568" text-anchor="end">+30%</text>
+      <circle cx="161" cy="83" r="16" fill="#7C3AED" opacity="0.75"/><text x="161" y="60" font-size="12" font-weight="bold" fill="#1A202C" text-anchor="middle">AutoStore</text>
+      <circle cx="406" cy="265" r="38" fill="#059669" opacity="0.7"/><text x="406" y="242" font-size="12" font-weight="bold" fill="#1A202C" text-anchor="middle">KION SCS</text>
+      <circle cx="606" cy="265" r="24" fill="#D97706" opacity="0.75"/><text x="606" y="305" font-size="12" font-weight="bold" fill="#1A202C" text-anchor="middle">Ocado</text>
+      <circle cx="881" cy="253" r="34" fill="#2563EB" opacity="0.85"/><text x="881" y="230" font-size="12" font-weight="bold" fill="#1A202C" text-anchor="middle">Symbotic</text>
+      <text x="500" y="404" font-size="12" fill="#718096" text-anchor="middle">가로: 최근 매출 성장률 · 세로: 조정 EBITDA 마진(%) · 버블 크기: 매출 규모 — AutoStore는 2025 실적치, KION·Ocado 마진 좌표는 추정</text>
+    </svg>
+  </div>
+  <figcaption>그림 8. 피어 2D 포지셔닝. AutoStore는 2025 공시 실적치, KION 좌표와 Ocado 마진 좌표는 <span class="bd bd-est">추정</span>. | 출처: 각사 공시(AutoStore Q4'25 보고서·Ocado FY25 결산)·koalagains·synkrato 집계</figcaption>
+</figure>
+<p><strong>우위/열위 정리:</strong> Symbotic 우위 — 성장률(피어 유일 +20%대), 수주 가시성(백로그/매출 8배), 재무 건전성(무차입 $1.75B), 케이스 자동화 기술 독주. 열위 — 현재 마진(AutoStore의 4분의 1 수준), 고객 다변화(피어 최하), 밸류에이션 부담(피어 최고 배수), 그리고 회계 신뢰(재작성 이력은 피어 중 유일).</p>
+</section>
+
+<section id="s8">
+<h2><span class="no">8</span>시장 내러티브 및 자금 선호도 — 시장은 지금 무슨 이야기를 하나</h2>
+<p class="lead">시장이 SYM에 붙인 스토리는 세 겹이다: ① "실적으로 검증된 유일한 피지컬 AI"(로보틱스 테마의 안전판), ② "월마트 프리미엄"(세계 최고 유통사의 선택이라는 품질 보증), ③ "제2의 성장곡선 대기"(APD·WaaS·신선). 2026년의 하락은 이 스토리의 부정이 아니라, <strong>스토리에 지불하던 가격의 재협상</strong>이었다.</p>
+<p><strong>자금을 끌어들이는 사업부:</strong> 관심의 중심은 여전히 시스템 백로그이지만, 애널리스트 질문의 무게중심은 2026년 들어 소프트웨어(+57%)·Exol·SymMicro로 이동했다 — "언제 하드웨어 회사에서 플랫폼 회사가 되는가"가 리레이팅의 열쇠 질문이다. Q3 어닝콜에서도 골드만의 질문은 마진과 FCF에, 강세론자(Oppenheimer $85)의 논리는 Gen-2와 APD의 2027~28년 매출 곡선에 집중됐다.</p>
+<p><strong>최근 주가를 움직인 내러티브의 결:</strong> 상승 재료는 "실적 서프라이즈+가이던스 가속"(2025-11, +50%)과 신규 고객(AWG), 하락 재료는 "성장의 질"(EPS 컨센 미스 반복 — 주로 SBC·투자 확대와 귀속·조정 집계 차이 탓), "수급"(증자·소프트뱅크 전량 매도·내부자 매도), "밸류에이션 로테이션"(고배수 AI·로보틱스 차익실현)이었다. 주목할 비대칭: <strong>매출은 8분기 연속 가이던스 달성·비트인데 주가는 -53%</strong> — 시장이 문제 삼은 건 사업이 아니라 가격과 이익의 질이었다.</p>
+<p><strong>컨센서스의 방향과 강도:</strong> 19~24명 커버리지, 매수 비율 71%(10 Buy·5 Hold·3 Sell), 평균 목표 $65.7(고 $85 Oppenheimer, 저 $42~45 Goldman Sell), 최근 3개월 목표가 +2.2% 상향 — <strong>하락장에서 목표가가 오히려 오르는, 애널리스트와 수급의 괴리</strong>가 현 국면의 특징이다. Zacks 스코어(Growth A / Value F / Momentum F)가 이 종목의 성격을 세 글자로 요약한다. 향후 리레이팅 트리거는 §5-B(5)의 촉매 캘린더와 동일하며, 그 1순위는 <strong>11월 FY27 가이던스</strong>다: "FY27 하반기 변곡"이 숫자로 확인되면 최다 공매도 포지션이 연료로 전환된다. 이 내러티브가 펀더멘털로 뒷받침되는가 — §5-B의 3P 판정(Plausible 확정·Probable 초기)이 답이다: 월마트 안에서는 사실이고, 월마트 밖에서는 아직 약속이다.</p>
+</section>
+<section id="s9">
+<h2><span class="no">9</span>재무 분석 및 DCF 모델</h2>
+<p class="lead">재무의 큰 그림: <strong>매출 3년 연속 +24~26%, 조정 EBITDA는 FY25 $147M → FY26E ~$342M로 2배+, GAAP도 FY26 들어 3분기 연속 흑자.</strong> 무차입에 현금 $1.75B. 단, 이익의 질에는 세 개의 각주가 붙는다 — SBC 7%, 미청구채권 급증, 그리고 재작성 이력.</p>
+
+<h3>9-A. 이익의 질 점검 (DCF 입력 전 관문)</h3>
+<div class="twrap"><table>
+<caption>표 11. 이익의 질 체크리스트</caption>
+<thead><tr><th>항목</th><th>관찰</th><th>판정·모델 반영</th></tr></thead>
+<tbody>
+<tr><td>CFO/순이익 괴리</td><td>9M FY26: CFO $305.6M vs 순이익 $77.8M — CFO가 4배. 단 원천이 이연수익 +$368.8M(고객 선수금)</td><td>양호하나 <strong>선수금 의존</strong>: 신규 수주가 멈추면 이 현금 우위는 역전됨. 모델 FCF는 선수금 효과를 배제한 NOPAT−투자 기준으로 보수화</td></tr>
+<tr><td>매출 인식 공격성</td><td>진행기준(POC) — 2024년 재작성의 진원(청구 불가 원가 초과분의 매출 가속 인식, FY24 -$30~40M 정정). 이후 내부통제 개선비 분기 ~$1.5M 지속 지출</td><td><span class="bd bd-cfl">상충 이력</span> 요주의. 신규 프로젝트 "가격 조정"(Q3 백로그) 언급은 오히려 보수화 신호로 해석</td></tr>
+<tr><td>채권·재고 vs 매출</td><td>9M간 매출채권 +$101M, <strong>미청구채권 +$278M(→$460M)</strong>, 재고 +$56M — 매출 증가율(+24%)을 크게 상회</td><td><strong>경고 1순위.</strong> POC 특성상 마일스톤 청구 전 누적이 자연스럽지만, 증가 속도가 빠름. Q3 FCF -$165M의 주범. Q4 FCF 흑자 가이드 이행 여부가 검증 포인트</td></tr>
+<tr><td>SBC 규모</td><td>9M $151.8M = 매출의 7.5% (전년 6.3%에서 상승). Q3 $50.5M</td><td>실비용으로 처리. EBITA·NOPAT에 전액 반영, 조정 EPS($0.39~0.44)는 참고치로만</td></tr>
+<tr><td>Non-GAAP 괴리</td><td>조정 EBITDA와 GAAP 순익 갭의 대부분이 SBC+지분법손실. "일회성" 반복성: 구조조정 FY25 $16M→FY26 소멸, 내부통제비는 3년째 지속</td><td>내부통제비는 사실상 경상비로 간주</td></tr>
+<tr><td>감사·소송</td><td>재작성 관련 증권 집단소송 진행(집단기간 2024-02-08~11-26). 회사는 "법적 리스크 지속" 공시</td><td>충당 규모 <span class="bd bd-unk">미확인</span> — §12 리스크 반영</td></tr>
+</tbody></table></div>
+
+<h3>9-B. 자본구조·희석 점검</h3>
+<p>차입금 0, 전환사채·워런트 오버행은 소프트뱅크 워런트(최대 2.0%, Exol 결제 마일스톤 베스팅)뿐이다. 유동성은 현금 $1.75B + 순선수금 구조로 12개월 필요액을 크게 상회(경영진 확인). 문제는 <strong>주식 수 증가</strong>다: 총 유닛 590.9M(FY25말) → 603.9M(FY26 Q3), 9개월 만에 +2.2%. 원천은 12월 증자(신주 ~8M)와 SBC 베스팅. 최근 3~5년 연평균 증가율은 약 1.5~2.5%<span class="bd bd-drv">파생</span>이며, SBC 7.5%가 지속되면 연 1.5~2% 희석이 구조화된다. 본 모델은 희석을 주식 수(609M)에 반영하고 SBC를 비용 처리하는 이중 보수화 대신, <strong>SBC 비용 처리 + 현재 완전 유닛 수 고정</strong> 방식을 채택했다(이중 계상 방지 원칙).</p>
+
+<figure>
+  <div class="fig-t">현금은 두 번의 계단(선수금·증자)으로 $1.75B — FCF는 수금 타이밍 따라 분기 진폭 ±$200M</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg">
+      <line x1="70" y1="280" x2="960" y2="280" stroke="#E2E8F0"/><text x="60" y="284" font-size="12" fill="#4A5568" text-anchor="end">500</text>
+      <line x1="70" y1="209" x2="960" y2="209" stroke="#E2E8F0"/><text x="60" y="213" font-size="12" fill="#4A5568" text-anchor="end">1,000</text>
+      <line x1="70" y1="139" x2="960" y2="139" stroke="#E2E8F0"/><text x="60" y="143" font-size="12" fill="#4A5568" text-anchor="end">1,500</text>
+      <line x1="70" y1="68" x2="960" y2="68" stroke="#E2E8F0"/><text x="60" y="72" font-size="12" fill="#4A5568" text-anchor="end">2,000</text>
+      <rect x="127" y="240" width="110" height="110" fill="#2563EB"/><text x="182" y="232" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">781</text>
+      <rect x="293" y="174" width="110" height="176" fill="#2563EB"/><text x="348" y="166" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">1,247</text>
+      <rect x="460" y="93" width="110" height="257" fill="#2563EB"/><text x="515" y="85" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">1,821</text>
+      <rect x="627" y="66" width="110" height="284" fill="#2563EB"/><text x="682" y="58" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">2,012</text>
+      <rect x="793" y="100" width="110" height="250" fill="#2563EB"/><text x="848" y="92" font-size="12.5" font-weight="bold" fill="#1A202C" text-anchor="middle">1,774</text>
+      <text x="182" y="372" font-size="12" fill="#4A5568" text-anchor="middle">FY25Q3</text>
+      <text x="348" y="372" font-size="12" fill="#4A5568" text-anchor="middle">FY25Q4</text>
+      <text x="515" y="372" font-size="12" fill="#4A5568" text-anchor="middle">FY26Q1</text>
+      <text x="682" y="372" font-size="12" fill="#4A5568" text-anchor="middle">FY26Q2</text>
+      <text x="848" y="372" font-size="12" fill="#4A5568" text-anchor="middle">FY26Q3</text>
+      <text x="182" y="398" font-size="12" font-weight="bold" fill="#DC2626" text-anchor="middle">FCF -211</text>
+      <text x="348" y="398" font-size="12" fill="#718096" text-anchor="middle">FCF 미공시</text>
+      <text x="515" y="398" font-size="12" font-weight="bold" fill="#047857" text-anchor="middle">FCF +189</text>
+      <text x="682" y="398" font-size="12" font-weight="bold" fill="#047857" text-anchor="middle">FCF +218</text>
+      <text x="848" y="398" font-size="12" font-weight="bold" fill="#DC2626" text-anchor="middle">FCF -165</text>
+    </svg>
+  </div>
+  <figcaption>그림 9. 현금·제한현금 잔고($M, 막대)와 분기 FCF. FY26Q1에는 증자 순수취 $424M 포함. FY26Q1 FCF는 9개월 누계에서 역산<span class="bd bd-drv">파생</span>, FY25Q4는 <span class="bd bd-unk">미확인</span>. | 출처: 회사 분기 실적발표</figcaption>
+</figure>
+
+<h3>9-C. 재무 추이와 DCF 모델</h3>
+<div class="twrap"><table>
+<caption>표 12. 연간 재무 추이 (FY, $M)</caption>
+<thead><tr><th>항목</th><th class="num">FY22</th><th class="num">FY23</th><th class="num">FY24</th><th class="num">FY25</th><th class="num">FY26E</th></tr></thead>
+<tbody>
+<tr><td>매출</td><td class="num">593</td><td class="num">1,177</td><td class="num">1,788</td><td class="num">2,247</td><td class="num">~2,797</td></tr>
+<tr><td>YoY</td><td class="num">—</td><td class="num"><span class="up">+98%</span></td><td class="num"><span class="up">+52%</span></td><td class="num"><span class="up">+26%</span></td><td class="num"><span class="up">+24%</span></td></tr>
+<tr><td>조정 EBITDA</td><td class="num">적자</td><td class="num">소폭 흑자<span class="bd bd-est">추정</span></td><td class="num">~110<span class="bd bd-drv">파생</span></td><td class="num">147</td><td class="num">~342</td></tr>
+<tr><td>GAAP 순이익</td><td class="num">적자</td><td class="num">적자</td><td class="num">소폭 흑자<span class="bd bd-est">추정</span></td><td class="num">-91</td><td class="num">~+130<span class="bd bd-drv">파생: 9M 77.8+Q4E ~50</span></td></tr>
+<tr><td>현금(기말)</td><td class="num">—</td><td class="num">—</td><td class="num">730</td><td class="num">1,245</td><td class="num">1,746 (Q3)</td></tr>
+</tbody></table></div>
+<p><strong>생애주기 판별(Dickinson):</strong> FY26 9M 현금흐름 부호 = 영업(+) / 투자(−) / 재무(+) → <strong>성장기</strong> 전형. 증자를 제외하면 재무(0)로 성장→성숙 이행 특징도 보이나, 매출 +24%·배치 77개 확대 국면이므로 성장기로 확정한다. 규칙 연결: 예측기간 10~15년, 페이드 시작 유예 가능. 사업부별 단계 차이(시스템=성장, SW·서비스=도입~성장)는 있으나 SW 비중 7%라 SOTP는 불필요 판정.</p>
+<div class="twrap"><table>
+<caption>표 13. WACC 산출 — 베타 불일치는 범위로 처리</caption>
+<thead><tr><th>요소</th><th class="num">값</th><th>근거</th></tr></thead>
+<tbody>
+<tr><td>무위험이자율</td><td class="num">4.70%</td><td>미 10년물, 2026-07-31 4.74% → 8월 4.65~4.74% 박스(8/6 4.69%) (실시간 조회)</td></tr>
+<tr><td>ERP</td><td class="num">4.23%</td><td>다모다란 implied ERP, 2026-08-01 (실시간 조회)</td></tr>
+<tr><td>베타</td><td class="num">1.6 (범위 1.1~2.15)</td><td><span class="bd bd-cfl">상충</span> 회귀 베타 2.73(조정 2.15)는 극단값(상장 4년·테마 변동) — 산업 언레버드 베타 ~1.0~1.2<span class="bd bd-est">추정</span>를 무차입 리레버(=동일)한 1.1과 병용, 기본 1.6 채택 후 민감도</td></tr>
+<tr><td><strong>자본비용 = WACC</strong></td><td class="num"><strong>11.47%</strong> (9.35~13.79%)</td><td>부채 0 → WACC=자기자본비용. 연중(mid-year) 할인 적용</td></tr>
+<tr><td>장기 성장률 g</td><td class="num">2.3%</td><td>FRED T10YIE 2026년 2.2~2.35% 박스 최근치 (실시간 조회)</td></tr>
+<tr><td>페이드 f / 종착 ROIIC</td><td class="num">0.21 / 20%</td><td>산업(Industrials) 섹터 페이드. 자본재 그룹 0.25는 민감도로</td></tr>
+<tr><td>세율 / 투자율</td><td class="num">25% / 매출의 4.0%</td><td>정상화 법정세율(현재는 NOL로 근사 0). 투자 = Capex+자본화SW ~3%에 여유 가산 — 선수금 float 효과는 보수적으로 배제</td></tr>
+</tbody></table></div>
+
+<div class="twrap"><table class="wide">
+<caption>표 14. DCF 전시 23 — 기본 시나리오 (FY, $M / k=11.47%, 연중 할인)</caption>
+<thead><tr><th>항목</th><th class="num">FY27</th><th class="num">FY28</th><th class="num">FY29</th><th class="num">FY30</th><th class="num">FY31</th><th class="num">FY32</th><th class="num">FY33</th><th class="num">FY34</th><th class="num">FY35</th><th class="num">FY36</th></tr></thead>
+<tbody>
+<tr><td>매출</td><td class="num">3,440</td><td class="num">4,197</td><td class="num">4,953</td><td class="num">5,646</td><td class="num">6,267</td><td class="num">6,831</td><td class="num">7,309</td><td class="num">7,748</td><td class="num">8,135</td><td class="num">8,477</td></tr>
+<tr><td>매출 성장 %</td><td class="num">23.0</td><td class="num">22.0</td><td class="num">18.0</td><td class="num">14.0</td><td class="num">11.0</td><td class="num">9.0</td><td class="num">7.0</td><td class="num">6.0</td><td class="num">5.0</td><td class="num">4.2</td></tr>
+<tr><td>EBITA</td><td class="num">189</td><td class="num">315</td><td class="num">446</td><td class="num">593</td><td class="num">721</td><td class="num">854</td><td class="num">950</td><td class="num">1,046</td><td class="num">1,098</td><td class="num">1,144</td></tr>
+<tr><td>EBITA 마진 %</td><td class="num">5.5</td><td class="num">7.5</td><td class="num">9.0</td><td class="num">10.5</td><td class="num">11.5</td><td class="num">12.5</td><td class="num">13.0</td><td class="num">13.5</td><td class="num">13.5</td><td class="num">13.5</td></tr>
+<tr><td>세율 %</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td><td class="num">25</td></tr>
+<tr><td>NOPAT</td><td class="num">142</td><td class="num">236</td><td class="num">334</td><td class="num">445</td><td class="num">541</td><td class="num">640</td><td class="num">713</td><td class="num">784</td><td class="num">824</td><td class="num">858</td></tr>
+<tr><td>미래 투자</td><td class="num">138</td><td class="num">168</td><td class="num">198</td><td class="num">226</td><td class="num">251</td><td class="num">273</td><td class="num">292</td><td class="num">310</td><td class="num">325</td><td class="num">339</td></tr>
+<tr><td>FCF</td><td class="num">4</td><td class="num">68</td><td class="num">136</td><td class="num">219</td><td class="num">290</td><td class="num">367</td><td class="num">420</td><td class="num">475</td><td class="num">498</td><td class="num">519</td></tr>
+<tr><td>FCF의 PV</td><td class="num">4</td><td class="num">58</td><td class="num">104</td><td class="num">150</td><td class="num">178</td><td class="num">202</td><td class="num">208</td><td class="num">210</td><td class="num">198</td><td class="num">185</td></tr>
+<tr><td>ROIIC %</td><td class="num">—</td><td class="num">68</td><td class="num">58</td><td class="num">56</td><td class="num">42</td><td class="num">40</td><td class="num">26</td><td class="num">25</td><td class="num">13</td><td class="num">11</td></tr>
+<tr class="total"><td>합산 (T=10)</td><td class="num" colspan="4">PV(FCF) 1,496</td><td class="num" colspan="3">최종가치 7,950 → PV 2,834</td><td class="num" colspan="3">EV 4,330 · 자본가치 6,243 · <strong>주당 $10.25</strong></td></tr>
+</tbody></table></div>
+<div class="co co-note"><div class="ct">표 읽는 법</div><p>최종가치는 FY2037 NOPAT $889M에 페이드 모델(f=0.21, g=2.3%, r=20%)을 적용한 값. 자본가치 = EV + 순현금 $1,773M + Exol 지분법 $140M. 주당 = ÷609M 유닛. T=15로 늘려도 주당 $9.87로 <strong>수렴</strong>한다 — 성장의 한계가치가 페이드에 흡수되기 때문. 이 수렴이 §10의 핵심 발견으로 이어진다. ROIIC가 68%→11%로 낮아지는 것은 자본경량 모델이 성숙하며 정상화되는 경로다.</p></div>
+</section>
+
+<section id="s10">
+<h2><span class="no">10</span>시장 내재 CAP 역산 및 해석</h2>
+<p class="lead"><strong>결론: 내재 CAP는 "역산 불가"다.</strong> 기본 펀더멘털 경로에서 예측기간을 1년부터 19년까지 늘려도 주당가치는 $9.6~10.3에 수렴해 현재가 $41.2에 닿지 않는다. 즉 시장은 CAP(초과수익 기간)를 길게 쳐주는 것이 아니라, <strong>기본 경제성 자체가 다른 회사가 될 것</strong>이라는 데 베팅하고 있다.</p>
+
+<figure>
+  <div class="fig-t">CAP 사다리: 예측기간을 아무리 늘려도 현재가와 만나지 않는다 — 가격은 다른 이야기를 산 것</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg">
+      <line x1="70" y1="288" x2="960" y2="288" stroke="#E2E8F0"/><text x="60" y="292" font-size="12" fill="#4A5568" text-anchor="end">$10</text>
+      <line x1="70" y1="226" x2="960" y2="226" stroke="#E2E8F0"/><text x="60" y="230" font-size="12" fill="#4A5568" text-anchor="end">$20</text>
+      <line x1="70" y1="164" x2="960" y2="164" stroke="#E2E8F0"/><text x="60" y="168" font-size="12" fill="#4A5568" text-anchor="end">$30</text>
+      <line x1="70" y1="102" x2="960" y2="102" stroke="#E2E8F0"/><text x="60" y="106" font-size="12" fill="#4A5568" text-anchor="end">$40</text>
+      <line x1="70" y1="40" x2="960" y2="40" stroke="#E2E8F0"/><text x="60" y="44" font-size="12" fill="#4A5568" text-anchor="end">$50</text>
+      <line x1="70" y1="95" x2="960" y2="95" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 4"/>
+      <text x="950" y="88" font-size="12.5" font-weight="bold" fill="#2563EB" text-anchor="end">현재가 $41.2 — 어떤 곡선과도 미교차</text>
+      <path d="M70,297 L122,289 L175,283 L227,277 L279,274 L332,271 L384,271 L436,270 L489,271 L541,271 L594,271 L646,272 L698,272 L751,273 L803,273 L855,274 L908,274 L960,274" fill="none" stroke="#059669" stroke-width="2.5"/>
+      <path d="M70,304 L122,298 L175,294 L227,290 L279,288 L332,286 L384,286 L436,286 L489,286 L541,287 L594,287 L646,288 L698,288 L751,289 L803,289 L855,290 L908,290 L960,290" fill="none" stroke="#2563EB" stroke-width="2.5"/>
+      <path d="M70,309 L122,305 L175,302 L227,299 L279,298 L332,297 L384,297 L436,297 L489,298 L541,298 L594,298 L646,299 L698,299 L751,300 L803,300 L855,300 L908,301 L960,301" fill="none" stroke="#DC2626" stroke-width="2.5"/>
+      <text x="70" y="332" font-size="12" fill="#4A5568">T=2</text>
+      <text x="227" y="332" font-size="12" fill="#4A5568">T=5</text>
+      <text x="384" y="332" font-size="12" fill="#4A5568">T=8</text>
+      <text x="541" y="332" font-size="12" fill="#4A5568">T=11</text>
+      <text x="698" y="332" font-size="12" fill="#4A5568">T=14</text>
+      <text x="855" y="332" font-size="12" fill="#4A5568">T=17</text>
+      <text x="945" y="332" font-size="12" fill="#4A5568">T=19</text>
+      <text x="500" y="372" font-size="12" fill="#718096" text-anchor="middle">기본 시나리오 경로 고정, 예측기간(CAP) 1~19년 변화 · 연중 할인 · 세 곡선은 자본비용별</text>
+    </svg>
+    <div class="legend"><div class="li"><span class="sw" style="background:#059669"></span>k=9.35% (β1.1)</div><div class="li"><span class="sw" style="background:#2563EB"></span>k=11.47% (β1.6, 기본)</div><div class="li"><span class="sw" style="background:#DC2626"></span>k=13.79% (β2.15)</div></div>
+  </div>
+  <figcaption>그림 10. CAP별 주당가치 사다리 vs 현재가. | 출처: 본 보고서 DCF 모델</figcaption>
+</figure>
+
+<div class="twrap"><table>
+<caption>표 15. 시장 내재 기대치의 역산 — $41.2가 성립하려면 무엇이 참이어야 하나</caption>
+<thead><tr><th>역산 축</th><th class="num">필요 조건</th><th>합리성 판정</th></tr></thead>
+<tbody>
+<tr><td>요구 기업가치</td><td class="num">EV $23.2B</td><td>= $41.2 × 609M − 순현금 $1.77B − 지분법 $0.14B</td></tr>
+<tr><td>① 할인율로만 설명 시</td><td class="num">k = 3.47%</td><td><strong>불성립</strong> — 무위험수익률 4.70%보다 낮음. 가격은 할인율 논쟁이 아님</td></tr>
+<tr><td>② 마진으로만 설명 시 (기본 성장 유지, T=15)</td><td class="num">종착 EBITA 마진 52~60%</td><td><strong>비현실</strong> — 하드웨어 포함 사업으로는 소프트웨어 독점 기업 수준. AutoStore(제품만 판매)도 조정 EBITDA 42.3%(2025)</td></tr>
+<tr><td>③ 규모로만 설명 시 (마진 16.5% 강세 수준, T=15)</td><td class="num">FY2031 매출 $13.5~15.6B → FY2036 $26~35B</td><td><strong>대형 성공 전제</strong> — FY26의 9~13배. 코어 TAM $433B의 6~8% 점유에 해당. 가능은 하나 계약된 미래가 아님</td></tr>
+<tr><td>④ 최관대 조합(강세²: 성장 28%대+종착 마진 20%+k 9.35%)</td><td class="num">주당 $30.4 (T=15)</td><td>그래도 현재가 대비 <strong>-26%</strong> — 즉 최소 $10.8/주는 어떤 정량 시나리오로도 미설명</td></tr>
+<tr class="hl"><td>종합 판정</td><td class="num">내재 CAP &gt; 20년 등가(역산 불가)</td><td>CAP 합리성 표에서 "20년 초과 = 과도한 낙관" 구간 초과. <strong>CAP 축: 명백한 과열</strong></td></tr>
+</tbody></table></div>
+
+<figure>
+  <div class="fig-t">풋볼 필드: 현재가 $41.2는 모든 DCF 시나리오 위, 애널리스트 밴드 하단 — "꿈의 값"이 그 사이에 있다</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg">
+      <line x1="70" y1="40" x2="70" y2="330" stroke="#CBD5E1"/><text x="70" y="352" font-size="12" fill="#4A5568" text-anchor="middle">$0</text>
+      <line x1="232" y1="40" x2="232" y2="330" stroke="#E2E8F0"/><text x="232" y="352" font-size="12" fill="#4A5568" text-anchor="middle">$20</text>
+      <line x1="394" y1="40" x2="394" y2="330" stroke="#E2E8F0"/><text x="394" y="352" font-size="12" fill="#4A5568" text-anchor="middle">$40</text>
+      <line x1="555" y1="40" x2="555" y2="330" stroke="#E2E8F0"/><text x="555" y="352" font-size="12" fill="#4A5568" text-anchor="middle">$60</text>
+      <line x1="717" y1="40" x2="717" y2="330" stroke="#E2E8F0"/><text x="717" y="352" font-size="12" fill="#4A5568" text-anchor="middle">$80</text>
+      <line x1="879" y1="40" x2="879" y2="330" stroke="#E2E8F0"/><text x="879" y="352" font-size="12" fill="#4A5568" text-anchor="middle">$100</text>
+      <rect x="379" y="55" width="402" height="22" rx="6" fill="#64748B" opacity="0.55"/><text x="379" y="50" font-size="12" fill="#1A202C">52주 주가 범위 38.19–87.88</text>
+      <rect x="410" y="95" width="348" height="22" rx="6" fill="#7C3AED" opacity="0.6"/><text x="410" y="90" font-size="12" fill="#1A202C">애널리스트 목표 42–85 (평균 65.7)</text>
+      <rect x="264" y="135" width="663" height="22" rx="6" fill="#0891B2" opacity="0.5"/><text x="264" y="130" font-size="12" fill="#1A202C">멀티플 밴드 3.7–18.2× 선행매출 → 24.0–105.9</text>
+      <rect x="249" y="175" width="67" height="22" rx="6" fill="#059669" opacity="0.8"/><text x="322" y="191" font-size="12" fill="#1A202C">DCF 강세² 22.1–30.4</text>
+      <rect x="195" y="215" width="39" height="22" rx="6" fill="#059669" opacity="0.55"/><text x="240" y="231" font-size="12" fill="#1A202C">DCF 강세 15.5–20.3</text>
+      <rect x="150" y="255" width="23" height="22" rx="6" fill="#D97706" opacity="0.8"/><text x="179" y="271" font-size="12" fill="#1A202C">DCF 기본 9.9–12.8</text>
+      <rect x="117" y="295" width="9" height="22" rx="6" fill="#DC2626" opacity="0.8"/><text x="132" y="311" font-size="12" fill="#1A202C">DCF 약세 5.8–6.9</text>
+      <line x1="403" y1="40" x2="403" y2="330" stroke="#2563EB" stroke-width="2.5"/>
+      <text x="403" y="34" font-size="12.5" font-weight="bold" fill="#2563EB" text-anchor="middle">현재가 $41.2</text>
+      <text x="500" y="384" font-size="12" fill="#718096" text-anchor="middle">DCF 밴드는 자본비용 9.35~13.79% × 예측기간 10~15년의 범위 · 멀티플 밴드는 자사 역사적 EV/선행매출 트로프~피크</text>
+    </svg>
+  </div>
+  <figcaption>그림 11. 밸류에이션 레인지 종합. | 출처: 본 보고서 모델·회사 공시·시장데이터</figcaption>
+</figure>
+
+<figure>
+  <div class="fig-t">멀티플 밴드: 자사 역사 3.7×(공포)–18.2×(도취) 안에서 지금은 8.3× — 중립 아래쪽</div>
+  <div class="fig-box">
+    <svg viewBox="0 0 1000 190" xmlns="http://www.w3.org/2000/svg">
+      <rect x="70" y="80" width="890" height="26" rx="13" fill="#F6F8FA" stroke="#E2E8F0"/>
+      <rect x="235" y="80" width="645" height="26" rx="13" fill="#EFF6FF"/>
+      <text x="70" y="150" font-size="12" fill="#4A5568">0×</text>
+      <text x="292" y="150" font-size="12" fill="#4A5568">5×</text>
+      <text x="515" y="150" font-size="12" fill="#4A5568">10×</text>
+      <text x="738" y="150" font-size="12" fill="#4A5568">15×</text>
+      <text x="950" y="150" font-size="12" fill="#4A5568" text-anchor="end">20×</text>
+      <line x1="235" y1="60" x2="235" y2="126" stroke="#DC2626" stroke-width="2.5"/>
+      <text x="235" y="50" font-size="12" font-weight="bold" fill="#DC2626" text-anchor="middle">트로프 3.7× (2025-04 관세 패닉)</text>
+      <line x1="880" y1="60" x2="880" y2="126" stroke="#059669" stroke-width="2.5"/>
+      <text x="865" y="50" font-size="12" font-weight="bold" fill="#059669" text-anchor="middle">피크 18.2× (2025-12 도취)</text>
+      <line x1="439" y1="55" x2="439" y2="131" stroke="#2563EB" stroke-width="3"/>
+      <text x="439" y="176" font-size="12.5" font-weight="bold" fill="#2563EB" text-anchor="middle">현재 8.3× (EV $23.3B / FY26E 매출)</text>
+    </svg>
+  </div>
+  <figcaption>그림 12. EV/선행매출 밴드(전체 유닛 기준 EV). 트로프·피크는 당시 주가·주식수·현금으로 역산<span class="bd bd-drv">파생</span>. | 출처: 시장데이터·회사 공시, 본 보고서 계산</figcaption>
+</figure>
+
+<div class="twrap"><table>
+<caption>표 16. 민감도 (T=10 고정, 주당 $) — 결론은 f·k가 아니라 마진·규모 가정이 지배한다</caption>
+<thead><tr><th>자본비용 \ 페이드</th><th class="num">f=0.10 (강한 해자)</th><th class="num">f=0.21 (섹터, 기본)</th><th class="num">f=0.30 (약한 해자)</th></tr></thead>
+<tbody>
+<tr><td>k=10.47%</td><td class="num" style="background:var(--pos-soft);color:#065F46;">11.45</td><td class="num" style="background:var(--pos-soft);color:#065F46;">11.31</td><td class="num" style="background:var(--pos-soft);color:#065F46;">11.26</td></tr>
+<tr><td>k=11.47% (기본)</td><td class="num" style="background:var(--gold-soft);color:#78350F;">10.34</td><td class="num" style="background:var(--gold-soft);color:#78350F;font-weight:700;">10.25</td><td class="num" style="background:var(--gold-soft);color:#78350F;">10.22</td></tr>
+<tr><td>k=12.47%</td><td class="num" style="background:var(--warn-soft);color:#92400E;">9.45</td><td class="num" style="background:var(--warn-soft);color:#92400E;">9.39</td><td class="num" style="background:var(--warn-soft);color:#92400E;">9.36</td></tr>
+</tbody></table></div>
+<div class="twrap"><table>
+<caption>표 17. 3+1 시나리오 요약 (주당 $, T=10~15 범위)</caption>
+<thead><tr><th>시나리오</th><th>핵심 가정</th><th class="num">k=11.47%</th><th class="num">k=9.35%</th><th>대응 서사</th></tr></thead>
+<tbody>
+<tr><td>약세</td><td>성장 17%→저성장 조기 페이드, 종착 마진 9.5%</td><td class="num">5.8</td><td class="num">6.9</td><td>월마트 편중 고착 + 마진 정체 — "장비 하청" 결말</td></tr>
+<tr><td>기본</td><td>성장 23%→감속, 종착 마진 13.5%</td><td class="num">9.9~10.3</td><td class="num">12.4~12.8</td><td>백로그 소화 + 점진적 믹스 개선</td></tr>
+<tr><td>강세</td><td>성장 26%대 유지, 종착 마진 16.5%</td><td class="num">15.5~15.7</td><td class="num">20.2~20.3</td><td>비월마트 앵커 확보 + SW 믹스 가속</td></tr>
+<tr class="hl"><td>강세² (꿈의 정량화 상한)</td><td>성장 28%대 장기 유지, 종착 마진 20%</td><td class="num">22.1~22.6</td><td class="num">29.1~30.4</td><td>APD+WaaS+신선 전부 성공 — "물류의 AWS" 실현</td></tr>
+</tbody></table></div>
+<p><strong>해석 — 시장이 거는 기대의 강도:</strong> 표 15·17을 겹치면 현 주가의 구성이 보인다: 기본 경제성 $10 + 강세 증분 $5~8 + 강세² 증분 $7~10 + <strong>어떤 시나리오로도 미설명되는 잔여 $11+</strong>. 이 잔여가 곧 "테마 프리미엄"이며, 2025-12 고점에서는 잔여가 $57+였다. 조정을 거쳐 프리미엄이 3분의 1 이하로 줄었다는 것 — 그것이 지금 가격의 정확한 위치다. 애널리스트 평균 $65.7는 DCF가 아니라 FY27~28 EBITDA에 30~45배 멀티플을 적용한 결과<span class="bd bd-est">추정: EV $23.3B/FY27E EBITDA ~$520M ≈ 45배 역산</span>로, 테마 멀티플의 유지를 전제한다.</p>
+</section>
+<section id="s11">
+<h2><span class="no">11</span>투자 논거 — Bull Case (긍정 동인 집중 분석)</h2>
+<p class="lead">강세론의 뼈대: <strong>"검증은 끝났고, 남은 것은 복제뿐이다."</strong> 세계에서 가장 까다로운 유통사가 42개 물류센터 전부에 이 기술을 심고 있고, 그 위에 매장 400곳·타사 창고(WaaS)·신선식품이라는 세 개의 제2곡선이 계약 또는 합작 형태로 이미 문서화되어 있다.</p>
+<div class="twrap"><table class="wide">
+<caption>표 18. Bull 동인별 지속가능성 × 가격 반영도 (§10 교차검토 — 대칭 보정)</caption>
+<thead><tr><th>긍정 동인</th><th>왜 지속 가능한가 / 왜 못 따라오나</th><th>가격 반영도 판정</th></tr></thead>
+<tbody>
+<tr><td><strong>① 케이스 자동화 독주</strong></td><td>혼합 팔레트 자동 적재는 이치스 경쟁사가 출력 자체를 못 만드는 문제. 특허 1,050+·3.3억 마일 데이터·42개 RDC 레퍼런스는 자본으로 단축 불가한 시간 자산 (§4-C)</td><td><strong>기반영</strong> — 기본 DCF($10)에 이미 포함된 "주가 유지 조건". 이것만으로는 상승 여력 아님</td></tr>
+<tr><td><strong>② 백로그 $22.5B의 가시성</strong></td><td>연매출 8배의 계약 물량. 진행기준 인식이라 매출 경로가 기계적. 8분기 연속 가이던스 달성이 실행력 증거</td><td><strong>기반영</strong> — 기본~강세 시나리오의 재료. 백로그 "증가"만이 신규 재료</td></tr>
+<tr><td><strong>③ 마진 믹스 전환 (SW +57%·서비스 +49%)</strong></td><td>가동 시스템 56→수백 개로 늘수록 자동 누적되는 구독 매출. ARMS(운영 인텔리전스)·Fox 플릿 관리가 구독 레이어를 추가. 조정 GM 21.5→25.0% 실증</td><td><strong>부분 반영</strong> — 강세(마진 16.5%)까지는 가격에 있음. 종착 마진 20%(강세²) 도달 여부가 진짜 엣지</td></tr>
+<tr><td><strong>④ 제2곡선 3종: APD·Exol·신선</strong></td><td>APD는 월마트 400개 커밋+200 옵션(KPI 조건부)·개발비 $520M 선지급, Exol은 소프트뱅크 자본으로 사이트 확장(2호기 가동·5개 추가 계획), 신선은 Gen-2+SymBot TR로 기술 준비 완료. 모두 앵커가 자본을 대는 확장</td><td><strong>미반영 큰 몫 — 진짜 엣지.</strong> 강세²($22~30)와 현재가의 갭이 이 곡선들의 성공 확률 프라이싱. 2028 초 APD 본주문이 최대 검증 이벤트</td></tr>
+<tr><td><strong>⑤ 무차입 + 고객 선수금 성장 모델</strong></td><td>이연수익 $1.74B가 운전자본을 조달 — 성장할수록 현금이 먼저 들어오는 희귀 구조. 자본시장 의존 없이 M&amp;A(Fox·ARMS) 수행</td><td><strong>기반영</strong> — 순현금 $1.9B는 밸류에이션에 가산 완료</td></tr>
+<tr><td><strong>⑥ 수급 비대칭 (숏스퀴즈 옵션)</strong></td><td>$10B+ 산업주 최다 공매도 + 유통주식 21%뿐인 Up-C 구조 — 촉매 확인 시 되사기 압력이 증폭되는 구조</td><td><strong>미반영</strong> — 펀더멘털 외 요인이라 DCF에 없음. 11월 가이던스가 트리거 후보</td></tr>
+</tbody></table></div>
+<p>요약하면, 상승 논거의 무게중심은 ①②⑤(이미 가격에 있는 것)가 아니라 <strong>④⑥(아직 가격 밖에 있는 것)</strong>이다. 강세론자가 옳다면 그 증거는 손익계산서보다 먼저 <strong>수주 공시와 FY27 가이던스</strong>에 나타난다.</p>
+</section>
+
+<section id="s12">
+<h2><span class="no">12</span>리스크 — Bear Case</h2>
+<p class="lead">약세론의 뼈대: <strong>"이것은 플랫폼이 아니라, 세계 최강 구매자를 단일 고객으로 둔 프로젝트 회사다."</strong> 그리고 그 구매자가 지분 12.6%를 쥐고 가격을 조정하고 있으며, 초기 후원자(소프트뱅크)는 이미 팔고 나갔다.</p>
+<div class="twrap"><table class="wide">
+<caption>표 19. 리스크별 강도 × 가격 반영도</caption>
+<thead><tr><th>리스크</th><th>내용·증거</th><th>이미 반영됐나 / 과도한 우려인가</th></tr></thead>
+<tbody>
+<tr><td><strong>① 월마트 집중 (매출 85~90%)</strong></td><td>가격 협상력 비대칭(Q3 백로그 "가격 조정"), CapEx 사이클 종료 리스크 — 2026년이 월마트 자동화 투자 "피크"라는 회사 발언은 양날의 검. 42개 RDC 완료 후의 공백 가능성</td><td><strong>부분 반영</strong> — -53% 조정의 핵심 사유였음. 그러나 "피크 이후" 시나리오는 FY28+ 문제라 완전 반영으로 보기 어려움. 과도한 우려는 아님</td></tr>
+<tr><td><strong>② 이익의 질 (§9-A)</strong></td><td>미청구채권 9개월 +$278M, SBC 7.5%, FCF 분기 진폭 ±$200M, 재작성 이력+진행 중 집단소송+내부통제 개선 계속</td><td><strong>부분 반영</strong> — EPS 미스마다 처벌받아 왔음. 단 미청구채권이 실제 회수 실패로 번지면 미반영 하방</td></tr>
+<tr><td><strong>③ Gen-2 전환 리스크</strong></td><td>세대 교체기의 배치 재편성이 이미 FY26 상반기 감속을 유발. 프로토타입 KPI 미달 시 APD 400개(2028)·FY27 변곡 모두 연쇄 지연</td><td><strong>미반영에 가까움</strong> — 시장은 FY27 변곡을 컨센서스(+23%)에 넣어둔 상태. 실패 시 컨센 하향 폭 큼</td></tr>
+<tr><td><strong>④ Exol(WaaS) 경제성</strong></td><td>지분법손실 9M -$22.4M로 확대 중. 35% 지분·독점 공급 구조라 실패 시 백로그 ~$11B<span class="bd bd-cfl">상충</span>의 질이 훼손. Ocado 선례(파트너 가동률 부진 → -90%대)가 이 유형의 하방 교과서</td><td><strong>일부 반영</strong> — 골드만 Sell 논거. 사이트 2개 가동은 초기 반증이나 단위 경제성 수치는 <span class="bd bd-unk">미확인</span></td></tr>
+<tr><td><strong>⑤ 밸류에이션 (§10)</strong></td><td>어떤 정량 시나리오로도 현재가의 최소 26%가 미설명. 테마 멀티플(EV/EBITDA 45배+) 의존</td><td><strong>미반영이 정의상 존재</strong> — 이것이 §15-B 하방 정량화의 근거</td></tr>
+<tr><td>⑥ 경쟁·기술 파괴</td><td>Amazon 사내 로봇(외판 시 시나리오), 휴머노이드 범용화(수년 후), Witron·Dematic의 대응, 중국계(Geek+·Hai)의 저가 이치스 확산</td><td><strong>과도한 우려 판정</strong> — 단기 케이스 자동화 직접 위협은 미미(§4-C). 3~5년 감시 항목</td></tr>
+<tr><td>⑦ 수급·거버넌스</td><td>소프트뱅크 잔여 Class A 31.3% 오버행, 내부자 매도, 코헨 절대 지배(V-3 403.6M) — 소수주주 견제 장치 약함, 특수관계 거래(C&amp;S) 상존</td><td><strong>부분 반영</strong> — 매도 이벤트마다 -10%대 반응 실증. 오버행은 잔존</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="s13">
+<h2><span class="no">13</span>SWOT 분석</h2>
+<div class="swot">
+  <div class="q s"><div class="qt">강점 (Strengths)</div><ul>
+    <li>케이스 자동화 사실상 독주 — 혼합 팔레트 자동 적재의 유일 검증 벤더</li>
+    <li>백로그 $22.5B(매출 8배) + 8분기 연속 가이던스 달성</li>
+    <li>무차입·현금 $1.75B·고객 선수금 성장 모델</li>
+    <li>특허 1,050+·주행 3.3억 마일·R&amp;D 누적 $1B+</li>
+    <li>월마트·소프트뱅크·월마트멕시코라는 자본력 있는 후원 구조</li>
+  </ul></div>
+  <div class="q w"><div class="qt">약점 (Weaknesses)</div><ul>
+    <li>월마트 매출 85~90% — 가격·일정 협상력 비대칭</li>
+    <li>낮은 현재 마진(EBITA ~3.5%)·SBC 7.5%·FCF 변동성</li>
+    <li>재무 재작성 이력·집단소송·내부통제 개선 진행 중</li>
+    <li>Up-C 구조 — 유통주식 21%, 창업자 절대 지배</li>
+  </ul></div>
+  <div class="q o"><div class="qt">기회 (Opportunities)</div><ul>
+    <li>APD 400개(+옵션 200) — 미국 MFC TAM $305B의 교두보</li>
+    <li>Exol WaaS — 연 $500B 서비스 시장, 소프트뱅크 자본으로 확장</li>
+    <li>Gen-2로 신선식품·도심형 진입, FY27 하반기 매출 변곡</li>
+    <li>Fox(도크)·ARMS(SW)로 인접 확장 + 크로스셀 고객 25개사</li>
+    <li>자동화 군비경쟁(Amazon €10B)이 월마트 진영 투자를 자극</li>
+  </ul></div>
+  <div class="q t"><div class="qt">위협 (Threats)</div><ul>
+    <li>월마트 CapEx 피크아웃(2026) 이후의 수주 공백</li>
+    <li>Gen-2 KPI 미달 → APD·FY27 변곡 연쇄 지연</li>
+    <li>Exol 단위 경제성 실패(Ocado형 경로)</li>
+    <li>소프트뱅크 31.3% 오버행·테마 자금 이탈 지속</li>
+    <li>장기: 휴머노이드·범용 로봇의 우회 진입</li>
+  </ul></div>
+</div>
+</section>
+
+<section id="s14">
+<h2><span class="no">14</span>경영진 및 자본 배분</h2>
+<p class="lead">이 회사는 릭 코헨이라는 한 사람의 확신 위에 서 있다 — 세계 최대 식품 도매상을 만든 오너가, 자기 돈으로 20년간 $1B+를 태워 만든 제품이라는 점은 최고의 품질 보증이자 최대의 지배구조 리스크다.</p>
+<p><strong>트랙 레코드:</strong> 코헨(회장 겸 CEO)은 C&amp;S를 $14M→$25B+로 키운 실물 물류 경영자다. 2022년 전문경영인(로파르코)에게 CEO를 넘겼다가 7개월 만에 복귀 — "단일 리더십" 명분이었지만, 창업자 의존도가 그만큼 높다는 방증이다. CFO 이지 마틴스는 재작성 사태 이후 가이던스 8분기 연속 달성으로 신뢰를 재구축 중이며, 2026-08 <strong>스티브 팔리우카(전 베인캐피털 공동회장) 이사 영입</strong>은 M&amp;A·스케일업 국면의 포석으로 읽힌다.</p>
+<p><strong>자본 배분의 성적표:</strong> 배당·자사주 없음(성장기 정합적). 배분의 축은 ① R&amp;D(매출의 7% 안팎, 누적 $1B+), ② 볼트온 M&amp;A — ASR $200M(월마트 관계 심화+MFC 기술), Fox(도크 자동화, 가격 비공개·직전 밸류 수억 달러대<span class="bd bd-est">추정</span>), ARMS(SW 레이어), ③ 전략 지분 — Nyobolt(급속충전, Series C $1B 밸류에서 공정가치이익 $19.4M 기실현), Exol $35M+. 모두 "플랫폼 완성" 논리로 일관성이 있고, 12월 증자($424M 순수취)는 현금 $1.2B 위에서의 기회적 조달이라 필요성 논란(고점 매도 아니냐)이 있었으나 공모가 $55는 이후 주가($41)를 웃돌아 사후적으로는 주주에 유리한 조달 타이밍이 됐다.</p>
+<p><strong>인센티브·내부자:</strong> 코헨 일가가 V주로 경제 지분 대부분·의결권 절대 다수를 보유 — 이해관계는 정렬되나 견제는 부재. SBC 7.5%는 인재 유치 명분과 희석 비용의 트레이드오프. 2026년 5월 CSO·이사의 장내 매도(합계 수백만 달러)와 소프트뱅크 전량 처분(스폰서 비히클 기준)은 수급·심리에 부정적이었다. <strong>약속 대비 실행:</strong> "가이던스는 지킨다"(8분기 연속)와 "EPS 컨센서스는 자주 놓친다"(SBC·투자 확대)가 공존 — 경영진은 성장·현금을 약속하고 지켰지, 단기 EPS를 약속한 적은 없다는 점은 공정하게 기록해 둔다.</p>
+</section>
+
+<section id="s15">
+<h2><span class="no">15</span>종합 판단 및 체크포인트</h2>
+<h3>15-A. 1차 판단 — 내러티브 엔진 (헤드라인 결론)</h3>
+<div class="co co-key"><div class="ct">판정: 꿈 × CAP 매트릭스의 "꿈 신선 + CAP 과열" 칸 — 1차 판정 조건부 긍정 (촉매 대기 구간)</div>
+<p>§5-B 종합: 신선도는 반(半)신선(1차 소비 후 재장전 — 테마 생존·커버리지 유지·목표가 상향 지속), 3P는 Plausible 확정·Probable 초기, 증거화 일정은 <strong>2026-11 실적/FY27 가이던스 → FY27 하반기 Gen-2 변곡 → 2028 초 APD 400개</strong>로 날짜가 박혀 있으며, 자금 흐름은 유출 후 최다 공매도로 비대칭 구조다. 따라서 "지금 이야기가 커지는 구간인가?"에 대한 답은 <strong>"아직 아니다 — 그러나 커질 촉매가 전방에 배치되어 있고, 가격은 그 도취를 절반 이상 반납했다"</strong>이다. 내러티브 주도 구간의 재개 조건은 11월 FY27 가이던스가 "하반기 변곡"을 숫자로 확인하는 것이며, 이 확인 전까지 1차 판정은 긍정 방향의 유보(조건부 긍정)로 둔다. §1 헤드라인과 동일 판정.</p></div>
+<div class="twrap"><table>
+<caption>표 20. 꿈 × CAP 조합 매트릭스 — 현 위치</caption>
+<thead><tr><th></th><th>CAP 합리·미반영</th><th>CAP 과열</th></tr></thead>
+<tbody>
+<tr><td><strong>꿈 신선</strong></td><td style="background:var(--pos-soft);color:#065F46;">최상 — 내러티브가 공짜 옵션</td><td style="background:var(--gold-soft);color:#78350F;border:2px solid var(--line-2);font-weight:700;">★ 현 위치 — 1차 긍정(조건부·촉매 대기). 단 소진 시 하방을 15-B에 정량 명시</td></tr>
+<tr><td><strong>꿈 소진</strong></td><td style="background:var(--warn-soft);color:#92400E;">유보 — 가치함정 위험, 재점화 트리거 추적</td><td style="background:var(--neg-soft);color:#991B1B;">부정 — 최악 조합</td></tr>
+</tbody></table></div>
+
+<h3>15-B. 2차 후술 — 장기 보유 관점 (1차 판정과 별도, 생략 없이)</h3>
+<div class="co co-warn"><div class="ct">CAP 과열도와 하방의 크기 — 숫자로</div>
+<p>내러티브가 소진되고 가격이 검증 가능한 경제성으로 회귀할 때의 이론가: <strong>① 멀티플 트로프(3.7× 선행매출) 재방문 시 약 $24.0 → -42%</strong><span class="bd bd-drv">파생</span>, <strong>② 강세 펀더멘털 유지 가정 $15.5~20.3 → -51~-62%</strong>, <strong>③ 기본 펀더멘털 회귀 $9.9~12.8 → -69~-76%</strong>. 즉 이 종목의 장기 보유는 "꿈이 실현되는 속도"가 아니라 "꿈이 유지되는 기간"에 대한 베팅이며, 하방 완충은 얇다.</p></div>
+<p><strong>내러티브 사후 가치(꿈이 꺼져도 남는 것):</strong> 순현금+지분법 주당 약 $3.1, 계약 백로그 $22.5B의 이행 가치(기본 DCF $10의 골격), 월마트 물류망에 물리적으로 심긴 시스템의 서비스 연금(가동 56개×SW·서비스), 그리고 특허·데이터 자산. 최악에도 "장비 하청+서비스 회사"로서 주당 $6~10의 사업은 남는다 — 단 그 가격은 여기서 한참 아래다.</p>
+<p><strong>보유 전환 조건("내러티브 구간 보유" → "장기 보유"로 격상하려면):</strong> ① FY27 가이던스와 실제 하반기 매출 가속의 이행(Gen-2 검증), ② <strong>대형 비월마트 앵커 1개 이상</strong>(AWG급을 넘는 수주 — Probable 확정의 결정 증거), ③ APD 400개 본주문 접수(2028 초), ④ Exol 사이트 확장 지속 + 지분법손실 축소 전환, ⑤ 미청구채권 정상화·연간 FCF 흑자 지속, ⑥ 조정 GM 25%→시스템 GM 추가 개선. 이 중 ②·③이 확인되면 강세²($22~30)가 "시나리오"에서 "기본"으로 승격되고, 그때 비로소 현재가는 장기 보유 관점에서도 방어 가능해진다. <strong>1차 판정(조건부 긍정)과 장기 판정(현 가격은 하방 완충 부족)은 다르며, 이 둘을 뭉뚱그리지 않는 것이 본 보고서의 결론 구조다.</strong></p>
+
+<h3>15-C. 한계와 가정, 모니터링 체크포인트</h3>
+<div class="co co-note"><div class="ct">한계와 가정 (Limitations &amp; Assumptions)</div>
+<p>· 이 결론이 의존하는 핵심 가정: (1) 월마트 관계의 계약 이행 지속, (2) FY26 Q4 가이던스 및 "FY27 하반기 변곡"이라는 경영진 가이드의 신뢰성, (3) 기본 DCF의 종착 EBITA 마진 13.5%·투자율 4%라는 필자 추정. · 확신도 낮은 지점: 베타(1.1~2.15 <span class="bd bd-cfl">상충</span>), Exol 단위 경제성(<span class="bd bd-unk">미확인</span>), 시스템 평균 단가(<span class="bd bd-est">추정</span>), 비월마트 파이프라인의 실체. · 결론 수정 조건: §5-B(8)의 사망 조건 중 하나라도 발생하면 1차 판정을 하향하고, 15-B의 전환 조건 ②③ 확인 시 상향한다. · 다음 검증 단계: 2026-11 실적에서 FY27 가이던스·Gen-2 KPI·백로그 순증·미청구채권 잔액 4개 항목 대조.</p></div>
+<div class="twrap"><table>
+<caption>표 21. 분기·연간 체크포인트</caption>
+<thead><tr><th>주기</th><th>항목</th><th>합격선·경보선</th></tr></thead>
+<tbody>
+<tr><td>매 분기</td><td>매출 vs 가이던스 / 백로그 순변동 / 조정 GM</td><td>가이던스 내 + 백로그 $22B 이상 유지 / GM 25%± 지속. 경보: 백로그 취소·감액 공시</td></tr>
+<tr><td>매 분기</td><td>미청구채권·AR / FCF</td><td>매출 증가율 이하로 둔화 / 연간 FCF 흑자. 경보: 미청구 +$100M/분기 지속</td></tr>
+<tr><td>매 분기</td><td>비월마트 신규 로고·Exol 사이트 수·지분법손실</td><td>분기 1건 이상 진전 / 손실 축소 전환. 경보: Exol 증설 중단</td></tr>
+<tr><td>반기</td><td>Gen-2 진척(프로토타입→양산) / APD 개발 마일스톤</td><td>FY27 하반기 변곡 가이드 유지. 경보: APD 일정 언급 후퇴</td></tr>
+<tr><td>연간</td><td>내재 기대 재역산 / 페이드·자본비용 갱신 / 생애주기 재판별</td><td>본 §10 방법론 반복. 경보: 꿈의 사망 조건(§5-B 8) 발생</td></tr>
+<tr><td>상시</td><td>월마트 CapEx 발언·소프트뱅크 잔여 지분·내부자 매매·소송</td><td>13D/A·Form 4 추적. 경보: 월마트 "자동화 내재화" 시그널</td></tr>
+</tbody></table></div>
+<p>본 보고서는 매수·매도 추천이 아니라 의사결정 자료다. 판단의 갱신 주기는 위 체크포인트를 따른다.</p>
+</section>
+
+<div class="foot">
+<p><strong>기준일</strong> 2026-08-14 (주가·시장데이터 2026-08-13 종가 부근, [상충] 시 범위 표기) · <strong>회계연도</strong> FY는 9월 말 종료(예: FY2026 = 2025-09-28~2026-09-26) · <strong>주요 출처</strong> Symbotic IR 보도자료·10-K(2025-11-24)·10-Q·8-K, SEC Form 4/13D-A, 어닝콜 트랜스크립트(Motley Fool·Investing.com·BigGo), symbotic.com 기술·제품 페이지, The Robot Report·Robotics 24/7·Modern Materials Handling·Interact Analysis 코멘트, Grand View·Mordor·Precedence·LogisticsIQ 시장 전망, Damodaran(ERP)·FRED(T10YIE)·미 재무부(10Y), Motley Fool·Zacks·Simply Wall St·StockAnalysis·MarketBeat·TradingView·Investing.com(국문 포함) 시장데이터 — 약 45개 출처 교차 검증 · <strong>표기</strong> <span class="bd bd-est">추정</span> 논리적 추정(근거 병기) / <span class="bd bd-drv">파생</span> 계산값(식 병기) / <span class="bd bd-cfl">상충</span> 출처 간 불일치(범위 제시) / <span class="bd bd-unk">미확인</span> 검증 실패(수치 미기재) · 본 자료는 정보 제공 목적이며 특정 증권의 매매 권유가 아닙니다.</p>
+</div>
+</div>
+</body>
+</html>
