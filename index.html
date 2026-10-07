@@ -66,6 +66,7 @@
   .item.ind .nm{color:#f4e7c4}
   .item .nm{display:inline}
   .item .tbadge{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:8px;letter-spacing:.12em;padding:1px 5px;border-radius:4px;vertical-align:middle;border:1px solid var(--accent);color:var(--accent)}
+  .item .tbadge.tk{border-color:var(--ink-muted);color:var(--ink-muted)}
   .item .hit{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--ink);background:var(--accent);padding:1px 5px;border-radius:4px;vertical-align:middle}
   .item .snip{display:block;margin-top:5px;font-size:11.5px;line-height:1.45;color:var(--ink-muted);font-family:var(--sans)}
   .item .snip mark{background:rgba(194,153,46,.32);color:var(--ink-text);border-radius:2px;padding:0 1px}
@@ -140,6 +141,7 @@
         <button data-f="전체" class="on"><span>전체</span><span class="cnt" id="cnt-all">0</span></button>
         <button data-f="기업"><span>기업</span><span class="cnt" id="cnt-co">0</span></button>
         <button data-f="산업"><span>산업</span><span class="cnt" id="cnt-in">0</span></button>
+        <button data-f="10-K"><span>10-K</span><span class="cnt" id="cnt-tk">0</span></button>
       </div>
     </div>
 
@@ -192,7 +194,7 @@
       <div class="panel" id="emptyPanel">
         <div class="ic">Empty</div>
         <h2>아직 등록된 분석이 없습니다</h2>
-        <p>기업 보고서는 <code>companies</code> 폴더에, 산업 보고서는 <code>industries</code> 폴더에 올리면 자동으로 여기에 나타납니다.</p>
+        <p>기업 보고서는 <code>companies</code>, 산업 보고서는 <code>industries</code>, 10-K는 <code>10-k</code> 폴더에 올리면 자동으로 여기에 나타납니다.</p>
         <div class="steps">
           <div class="step"><div class="n">1</div><div class="t">저장소에 <b>companies</b>, <b>industries</b> 폴더를 두고 각 보고서를 종류에 맞게 올립니다.</div></div>
           <div class="step"><div class="n">2</div><div class="t">파일 이름은 <b>섹터__이름.html</b> 형식으로. 여러 섹터에 걸치면 쉼표로 나열합니다 (예: <b>반도체, 디스플레이__삼성전자.html</b>).</div></div>
@@ -228,7 +230,8 @@ const CONFIG = {
   repo: "",
   sources: [
     { folder: "companies",  type: "기업" },
-    { folder: "industries", type: "산업" }
+    { folder: "industries", type: "산업" },
+    { folder: "10-k",       type: "10-K" }
   ],
   title:    "Roa's Archive",
   subtitle: "Companies & Industries"
@@ -288,10 +291,12 @@ function updateCounts(){
   const total = ITEMS.length;
   const co = ITEMS.filter(i=>i.type==="기업").length;
   const ind = ITEMS.filter(i=>i.type==="산업").length;
+  const tk = ITEMS.filter(i=>i.type==="10-K").length;
   $("count").textContent = String(total);
   $("cnt-all").textContent = total;
   $("cnt-co").textContent = co;
   $("cnt-in").textContent = ind;
+  $("cnt-tk").textContent = tk;
 }
 
 async function loadList(){
@@ -462,6 +467,7 @@ function renderList(){
     b.style.animationDelay = Math.min(rendered*20, 300)+"ms"; rendered++;
     let inner = `<span class="marker"></span><span class="nm">`+escapeHtml(it.name)+`</span>`;
     if(it.type==="산업") inner += `<span class="tbadge">산업</span>`;
+    else if(it.type==="10-K") inner += `<span class="tbadge tk">10-K</span>`;
     const snip = matchInfo[it.path];
     if(snip) inner += `<span class="hit">본문</span><span class="snip">`+snip+`</span>`;
     b.innerHTML = inner;
